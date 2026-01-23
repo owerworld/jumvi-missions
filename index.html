@@ -2,140 +2,798 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>JUMVI Missions</title>
-  <meta name="description" content="Quick missions for JUMVI Toss & Catch Paddle Set" />
+  <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
+  <meta name="theme-color" content="#061326" />
+
   <style>
-    :root { --bg:#0b1220; --card:#111c33; --text:#e8eefc; --muted:#9fb0d0; --border:#243457; --btn:#4FB3FF; }
-    *{box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;}
-    body{margin:0; background:var(--bg); color:var(--text);}
-    .wrap{max-width:820px; margin:0 auto; padding:20px;}
-    .top{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-    .logo{font-weight:800; letter-spacing:.5px;}
-    .pill{font-size:12px; color:var(--muted); border:1px solid var(--border); padding:6px 10px; border-radius:999px;}
-    .card{margin-top:14px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px;}
-    h1{font-size:20px; margin:10px 0 0;}
-    p{color:var(--muted); margin:10px 0 0; line-height:1.45;}
-    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
-    button{border:0; border-radius:14px; padding:12px 14px; font-weight:700; cursor:pointer;}
-    .btn{background:var(--btn); color:#001223;}
-    .btn2{background:transparent; color:var(--text); border:1px solid var(--border);}
-    .grid{display:grid; grid-template-columns:1fr; gap:10px; margin-top:12px;}
-    .mission{padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.02);}
-    .mhead{display:flex; justify-content:space-between; gap:10px; align-items:center;}
-    .tag{font-size:11px; color:var(--muted); border:1px solid var(--border); padding:4px 8px; border-radius:999px;}
-    .title{font-weight:800;}
-    .steps{margin:8px 0 0; color:var(--text); opacity:.92;}
-    .steps li{margin:4px 0;}
-    .footer{margin-top:18px; color:var(--muted); font-size:12px;}
-    .hide{display:none;}
-    select,input{background:transparent; color:var(--text); border:1px solid var(--border); border-radius:12px; padding:10px 12px;}
-    a{color:var(--btn); text-decoration:none;}
+    :root{
+      --bg:#061326;
+      --bg2:#0A1B38;
+      --card:#0E234A;
+      --card2:#0B1D3D;
+      --text:#EAF2FF;
+      --muted:#A9B8D6;
+      --border:rgba(255,255,255,.12);
+      --blue:#4FB3FF;     /* JUMVI Sport Blue */
+      --lime:#97D700;     /* Neon Lime */
+      --orange:#FF6A00;   /* Ball Orange */
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 900px at 20% 0%, rgba(79,179,255,.22), transparent 55%),
+                  radial-gradient(900px 700px at 90% 20%, rgba(151,215,0,.16), transparent 50%),
+                  linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      -webkit-tap-highlight-color: transparent;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:980px; margin:0 auto; padding:16px 16px 28px}
+    .sticky{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(6,19,38,.72);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px 16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:900; letter-spacing:.3px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: linear-gradient(135deg, var(--blue), var(--lime));
+      box-shadow: 0 0 0 4px rgba(79,179,255,.14);
+    }
+    .pill{
+      font-size:12px; color:var(--muted);
+      border:1px solid var(--border);
+      padding:7px 10px; border-radius:999px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .hero{
+      margin-top:14px;
+      border:1px solid var(--border);
+      background: linear-gradient(135deg, rgba(79,179,255,.18), rgba(151,215,0,.10));
+      border-radius:28px;
+      padding:16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 200px at 20% 0%, rgba(79,179,255,.25), transparent 55%),
+                  radial-gradient(500px 220px at 90% 20%, rgba(255,106,0,.18), transparent 55%);
+      pointer-events:none;
+    }
+    .heroin{position:relative; z-index:2}
+    .h1{
+      margin:0;
+      font-size:26px;
+      line-height:1.15;
+      font-weight:950;
+      letter-spacing:-.2px;
+    }
+    .sub{
+      margin:10px 0 0;
+      color:var(--muted);
+      line-height:1.4;
+      max-width:58ch;
+    }
+    .ctaRow{
+      margin-top:14px;
+      display:flex; flex-wrap:wrap; gap:10px;
+    }
+    .btn{
+      appearance:none; border:0; cursor:pointer;
+      border-radius:16px;
+      padding:12px 14px;
+      font-weight:850;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+      user-select:none;
+    }
+    .btn:active{transform:scale(.98)}
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--blue), #2E8DFF);
+      color:#061326;
+      box-shadow: 0 10px 30px rgba(79,179,255,.22);
+    }
+    .btnGhost{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border:1px solid var(--border);
+    }
+    .btnLime{
+      background: linear-gradient(135deg, var(--lime), #B7FF2A);
+      color:#061326;
+      box-shadow: 0 10px 30px rgba(151,215,0,.18);
+    }
+
+    .progressBox{
+      margin-top:14px;
+      display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .pText{
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .pSub{
+      color:var(--muted); font-size:12px;
+    }
+    .bar{
+      flex:1;
+      min-width:180px;
+      height:12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--orange), var(--blue), var(--lime));
+      border-radius:999px;
+      transition: width .35s ease;
+    }
+
+    .filters{
+      margin-top:14px;
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:850;
+      font-size:13px;
+      cursor:pointer;
+      transition: filter .12s ease, transform .12s ease;
+      user-select:none;
+    }
+    .chip:active{transform:scale(.98)}
+    .chip.active{
+      border-color: rgba(79,179,255,.55);
+      background: rgba(79,179,255,.18);
+      box-shadow: 0 0 0 4px rgba(79,179,255,.12);
+    }
+
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 720px){
+      .grid{grid-template-columns: repeat(2, 1fr);}
+    }
+    @media (min-width: 980px){
+      .grid{grid-template-columns: repeat(3, 1fr);}
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      padding:14px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.22);
+      transition: transform .12s ease, filter .12s ease;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:hover{transform: translateY(-2px)}
+    .cardHead{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
+    .left{display:flex; gap:10px; align-items:flex-start}
+    .icon{
+      width:44px; height:44px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:20px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .title{font-weight:950; letter-spacing:-.1px}
+    .meta{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex; flex-wrap:wrap; gap:8px;
+    }
+    .tag{
+      font-size:11px;
+      font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.12);
+      color:var(--text);
+      white-space:nowrap;
+    }
+    .tag.pack{border-color: rgba(79,179,255,.25)}
+    .tag.diff{border-color: rgba(255,106,0,.25)}
+    .steps{
+      margin:12px 0 0;
+      padding:0 0 0 16px;
+      color: rgba(234,242,255,.92);
+      font-size:13px;
+      line-height:1.35;
+    }
+    .doneBadge{
+      position:absolute; top:12px; right:12px;
+      font-size:11px;
+      font-weight:950;
+      color:#061326;
+      background: linear-gradient(135deg, var(--lime), #B7FF2A);
+      padding:6px 10px;
+      border-radius:999px;
+      box-shadow: 0 10px 25px rgba(151,215,0,.22);
+      display:none;
+    }
+    .card.done .doneBadge{display:block}
+    .card.done{outline: 2px solid rgba(151,215,0,.35);}
+
+    .footer{
+      margin-top:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      border-radius: 18px;
+      padding:14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+    .links{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+    .linkBtn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      padding:10px 12px;
+      border-radius:14px;
+      color: var(--text);
+      font-weight:850;
+      font-size:13px;
+      cursor:pointer;
+    }
+
+    /* Modal */
+    .backdrop{
+      position:fixed; inset:0; z-index:80;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:flex-end;
+    }
+    .backdrop.show{display:flex}
+    .sheet{
+      width:100%;
+      max-width:980px;
+      margin:0 auto;
+      border-radius: 22px 22px 0 0;
+      background: linear-gradient(180deg, rgba(14,35,74,.98), rgba(11,29,61,.98));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 -18px 60px rgba(0,0,0,.45);
+      padding:14px 14px 18px;
+      max-height: 86vh;
+      overflow:auto;
+    }
+    .sheetTop{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .close{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .sheetTitle{font-weight:950; font-size:18px}
+    .sheetMeta{margin-top:6px; color:var(--muted); font-size:12px; display:flex; flex-wrap:wrap; gap:10px}
+    .sheetBody{margin-top:12px}
+    .kv{margin-top:10px; padding:12px; border-radius:16px; border:1px solid var(--border); background: rgba(255,255,255,.04);}
+    .kv b{color:var(--text)}
+    .sheetActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .small{font-size:12px; color:var(--muted); margin-top:10px}
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="logo">JUMVI ⚡ Missions</div>
-      <div class="pill">Safe • Quick • Kids 3–8</div>
+  <div class="sticky">
+    <div class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>JUMVI Missions</span>
+      </div>
+      <div class="pill">Kids 3–8 • Safe play</div>
     </div>
+  </div>
 
-    <div class="card">
-      <h1>Pick a mission</h1>
-      <p>Scan the QR and start playing. Keep throws below face level.</p>
-
-      <div class="row">
-        <button class="btn" id="randomBtn">🎲 Random mission</button>
-        <button class="btn2" id="safetyBtn">🛡️ Safety</button>
-        <input id="search" placeholder="Search missions..." />
-        <select id="pack">
-          <option value="all">All packs</option>
-          <option value="Reflex Rush">Reflex Rush</option>
-          <option value="Aim Master">Aim Master</option>
-          <option value="Focus Control">Focus Control</option>
-          <option value="Team Duo">Team Duo</option>
-          <option value="Indoor Compact">Indoor Compact</option>
-          <option value="Party Challenge">Party Challenge</option>
-        </select>
-      </div>
-
-      <div class="grid" id="list"></div>
-
-      <div class="card hide" id="safetyCard">
-        <h1>Safety rules</h1>
-        <p>
-          • Throw below face level<br/>
-          • Keep distance 1–3 meters<br/>
-          • No hard throws indoors<br/>
-          • Stop if anyone feels unsafe
+  <div class="wrap">
+    <section class="hero">
+      <div class="heroin">
+        <h1 class="h1">Scan → Play → Finish 30 Missions</h1>
+        <p class="sub">
+          Pick a pack or start random. Tap a mission to see full details. Mark missions as done to track progress.
+          <br><b>Safety:</b> throw below face level, keep 1–3 meters distance, adult supervision.
         </p>
-      </div>
 
-      <div class="footer">
-        Need help? <a href="mailto:saykirtasiye@gmail.com">Contact us</a>
+        <div class="ctaRow">
+          <button class="btn btnPrimary" id="btnRandomAll">🎲 Random Mission</button>
+          <button class="btn btnGhost" id="btnChoosePack">🗂️ Choose a Pack</button>
+          <button class="btn btnLime" id="btnReset">Reset Progress</button>
+        </div>
+
+        <div class="progressBox" aria-label="progress">
+          <div>
+            <div class="pText" id="progressText">0 / 30 completed</div>
+            <div class="pSub" id="progressSub">Finish all missions to unlock the certificate.</div>
+          </div>
+          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
+            <div id="progressBarFill"></div>
+          </div>
+        </div>
+
+        <div class="filters" id="filters">
+          <!-- chips injected -->
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" id="grid">
+      <!-- cards injected -->
+    </section>
+
+    <section class="footer">
+      <b>Optional downloads (inside the site)</b><br/>
+      If you add these files to the GitHub repo root, these buttons will work:
+      <div class="links">
+        <a class="linkBtn" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book (PDF)</a>
+        <a class="linkBtn" href="certificate.pdf" target="_blank" rel="noopener">🏆 Certificate (PDF)</a>
+        <button class="linkBtn" id="btnShare">📤 Share</button>
+      </div>
+      <div class="small">
+        Support: <a href="mailto:saykirtasiye@gmail.com">saykirtasiye@gmail.com</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal / Bottom Sheet -->
+  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true">
+    <div class="sheet" id="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle" id="mTitle">Mission</div>
+          <div class="sheetMeta" id="mMeta"></div>
+        </div>
+        <button class="close" id="btnClose">✕</button>
+      </div>
+      <div class="sheetBody">
+        <div class="kv" id="mSteps"></div>
+        <div class="kv" id="mWin"></div>
+        <div class="kv" id="mTip"></div>
+        <div class="kv" id="mSafety"></div>
+
+        <div class="sheetActions">
+          <button class="btn btnPrimary" id="btnToggleDone">✅ Mark as Done</button>
+          <button class="btn btnGhost" id="btnNext">➡️ Next Mission</button>
+          <button class="btn btnGhost" id="btnRandomPack">🎲 Random from this Pack</button>
+        </div>
+
+        <div class="small" id="mSmall"></div>
       </div>
     </div>
   </div>
 
 <script>
-const missions = [
-  {id:1, pack:"Reflex Rush", title:"Flash Catch", time:"45s", players:"2", steps:["Stand 2 meters apart.","Throw gently, fast rhythm.","Count clean catches."], win:"Most catches in 45s."},
-  {id:2, pack:"Aim Master", title:"Corner Target", time:"60s", players:"1-2", steps:["Pick a wall spot.","Throw to hit the spot.","Catch after bounce (optional)."], win:"5 hits wins."},
-  {id:3, pack:"Focus Control", title:"Quiet Hands", time:"90s", players:"2", steps:["No talking challenge.","Slow throws only.","Focus on clean catches."], win:"10 clean catches."},
-  {id:4, pack:"Indoor Compact", title:"Soft Toss", time:"60s", players:"2", steps:["Stand 1 meter apart.","Tiny throws only.","No running."], win:"15 safe catches."},
-  {id:5, pack:"Team Duo", title:"Relay Catch", time:"120s", players:"3+", steps:["Make a small circle.","Pass the ball clockwise.","No drops allowed."], win:"Full circle ×3."},
-  {id:6, pack:"Party Challenge", title:"Last Paddle", time:"180s", players:"4+", steps:["Everyone lines up.","One throw each turn.","If you drop, step back."], win:"Closest player wins."}
+/** ========= DATA (30 missions = 5 packs × 6) ========= **/
+const PACKS = [
+  { key:"all", name:"All Packs" },
+  { key:"Reflex Rush", name:"Reflex Rush" },
+  { key:"Aim Master", name:"Aim Master" },
+  { key:"Focus Control", name:"Focus Control" },
+  { key:"Team Duo", name:"Team Duo" },
+  { key:"Indoor Compact", name:"Indoor Compact" },
 ];
 
-const listEl = document.getElementById("list");
-const safetyCard = document.getElementById("safetyCard");
-const searchEl = document.getElementById("search");
-const packEl = document.getElementById("pack");
+const missions = [
+  // Reflex Rush (6)
+  m(1,"Reflex Rush","⚡","Flash Catch",1,"2","45s","3+",
+    ["Stand 2 meters apart.","Quick gentle throws only.","Count clean catches."],
+    "Most catches in 45 seconds wins.",
+    "Keep throws below face level.",
+    "Go slower for younger kids."),
+  m(2,"Reflex Rush","🟢","Go / Stop Catch",1,"2-3","60s","4+",
+    ["Throw only when someone says “GO”.","Freeze when someone says “STOP”.","Continue until timer ends."],
+    "No drops during STOP = bonus point.",
+    "Freeze means no throwing.",
+    "Great for attention + control."),
+  m(3,"Reflex Rush","👏","Clap-Then-Catch",2,"2","60s","6+",
+    ["Throw gently.","Catcher claps once, then catches.","Switch roles after 10 throws."],
+    "10 clean catches each wins.",
+    "If it feels hard, remove the clap.",
+    "Start with slow throws."),
+  m(4,"Reflex Rush","🔁","Switch Hands",2,"2","90s","6+",
+    ["Catch with right hand.","Next catch with left hand.","Alternate every throw."],
+    "First to 12 clean catches wins.",
+    "Keep distance steady.",
+    "Builds both-hand coordination."),
+  m(5,"Reflex Rush","🧊","Freeze & Catch",1,"2","60s","4+",
+    ["After each catch, freeze 2 seconds.","Then throw back softly.","Repeat."],
+    "No moving during freeze = win.",
+    "No running.",
+    "Simple indoor/outdoor game."),
+  m(6,"Reflex Rush","🔊","Echo Count",1,"2","60s","3+",
+    ["Throw and say the number aloud.","Catcher repeats the number.","Then throws back."],
+    "Reach 15 without mistakes.",
+    "Stay calm if mistakes happen.",
+    "Adds memory + focus."),
 
-function render(items){
-  listEl.innerHTML = "";
-  items.forEach(m=>{
-    const div = document.createElement("div");
-    div.className="mission";
-    div.innerHTML = `
-      <div class="mhead">
-        <div class="title">${m.title}</div>
-        <div class="tag">${m.pack} • ${m.time} • ${m.players}</div>
+  // Aim Master (6)
+  m(7,"Aim Master","🎯","Center Hit",1,"2","90s","3+",
+    ["Aim for the middle of the paddle.","Soft arc throws.","Switch after 10 throws."],
+    "Most center hits wins.",
+    "No hard throws.",
+    "Use short distance first."),
+  m(8,"Aim Master","🟧","Landing Zone",1,"1-2","90s","4+",
+    ["Imagine a circle in front of you.","Throw so the ball lands in it.","Catch after the bounce (optional)."],
+    "5 clean landings wins.",
+    "Bounce is optional.",
+    "Works great in a hallway/yard."),
+  m(9,"Aim Master","📏","Distance Ladder",2,"2","120s","5+",
+    ["Start 1 meter apart.","After 3 clean catches, step back 1 step.","Keep going."],
+    "Farthest distance wins.",
+    "Stop if throws get wild.",
+    "Smooth, gentle arcs only."),
+  m(10,"Aim Master","🧠","Two-Step Throw",2,"2","90s","6+",
+    ["Take one step forward.","Throw softly.","Step back and repeat."],
+    "10 clean throws wins.",
+    "Keep below face level.",
+    "Adds body control."),
+  m(11,"Aim Master","🪙","Slow Arc",1,"2","90s","3+",
+    ["Throw high and slow.","Catcher waits calmly.","Catch with both hands if needed."],
+    "10 slow catches wins.",
+    "No rushing.",
+    "Perfect for younger kids."),
+  m(12,"Aim Master","🎯","Corner Aim",2,"2","120s","6+",
+    ["Pick a ‘corner’ area of the paddle.","Aim there every throw.","Switch corners after 5."],
+    "Most correct-corner hits wins.",
+    "Keep throws gentle.",
+    "Hard mode for older kids."),
+
+  // Focus Control (6)
+  m(13,"Focus Control","🧘","Quiet Round",1,"2","120s","4+",
+    ["No talking challenge.","Slow throws only.","Count with fingers silently."],
+    "12 clean catches without talking.",
+    "Stop if someone needs a break.",
+    "Great for calm focus."),
+  m(14,"Focus Control","🐢","Slow Motion",1,"2","120s","3+",
+    ["Move slowly like a turtle.","Throw slowly.","Catch slowly."],
+    "No drops in 2 minutes.",
+    "No sudden runs.",
+    "Fun + safe indoors."),
+  m(15,"Focus Control","👀","Eyes on Ball",1,"2","90s","3+",
+    ["Catcher says “I SEE IT”.","Throw gently.","Catcher catches and repeats."],
+    "Reach 15 clean catches.",
+    "Keep distance stable.",
+    "Builds tracking skill."),
+  m(16,"Focus Control","🫁","Breathe Catch",2,"2","120s","6+",
+    ["Breathe in while waiting.","Breathe out while catching.","Then throw back."],
+    "10 calm catches in a row.",
+    "If dizzy, stop.",
+    "Adds calm control."),
+  m(17,"Focus Control","🪞","Mirror Moves",2,"2","120s","6+",
+    ["One player does a small pose.","Other copies it.","Then throw and catch."],
+    "Copy + catch 8 times wins.",
+    "Keep poses simple.",
+    "Funny + focused."),
+  m(18,"Focus Control","🔟","Count to Ten",1,"2","90s","3+",
+    ["Count every clean catch.","If you drop, restart.","Try again."],
+    "Reach 10 clean catches.",
+    "No stress, just retry.",
+    "Classic confidence builder."),
+
+  // Team Duo (6)
+  m(19,"Team Duo","👨‍👩‍👧‍👦","Circle Pass",2,"3-6","180s","4+",
+    ["Make a small circle.","Pass to anyone (not same person twice).","Keep it gentle."],
+    "Complete 2 full minutes with no drops.",
+    "Keep space between kids.",
+    "Perfect party mode."),
+  m(20,"Team Duo","🏁","Relay Pass",2,"4+","180s","5+",
+    ["Make two lines (two teams).","Pass down the line.","Last player runs to front."],
+    "First team to 20 passes wins.",
+    "No running if indoors.",
+    "Keep throws low."),
+  m(21,"Team Duo","🧑‍✈️","Captain Calls",2,"3+","150s","6+",
+    ["One captain chooses the next target.","Captain says a name.","Throw to that person."],
+    "No wrong throws in 2 minutes.",
+    "Captain must be kind.",
+    "Great listening practice."),
+  m(22,"Team Duo","🛡️","Team Save",2,"3-5","180s","6+",
+    ["If a ball drops, another player ‘saves’ it.","Resume immediately.","Keep count."],
+    "10 saves total wins.",
+    "No diving on hard floors.",
+    "Use soft balls only."),
+  m(23,"Team Duo","🔄","Partner Swap",2,"4+","180s","6+",
+    ["Play 6 catches with a partner.","Then swap partners.","Repeat."],
+    "Most clean swaps wins.",
+    "Swap calmly, no pushing.",
+    "Keeps everyone included."),
+  m(24,"Team Duo","🏆","2v2 Mini Match",3,"4","240s","7+",
+    ["Two teams of two.","Each team tries 10 clean catches.","Miss = restart that team’s count."],
+    "First team to 10 wins.",
+    "Stop if too competitive.",
+    "Keep it friendly."),
+
+  // Indoor Compact (6)
+  m(25,"Indoor Compact","🪑","Sitting Catch",1,"2","120s","3+",
+    ["Sit on the floor or a chair.","Short throws only.","Catch with both hands."],
+    "15 clean catches wins.",
+    "No standing jumps.",
+    "Perfect for small spaces."),
+  m(26,"Indoor Compact","🚪","Doorway Distance",1,"2","90s","4+",
+    ["Stand 1 meter apart.","Throw softly.","No stepping forward."],
+    "12 clean catches wins.",
+    "Keep balls away from lamps.",
+    "Safe indoor rule."),
+  m(27,"Indoor Compact","🤫","Silent Catch",1,"2-3","120s","4+",
+    ["No talking challenge.","Soft throws only.","Count with fingers."],
+    "No drops for 2 minutes.",
+    "Take breaks if needed.",
+    "Calm + fun."),
+  m(28,"Indoor Compact","🧱","Wall Assist (Solo)",2,"1","120s","6+",
+    ["Stand 1 meter from a wall.","Throw gently to wall.","Catch the return."],
+    "10 clean wall catches.",
+    "Use a soft throw only.",
+    "Adult checks surroundings."),
+  m(29,"Indoor Compact","🧊","No-Run Rule",1,"2","120s","3+",
+    ["Both players keep feet planted.","Soft toss only.","Catch and return."],
+    "20 clean catches wins.",
+    "If it gets wild, slow down.",
+    "Safe default mode."),
+  m(30,"Indoor Compact","🎯","Tiny Target",2,"2","120s","6+",
+    ["Aim for the center.","Short throws.","Switch after 10."],
+    "Most center hits wins.",
+    "No hard throws indoors.",
+    "Great skill drill."),
+];
+
+// helper creator
+function m(id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip){
+  return { id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip };
+}
+
+/** ========= STATE ========= **/
+const LS_KEY = "jumvi_missions_done_v2";
+let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
+
+let currentPack = "all";
+let lastOpenedId = null;
+
+/** ========= UI refs ========= **/
+const grid = document.getElementById("grid");
+const filters = document.getElementById("filters");
+const progressText = document.getElementById("progressText");
+const progressSub = document.getElementById("progressSub");
+const progressFill = document.getElementById("progressBarFill");
+
+const backdrop = document.getElementById("backdrop");
+const btnClose = document.getElementById("btnClose");
+
+const mTitle = document.getElementById("mTitle");
+const mMeta = document.getElementById("mMeta");
+const mSteps = document.getElementById("mSteps");
+const mWin = document.getElementById("mWin");
+const mTip = document.getElementById("mTip");
+const mSafety = document.getElementById("mSafety");
+const mSmall = document.getElementById("mSmall");
+
+const btnToggleDone = document.getElementById("btnToggleDone");
+const btnNext = document.getElementById("btnNext");
+const btnRandomPack = document.getElementById("btnRandomPack");
+
+/** ========= RENDER ========= **/
+function renderFilters(){
+  filters.innerHTML = "";
+  PACKS.forEach(p=>{
+    const b = document.createElement("button");
+    b.className = "chip" + (p.key===currentPack ? " active" : "");
+    b.textContent = p.name;
+    b.onclick = ()=>{ currentPack = p.key; renderFilters(); renderGrid(); };
+    filters.appendChild(b);
+  });
+}
+
+function filteredMissions(){
+  if(currentPack==="all") return missions;
+  return missions.filter(x=>x.pack===currentPack);
+}
+
+function diffLabel(d){
+  if(d===1) return "Easy";
+  if(d===2) return "Medium";
+  return "Hard";
+}
+
+function renderGrid(){
+  const list = filteredMissions();
+  grid.innerHTML = "";
+  list.forEach(ms=>{
+    const c = document.createElement("div");
+    const isDone = done.has(ms.id);
+    c.className = "card" + (isDone ? " done" : "");
+    c.innerHTML = `
+      <div class="doneBadge">DONE ✅</div>
+      <div class="cardHead">
+        <div class="left">
+          <div class="icon">${ms.icon}</div>
+          <div>
+            <div class="title">${ms.title}</div>
+            <div class="meta">
+              <span class="tag pack">${ms.pack}</span>
+              <span class="tag diff">${diffLabel(ms.difficulty)} • ${ms.time}</span>
+              <span class="tag">👥 ${ms.players}</span>
+              <span class="tag">🎂 ${ms.age}</span>
+            </div>
+          </div>
+        </div>
       </div>
       <ol class="steps">
-        ${m.steps.map(s=>`<li>${s}</li>`).join("")}
+        ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
       </ol>
-      <div class="footer"><b>Win:</b> ${m.win}</div>
     `;
-    listEl.appendChild(div);
+    c.onclick = ()=>openMission(ms.id);
+    grid.appendChild(c);
   });
+  updateProgress();
 }
 
-function filter(){
-  const q = searchEl.value.trim().toLowerCase();
-  const p = packEl.value;
-  const out = missions.filter(m=>{
-    const hitQ = !q || (m.title.toLowerCase().includes(q) || m.pack.toLowerCase().includes(q));
-    const hitP = (p==="all") || (m.pack===p);
-    return hitQ && hitP;
-  });
-  render(out);
+function updateProgress(){
+  const total = missions.length;
+  const completed = done.size;
+  progressText.textContent = `${completed} / ${total} completed`;
+  const pct = Math.round((completed/total)*100);
+  progressFill.style.width = pct + "%";
+  document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
+
+  if(completed>=total){
+    progressSub.textContent = "All missions completed! Download your certificate 🎉";
+  }else if(completed>=10){
+    progressSub.textContent = "Nice! Keep going — you’re building real skills.";
+  }else{
+    progressSub.textContent = "Finish all missions to unlock the certificate.";
+  }
 }
 
-document.getElementById("randomBtn").onclick = ()=>{
-  const m = missions[Math.floor(Math.random()*missions.length)];
-  render([m]);
+/** ========= MODAL ========= **/
+function openMission(id){
+  const ms = missions.find(x=>x.id===id);
+  if(!ms) return;
+  lastOpenedId = id;
+
+  mTitle.textContent = `${ms.icon} ${ms.title}`;
+  mMeta.innerHTML = `
+    <span class="tag pack">${ms.pack}</span>
+    <span class="tag diff">${diffLabel(ms.difficulty)} • ${ms.time}</span>
+    <span class="tag">👥 ${ms.players}</span>
+    <span class="tag">🎂 ${ms.age}</span>
+  `;
+
+  mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px; line-height:1.45">
+    ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
+  </ol>`;
+
+  mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
+  mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
+  mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
+
+  const isDone = done.has(ms.id);
+  btnToggleDone.textContent = isDone ? "✅ Mark as NOT Done" : "✅ Mark as Done";
+  btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+
+  mSmall.textContent = "Tip: This progress is saved on this phone automatically.";
+
+  backdrop.classList.add("show");
+  // scroll sheet top
+  document.getElementById("sheet").scrollTop = 0;
+}
+
+function closeMission(){
+  backdrop.classList.remove("show");
+}
+
+btnClose.onclick = closeMission;
+backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop) closeMission(); });
+
+btnToggleDone.onclick = ()=>{
+  if(lastOpenedId==null) return;
+  if(done.has(lastOpenedId)) done.delete(lastOpenedId);
+  else done.add(lastOpenedId);
+  persist();
+  renderGrid();
+  openMission(lastOpenedId); // refresh modal state
 };
 
-document.getElementById("safetyBtn").onclick = ()=>{
-  safetyCard.classList.toggle("hide");
-  safetyCard.scrollIntoView({behavior:"smooth", block:"start"});
+btnNext.onclick = ()=>{
+  if(lastOpenedId==null) return;
+  const list = filteredMissions();
+  const idx = list.findIndex(x=>x.id===lastOpenedId);
+  const next = list[(idx+1) % list.length];
+  openMission(next.id);
 };
 
-searchEl.addEventListener("input", filter);
-packEl.addEventListener("change", filter);
+btnRandomPack.onclick = ()=>{
+  if(lastOpenedId==null) return;
+  const ms = missions.find(x=>x.id===lastOpenedId);
+  const list = missions.filter(x=>x.pack===ms.pack);
+  const pick = list[Math.floor(Math.random()*list.length)];
+  openMission(pick.id);
+};
 
-render(missions);
+/** ========= ACTIONS ========= **/
+document.getElementById("btnRandomAll").onclick = ()=>{
+  const pick = missions[Math.floor(Math.random()*missions.length)];
+  openMission(pick.id);
+};
+
+document.getElementById("btnChoosePack").onclick = ()=>{
+  // just scroll to filters (simple, no extra UI)
+  document.getElementById("filters").scrollIntoView({behavior:"smooth", block:"start"});
+};
+
+document.getElementById("btnReset").onclick = ()=>{
+  if(!confirm("Reset progress on this phone?")) return;
+  done = new Set();
+  persist();
+  renderGrid();
+  closeMission();
+};
+
+document.getElementById("btnShare").onclick = async ()=>{
+  const url = location.href;
+  try{
+    if(navigator.share){
+      await navigator.share({ title:"JUMVI Missions", text:"Scan & play 30 missions!", url });
+    }else{
+      await navigator.clipboard.writeText(url);
+      alert("Link copied!");
+    }
+  }catch(e){
+    // ignore
+  }
+};
+
+function persist(){
+  localStorage.setItem(LS_KEY, JSON.stringify([...done]));
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/** ========= INIT ========= **/
+renderFilters();
+renderGrid();
 </script>
 </body>
 </html>
+
