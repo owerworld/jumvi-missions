@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JUMVI Missions</title>
+  <meta name="description" content="Quick missions for JUMVI Toss & Catch Paddle Set" />
+  <style>
+    :root { --bg:#0b1220; --card:#111c33; --text:#e8eefc; --muted:#9fb0d0; --border:#243457; --btn:#4FB3FF; }
+    *{box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+    body{margin:0; background:var(--bg); color:var(--text);}
+    .wrap{max-width:820px; margin:0 auto; padding:20px;}
+    .top{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+    .logo{font-weight:800; letter-spacing:.5px;}
+    .pill{font-size:12px; color:var(--muted); border:1px solid var(--border); padding:6px 10px; border-radius:999px;}
+    .card{margin-top:14px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px;}
+    h1{font-size:20px; margin:10px 0 0;}
+    p{color:var(--muted); margin:10px 0 0; line-height:1.45;}
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+    button{border:0; border-radius:14px; padding:12px 14px; font-weight:700; cursor:pointer;}
+    .btn{background:var(--btn); color:#001223;}
+    .btn2{background:transparent; color:var(--text); border:1px solid var(--border);}
+    .grid{display:grid; grid-template-columns:1fr; gap:10px; margin-top:12px;}
+    .mission{padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.02);}
+    .mhead{display:flex; justify-content:space-between; gap:10px; align-items:center;}
+    .tag{font-size:11px; color:var(--muted); border:1px solid var(--border); padding:4px 8px; border-radius:999px;}
+    .title{font-weight:800;}
+    .steps{margin:8px 0 0; color:var(--text); opacity:.92;}
+    .steps li{margin:4px 0;}
+    .footer{margin-top:18px; color:var(--muted); font-size:12px;}
+    .hide{display:none;}
+    select,input{background:transparent; color:var(--text); border:1px solid var(--border); border-radius:12px; padding:10px 12px;}
+    a{color:var(--btn); text-decoration:none;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo">JUMVI ⚡ Missions</div>
+      <div class="pill">Safe • Quick • Kids 3–8</div>
+    </div>
+
+    <div class="card">
+      <h1>Pick a mission</h1>
+      <p>Scan the QR and start playing. Keep throws below face level.</p>
+
+      <div class="row">
+        <button class="btn" id="randomBtn">🎲 Random mission</button>
+        <button class="btn2" id="safetyBtn">🛡️ Safety</button>
+        <input id="search" placeholder="Search missions..." />
+        <select id="pack">
+          <option value="all">All packs</option>
+          <option value="Reflex Rush">Reflex Rush</option>
+          <option value="Aim Master">Aim Master</option>
+          <option value="Focus Control">Focus Control</option>
+          <option value="Team Duo">Team Duo</option>
+          <option value="Indoor Compact">Indoor Compact</option>
+          <option value="Party Challenge">Party Challenge</option>
+        </select>
+      </div>
+
+      <div class="grid" id="list"></div>
+
+      <div class="card hide" id="safetyCard">
+        <h1>Safety rules</h1>
+        <p>
+          • Throw below face level<br/>
+          • Keep distance 1–3 meters<br/>
+          • No hard throws indoors<br/>
+          • Stop if anyone feels unsafe
+        </p>
+      </div>
+
+      <div class="footer">
+        Need help? <a href="mailto:saykirtasiye@gmail.com">Contact us</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+const missions = [
+  {id:1, pack:"Reflex Rush", title:"Flash Catch", time:"45s", players:"2", steps:["Stand 2 meters apart.","Throw gently, fast rhythm.","Count clean catches."], win:"Most catches in 45s."},
+  {id:2, pack:"Aim Master", title:"Corner Target", time:"60s", players:"1-2", steps:["Pick a wall spot.","Throw to hit the spot.","Catch after bounce (optional)."], win:"5 hits wins."},
+  {id:3, pack:"Focus Control", title:"Quiet Hands", time:"90s", players:"2", steps:["No talking challenge.","Slow throws only.","Focus on clean catches."], win:"10 clean catches."},
+  {id:4, pack:"Indoor Compact", title:"Soft Toss", time:"60s", players:"2", steps:["Stand 1 meter apart.","Tiny throws only.","No running."], win:"15 safe catches."},
+  {id:5, pack:"Team Duo", title:"Relay Catch", time:"120s", players:"3+", steps:["Make a small circle.","Pass the ball clockwise.","No drops allowed."], win:"Full circle ×3."},
+  {id:6, pack:"Party Challenge", title:"Last Paddle", time:"180s", players:"4+", steps:["Everyone lines up.","One throw each turn.","If you drop, step back."], win:"Closest player wins."}
+];
+
+const listEl = document.getElementById("list");
+const safetyCard = document.getElementById("safetyCard");
+const searchEl = document.getElementById("search");
+const packEl = document.getElementById("pack");
+
+function render(items){
+  listEl.innerHTML = "";
+  items.forEach(m=>{
+    const div = document.createElement("div");
+    div.className="mission";
+    div.innerHTML = `
+      <div class="mhead">
+        <div class="title">${m.title}</div>
+        <div class="tag">${m.pack} • ${m.time} • ${m.players}</div>
+      </div>
+      <ol class="steps">
+        ${m.steps.map(s=>`<li>${s}</li>`).join("")}
+      </ol>
+      <div class="footer"><b>Win:</b> ${m.win}</div>
+    `;
+    listEl.appendChild(div);
+  });
+}
+
+function filter(){
+  const q = searchEl.value.trim().toLowerCase();
+  const p = packEl.value;
+  const out = missions.filter(m=>{
+    const hitQ = !q || (m.title.toLowerCase().includes(q) || m.pack.toLowerCase().includes(q));
+    const hitP = (p==="all") || (m.pack===p);
+    return hitQ && hitP;
+  });
+  render(out);
+}
+
+document.getElementById("randomBtn").onclick = ()=>{
+  const m = missions[Math.floor(Math.random()*missions.length)];
+  render([m]);
+};
+
+document.getElementById("safetyBtn").onclick = ()=>{
+  safetyCard.classList.toggle("hide");
+  safetyCard.scrollIntoView({behavior:"smooth", block:"start"});
+};
+
+searchEl.addEventListener("input", filter);
+packEl.addEventListener("change", filter);
+
+render(missions);
+</script>
+</body>
+</html>
