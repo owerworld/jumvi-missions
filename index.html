@@ -2,329 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- ✅ zoom lock -->
+  <!-- Mobile-first: lock zoom (per your request) + notch safe area -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>JUMVI Missions - Toss & Catch Adventure</title>
+  <title>JUMVI Missions</title>
   <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
   <meta name="theme-color" content="#061326" />
 
   <style>
     :root{
-      --bg:#061326;
-      --bg2:#0A1B38;
-      --card:#0E234A;
+      --bg:#061326;           /* stable base (no harsh scroll bands) */
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.04);
       --text:#EAF2FF;
       --muted:#A9B8D6;
       --border:rgba(255,255,255,.12);
-      --blue:#4FB3FF;     /* JUMVI Sport Blue */
-      --lime:#97D700;     /* Neon Lime */
-      --orange:#FF6A00;   /* Ball Orange */
-      --shadow: 0 18px 60px rgba(0,0,0,.35);
+
+      --blue:#4FB3FF;         /* JUMVI Sport Blue */
+      --lime:#97D700;         /* Neon Lime */
+      --orange:#FF6A00;       /* Ball Orange */
+
       --radius:18px;
+      --shadow: 0 18px 55px rgba(0,0,0,.35);
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    html{-webkit-text-size-adjust:100%}
-    a,button,input,select,textarea{touch-action:manipulation}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ -webkit-text-size-adjust:100%; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: radial-gradient(1200px 900px at 20% 0%, rgba(79,179,255,.22), transparent 55%),
-                  radial-gradient(900px 700px at 90% 20%, rgba(151,215,0,.16), transparent 50%),
-                  linear-gradient(180deg, var(--bg), var(--bg2));
       color:var(--text);
+      background: var(--bg);
       -webkit-tap-highlight-color: transparent;
-    }
-    a{color:inherit;text-decoration:none}
-
-    .wrap{
-      max-width:980px;
-      margin:0 auto;
-      padding:16px 16px calc(28px + env(safe-area-inset-bottom));
+      overscroll-behavior: none;
     }
 
+    /* Fixed background layer = no “hard gradient bands” while scrolling on iOS */
+    .bgLayer{
+      position:fixed; inset:0; z-index:-1;
+      background:
+        radial-gradient(900px 600px at 15% 0%, rgba(79,179,255,.16), transparent 55%),
+        radial-gradient(820px 520px at 90% 25%, rgba(151,215,0,.11), transparent 55%),
+        radial-gradient(650px 480px at 60% 95%, rgba(255,106,0,.10), transparent 55%),
+        linear-gradient(180deg, #061326 0%, #061326 100%);
+      transform: translateZ(0);
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button, a, input { touch-action: manipulation; }
+    .wrap{ max-width:980px; margin:0 auto; padding:14px 14px 26px; }
+
+    /* Top bar */
     .sticky{
       position:sticky; top:0; z-index:50;
-      padding-top: env(safe-area-inset-top);
       backdrop-filter: blur(10px);
-      background: rgba(6,19,38,.72);
+      background: rgba(6,19,38,.78);
       border-bottom:1px solid var(--border);
+      padding-top: env(safe-area-inset-top);
     }
     .topbar{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:12px 16px;
+      padding:10px 14px 10px;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:900; letter-spacing:.3px;
-    }
-
-    /* ✅ real logo */
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; }
     .logoWrap{
-      width:40px;height:40px;border-radius:12px;
-      background: linear-gradient(135deg, rgba(79,179,255,.22), rgba(151,215,0,.18));
-      border:1px solid rgba(255,255,255,.12);
-      display:flex;align-items:center;justify-content:center;
-      box-shadow: 0 0 0 3px rgba(79,179,255,.12);
+      width:38px; height:38px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(79,179,255,.25), rgba(151,215,0,.16));
+      border:1px solid rgba(255,255,255,.14);
+      display:flex; align-items:center; justify-content:center;
       overflow:hidden;
+      box-shadow: 0 0 0 3px rgba(79,179,255,.10);
       flex: 0 0 auto;
     }
-    .logoImg{
-      width:100%;height:100%;
-      object-fit:contain;
-      padding:6px;
-      background: rgba(0,0,0,.10);
-    }
-    .logoFallback{
-      display:none;
-      font-size:18px;
-    }
-
+    .logoImg{ width:100%; height:100%; object-fit:contain; padding:6px; }
     .pill{
       font-size:12px; color:var(--muted);
       border:1px solid var(--border);
       padding:7px 10px; border-radius:999px;
       display:flex; align-items:center; gap:8px;
-      white-space:nowrap;
+      white-space: nowrap;
     }
 
+    /* Hero card */
     .hero{
-      margin-top:14px;
+      margin-top:12px;
       border:1px solid var(--border);
-      background: linear-gradient(135deg, rgba(79,179,255,.18), rgba(151,215,0,.10));
-      border-radius:28px;
-      padding:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
+      border-radius: 24px;
+      padding:14px;
       box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
     }
-    .hero:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(600px 200px at 20% 0%, rgba(79,179,255,.25), transparent 55%),
-                  radial-gradient(500px 220px at 90% 20%, rgba(255,106,0,.18), transparent 55%);
-      pointer-events:none;
-    }
-    .heroin{position:relative; z-index:2}
     .h1{
       margin:0;
-      font-size:26px;
+      font-size: 22px;
       line-height:1.15;
       font-weight:950;
       letter-spacing:-.2px;
     }
     .sub{
-      margin:10px 0 0;
+      margin:8px 0 0;
       color:var(--muted);
       line-height:1.4;
-      max-width:62ch;
+      font-size:13px;
+      max-width: 60ch;
     }
 
-    .productRow{
-      margin-top:14px;
-      display:flex; gap:12px; align-items:center;
-      padding:12px;
-      border-radius:18px;
-      background: rgba(0,0,0,.18);
-      border:1px solid var(--border);
-    }
-    .productImg{
-      width:78px;height:78px;border-radius:14px;
-      background: linear-gradient(135deg, rgba(79,179,255,.20), rgba(151,215,0,.15));
-      display:flex;align-items:center;justify-content:center;
-      font-size:34px;
-      border:1px solid rgba(255,255,255,.10);
-      flex:0 0 auto;
-    }
-    .productInfo{flex:1}
-    .productTitle{font-weight:950;font-size:15px;margin-bottom:4px}
-    .productMeta{
-      font-size:11px;color:var(--muted);
-      display:flex;gap:8px;flex-wrap:wrap;
-    }
-    .productMeta span{
-      padding:4px 8px;border-radius:10px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      white-space:nowrap;
-    }
-
-    .ctaRow{
-      margin-top:14px;
-      display:flex; flex-wrap:wrap; gap:10px;
-    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
     .btn{
-      appearance:none;border:0;cursor:pointer;
+      appearance:none; border:0; cursor:pointer;
       border-radius:16px;
       padding:12px 14px;
       font-weight:900;
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      transition: transform .12s ease, filter .12s ease, opacity .12s ease;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      transition: transform .12s ease, filter .12s ease;
       user-select:none;
       min-height:44px;
+      -webkit-user-select:none;
     }
-    .btn:active{transform:scale(.98)}
+    .btn:active{ transform: scale(.98); }
     .btnPrimary{
       background: linear-gradient(135deg, var(--blue), #2E8DFF);
       color:#061326;
-      box-shadow: 0 10px 30px rgba(79,179,255,.22);
+      box-shadow: 0 10px 26px rgba(79,179,255,.22);
     }
     .btnGhost{
       background: rgba(255,255,255,.06);
-      color: var(--text);
       border:1px solid var(--border);
-    }
-    .btnOrange{
-      background: linear-gradient(135deg, var(--orange), #FF8A33);
-      color:#fff;
-      box-shadow: 0 10px 30px rgba(255,106,0,.18);
+      color:var(--text);
     }
     .btnLime{
       background: linear-gradient(135deg, var(--lime), #B7FF2A);
       color:#061326;
-      box-shadow: 0 10px 30px rgba(151,215,0,.18);
+      box-shadow: 0 10px 26px rgba(151,215,0,.18);
     }
 
+    /* Progress */
     .progressBox{
-      margin-top:14px;
+      margin-top:12px;
       display:flex; gap:12px; align-items:center; flex-wrap:wrap;
       padding:12px;
       border-radius:18px;
       border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
+      background: rgba(0,0,0,.12);
     }
-    .pText{font-weight:950; letter-spacing:.2px}
-    .pSub{color:var(--muted); font-size:12px}
+    .pText{ font-weight:950; letter-spacing:.2px; }
+    .pSub{ color:var(--muted); font-size:12px; margin-top:2px; }
     .bar{
       flex:1; min-width:180px;
-      height:12px;border-radius:999px;
+      height:12px; border-radius:999px;
       background: rgba(255,255,255,.10);
       overflow:hidden;
       border:1px solid rgba(255,255,255,.08);
     }
-    .bar > div{
+    .bar>div{
       height:100%; width:0%;
       background: linear-gradient(90deg, var(--orange), var(--blue), var(--lime));
       border-radius:999px;
       transition: width .35s ease;
     }
 
-    .controlsRow{
-      margin-top:14px;
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    /* Search + quick toggles */
+    .controls{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
     }
     .search{
-      flex: 1 1 240px;
-      display:flex;align-items:center;gap:10px;
+      display:flex; align-items:center; gap:10px;
       border:1px solid var(--border);
       background: rgba(255,255,255,.05);
-      border-radius:16px;
-      padding:10px 12px;
-      min-height:44px;
+      border-radius:18px;
+      padding:12px 12px;
     }
+    .searchIcon{ opacity:.75; }
     .search input{
       width:100%;
-      background:transparent;
-      border:0;
-      outline:none;
-      color:var(--text);
-      font-weight:800;
-      font-size:13px;
-    }
-    .toggleChip{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:13px;
-      cursor:pointer;
-      user-select:none;
-      min-height:44px;
-    }
-    .toggleChip.active{
-      border-color: rgba(151,215,0,.45);
-      background: rgba(151,215,0,.14);
-      box-shadow: 0 0 0 4px rgba(151,215,0,.10);
-    }
-
-    .badgesRow{
-      margin-top:14px;
-      display:flex; gap:8px;
-      overflow-x:auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom:6px;
-    }
-    .badgesRow::-webkit-scrollbar{display:none}
-    .badge{
-      flex-shrink:0;
-      padding:10px 14px;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      text-align:center;
-      min-width:110px;
-      transition: all .2s ease;
-    }
-    .badge.unlocked{
-      border-color: rgba(151,215,0,.4);
-      background: linear-gradient(135deg, rgba(151,215,0,.16), rgba(79,179,255,.10));
-      box-shadow: 0 0 0 3px rgba(151,215,0,.10);
-    }
-    .badge.locked{opacity:.45; filter:grayscale(1)}
-    .badgeIcon{font-size:22px; margin-bottom:4px}
-    .badgeName{font-size:11px; font-weight:950}
-    .badgeReq{font-size:9px; color:var(--muted); margin-top:2px}
-
-    .streakBox{
-      margin-top:14px;
-      padding:12px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: linear-gradient(135deg, rgba(255,106,0,.12), rgba(79,179,255,.08));
-      display:none;
-      align-items:center;
-      gap:12px;
-    }
-    .streakBox.show{display:flex}
-    .streakIcon{font-size:30px; animation: fire 2s ease-in-out infinite}
-    @keyframes fire{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-    .streakNum{font-weight:950; font-size:18px}
-    .streakText{font-size:12px; color:var(--muted)}
-
-    .certBox{
-      margin-top:14px;
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: linear-gradient(135deg, rgba(255,215,0,.08), rgba(79,179,255,.06));
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .certLeft{display:flex; gap:12px; align-items:center}
-    .certIcon{font-size:34px}
-    .certTitle{font-weight:950}
-    .certSub{font-size:12px;color:var(--muted);margin-top:2px}
-    .lockPill{
-      font-size:12px;
-      font-weight:950;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.15);
-      white-space:nowrap;
-    }
-    .lockPill.unlocked{
-      border-color: rgba(151,215,0,.45);
-      background: rgba(151,215,0,.14);
+      border:0; outline:0;
+      background: transparent;
       color: var(--text);
+      font-weight:850;
+      font-size:16px; /* iOS: prevent zoom on focus */
     }
+    .search input::placeholder{ color: rgba(169,184,214,.75); font-weight:850; }
 
-    .filters{
-      margin-top:14px;
-      display:flex; gap:8px; flex-wrap:wrap;
-    }
+    .toggleRow{ display:flex; gap:10px; flex-wrap:wrap; }
     .chip{
       border:1px solid var(--border);
       background: rgba(255,255,255,.05);
@@ -336,40 +198,52 @@
       cursor:pointer;
       user-select:none;
       white-space:nowrap;
+      transition: transform .12s ease, filter .12s ease;
       min-height:44px;
-      display:flex; align-items:center;
+      display:inline-flex; align-items:center; justify-content:center;
     }
-    .chip:active{transform:scale(.98)}
+    .chip:active{ transform: scale(.98); }
     .chip.active{
       border-color: rgba(79,179,255,.55);
-      background: rgba(79,179,255,.18);
-      box-shadow: 0 0 0 4px rgba(79,179,255,.12);
+      background: rgba(79,179,255,.16);
+      box-shadow: 0 0 0 4px rgba(79,179,255,.10);
+    }
+    .chip.limeActive.active{
+      border-color: rgba(151,215,0,.55);
+      background: rgba(151,215,0,.14);
+      box-shadow: 0 0 0 4px rgba(151,215,0,.08);
     }
 
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
+    /* Pack filter row */
+    .filters{
+      margin-top:12px;
+      display:flex; gap:8px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom:6px;
     }
-    @media (min-width: 720px){ .grid{grid-template-columns: repeat(2, 1fr);} }
-    @media (min-width: 980px){ .grid{grid-template-columns: repeat(3, 1fr);} }
+    .filters::-webkit-scrollbar{ display:none; }
 
+    /* Mission list */
+    .list{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
     .card{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.045);
-      border-radius: var(--radius);
-      padding:14px;
-      box-shadow: 0 12px 34px rgba(0,0,0,.22);
-      transition: transform .12s ease;
+      background: rgba(255,255,255,.05);
+      border-radius: 18px;
+      padding:12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
       cursor:pointer;
-      position:relative;
-      overflow:hidden;
+      display:flex;
+      gap:12px;
+      align-items:center;
     }
-    .card:hover{transform: translateY(-2px)}
-    .cardHead{display:flex; align-items:flex-start; justify-content:space-between; gap:10px}
-    .left{display:flex; gap:10px; align-items:flex-start}
-    .icon{
+    .card:active{ transform: scale(.995); }
+    .mIcon{
       width:44px; height:44px; border-radius:14px;
       display:flex; align-items:center; justify-content:center;
       font-size:20px;
@@ -377,57 +251,123 @@
       border:1px solid rgba(255,255,255,.10);
       flex:0 0 auto;
     }
-    .title{font-weight:950; letter-spacing:-.1px}
-    .meta{
+    .mMain{ flex:1; min-width:0; }
+    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:16px; }
+    .mMeta{
       margin-top:6px;
-      color:var(--muted);
-      font-size:12px;
       display:flex; flex-wrap:wrap; gap:8px;
+      color: var(--muted);
+      font-size:12px;
+      font-weight:900;
     }
     .tag{
-      font-size:11px;
-      font-weight:950;
       padding:6px 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.12);
-      color:var(--text);
+      background: rgba(0,0,0,.10);
+      color: var(--text);
       white-space:nowrap;
-    }
-    .tag.pack{border-color: rgba(79,179,255,.25)}
-    .tag.diff{border-color: rgba(255,106,0,.25)}
-    .steps{
-      margin:12px 0 0;
-      padding:0 0 0 16px;
-      color: rgba(234,242,255,.92);
-      font-size:13px;
-      line-height:1.35;
-    }
-    .doneBadge{
-      position:absolute; top:12px; right:12px;
       font-size:11px;
       font-weight:950;
-      color:#061326;
-      background: linear-gradient(135deg, var(--lime), #B7FF2A);
-      padding:6px 10px;
+    }
+    .tag.pack{ border-color: rgba(79,179,255,.25); }
+    .tag.diff{ border-color: rgba(255,106,0,.25); }
+    .tag.smallHide{ display:inline-flex; }
+    .donePill{
+      padding:8px 10px;
       border-radius:999px;
-      box-shadow: 0 10px 25px rgba(151,215,0,.22);
+      background: rgba(151,215,0,.20);
+      border:1px solid rgba(151,215,0,.40);
+      color: var(--text);
+      font-weight:950;
+      font-size:12px;
+      flex:0 0 auto;
       display:none;
     }
-    .card.done .doneBadge{display:block}
-    .card.done{border-color: rgba(151,215,0,.35);}
+    .card.done .donePill{ display:inline-flex; }
+    .card.done{
+      border-color: rgba(151,215,0,.33);
+      background: rgba(151,215,0,.06);
+    }
 
+    /* Badges + certificate */
+    .badgeRow{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom:6px;
+    }
+    .badgeRow::-webkit-scrollbar{ display:none; }
+    .badge{
+      flex:0 0 auto;
+      min-width:128px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      padding:12px;
+      text-align:left;
+      box-shadow: 0 12px 28px rgba(0,0,0,.16);
+      opacity:.55;
+      filter: grayscale(1);
+    }
+    .badge.unlocked{
+      opacity:1;
+      filter:none;
+      border-color: rgba(151,215,0,.35);
+      background: linear-gradient(135deg, rgba(151,215,0,.12), rgba(79,179,255,.08));
+      box-shadow: 0 0 0 3px rgba(151,215,0,.08);
+    }
+    .badgeIcon{ font-size:22px; }
+    .badgeName{ margin-top:6px; font-weight:950; font-size:13px; }
+    .badgeReq{ margin-top:4px; color: var(--muted); font-size:11px; font-weight:850; }
+
+    .certBox{
+      margin-top:12px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      padding:14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .certLeft{ display:flex; align-items:center; gap:12px; }
+    .certIcon{ font-size:28px; }
+    .certText b{ font-weight:950; }
+    .certText div{ color: var(--muted); font-size:12px; margin-top:2px; font-weight:850; }
+    .certBtn{
+      border-radius:16px;
+      border:1px solid rgba(151,215,0,.38);
+      background: rgba(151,215,0,.18);
+      color: var(--text);
+      font-weight:950;
+      padding:12px 12px;
+      min-height:44px;
+      cursor:pointer;
+      opacity:.55;
+      pointer-events:none;
+    }
+    .certBtn.unlocked{
+      opacity:1;
+      pointer-events:auto;
+      background: linear-gradient(135deg, rgba(151,215,0,.88), #B7FF2A);
+      color:#061326;
+      border-color: rgba(151,215,0,.55);
+      box-shadow: 0 10px 26px rgba(151,215,0,.18);
+    }
+
+    /* Footer */
     .footer{
-      margin-top:18px;
+      margin-top:16px;
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
-      border-radius: 18px;
+      border-radius:18px;
       padding:14px;
-      color:var(--muted);
+      color: var(--muted);
       font-size:12px;
       line-height:1.5;
     }
-    .links{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+    .links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
     .linkBtn{
       border:1px solid var(--border);
       background: rgba(255,255,255,.05);
@@ -437,123 +377,111 @@
       font-weight:900;
       font-size:13px;
       cursor:pointer;
-      transition: all .2s ease;
       min-height:44px;
+      display:inline-flex; align-items:center; justify-content:center;
     }
-    .linkBtn:active{transform:scale(.98)}
-    .linkBtn.disabled{opacity:.5; pointer-events:none}
 
-    /* Modal */
+    /* Modal (bottom sheet) */
     .backdrop{
       position:fixed; inset:0; z-index:80;
       background: rgba(0,0,0,.55);
       display:none;
       align-items:flex-end;
+      padding-bottom: env(safe-area-inset-bottom);
     }
-    .backdrop.show{display:flex}
+    .backdrop.show{ display:flex; }
     .sheet{
       width:100%;
       max-width:980px;
       margin:0 auto;
       border-radius: 22px 22px 0 0;
-      background: linear-gradient(180deg, rgba(14,35,74,.98), rgba(11,29,61,.98));
+      background: rgba(10,27,56,.96);
       border:1px solid rgba(255,255,255,.12);
       box-shadow: 0 -18px 60px rgba(0,0,0,.45);
       padding:14px 14px 18px;
       max-height: 86vh;
       overflow:auto;
     }
-    .sheetTop{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .sheetTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
     .close{
       border:1px solid var(--border);
       background: rgba(255,255,255,.06);
-      color:var(--text);
+      color: var(--text);
       border-radius:14px;
       padding:10px 12px;
       font-weight:950;
       cursor:pointer;
       min-height:44px;
     }
-    .sheetTitle{font-weight:950; font-size:18px}
-    .sheetMeta{margin-top:6px; color:var(--muted); font-size:12px; display:flex; flex-wrap:wrap; gap:10px}
-    .sheetBody{margin-top:12px}
-    .kv{margin-top:10px; padding:12px; border-radius:16px; border:1px solid var(--border); background: rgba(255,255,255,.04);}
-    .kv b{color:var(--text)}
-    .sheetActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
-    .small{font-size:12px; color:var(--muted); margin-top:10px}
+    .sheetTitle{ font-weight:950; font-size:18px; }
+    .sheetMeta{ margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; }
+    .kv{
+      margin-top:10px;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      line-height:1.45;
+      font-size:13px;
+    }
+    .kv b{ color: var(--text); }
+    .sheetActions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .small{ font-size:12px; color: var(--muted); margin-top:10px; }
 
-    /* floating sound toggle */
+    /* Floating sound toggle */
     .soundToggle{
       position:fixed;
-      bottom:calc(16px + env(safe-area-inset-bottom));
+      bottom:16px;
       right:16px;
-      width:46px;height:46px;
+      width:46px;
+      height:46px;
       border-radius:999px;
-      background: linear-gradient(135deg, var(--blue), var(--lime));
+      background: linear-gradient(135deg, rgba(79,179,255,.95), rgba(151,215,0,.92));
       border:2px solid rgba(255,255,255,.18);
-      display:flex;align-items:center;justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       font-size:20px;
       cursor:pointer;
-      box-shadow: 0 10px 30px rgba(0,0,0,.30);
+      box-shadow: 0 10px 30px rgba(0,0,0,.32);
       z-index:70;
       transition: transform .2s ease, opacity .2s ease;
       user-select:none;
     }
-    .soundToggle:active{transform:scale(.92)}
-    .soundToggle.muted{opacity:.55; background: rgba(255,255,255,.08)}
-
-    /* error box */
-    .errorBox{
-      margin-top:14px;
-      border:1px solid rgba(255,80,80,.35);
-      background: rgba(255,80,80,.08);
-      border-radius:16px;
-      padding:12px;
-      color: rgba(255,220,220,.95);
-      display:none;
-      font-weight:850;
-      line-height:1.35;
+    .soundToggle:active{ transform: scale(.92); }
+    .soundToggle.muted{
+      background: rgba(255,255,255,.08);
+      opacity:.65;
     }
-    .errorBox.show{display:block}
 
-    /* ✅ mobile clean */
-    @media (max-width: 520px){
-      .wrap{ padding: 12px 12px calc(22px + env(safe-area-inset-bottom)); }
-      .topbar{ padding: 10px 12px; }
-      .hero{ padding: 14px; border-radius: 22px; }
-      .h1{ font-size: clamp(20px, 5.8vw, 26px); }
+    /* Small screens tweaks */
+    @media (max-width:520px){
+      .wrap{ padding:12px 12px 24px; }
+      .topbar{ padding:10px 12px; }
+      .hero{ border-radius:22px; }
+      .h1{ font-size: clamp(20px, 5.6vw, 24px); }
       .sub{ font-size: 13px; }
-      .ctaRow{ gap: 8px; }
-      .ctaRow .btn{ flex: 1 1 calc(50% - 8px); border-radius: 14px; }
-      .ctaRow .btn.btnOrange{ flex-basis: 100%; }
-      .progressBox{ padding: 10px; }
-      .grid{ grid-template-columns: 1fr; gap: 10px; }
-      .card{ padding: 12px; }
-      .icon{ width: 40px; height: 40px; border-radius: 12px; }
-      .steps{ display: none; }
-      .meta .tag:nth-child(n+3){ display:none; }
-      .filters{
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 6px;
-      }
-      .filters::-webkit-scrollbar{ display:none; }
-      .sheet{ max-height: 88vh; }
-      .productImg{width:60px; height:60px; font-size:28px}
-      .logoWrap{width:38px;height:38px}
+      .row{ gap:8px; }
+      .row .btn{ flex:1 1 calc(50% - 8px); }
+      .row .btn:last-child{ flex-basis: 100%; }
+      .tag.smallHide{ display:none; } /* keep list clean on iPhone */
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
   </style>
 </head>
 
 <body>
+  <div class="bgLayer" aria-hidden="true"></div>
+
   <div class="sticky">
     <div class="topbar">
       <div class="brand">
-        <div class="logoWrap" aria-label="JUMVI logo">
-          <img class="logoImg" src="jumvi_logo.png" alt="JUMVI"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-          <div class="logoFallback">🎯</div>
+        <div class="logoWrap" title="JUMVI">
+          <!-- Put jumvi_logo.png in the same GitHub folder as this HTML -->
+          <img class="logoImg" src="jumvi_logo.png" alt="JUMVI logo" onerror="this.style.display='none'; this.parentElement.textContent='J';" />
         </div>
         <span>JUMVI Missions</span>
       </div>
@@ -563,93 +491,73 @@
 
   <div class="wrap">
     <section class="hero">
-      <div class="heroin">
-        <h1 class="h1">30 Fun Missions Await! 🚀</h1>
-        <p class="sub">
-          Pick a pack or start random. Track your progress, unlock badges, and earn your champion certificate.
-          <br><b>Safety:</b> throw below face level, keep 1–3 meters distance, adult supervision.
-        </p>
+      <h1 class="h1">Scan → Play → Finish 30 Missions</h1>
+      <p class="sub">
+        Tap a mission to see full details. Mark missions as done to track progress.
+        <br><b>Safety:</b> throw below face level, keep 1–3 meters distance, adult supervision.
+      </p>
 
-        <div class="productRow">
-          <div class="productImg">🏓</div>
-          <div class="productInfo">
-            <div class="productTitle">JUMVI Toss & Catch Paddle Set</div>
-            <div class="productMeta">
-              <span>✅ Soft balls</span>
-              <span>👶 Ages 3–8</span>
-              <span>🎯 Skill-building</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="ctaRow">
-          <button class="btn btnPrimary" id="btnRandomAll">🎲 Random Mission</button>
-          <button class="btn btnGhost" id="btnChoosePack">🗂️ Choose a Pack</button>
-          <button class="btn btnOrange" id="btnShowBadges">🏅 My Badges</button>
-        </div>
-
-        <div class="progressBox" aria-label="progress">
-          <div>
-            <div class="pText" id="progressText">0 / 30 completed</div>
-            <div class="pSub" id="progressSub">Start your first mission to begin!</div>
-          </div>
-          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
-            <div id="progressBarFill"></div>
-          </div>
-        </div>
-
-        <div class="streakBox" id="streakBox">
-          <div class="streakIcon">🔥</div>
-          <div>
-            <div class="streakNum" id="streakNum">0 day streak</div>
-            <div class="streakText" id="streakText">Complete at least 1 mission per day.</div>
-          </div>
-        </div>
-
-        <div class="badgesRow" id="badgesRow"></div>
-
-        <div class="certBox" id="certBox">
-          <div class="certLeft">
-            <div class="certIcon">🏆</div>
-            <div>
-              <div class="certTitle">Champion Certificate</div>
-              <div class="certSub" id="certSub">Complete all 30 missions to unlock.</div>
-            </div>
-          </div>
-          <div class="lockPill" id="certPill">🔒 Locked</div>
-        </div>
-
-        <div class="controlsRow">
-          <div class="search" title="Search missions">
-            🔎 <input id="searchInput" placeholder="Search missions (e.g. catch, calm, team)" autocomplete="off" />
-          </div>
-          <button class="toggleChip" id="toggleUnfinished">Only Unfinished</button>
-          <button class="toggleChip" id="btnReset">Reset</button>
-        </div>
-
-        <div class="errorBox" id="errorBox"></div>
-
-        <div class="filters" id="filters"></div>
+      <div class="row">
+        <button class="btn btnPrimary" id="btnRandomAll">🎲 Random</button>
+        <button class="btn btnGhost" id="btnBadges">🏅 Badges</button>
+        <button class="btn btnLime" id="btnReset">Reset</button>
       </div>
+
+      <div class="progressBox" aria-label="progress">
+        <div>
+          <div class="pText" id="progressText">0 / 30 completed</div>
+          <div class="pSub" id="progressSub">Finish all missions to unlock the certificate.</div>
+        </div>
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
+          <div id="progressBarFill"></div>
+        </div>
+      </div>
+
+      <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+
+      <div class="certBox" id="certBox">
+        <div class="certLeft">
+          <div class="certIcon">🏆</div>
+          <div class="certText">
+            <b>Champion Certificate</b>
+            <div id="certSub">Complete all 30 missions to unlock.</div>
+          </div>
+        </div>
+        <a class="certBtn" id="certBtn" href="certificate.pdf" target="_blank" rel="noopener">Download</a>
+      </div>
+
+      <div class="controls">
+        <div class="search">
+          <div class="searchIcon">🔎</div>
+          <input id="searchInput" type="text" placeholder="Search missions (e.g. catch, calm, team)" autocomplete="off" />
+        </div>
+
+        <div class="toggleRow">
+          <button class="chip limeActive" id="btnOnlyUnfinished">Only Unfinished</button>
+          <button class="chip" id="btnChoosePack">Choose Pack</button>
+        </div>
+      </div>
+
+      <div class="filters" id="filters" aria-label="packs"></div>
     </section>
 
-    <section class="grid" id="grid"></section>
+    <section class="list" id="list" aria-label="missions"></section>
 
     <section class="footer">
-      <b>🎉 Share Your Progress</b><br/>
+      <b>Optional downloads</b><br/>
+      If you add these files to the GitHub repo root, links will work:
       <div class="links">
-        <button class="linkBtn" id="btnShare">📤 Share</button>
         <a class="linkBtn" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
-        <a class="linkBtn disabled" href="certificate.pdf" target="_blank" rel="noopener" id="certLink">🏆 Certificate</a>
+        <button class="linkBtn" id="btnShare">📤 Share</button>
       </div>
-      <div class="small" style="margin-top:12px">
-        Support: <a href="mailto:saykirtasiye@gmail.com" style="color:var(--blue);font-weight:900">saykirtasiye@gmail.com</a>
+      <div class="small">
+        Support: <a href="mailto:saykirtasiye@gmail.com">saykirtasiye@gmail.com</a>
       </div>
     </section>
   </div>
 
-  <!-- Bottom Sheet -->
-  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true">
+  <!-- Mission Modal -->
+  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-label="Mission details">
     <div class="sheet" id="sheet">
       <div class="sheetTop">
         <div>
@@ -658,27 +566,44 @@
         </div>
         <button class="close" id="btnClose">✕</button>
       </div>
-      <div class="sheetBody">
-        <div class="kv" id="mSteps"></div>
-        <div class="kv" id="mWin"></div>
-        <div class="kv" id="mTip"></div>
-        <div class="kv" id="mSafety"></div>
 
-        <div class="sheetActions">
-          <button class="btn btnPrimary" id="btnToggleDone">✅ Mark as Done</button>
-          <button class="btn btnGhost" id="btnNext">➡️ Next Mission</button>
-          <button class="btn btnGhost" id="btnRandomPack">🎲 Random from Pack</button>
-        </div>
+      <div class="kv" id="mSteps"></div>
+      <div class="kv" id="mWin"></div>
+      <div class="kv" id="mTip"></div>
+      <div class="kv" id="mSafety"></div>
 
-        <div class="small" id="mSmall"></div>
+      <div class="sheetActions">
+        <button class="btn btnPrimary" id="btnToggleDone">✅ Mark as Done</button>
+        <button class="btn btnGhost" id="btnNext">➡️ Next</button>
+        <button class="btn btnGhost" id="btnRandomPack">🎲 Random from Pack</button>
       </div>
+
+      <div class="small" id="mSmall"></div>
     </div>
   </div>
 
+  <!-- Badges Modal -->
+  <div class="backdrop" id="badgesBackdrop" role="dialog" aria-modal="true" aria-label="Badges">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">🏅 Badges</div>
+          <div class="small">Unlock badges by completing missions.</div>
+        </div>
+        <button class="close" id="btnBadgesClose">✕</button>
+      </div>
+      <div class="kv" id="badgesList"></div>
+      <div class="small">Badges update automatically on this phone.</div>
+    </div>
+  </div>
+
+  <!-- Floating sound toggle -->
   <button class="soundToggle" id="soundToggle" title="Toggle sound">🔊</button>
 
 <script>
-/** ✅ Zoom blockers **/
+/** =======================
+ *  Disable zoom (iOS + desktop)
+ *  ======================= */
 (function disableZoom(){
   ["gesturestart","gesturechange","gestureend"].forEach(evt=>{
     document.addEventListener(evt, (e)=>e.preventDefault(), { passive:false });
@@ -686,14 +611,60 @@
   let lastTouchEnd = 0;
   document.addEventListener("touchend", function(e){
     const now = Date.now();
-    if(now - lastTouchEnd <= 300) e.preventDefault();
+    if(now - lastTouchEnd <= 300){ e.preventDefault(); }
     lastTouchEnd = now;
   }, { passive:false });
   document.addEventListener("dblclick", (e)=>e.preventDefault(), { passive:false });
   document.addEventListener("wheel", (e)=>{ if(e.ctrlKey) e.preventDefault(); }, { passive:false });
 })();
 
-/** ========= DATA ========= **/
+/** =======================
+ *  Sound (Web Audio) — works on iOS after first user tap
+ *  ======================= */
+const SOUND_KEY = "jumvi_sound_on_v1";
+let soundOn = (localStorage.getItem(SOUND_KEY) ?? "1") === "1";
+let audioCtx = null;
+
+function ensureAudio(){
+  if(!soundOn) return null;
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    audioCtx = new AC();
+  }
+  if(audioCtx.state === "suspended"){
+    // will resume on user gesture
+    audioCtx.resume().catch(()=>{});
+  }
+  return audioCtx;
+}
+
+function clickSound(type="click"){
+  if(!soundOn) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  // short, soft UI click
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(type==="success" ? 820 : 1050, t0);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(type==="success" ? 0.08 : 0.06, t0 + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.06);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(t0);
+  osc.stop(t0 + 0.07);
+}
+
+/** =======================
+ *  Data
+ *  ======================= */
 const PACKS = [
   { key:"all", name:"All Packs" },
   { key:"Reflex Rush", name:"Reflex Rush" },
@@ -703,21 +674,11 @@ const PACKS = [
   { key:"Indoor Compact", name:"Indoor Compact" },
 ];
 
-const BADGES = [
-  { id:"first", icon:"⭐", name:"First Steps", req:"Complete 1 mission", check: (d,m)=>d.size>=1 },
-  { id:"reflex", icon:"⚡", name:"Speed Demon", req:"Complete all Reflex Rush", check: (d,m)=>m.filter(x=>x.pack==="Reflex Rush"&&d.has(x.id)).length>=6 },
-  { id:"aim", icon:"🎯", name:"Sharpshooter", req:"Complete all Aim Master", check: (d,m)=>m.filter(x=>x.pack==="Aim Master"&&d.has(x.id)).length>=6 },
-  { id:"focus", icon:"🧘", name:"Zen Master", req:"Complete all Focus Control", check: (d,m)=>m.filter(x=>x.pack==="Focus Control"&&d.has(x.id)).length>=6 },
-  { id:"team", icon:"👥", name:"Team Player", req:"Complete all Team Duo", check: (d,m)=>m.filter(x=>x.pack==="Team Duo"&&d.has(x.id)).length>=6 },
-  { id:"indoor", icon:"🏠", name:"Indoor Hero", req:"Complete all Indoor Compact", check: (d,m)=>m.filter(x=>x.pack==="Indoor Compact"&&d.has(x.id)).length>=6 },
-  { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 30", check: (d,m)=>d.size>=30 },
-];
-
 function m(id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip){
   return { id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip };
 }
 
-/** ✅ Full 30 missions (safe strings; quotes escaped) **/
+// 30 missions (5 packs × 6)
 const missions = [
   // Reflex Rush (6)
   m(1,"Reflex Rush","⚡","Flash Catch",1,"2","45s","3+",
@@ -756,12 +717,12 @@ const missions = [
     ["Aim for the middle of the paddle.","Soft arc throws.","Switch after 10 throws."],
     "Most center hits wins.",
     "No hard throws.",
-    "Use short distance first."),
+    "Start closer for younger kids."),
   m(8,"Aim Master","🟧","Landing Zone",1,"1-2","90s","4+",
     ["Imagine a circle in front of you.","Throw so the ball lands in it.","Catch after the bounce (optional)."],
     "5 clean landings wins.",
     "Bounce is optional.",
-    "Works great in a hallway/yard."),
+    "Great in a hallway/yard."),
   m(9,"Aim Master","📏","Distance Ladder",2,"2","120s","5+",
     ["Start 1 meter apart.","After 3 clean catches, step back 1 step.","Keep going."],
     "Farthest distance wins.",
@@ -777,7 +738,7 @@ const missions = [
     "10 slow catches wins.",
     "No rushing.",
     "Perfect for younger kids."),
-  m(12,"Aim Master","🎯","Corner Aim",2,"2","120s","6+",
+  m(12,"Aim Master","📍","Corner Aim",2,"2","120s","6+",
     ["Pick a ‘corner’ area of the paddle.","Aim there every throw.","Switch corners after 5."],
     "Most correct-corner hits wins.",
     "Keep throws gentle.",
@@ -880,90 +841,81 @@ const missions = [
     "Great skill drill."),
 ];
 
-/** ========= STATE ========= **/
-const LS_DONE   = "jumvi_done_v3";
-const LS_SOUND  = "jumvi_sound_v1";
-const LS_STREAK = "jumvi_streak_v1";
+const BADGES = [
+  { id:"first", icon:"⭐", name:"First Steps", req:"Complete 1 mission",
+    check: (done)=>done.size>=1 },
+  { id:"speedy", icon:"⚡", name:"Speed Demon", req:"Complete all Reflex Rush",
+    check: (done)=>missions.filter(x=>x.pack==="Reflex Rush" && done.has(x.id)).length>=6 },
+  { id:"sharp", icon:"🎯", name:"Sharpshooter", req:"Complete all Aim Master",
+    check: (done)=>missions.filter(x=>x.pack==="Aim Master" && done.has(x.id)).length>=6 },
+  { id:"zen", icon:"🧘", name:"Zen Master", req:"Complete all Focus Control",
+    check: (done)=>missions.filter(x=>x.pack==="Focus Control" && done.has(x.id)).length>=6 },
+  { id:"team", icon:"👥", name:"Team Player", req:"Complete all Team Duo",
+    check: (done)=>missions.filter(x=>x.pack==="Team Duo" && done.has(x.id)).length>=6 },
+  { id:"indoor", icon:"🏠", name:"Indoor Hero", req:"Complete all Indoor Compact",
+    check: (done)=>missions.filter(x=>x.pack==="Indoor Compact" && done.has(x.id)).length>=6 },
+  { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 30 missions",
+    check: (done)=>done.size>=30 },
+];
 
-let done = new Set(JSON.parse(localStorage.getItem(LS_DONE) || "[]"));
+/** =======================
+ *  State
+ *  ======================= */
+const LS_KEY = "jumvi_missions_done_v3";
+let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
+
+const ONLY_KEY = "jumvi_only_unfinished_v1";
+let onlyUnfinished = (localStorage.getItem(ONLY_KEY) ?? "0") === "1";
+
 let currentPack = "all";
-let lastOpenedId = null;
 let searchQuery = "";
-let onlyUnfinished = false;
+let lastOpenedId = null;
 
-/** streak data shape */
-function getStreak(){
-  try{ return JSON.parse(localStorage.getItem(LS_STREAK) || "{}"); }catch{ return {}; }
-}
-function setStreak(obj){
-  localStorage.setItem(LS_STREAK, JSON.stringify(obj));
-}
-
-/** ========= UI refs ========= **/
-const grid = document.getElementById("grid");
-const filters = document.getElementById("filters");
-const badgesRow = document.getElementById("badgesRow");
+/** =======================
+ *  Refs
+ *  ======================= */
+const listEl = document.getElementById("list");
+const filtersEl = document.getElementById("filters");
 const progressText = document.getElementById("progressText");
 const progressSub = document.getElementById("progressSub");
 const progressFill = document.getElementById("progressBarFill");
-const certPill = document.getElementById("certPill");
+const certBtn = document.getElementById("certBtn");
 const certSub = document.getElementById("certSub");
-const certLink = document.getElementById("certLink");
-const errorBox = document.getElementById("errorBox");
-
-const streakBox = document.getElementById("streakBox");
-const streakNum = document.getElementById("streakNum");
-const streakText = document.getElementById("streakText");
+const badgesRow = document.getElementById("badgesRow");
 
 const backdrop = document.getElementById("backdrop");
 const btnClose = document.getElementById("btnClose");
+const sheet = document.getElementById("sheet");
 
 const mTitle = document.getElementById("mTitle");
-const mMeta = document.getElementById("mMeta");
+const mMeta  = document.getElementById("mMeta");
 const mSteps = document.getElementById("mSteps");
-const mWin = document.getElementById("mWin");
-const mTip = document.getElementById("mTip");
-const mSafety = document.getElementById("mSafety");
+const mWin   = document.getElementById("mWin");
+const mTip   = document.getElementById("mTip");
+const mSafety= document.getElementById("mSafety");
 const mSmall = document.getElementById("mSmall");
 
 const btnToggleDone = document.getElementById("btnToggleDone");
 const btnNext = document.getElementById("btnNext");
 const btnRandomPack = document.getElementById("btnRandomPack");
 
-/** ========= SOUND ========= **/
-let soundOn = (localStorage.getItem(LS_SOUND) ?? "1") === "1";
+const badgesBackdrop = document.getElementById("badgesBackdrop");
+const btnBadgesClose = document.getElementById("btnBadgesClose");
+const badgesList = document.getElementById("badgesList");
+
+const searchInput = document.getElementById("searchInput");
+const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
 const soundToggle = document.getElementById("soundToggle");
-function renderSound(){
-  soundToggle.textContent = soundOn ? "🔊" : "🔇";
-  soundToggle.classList.toggle("muted", !soundOn);
+
+/** =======================
+ *  Helpers
+ *  ======================= */
+function persist(){
+  localStorage.setItem(LS_KEY, JSON.stringify([...done]));
 }
-function clickSound(){
-  if(!soundOn) return;
-  try{
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioCtx();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "sine";
-    o.frequency.value = 520;
-    g.gain.value = 0.05;
-    o.connect(g); g.connect(ctx.destination);
-    o.start();
-    setTimeout(()=>{ o.stop(); ctx.close(); }, 70);
-  }catch(e){}
+function persistOnly(){
+  localStorage.setItem(ONLY_KEY, onlyUnfinished ? "1" : "0");
 }
-soundToggle.addEventListener("click", ()=>{
-  soundOn = !soundOn;
-  localStorage.setItem(LS_SOUND, soundOn ? "1" : "0");
-  renderSound();
-  clickSound();
-});
-
-/** ========= HELPERS ========= **/
-function persistDone(){ localStorage.setItem(LS_DONE, JSON.stringify([...done])); }
-
-function diffLabel(d){ return d===1 ? "Easy" : d===2 ? "Medium" : "Hard"; }
-
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -972,99 +924,97 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-
-function todayISO(){
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const da = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${da}`;
-}
-function yesterdayISO(){
-  const d = new Date(Date.now() - 86400000);
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const da = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${da}`;
+function diffLabel(d){
+  if(d===1) return "Easy";
+  if(d===2) return "Medium";
+  return "Hard";
 }
 
-function updateStreakOnComplete(){
-  const t = todayISO();
-  const y = yesterdayISO();
-  const s = getStreak();
-  const last = s.last || null;
-  let count = Number(s.count || 0);
-
-  if(last === t){
-    // same day: no change
-  }else if(last === y){
-    count += 1;
-  }else{
-    count = 1;
-  }
-
-  setStreak({ last: t, count });
-  renderStreak();
-}
-
-function renderStreak(){
-  const s = getStreak();
-  const count = Number(s.count || 0);
-  if(count > 0){
-    streakBox.classList.add("show");
-    streakNum.textContent = `${count} day streak`;
-    streakText.textContent = "Complete at least 1 mission per day to keep it!";
-  }else{
-    streakBox.classList.remove("show");
-  }
-}
-
-/** ========= FILTERS / LIST ========= **/
-function filteredMissions(){
-  let list = missions;
-
-  if(currentPack !== "all"){
-    list = list.filter(x => x.pack === currentPack);
-  }
-
-  if(searchQuery.trim()){
-    const q = searchQuery.trim().toLowerCase();
-    list = list.filter(x =>
-      x.title.toLowerCase().includes(q) ||
-      x.pack.toLowerCase().includes(q) ||
-      x.steps.join(" ").toLowerCase().includes(q)
-    );
-  }
-
-  if(onlyUnfinished){
-    list = list.filter(x => !done.has(x.id));
-  }
-
-  return list;
-}
-
+/** =======================
+ *  Rendering
+ *  ======================= */
 function renderFilters(){
-  filters.innerHTML = "";
+  filtersEl.innerHTML = "";
   PACKS.forEach(p=>{
     const b = document.createElement("button");
     b.className = "chip" + (p.key===currentPack ? " active" : "");
     b.textContent = p.name;
     b.onclick = ()=>{
-      clickSound();
+      clickSound("click");
       currentPack = p.key;
       renderFilters();
-      renderGrid();
+      renderList();
     };
-    filters.appendChild(b);
+    filtersEl.appendChild(b);
   });
 }
 
-function renderBadges(){
+function getVisibleMissions(){
+  let list = missions;
+
+  if(currentPack !== "all"){
+    list = list.filter(x=>x.pack===currentPack);
+  }
+
+  if(onlyUnfinished){
+    list = list.filter(x=>!done.has(x.id));
+  }
+
+  const q = searchQuery.trim().toLowerCase();
+  if(q){
+    list = list.filter(x=>{
+      const hay = `${x.title} ${x.pack} ${x.steps.join(" ")} ${x.tip} ${x.win}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  return list;
+}
+
+function renderList(){
+  const list = getVisibleMissions();
+  listEl.innerHTML = "";
+
+  if(list.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "kv";
+    empty.innerHTML = "<b>No missions found.</b><br/>Try a different pack or clear search.";
+    listEl.appendChild(empty);
+    updateProgress();
+    return;
+  }
+
+  list.forEach(ms=>{
+    const c = document.createElement("div");
+    const isDone = done.has(ms.id);
+    c.className = "card" + (isDone ? " done" : "");
+    c.innerHTML = `
+      <div class="mIcon">${ms.icon}</div>
+      <div class="mMain">
+        <div class="mTitle">${escapeHtml(ms.title)}</div>
+        <div class="mMeta">
+          <span class="tag pack">${escapeHtml(ms.pack)}</span>
+          <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+          <span class="tag smallHide">👥 ${escapeHtml(ms.players)}</span>
+          <span class="tag smallHide">🎂 ${escapeHtml(ms.age)}</span>
+        </div>
+      </div>
+      <div class="donePill">Done ✓</div>
+    `;
+    c.onclick = ()=>{ clickSound("click"); openMission(ms.id); };
+    listEl.appendChild(c);
+  });
+
+  updateProgress();
+}
+
+function updateBadges(){
   badgesRow.innerHTML = "";
+  const unlocked = new Set();
   BADGES.forEach(b=>{
-    const unlocked = !!b.check(done, missions);
+    const ok = !!b.check(done);
+    if(ok) unlocked.add(b.id);
     const el = document.createElement("div");
-    el.className = "badge " + (unlocked ? "unlocked" : "locked");
+    el.className = "badge" + (ok ? " unlocked" : "");
     el.innerHTML = `
       <div class="badgeIcon">${b.icon}</div>
       <div class="badgeName">${escapeHtml(b.name)}</div>
@@ -1072,20 +1022,29 @@ function renderBadges(){
     `;
     badgesRow.appendChild(el);
   });
-}
 
-function updateCertificateUI(){
-  const completed = done.size;
-  if(completed >= missions.length){
-    certPill.textContent = "✅ Unlocked";
-    certPill.classList.add("unlocked");
-    certSub.textContent = "Unlocked! Download your certificate 🎉";
-    certLink.classList.remove("disabled");
+  // badges modal list (pretty)
+  badgesList.innerHTML = BADGES.map(b=>{
+    const ok = !!b.check(done);
+    return `
+      <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); margin-top:10px;">
+        <div style="font-size:22px; width:34px">${b.icon}</div>
+        <div style="flex:1">
+          <div style="font-weight:950">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
+          <div style="color: rgba(169,184,214,.9); font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // certificate unlock
+  const unlockedAll = done.size >= missions.length;
+  if(unlockedAll){
+    certBtn.classList.add("unlocked");
+    certSub.textContent = "Unlocked! Download your certificate.";
   }else{
-    certPill.textContent = "🔒 Locked";
-    certPill.classList.remove("unlocked");
+    certBtn.classList.remove("unlocked");
     certSub.textContent = "Complete all 30 missions to unlock.";
-    certLink.classList.add("disabled");
   }
 }
 
@@ -1098,68 +1057,20 @@ function updateProgress(){
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
 
   if(completed>=total){
-    progressSub.textContent = "All missions completed! Certificate unlocked 🎉";
-  }else if(completed>=10){
-    progressSub.textContent = "Nice! Keep going — you’re building real skills.";
+    progressSub.textContent = "All missions completed! Certificate unlocked 🏆";
+  }else if(completed>=15){
+    progressSub.textContent = "Halfway there — keep going!";
+  }else if(completed>=5){
+    progressSub.textContent = "Nice start — build the streak!";
   }else{
-    progressSub.textContent = "Start your first mission to begin!";
+    progressSub.textContent = "Finish all missions to unlock the certificate.";
   }
+  updateBadges();
 }
 
-function renderGrid(){
-  const list = filteredMissions();
-  grid.innerHTML = "";
-
-  if(list.length === 0){
-    const empty = document.createElement("div");
-    empty.style.padding = "14px";
-    empty.style.border = "1px solid rgba(255,255,255,.12)";
-    empty.style.borderRadius = "18px";
-    empty.style.background = "rgba(255,255,255,.04)";
-    empty.style.color = "rgba(234,242,255,.9)";
-    empty.style.fontWeight = "900";
-    empty.textContent = "No missions found for this filter.";
-    grid.appendChild(empty);
-    updateProgress();
-    updateCertificateUI();
-    renderBadges();
-    return;
-  }
-
-  list.forEach(ms=>{
-    const c = document.createElement("div");
-    const isDone = done.has(ms.id);
-    c.className = "card" + (isDone ? " done" : "");
-    c.innerHTML = `
-      <div class="doneBadge">DONE ✅</div>
-      <div class="cardHead">
-        <div class="left">
-          <div class="icon">${ms.icon}</div>
-          <div>
-            <div class="title">${escapeHtml(ms.title)}</div>
-            <div class="meta">
-              <span class="tag pack">${escapeHtml(ms.pack)}</span>
-              <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
-              <span class="tag">👥 ${escapeHtml(ms.players)}</span>
-              <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ol class="steps">
-        ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
-      </ol>
-    `;
-    c.onclick = ()=>{ clickSound(); openMission(ms.id); };
-    grid.appendChild(c);
-  });
-
-  updateProgress();
-  updateCertificateUI();
-  renderBadges();
-}
-
-/** ========= MODAL ========= **/
+/** =======================
+ *  Modal
+ *  ======================= */
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
@@ -1173,9 +1084,10 @@ function openMission(id){
     <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
   `;
 
-  mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px; line-height:1.45">
+  mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px">
     ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
   </ol>`;
+
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
   mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
@@ -1183,118 +1095,136 @@ function openMission(id){
   const isDone = done.has(ms.id);
   btnToggleDone.textContent = isDone ? "✅ Mark as NOT Done" : "✅ Mark as Done";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+
   mSmall.textContent = "Progress is saved on this phone automatically.";
 
   backdrop.classList.add("show");
-  document.getElementById("sheet").scrollTop = 0;
+  sheet.scrollTop = 0;
 }
 
-function closeMission(){ backdrop.classList.remove("show"); }
-btnClose.onclick = ()=>{ clickSound(); closeMission(); };
-backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop) closeMission(); });
+function closeMission(){
+  backdrop.classList.remove("show");
+}
+
+btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
+backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
 
 btnToggleDone.onclick = ()=>{
   if(lastOpenedId==null) return;
-  clickSound();
-  if(done.has(lastOpenedId)){
-    done.delete(lastOpenedId);
-  }else{
-    done.add(lastOpenedId);
-    updateStreakOnComplete();
-  }
-  persistDone();
-  renderGrid();
-  openMission(lastOpenedId);
+  const wasDone = done.has(lastOpenedId);
+  if(wasDone) done.delete(lastOpenedId);
+  else done.add(lastOpenedId);
+
+  persist();
+  renderList();
+  clickSound(wasDone ? "click" : "success");
+  openMission(lastOpenedId); // refresh modal state
 };
 
 btnNext.onclick = ()=>{
   if(lastOpenedId==null) return;
-  clickSound();
-  const list = filteredMissions();
+  const list = getVisibleMissions();
   const idx = list.findIndex(x=>x.id===lastOpenedId);
   const next = list[(idx+1) % list.length];
+  clickSound("click");
   openMission(next.id);
 };
 
 btnRandomPack.onclick = ()=>{
   if(lastOpenedId==null) return;
-  clickSound();
   const ms = missions.find(x=>x.id===lastOpenedId);
   const list = missions.filter(x=>x.pack===ms.pack);
   const pick = list[Math.floor(Math.random()*list.length)];
+  clickSound("click");
   openMission(pick.id);
 };
 
-/** ========= ACTIONS ========= **/
+/** =======================
+ *  Actions
+ *  ======================= */
 document.getElementById("btnRandomAll").onclick = ()=>{
-  clickSound();
+  clickSound("click");
   const pick = missions[Math.floor(Math.random()*missions.length)];
   openMission(pick.id);
 };
 
-document.getElementById("btnChoosePack").onclick = ()=>{
-  clickSound();
-  document.getElementById("filters").scrollIntoView({behavior:"smooth", block:"start"});
-};
-
-document.getElementById("btnShowBadges").onclick = ()=>{
-  clickSound();
-  document.getElementById("badgesRow").scrollIntoView({behavior:"smooth", block:"start"});
-};
-
 document.getElementById("btnReset").onclick = ()=>{
-  clickSound();
+  clickSound("click");
   if(!confirm("Reset progress on this phone?")) return;
   done = new Set();
-  persistDone();
-  setStreak({});
-  renderStreak();
-  renderGrid();
+  persist();
+  renderList();
   closeMission();
 };
 
+document.getElementById("btnBadges").onclick = ()=>{
+  clickSound("click");
+  badgesBackdrop.classList.add("show");
+};
+
+btnBadgesClose.onclick = ()=>{ clickSound("click"); badgesBackdrop.classList.remove("show"); };
+badgesBackdrop.addEventListener("click",(e)=>{ if(e.target===badgesBackdrop){ clickSound("click"); badgesBackdrop.classList.remove("show"); } });
+
 document.getElementById("btnShare").onclick = async ()=>{
-  clickSound();
+  clickSound("click");
   const url = location.href;
-  const msg = `I completed ${done.size}/${missions.length} JUMVI missions!`;
+  const text = `JUMVI Missions progress: ${done.size}/${missions.length}`;
   try{
     if(navigator.share){
-      await navigator.share({ title:"JUMVI Missions", text: msg, url });
+      await navigator.share({ title:"JUMVI Missions", text, url });
     }else{
-      await navigator.clipboard.writeText(`${msg}\n${url}`);
-      alert("Copied!");
+      await navigator.clipboard.writeText(url);
+      alert("Link copied!");
     }
   }catch(e){}
 };
 
-/** search + unfinished toggle */
-document.getElementById("searchInput").addEventListener("input",(e)=>{
-  searchQuery = e.target.value || "";
-  renderGrid();
-});
-const toggleUnfinishedBtn = document.getElementById("toggleUnfinished");
-toggleUnfinishedBtn.onclick = ()=>{
-  clickSound();
-  onlyUnfinished = !onlyUnfinished;
-  toggleUnfinishedBtn.classList.toggle("active", onlyUnfinished);
-  renderGrid();
+document.getElementById("btnChoosePack").onclick = ()=>{
+  clickSound("click");
+  document.getElementById("filters").scrollIntoView({behavior:"smooth", block:"start"});
 };
 
-/** ========= INIT ========= **/
-function init(){
-  renderSound();
-  renderFilters();
-  renderStreak();
-  renderGrid();
-}
+searchInput.addEventListener("input", ()=>{
+  searchQuery = searchInput.value || "";
+  renderList();
+});
 
-try{
-  init();
-}catch(err){
-  console.error(err);
-  errorBox.classList.add("show");
-  errorBox.textContent = "⚠️ Something went wrong. Please refresh. If it continues, copy this screen to support: " + (err?.message || "Unknown error");
+btnOnlyUnfinished.onclick = ()=>{
+  clickSound("click");
+  onlyUnfinished = !onlyUnfinished;
+  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+  persistOnly();
+  renderList();
+};
+
+/** =======================
+ *  Sound toggle
+ *  ======================= */
+function renderSoundToggle(){
+  soundToggle.classList.toggle("muted", !soundOn);
+  soundToggle.textContent = soundOn ? "🔊" : "🔇";
 }
+soundToggle.onclick = ()=>{
+  soundOn = !soundOn;
+  localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+  renderSoundToggle();
+  // If turning on, try to unlock audio on tap
+  if(soundOn){
+    ensureAudio();
+    clickSound("click");
+  }
+};
+
+/** =======================
+ *  Init
+ *  ======================= */
+function init(){
+  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+  renderSoundToggle();
+  renderFilters();
+  renderList();
+}
+init();
 </script>
 </body>
 </html>
