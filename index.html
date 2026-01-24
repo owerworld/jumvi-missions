@@ -344,8 +344,9 @@
       padding:12px 12px;
       min-height:44px;
       cursor:pointer;
+    }
+    .certBtn.locked{
       opacity:.55;
-      pointer-events:none;
     }
     .certBtn.unlocked{
       opacity:1;
@@ -470,6 +471,242 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
+  
+    /* Certificate + confetti + toast */
+    .certBox.unlockedPulse{
+      animation: certPulse 1.15s ease-in-out 0s 1;
+      border-color: rgba(151,215,0,.55);
+      box-shadow: 0 0 0 4px rgba(151,215,0,.10), 0 18px 55px rgba(0,0,0,.35);
+    }
+    @keyframes certPulse{
+      0%{ transform: scale(1); }
+      18%{ transform: scale(1.015); }
+      36%{ transform: scale(1); }
+      55%{ transform: scale(1.01); }
+      100%{ transform: scale(1); }
+    }
+
+    .toast{
+      position:fixed;
+      top: calc(env(safe-area-inset-top) + 10px);
+      left:50%;
+      transform: translateX(-50%) translateY(-12px);
+      z-index:95;
+      padding:12px 14px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(10,27,56,.92);
+      color: var(--text);
+      font-weight:950;
+      font-size:13px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity .2s ease, transform .2s ease;
+      max-width: calc(100vw - 24px);
+      text-align:center;
+    }
+    .toast.show{
+      opacity:1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #confettiCanvas{
+      position:fixed;
+      inset:0;
+      z-index:90;
+      pointer-events:none;
+      display:none;
+    }
+
+    /* Certificate sheet */
+    .certWrap{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .certPaper{
+      width:100%;
+      background: #ffffff;
+      color:#0b1a2e;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow: 0 18px 55px rgba(0,0,0,.30);
+    }
+    .certInner{
+      padding: 22px 22px;
+      background:
+        radial-gradient(900px 520px at 12% 0%, rgba(79,179,255,.16), transparent 60%),
+        radial-gradient(820px 520px at 92% 18%, rgba(151,215,0,.14), transparent 60%),
+        radial-gradient(650px 480px at 62% 98%, rgba(255,106,0,.12), transparent 60%),
+        #ffffff;
+      min-height: 520px;
+    }
+    .certHeader{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .certBrand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 950;
+      letter-spacing: .2px;
+    }
+    .certLogo{
+      width:44px; height:44px;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,.10);
+      background: #f3f7ff;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .certLogo img{ width:100%; height:100%; object-fit:contain; padding:7px; }
+    .certMetaMini{
+      font-size:12px;
+      font-weight:900;
+      opacity:.75;
+      text-align:right;
+      white-space:nowrap;
+    }
+
+    .certTitle{
+      margin:16px 0 6px;
+      font-size: 26px;
+      font-weight: 1000;
+      letter-spacing: -.3px;
+    }
+    .certSubtitle{
+      margin:0;
+      font-size: 13px;
+      font-weight: 850;
+      opacity:.75;
+      line-height: 1.4;
+    }
+
+    .certName{
+      margin-top:18px;
+      font-size: 22px;
+      font-weight: 1000;
+      letter-spacing: -.2px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px dashed rgba(11,26,46,.25);
+      background: rgba(79,179,255,.06);
+    }
+
+    .certBody{
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.6;
+      opacity: .92;
+      max-width: 70ch;
+    }
+
+    .certFooter{
+      margin-top: 22px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-end;
+    }
+    .certBoxMini{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(0,0,0,.10);
+      background: rgba(0,0,0,.03);
+      font-size: 12px;
+      font-weight: 900;
+      min-width: 210px;
+    }
+    .sig{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      align-items:flex-start;
+      min-width: 210px;
+    }
+    .sigLine{
+      width: 210px;
+      height: 1px;
+      background: rgba(0,0,0,.35);
+    }
+    .sigText{
+      font-size: 12px;
+      font-weight: 950;
+      opacity:.85;
+    }
+
+    .certControls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .field{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .field label{
+      font-size: 12px;
+      font-weight: 950;
+      color: rgba(234,242,255,.9);
+      white-space:nowrap;
+    }
+    .field input{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 12px;
+      font-weight: 950;
+      font-size: 16px; /* iOS: prevent zoom */
+      min-height:44px;
+      outline:0;
+      width:min(340px, 58vw);
+    }
+
+    /* Print: certificate only (US Letter / A4 friendly) */
+    @media print{
+      html, body{
+        background:#ffffff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .sticky, .wrap, .soundToggle, #confettiCanvas, .toast, #badgesBackdrop, #backdrop{
+        display:none !important;
+      }
+      #certBackdrop{
+        position:static !important;
+        display:block !important;
+        background: transparent !important;
+        padding:0 !important;
+      }
+      #certBackdrop .sheet{
+        max-height:none !important;
+        overflow:visible !important;
+        box-shadow:none !important;
+        border:0 !important;
+        background: transparent !important;
+        padding:0 !important;
+      }
+      .certPaper{
+        border: 1px solid rgba(0,0,0,.15) !important;
+        box-shadow:none !important;
+        max-width: 186mm !important;
+        margin: 0 auto !important;
+      }
+      /* Keep a clean margin for both A4 and Letter */
+      @page{
+        margin: 12mm;
+      }
+    }
+
   </style>
 </head>
 
@@ -523,7 +760,7 @@
             <div id="certSub">Complete all 30 missions to unlock.</div>
           </div>
         </div>
-        <a class="certBtn" id="certBtn" href="certificate.pdf" target="_blank" rel="noopener">Download</a>
+        <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
       </div>
 
       <div class="controls">
@@ -597,6 +834,88 @@
     </div>
   </div>
 
+
+  <!-- Toast + Confetti -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Certificate Modal -->
+  <div class="backdrop" id="certBackdrop" role="dialog" aria-modal="true" aria-label="Certificate">
+    <div class="sheet" id="certSheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">🏆 Champion Certificate</div>
+          <div class="small">Print on US Letter or A4 (Save as PDF).</div>
+        </div>
+        <button class="close" id="btnCertClose">✕</button>
+      </div>
+
+      <div class="certWrap">
+        <div class="field" style="justify-content:space-between; flex-wrap:wrap;">
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <label for="certNameInput">Name on certificate</label>
+            <input id="certNameInput" type="text" placeholder="(Optional) e.g. Alex" autocomplete="off" />
+          </div>
+          <div class="certControls">
+            <button class="btn btnLime" id="btnCertPrint">🖨️ Print / Save PDF</button>
+            <button class="btn btnGhost" id="btnCertShare">📤 Share</button>
+          </div>
+        </div>
+
+        <div class="certPaper" id="certPaper">
+          <div class="certInner">
+            <div class="certHeader">
+              <div class="certBrand">
+                <div class="certLogo" title="JUMVI">
+                  <img src="jumvi_logo.png" alt="JUMVI logo" onerror="this.style.display='none';" />
+                </div>
+                <div>
+                  <div style="font-size:14px; font-weight:1000;">JUMVI</div>
+                  <div style="font-size:12px; font-weight:900; opacity:.75;">Missions Program</div>
+                </div>
+              </div>
+              <div class="certMetaMini">
+                <div id="certDateText">Date: —</div>
+                <div id="certIdText">Certificate ID: —</div>
+              </div>
+            </div>
+
+            <div class="certTitle">Champion Certificate</div>
+            <p class="certSubtitle">This certificate is awarded to the player who completed all missions.</p>
+
+            <div class="certName" id="certNameText">JUMVI Champion</div>
+
+            <div class="certBody">
+              Completed <b>all 30 missions</b> in the JUMVI Toss &amp; Catch Paddle Set program (Kids 3–8),
+              demonstrating consistency, safe play, and great hand-eye coordination.
+              <br/><br/>
+              Keep practicing with gentle throws below face level and have fun together!
+            </div>
+
+            <div class="certFooter">
+              <div class="certBoxMini">
+                <div style="font-weight:1000">Achievement</div>
+                <div style="margin-top:6px; opacity:.85">
+                  Missions: <span id="certMissionText">30/30</span><br/>
+                  Badge: <b>Champion 🏆</b>
+                </div>
+              </div>
+
+              <div class="sig">
+                <div class="sigLine"></div>
+                <div class="sigText">JUMVI Team</div>
+                <div style="font-size:11px; font-weight:850; opacity:.70">Safe play • Kids 3–8</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="small">Tip: For best print quality, choose “Background graphics” ON in print settings.</div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Floating sound toggle -->
   <button class="soundToggle" id="soundToggle" title="Toggle sound">🔊</button>
 
@@ -661,6 +980,125 @@ function clickSound(type="click"){
   osc.start(t0);
   osc.stop(t0 + 0.07);
 }
+
+/** =======================
+ *  Toast (small notification)
+ *  ======================= */
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById("toast");
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove("show"), 1800);
+}
+
+/** =======================
+ *  Confetti (tiny, no library)
+ *  ======================= */
+function fireConfetti(durationMs=1100){
+  const canvas = document.getElementById("confettiCanvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const resize = ()=>{
+    canvas.width  = Math.floor(window.innerWidth * DPR);
+    canvas.height = Math.floor(window.innerHeight * DPR);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  };
+  resize();
+  canvas.style.display = "block";
+
+  const colors = ["#4FB3FF","#97D700","#FF6A00","#EAF2FF"];
+  const parts = [];
+  const n = 130;
+
+  for(let i=0;i<n;i++){
+    parts.push({
+      x: Math.random()*window.innerWidth,
+      y: -20 - Math.random()*window.innerHeight*0.4,
+      r: 3 + Math.random()*4,
+      vx: -2.5 + Math.random()*5,
+      vy: 2 + Math.random()*5,
+      rot: Math.random()*Math.PI,
+      vr: -0.2 + Math.random()*0.4,
+      c: colors[Math.floor(Math.random()*colors.length)],
+      a: 0.9
+    });
+  }
+
+  const tStart = performance.now();
+  function step(t){
+    const elapsed = t - tStart;
+    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+
+    parts.forEach(p=>{
+      p.vy += 0.045; // gravity
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.a = Math.max(0, 0.9 - elapsed/(durationMs*1.15));
+
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*1.2);
+      ctx.restore();
+    });
+
+    if(elapsed < durationMs){
+      requestAnimationFrame(step);
+    }else{
+      canvas.style.display = "none";
+      ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+/** =======================
+ *  Ensure iOS audio works (resume on first tap)
+ *  ======================= */
+let audioUnlocked = false;
+function unlockAudioOnce(){
+  if(audioUnlocked || !soundOn) return;
+  const ctx = ensureAudio();
+  if(ctx){
+    ctx.resume().then(()=>{ audioUnlocked = true; }).catch(()=>{});
+  }
+}
+window.addEventListener("pointerdown", unlockAudioOnce, { passive:true });
+window.addEventListener("touchstart", unlockAudioOnce, { passive:true });
+
+/** =======================
+ *  Certificate helpers
+ *  ======================= */
+const CERT_ID_KEY   = "jumvi_cert_id_v1";
+const CERT_NAME_KEY = "jumvi_cert_name_v1";
+
+function getCertId(){
+  let id = localStorage.getItem(CERT_ID_KEY);
+  if(id) return id;
+  // simple readable id: JUMVI-XXXX-XXXX
+  const rand = ()=> Math.random().toString(16).slice(2,6).toUpperCase();
+  id = `JUMVI-${rand()}-${rand()}`;
+  localStorage.setItem(CERT_ID_KEY, id);
+  return id;
+}
+function getToday(){
+  try{
+    return new Date().toLocaleDateString("en-US", { year:"numeric", month:"short", day:"2-digit" });
+  }catch(e){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+}
+
 
 /** =======================
  *  Data
@@ -863,6 +1301,7 @@ const BADGES = [
  *  ======================= */
 const LS_KEY = "jumvi_missions_done_v3";
 let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
+let unlockedBefore = done.size >= missions.length;
 
 const ONLY_KEY = "jumvi_only_unfinished_v1";
 let onlyUnfinished = (localStorage.getItem(ONLY_KEY) ?? "0") === "1";
@@ -906,6 +1345,16 @@ const badgesList = document.getElementById("badgesList");
 const searchInput = document.getElementById("searchInput");
 const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
 const soundToggle = document.getElementById("soundToggle");
+
+const certBackdrop = document.getElementById("certBackdrop");
+const btnCertClose = document.getElementById("btnCertClose");
+const certNameInput = document.getElementById("certNameInput");
+const certNameText  = document.getElementById("certNameText");
+const certDateText  = document.getElementById("certDateText");
+const certIdText    = document.getElementById("certIdText");
+const btnCertPrint  = document.getElementById("btnCertPrint");
+const btnCertShare  = document.getElementById("btnCertShare");
+
 
 /** =======================
  *  Helpers
@@ -1041,10 +1490,32 @@ function updateBadges(){
   const unlockedAll = done.size >= missions.length;
   if(unlockedAll){
     certBtn.classList.add("unlocked");
-    certSub.textContent = "Unlocked! Download your certificate.";
+    certBtn.classList.remove("locked");
+    certBtn.textContent = "Open";
+    certBtn.setAttribute("aria-disabled","false");
+    certSub.textContent = "Unlocked! Tap to open and print.";
   }else{
     certBtn.classList.remove("unlocked");
+    certBtn.classList.add("locked");
+    certBtn.textContent = "Locked";
+    certBtn.setAttribute("aria-disabled","true");
     certSub.textContent = "Complete all 30 missions to unlock.";
+  }
+
+  // unlock celebration (only when crossing 30/30)
+  if(unlockedAll && !unlockedBefore){
+    unlockedBefore = true;
+    const box = document.getElementById("certBox");
+    if(box){
+      box.classList.add("unlockedPulse");
+      setTimeout(()=> box.classList.remove("unlockedPulse"), 1150);
+    }
+    clickSound("success");
+    fireConfetti();
+    showToast("🏆 Unlocked! Open your certificate.");
+  }
+  if(!unlockedAll && unlockedBefore){
+    unlockedBefore = false;
   }
 }
 
@@ -1106,6 +1577,99 @@ function closeMission(){
   backdrop.classList.remove("show");
 }
 
+
+/** =======================
+ *  Certificate modal
+ *  ======================= */
+function buildCertificate(){
+  if(!certNameInput || !certNameText) return;
+  const raw = (certNameInput.value || "").trim();
+  localStorage.setItem(CERT_NAME_KEY, raw);
+
+  const displayName = raw ? raw : "JUMVI Champion";
+  certNameText.textContent = displayName;
+
+  if(certDateText) certDateText.textContent = "Date: " + getToday();
+  if(certIdText)   certIdText.textContent   = "Certificate ID: " + getCertId();
+}
+
+function openCertificate(){
+  if(!certBackdrop) return;
+  buildCertificate();
+  certBackdrop.classList.add("show");
+  const sheet = document.getElementById("certSheet");
+  if(sheet) sheet.scrollTop = 0;
+}
+
+function closeCertificate(){
+  if(!certBackdrop) return;
+  certBackdrop.classList.remove("show");
+}
+
+// Close handlers
+if(btnCertClose){
+  btnCertClose.onclick = ()=>{ clickSound("click"); closeCertificate(); };
+}
+if(certBackdrop){
+  certBackdrop.addEventListener("click",(e)=>{
+    if(e.target===certBackdrop){ clickSound("click"); closeCertificate(); }
+  });
+}
+if(certNameInput){
+  certNameInput.addEventListener("input", ()=>{ buildCertificate(); });
+}
+
+// Print / Share
+if(btnCertPrint){
+  btnCertPrint.onclick = ()=>{
+    clickSound("click");
+    buildCertificate();
+    // small delay so DOM updates apply before print
+    setTimeout(()=> window.print(), 60);
+  };
+}
+if(btnCertShare){
+  btnCertShare.onclick = async ()=>{
+    clickSound("click");
+    const name = (certNameInput?.value || "").trim();
+    const text = name
+      ? `${name} completed all 30 JUMVI missions 🏆`
+      : `Completed all 30 JUMVI missions 🏆`;
+    const url = location.href;
+    try{
+      if(navigator.share){
+        await navigator.share({ title:"JUMVI Champion", text, url });
+      }else{
+        await navigator.clipboard.writeText(`${text}\n${url}`);
+        showToast("Copied!");
+      }
+    }catch(e){}
+  };
+}
+
+// Open certificate (only if unlocked)
+if(certBtn){
+  certBtn.onclick = ()=>{
+    clickSound("click");
+    const unlocked = done.size >= missions.length;
+    if(unlocked){
+      openCertificate();
+    }else{
+      showToast("Finish all 30 missions to unlock.");
+    }
+  };
+}
+const certBox = document.getElementById("certBox");
+if(certBox){
+  certBox.addEventListener("click", ()=>{
+    const unlocked = done.size >= missions.length;
+    if(unlocked){
+      clickSound("click");
+      openCertificate();
+    }
+  });
+}
+
 btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
 
@@ -1152,9 +1716,11 @@ document.getElementById("btnReset").onclick = ()=>{
   clickSound("click");
   if(!confirm("Reset progress on this phone?")) return;
   done = new Set();
+  unlockedBefore = false;
   persist();
   renderList();
   closeMission();
+  closeCertificate();
 };
 
 document.getElementById("btnBadges").onclick = ()=>{
@@ -1223,6 +1789,12 @@ function init(){
   renderSoundToggle();
   renderFilters();
   renderList();
+
+  // restore certificate name (optional)
+  if(certNameInput){
+    certNameInput.value = localStorage.getItem(CERT_NAME_KEY) || "";
+    buildCertificate();
+  }
 }
 init();
 </script>
