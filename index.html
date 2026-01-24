@@ -3103,8 +3103,9 @@ function openCertificate(){
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
   if(sheet) sheet.scrollTop = 0;
-  // Auto-save once per open (works best when opened by a user tap)
-  if(!_certAutoDownloaded){
+  // Auto-save once per open (skip on iOS: requires a user gesture)
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if(!_certAutoDownloaded && !isiOS){
     _certAutoDownloaded = true;
     setTimeout(()=> downloadCertificatePNG({auto:true}), 120);
   }
@@ -3165,23 +3166,74 @@ function _inlineAllStyles(root){
   });
 }
 
+
+// ---- Certificate export helpers (iOS-safe) ----
+function _loadScriptOnce(src){
+  return new Promise((resolve, reject)=>{
+    // If already present, resolve
+    for(const s of Array.from(document.scripts||[])){
+      if(s.src && s.src.indexOf(src) !== -1) return resolve();
+    }
+    const el = document.createElement("script");
+    el.src = src;
+    el.async = true;
+    el.onload = ()=> resolve();
+    el.onerror = ()=> reject(new Error("script load failed: "+src));
+    document.head.appendChild(el);
+  });
+}
+async function ensureHtml2Canvas(){
+  if(window.html2canvas) return true;
+  const cdns = [
+    "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
+    "https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+  ];
+  for(const src of cdns){
+    try{
+      await _loadScriptOnce(src);
+      if(window.html2canvas) return true;
+    }catch(_){}
+  }
+  return !!window.html2canvas;
+}
+// iOS fallback: open image in a new tab (works even when downloads are blocked)
+function openImageForSave(url){
+  try{
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return true;
+  }catch(_){
+    return false;
+  }
+}
+
 async function downloadCertificatePNG({auto=true}={}){
-  // NOTE: iOS Safari blocks automatic "save to Photos" without user gesture.
-  // We capture the certificate as a PNG blob and then:
-  // - iOS: try Share Sheet (Save Image). If not available, show overlay for long-press save.
-  // - Others: trigger a normal file download.
+  // iOS Safari/Chrome (both WebKit) do NOT allow "direct download to Photos".
+  // Best practice:
+  // 1) Capture as PNG (html2canvas).
+  // 2) iOS: try Share Sheet (Save Image). If not available, open image in a new tab + overlay for long-press save.
+  // 3) Others: normal download.
   const cert = document.getElementById("certPaper") || document.getElementById("certificate");
   if(!cert){ showToast("Certificate is not ready yet."); return; }
+
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   try{
     cert.classList.add("isRendering");
 
-    // Prefer html2canvas for broad compatibility (incl. iOS Safari).
+    // Ensure renderer is available (multiple CDNs)
+    await ensureHtml2Canvas();
+
     let blob = null;
 
     if(window.html2canvas){
-      // Scale tuned to avoid iOS memory issues while staying crisp.
-      const scale = Math.min(2, window.devicePixelRatio || 1.5);
+      const scale = Math.min(2, window.devicePixelRatio || 1);
       const canvas = await window.html2canvas(cert, {
         backgroundColor: null,
         scale,
@@ -3193,60 +3245,48 @@ async function downloadCertificatePNG({auto=true}={}){
     }
 
     if(!blob){
-      // Fallback: try native canvas render if html2canvas isn't available
-      const fallbackCanvas = document.createElement("canvas");
-      const rect = cert.getBoundingClientRect();
-      const scale = Math.min(2, window.devicePixelRatio || 1);
-      fallbackCanvas.width = Math.max(1, Math.round(rect.width * scale));
-      fallbackCanvas.height = Math.max(1, Math.round(rect.height * scale));
-      const ctx = fallbackCanvas.getContext("2d");
-      ctx.setTransform(scale,0,0,scale,0,0);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0,0,rect.width,rect.height);
-      // Draw via SVG foreignObject
-      const cloned = cert.cloneNode(true);
-      cloned.classList.add("forExport");
-      const wrap = document.createElement("div");
-      wrap.style.width = rect.width+"px";
-      wrap.style.height = rect.height+"px";
-      wrap.appendChild(cloned);
-
-      const data = new XMLSerializer().serializeToString(wrap);
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${rect.width}" height="${rect.height}">
-        <foreignObject width="100%" height="100%">${data}</foreignObject>
-      </svg>`;
-      const img = new Image();
-      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-      await new Promise((res, rej)=>{ img.onload=res; img.onerror=rej; });
-      ctx.drawImage(img, 0, 0, rect.width, rect.height);
-      blob = await new Promise(res=>fallbackCanvas.toBlob(res, "image/png", 1.0));
-    }
-
-    if(!blob) throw new Error("capture failed");
-
-    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
-    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-    if(isiOS){
-      const file = new File([blob], filename, {type:"image/png"});
-      // Share Sheet first (best UX)
-      if(navigator.canShare && navigator.canShare({files:[file]})){
-        try{
-          await navigator.share({files:[file], title:"JUMVI Certificate"});
-          if(!auto) showToast("Saved ✅");
-          return;
-        }catch(_){
-          // user cancelled or share failed -> fall back to overlay
-        }
+      // If opened as file:// on iOS, external libs may not load. Give a clear hint.
+      if(isiOS && location.protocol === "file:"){
+        showToast("iPhone: Please open this page from Netlify/HTTPS (not Files).");
+      }else{
+        showToast("Save blocked on this device. Try again.");
       }
-      // Overlay fallback: long-press image -> Save to Photos
-      const url = URL.createObjectURL(blob);
-      showSaveOverlay(url);
-      if(!auto) showToast("Long-press → Save to Photos ✅");
       return;
     }
 
-    // Non‑iOS: normal download
+    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+
+    if(isiOS){
+      const url = URL.createObjectURL(blob);
+
+      // 1) Share Sheet (best UX) - needs HTTPS + iOS support
+      try{
+        const file = new File([blob], filename, {type:"image/png"});
+        if(window.isSecureContext && navigator.canShare && navigator.canShare({files:[file]})){
+          await navigator.share({files:[file], title:"JUMVI Certificate"});
+          if(!auto) showToast("Saved ✅");
+          // keep url cleanup
+          setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 5000);
+          return;
+        }
+      }catch(_){
+        // user cancelled / share failed -> fallback below
+      }
+
+      // 2) Open image in a new tab (lets user "Save Image" reliably)
+      const opened = openImageForSave(url);
+
+      // 3) Overlay fallback (long-press)
+      showSaveOverlay(url);
+
+      if(!auto){
+        showToast(opened ? "Opened image — long‑press to Save ✅" : "Long‑press → Save to Photos ✅");
+      }
+      // Do not revoke immediately; overlay / new tab needs it
+      return;
+    }
+
+    // Android/Desktop: normal download
     const a = document.createElement("a");
     const url = URL.createObjectURL(blob);
     a.href = url;
@@ -3254,14 +3294,13 @@ async function downloadCertificatePNG({auto=true}={}){
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=> URL.revokeObjectURL(url), 2500);
-    if(!auto) showToast("Downloaded ✅");
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 2000);
+    if(!auto) showToast("Saved ✅");
+
   }catch(err){
-    console.error(err);
-    // On iOS, avoid "blocked" messaging — show overlay guidance instead.
-    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if(isiOS){
-      showToast("Tap Save again. If it fails: long‑press the image.");
+    // Surface a more useful message on iOS
+    if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+      showToast("iPhone blocks auto-download. Use Save → long-press image.");
     }else{
       showToast("Save blocked by browser. Tap Save again.");
     }
