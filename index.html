@@ -1389,6 +1389,153 @@ body{
   background: #fff;
 }
 
+
+/* ===========================
+   JUMVI Mobile Fix Pack v7
+   (Readability + Mobile Fit)
+   =========================== */
+
+/* Core dark readability */
+body{
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+/* Remove extra feature chips if still present */
+#btnSolidBg, #btnBackup{ display:none !important; }
+
+/* Daily mission card: consistent + non-overlapping */
+.dailyBox{
+  background: rgba(14, 26, 52, 0.92) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.30) !important;
+}
+.dailyLeft{ flex: 1 1 auto !important; min-width: 0 !important; }
+.dailyText{ min-width:0 !important; }
+.dailyTitle{ color: rgba(234,242,255,0.80) !important; }
+.dailyName{ color: var(--text) !important; max-width: 100% !important; }
+.dailyMeta{ color: rgba(234,242,255,0.70) !important; }
+.dailyIcon{
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+.dailyActions{ flex: 0 0 auto !important; }
+.dailyActions .btn{
+  min-height: 46px !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+}
+@media (max-width:520px){
+  .dailyBox{ display:flex !important; flex-direction:column !important; align-items:stretch !important; }
+  .dailyActions{ width:100% !important; }
+  .dailyActions .btn{ flex: 1 1 100% !important; }
+}
+
+/* Mission list cards: make them dark + readable */
+.card{
+  background: rgba(14, 26, 52, 0.92) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.30) !important;
+}
+.mTitle{ color: var(--text) !important; }
+.mMeta{ color: rgba(234,242,255,0.72) !important; }
+.tag{
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  color: rgba(234,242,255,0.86) !important;
+}
+.tag.pack{ background: rgba(79,179,255,0.16) !important; color: #BFE7FF !important; }
+.tag.diff{ background: rgba(255,193,7,0.14) !important; color: #FFE6A6 !important; }
+
+/* Done cards (Kids mode unreadable fix) */
+.card.done{
+  background: rgba(10, 44, 26, 0.88) !important;
+  border: 1px solid rgba(151, 215, 0, 0.70) !important;
+}
+.card.done .mTitle{ color: var(--text) !important; }
+.card.done .mIcon{ background: rgba(151, 215, 0, 0.20) !important; }
+
+/* Mission modal: make footer always visible, body scrolls */
+#backdrop{
+  background: rgba(0,0,0,0.62) !important;
+  backdrop-filter: blur(10px);
+  align-items: flex-end;
+}
+#sheet{
+  background: rgba(10, 20, 40, 0.98) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  max-height: calc(100svh - 10px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+#sheetBody{
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 10px;
+}
+
+/* Top actions (Start Timer / Read to Me) */
+.mTopActions{
+  display:flex !important;
+  gap:10px !important;
+  flex-wrap:wrap !important;
+}
+.mTopActions .btn{
+  flex: 1 1 170px !important;
+  min-width: 0 !important;
+}
+
+/* Detail blocks */
+#sheet .kv{
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+}
+#sheet .kv b{ color:#8FD3FF !important; }
+
+/* Footer actions pinned */
+#sheet > .sheetActions{
+  margin-top: 0 !important;
+  padding: 12px 0 0 !important;
+  background: rgba(10, 20, 40, 0.98) !important;
+  border-top: 1px solid rgba(255,255,255,0.10) !important;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+#btnToggleDone{ grid-column: 1 / -1 !important; }
+@media (max-width:420px){
+  #sheet > .sheetActions{ grid-template-columns: 1fr !important; }
+}
+
+/* Keep "progress saved" note visible but compact */
+#mSmall{
+  color: rgba(234,242,255,0.65) !important;
+  font-size: 12px !important;
+  margin-top: 10px !important;
+}
+
+/* Confetti fallback burst */
+.fxBurst{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+}
+.fxStar{
+  position: absolute;
+  font-size: 18px;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  animation: fxPop 900ms ease-out forwards;
+}
+@keyframes fxPop{
+  0%   { opacity: 0; transform: translate(var(--x0), var(--y0)) scale(0.6); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--x1), var(--y1)) scale(1.15); }
+}
+
 </style>
 </head>
 
@@ -1484,10 +1631,8 @@ body{
         <div class="toggleRow">
           <button class="chip limeActive" id="btnOnlyUnfinished" type="button">Only Unfinished</button>
           <button class="chip" id="btnChoosePack" type="button">Choose Pack</button>
-          <button class="chip" id="btnSolidBg" type="button">Solid BG</button>
-          <button class="chip" id="btnKidsMode" type="button">Kids Mode</button>
-          <button class="chip" id="btnBackup" type="button">Backup</button>
-        </div>
+                    <button class="chip" id="btnKidsMode" type="button">Kids Mode</button>
+                  </div>
       </div>
 
       <div class="filters" id="filters" aria-label="packs"></div>
@@ -1518,14 +1663,14 @@ body{
         </div>
         <button class="close" id="btnClose">✕</button>
       </div>
-      
+      <div class="sheetBody" id="sheetBody">
       <!-- New: Timer UI (Hidden by default) -->
       <div id="timerUI">
         <div id="timerDisplay">60s</div>
         <div id="timerBar"><div id="timerFill"></div></div>
       </div>
 
-      <div class="sheetActions" style="margin-top:10px; margin-bottom:10px; justify-content:flex-start;">
+      <div class="mTopActions" style="margin-top:10px; margin-bottom:10px; justify-content:flex-start;">
         <!-- New Buttons -->
         <button class="btn btnTimer" id="btnStartTimer">⏱️ Start Timer</button>
         <button class="btn btnGhost" id="btnSpeak">🗣️ Read to Me</button>
@@ -1536,13 +1681,16 @@ body{
       <div class="kv" id="mTip"></div>
       <div class="kv" id="mSafety"></div>
 
+      <div class="small" id="mSmall"></div>
+      </div>
+
       <div class="sheetActions">
         <button class="btn btnPrimary" id="btnToggleDone">✅ Mark as Done</button>
         <button class="btn btnGhost" id="btnNext">➡️ Next</button>
         <button class="btn btnGhost" id="btnRandomPack">🎲 Random from Pack</button>
       </div>
 
-      <div class="small" id="mSmall"></div>
+      
     </div>
   </div>
 
@@ -1562,43 +1710,6 @@ body{
   </div>
 
 
-
-  <!-- Backup / Restore Modal -->
-  <div class="backdrop" id="backupBackdrop" role="dialog" aria-modal="true" aria-label="Backup and restore">
-    <div class="sheet">
-      <div class="sheetTop">
-        <div>
-          <div class="sheetTitle">🧷 Backup / Restore</div>
-          <div class="small">Copy a backup code and restore it on another phone.</div>
-        </div>
-        <button class="close" id="btnBackupClose">✕</button>
-      </div>
-
-      <div class="kv">
-        <b>Backup code</b>
-        <div class="small" style="margin-top:6px">Tap “Copy” and keep it somewhere safe.</div>
-        <textarea class="ta" id="backupCode" readonly></textarea>
-        <div class="sheetActions" style="margin-top:10px">
-          <button class="btn btnLime" id="btnBackupCopy" type="button">📋 Copy</button>
-          <button class="btn btnGhost" id="btnBackupRefresh" type="button">🔄 Refresh</button>
-        </div>
-      </div>
-
-      <div class="kv">
-        <b>Restore</b>
-        <div class="small" style="margin-top:6px">Paste a backup code below and tap Restore.</div>
-        <textarea class="ta" id="restoreInput" placeholder="Paste backup code here"></textarea>
-        <div class="sheetActions" style="margin-top:10px">
-          <button class="btn btnPrimary" id="btnRestore" type="button">♻️ Restore</button>
-        </div>
-        <div class="small">Note: restore replaces progress on this phone.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast + Confetti -->
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <canvas id="confettiCanvas"></canvas>
 
   <!-- Certificate Modal -->
   <div class="backdrop" id="certBackdrop" role="dialog" aria-modal="true" aria-label="Certificate">
@@ -1701,6 +1812,7 @@ body{
     </div>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
 /** =======================
  * Disable zoom (iOS + desktop)
@@ -1774,6 +1886,41 @@ function showToast(msg){
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=> el.classList.remove("show"), 1800);
+}
+
+function celebrate(){
+  try{
+    // Prefer canvas-confetti when available
+    if(window.confetti){
+      const origin = { x: 0.5, y: 0.75 };
+      window.confetti({ particleCount: 70, spread: 70, origin });
+      window.confetti({ particleCount: 40, spread: 110, origin, startVelocity: 35 });
+      return;
+    }
+  }catch(_){}
+
+  // Fallback: tiny star burst
+  const root = document.createElement("div");
+  root.className = "fxBurst";
+  const stars = ["⭐","✨","🌟","💫","🎉"];
+  for(let i=0;i<18;i++){
+    const s = document.createElement("div");
+    s.className = "fxStar";
+    s.textContent = stars[i % stars.length];
+    const cx = window.innerWidth * (0.25 + Math.random()*0.5);
+    const cy = window.innerHeight * (0.35 + Math.random()*0.35);
+    const dx = (Math.random()*2-1) * 140;
+    const dy = (Math.random()*2-1) * 180;
+    s.style.left = cx + "px";
+    s.style.top  = cy + "px";
+    s.style.setProperty("--x0", "0px");
+    s.style.setProperty("--y0", "0px");
+    s.style.setProperty("--x1", dx + "px");
+    s.style.setProperty("--y1", dy + "px");
+    root.appendChild(s);
+  }
+  document.body.appendChild(root);
+  setTimeout(()=>{ try{ root.remove(); }catch(_){} }, 950);
 }
 
 /** =======================
@@ -3137,6 +3284,7 @@ btnToggleDone.onclick = ()=>{
   persist();
   renderList();
   clickSound(wasDone ? "click" : "success");
+  if(!wasDone){ celebrate(); }
   openMission(lastOpenedId); // refresh modal state
 };
 
