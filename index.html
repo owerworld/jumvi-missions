@@ -25,7 +25,12 @@
 
       --radius: 22px;           /* Bubbly/Rounder corners */
       --shadow: 0 12px 30px rgba(13, 71, 161, 0.15); /* Soft colorful shadow */
-    }
+    
+      --sheetbg: rgba(255,255,255,0.94);
+      --sheetpanel: rgba(240,249,255,0.92);
+      --backdrop: rgba(0,0,0,0.45);
+
+}
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
@@ -1083,8 +1088,8 @@
 /* ===== FORCED DARK MODE (JUMVI Night) ===== */
 :root{
   --bg:#061326;
-  --card:rgba(255,255,255,.06);
-  --card2:rgba(255,255,255,.04);
+  --card:rgba(255,255,255,.10);
+  --card2:rgba(255,255,255,.07);
   --text:#EAF2FF;
   --muted:#A9B8D6;
   --border:rgba(79,179,255,.22);
@@ -1095,6 +1100,11 @@
   --orange:#FF6A00; /* Bright Orange */
 
   --shadow: 0 16px 40px rgba(0,0,0,0.35);
+
+  --sheetbg: rgba(8,16,32,0.94);
+  --sheetpanel: rgba(14,26,52,0.90);
+  --backdrop: rgba(0,0,0,0.60);
+
 }
 
 body{
@@ -1275,7 +1285,69 @@ body{
       .tag.smallHide{ display:none; } /* keep layout clean on very small phones */
     }
 
-  </style>
+  
+/* === Readability + Mobile Layout Fixes (v5) === */
+.modalOverlay{
+  background: var(--backdrop) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+}
+.sheet{
+  background: var(--sheetbg) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+}
+.sheet .kv{
+  background: var(--sheetpanel) !important;
+  border: 1px solid rgba(255,255,255,.12) !important;
+}
+.sheet .kv h3, .sheet .kv h4, .sheet .kv .k, .sheet .kv .v, .sheet .kv li, .sheet .kv p{
+  color: var(--text) !important;
+  text-shadow: none !important;
+}
+.sheet .kv .k{ opacity: .92 !important; }
+.sheet .kv .v{ opacity: .95 !important; }
+
+@media (max-width: 520px){
+  /* Keep everything inside the viewport */
+  .sheet{
+    width: min(96vw, 560px) !important;
+    max-height: calc(100dvh - 18px) !important;
+  }
+  /* Top action row inside mission modal */
+  .mTopActions, .topActions, .modalActions{
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .mTopActions .btn, .topActions .btn, .modalActions .btn{
+    flex: 1 1 150px !important;
+    width: auto !important;
+  }
+  /* Pills/chips wrapping */
+  .pillRow, .tags, .chips, .mMeta{
+    flex-wrap: wrap !important;
+    row-gap: 8px !important;
+  }
+  /* Today's mission card: prevent overlap */
+  .todayRow, .todayGrid, .todayCardRow{
+    flex-wrap: wrap !important;
+  }
+  .todayRow .btn, .todayGrid .btn{
+    min-width: 0 !important;
+  }
+}
+
+/* Prevent background UI showing through too strongly */
+.card, .panel, .glass, .tile{
+  background-color: color-mix(in srgb, var(--card) 100%, rgba(0,0,0,0) 0%) !important;
+}
+
+
+/* Fallback if color-mix unsupported */
+@supports not (background-color: color-mix(in srgb, white 50%, black)){
+  .card, .panel, .glass, .tile{ background: var(--card) !important; }
+}
+
+</style>
 </head>
 
 <body>
@@ -2863,44 +2935,21 @@ function _inlineAllStyles(root){
   });
 }
 
-async function downloadCertificatePNG({auto=false} = {}){
-  const paper = document.getElementById("certPaper");
-  if(!paper) return;
-
+async function downloadCertificatePNG({auto=true}={}){
   try{
-    // clone + inline styles
-    const clone = paper.cloneNode(true);
-    clone.querySelectorAll("button").forEach(b=>b.remove()); // safety
-    _inlineAllStyles(clone);
+    const cert = document.getElementById("certificate");
+    if(!cert) throw new Error("certificate missing");
 
-    // Compute dimensions
-    const rect = paper.getBoundingClientRect();
-    const w = Math.max(1, Math.round(rect.width));
-    const h = Math.max(1, Math.round(rect.height));
+    // Ensure it is fully visible for rendering
+    cert.classList.add("isRendering");
 
-    // SVG foreignObject export
-    const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
-        <foreignObject width="100%" height="100%">
-          <div xmlns="http://www.w3.org/1999/xhtml">${clone.outerHTML}</div>
-        </foreignObject>
-      </svg>
-    `.trim();
-
-    const svgBlob = new Blob([svg], {type:"image/svg+xml;charset=utf-8"});
-    const url = URL.createObjectURL(svgBlob);
-
-    const img = new Image();
-    img.decoding = "async";
-
-    await new Promise((resolve,reject)=>{
-      img.onload = ()=>resolve();
-      img.onerror = ()=>reject(new Error("img load failed"));
-      img.src = url;
-    });
+    // Render as image (HTML -> SVG -> Canvas)
+    const img = await renderNodeToImage(cert);
+    const w = img.naturalWidth || img.width;
+    const h = img.naturalHeight || img.height;
 
     const canvas = document.createElement("canvas");
-    const scale = Math.min(2, window.devicePixelRatio || 1); // crisp, but not huge memory
+    const scale = Math.min(2, window.devicePixelRatio || 1); // crisp but safe
     canvas.width  = Math.round(w * scale);
     canvas.height = Math.round(h * scale);
 
@@ -2908,24 +2957,47 @@ async function downloadCertificatePNG({auto=false} = {}){
     ctx.setTransform(scale,0,0,scale,0,0);
     ctx.drawImage(img, 0, 0);
 
-    URL.revokeObjectURL(url);
+    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
 
-    const blob = await new Promise(resolve=>canvas.toBlob(resolve, "image/png", 1.0));
+    // 1) Best on iOS: Share sheet (lets user "Save Image")
+    const blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
     if(!blob) throw new Error("toBlob failed");
 
+    // iOS Safari: download attribute may be blocked; use share or open tab
+    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    if(navigator.canShare && navigator.canShare({ files: [new File([blob], filename, {type:"image/png"})] })){
+      const file = new File([blob], filename, {type:"image/png"});
+      await navigator.share({ files:[file], title:"JUMVI Certificate" });
+      if(!auto) showToast("Open Share → Save Image ✅");
+      return;
+    }
+
+    // 2) Standard download (Chrome/Android/desktop)
     const a = document.createElement("a");
-    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
-    a.href = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
+    a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+
+    // 3) iOS fallback: open the image in a new tab so user can long-press → Save to Photos
+    if(isiOS){
+      const dataUrl = canvas.toDataURL("image/png");
+      window.open(dataUrl, "_blank");
+      if(!auto) showToast("Opened image. Long‑press → Save to Photos ✅");
+      return;
+    }
 
     if(!auto) showToast("Saved! ✅");
   }catch(err){
-    // Fallback: let user use system print/save if export is blocked
-    showToast("Save blocked by browser. Try again (tap once).");
+    // Soft fallback: tell the user to tap again (some browsers require user gesture)
+    showToast("Save blocked by browser. Tap Save again.");
+  }finally{
+    const cert = document.getElementById("certificate");
+    if(cert) cert.classList.remove("isRendering");
   }
 }
 
