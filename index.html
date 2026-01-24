@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- ✅ Zoom lock -->
+  <!-- ✅ zoom lock -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>JUMVI Missions</title>
+  <title>JUMVI Missions - Toss & Catch Adventure</title>
   <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
   <meta name="theme-color" content="#061326" />
 
@@ -13,7 +13,6 @@
       --bg:#061326;
       --bg2:#0A1B38;
       --card:#0E234A;
-      --card2:#0B1D3D;
       --text:#EAF2FF;
       --muted:#A9B8D6;
       --border:rgba(255,255,255,.12);
@@ -26,11 +25,8 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
-
-    /* ✅ Mobile text scaling + zoom side effects */
-    html { -webkit-text-size-adjust: 100%; }
-    a, button, input, select, textarea { touch-action: manipulation; }
-
+    html{-webkit-text-size-adjust:100%}
+    a,button,input,select,textarea{touch-action:manipulation}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -40,10 +36,17 @@
       color:var(--text);
       -webkit-tap-highlight-color: transparent;
     }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:980px; margin:0 auto; padding:16px 16px 28px}
+    a{color:inherit;text-decoration:none}
+
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:16px 16px calc(28px + env(safe-area-inset-bottom));
+    }
+
     .sticky{
       position:sticky; top:0; z-index:50;
+      padding-top: env(safe-area-inset-top);
       backdrop-filter: blur(10px);
       background: rgba(6,19,38,.72);
       border-bottom:1px solid var(--border);
@@ -56,17 +59,36 @@
       display:flex; align-items:center; gap:10px;
       font-weight:900; letter-spacing:.3px;
     }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: linear-gradient(135deg, var(--blue), var(--lime));
-      box-shadow: 0 0 0 4px rgba(79,179,255,.14);
+
+    /* ✅ real logo */
+    .logoWrap{
+      width:40px;height:40px;border-radius:12px;
+      background: linear-gradient(135deg, rgba(79,179,255,.22), rgba(151,215,0,.18));
+      border:1px solid rgba(255,255,255,.12);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow: 0 0 0 3px rgba(79,179,255,.12);
+      overflow:hidden;
+      flex: 0 0 auto;
     }
+    .logoImg{
+      width:100%;height:100%;
+      object-fit:contain;
+      padding:6px;
+      background: rgba(0,0,0,.10);
+    }
+    .logoFallback{
+      display:none;
+      font-size:18px;
+    }
+
     .pill{
       font-size:12px; color:var(--muted);
       border:1px solid var(--border);
       padding:7px 10px; border-radius:999px;
       display:flex; align-items:center; gap:8px;
+      white-space:nowrap;
     }
+
     .hero{
       margin-top:14px;
       border:1px solid var(--border);
@@ -96,21 +118,51 @@
       margin:10px 0 0;
       color:var(--muted);
       line-height:1.4;
-      max-width:58ch;
+      max-width:62ch;
     }
+
+    .productRow{
+      margin-top:14px;
+      display:flex; gap:12px; align-items:center;
+      padding:12px;
+      border-radius:18px;
+      background: rgba(0,0,0,.18);
+      border:1px solid var(--border);
+    }
+    .productImg{
+      width:78px;height:78px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(79,179,255,.20), rgba(151,215,0,.15));
+      display:flex;align-items:center;justify-content:center;
+      font-size:34px;
+      border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
+    }
+    .productInfo{flex:1}
+    .productTitle{font-weight:950;font-size:15px;margin-bottom:4px}
+    .productMeta{
+      font-size:11px;color:var(--muted);
+      display:flex;gap:8px;flex-wrap:wrap;
+    }
+    .productMeta span{
+      padding:4px 8px;border-radius:10px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      white-space:nowrap;
+    }
+
     .ctaRow{
       margin-top:14px;
       display:flex; flex-wrap:wrap; gap:10px;
     }
     .btn{
-      appearance:none; border:0; cursor:pointer;
+      appearance:none;border:0;cursor:pointer;
       border-radius:16px;
       padding:12px 14px;
-      font-weight:850;
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      font-weight:900;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
       transition: transform .12s ease, filter .12s ease, opacity .12s ease;
       user-select:none;
-      min-height:44px; /* ✅ better tap target */
+      min-height:44px;
     }
     .btn:active{transform:scale(.98)}
     .btnPrimary{
@@ -122,6 +174,11 @@
       background: rgba(255,255,255,.06);
       color: var(--text);
       border:1px solid var(--border);
+    }
+    .btnOrange{
+      background: linear-gradient(135deg, var(--orange), #FF8A33);
+      color:#fff;
+      box-shadow: 0 10px 30px rgba(255,106,0,.18);
     }
     .btnLime{
       background: linear-gradient(135deg, var(--lime), #B7FF2A);
@@ -137,28 +194,131 @@
       border:1px solid var(--border);
       background: rgba(255,255,255,.04);
     }
-    .pText{
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .pSub{
-      color:var(--muted); font-size:12px;
-    }
+    .pText{font-weight:950; letter-spacing:.2px}
+    .pSub{color:var(--muted); font-size:12px}
     .bar{
-      flex:1;
-      min-width:180px;
-      height:12px;
-      border-radius:999px;
+      flex:1; min-width:180px;
+      height:12px;border-radius:999px;
       background: rgba(255,255,255,.10);
       overflow:hidden;
       border:1px solid rgba(255,255,255,.08);
     }
     .bar > div{
-      height:100%;
-      width:0%;
+      height:100%; width:0%;
       background: linear-gradient(90deg, var(--orange), var(--blue), var(--lime));
       border-radius:999px;
       transition: width .35s ease;
+    }
+
+    .controlsRow{
+      margin-top:14px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    .search{
+      flex: 1 1 240px;
+      display:flex;align-items:center;gap:10px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      border-radius:16px;
+      padding:10px 12px;
+      min-height:44px;
+    }
+    .search input{
+      width:100%;
+      background:transparent;
+      border:0;
+      outline:none;
+      color:var(--text);
+      font-weight:800;
+      font-size:13px;
+    }
+    .toggleChip{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      min-height:44px;
+    }
+    .toggleChip.active{
+      border-color: rgba(151,215,0,.45);
+      background: rgba(151,215,0,.14);
+      box-shadow: 0 0 0 4px rgba(151,215,0,.10);
+    }
+
+    .badgesRow{
+      margin-top:14px;
+      display:flex; gap:8px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom:6px;
+    }
+    .badgesRow::-webkit-scrollbar{display:none}
+    .badge{
+      flex-shrink:0;
+      padding:10px 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      text-align:center;
+      min-width:110px;
+      transition: all .2s ease;
+    }
+    .badge.unlocked{
+      border-color: rgba(151,215,0,.4);
+      background: linear-gradient(135deg, rgba(151,215,0,.16), rgba(79,179,255,.10));
+      box-shadow: 0 0 0 3px rgba(151,215,0,.10);
+    }
+    .badge.locked{opacity:.45; filter:grayscale(1)}
+    .badgeIcon{font-size:22px; margin-bottom:4px}
+    .badgeName{font-size:11px; font-weight:950}
+    .badgeReq{font-size:9px; color:var(--muted); margin-top:2px}
+
+    .streakBox{
+      margin-top:14px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,106,0,.12), rgba(79,179,255,.08));
+      display:none;
+      align-items:center;
+      gap:12px;
+    }
+    .streakBox.show{display:flex}
+    .streakIcon{font-size:30px; animation: fire 2s ease-in-out infinite}
+    @keyframes fire{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+    .streakNum{font-weight:950; font-size:18px}
+    .streakText{font-size:12px; color:var(--muted)}
+
+    .certBox{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,215,0,.08), rgba(79,179,255,.06));
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .certLeft{display:flex; gap:12px; align-items:center}
+    .certIcon{font-size:34px}
+    .certTitle{font-weight:950}
+    .certSub{font-size:12px;color:var(--muted);margin-top:2px}
+    .lockPill{
+      font-size:12px;
+      font-weight:950;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.15);
+      white-space:nowrap;
+    }
+    .lockPill.unlocked{
+      border-color: rgba(151,215,0,.45);
+      background: rgba(151,215,0,.14);
+      color: var(--text);
     }
 
     .filters{
@@ -171,12 +331,13 @@
       color:var(--text);
       padding:10px 12px;
       border-radius:999px;
-      font-weight:850;
+      font-weight:900;
       font-size:13px;
       cursor:pointer;
-      transition: filter .12s ease, transform .12s ease;
       user-select:none;
       white-space:nowrap;
+      min-height:44px;
+      display:flex; align-items:center;
     }
     .chip:active{transform:scale(.98)}
     .chip.active{
@@ -191,12 +352,8 @@
       grid-template-columns: 1fr;
       gap:12px;
     }
-    @media (min-width: 720px){
-      .grid{grid-template-columns: repeat(2, 1fr);}
-    }
-    @media (min-width: 980px){
-      .grid{grid-template-columns: repeat(3, 1fr);}
-    }
+    @media (min-width: 720px){ .grid{grid-template-columns: repeat(2, 1fr);} }
+    @media (min-width: 980px){ .grid{grid-template-columns: repeat(3, 1fr);} }
 
     .card{
       border:1px solid var(--border);
@@ -204,7 +361,7 @@
       border-radius: var(--radius);
       padding:14px;
       box-shadow: 0 12px 34px rgba(0,0,0,.22);
-      transition: transform .12s ease, filter .12s ease;
+      transition: transform .12s ease;
       cursor:pointer;
       position:relative;
       overflow:hidden;
@@ -218,6 +375,7 @@
       font-size:20px;
       background: rgba(255,255,255,.08);
       border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
     }
     .title{font-weight:950; letter-spacing:-.1px}
     .meta{
@@ -228,7 +386,7 @@
     }
     .tag{
       font-size:11px;
-      font-weight:900;
+      font-weight:950;
       padding:6px 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
@@ -257,10 +415,7 @@
       display:none;
     }
     .card.done .doneBadge{display:block}
-    .card.done{
-      outline: none;
-      border-color: rgba(151,215,0,.35);
-    }
+    .card.done{border-color: rgba(151,215,0,.35);}
 
     .footer{
       margin-top:18px;
@@ -279,10 +434,14 @@
       padding:10px 12px;
       border-radius:14px;
       color: var(--text);
-      font-weight:850;
+      font-weight:900;
       font-size:13px;
       cursor:pointer;
+      transition: all .2s ease;
+      min-height:44px;
     }
+    .linkBtn:active{transform:scale(.98)}
+    .linkBtn.disabled{opacity:.5; pointer-events:none}
 
     /* Modal */
     .backdrop{
@@ -311,8 +470,9 @@
       color:var(--text);
       border-radius:14px;
       padding:10px 12px;
-      font-weight:900;
+      font-weight:950;
       cursor:pointer;
+      min-height:44px;
     }
     .sheetTitle{font-weight:950; font-size:18px}
     .sheetMeta{margin-top:6px; color:var(--muted); font-size:12px; display:flex; flex-wrap:wrap; gap:10px}
@@ -322,36 +482,56 @@
     .sheetActions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
     .small{font-size:12px; color:var(--muted); margin-top:10px}
 
-    /* ✅ MOBILE: cleaner + premium (less clutter) */
-    @media (max-width: 520px){
-      .wrap{ padding: 12px 12px 22px; }
-      .topbar{ padding: 10px 12px; }
+    /* floating sound toggle */
+    .soundToggle{
+      position:fixed;
+      bottom:calc(16px + env(safe-area-inset-bottom));
+      right:16px;
+      width:46px;height:46px;
+      border-radius:999px;
+      background: linear-gradient(135deg, var(--blue), var(--lime));
+      border:2px solid rgba(255,255,255,.18);
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;
+      cursor:pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,.30);
+      z-index:70;
+      transition: transform .2s ease, opacity .2s ease;
+      user-select:none;
+    }
+    .soundToggle:active{transform:scale(.92)}
+    .soundToggle.muted{opacity:.55; background: rgba(255,255,255,.08)}
 
+    /* error box */
+    .errorBox{
+      margin-top:14px;
+      border:1px solid rgba(255,80,80,.35);
+      background: rgba(255,80,80,.08);
+      border-radius:16px;
+      padding:12px;
+      color: rgba(255,220,220,.95);
+      display:none;
+      font-weight:850;
+      line-height:1.35;
+    }
+    .errorBox.show{display:block}
+
+    /* ✅ mobile clean */
+    @media (max-width: 520px){
+      .wrap{ padding: 12px 12px calc(22px + env(safe-area-inset-bottom)); }
+      .topbar{ padding: 10px 12px; }
       .hero{ padding: 14px; border-radius: 22px; }
       .h1{ font-size: clamp(20px, 5.8vw, 26px); }
       .sub{ font-size: 13px; }
-
       .ctaRow{ gap: 8px; }
-      .ctaRow .btn{
-        flex: 1 1 calc(50% - 8px);
-        padding: 12px 12px;
-        border-radius: 14px;
-      }
-      .ctaRow .btn.btnLime{ flex-basis: 100%; }
-
+      .ctaRow .btn{ flex: 1 1 calc(50% - 8px); border-radius: 14px; }
+      .ctaRow .btn.btnOrange{ flex-basis: 100%; }
       .progressBox{ padding: 10px; }
       .grid{ grid-template-columns: 1fr; gap: 10px; }
-
       .card{ padding: 12px; }
       .icon{ width: 40px; height: 40px; border-radius: 12px; }
-
-      /* Hide steps on cards (open in sheet instead) */
       .steps{ display: none; }
-
-      /* Keep only pack + difficulty/time (hide players + age to reduce noise) */
       .meta .tag:nth-child(n+3){ display:none; }
-
-      /* Filters as horizontal scroll */
       .filters{
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -359,9 +539,9 @@
         padding-bottom: 6px;
       }
       .filters::-webkit-scrollbar{ display:none; }
-
-      .doneBadge{ padding: 5px 9px; font-size: 10px; }
       .sheet{ max-height: 88vh; }
+      .productImg{width:60px; height:60px; font-size:28px}
+      .logoWrap{width:38px;height:38px}
     }
   </style>
 </head>
@@ -370,7 +550,11 @@
   <div class="sticky">
     <div class="topbar">
       <div class="brand">
-        <span class="dot"></span>
+        <div class="logoWrap" aria-label="JUMVI logo">
+          <img class="logoImg" src="jumvi_logo.png" alt="JUMVI"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <div class="logoFallback">🎯</div>
+        </div>
         <span>JUMVI Missions</span>
       </div>
       <div class="pill">Kids 3–8 • Safe play</div>
@@ -380,53 +564,91 @@
   <div class="wrap">
     <section class="hero">
       <div class="heroin">
-        <h1 class="h1">Scan → Play → Finish 30 Missions</h1>
+        <h1 class="h1">30 Fun Missions Await! 🚀</h1>
         <p class="sub">
-          Pick a pack or start random. Tap a mission to see full details. Mark missions as done to track progress.
+          Pick a pack or start random. Track your progress, unlock badges, and earn your champion certificate.
           <br><b>Safety:</b> throw below face level, keep 1–3 meters distance, adult supervision.
         </p>
+
+        <div class="productRow">
+          <div class="productImg">🏓</div>
+          <div class="productInfo">
+            <div class="productTitle">JUMVI Toss & Catch Paddle Set</div>
+            <div class="productMeta">
+              <span>✅ Soft balls</span>
+              <span>👶 Ages 3–8</span>
+              <span>🎯 Skill-building</span>
+            </div>
+          </div>
+        </div>
 
         <div class="ctaRow">
           <button class="btn btnPrimary" id="btnRandomAll">🎲 Random Mission</button>
           <button class="btn btnGhost" id="btnChoosePack">🗂️ Choose a Pack</button>
-          <button class="btn btnLime" id="btnReset">Reset Progress</button>
+          <button class="btn btnOrange" id="btnShowBadges">🏅 My Badges</button>
         </div>
 
         <div class="progressBox" aria-label="progress">
           <div>
             <div class="pText" id="progressText">0 / 30 completed</div>
-            <div class="pSub" id="progressSub">Finish all missions to unlock the certificate.</div>
+            <div class="pSub" id="progressSub">Start your first mission to begin!</div>
           </div>
           <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
             <div id="progressBarFill"></div>
           </div>
         </div>
 
-        <div class="filters" id="filters">
-          <!-- chips injected -->
+        <div class="streakBox" id="streakBox">
+          <div class="streakIcon">🔥</div>
+          <div>
+            <div class="streakNum" id="streakNum">0 day streak</div>
+            <div class="streakText" id="streakText">Complete at least 1 mission per day.</div>
+          </div>
         </div>
+
+        <div class="badgesRow" id="badgesRow"></div>
+
+        <div class="certBox" id="certBox">
+          <div class="certLeft">
+            <div class="certIcon">🏆</div>
+            <div>
+              <div class="certTitle">Champion Certificate</div>
+              <div class="certSub" id="certSub">Complete all 30 missions to unlock.</div>
+            </div>
+          </div>
+          <div class="lockPill" id="certPill">🔒 Locked</div>
+        </div>
+
+        <div class="controlsRow">
+          <div class="search" title="Search missions">
+            🔎 <input id="searchInput" placeholder="Search missions (e.g. catch, calm, team)" autocomplete="off" />
+          </div>
+          <button class="toggleChip" id="toggleUnfinished">Only Unfinished</button>
+          <button class="toggleChip" id="btnReset">Reset</button>
+        </div>
+
+        <div class="errorBox" id="errorBox"></div>
+
+        <div class="filters" id="filters"></div>
       </div>
     </section>
 
-    <section class="grid" id="grid">
-      <!-- cards injected -->
-    </section>
+    <section class="grid" id="grid"></section>
 
     <section class="footer">
-      <b>Optional downloads (inside the site)</b><br/>
-      If you add these files to the GitHub repo root, these buttons will work:
+      <b>🎉 Share Your Progress</b><br/>
       <div class="links">
-        <a class="linkBtn" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book (PDF)</a>
-        <a class="linkBtn" href="certificate.pdf" target="_blank" rel="noopener">🏆 Certificate (PDF)</a>
         <button class="linkBtn" id="btnShare">📤 Share</button>
+        <a class="linkBtn" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
+        <a class="linkBtn disabled" href="certificate.pdf" target="_blank" rel="noopener" id="certLink">🏆 Certificate</a>
       </div>
-      <div class="small">
-        Support: <a href="mailto:saykirtasiye@gmail.com">saykirtasiye@gmail.com</a>
+      <div class="small" style="margin-top:12px">
+        Support: <a href="mailto:saykirtasiye@gmail.com" style="color:var(--blue);font-weight:900">saykirtasiye@gmail.com</a>
       </div>
     </section>
   </div>
 
-  <!-- Modal / Bottom Sheet -->
+  <!-- Bottom Sheet -->
   <div class="backdrop" id="backdrop" role="dialog" aria-modal="true">
     <div class="sheet" id="sheet">
       <div class="sheetTop">
@@ -445,7 +667,7 @@
         <div class="sheetActions">
           <button class="btn btnPrimary" id="btnToggleDone">✅ Mark as Done</button>
           <button class="btn btnGhost" id="btnNext">➡️ Next Mission</button>
-          <button class="btn btnGhost" id="btnRandomPack">🎲 Random from this Pack</button>
+          <button class="btn btnGhost" id="btnRandomPack">🎲 Random from Pack</button>
         </div>
 
         <div class="small" id="mSmall"></div>
@@ -453,33 +675,25 @@
     </div>
   </div>
 
+  <button class="soundToggle" id="soundToggle" title="Toggle sound">🔊</button>
+
 <script>
-/** ✅ Zoom / accidental enlarge blockers (iOS + general) **/
+/** ✅ Zoom blockers **/
 (function disableZoom(){
-  // iOS pinch
   ["gesturestart","gesturechange","gestureend"].forEach(evt=>{
     document.addEventListener(evt, (e)=>e.preventDefault(), { passive:false });
   });
-
-  // prevent double-tap zoom (iOS Safari)
   let lastTouchEnd = 0;
   document.addEventListener("touchend", function(e){
     const now = Date.now();
-    if(now - lastTouchEnd <= 300){
-      e.preventDefault();
-    }
+    if(now - lastTouchEnd <= 300) e.preventDefault();
     lastTouchEnd = now;
   }, { passive:false });
-
   document.addEventListener("dblclick", (e)=>e.preventDefault(), { passive:false });
-
-  // desktop ctrl+wheel zoom
-  document.addEventListener("wheel", (e)=>{
-    if(e.ctrlKey) e.preventDefault();
-  }, { passive:false });
+  document.addEventListener("wheel", (e)=>{ if(e.ctrlKey) e.preventDefault(); }, { passive:false });
 })();
 
-/** ========= DATA (30 missions = 5 packs × 6) ========= **/
+/** ========= DATA ========= **/
 const PACKS = [
   { key:"all", name:"All Packs" },
   { key:"Reflex Rush", name:"Reflex Rush" },
@@ -489,6 +703,21 @@ const PACKS = [
   { key:"Indoor Compact", name:"Indoor Compact" },
 ];
 
+const BADGES = [
+  { id:"first", icon:"⭐", name:"First Steps", req:"Complete 1 mission", check: (d,m)=>d.size>=1 },
+  { id:"reflex", icon:"⚡", name:"Speed Demon", req:"Complete all Reflex Rush", check: (d,m)=>m.filter(x=>x.pack==="Reflex Rush"&&d.has(x.id)).length>=6 },
+  { id:"aim", icon:"🎯", name:"Sharpshooter", req:"Complete all Aim Master", check: (d,m)=>m.filter(x=>x.pack==="Aim Master"&&d.has(x.id)).length>=6 },
+  { id:"focus", icon:"🧘", name:"Zen Master", req:"Complete all Focus Control", check: (d,m)=>m.filter(x=>x.pack==="Focus Control"&&d.has(x.id)).length>=6 },
+  { id:"team", icon:"👥", name:"Team Player", req:"Complete all Team Duo", check: (d,m)=>m.filter(x=>x.pack==="Team Duo"&&d.has(x.id)).length>=6 },
+  { id:"indoor", icon:"🏠", name:"Indoor Hero", req:"Complete all Indoor Compact", check: (d,m)=>m.filter(x=>x.pack==="Indoor Compact"&&d.has(x.id)).length>=6 },
+  { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 30", check: (d,m)=>d.size>=30 },
+];
+
+function m(id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip){
+  return { id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip };
+}
+
+/** ✅ Full 30 missions (safe strings; quotes escaped) **/
 const missions = [
   // Reflex Rush (6)
   m(1,"Reflex Rush","⚡","Flash Catch",1,"2","45s","3+",
@@ -593,7 +822,7 @@ const missions = [
     "Keep space between kids.",
     "Perfect party mode."),
   m(20,"Team Duo","🏁","Relay Pass",2,"4+","180s","5+",
-    ["Make two lines (two teams).","Pass down the line.","Last player runs to front."],
+    ["Make two lines (two teams).","Pass down the line.","Last player goes to front."],
     "First team to 20 passes wins.",
     "No running if indoors.",
     "Keep throws low."),
@@ -651,24 +880,40 @@ const missions = [
     "Great skill drill."),
 ];
 
-// helper creator
-function m(id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip){
-  return { id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip };
-}
-
 /** ========= STATE ========= **/
-const LS_KEY = "jumvi_missions_done_v2";
-let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
+const LS_DONE   = "jumvi_done_v3";
+const LS_SOUND  = "jumvi_sound_v1";
+const LS_STREAK = "jumvi_streak_v1";
 
+let done = new Set(JSON.parse(localStorage.getItem(LS_DONE) || "[]"));
 let currentPack = "all";
 let lastOpenedId = null;
+let searchQuery = "";
+let onlyUnfinished = false;
+
+/** streak data shape */
+function getStreak(){
+  try{ return JSON.parse(localStorage.getItem(LS_STREAK) || "{}"); }catch{ return {}; }
+}
+function setStreak(obj){
+  localStorage.setItem(LS_STREAK, JSON.stringify(obj));
+}
 
 /** ========= UI refs ========= **/
 const grid = document.getElementById("grid");
 const filters = document.getElementById("filters");
+const badgesRow = document.getElementById("badgesRow");
 const progressText = document.getElementById("progressText");
 const progressSub = document.getElementById("progressSub");
 const progressFill = document.getElementById("progressBarFill");
+const certPill = document.getElementById("certPill");
+const certSub = document.getElementById("certSub");
+const certLink = document.getElementById("certLink");
+const errorBox = document.getElementById("errorBox");
+
+const streakBox = document.getElementById("streakBox");
+const streakNum = document.getElementById("streakNum");
+const streakText = document.getElementById("streakText");
 
 const backdrop = document.getElementById("backdrop");
 const btnClose = document.getElementById("btnClose");
@@ -685,60 +930,163 @@ const btnToggleDone = document.getElementById("btnToggleDone");
 const btnNext = document.getElementById("btnNext");
 const btnRandomPack = document.getElementById("btnRandomPack");
 
-/** ========= RENDER ========= **/
+/** ========= SOUND ========= **/
+let soundOn = (localStorage.getItem(LS_SOUND) ?? "1") === "1";
+const soundToggle = document.getElementById("soundToggle");
+function renderSound(){
+  soundToggle.textContent = soundOn ? "🔊" : "🔇";
+  soundToggle.classList.toggle("muted", !soundOn);
+}
+function clickSound(){
+  if(!soundOn) return;
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.value = 520;
+    g.gain.value = 0.05;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); ctx.close(); }, 70);
+  }catch(e){}
+}
+soundToggle.addEventListener("click", ()=>{
+  soundOn = !soundOn;
+  localStorage.setItem(LS_SOUND, soundOn ? "1" : "0");
+  renderSound();
+  clickSound();
+});
+
+/** ========= HELPERS ========= **/
+function persistDone(){ localStorage.setItem(LS_DONE, JSON.stringify([...done])); }
+
+function diffLabel(d){ return d===1 ? "Easy" : d===2 ? "Medium" : "Hard"; }
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function todayISO(){
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const da = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${da}`;
+}
+function yesterdayISO(){
+  const d = new Date(Date.now() - 86400000);
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const da = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${da}`;
+}
+
+function updateStreakOnComplete(){
+  const t = todayISO();
+  const y = yesterdayISO();
+  const s = getStreak();
+  const last = s.last || null;
+  let count = Number(s.count || 0);
+
+  if(last === t){
+    // same day: no change
+  }else if(last === y){
+    count += 1;
+  }else{
+    count = 1;
+  }
+
+  setStreak({ last: t, count });
+  renderStreak();
+}
+
+function renderStreak(){
+  const s = getStreak();
+  const count = Number(s.count || 0);
+  if(count > 0){
+    streakBox.classList.add("show");
+    streakNum.textContent = `${count} day streak`;
+    streakText.textContent = "Complete at least 1 mission per day to keep it!";
+  }else{
+    streakBox.classList.remove("show");
+  }
+}
+
+/** ========= FILTERS / LIST ========= **/
+function filteredMissions(){
+  let list = missions;
+
+  if(currentPack !== "all"){
+    list = list.filter(x => x.pack === currentPack);
+  }
+
+  if(searchQuery.trim()){
+    const q = searchQuery.trim().toLowerCase();
+    list = list.filter(x =>
+      x.title.toLowerCase().includes(q) ||
+      x.pack.toLowerCase().includes(q) ||
+      x.steps.join(" ").toLowerCase().includes(q)
+    );
+  }
+
+  if(onlyUnfinished){
+    list = list.filter(x => !done.has(x.id));
+  }
+
+  return list;
+}
+
 function renderFilters(){
   filters.innerHTML = "";
   PACKS.forEach(p=>{
     const b = document.createElement("button");
     b.className = "chip" + (p.key===currentPack ? " active" : "");
     b.textContent = p.name;
-    b.onclick = ()=>{ currentPack = p.key; renderFilters(); renderGrid(); };
+    b.onclick = ()=>{
+      clickSound();
+      currentPack = p.key;
+      renderFilters();
+      renderGrid();
+    };
     filters.appendChild(b);
   });
 }
 
-function filteredMissions(){
-  if(currentPack==="all") return missions;
-  return missions.filter(x=>x.pack===currentPack);
-}
-
-function diffLabel(d){
-  if(d===1) return "Easy";
-  if(d===2) return "Medium";
-  return "Hard";
-}
-
-function renderGrid(){
-  const list = filteredMissions();
-  grid.innerHTML = "";
-  list.forEach(ms=>{
-    const c = document.createElement("div");
-    const isDone = done.has(ms.id);
-    c.className = "card" + (isDone ? " done" : "");
-    c.innerHTML = `
-      <div class="doneBadge">DONE ✅</div>
-      <div class="cardHead">
-        <div class="left">
-          <div class="icon">${ms.icon}</div>
-          <div>
-            <div class="title">${ms.title}</div>
-            <div class="meta">
-              <span class="tag pack">${ms.pack}</span>
-              <span class="tag diff">${diffLabel(ms.difficulty)} • ${ms.time}</span>
-              <span class="tag">👥 ${ms.players}</span>
-              <span class="tag">🎂 ${ms.age}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ol class="steps">
-        ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
-      </ol>
+function renderBadges(){
+  badgesRow.innerHTML = "";
+  BADGES.forEach(b=>{
+    const unlocked = !!b.check(done, missions);
+    const el = document.createElement("div");
+    el.className = "badge " + (unlocked ? "unlocked" : "locked");
+    el.innerHTML = `
+      <div class="badgeIcon">${b.icon}</div>
+      <div class="badgeName">${escapeHtml(b.name)}</div>
+      <div class="badgeReq">${escapeHtml(b.req)}</div>
     `;
-    c.onclick = ()=>openMission(ms.id);
-    grid.appendChild(c);
+    badgesRow.appendChild(el);
   });
-  updateProgress();
+}
+
+function updateCertificateUI(){
+  const completed = done.size;
+  if(completed >= missions.length){
+    certPill.textContent = "✅ Unlocked";
+    certPill.classList.add("unlocked");
+    certSub.textContent = "Unlocked! Download your certificate 🎉";
+    certLink.classList.remove("disabled");
+  }else{
+    certPill.textContent = "🔒 Locked";
+    certPill.classList.remove("unlocked");
+    certSub.textContent = "Complete all 30 missions to unlock.";
+    certLink.classList.add("disabled");
+  }
 }
 
 function updateProgress(){
@@ -750,12 +1098,65 @@ function updateProgress(){
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
 
   if(completed>=total){
-    progressSub.textContent = "All missions completed! Download your certificate 🎉";
+    progressSub.textContent = "All missions completed! Certificate unlocked 🎉";
   }else if(completed>=10){
     progressSub.textContent = "Nice! Keep going — you’re building real skills.";
   }else{
-    progressSub.textContent = "Finish all missions to unlock the certificate.";
+    progressSub.textContent = "Start your first mission to begin!";
   }
+}
+
+function renderGrid(){
+  const list = filteredMissions();
+  grid.innerHTML = "";
+
+  if(list.length === 0){
+    const empty = document.createElement("div");
+    empty.style.padding = "14px";
+    empty.style.border = "1px solid rgba(255,255,255,.12)";
+    empty.style.borderRadius = "18px";
+    empty.style.background = "rgba(255,255,255,.04)";
+    empty.style.color = "rgba(234,242,255,.9)";
+    empty.style.fontWeight = "900";
+    empty.textContent = "No missions found for this filter.";
+    grid.appendChild(empty);
+    updateProgress();
+    updateCertificateUI();
+    renderBadges();
+    return;
+  }
+
+  list.forEach(ms=>{
+    const c = document.createElement("div");
+    const isDone = done.has(ms.id);
+    c.className = "card" + (isDone ? " done" : "");
+    c.innerHTML = `
+      <div class="doneBadge">DONE ✅</div>
+      <div class="cardHead">
+        <div class="left">
+          <div class="icon">${ms.icon}</div>
+          <div>
+            <div class="title">${escapeHtml(ms.title)}</div>
+            <div class="meta">
+              <span class="tag pack">${escapeHtml(ms.pack)}</span>
+              <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+              <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+              <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ol class="steps">
+        ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
+      </ol>
+    `;
+    c.onclick = ()=>{ clickSound(); openMission(ms.id); };
+    grid.appendChild(c);
+  });
+
+  updateProgress();
+  updateCertificateUI();
+  renderBadges();
 }
 
 /** ========= MODAL ========= **/
@@ -766,16 +1167,15 @@ function openMission(id){
 
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
-    <span class="tag pack">${ms.pack}</span>
-    <span class="tag diff">${diffLabel(ms.difficulty)} • ${ms.time}</span>
-    <span class="tag">👥 ${ms.players}</span>
-    <span class="tag">🎂 ${ms.age}</span>
+    <span class="tag pack">${escapeHtml(ms.pack)}</span>
+    <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+    <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+    <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
   `;
 
   mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px; line-height:1.45">
     ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
   </ol>`;
-
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
   mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
@@ -783,31 +1183,33 @@ function openMission(id){
   const isDone = done.has(ms.id);
   btnToggleDone.textContent = isDone ? "✅ Mark as NOT Done" : "✅ Mark as Done";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
-
-  mSmall.textContent = "Tip: This progress is saved on this phone automatically.";
+  mSmall.textContent = "Progress is saved on this phone automatically.";
 
   backdrop.classList.add("show");
   document.getElementById("sheet").scrollTop = 0;
 }
 
-function closeMission(){
-  backdrop.classList.remove("show");
-}
-
-btnClose.onclick = closeMission;
+function closeMission(){ backdrop.classList.remove("show"); }
+btnClose.onclick = ()=>{ clickSound(); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop) closeMission(); });
 
 btnToggleDone.onclick = ()=>{
   if(lastOpenedId==null) return;
-  if(done.has(lastOpenedId)) done.delete(lastOpenedId);
-  else done.add(lastOpenedId);
-  persist();
+  clickSound();
+  if(done.has(lastOpenedId)){
+    done.delete(lastOpenedId);
+  }else{
+    done.add(lastOpenedId);
+    updateStreakOnComplete();
+  }
+  persistDone();
   renderGrid();
   openMission(lastOpenedId);
 };
 
 btnNext.onclick = ()=>{
   if(lastOpenedId==null) return;
+  clickSound();
   const list = filteredMissions();
   const idx = list.findIndex(x=>x.id===lastOpenedId);
   const next = list[(idx+1) % list.length];
@@ -816,6 +1218,7 @@ btnNext.onclick = ()=>{
 
 btnRandomPack.onclick = ()=>{
   if(lastOpenedId==null) return;
+  clickSound();
   const ms = missions.find(x=>x.id===lastOpenedId);
   const list = missions.filter(x=>x.pack===ms.pack);
   const pick = list[Math.floor(Math.random()*list.length)];
@@ -824,50 +1227,74 @@ btnRandomPack.onclick = ()=>{
 
 /** ========= ACTIONS ========= **/
 document.getElementById("btnRandomAll").onclick = ()=>{
+  clickSound();
   const pick = missions[Math.floor(Math.random()*missions.length)];
   openMission(pick.id);
 };
 
 document.getElementById("btnChoosePack").onclick = ()=>{
+  clickSound();
   document.getElementById("filters").scrollIntoView({behavior:"smooth", block:"start"});
 };
 
+document.getElementById("btnShowBadges").onclick = ()=>{
+  clickSound();
+  document.getElementById("badgesRow").scrollIntoView({behavior:"smooth", block:"start"});
+};
+
 document.getElementById("btnReset").onclick = ()=>{
+  clickSound();
   if(!confirm("Reset progress on this phone?")) return;
   done = new Set();
-  persist();
+  persistDone();
+  setStreak({});
+  renderStreak();
   renderGrid();
   closeMission();
 };
 
 document.getElementById("btnShare").onclick = async ()=>{
+  clickSound();
   const url = location.href;
+  const msg = `I completed ${done.size}/${missions.length} JUMVI missions!`;
   try{
     if(navigator.share){
-      await navigator.share({ title:"JUMVI Missions", text:"Scan & play 30 missions!", url });
+      await navigator.share({ title:"JUMVI Missions", text: msg, url });
     }else{
-      await navigator.clipboard.writeText(url);
-      alert("Link copied!");
+      await navigator.clipboard.writeText(`${msg}\n${url}`);
+      alert("Copied!");
     }
   }catch(e){}
 };
 
-function persist(){
-  localStorage.setItem(LS_KEY, JSON.stringify([...done]));
-}
-
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
+/** search + unfinished toggle */
+document.getElementById("searchInput").addEventListener("input",(e)=>{
+  searchQuery = e.target.value || "";
+  renderGrid();
+});
+const toggleUnfinishedBtn = document.getElementById("toggleUnfinished");
+toggleUnfinishedBtn.onclick = ()=>{
+  clickSound();
+  onlyUnfinished = !onlyUnfinished;
+  toggleUnfinishedBtn.classList.toggle("active", onlyUnfinished);
+  renderGrid();
+};
 
 /** ========= INIT ========= **/
-renderFilters();
-renderGrid();
+function init(){
+  renderSound();
+  renderFilters();
+  renderStreak();
+  renderGrid();
+}
+
+try{
+  init();
+}catch(err){
+  console.error(err);
+  errorBox.classList.add("show");
+  errorBox.textContent = "⚠️ Something went wrong. Please refresh. If it continues, copy this screen to support: " + (err?.message || "Unknown error");
+}
 </script>
 </body>
 </html>
