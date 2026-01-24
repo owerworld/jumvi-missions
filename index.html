@@ -11,19 +11,20 @@
 
   <style>
     :root{
-      --bg:#061326;           /* stable base (no harsh scroll bands) */
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.04);
-      --text:#EAF2FF;
-      --muted:#A9B8D6;
-      --border:rgba(255,255,255,.12);
+      /* "SUNNY PLAYGROUND" THEME (Kids 3-8) */
+      --bg: #E0F7FA;            /* Sky Blue Light */
+      --card: #FFFFFF;          /* White Cloud */
+      --card2: #F0F9FF;         /* Very Light Blue */
+      --text: #0D47A1;          /* Deep Blue (Readable contrast) */
+      --muted: #5472A3;         /* Soft Grey-Blue */
+      --border: rgba(33, 150, 243, 0.2); /* Soft Blue Border */
 
-      --blue:#4FB3FF;         /* JUMVI Sport Blue */
-      --lime:#97D700;         /* Neon Lime */
-      --orange:#FF6A00;       /* Ball Orange */
+      --blue: #00B0FF;          /* Bright Cartoon Blue */
+      --lime: #76FF03;          /* Bright Grass Green */
+      --orange: #FF9100;        /* Toy Orange */
 
-      --radius:18px;
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
+      --radius: 22px;           /* Bubbly/Rounder corners */
+      --shadow: 0 12px 30px rgba(13, 71, 161, 0.15); /* Soft colorful shadow */
     }
 
     *{ box-sizing:border-box; }
@@ -31,21 +32,20 @@
     html{ -webkit-text-size-adjust:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Comic Sans MS", "Chalkboard SE", sans-serif; /* Added fun fonts fallback */
       color:var(--text);
       background: var(--bg);
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior: none;
     }
 
-    /* Fixed background layer = no “hard gradient bands” while scrolling on iOS */
+    /* Fixed background layer = Sunny Day Gradient */
     .bgLayer{
       position:fixed; inset:0; z-index:-1;
       background:
-        radial-gradient(900px 600px at 15% 0%, rgba(79,179,255,.16), transparent 55%),
-        radial-gradient(820px 520px at 90% 25%, rgba(151,215,0,.11), transparent 55%),
-        radial-gradient(650px 480px at 60% 95%, rgba(255,106,0,.10), transparent 55%),
-        linear-gradient(180deg, #061326 0%, #061326 100%);
+        radial-gradient(circle at 10% 10%, rgba(255, 235, 59, 0.4), transparent 40%), /* Sun glow */
+        radial-gradient(circle at 90% 80%, rgba(118, 255, 3, 0.2), transparent 40%),  /* Grass glow */
+        linear-gradient(180deg, #E0F7FA 0%, #E1F5FE 100%);
       transform: translateZ(0);
     }
 
@@ -56,145 +56,177 @@
     /* Top bar */
     .sticky{
       position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(10px);
-      background: rgba(6,19,38,.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.85); /* Milky glass */
       border-bottom:1px solid var(--border);
       padding-top: env(safe-area-inset-top);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
     .topbar{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:10px 14px 10px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: #0277BD; }
     .logoWrap{
-      width:38px; height:38px; border-radius:12px;
-      background: linear-gradient(135deg, rgba(79,179,255,.25), rgba(151,215,0,.16));
-      border:1px solid rgba(255,255,255,.14);
+      width:42px; height:42px; border-radius:14px;
+      background: #FFFFFF;
+      border:1px solid var(--border);
       display:flex; align-items:center; justify-content:center;
       overflow:hidden;
-      box-shadow: 0 0 0 3px rgba(79,179,255,.10);
+      box-shadow: 0 4px 10px rgba(0,176,255,.15);
       flex: 0 0 auto;
     }
-    .logoImg{ width:100%; height:100%; object-fit:contain; padding:6px; }
+    .logoImg{ width:100%; height:100%; object-fit:contain; padding:4px; }
+    
+    /* New Avatar Feature */
+    .avatarBtn{
+      background: #FFF;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      width: 40px; height: 40px;
+      font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      user-select: none;
+    }
+
     .pill{
       font-size:12px; color:var(--muted);
       border:1px solid var(--border);
-      padding:7px 10px; border-radius:999px;
+      background: rgba(255,255,255,0.6);
+      padding:7px 12px; border-radius:999px;
       display:flex; align-items:center; gap:8px;
       white-space: nowrap;
+      font-weight: 800;
     }
 
     /* Hero card */
     .hero{
       margin-top:12px;
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.035));
-      border-radius: 24px;
-      padding:14px;
+      border:1px solid #FFFFFF;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5));
+      border-radius: 26px;
+      padding:16px;
       box-shadow: var(--shadow);
     }
     .h1{
       margin:0;
-      font-size: 22px;
+      font-size: 24px;
       line-height:1.15;
       font-weight:950;
       letter-spacing:-.2px;
+      color: #01579B;
     }
     .sub{
       margin:8px 0 0;
       color:var(--muted);
-      line-height:1.4;
-      font-size:13px;
+      line-height:1.5;
+      font-size:14px;
       max-width: 60ch;
+      font-weight: 600;
     }
+    .sub b { color: var(--orange); }
 
-    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
     .btn{
       appearance:none; border:0; cursor:pointer;
-      border-radius:16px;
-      padding:12px 14px;
+      border-radius:20px;
+      padding:12px 18px;
       font-weight:900;
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       transition: transform .12s ease, filter .12s ease;
       user-select:none;
-      min-height:44px;
+      min-height:48px; /* Bigger touch target for kids */
       -webkit-user-select:none;
+      font-size: 15px;
     }
-    .btn:active{ transform: scale(.98); }
+    .btn:active{ transform: scale(.96); }
     .btnPrimary{
-      background: linear-gradient(135deg, var(--blue), #2E8DFF);
-      color:#061326;
-      box-shadow: 0 10px 26px rgba(79,179,255,.22);
+      background: linear-gradient(135deg, #29B6F6, #0288D1);
+      color:#FFFFFF;
+      box-shadow: 0 8px 20px rgba(3, 169, 244, 0.3);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     .btnGhost{
-      background: rgba(255,255,255,.06);
+      background: #FFFFFF;
       border:1px solid var(--border);
-      color:var(--text);
+      color: var(--text);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
     .btnLime{
-      background: linear-gradient(135deg, var(--lime), #B7FF2A);
-      color:#061326;
-      box-shadow: 0 10px 26px rgba(151,215,0,.18);
+      background: linear-gradient(135deg, #76FF03, #64DD17);
+      color:#1B5E20;
+      box-shadow: 0 8px 20px rgba(118, 255, 3, 0.25);
+    }
+    .btnTimer{
+        background: #FFF3E0;
+        color: #E65100;
+        border: 1px solid #FFE0B2;
     }
 
     /* Progress */
     .progressBox{
-      margin-top:12px;
+      margin-top:16px;
       display:flex; gap:12px; align-items:center; flex-wrap:wrap;
-      padding:12px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.12);
+      padding:14px;
+      border-radius:22px;
+      border:1px solid #FFF;
+      background: #FFFFFF; /* Clean white */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    .pText{ font-weight:950; letter-spacing:.2px; }
-    .pSub{ color:var(--muted); font-size:12px; margin-top:2px; }
+    .pText{ font-weight:950; letter-spacing:.2px; color: #0277BD; font-size: 15px; }
+    .pSub{ color:var(--muted); font-size:12px; margin-top:3px; font-weight: 700; }
     .bar{
       flex:1; min-width:180px;
-      height:12px; border-radius:999px;
-      background: rgba(255,255,255,.10);
+      height:16px; border-radius:999px;
+      background: #F1F5F9;
       overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid rgba(0,0,0,0.05);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
     .bar>div{
       height:100%; width:0%;
-      background: linear-gradient(90deg, var(--orange), var(--blue), var(--lime));
+      background: linear-gradient(90deg, #FFAB00, #00B0FF, #76FF03);
       border-radius:999px;
-      transition: width .35s ease;
+      transition: width .35s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy transition */
     }
 
     /* Search + quick toggles */
     .controls{
-      margin-top:12px;
+      margin-top:16px;
       display:grid;
       grid-template-columns: 1fr;
       gap:10px;
     }
     .search{
       display:flex; align-items:center; gap:10px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      border-radius:18px;
-      padding:12px 12px;
+      border:1px solid transparent;
+      background: #FFFFFF;
+      border-radius:22px;
+      padding:12px 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
     }
-    .searchIcon{ opacity:.75; }
+    .searchIcon{ opacity:.5; font-size: 18px; }
     .search input{
       width:100%;
       border:0; outline:0;
       background: transparent;
       color: var(--text);
-      font-weight:850;
-      font-size:16px; /* iOS: prevent zoom on focus */
+      font-weight:800;
+      font-size:16px; 
     }
-    .search input::placeholder{ color: rgba(169,184,214,.75); font-weight:850; }
+    .search input::placeholder{ color: #90A4AE; font-weight:700; }
 
     .toggleRow{ display:flex; gap:10px; flex-wrap:wrap; }
     .chip{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color:var(--text);
-      padding:10px 12px;
+      background: #FFFFFF;
+      color: rgba(6,19,38,0.72);
+      padding:10px 14px;
       border-radius:999px;
-      font-weight:900;
+      font-weight:800;
       font-size:13px;
       cursor:pointer;
       user-select:none;
@@ -202,191 +234,201 @@
       transition: transform .12s ease, filter .12s ease;
       min-height:44px;
       display:inline-flex; align-items:center; justify-content:center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     .chip:active{ transform: scale(.98); }
     .chip.active{
-      border-color: rgba(79,179,255,.55);
-      background: rgba(79,179,255,.16);
-      box-shadow: 0 0 0 4px rgba(79,179,255,.10);
+      border-color: var(--blue);
+      background: #E1F5FE;
+      color: #01579B;
+      box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.15);
     }
     .chip.limeActive.active{
-      border-color: rgba(151,215,0,.55);
-      background: rgba(151,215,0,.14);
-      box-shadow: 0 0 0 4px rgba(151,215,0,.08);
+      border-color: #64DD17;
+      background: #F1F8E9;
+      color: #33691E;
+      box-shadow: 0 0 0 3px rgba(118, 255, 3, 0.2);
     }
 
     /* Pack filter row */
     .filters{
-      margin-top:12px;
-      display:flex; gap:8px;
+      margin-top:14px;
+      display:flex; gap:10px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom:6px;
+      padding-bottom:10px;
+      padding-left: 4px; /* padding for shadow visibility */
     }
     .filters::-webkit-scrollbar{ display:none; }
 
     /* Mission list */
     .list{
-      margin-top:12px;
+      margin-top:16px;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:14px;
     }
     .card{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      border-radius: 18px;
-      padding:12px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      border:1px solid transparent;
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding:16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05); /* Soft cloud shadow */
       cursor:pointer;
       display:flex;
-      gap:12px;
+      gap:14px;
       align-items:center;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .card:active{ transform: scale(.995); }
+    .card:active{ transform: scale(.98); }
     .mIcon{
-      width:44px; height:44px; border-radius:14px;
+      width:50px; height:50px; border-radius:18px;
       display:flex; align-items:center; justify-content:center;
-      font-size:20px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
+      font-size:24px;
+      background: #F5F5F5;
+      color: #333;
       flex:0 0 auto;
     }
     .mMain{ flex:1; min-width:0; }
-    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:16px; }
+    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: #0277BD; }
     .mMeta{
       margin-top:6px;
       display:flex; flex-wrap:wrap; gap:8px;
-      color: var(--muted);
+      color: rgba(6,19,38,0.72);
       font-size:12px;
-      font-weight:900;
+      font-weight:800;
     }
     .tag{
       padding:6px 10px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.10);
-      color: var(--text);
+      background: #F1F5F9;
+      color: #334155;
       white-space:nowrap;
       font-size:11px;
-      font-weight:950;
+      font-weight:800;
     }
-    .tag.pack{ border-color: rgba(79,179,255,.25); }
-    .tag.diff{ border-color: rgba(255,106,0,.25); }
+    .tag.pack{ background: #E1F5FE; color: #0277BD; }
+    .tag.diff{ background: #FFF3E0; color: #E65100; }
     .tag.smallHide{ display:inline-flex; }
+    
     .donePill{
-      padding:8px 10px;
+      padding:8px 12px;
       border-radius:999px;
-      background: rgba(151,215,0,.20);
-      border:1px solid rgba(151,215,0,.40);
-      color: var(--text);
+      background: #76FF03;
+      color: #1B5E20;
       font-weight:950;
       font-size:12px;
       flex:0 0 auto;
       display:none;
+      box-shadow: 0 4px 10px rgba(118, 255, 3, 0.3);
     }
     .card.done .donePill{ display:inline-flex; }
     .card.done{
-      border-color: rgba(151,215,0,.33);
-      background: rgba(151,215,0,.06);
+      background: #F1F8E9;
+      border: 1px solid #76FF03;
+      box-shadow: 0 4px 10px rgba(118, 255, 3, 0.1);
     }
+    .card.done .mTitle { color: #33691E; text-decoration: none; }
+    .card.done .mIcon { background: #DCEDC8; }
 
     /* Badges + certificate */
     .badgeRow{
-      margin-top:12px;
+      margin-top:16px;
       display:flex;
-      gap:10px;
+      gap:12px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom:6px;
+      padding-bottom:10px;
+      padding-left:4px;
     }
     .badgeRow::-webkit-scrollbar{ display:none; }
     .badge{
       flex:0 0 auto;
-      min-width:128px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      padding:12px;
+      min-width:130px;
+      border-radius:20px;
+      border:1px solid #EEEEEE;
+      background: #FFFFFF;
+      padding:14px;
       text-align:left;
-      box-shadow: 0 12px 28px rgba(0,0,0,.16);
-      opacity:.55;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+      opacity:.6;
       filter: grayscale(1);
     }
     .badge.unlocked{
       opacity:1;
       filter:none;
-      border-color: rgba(151,215,0,.35);
-      background: linear-gradient(135deg, rgba(151,215,0,.12), rgba(79,179,255,.08));
-      box-shadow: 0 0 0 3px rgba(151,215,0,.08);
+      border-color: var(--lime);
+      background: linear-gradient(135deg, #F1F8E9, #FFFFFF);
+      box-shadow: 0 4px 12px rgba(118, 255, 3, 0.2);
     }
-    .badgeIcon{ font-size:22px; }
-    .badgeName{ margin-top:6px; font-weight:950; font-size:13px; }
-    .badgeReq{ margin-top:4px; color: var(--muted); font-size:11px; font-weight:850; }
+    .badgeIcon{ font-size:26px; }
+    .badgeName{ margin-top:8px; font-weight:950; font-size:14px; color: #0277BD; }
+    .badgeReq{ margin-top:4px; color: var(--muted); font-size:11px; font-weight:700; }
 
     .certBox{
-      margin-top:12px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      padding:14px;
+      margin-top:16px;
+      border-radius:24px;
+      border:1px solid #FFFFFF;
+      background: #FFFFFF;
+      padding:16px;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
+      box-shadow: var(--shadow);
     }
     .certLeft{ display:flex; align-items:center; gap:12px; }
-    .certIcon{ font-size:28px; }
-    .certText b{ font-weight:950; }
-    .certText div{ color: var(--muted); font-size:12px; margin-top:2px; font-weight:850; }
+    .certIcon{ font-size:32px; }
+    .certText b{ font-weight:950; font-size: 16px; color: #01579B; }
+    .certText div{ color: var(--muted); font-size:12px; margin-top:4px; font-weight:700; }
     .certBtn{
-      border-radius:16px;
-      border:1px solid rgba(151,215,0,.38);
-      background: rgba(151,215,0,.18);
-      color: var(--text);
+      border-radius:18px;
+      background: #EEEEEE;
+      color: #999;
       font-weight:950;
-      padding:12px 12px;
-      min-height:44px;
+      padding:12px 16px;
+      min-height:48px;
       cursor:pointer;
+      border: none;
     }
     .certBtn.locked{
-      opacity:.55;
+      opacity:.7;
     }
     .certBtn.unlocked{
       opacity:1;
       pointer-events:auto;
-      background: linear-gradient(135deg, rgba(151,215,0,.88), #B7FF2A);
-      color:#061326;
-      border-color: rgba(151,215,0,.55);
-      box-shadow: 0 10px 26px rgba(151,215,0,.18);
+      background: linear-gradient(135deg, #FFD600, #FFAB00);
+      color: #3E2723;
+      box-shadow: 0 8px 20px rgba(255, 171, 0, 0.3);
     }
 
     /* Footer */
     .footer{
-      margin-top:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      border-radius:18px;
-      padding:14px;
-      color: var(--muted);
+      margin-top:20px;
+      border:1px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,.6);
+      border-radius:20px;
+      padding:16px;
+      color: rgba(6,19,38,0.72);
       font-size:12px;
       line-height:1.5;
     }
     .links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
     .linkBtn{
       border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      padding:10px 12px;
-      border-radius:14px;
-      color: var(--text);
-      font-weight:900;
+      background: #FFFFFF;
+      padding:10px 14px;
+      border-radius:16px;
+      color: #0277BD;
+      font-weight:800;
       font-size:13px;
       cursor:pointer;
       min-height:44px;
       display:inline-flex; align-items:center; justify-content:center;
     }
 
-    /* Modal (bottom sheet) */
+    /* Modal (bottom sheet) - LIGHT THEME */
     .backdrop{
       position:fixed; inset:0; z-index:80;
-      background: rgba(0,0,0,.55);
+      background: rgba(33, 150, 243, 0.25); /* Blue tinted backdrop */
+      backdrop-filter: blur(4px);
       display:none;
       align-items:flex-end;
       padding-bottom: env(safe-area-inset-bottom);
@@ -396,77 +438,98 @@
       width:100%;
       max-width:980px;
       margin:0 auto;
-      border-radius: 22px 22px 0 0;
-      background: rgba(10,27,56,.96);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 -18px 60px rgba(0,0,0,.45);
-      padding:14px 14px 18px;
-      max-height: 86vh;
+      border-radius: 28px 28px 0 0;
+      background: #FFFFFF;
+      border:none;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.15);
+      padding:18px 18px 24px;
+      max-height: 88vh;
       overflow:auto;
+      color: #37474F;
     }
     .sheetTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
     .close{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      border-radius:14px;
-      padding:10px 12px;
+      border:1px solid #EEE;
+      background: #F5F5F5;
+      color: #555;
+      border-radius:16px;
+      padding:10px 14px;
       font-weight:950;
       cursor:pointer;
       min-height:44px;
+      font-size: 16px;
     }
-    .sheetTitle{ font-weight:950; font-size:18px; }
+    .sheetTitle{ font-weight:950; font-size:20px; color: #01579B; }
     .sheetMeta{ margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; }
     .kv{
-      margin-top:10px;
-      padding:12px;
-      border-radius:16px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      line-height:1.45;
-      font-size:13px;
+      margin-top:12px;
+      padding:16px;
+      border-radius:20px;
+      border:1px solid #E1F5FE;
+      background: #F1F9FF; /* Very light blue */
+      line-height:1.5;
+      font-size:15px; /* Bigger text for kids/parents */
     }
-    .kv b{ color: var(--text); }
-    .sheetActions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
-    .small{ font-size:12px; color: var(--muted); margin-top:10px; }
+    .kv b{ color: #0277BD; }
+    .sheetActions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
+    .small{ font-size:12px; color: #90A4AE; margin-top:10px; }
+    
+    /* Timer UI in Modal */
+    #timerUI{
+        margin-top: 10px;
+        display:none;
+        padding: 12px;
+        background: #FFF3E0;
+        border-radius: 16px;
+        border: 1px solid #FFE0B2;
+        text-align:center;
+    }
+    #timerDisplay{ font-size: 24px; font-weight: 950; color: #E65100; font-variant-numeric: tabular-nums; }
+    #timerBar{ height: 8px; background: rgba(230, 81, 0, 0.1); border-radius: 99px; margin-top: 8px; overflow:hidden; }
+    #timerFill{ height: 100%; width: 100%; background: #FF9800; transition: width 1s linear; }
 
     /* Floating sound toggle */
     .soundToggle{
       position:fixed;
-      bottom:16px;
-      right:16px;
-      width:46px;
-      height:46px;
+      bottom:20px;
+      right:20px;
+      width:52px;
+      height:52px;
       border-radius:999px;
-      background: linear-gradient(135deg, rgba(79,179,255,.95), rgba(151,215,0,.92));
-      border:2px solid rgba(255,255,255,.18);
+      background: linear-gradient(135deg, #FFD600, #FF6D00);
+      border:3px solid #FFFFFF;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:20px;
+      font-size:22px;
       cursor:pointer;
-      box-shadow: 0 10px 30px rgba(0,0,0,.32);
+      box-shadow: 0 8px 24px rgba(255, 109, 0, 0.3);
       z-index:70;
       transition: transform .2s ease, opacity .2s ease;
       user-select:none;
     }
     .soundToggle:active{ transform: scale(.92); }
     .soundToggle.muted{
-      background: rgba(255,255,255,.08);
-      opacity:.65;
+      background: #ECEFF1;
+      color: #999;
+      opacity:.8;
     }
 
     /* Small screens tweaks */
     @media (max-width:520px){
       .wrap{ padding:12px 12px 24px; }
       .topbar{ padding:10px 12px; }
-      .hero{ border-radius:22px; }
-      .h1{ font-size: clamp(20px, 5.6vw, 24px); }
-      .sub{ font-size: 13px; }
-      .row{ gap:8px; }
-      .row .btn{ flex:1 1 calc(50% - 8px); }
+      .hero{ border-radius:24px; }
+      .h1{ font-size: clamp(22px, 6vw, 26px); }
+      .sub{ font-size: 14px; }
+      .row{ gap:10px; }
+      .row .btn{ flex:1 1 calc(50% - 10px); }
       .row .btn:last-child{ flex-basis: 100%; }
-      .tag.smallHide{ display:none; } /* keep list clean on iPhone */
+      .tag.smallHide{ display:none; }
+      
+      /* Make list items chunkier on phone */
+      .card { padding: 18px; }
+      .mIcon { width: 54px; height: 54px; }
     }
 
     @media (prefers-reduced-motion: reduce){
@@ -476,14 +539,14 @@
     /* Certificate + confetti + toast */
     .certBox.unlockedPulse{
       animation: certPulse 1.15s ease-in-out 0s 1;
-      border-color: rgba(151,215,0,.55);
-      box-shadow: 0 0 0 4px rgba(151,215,0,.10), 0 18px 55px rgba(0,0,0,.35);
+      border-color: var(--lime);
+      box-shadow: 0 0 0 6px rgba(118, 255, 3, 0.3), 0 18px 55px rgba(0,0,0,.15);
     }
     @keyframes certPulse{
       0%{ transform: scale(1); }
-      18%{ transform: scale(1.015); }
+      18%{ transform: scale(1.03); }
       36%{ transform: scale(1); }
-      55%{ transform: scale(1.01); }
+      55%{ transform: scale(1.02); }
       100%{ transform: scale(1); }
     }
 
@@ -493,14 +556,14 @@
       left:50%;
       transform: translateX(-50%) translateY(-12px);
       z-index:95;
-      padding:12px 14px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(10,27,56,.92);
-      color: var(--text);
+      padding:14px 20px;
+      border-radius: 999px;
+      border:none;
+      background: #37474F;
+      color: #FFF;
       font-weight:950;
-      font-size:13px;
-      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      font-size:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
       opacity:0;
       pointer-events:none;
       transition: opacity .2s ease, transform .2s ease;
@@ -520,33 +583,54 @@
       display:none;
     }
 
-    /* Certificate sheet */
+    /* Certificate sheet - FUN REDESIGN */
     .certWrap{
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap:14px;
     }
     .certPaper{
       width:100%;
       background: #ffffff;
       color:#0b1a2e;
-      border-radius: 16px;
+      border-radius: 20px;
       overflow:hidden;
-      border:1px solid rgba(0,0,0,.10);
-      box-shadow: 0 18px 55px rgba(0,0,0,.30);
+      border: 8px solid #FFB74D; /* Thick orange frame */
+      box-shadow: 0 18px 55px rgba(0,0,0,.15), inset 0 0 0 2px #FFF;
+      position: relative;
     }
     .certInner{
       padding: 22px 22px;
-      background:
-        radial-gradient(900px 520px at 12% 0%, rgba(79,179,255,.16), transparent 60%),
-        radial-gradient(820px 520px at 92% 18%, rgba(151,215,0,.14), transparent 60%),
-        radial-gradient(650px 480px at 62% 98%, rgba(255,106,0,.12), transparent 60%),
-        #ffffff;
-      min-height: 520px;
+      background: linear-gradient(135deg, #E6FBFF 0%, #FFF7C7 45%, #FFE9F6 100%);
+      position: relative;
+      overflow: hidden;
     }
-
-    /* Certificate premium styling */
-    .certInner{ position:relative; overflow:hidden; }
+    .certInner::before{
+      content: "";
+      position: absolute;
+      inset: -30px;
+      background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27160%27%20height%3D%27160%27%20viewBox%3D%270%200%20160%20160%27%3E%0A%20%20%3Crect%20width%3D%27160%27%20height%3D%27160%27%20fill%3D%27none%27%2F%3E%0A%20%20%3Cg%20opacity%3D%270.95%27%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2738%2C18%2042%2C30%2055%2C30%2044%2C37%2048%2C50%2038%2C42%2028%2C50%2032%2C37%2021%2C30%2034%2C30%27%20fill%3D%27rgba%28255%2C215%2C0%2C0.75%29%27%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%27130%2C34%20133%2C43%20143%2C43%20135%2C49%20138%2C58%20130%2C52%20122%2C58%20125%2C49%20117%2C43%20127%2C43%27%20fill%3D%27rgba%2879%2C179%2C255%2C0.60%29%27%2F%3E%0A%20%20%20%20%3Cpolygon%20points%3D%2770%2C120%2073%2C129%2083%2C129%2075%2C135%2078%2C144%2070%2C138%2062%2C144%2065%2C135%2057%2C129%2067%2C129%27%20fill%3D%27rgba%28255%2C106%2C0%2C0.55%29%27%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2722%27%20cy%3D%2792%27%20r%3D%273%27%20fill%3D%27rgba%2879%2C179%2C255%2C0.45%29%27%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%27104%27%20cy%3D%2794%27%20r%3D%273%27%20fill%3D%27rgba%28255%2C106%2C0%2C0.45%29%27%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%27140%27%20cy%3D%27118%27%20r%3D%273%27%20fill%3D%27rgba%28255%2C215%2C0%2C0.55%29%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M20%20136%20l12%20-7%27%20stroke%3D%27rgba%2879%2C179%2C255%2C0.45%29%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%27M116%2010%20l14%207%27%20stroke%3D%27rgba%28255%2C106%2C0%2C0.45%29%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E");
+      background-size: 160px 160px;
+      background-repeat: repeat;
+      opacity: .28;
+      transform: rotate(-2deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .certInner::after{
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -120px;
+      top: -130px;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 214, 0, .55), rgba(255, 106, 0, 0) 65%);
+      opacity: .60;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .certInner > *{ position: relative; z-index: 1; }
+/* Certificate premium styling */
     .certRibbon{
       position:absolute; left:0; top:0; right:0;
       height:14px;
@@ -554,34 +638,39 @@
     }
     .certWatermark{
       position:absolute;
-      right:-36px;
-      bottom:18px;
-      font-size:92px;
+      right:-20px;
+      bottom:20px;
+      font-size:100px;
       font-weight:1000;
       letter-spacing:-2px;
-      color: rgba(11,26,46,.06);
+      color: rgba(255, 167, 38, 0.08); /* Faint orange watermark */
       transform: rotate(-8deg);
       pointer-events:none;
       user-select:none;
       line-height:1;
     }
+    
+    /* "Medal" style stamp */
     .certStamp{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      margin-top:12px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(79,179,255,.35);
-      background: rgba(79,179,255,.08);
-      font-size:12px;
+      margin-top:16px;
+      padding:10px 16px;
+      border-radius:99px;
+      background: linear-gradient(135deg, #FFD700, #FFCA28); /* Gold */
+      border: 2px solid #FFECB3;
+      box-shadow: 0 4px 0 #FFB300, 0 8px 10px rgba(0,0,0,0.1);
+      font-size:13px;
       font-weight:950;
-      opacity:.95;
+      color: #5D4037; /* Dark brown text */
+      transform: rotate(-2deg);
     }
     .certStamp b{ font-weight:1000; }
 
     .certHeader{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
+      margin-top: 10px;
     }
     .certBrand{
       display:flex; align-items:center; gap:10px;
@@ -589,59 +678,93 @@
       letter-spacing: .2px;
     }
     .certLogo{
-      width:44px; height:44px;
-      border-radius:14px;
-      border:1px solid rgba(0,0,0,.10);
-      background: #f3f7ff;
+      width:52px; height:52px; /* Bigger logo */
+      border-radius:18px;
+      border:2px solid #EEE;
+      background: #FFF;
       display:flex; align-items:center; justify-content:center;
       overflow:hidden;
       flex:0 0 auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
-    .certLogo img{ width:100%; height:100%; object-fit:contain; padding:7px; }
+    .certLogo img{ width:100%; height:100%; object-fit:contain; padding:6px; }
+
+    .certLogo .logoFallback{
+      display:none;
+      font-size: 20px;
+      font-weight: 1000;
+      color:#0b1a2e;
+      line-height:1;
+    }
+    .certLogo.fallback{
+      background: linear-gradient(135deg, rgba(79,179,255,.22), rgba(151,215,0,.18));
+    }
+    .certLogo.fallback .logoFallback{ display:block; }
+
+    .certBurst{
+      position:absolute;
+      top:12px; right:12px;
+      width:72px; height:72px;
+      border-radius:999px;
+      background: #FFFFFF;
+      border:4px solid #FFD54F;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: 0 6px 0 rgba(255, 160, 0, 0.2);
+      font-size:36px;
+      transform: rotate(10deg);
+    }
+
+    .certTitle{
+      margin:24px 0 8px;
+      font-size: 32px; /* HUGE title */
+      font-weight: 1000;
+      letter-spacing: -1px;
+      color: #0277BD;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0px #E1F5FE;
+      line-height: 1;
+    }
+    .certSubtitle{
+      margin:0;
+      font-size: 14px;
+      font-weight: 850;
+      color: #334155;
+      line-height: 1.4;
+    }
+
     .certMetaMini{
-      font-size:12px;
+      font-size:11px;
       font-weight:900;
-      opacity:.75;
+      color: #90A4AE;
       text-align:right;
       white-space:nowrap;
     }
 
-    .certTitle{
-      margin:16px 0 6px;
+    .certName{
+      margin-top:24px;
       font-size: 26px;
       font-weight: 1000;
-      letter-spacing: -.3px;
-    }
-    .certSubtitle{
-      margin:0;
-      font-size: 13px;
-      font-weight: 850;
-      opacity:.75;
-      line-height: 1.4;
-    }
-
-    .certName{
-      margin-top:18px;
-      font-size: 22px;
-      font-weight: 1000;
-      letter-spacing: -.2px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border:1px dashed rgba(11,26,46,.25);
-      background: rgba(79,179,255,.06);
+      letter-spacing: -.5px;
+      padding: 10px 4px;
+      border-bottom: 2px dashed #0277BD; /* Dotted line */
+      background: transparent;
+      color: #01579B;
+      text-align: center;
+      width: 100%;
     }
 
     .certBody{
-      margin-top: 14px;
-      font-size: 13px;
-      font-weight: 850;
+      margin-top: 18px;
+      font-size: 14px;
+      font-weight: 700;
       line-height: 1.6;
-      opacity: .92;
+      color: #37474F;
       max-width: 70ch;
     }
+    .certBody b { color: #E65100; font-weight: 900; }
 
     .certFooter{
-      margin-top: 22px;
+      margin-top: 28px;
       display:flex;
       justify-content:space-between;
       gap:14px;
@@ -649,30 +772,32 @@
       align-items:flex-end;
     }
     .certBoxMini{
-      padding: 10px 12px;
+      padding: 10px 14px;
       border-radius: 14px;
-      border:1px solid rgba(0,0,0,.10);
-      background: rgba(0,0,0,.03);
+      border:1px solid #B3E5FC;
+      background: #E1F5FE;
       font-size: 12px;
       font-weight: 900;
-      min-width: 210px;
+      min-width: 200px;
+      color: #01579B;
     }
     .sig{
       display:flex;
       flex-direction:column;
       gap:6px;
       align-items:flex-start;
-      min-width: 210px;
+      min-width: 200px;
     }
     .sigLine{
-      width: 210px;
-      height: 1px;
-      background: rgba(0,0,0,.35);
+      width: 200px;
+      height: 2px;
+      background: #CFD8DC;
     }
     .sigText{
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 950;
-      opacity:.85;
+      color: #0277BD;
+      font-family: "Comic Sans MS", "Chalkboard SE", sans-serif; /* Handwritten feel */
     }
 
     .certControls{
@@ -686,19 +811,19 @@
       align-items:center;
       padding:12px;
       border-radius: 16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
+      border:1px solid rgba(0,0,0,.08);
+      background: #F5F5F5;
     }
     .field label{
       font-size: 12px;
       font-weight: 950;
-      color: rgba(234,242,255,.9);
+      color: #37474F;
       white-space:nowrap;
     }
     .field input{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
+      border:1px solid rgba(0,0,0,.1);
+      background: #FFFFFF;
+      color: #333;
       border-radius: 14px;
       padding: 12px 12px;
       font-weight: 950;
@@ -756,16 +881,31 @@
         max-width:none !important;
         margin:0 !important;
         border-radius:0 !important;
-        border:1px solid rgba(0,0,0,.18) !important;
+        /* Keep the border in print mode */
+        border: 8px solid #FFB74D !important;
         box-shadow:none !important;
         background:#ffffff !important;
       }
 
-      /* iOS fix: remove complex layered backgrounds that can turn black in PDF */
+      /* iOS fix: keep background graphics if possible, but simplify if needed */
       .certInner{
         background:#ffffff !important;
-        background-image:none !important;
+        /* Try to keep the border in print */
+        border: 2px dashed #FFD54F !important;
       }
+
+      /* Extra: remove overlay artifacts / make mobile PDF clean */
+      #certBackdrop{ background:#ffffff !important; }
+      .certPaper:before{ display:none !important; }
+      .certInner::before{ opacity: .18 !important; }
+      .certInner::after{ opacity: .35 !important; }
+      .certRibbon{
+        background: #4FB3FF !important; /* solid for reliable printing */
+      }
+      .certBurst{
+        border-color: #FFB300 !important;
+      }
+
 
       /* iOS print headers are unavoidable; this keeps clean margins */
       @page{
@@ -776,33 +916,34 @@
   
     /* ===== Add-on features (Daily Mission, Streak, Backup, A2HS, Modes) ===== */
     body.solidBg .bgLayer{
-      background: linear-gradient(180deg, #061326 0%, #061326 100%) !important;
+      background: linear-gradient(180deg, #E1F5FE 0%, #E1F5FE 100%) !important;
     }
 
     /* A2HS banner */
     .a2hs{
-      margin-top:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      border-radius:18px;
-      padding:12px;
+      margin-top:16px;
+      border:1px solid #FFF;
+      background: #FFF;
+      border-radius:22px;
+      padding:16px;
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
       gap:10px;
+      box-shadow: var(--shadow);
     }
-    .a2hsText b{ font-weight:950; }
+    .a2hsText b{ font-weight:950; color: #0277BD; }
     .a2hsText div{
-      color: var(--muted);
+      color: rgba(6,19,38,0.72);
       font-size:12px;
       font-weight:850;
       margin-top:4px;
       line-height:1.35;
     }
     .a2hsClose{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
+      border:1px solid #EEE;
+      background: #F5F5F5;
+      color: #999;
       border-radius:14px;
       padding:10px 12px;
       font-weight:950;
@@ -823,14 +964,15 @@
     .streakPill{
       padding:8px 10px;
       border-radius:999px;
-      border:1px solid rgba(255,106,0,.25);
-      background: rgba(255,106,0,.10);
+      border:1px solid #FFAB00;
+      background: #FFF8E1;
+      color: #FF6F00;
       font-weight:950;
       font-size:12px;
       white-space:nowrap;
     }
     .streakSub{
-      color: var(--muted);
+      color: rgba(6,19,38,0.72);
       font-size:11px;
       font-weight:850;
       white-space:nowrap;
@@ -838,15 +980,16 @@
 
     /* Daily mission */
     .dailyBox{
-      margin-top:12px;
-      border-radius:18px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      padding:12px;
+      margin-top:16px;
+      border-radius:24px;
+      border:1px solid #FFF;
+      background: #FFFFFF;
+      padding:16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     .dailyLeft{
       display:flex;
@@ -855,14 +998,14 @@
       min-width:0;
     }
     .dailyIcon{
-      width:44px; height:44px;
-      border-radius:14px;
+      width:50px; height:50px;
+      border-radius:18px;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:20px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
+      font-size:24px;
+      background: #F5F5F5;
+      border:1px solid transparent;
       flex:0 0 auto;
     }
     .dailyText{ min-width:0; }
@@ -870,22 +1013,23 @@
       font-weight:950;
       font-size:12px;
       letter-spacing:.2px;
-      color: rgba(234,242,255,.88);
-      opacity:.9;
+      color: #FF6F00;
+      text-transform: uppercase;
     }
     .dailyName{
       margin-top:2px;
       font-weight:1000;
-      font-size:15px;
+      font-size:16px;
       letter-spacing:-.1px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
       max-width: 52vw;
+      color: #0277BD;
     }
     .dailyMeta{
       margin-top:4px;
-      color: var(--muted);
+      color: rgba(6,19,38,0.72);
       font-size:12px;
       font-weight:900;
       display:flex;
@@ -899,7 +1043,7 @@
       justify-content:flex-end;
       flex:0 0 auto;
     }
-    .dailyActions .btn{ padding:10px 12px; border-radius:14px; min-height:44px; }
+    .dailyActions .btn{ padding:10px 14px; border-radius:16px; min-height:44px; }
     @media (max-width:520px){
       .dailyBox{ align-items:flex-start; }
       .dailyActions{ width:100%; justify-content:stretch; }
@@ -912,9 +1056,9 @@
       width:100%;
       margin-top:10px;
       border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--text);
+      border:1px solid #CCC;
+      background: #FFF;
+      color: #333;
       padding:12px 12px;
       font-weight:850;
       font-size:13px;
@@ -923,7 +1067,7 @@
       outline:0;
       resize: vertical;
     }
-    .ta::placeholder{ color: rgba(169,184,214,.70); }
+    .ta::placeholder{ color: #AAA; }
 
     /* Kids Mode (simple UI) */
     body.kidsMode .sub{ display:none; }
@@ -931,8 +1075,205 @@
     body.kidsMode .filters{ display:none; }
     body.kidsMode .footer{ display:none; }
     body.kidsMode .mMeta{ display:none; }
-    body.kidsMode .card{ padding:14px; }
-    body.kidsMode .mTitle{ font-size:18px; }
+    body.kidsMode .card{ padding:20px; }
+    body.kidsMode .mTitle{ font-size:20px; }
+    body.kidsMode .mIcon{ width:60px; height:60px; font-size:30px; }
+
+
+/* ===== FORCED DARK MODE (JUMVI Night) ===== */
+:root{
+  --bg:#061326;
+  --card:rgba(255,255,255,.06);
+  --card2:rgba(255,255,255,.04);
+  --text:#EAF2FF;
+  --muted:#A9B8D6;
+  --border:rgba(79,179,255,.22);
+
+  /* Brand colors (locked) */
+  --blue:#4FB3FF;   /* Vivid Sport Blue */
+  --lime:#97D700;   /* Bright Lime Green */
+  --orange:#FF6A00; /* Bright Orange */
+
+  --shadow: 0 16px 40px rgba(0,0,0,0.35);
+}
+
+body{
+  background: var(--bg);
+  color: var(--text);
+}
+
+.bgLayer{
+  background:
+    radial-gradient(circle at 12% 12%, rgba(79,179,255,0.22), transparent 42%),
+    radial-gradient(circle at 88% 78%, rgba(151,215,0,0.14), transparent 44%),
+    radial-gradient(circle at 40% 110%, rgba(255,106,0,0.10), transparent 48%),
+    linear-gradient(180deg, #061326 0%, #071a35 100%);
+}
+
+/* Surfaces */
+.sticky{
+  background: rgba(6, 19, 38, 0.78);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 6px 26px rgba(0,0,0,0.25);
+}
+.pill{
+  background: rgba(255,255,255,0.06);
+  border-color: var(--border);
+  color: var(--muted);
+}
+.hero{
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+  border-color: rgba(79,179,255,0.18);
+  box-shadow: var(--shadow);
+}
+.h1{ color: var(--text); }
+.sub{ color: var(--muted); }
+.brand{ color: var(--text); }
+.logoWrap{ background: rgba(255,255,255,0.06); border-color: var(--border); }
+
+.progressBox,
+.search,
+.card,
+.badge,
+.certBox,
+.footer,
+.sheet{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(79,179,255,0.18);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+}
+
+.search input{ color: var(--text); }
+.search input::placeholder{ color: rgba(233,242,255,0.55); }
+
+.chip{
+  background: rgba(255,255,255,0.06);
+  border-color: var(--border);
+  color: rgba(233,242,255,0.70);
+}
+.chip.active{
+  background: rgba(79,179,255,0.18);
+  color: var(--text);
+  border-color: rgba(79,179,255,0.55);
+  box-shadow: 0 0 0 3px rgba(79,179,255,0.18);
+}
+.chip.limeActive.active{
+  background: rgba(151,215,0,0.16);
+  border-color: rgba(151,215,0,0.55);
+  color: var(--text);
+  box-shadow: 0 0 0 3px rgba(151,215,0,0.18);
+}
+
+.card{ border-color: rgba(79,179,255,0.10); }
+.mTitle{ color: var(--text); }
+.mIcon{ background: rgba(255,255,255,0.08); color: var(--text); }
+
+.tag{ background: rgba(255,255,255,0.06); color: rgba(233,242,255,0.72); }
+.tag.pack{ background: rgba(79,179,255,0.18); color: var(--text); }
+.tag.diff{ background: rgba(255,106,0,0.14); color: var(--text); }
+
+.kv{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(79,179,255,0.16);
+  color: rgba(233,242,255,0.88);
+}
+.kv b{ color: var(--blue); }
+
+.backdrop{
+  background: rgba(0,0,0,0.55);
+}
+
+/* Buttons */
+.btnGhost{
+  background: rgba(255,255,255,0.06);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+.btnTimer{
+  background: rgba(255,106,0,0.14);
+  border-color: rgba(255,106,0,0.22);
+  color: var(--text);
+}
+.btnPrimary{
+  background: linear-gradient(135deg, rgba(79,179,255,0.95), rgba(2,136,209,0.95));
+  color: #ffffff;
+}
+.btnLime{
+  background: linear-gradient(135deg, rgba(151,215,0,0.95), rgba(118,255,3,0.70));
+  color:#061326;
+}
+
+/* Timer UI */
+#timerUI{
+  background: rgba(255,106,0,0.10);
+  border-color: rgba(255,106,0,0.22);
+}
+#timerDisplay{ color: var(--text); }
+#timerBar{ background: rgba(255,255,255,0.10); }
+#timerFill{ background: var(--orange); }
+
+/* Make "Done" button bigger & more playful */
+#btnToggleDone{
+  flex: 1 1 100%;
+  padding: 16px 18px;
+  font-size: 16px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(151,215,0,0.95), rgba(79,179,255,0.95));
+  color: #061326;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.35);
+  position: relative;
+  overflow: hidden;
+}
+#btnToggleDone::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 55%);
+  transform: rotate(12deg);
+  opacity: .55;
+  pointer-events:none;
+}
+
+/* Links/buttons in footer */
+.linkBtn{
+  background: rgba(255,255,255,0.06);
+  border-color: var(--border);
+  color: var(--text);
+}
+.close{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.10);
+  color: var(--text);
+}
+
+  
+    /* ---- Readability + Responsive polish (mobile/tablet) ---- */
+    html, body{ overflow-x:hidden; }
+    body{ padding-bottom: env(safe-area-inset-bottom); }
+    .card{ color:#061326; }
+    .mMeta{ line-height:1.2; }
+    .search input{ color:#EAF2FF; } /* keep dark-mode search readable */
+
+    /* Ensure pills/tags never go too faint */
+    .tag{ filter: saturate(1.02); }
+
+    /* Better tap targets + wrapping on small screens */
+    @media (max-width: 900px){
+      .wrap{ padding-left: clamp(14px, 4vw, 28px); padding-right: clamp(14px, 4vw, 28px); }
+    }
+    @media (max-width: 760px){
+      .card{ padding:14px; border-radius:22px; }
+      .mIcon{ width:46px; height:46px; border-radius:16px; font-size:22px; }
+      .mTitle{ font-size:16px; }
+      .tag{ font-size:10.5px; }
+      .toggleRow{ gap:8px; }
+      .chip{ padding:10px 12px; font-size:12.5px; }
+    }
+    @media (max-width: 420px){
+      .mMeta{ gap:6px; }
+      .tag.smallHide{ display:none; } /* keep layout clean on very small phones */
+    }
 
   </style>
 </head>
@@ -948,6 +1289,9 @@
           <img class="logoImg" src="jumvi_logo.png" alt="JUMVI logo" onerror="this.style.display='none'; this.parentElement.textContent='J';" />
         </div>
         <span>JUMVI Missions</span>
+        
+        <!-- Avatar Selector -->
+        <div class="avatarBtn" id="avatarBtn">🦁</div>
       </div>
       <div class="pill">Kids 3–8 • Safe play</div>
     </div>
@@ -1010,7 +1354,7 @@
         <div class="certLeft">
           <div class="certIcon">🏆</div>
           <div class="certText">
-            <b>Champion Certificate</b>
+            <b>Mission Champion Certificate</b>
             <div id="certSub">Complete all 30 missions to unlock.</div>
           </div>
         </div>
@@ -1045,7 +1389,7 @@
         <button class="linkBtn" id="btnShare">📤 Share</button>
       </div>
       <div class="small">
-        Support: <a href="mailto:saykirtasiye@gmail.com">saykirtasiye@gmail.com</a>
+        Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
       </div>
     </section>
   </div>
@@ -1059,6 +1403,18 @@
           <div class="sheetMeta" id="mMeta"></div>
         </div>
         <button class="close" id="btnClose">✕</button>
+      </div>
+      
+      <!-- New: Timer UI (Hidden by default) -->
+      <div id="timerUI">
+        <div id="timerDisplay">60s</div>
+        <div id="timerBar"><div id="timerFill"></div></div>
+      </div>
+
+      <div class="sheetActions" style="margin-top:10px; margin-bottom:10px; justify-content:flex-start;">
+        <!-- New Buttons -->
+        <button class="btn btnTimer" id="btnStartTimer">⏱️ Start Timer</button>
+        <button class="btn btnGhost" id="btnSpeak">🗣️ Read to Me</button>
       </div>
 
       <div class="kv" id="mSteps"></div>
@@ -1135,7 +1491,7 @@
     <div class="sheet" id="certSheet">
       <div class="sheetTop">
         <div>
-          <div class="sheetTitle">🏆 Champion Certificate</div>
+          <div class="sheetTitle">🌟 Mission Champion • Star Catcher</div>
           <div class="small">Print on US Letter or A4 (Save as PDF).</div>
         </div>
         <button class="close" id="btnCertClose">✕</button>
@@ -1148,19 +1504,22 @@
             <input id="certNameInput" type="text" placeholder="(Optional) e.g. Alex" autocomplete="off" />
           </div>
           <div class="certControls">
-            <button class="btn btnLime" id="btnCertPrint">🖨️ Print / Save PDF</button>
-            <button class="btn btnGhost" id="btnCertShare">📤 Share</button>
+            <button class="btn btnLime" id="btnCertDownload">⬇️ Save to Photos</button>
           </div>
         </div>
 
         <div class="certPaper" id="certPaper">
           <div class="certInner">
             <div class="certRibbon" aria-hidden="true"></div>
+            <div class="certBurst" aria-hidden="true">🌟</div>
+            <div class="certRibbon" aria-hidden="true"></div>
             <div class="certWatermark" aria-hidden="true">JUMVI</div>
             <div class="certHeader">
               <div class="certBrand">
                 <div class="certLogo" title="JUMVI">
-                  <img src="jumvi_logo.png" alt="JUMVI logo" onerror="this.style.display='none';" />
+                  <img src="jumvi_logo.png" alt="JUMVI logo" onerror="this.style.display='none'; this.parentElement.classList.add('fallback');" />
+                  <span class="logoFallback" aria-hidden="true">J</span>
+                
                 </div>
                 <div>
                   <div style="font-size:14px; font-weight:1000;">JUMVI</div>
@@ -1173,8 +1532,8 @@
               </div>
             </div>
 
-            <div class="certTitle">Champion Certificate</div>
-            <p class="certSubtitle">This certificate is awarded to the player who completed all missions.</p>
+            <div class="certTitle">Mission Champion & Star Catcher Certificate</div>
+            <p class="certSubtitle">High five! You completed all 30 missions and caught every star!</p>
 
             <div class="certStamp">✅ <b>All 30 Missions</b> • Safe play • Kids 3–8</div>
 
@@ -1182,9 +1541,9 @@
 
             <div class="certBody">
               Completed <b>all 30 missions</b> in the JUMVI Toss &amp; Catch Paddle Set program (Kids 3–8),
-              demonstrating consistency, safe play, and great hand-eye coordination.
+              showing great focus, safe play, and awesome hand-eye coordination.
               <br/><br/>
-              Keep practicing with gentle throws below face level and have fun together!
+              Keep playing safely (throws below face level) — and keep collecting stars together!
             </div>
 
             <div class="certFooter">
@@ -1216,8 +1575,8 @@
 
 <script>
 /** =======================
- *  Disable zoom (iOS + desktop)
- *  ======================= */
+ * Disable zoom (iOS + desktop)
+ * ======================= */
 (function disableZoom(){
   ["gesturestart","gesturechange","gestureend"].forEach(evt=>{
     document.addEventListener(evt, (e)=>e.preventDefault(), { passive:false });
@@ -1233,8 +1592,8 @@
 })();
 
 /** =======================
- *  Sound (Web Audio) — works on iOS after first user tap
- *  ======================= */
+ * Sound (Web Audio) — works on iOS after first user tap
+ * ======================= */
 const SOUND_KEY = "jumvi_sound_on_v1";
 let soundOn = (localStorage.getItem(SOUND_KEY) ?? "1") === "1";
 let audioCtx = null;
@@ -1277,8 +1636,8 @@ function clickSound(type="click"){
 }
 
 /** =======================
- *  Toast (small notification)
- *  ======================= */
+ * Toast (small notification)
+ * ======================= */
 let toastTimer = null;
 function showToast(msg){
   const el = document.getElementById("toast");
@@ -1290,8 +1649,8 @@ function showToast(msg){
 }
 
 /** =======================
- *  Confetti (tiny, no library)
- *  ======================= */
+ * Confetti (tiny, no library)
+ * ======================= */
 function fireConfetti(durationMs=1100){
   const canvas = document.getElementById("confettiCanvas");
   if(!canvas) return;
@@ -1357,8 +1716,8 @@ function fireConfetti(durationMs=1100){
 }
 
 /** =======================
- *  Ensure iOS audio works (resume on first tap)
- *  ======================= */
+ * Ensure iOS audio works (resume on first tap)
+ * ======================= */
 let audioUnlocked = false;
 function unlockAudioOnce(){
   if(audioUnlocked || !soundOn) return;
@@ -1371,8 +1730,8 @@ window.addEventListener("pointerdown", unlockAudioOnce, { passive:true });
 window.addEventListener("touchstart", unlockAudioOnce, { passive:true });
 
 /** =======================
- *  Certificate helpers
- *  ======================= */
+ * Certificate helpers
+ * ======================= */
 const CERT_ID_KEY   = "jumvi_cert_id_v1";
 const CERT_NAME_KEY = "jumvi_cert_name_v1";
 
@@ -1396,8 +1755,8 @@ function getToday(){
 
 
 /** =======================
- *  Data
- *  ======================= */
+ * Data
+ * ======================= */
 const PACKS = [
   { key:"all", name:"All Packs" },
   { key:"Reflex Rush", name:"Reflex Rush" },
@@ -1592,8 +1951,8 @@ const BADGES = [
 ];
 
 /** =======================
- *  State
- *  ======================= */
+ * State
+ * ======================= */
 const LS_KEY = "jumvi_missions_done_v3";
 let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
 let unlockedBefore = done.size >= missions.length;
@@ -1612,6 +1971,7 @@ const DAILY_DATE_KEY    = "jumvi_daily_date_v1";
 const DAILY_ID_KEY      = "jumvi_daily_id_v1";
 const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
+const AVATAR_KEY        = "jumvi_avatar_v1";
 
 let currentPack = localStorage.getItem(PACK_KEY) || "all";
 let searchQuery = "";
@@ -1628,9 +1988,13 @@ let dailyIso = localStorage.getItem(DAILY_DATE_KEY) || "";
 let dailyIdStored = Number(localStorage.getItem(DAILY_ID_KEY) || "0");
 let dailyN = Number(localStorage.getItem(DAILY_N_KEY) || "0");
 
+const AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
+let currentAvatarIdx = Number(localStorage.getItem(AVATAR_KEY) || "0");
+if(isNaN(currentAvatarIdx) || currentAvatarIdx < 0) currentAvatarIdx = 0;
+
 /** =======================
- *  Refs
- *  ======================= */
+ * Refs
+ * ======================= */
 const listEl = document.getElementById("list");
 const filtersEl = document.getElementById("filters");
 const progressText = document.getElementById("progressText");
@@ -1697,13 +2061,71 @@ const certNameInput = document.getElementById("certNameInput");
 const certNameText  = document.getElementById("certNameText");
 const certDateText  = document.getElementById("certDateText");
 const certIdText    = document.getElementById("certIdText");
-const btnCertPrint  = document.getElementById("btnCertPrint");
-const btnCertShare  = document.getElementById("btnCertShare");
+const btnCertDownload = document.getElementById("btnCertDownload");
+
+/* New Feature Refs */
+const avatarBtn = document.getElementById("avatarBtn");
+const btnSpeak = document.getElementById("btnSpeak");
+const btnStartTimer = document.getElementById("btnStartTimer");
+const timerUI = document.getElementById("timerUI");
+const timerDisplay = document.getElementById("timerDisplay");
+const timerFill = document.getElementById("timerFill");
+
+
+/* ===== Kid-friendly Voice (TTS) ===== */
+let kidVoice = null;
+
+function pickKidVoice(voices){
+  const list = (voices || []).filter(v => (v.lang || "").toLowerCase().startsWith("en"));
+  if(!list.length) return null;
+
+  const prefer = [
+    "Samantha","Karen","Tessa","Serena","Jenny","Aria","Zira",
+    "Google US English","Google UK English Female","Microsoft Aria"
+  ];
+
+  function score(v){
+    const name = (v.name || "").toLowerCase();
+    const lang = (v.lang || "").toLowerCase();
+    let s = 0;
+
+    if(lang.startsWith("en-us")) s += 4;
+    if(lang.startsWith("en-gb")) s += 2;
+    if(v.localService) s += 1;
+
+    // Prefer bright/friendly voices (heuristic)
+    if(name.includes("female")) s += 4;
+    if(name.includes("child") || name.includes("kid")) s += 6;
+    if(name.includes("male")) s -= 4;
+    if(name.includes("fred")) s -= 6;
+
+    for(const p of prefer){
+      if(name.includes(p.toLowerCase())) s += 6;
+    }
+    return s;
+  }
+
+  return list.sort((a,b)=>score(b)-score(a))[0] || null;
+}
+
+function loadKidVoice(){
+  try{
+    const voices = window.speechSynthesis.getVoices();
+    kidVoice = pickKidVoice(voices);
+  }catch(e){
+    kidVoice = null;
+  }
+}
+
+if("speechSynthesis" in window){
+  loadKidVoice();
+  window.speechSynthesis.onvoiceschanged = loadKidVoice;
+}
 
 
 /** =======================
- *  Helpers
- *  ======================= */
+ * Helpers
+ * ======================= */
 function persist(){
   localStorage.setItem(LS_KEY, JSON.stringify([...done]));
 }
@@ -1881,7 +2303,8 @@ function buildBackupPayload(){
     kidsMode,
     streak: { c: streakCount||0, b: bestStreak||0, l: lastActiveIso||"" },
     daily:  { d: dailyIso||"", id: dailyIdStored||0, n: dailyN||0 },
-    cert:   { name: localStorage.getItem(CERT_NAME_KEY) || "" }
+    cert:   { name: localStorage.getItem(CERT_NAME_KEY) || "" },
+    avatar: currentAvatarIdx
   };
 }
 function makeBackupCode(){
@@ -1923,6 +2346,13 @@ function applyBackupPayload(p){
   dailyIdStored = Number(p.daily?.id || 0);
   dailyN = Number(p.daily?.n || 0);
   persistDaily();
+  
+  // Avatar
+  if(typeof p.avatar === "number") {
+    currentAvatarIdx = p.avatar;
+    localStorage.setItem(AVATAR_KEY, currentAvatarIdx);
+    renderAvatar();
+  }
 
   // certificate name (optional)
   if(p.cert && typeof p.cert.name === "string"){
@@ -1943,8 +2373,8 @@ function applyBackupPayload(p){
 }
 
 /** =======================
- *  Rendering
- *  ======================= */
+ * Rendering
+ * ======================= */
 function renderFilters(){
   filtersEl.innerHTML = "";
   PACKS.forEach(p=>{
@@ -2007,8 +2437,8 @@ function renderList(){
         <div class="mMeta">
           <span class="tag pack">${escapeHtml(ms.pack)}</span>
           <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
-          <span class="tag smallHide">👥 ${escapeHtml(ms.players)}</span>
-          <span class="tag smallHide">🎂 ${escapeHtml(ms.age)}</span>
+          <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+          <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
         </div>
       </div>
       <div class="donePill">Done ✓</div>
@@ -2040,11 +2470,11 @@ function updateBadges(){
   badgesList.innerHTML = BADGES.map(b=>{
     const ok = !!b.check(done);
     return `
-      <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); margin-top:10px;">
+      <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(0,0,0,.1); background: #F5F5F5; margin-top:10px;">
         <div style="font-size:22px; width:34px">${b.icon}</div>
         <div style="flex:1">
-          <div style="font-weight:950">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
-          <div style="color: rgba(169,184,214,.9); font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
+          <div style="font-weight:950; color: #0277BD;">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
+          <div style="color: #546E7A; font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
         </div>
       </div>
     `;
@@ -2107,12 +2537,170 @@ function updateProgress(){
 }
 
 /** =======================
- *  Modal
- *  ======================= */
+ * Modal
+ * ======================= */
+let timerInterval = null;
+let timerState = "idle";   // "idle" | "running" | "paused"
+let timerTotal = 0;
+let timerLeft = 0;
+let timerEndAt = 0;
+let timerHoldResetArmed = false;
+let timerHoldResetT = null;
+
+function setTimerButtonLabel(){
+  if(timerState === "running"){
+    btnStartTimer.textContent = "⏸️ Pause Timer";
+  }else if(timerState === "paused"){
+    btnStartTimer.textContent = "▶️ Resume Timer";
+  }else{
+    btnStartTimer.textContent = "⏱️ Start Timer";
+  }
+}
+
+function resetTimerUI() {
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  timerState = "idle";
+  timerTotal = 0;
+  timerLeft = 0;
+  timerEndAt = 0;
+
+  timerUI.style.display = "none";
+  timerFill.style.transition = "none";
+  timerFill.style.width = "0%";
+  timerDisplay.textContent = "60s";
+  setTimerButtonLabel();
+}
+
+function updateTimerTick(){
+  if(timerState !== "running") return;
+
+  const now = Date.now();
+  const msLeft = Math.max(0, timerEndAt - now);
+  const secLeft = Math.ceil(msLeft / 1000);
+
+  timerLeft = secLeft;
+
+  if(secLeft <= 0){
+    if(timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+
+    timerState = "idle";
+    timerDisplay.textContent = "Time's Up!";
+    setTimerButtonLabel();
+    clickSound("success");
+    return;
+  }
+
+  timerDisplay.textContent = secLeft + "s";
+}
+
+function startTimer(durationSeconds) {
+  if(timerInterval) clearInterval(timerInterval);
+
+  timerUI.style.display = "block";
+
+  timerTotal = durationSeconds;
+  timerLeft = durationSeconds;
+  timerState = "running";
+  setTimerButtonLabel();
+
+  // UI baseline
+  timerDisplay.textContent = timerLeft + "s";
+
+  // Progress bar animation (100% -> 0%)
+  timerFill.style.transition = "none";
+  timerFill.style.width = "100%";
+  void timerFill.offsetWidth; // reflow
+  timerFill.style.transition = `width ${timerLeft}s linear`;
+  timerFill.style.width = "0%";
+
+  timerEndAt = Date.now() + (timerLeft * 1000);
+
+  clickSound("click");
+
+  // Update text smoothly (and accurate if tab is throttled)
+  timerInterval = setInterval(updateTimerTick, 200);
+}
+
+function pauseTimer(){
+  if(timerState !== "running") return;
+
+  const now = Date.now();
+  const msLeft = Math.max(0, timerEndAt - now);
+  timerLeft = Math.ceil(msLeft / 1000);
+
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+
+  timerState = "paused";
+  setTimerButtonLabel();
+
+  // Freeze bar where it is now
+  const pct = timerTotal > 0 ? (msLeft / (timerTotal * 1000)) * 100 : 0;
+  timerFill.style.transition = "none";
+  timerFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+
+  timerDisplay.textContent = timerLeft + "s";
+  clickSound("click");
+}
+
+function resumeTimer(){
+  if(timerState !== "paused") return;
+  if(timerLeft <= 0){
+    resetTimerUI();
+    return;
+  }
+
+  timerState = "running";
+  setTimerButtonLabel();
+
+  // Animate bar from current % to 0% in remaining seconds
+  const pct = timerTotal > 0 ? (timerLeft / timerTotal) * 100 : 0;
+  timerFill.style.transition = "none";
+  timerFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+  void timerFill.offsetWidth;
+  timerFill.style.transition = `width ${timerLeft}s linear`;
+  timerFill.style.width = "0%";
+
+  timerEndAt = Date.now() + (timerLeft * 1000);
+
+  clickSound("click");
+
+  timerInterval = setInterval(updateTimerTick, 200);
+}
+
+function toggleTimer(durationSeconds){
+  if(timerState === "idle"){
+    startTimer(durationSeconds);
+  }else if(timerState === "running"){
+    pauseTimer();
+  }else{
+    resumeTimer();
+  }
+}
+
+// Hold-to-reset (works on mobile)
+function armHoldToReset(){
+  if(timerHoldResetT) clearTimeout(timerHoldResetT);
+  timerHoldResetT = setTimeout(()=>{
+    timerHoldResetArmed = true;
+    resetTimerUI();
+    showToast("Timer reset ✅");
+  }, 650);
+}
+function disarmHoldToReset(){
+  if(timerHoldResetT) clearTimeout(timerHoldResetT);
+  timerHoldResetT = null;
+  setTimeout(()=>{ timerHoldResetArmed = false; }, 80);
+}
+
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
   lastOpenedId = id;
+  
+  resetTimerUI(); // Ensure timer is reset when opening
 
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
@@ -2131,23 +2719,70 @@ function openMission(id){
   mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
 
   const isDone = done.has(ms.id);
-  btnToggleDone.textContent = isDone ? "✅ Mark as NOT Done" : "✅ Mark as Done";
+  btnToggleDone.textContent = isDone ? "↩️ Undo (Not Done)" : "🎉 I Did It!";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
 
   mSmall.textContent = "Progress is saved on this phone automatically.";
+
+  // Timer Setup
+  let seconds = 60; // default
+  if(ms.time.includes("s")) seconds = parseInt(ms.time) || 60;
+  
+  btnStartTimer.onclick = () => {
+    if(timerHoldResetArmed) return; // ignore click right after a hold-reset
+    toggleTimer(seconds); // tap: start / pause / resume
+};
+
+// Tip: hold the timer button to reset (kid-friendly, no extra buttons)
+if(!btnStartTimer.dataset.holdBound){
+    btnStartTimer.dataset.holdBound = "1";
+    btnStartTimer.addEventListener("pointerdown", armHoldToReset);
+    btnStartTimer.addEventListener("pointerup", disarmHoldToReset);
+    btnStartTimer.addEventListener("pointercancel", disarmHoldToReset);
+    btnStartTimer.addEventListener("pointerleave", disarmHoldToReset);
+}
+  
+  // TTS Setup (kid-friendly voice)
+btnSpeak.onclick = () => {
+   clickSound("click");
+   if('speechSynthesis' in window){
+       window.speechSynthesis.cancel(); // stop previous
+
+       // Keep it short + clear for parents & kids
+       const text =
+         `Mission: ${ms.title}. ` +
+         `Steps: ${ms.steps.join(". ")}. ` +
+         `Win: ${ms.win}.`;
+
+       const utter = new SpeechSynthesisUtterance(text);
+       utter.lang = 'en-US';
+
+       // Child-friendly tone (usually higher pitch + normal speed)
+       utter.rate = 1.0;
+       utter.pitch = 1.15;
+
+       if(kidVoice) utter.voice = kidVoice;
+
+       window.speechSynthesis.speak(utter);
+   } else {
+       showToast("Not supported on this device.");
+   }
+};
 
   backdrop.classList.add("show");
   sheet.scrollTop = 0;
 }
 
 function closeMission(){
+  resetTimerUI(); // Stop + reset timer on close
+  if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   backdrop.classList.remove("show");
 }
 
 
 /** =======================
- *  Certificate modal
- *  ======================= */
+ * Certificate modal
+ * ======================= */
 function buildCertificate(){
   if(!certNameInput || !certNameText) return;
   const raw = (certNameInput.value || "").trim();
@@ -2166,6 +2801,11 @@ function openCertificate(){
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
   if(sheet) sheet.scrollTop = 0;
+  // Auto-save once per open (works best when opened by a user tap)
+  if(!_certAutoDownloaded){
+    _certAutoDownloaded = true;
+    setTimeout(()=> downloadCertificatePNG({auto:true}), 120);
+  }
 }
 
 function closeCertificate(){
@@ -2186,31 +2826,115 @@ if(certNameInput){
   certNameInput.addEventListener("input", ()=>{ buildCertificate(); });
 }
 
-// Print / Share
-if(btnCertPrint){
-  btnCertPrint.onclick = ()=>{
+// Save certificate (PNG download)
+let _certAutoDownloaded = false;
+
+// Inline computed styles so the certificate can be exported reliably as an image.
+function _inlineAllStyles(root){
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, null);
+  const els = [root];
+  while(walker.nextNode()) els.push(walker.currentNode);
+
+  els.forEach(el=>{
+    const cs = window.getComputedStyle(el);
+    // Build a minimal but reliable style snapshot
+    const keep = [
+      "display","position","top","right","bottom","left",
+      "width","height","min-width","min-height","max-width","max-height",
+      "margin","padding","box-sizing",
+      "font","font-family","font-size","font-weight","font-style","line-height","letter-spacing","text-transform","text-align","color",
+      "background","background-color","background-image","background-size","background-position","background-repeat",
+      "border","border-radius","box-shadow","opacity",
+      "flex","flex-direction","flex-wrap","justify-content","align-items","gap",
+      "grid","grid-template-columns","grid-template-rows","grid-auto-flow",
+      "transform","transform-origin",
+      "overflow","white-space"
+    ];
+    let style = "";
+    keep.forEach(p=>{
+      const v = cs.getPropertyValue(p);
+      if(v) style += `${p}:${v};`;
+    });
+    // Ensure images keep their size
+    if(el.tagName === "IMG"){
+      style += "max-width:100%;height:auto;";
+    }
+    el.setAttribute("style", (el.getAttribute("style")||"") + ";" + style);
+  });
+}
+
+async function downloadCertificatePNG({auto=false} = {}){
+  const paper = document.getElementById("certPaper");
+  if(!paper) return;
+
+  try{
+    // clone + inline styles
+    const clone = paper.cloneNode(true);
+    clone.querySelectorAll("button").forEach(b=>b.remove()); // safety
+    _inlineAllStyles(clone);
+
+    // Compute dimensions
+    const rect = paper.getBoundingClientRect();
+    const w = Math.max(1, Math.round(rect.width));
+    const h = Math.max(1, Math.round(rect.height));
+
+    // SVG foreignObject export
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+        <foreignObject width="100%" height="100%">
+          <div xmlns="http://www.w3.org/1999/xhtml">${clone.outerHTML}</div>
+        </foreignObject>
+      </svg>
+    `.trim();
+
+    const svgBlob = new Blob([svg], {type:"image/svg+xml;charset=utf-8"});
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.decoding = "async";
+
+    await new Promise((resolve,reject)=>{
+      img.onload = ()=>resolve();
+      img.onerror = ()=>reject(new Error("img load failed"));
+      img.src = url;
+    });
+
+    const canvas = document.createElement("canvas");
+    const scale = Math.min(2, window.devicePixelRatio || 1); // crisp, but not huge memory
+    canvas.width  = Math.round(w * scale);
+    canvas.height = Math.round(h * scale);
+
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(scale,0,0,scale,0,0);
+    ctx.drawImage(img, 0, 0);
+
+    URL.revokeObjectURL(url);
+
+    const blob = await new Promise(resolve=>canvas.toBlob(resolve, "image/png", 1.0));
+    if(!blob) throw new Error("toBlob failed");
+
+    const a = document.createElement("a");
+    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(a.href), 2000);
+
+    if(!auto) showToast("Saved! ✅");
+  }catch(err){
+    // Fallback: let user use system print/save if export is blocked
+    showToast("Save blocked by browser. Try again (tap once).");
+  }
+}
+
+// Wire up the single control button
+if(btnCertDownload){
+  btnCertDownload.onclick = ()=>{
     clickSound("click");
     buildCertificate();
-    // small delay so DOM updates apply before print
-    setTimeout(()=> window.print(), 180);
-  };
-}
-if(btnCertShare){
-  btnCertShare.onclick = async ()=>{
-    clickSound("click");
-    const name = (certNameInput?.value || "").trim();
-    const text = name
-      ? `${name} completed all 30 JUMVI missions 🏆`
-      : `Completed all 30 JUMVI missions 🏆`;
-    const url = location.href;
-    try{
-      if(navigator.share){
-        await navigator.share({ title:"JUMVI Champion", text, url });
-      }else{
-        await navigator.clipboard.writeText(`${text}\n${url}`);
-        showToast("Copied!");
-      }
-    }catch(e){}
+    downloadCertificatePNG({auto:false});
   };
 }
 
@@ -2277,8 +3001,8 @@ btnRandomPack.onclick = ()=>{
 };
 
 /** =======================
- *  Actions
- *  ======================= */
+ * Actions
+ * ======================= */
 document.getElementById("btnRandomAll").onclick = ()=>{
   clickSound("click");
   const pick = missions[Math.floor(Math.random()*missions.length)];
@@ -2337,8 +3061,8 @@ btnOnlyUnfinished.onclick = ()=>{
 };
 
 /** =======================
- *  New UI buttons
- *  ======================= */
+ * New UI buttons
+ * ======================= */
 if(btnSolidBg){
   btnSolidBg.onclick = ()=>{
     clickSound("click");
@@ -2379,6 +3103,19 @@ if(btnDailyNew){
     showToast("New daily mission selected!");
   };
 }
+
+/* Avatar Feature */
+function renderAvatar(){
+    avatarBtn.textContent = AVATARS[currentAvatarIdx];
+}
+avatarBtn.onclick = () => {
+    clickSound("click");
+    currentAvatarIdx = (currentAvatarIdx + 1) % AVATARS.length;
+    localStorage.setItem(AVATAR_KEY, currentAvatarIdx);
+    renderAvatar();
+    fireConfetti(500); // small confetti for fun
+}
+
 
 /* Backup modal */
 function openBackup(){
@@ -2451,8 +3188,8 @@ if(btnA2hsClose){
 }
 
 /** =======================
- *  Sound toggle
- *  ======================= */
+ * Sound toggle
+ * ======================= */
 function renderSoundToggle(){
   soundToggle.classList.toggle("muted", !soundOn);
   soundToggle.textContent = soundOn ? "🔊" : "🔇";
@@ -2469,8 +3206,8 @@ soundToggle.onclick = ()=>{
 };
 
 /** =======================
- *  Init
- *  ======================= */
+ * Init
+ * ======================= */
 function init(){
   btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
 
@@ -2483,6 +3220,7 @@ function init(){
 
   renderStreakUI();
   renderDailyUI();
+  renderAvatar();
 
   maybeShowA2HS();
 
@@ -2496,4 +3234,3 @@ init();
 </script>
 </body>
 </html>
-
