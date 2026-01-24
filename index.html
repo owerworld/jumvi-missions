@@ -1813,6 +1813,7 @@ body{
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 /** =======================
  * Disable zoom (iOS + desktop)
@@ -3165,56 +3166,87 @@ function _inlineAllStyles(root){
 }
 
 async function downloadCertificatePNG({auto=true}={}){
-  try{
-    // ✅ FIX: Use the real certificate container id
-    const cert = document.getElementById("certPaper") || document.getElementById("certificate");
-    if(!cert) throw new Error("certificate missing");
+  // NOTE: iOS Safari blocks automatic "save to Photos" without user gesture.
+  // We capture the certificate as a PNG blob and then:
+  // - iOS: try Share Sheet (Save Image). If not available, show overlay for long-press save.
+  // - Others: trigger a normal file download.
+  const cert = document.getElementById("certPaper") || document.getElementById("certificate");
+  if(!cert){ showToast("Certificate is not ready yet."); return; }
 
-    // Ensure it is fully visible for rendering
+  try{
     cert.classList.add("isRendering");
 
-    // Render as image (HTML -> SVG -> Canvas)
-    const img = await renderNodeToImage(cert);
-    const w = img.naturalWidth || img.width;
-    const h = img.naturalHeight || img.height;
+    // Prefer html2canvas for broad compatibility (incl. iOS Safari).
+    let blob = null;
 
-    const canvas = document.createElement("canvas");
-    const scale = Math.min(2, window.devicePixelRatio || 1); // crisp but safe
-    canvas.width  = Math.round(w * scale);
-    canvas.height = Math.round(h * scale);
+    if(window.html2canvas){
+      // Scale tuned to avoid iOS memory issues while staying crisp.
+      const scale = Math.min(2, window.devicePixelRatio || 1.5);
+      const canvas = await window.html2canvas(cert, {
+        backgroundColor: null,
+        scale,
+        useCORS: true,
+        logging: false,
+        removeContainer: true
+      });
+      blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+    }
 
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(scale,0,0,scale,0,0);
-    ctx.drawImage(img, 0, 0);
+    if(!blob){
+      // Fallback: try native canvas render if html2canvas isn't available
+      const fallbackCanvas = document.createElement("canvas");
+      const rect = cert.getBoundingClientRect();
+      const scale = Math.min(2, window.devicePixelRatio || 1);
+      fallbackCanvas.width = Math.max(1, Math.round(rect.width * scale));
+      fallbackCanvas.height = Math.max(1, Math.round(rect.height * scale));
+      const ctx = fallbackCanvas.getContext("2d");
+      ctx.setTransform(scale,0,0,scale,0,0);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0,0,rect.width,rect.height);
+      // Draw via SVG foreignObject
+      const cloned = cert.cloneNode(true);
+      cloned.classList.add("forExport");
+      const wrap = document.createElement("div");
+      wrap.style.width = rect.width+"px";
+      wrap.style.height = rect.height+"px";
+      wrap.appendChild(cloned);
+
+      const data = new XMLSerializer().serializeToString(wrap);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${rect.width}" height="${rect.height}">
+        <foreignObject width="100%" height="100%">${data}</foreignObject>
+      </svg>`;
+      const img = new Image();
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      await new Promise((res, rej)=>{ img.onload=res; img.onerror=rej; });
+      ctx.drawImage(img, 0, 0, rect.width, rect.height);
+      blob = await new Promise(res=>fallbackCanvas.toBlob(res, "image/png", 1.0));
+    }
+
+    if(!blob) throw new Error("capture failed");
 
     const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
-
-    const blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
-    if(!blob) throw new Error("toBlob failed");
-
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // ✅ iOS: Prefer Share Sheet (Save Image). If not available, show an overlay for long-press save.
     if(isiOS){
       const file = new File([blob], filename, {type:"image/png"});
-
+      // Share Sheet first (best UX)
       if(navigator.canShare && navigator.canShare({files:[file]})){
         try{
           await navigator.share({files:[file], title:"JUMVI Certificate"});
-          if(!auto) showToast("Share → Save Image ✅");
+          if(!auto) showToast("Saved ✅");
           return;
         }catch(_){
-          // user cancelled or share failed → fall through to overlay
+          // user cancelled or share failed -> fall back to overlay
         }
       }
-
+      // Overlay fallback: long-press image -> Save to Photos
       const url = URL.createObjectURL(blob);
       showSaveOverlay(url);
-      if(!auto) showToast("Long‑press the image → Save to Photos ✅");
+      if(!auto) showToast("Long-press → Save to Photos ✅");
       return;
     }
 
-    // ✅ Android/desktop: Standard download
+    // Non‑iOS: normal download
     const a = document.createElement("a");
     const url = URL.createObjectURL(blob);
     a.href = url;
@@ -3222,15 +3254,19 @@ async function downloadCertificatePNG({auto=true}={}){
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=> URL.revokeObjectURL(url), 2000);
-
-    if(!auto) showToast("Saved! ✅");
+    setTimeout(()=> URL.revokeObjectURL(url), 2500);
+    if(!auto) showToast("Downloaded ✅");
   }catch(err){
-    // Soft fallback: some browsers require a direct user gesture
-    showToast("Save blocked by browser. Tap Save again.");
+    console.error(err);
+    // On iOS, avoid "blocked" messaging — show overlay guidance instead.
+    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if(isiOS){
+      showToast("Tap Save again. If it fails: long‑press the image.");
+    }else{
+      showToast("Save blocked by browser. Tap Save again.");
+    }
   }finally{
-    const cert = document.getElementById("certPaper") || document.getElementById("certificate");
-    if(cert) cert.classList.remove("isRendering");
+    cert.classList.remove("isRendering");
   }
 }
 
