@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -543,6 +544,42 @@
         #ffffff;
       min-height: 520px;
     }
+
+    /* Certificate premium styling */
+    .certInner{ position:relative; overflow:hidden; }
+    .certRibbon{
+      position:absolute; left:0; top:0; right:0;
+      height:14px;
+      background: linear-gradient(90deg, var(--blue), var(--lime), var(--orange));
+    }
+    .certWatermark{
+      position:absolute;
+      right:-36px;
+      bottom:18px;
+      font-size:92px;
+      font-weight:1000;
+      letter-spacing:-2px;
+      color: rgba(11,26,46,.06);
+      transform: rotate(-8deg);
+      pointer-events:none;
+      user-select:none;
+      line-height:1;
+    }
+    .certStamp{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:12px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(79,179,255,.35);
+      background: rgba(79,179,255,.08);
+      font-size:12px;
+      font-weight:950;
+      opacity:.95;
+    }
+    .certStamp b{ font-weight:1000; }
+
     .certHeader{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
@@ -678,34 +715,224 @@
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      .sticky, .wrap, .soundToggle, #confettiCanvas, .toast, #badgesBackdrop, #backdrop{
-        display:none !important;
-      }
+
+      /* Force-show the certificate even if the modal isn't open */
       #certBackdrop{
-        position:static !important;
         display:block !important;
+        position:static !important;
+        inset:auto !important;
         background: transparent !important;
         padding:0 !important;
       }
       #certBackdrop .sheet{
+        display:block !important;
+        position:static !important;
         max-height:none !important;
         overflow:visible !important;
         box-shadow:none !important;
         border:0 !important;
         background: transparent !important;
         padding:0 !important;
+        margin:0 !important;
       }
-      .certPaper{
-        border: 1px solid rgba(0,0,0,.15) !important;
+
+      /* Hide EVERYTHING by default (fix: PC printing controls / whole UI) */
+      body *{
+        visibility:hidden !important;
         box-shadow:none !important;
-        max-width: 186mm !important;
-        margin: 0 auto !important;
+        filter:none !important;
       }
-      /* Keep a clean margin for both A4 and Letter */
+
+      /* Show ONLY the certificate paper */
+      #certPaper, #certPaper *{
+        visibility:visible !important;
+      }
+
+      #certPaper{
+        position: fixed !important;
+        left:0 !important;
+        top:0 !important;
+        width:100% !important;
+        max-width:none !important;
+        margin:0 !important;
+        border-radius:0 !important;
+        border:1px solid rgba(0,0,0,.18) !important;
+        box-shadow:none !important;
+        background:#ffffff !important;
+      }
+
+      /* iOS fix: remove complex layered backgrounds that can turn black in PDF */
+      .certInner{
+        background:#ffffff !important;
+        background-image:none !important;
+      }
+
+      /* iOS print headers are unavoidable; this keeps clean margins */
       @page{
         margin: 12mm;
       }
     }
+
+  
+    /* ===== Add-on features (Daily Mission, Streak, Backup, A2HS, Modes) ===== */
+    body.solidBg .bgLayer{
+      background: linear-gradient(180deg, #061326 0%, #061326 100%) !important;
+    }
+
+    /* A2HS banner */
+    .a2hs{
+      margin-top:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      border-radius:18px;
+      padding:12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .a2hsText b{ font-weight:950; }
+    .a2hsText div{
+      color: var(--muted);
+      font-size:12px;
+      font-weight:850;
+      margin-top:4px;
+      line-height:1.35;
+    }
+    .a2hsClose{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:950;
+      cursor:pointer;
+      min-height:44px;
+      flex:0 0 auto;
+    }
+
+    /* Progress: streak */
+    .streakBox{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:4px;
+      min-width: 120px;
+      flex:0 0 auto;
+    }
+    .streakPill{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,106,0,.25);
+      background: rgba(255,106,0,.10);
+      font-weight:950;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .streakSub{
+      color: var(--muted);
+      font-size:11px;
+      font-weight:850;
+      white-space:nowrap;
+    }
+
+    /* Daily mission */
+    .dailyBox{
+      margin-top:12px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      padding:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .dailyLeft{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .dailyIcon{
+      width:44px; height:44px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
+    }
+    .dailyText{ min-width:0; }
+    .dailyTitle{
+      font-weight:950;
+      font-size:12px;
+      letter-spacing:.2px;
+      color: rgba(234,242,255,.88);
+      opacity:.9;
+    }
+    .dailyName{
+      margin-top:2px;
+      font-weight:1000;
+      font-size:15px;
+      letter-spacing:-.1px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 52vw;
+    }
+    .dailyMeta{
+      margin-top:4px;
+      color: var(--muted);
+      font-size:12px;
+      font-weight:900;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .dailyActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      flex:0 0 auto;
+    }
+    .dailyActions .btn{ padding:10px 12px; border-radius:14px; min-height:44px; }
+    @media (max-width:520px){
+      .dailyBox{ align-items:flex-start; }
+      .dailyActions{ width:100%; justify-content:stretch; }
+      .dailyActions .btn{ flex:1 1 calc(50% - 10px); }
+      .dailyName{ max-width: 64vw; }
+    }
+
+    /* Backup textarea */
+    .ta{
+      width:100%;
+      margin-top:10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      padding:12px 12px;
+      font-weight:850;
+      font-size:13px;
+      line-height:1.45;
+      min-height: 96px;
+      outline:0;
+      resize: vertical;
+    }
+    .ta::placeholder{ color: rgba(169,184,214,.70); }
+
+    /* Kids Mode (simple UI) */
+    body.kidsMode .sub{ display:none; }
+    body.kidsMode .search{ display:none; }
+    body.kidsMode .filters{ display:none; }
+    body.kidsMode .footer{ display:none; }
+    body.kidsMode .mMeta{ display:none; }
+    body.kidsMode .card{ padding:14px; }
+    body.kidsMode .mTitle{ font-size:18px; }
 
   </style>
 </head>
@@ -734,6 +961,14 @@
         <br><b>Safety:</b> throw below face level, keep 1–3 meters distance, adult supervision.
       </p>
 
+      <div class="a2hs" id="a2hsBanner" style="display:none;">
+        <div class="a2hsText">
+          <b>📲 Add to Home Screen</b>
+          <div id="a2hsHint">Tip: Add this page to your Home Screen for app-like use.</div>
+        </div>
+        <button class="a2hsClose" id="btnA2hsClose" type="button">✕</button>
+      </div>
+
       <div class="row">
         <button class="btn btnPrimary" id="btnRandomAll">🎲 Random</button>
         <button class="btn btnGhost" id="btnBadges">🏅 Badges</button>
@@ -741,12 +976,31 @@
       </div>
 
       <div class="progressBox" aria-label="progress">
-        <div>
+        <div class="pLeft">
           <div class="pText" id="progressText">0 / 30 completed</div>
           <div class="pSub" id="progressSub">Finish all missions to unlock the certificate.</div>
         </div>
         <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
           <div id="progressBarFill"></div>
+        </div>
+        <div class="streakBox" aria-label="streak">
+          <div class="streakPill" id="streakPill">🔥 Streak: 0</div>
+          <div class="streakSub" id="streakSub">Best: 0</div>
+        </div>
+      </div>
+
+      <div class="dailyBox" id="dailyBox" aria-label="daily mission">
+        <div class="dailyLeft">
+          <div class="dailyIcon" id="dailyIcon">📅</div>
+          <div class="dailyText">
+            <div class="dailyTitle">Today’s Mission</div>
+            <div class="dailyName" id="dailyName">—</div>
+            <div class="dailyMeta" id="dailyMeta">—</div>
+          </div>
+        </div>
+        <div class="dailyActions">
+          <button class="btn btnGhost" id="btnDailyNew" type="button">🔁 New</button>
+          <button class="btn btnPrimary" id="btnDailyPlay" type="button">▶︎ Play</button>
         </div>
       </div>
 
@@ -770,8 +1024,11 @@
         </div>
 
         <div class="toggleRow">
-          <button class="chip limeActive" id="btnOnlyUnfinished">Only Unfinished</button>
-          <button class="chip" id="btnChoosePack">Choose Pack</button>
+          <button class="chip limeActive" id="btnOnlyUnfinished" type="button">Only Unfinished</button>
+          <button class="chip" id="btnChoosePack" type="button">Choose Pack</button>
+          <button class="chip" id="btnSolidBg" type="button">Solid BG</button>
+          <button class="chip" id="btnKidsMode" type="button">Kids Mode</button>
+          <button class="chip" id="btnBackup" type="button">Backup</button>
         </div>
       </div>
 
@@ -835,6 +1092,40 @@
   </div>
 
 
+
+  <!-- Backup / Restore Modal -->
+  <div class="backdrop" id="backupBackdrop" role="dialog" aria-modal="true" aria-label="Backup and restore">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">🧷 Backup / Restore</div>
+          <div class="small">Copy a backup code and restore it on another phone.</div>
+        </div>
+        <button class="close" id="btnBackupClose">✕</button>
+      </div>
+
+      <div class="kv">
+        <b>Backup code</b>
+        <div class="small" style="margin-top:6px">Tap “Copy” and keep it somewhere safe.</div>
+        <textarea class="ta" id="backupCode" readonly></textarea>
+        <div class="sheetActions" style="margin-top:10px">
+          <button class="btn btnLime" id="btnBackupCopy" type="button">📋 Copy</button>
+          <button class="btn btnGhost" id="btnBackupRefresh" type="button">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <div class="kv">
+        <b>Restore</b>
+        <div class="small" style="margin-top:6px">Paste a backup code below and tap Restore.</div>
+        <textarea class="ta" id="restoreInput" placeholder="Paste backup code here"></textarea>
+        <div class="sheetActions" style="margin-top:10px">
+          <button class="btn btnPrimary" id="btnRestore" type="button">♻️ Restore</button>
+        </div>
+        <div class="small">Note: restore replaces progress on this phone.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast + Confetti -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <canvas id="confettiCanvas"></canvas>
@@ -864,6 +1155,8 @@
 
         <div class="certPaper" id="certPaper">
           <div class="certInner">
+            <div class="certRibbon" aria-hidden="true"></div>
+            <div class="certWatermark" aria-hidden="true">JUMVI</div>
             <div class="certHeader">
               <div class="certBrand">
                 <div class="certLogo" title="JUMVI">
@@ -882,6 +1175,8 @@
 
             <div class="certTitle">Champion Certificate</div>
             <p class="certSubtitle">This certificate is awarded to the player who completed all missions.</p>
+
+            <div class="certStamp">✅ <b>All 30 Missions</b> • Safe play • Kids 3–8</div>
 
             <div class="certName" id="certNameText">JUMVI Champion</div>
 
@@ -1306,9 +1601,32 @@ let unlockedBefore = done.size >= missions.length;
 const ONLY_KEY = "jumvi_only_unfinished_v1";
 let onlyUnfinished = (localStorage.getItem(ONLY_KEY) ?? "0") === "1";
 
-let currentPack = "all";
+/* UI + persistence */
+const PACK_KEY          = "jumvi_current_pack_v1";
+const SOLIDBG_KEY       = "jumvi_solid_bg_v1";
+const KIDSMODE_KEY      = "jumvi_kids_mode_v1";
+const STREAK_COUNT_KEY  = "jumvi_streak_count_v1";
+const STREAK_BEST_KEY   = "jumvi_streak_best_v1";
+const STREAK_LAST_KEY   = "jumvi_streak_last_v1";
+const DAILY_DATE_KEY    = "jumvi_daily_date_v1";
+const DAILY_ID_KEY      = "jumvi_daily_id_v1";
+const DAILY_N_KEY       = "jumvi_daily_n_v1";
+const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
+
+let currentPack = localStorage.getItem(PACK_KEY) || "all";
 let searchQuery = "";
 let lastOpenedId = null;
+
+let solidBg = (localStorage.getItem(SOLIDBG_KEY) ?? "0") === "1";
+let kidsMode = (localStorage.getItem(KIDSMODE_KEY) ?? "0") === "1";
+
+let streakCount = Number(localStorage.getItem(STREAK_COUNT_KEY) || "0");
+let bestStreak  = Number(localStorage.getItem(STREAK_BEST_KEY) || "0");
+let lastActiveIso = localStorage.getItem(STREAK_LAST_KEY) || "";
+
+let dailyIso = localStorage.getItem(DAILY_DATE_KEY) || "";
+let dailyIdStored = Number(localStorage.getItem(DAILY_ID_KEY) || "0");
+let dailyN = Number(localStorage.getItem(DAILY_N_KEY) || "0");
 
 /** =======================
  *  Refs
@@ -1346,6 +1664,33 @@ const searchInput = document.getElementById("searchInput");
 const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
 const soundToggle = document.getElementById("soundToggle");
 
+const btnSolidBg = document.getElementById("btnSolidBg");
+const btnKidsMode = document.getElementById("btnKidsMode");
+const btnBackup = document.getElementById("btnBackup");
+
+const streakPill = document.getElementById("streakPill");
+const streakSubEl = document.getElementById("streakSub");
+
+const dailyBox = document.getElementById("dailyBox");
+const dailyIcon = document.getElementById("dailyIcon");
+const dailyName = document.getElementById("dailyName");
+const dailyMeta = document.getElementById("dailyMeta");
+const btnDailyPlay = document.getElementById("btnDailyPlay");
+const btnDailyNew = document.getElementById("btnDailyNew");
+
+const a2hsBanner = document.getElementById("a2hsBanner");
+const a2hsHint = document.getElementById("a2hsHint");
+const btnA2hsClose = document.getElementById("btnA2hsClose");
+
+const backupBackdrop = document.getElementById("backupBackdrop");
+const btnBackupClose = document.getElementById("btnBackupClose");
+const backupCode = document.getElementById("backupCode");
+const restoreInput = document.getElementById("restoreInput");
+const btnBackupCopy = document.getElementById("btnBackupCopy");
+const btnBackupRefresh = document.getElementById("btnBackupRefresh");
+const btnRestore = document.getElementById("btnRestore");
+
+
 const certBackdrop = document.getElementById("certBackdrop");
 const btnCertClose = document.getElementById("btnCertClose");
 const certNameInput = document.getElementById("certNameInput");
@@ -1379,6 +1724,224 @@ function diffLabel(d){
   return "Hard";
 }
 
+
+/* ===== Local date (streak + daily) ===== */
+function isoLocalDate(d=new Date()){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function isoToDate(iso){
+  const parts = String(iso||"").split("-");
+  if(parts.length!==3) return new Date();
+  const y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
+  return new Date(y, (m||1)-1, d||1);
+}
+function yesterdayIso(isoToday){
+  const dt = isoToDate(isoToday);
+  dt.setDate(dt.getDate()-1);
+  return isoLocalDate(dt);
+}
+
+/* ===== Modes ===== */
+function applyBodyClasses(){
+  document.body.classList.toggle("solidBg", !!solidBg);
+  document.body.classList.toggle("kidsMode", !!kidsMode);
+}
+function renderModeChips(){
+  if(btnSolidBg) btnSolidBg.classList.toggle("active", !!solidBg);
+  if(btnKidsMode) btnKidsMode.classList.toggle("active", !!kidsMode);
+}
+
+/* ===== Streak ===== */
+function persistStreak(){
+  localStorage.setItem(STREAK_COUNT_KEY, String(streakCount));
+  localStorage.setItem(STREAK_BEST_KEY, String(bestStreak));
+  localStorage.setItem(STREAK_LAST_KEY, String(lastActiveIso||""));
+}
+function recordActivityToday(){
+  const today = isoLocalDate();
+  if(lastActiveIso === today) return false; // already counted today
+  if(lastActiveIso === yesterdayIso(today)){
+    streakCount = Math.max(0, streakCount) + 1;
+  }else{
+    streakCount = 1;
+  }
+  bestStreak = Math.max(bestStreak, streakCount);
+  lastActiveIso = today;
+  persistStreak();
+  return true;
+}
+function renderStreakUI(){
+  if(streakPill) streakPill.textContent = `🔥 Streak: ${streakCount || 0}`;
+  if(streakSubEl) streakSubEl.textContent = `Best: ${bestStreak || 0}`;
+}
+
+/* ===== Daily mission ===== */
+function hashFNV1a(str){
+  let h = 0x811c9dc5;
+  for(let i=0;i<str.length;i++){
+    h ^= str.charCodeAt(i);
+    h = (h + ((h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24))) >>> 0;
+  }
+  return h >>> 0;
+}
+function pickDailyId(iso, n){
+  const h = hashFNV1a(`${iso}|${n}|JUMVI`);
+  const idx = h % missions.length;
+  return missions[idx].id;
+}
+function persistDaily(){
+  localStorage.setItem(DAILY_DATE_KEY, String(dailyIso||""));
+  localStorage.setItem(DAILY_ID_KEY, String(dailyIdStored||0));
+  localStorage.setItem(DAILY_N_KEY, String(dailyN||0));
+}
+function ensureDailyMission(){
+  const today = isoLocalDate();
+  if(dailyIso !== today){
+    dailyIso = today;
+    dailyN = 0;
+    dailyIdStored = pickDailyId(today, dailyN);
+    persistDaily();
+  }
+  if(!dailyIdStored || !missions.find(x=>x.id===dailyIdStored)){
+    dailyIdStored = pickDailyId(today, dailyN||0);
+    persistDaily();
+  }
+}
+function renderDailyUI(){
+  ensureDailyMission();
+  const ms = missions.find(x=>x.id===dailyIdStored);
+  if(!ms) return;
+  const doneToday = done.has(ms.id);
+
+  if(dailyIcon) dailyIcon.textContent = doneToday ? "✅" : ms.icon;
+  if(dailyName) dailyName.textContent = ms.title;
+  if(dailyMeta){
+    dailyMeta.innerHTML = `
+      <span class="tag pack">${escapeHtml(ms.pack)}</span>
+      <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+      <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+    `;
+  }
+  if(btnDailyPlay){
+    btnDailyPlay.textContent = doneToday ? "✅ View" : "▶︎ Play";
+  }
+}
+
+/* ===== A2HS helper ===== */
+function isStandalone(){
+  return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
+}
+function platformHint(){
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+  if(isIOS){
+    return "iPhone/iPad: Tap Share ▸ “Add to Home Screen”.";
+  }
+  if(isAndroid){
+    return "Android: Open browser menu ▸ “Add to Home screen”.";
+  }
+  return "Tip: Add this page to your Home Screen for app-like use.";
+}
+function maybeShowA2HS(){
+  if(!a2hsBanner) return;
+  const dismissed = (localStorage.getItem(A2HS_DISMISS_KEY) ?? "0") === "1";
+  if(dismissed || isStandalone()) return;
+  if(a2hsHint) a2hsHint.textContent = platformHint();
+  a2hsBanner.style.display = "flex";
+}
+
+/* ===== Backup / Restore ===== */
+function b64UrlEncode(str){
+  return str.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64UrlDecode(str){
+  const s = str.replace(/-/g,"+").replace(/_/g,"/");
+  const pad = s.length % 4 ? "=".repeat(4 - (s.length % 4)) : "";
+  return s + pad;
+}
+function b64EncodeUnicode(s){
+  return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g, (_,p)=>String.fromCharCode(parseInt(p,16))));
+}
+function b64DecodeUnicode(b64){
+  return decodeURIComponent(Array.prototype.map.call(atob(b64), c => "%" + ("00"+c.charCodeAt(0).toString(16)).slice(-2)).join(""));
+}
+function buildBackupPayload(){
+  return {
+    v: 1,
+    ts: Date.now(),
+    done: [...done],
+    onlyUnfinished,
+    currentPack,
+    soundOn,
+    solidBg,
+    kidsMode,
+    streak: { c: streakCount||0, b: bestStreak||0, l: lastActiveIso||"" },
+    daily:  { d: dailyIso||"", id: dailyIdStored||0, n: dailyN||0 },
+    cert:   { name: localStorage.getItem(CERT_NAME_KEY) || "" }
+  };
+}
+function makeBackupCode(){
+  const payload = JSON.stringify(buildBackupPayload());
+  const b64 = b64EncodeUnicode(payload);
+  return "JUMVI1." + b64UrlEncode(b64);
+}
+function applyBackupPayload(p){
+  if(!p || p.v!==1) throw new Error("bad_version");
+
+  // done
+  done = new Set(Array.isArray(p.done) ? p.done : []);
+  persist();
+
+  // toggles
+  onlyUnfinished = !!p.onlyUnfinished;
+  persistOnly();
+
+  currentPack = String(p.currentPack || "all");
+  localStorage.setItem(PACK_KEY, currentPack);
+
+  soundOn = !!p.soundOn;
+  localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+
+  solidBg = !!p.solidBg;
+  localStorage.setItem(SOLIDBG_KEY, solidBg ? "1" : "0");
+
+  kidsMode = !!p.kidsMode;
+  localStorage.setItem(KIDSMODE_KEY, kidsMode ? "1" : "0");
+
+  // streak
+  streakCount = Number(p.streak?.c || 0);
+  bestStreak  = Number(p.streak?.b || 0);
+  lastActiveIso = String(p.streak?.l || "");
+  persistStreak();
+
+  // daily
+  dailyIso = String(p.daily?.d || "");
+  dailyIdStored = Number(p.daily?.id || 0);
+  dailyN = Number(p.daily?.n || 0);
+  persistDaily();
+
+  // certificate name (optional)
+  if(p.cert && typeof p.cert.name === "string"){
+    localStorage.setItem(CERT_NAME_KEY, p.cert.name);
+    if(certNameInput) certNameInput.value = p.cert.name;
+    buildCertificate();
+  }
+
+  // refresh UI
+  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+  applyBodyClasses();
+  renderModeChips();
+  renderSoundToggle();
+  renderFilters();
+  renderList();
+  renderStreakUI();
+  renderDailyUI();
+}
+
 /** =======================
  *  Rendering
  *  ======================= */
@@ -1391,6 +1954,7 @@ function renderFilters(){
     b.onclick = ()=>{
       clickSound("click");
       currentPack = p.key;
+      localStorage.setItem(PACK_KEY, currentPack);
       renderFilters();
       renderList();
     };
@@ -1536,6 +2100,9 @@ function updateProgress(){
   }else{
     progressSub.textContent = "Finish all missions to unlock the certificate.";
   }
+
+  renderStreakUI();
+  renderDailyUI();
   updateBadges();
 }
 
@@ -1625,7 +2192,7 @@ if(btnCertPrint){
     clickSound("click");
     buildCertificate();
     // small delay so DOM updates apply before print
-    setTimeout(()=> window.print(), 60);
+    setTimeout(()=> window.print(), 180);
   };
 }
 if(btnCertShare){
@@ -1678,6 +2245,12 @@ btnToggleDone.onclick = ()=>{
   const wasDone = done.has(lastOpenedId);
   if(wasDone) done.delete(lastOpenedId);
   else done.add(lastOpenedId);
+
+  // streak counts once per day when you complete at least one mission
+  if(!wasDone){
+    const changed = recordActivityToday();
+    if(changed && streakCount > 1) showToast(`🔥 Streak: ${streakCount} days!`);
+  }
 
   persist();
   renderList();
@@ -1764,6 +2337,120 @@ btnOnlyUnfinished.onclick = ()=>{
 };
 
 /** =======================
+ *  New UI buttons
+ *  ======================= */
+if(btnSolidBg){
+  btnSolidBg.onclick = ()=>{
+    clickSound("click");
+    solidBg = !solidBg;
+    localStorage.setItem(SOLIDBG_KEY, solidBg ? "1" : "0");
+    applyBodyClasses();
+    renderModeChips();
+    showToast(solidBg ? "Solid background ON" : "Solid background OFF");
+  };
+}
+if(btnKidsMode){
+  btnKidsMode.onclick = ()=>{
+    clickSound("click");
+    kidsMode = !kidsMode;
+    localStorage.setItem(KIDSMODE_KEY, kidsMode ? "1" : "0");
+    applyBodyClasses();
+    renderModeChips();
+    showToast(kidsMode ? "Kids Mode ON" : "Kids Mode OFF");
+  };
+}
+
+/* Daily mission buttons */
+if(btnDailyPlay){
+  btnDailyPlay.onclick = ()=>{
+    clickSound("click");
+    ensureDailyMission();
+    openMission(dailyIdStored);
+  };
+}
+if(btnDailyNew){
+  btnDailyNew.onclick = ()=>{
+    clickSound("click");
+    ensureDailyMission();
+    dailyN = (dailyN || 0) + 1;
+    dailyIdStored = pickDailyId(dailyIso || isoLocalDate(), dailyN);
+    persistDaily();
+    renderDailyUI();
+    showToast("New daily mission selected!");
+  };
+}
+
+/* Backup modal */
+function openBackup(){
+  if(!backupBackdrop) return;
+  if(backupCode) backupCode.value = makeBackupCode();
+  if(restoreInput) restoreInput.value = "";
+  backupBackdrop.classList.add("show");
+}
+function closeBackup(){
+  if(!backupBackdrop) return;
+  backupBackdrop.classList.remove("show");
+}
+if(btnBackup){
+  btnBackup.onclick = ()=>{ clickSound("click"); openBackup(); };
+}
+if(btnBackupClose){
+  btnBackupClose.onclick = ()=>{ clickSound("click"); closeBackup(); };
+}
+if(backupBackdrop){
+  backupBackdrop.addEventListener("click",(e)=>{ if(e.target===backupBackdrop){ clickSound("click"); closeBackup(); } });
+}
+if(btnBackupRefresh){
+  btnBackupRefresh.onclick = ()=>{ clickSound("click"); if(backupCode) backupCode.value = makeBackupCode(); showToast("Backup code refreshed."); };
+}
+if(btnBackupCopy){
+  btnBackupCopy.onclick = async ()=>{
+    clickSound("click");
+    const code = backupCode ? backupCode.value : makeBackupCode();
+    try{
+      if(navigator.clipboard){
+        await navigator.clipboard.writeText(code);
+        showToast("Copied!");
+      }else{
+        if(backupCode){ backupCode.focus(); backupCode.select(); }
+        document.execCommand("copy");
+        showToast("Copied!");
+      }
+    }catch(e){
+      showToast("Copy failed. Select and copy manually.");
+    }
+  };
+}
+if(btnRestore){
+  btnRestore.onclick = ()=>{
+    clickSound("click");
+    const raw = (restoreInput?.value || "").trim();
+    if(!raw) return showToast("Paste a backup code first.");
+    if(!raw.startsWith("JUMVI1.")) return showToast("Invalid code.");
+    if(!confirm("Restore progress on this phone? This will replace current progress.")) return;
+    try{
+      const part = raw.split("JUMVI1.")[1] || "";
+      const json = b64DecodeUnicode(b64UrlDecode(part));
+      const payload = JSON.parse(json);
+      applyBackupPayload(payload);
+      closeBackup();
+      showToast("Restored!");
+    }catch(e){
+      showToast("Restore failed. Check the code.");
+    }
+  };
+}
+
+/* A2HS banner */
+if(btnA2hsClose){
+  btnA2hsClose.onclick = ()=>{
+    clickSound("click");
+    localStorage.setItem(A2HS_DISMISS_KEY, "1");
+    if(a2hsBanner) a2hsBanner.style.display = "none";
+  };
+}
+
+/** =======================
  *  Sound toggle
  *  ======================= */
 function renderSoundToggle(){
@@ -1786,9 +2473,18 @@ soundToggle.onclick = ()=>{
  *  ======================= */
 function init(){
   btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+
+  applyBodyClasses();
+  renderModeChips();
+
   renderSoundToggle();
   renderFilters();
   renderList();
+
+  renderStreakUI();
+  renderDailyUI();
+
+  maybeShowA2HS();
 
   // restore certificate name (optional)
   if(certNameInput){
@@ -1800,3 +2496,4 @@ init();
 </script>
 </body>
 </html>
+
