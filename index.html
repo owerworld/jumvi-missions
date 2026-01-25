@@ -1804,7 +1804,7 @@ body{
       <div class="saveRow">
         <div>
           <div class="saveHint">Save to Photos</div>
-          <div class="saveSub">iPhone: press & hold the image → “Save to Photos”.</div>
+          <div class="saveSub" id="saveSub">iPhone: press & hold the image → “Save to Photos”.</div>
         </div>
         <button class="saveCloseBtn" id="saveOverlayClose" type="button">✕</button>
       </div>
@@ -2343,20 +2343,36 @@ const btnCertDownload = document.getElementById("btnCertDownload");
 const saveOverlay = document.getElementById("saveOverlay");
 const saveOverlayClose = document.getElementById("saveOverlayClose");
 const saveImg = document.getElementById("saveImg");
+const saveSub = document.getElementById("saveSub");
 
-function showSaveOverlay(imgUrl){
-  if(!saveOverlay || !saveImg) return;
+function showSaveOverlay(imgUrl, subText){
+  if(!saveOverlay) return;
+  if(saveSub && typeof subText === "string") saveSub.textContent = subText;
   saveOverlay.dataset.url = imgUrl || "";
-  saveImg.src = imgUrl || "";
+  if(saveImg){
+    if(imgUrl){
+      saveImg.style.display = "block";
+      saveImg.src = imgUrl;
+    }else{
+      saveImg.style.display = "none";
+      saveImg.src = "";
+    }
+  }
   saveOverlay.classList.add("show");
   saveOverlay.setAttribute("aria-hidden","false");
 }
 function hideSaveOverlay(){
-  if(!saveOverlay || !saveImg) return;
+  if(!saveOverlay) return;
   const url = saveOverlay.dataset.url;
   if(url) try{ URL.revokeObjectURL(url); }catch(_){}
   saveOverlay.dataset.url = "";
-  saveImg.src = "";
+  if(saveImg){
+    saveImg.src = "";
+    saveImg.style.display = "block";
+  }
+  if(saveSub){
+    saveSub.textContent = "iPhone: press & hold the image → “Save to Photos”.";
+  }
   saveOverlay.classList.remove("show");
   saveOverlay.setAttribute("aria-hidden","true");
 }
@@ -3103,12 +3119,7 @@ function openCertificate(){
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
   if(sheet) sheet.scrollTop = 0;
-  // Auto-save once per open (skip on iOS: requires a user gesture)
-  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if(!_certAutoDownloaded && !isiOS){
-    _certAutoDownloaded = true;
-    setTimeout(()=> downloadCertificatePNG({auto:true}), 120);
-  }
+  // NOTE: "Open" should only open. Saving is done via the Save button inside the sheet.
 }
 
 function closeCertificate(){
@@ -3214,91 +3225,88 @@ function openImageForSave(url){
 }
 
 async function downloadCertificatePNG({auto=true}={}){
-  // iOS Safari/Chrome (both WebKit) do NOT allow "direct download to Photos".
-  // Best practice:
-  // 1) Capture as PNG (html2canvas).
-  // 2) iOS: try Share Sheet (Save Image). If not available, open image in a new tab + overlay for long-press save.
-  // 3) Others: normal download.
+  // iOS Safari/Chrome (WebKit) restricts programmatic downloads.
+  // Reliable iPhone flow:
+  // - Show an in-app preview (overlay) and let users long-press → Save to Photos
+  // - Try Share Sheet (if available) after image is ready (best UX)
   const cert = document.getElementById("certPaper") || document.getElementById("certificate");
   if(!cert){ showToast("Certificate is not ready yet."); return; }
 
   const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+
+  // iPhone: give instant feedback (avoid "nothing happened" feeling)
+  if(isiOS){
+    try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){}
+    try{ showToast("Preparing certificate…"); }catch(_){}
+    if(btnCertDownload){
+      btnCertDownload.disabled = true;
+      btnCertDownload.dataset.prevText = btnCertDownload.textContent || "";
+      btnCertDownload.textContent = "⏳ Preparing…";
+    }
+  }
 
   try{
     cert.classList.add("isRendering");
 
     // Ensure renderer is available (multiple CDNs)
-    await ensureHtml2Canvas();
-
-    let blob = null;
-
-    if(window.html2canvas){
-      const scale = Math.min(2, window.devicePixelRatio || 1);
-      const canvas = await window.html2canvas(cert, {
-        backgroundColor: null,
-        scale,
-        useCORS: true,
-        logging: false,
-        removeContainer: true
-      });
-      blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
-    }
-
-    if(!blob){
-      // If opened as file:// on iOS, external libs may not load. Give a clear hint.
-      if(isiOS && location.protocol === "file:"){
-        showToast("iPhone: Please open this page from Netlify/HTTPS (not Files).");
-      }else{
-        showToast("Save blocked on this device. Try again.");
+    const ok = await ensureHtml2Canvas();
+    if(!ok){
+      if(isiOS){
+        showSaveOverlay("", "Needs internet to generate image (html2canvas).");
       }
+      showToast("Certificate save needs internet (html2canvas).");
       return;
     }
 
-    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+    const scale = Math.min(2, window.devicePixelRatio || 1);
+    const canvas = await window.html2canvas(cert, {
+      backgroundColor: "#ffffff",
+      scale,
+      useCORS: true,
+      logging: false,
+      removeContainer: true
+    });
+
+    const blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+    if(!blob){
+      showToast("Save blocked on this device. Try again.");
+      return;
+    }
 
     if(isiOS){
       const url = URL.createObjectURL(blob);
 
-      // 1) Share Sheet (best UX) - needs HTTPS + iOS support
+      // Show preview for long-press save (most reliable)
+      showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
+
+      // Try Share Sheet (optional best UX)
       try{
         const file = new File([blob], filename, {type:"image/png"});
         if(window.isSecureContext && navigator.canShare && navigator.canShare({files:[file]})){
           await navigator.share({files:[file], title:"JUMVI Certificate"});
           if(!auto) showToast("Saved ✅");
-          // keep url cleanup
-          setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 5000);
-          return;
         }
       }catch(_){
-        // user cancelled / share failed -> fallback below
+        // ignore (user cancelled / not supported)
       }
 
-      // 2) Open image in a new tab (lets user "Save Image" reliably)
-      const opened = openImageForSave(url);
-
-      // 3) Overlay fallback (long-press)
-      showSaveOverlay(url);
-
-      if(!auto){
-        showToast(opened ? "Opened image — long‑press to Save ✅" : "Long‑press → Save to Photos ✅");
-      }
-      // Do not revoke immediately; overlay / new tab needs it
+      // cleanup will happen when overlay closes
       return;
     }
 
-    // Android/Desktop: normal download
-    const a = document.createElement("a");
+    // Android / desktop: normal download
     const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 2000);
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
     if(!auto) showToast("Saved ✅");
 
   }catch(err){
-    // Surface a more useful message on iOS
     if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
       showToast("iPhone blocks auto-download. Use Save → long-press image.");
     }else{
@@ -3306,13 +3314,18 @@ async function downloadCertificatePNG({auto=true}={}){
     }
   }finally{
     cert.classList.remove("isRendering");
+    if(isiOS && btnCertDownload){
+      btnCertDownload.disabled = false;
+      btnCertDownload.textContent = btnCertDownload.dataset.prevText || "⬇️ Save to Photos";
+      delete btnCertDownload.dataset.prevText;
+    }
   }
 }
 
 // Wire up the single control button
 if(btnCertDownload){
   btnCertDownload.onclick = ()=>{
-    clickSound("click");
+    try{ clickSound("click"); }catch(_){ }
     buildCertificate();
     downloadCertificatePNG({auto:false});
   };
