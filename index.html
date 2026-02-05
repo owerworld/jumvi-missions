@@ -7,28 +7,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>JUMVI Missions</title>
   <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
-  <meta name="theme-color" content="#061326" />
+  <meta name="theme-color" content="#f5f7fb" />
 
   <style>
     :root{
-      /* "SUNNY PLAYGROUND" THEME (Kids 3-8) */
-      --bg: #E0F7FA;            /* Sky Blue Light */
-      --card: #FFFFFF;          /* White Cloud */
-      --card2: #F0F9FF;         /* Very Light Blue */
-      --text: #0D47A1;          /* Deep Blue (Readable contrast) */
-      --muted: #5472A3;         /* Soft Grey-Blue */
-      --border: rgba(33, 150, 243, 0.2); /* Soft Blue Border */
+  /* Premium, clean theme (Apple-like) */
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --card2: #f8fafc;
+  --text: #0b1220;
+  --muted: #64748b;
+  --border: rgba(15, 23, 42, 0.12);
 
-      --blue: #00B0FF;          /* Bright Cartoon Blue */
-      --lime: #76FF03;          /* Bright Grass Green */
-      --orange: #FF9100;        /* Toy Orange */
+  --blue: #2563eb;
+  --lime: #22c55e;
+  --orange: #f59e0b;
 
-      --radius: 22px;           /* Bubbly/Rounder corners */
-      --shadow: 0 12px 30px rgba(13, 71, 161, 0.15); /* Soft colorful shadow */
-    
-      --sheetbg: rgba(255,255,255,0.94);
-      --sheetpanel: rgba(240,249,255,0.92);
-      --backdrop: rgba(0,0,0,0.45);
+  --radius: 20px;
+  --shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+
+  --sheetbg: rgba(255,255,255,0.96);
+  --sheetpanel: rgba(248,250,252,0.95);
+  --backdrop: rgba(2,6,23,0.45);
 
 }
 
@@ -37,7 +37,7 @@
     html{ -webkit-text-size-adjust:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Comic Sans MS", "Chalkboard SE", sans-serif; /* Added fun fonts fallback */
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
       color:var(--text);
       background: var(--bg);
       -webkit-tap-highlight-color: transparent;
@@ -48,9 +48,9 @@
     .bgLayer{
       position:fixed; inset:0; z-index:-1;
       background:
-        radial-gradient(circle at 10% 10%, rgba(255, 235, 59, 0.4), transparent 40%), /* Sun glow */
-        radial-gradient(circle at 90% 80%, rgba(118, 255, 3, 0.2), transparent 40%),  /* Grass glow */
-        linear-gradient(180deg, #E0F7FA 0%, #E1F5FE 100%);
+        radial-gradient(circle at 15% 10%, rgba(37, 99, 235, 0.10), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(34, 197, 94, 0.08), transparent 48%),
+        linear-gradient(180deg, #f5f7fb 0%, #edf2f7 100%);
       transform: translateZ(0);
     }
 
@@ -72,7 +72,7 @@
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:10px 14px 10px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: #0277BD; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: #2563eb; }
     .logoWrap{
       width:42px; height:42px; border-radius:14px;
       background: #FFFFFF;
@@ -111,7 +111,7 @@
     .hero{
       margin-top:12px;
       border:1px solid #FFFFFF;
-      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5));
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.9));
       border-radius: 26px;
       padding:16px;
       box-shadow: var(--shadow);
@@ -122,7 +122,7 @@
       line-height:1.15;
       font-weight:950;
       letter-spacing:-.2px;
-      color: #01579B;
+      color: #0f172a;
     }
     .sub{
       margin:8px 0 0;
@@ -149,9 +149,9 @@
     }
     .btn:active{ transform: scale(.96); }
     .btnPrimary{
-      background: linear-gradient(135deg, #29B6F6, #0288D1);
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
       color:#FFFFFF;
-      box-shadow: 0 8px 20px rgba(3, 169, 244, 0.3);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
       text-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
     .btnGhost{
@@ -161,9 +161,9 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
     .btnLime{
-      background: linear-gradient(135deg, #76FF03, #64DD17);
-      color:#1B5E20;
-      box-shadow: 0 8px 20px rgba(118, 255, 3, 0.25);
+      background: linear-gradient(135deg, #34d399, #22c55e);
+      color:#064e3b;
+      box-shadow: 0 10px 24px rgba(34, 197, 94, 0.25);
     }
     .btnTimer{
         background: #FFF3E0;
@@ -181,7 +181,7 @@
       background: #FFFFFF; /* Clean white */
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    .pText{ font-weight:950; letter-spacing:.2px; color: #0277BD; font-size: 15px; }
+    .pText{ font-weight:950; letter-spacing:.2px; color: #2563eb; font-size: 15px; }
     .pSub{ color:var(--muted); font-size:12px; margin-top:3px; font-weight: 700; }
     .bar{
       flex:1; min-width:180px;
@@ -245,7 +245,7 @@
     .chip.active{
       border-color: var(--blue);
       background: #E1F5FE;
-      color: #01579B;
+      color: #0f172a;
       box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.15);
     }
     .chip.limeActive.active{
@@ -295,7 +295,7 @@
       flex:0 0 auto;
     }
     .mMain{ flex:1; min-width:0; }
-    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: #0277BD; }
+    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: #2563eb; }
     .mMeta{
       margin-top:6px;
       display:flex; flex-wrap:wrap; gap:8px;
@@ -312,7 +312,7 @@
       font-size:11px;
       font-weight:800;
     }
-    .tag.pack{ background: #E1F5FE; color: #0277BD; }
+    .tag.pack{ background: #E1F5FE; color: #2563eb; }
     .tag.diff{ background: #FFF3E0; color: #E65100; }
     .tag.smallHide{ display:inline-flex; }
     
@@ -367,7 +367,7 @@
       box-shadow: 0 4px 12px rgba(118, 255, 3, 0.2);
     }
     .badgeIcon{ font-size:26px; }
-    .badgeName{ margin-top:8px; font-weight:950; font-size:14px; color: #0277BD; }
+    .badgeName{ margin-top:8px; font-weight:950; font-size:14px; color: #2563eb; }
     .badgeReq{ margin-top:4px; color: var(--muted); font-size:11px; font-weight:700; }
 
     .certBox{
@@ -381,7 +381,7 @@
     }
     .certLeft{ display:flex; align-items:center; gap:12px; }
     .certIcon{ font-size:32px; }
-    .certText b{ font-weight:950; font-size: 16px; color: #01579B; }
+    .certText b{ font-weight:950; font-size: 16px; color: #0f172a; }
     .certText div{ color: var(--muted); font-size:12px; margin-top:4px; font-weight:700; }
     .certBtn{
       border-radius:18px;
@@ -421,7 +421,7 @@
       background: #FFFFFF;
       padding:10px 14px;
       border-radius:16px;
-      color: #0277BD;
+      color: #2563eb;
       font-weight:800;
       font-size:13px;
       cursor:pointer;
@@ -464,7 +464,7 @@
       min-height:44px;
       font-size: 16px;
     }
-    .sheetTitle{ font-weight:950; font-size:20px; color: #01579B; }
+    .sheetTitle{ font-weight:950; font-size:20px; color: #0f172a; }
     .sheetMeta{ margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; }
     .kv{
       margin-top:12px;
@@ -475,7 +475,7 @@
       line-height:1.5;
       font-size:15px; /* Bigger text for kids/parents */
     }
-    .kv b{ color: #0277BD; }
+    .kv b{ color: #2563eb; }
     .sheetActions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
     .small{ font-size:12px; color: #90A4AE; margin-top:10px; }
     
@@ -724,7 +724,7 @@
       font-size: 32px; /* HUGE title */
       font-weight: 1000;
       letter-spacing: -1px;
-      color: #0277BD;
+      color: #2563eb;
       text-transform: uppercase;
       text-shadow: 2px 2px 0px #E1F5FE;
       line-height: 1;
@@ -753,7 +753,7 @@
       padding: 10px 4px;
       border-bottom: 2px dashed #0277BD; /* Dotted line */
       background: transparent;
-      color: #01579B;
+      color: #0f172a;
       text-align: center;
       width: 100%;
     }
@@ -784,7 +784,7 @@
       font-size: 12px;
       font-weight: 900;
       min-width: 200px;
-      color: #01579B;
+      color: #0f172a;
     }
     .sig{
       display:flex;
@@ -801,7 +801,7 @@
     .sigText{
       font-size: 14px;
       font-weight: 950;
-      color: #0277BD;
+      color: #2563eb;
       font-family: "Comic Sans MS", "Chalkboard SE", sans-serif; /* Handwritten feel */
     }
 
@@ -937,7 +937,7 @@
       gap:10px;
       box-shadow: var(--shadow);
     }
-    .a2hsText b{ font-weight:950; color: #0277BD; }
+    .a2hsText b{ font-weight:950; color: #2563eb; }
     .a2hsText div{
       color: rgba(6,19,38,0.72);
       font-size:12px;
@@ -1030,7 +1030,7 @@
       overflow:hidden;
       text-overflow:ellipsis;
       max-width: 52vw;
-      color: #0277BD;
+      color: #2563eb;
     }
     .dailyMeta{
       margin-top:4px;
@@ -1083,187 +1083,18 @@
     body.kidsMode .card{ padding:20px; }
     body.kidsMode .mTitle{ font-size:20px; }
     body.kidsMode .mIcon{ width:60px; height:60px; font-size:30px; }
+    body.kidsMode .btn{ padding:14px 18px; font-size:16px; min-height:52px; }
+    body.kidsMode .chip{ padding:12px 16px; font-size:14px; min-height:48px; }
+    body.kidsMode .certBtn{ min-height:52px; font-size:15px; }
 
 
-/* ===== FORCED DARK MODE (JUMVI Night) ===== */
-:root{
-  --bg:#061326;
-  --card:rgba(255,255,255,.10);
-  --card2:rgba(255,255,255,.07);
-  --text:#EAF2FF;
-  --muted:#A9B8D6;
-  --border:rgba(79,179,255,.22);
 
-  /* Brand colors (locked) */
-  --blue:#4FB3FF;   /* Vivid Sport Blue */
-  --lime:#97D700;   /* Bright Lime Green */
-  --orange:#FF6A00; /* Bright Orange */
-
-  --shadow: 0 16px 40px rgba(0,0,0,0.35);
-
-  --sheetbg: rgba(8,16,32,0.94);
-  --sheetpanel: rgba(14,26,52,0.90);
-  --backdrop: rgba(0,0,0,0.60);
-
-}
-
-body{
-  background: var(--bg);
-  color: var(--text);
-}
-
-.bgLayer{
-  background:
-    radial-gradient(circle at 12% 12%, rgba(79,179,255,0.22), transparent 42%),
-    radial-gradient(circle at 88% 78%, rgba(151,215,0,0.14), transparent 44%),
-    radial-gradient(circle at 40% 110%, rgba(255,106,0,0.10), transparent 48%),
-    linear-gradient(180deg, #061326 0%, #071a35 100%);
-}
-
-/* Surfaces */
-.sticky{
-  background: rgba(6, 19, 38, 0.78);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 6px 26px rgba(0,0,0,0.25);
-}
-.pill{
-  background: rgba(255,255,255,0.06);
-  border-color: var(--border);
-  color: var(--muted);
-}
-.hero{
-  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
-  border-color: rgba(79,179,255,0.18);
-  box-shadow: var(--shadow);
-}
-.h1{ color: var(--text); }
-.sub{ color: var(--muted); }
-.brand{ color: var(--text); }
-.logoWrap{ background: rgba(255,255,255,0.06); border-color: var(--border); }
-
-.progressBox,
-.search,
-.card,
-.badge,
-.certBox,
-.footer,
-.sheet{
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(79,179,255,0.18);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.28);
-}
-
-.search input{ color: var(--text); }
-.search input::placeholder{ color: rgba(233,242,255,0.55); }
-
-.chip{
-  background: rgba(255,255,255,0.06);
-  border-color: var(--border);
-  color: rgba(233,242,255,0.70);
-}
-.chip.active{
-  background: rgba(79,179,255,0.18);
-  color: var(--text);
-  border-color: rgba(79,179,255,0.55);
-  box-shadow: 0 0 0 3px rgba(79,179,255,0.18);
-}
-.chip.limeActive.active{
-  background: rgba(151,215,0,0.16);
-  border-color: rgba(151,215,0,0.55);
-  color: var(--text);
-  box-shadow: 0 0 0 3px rgba(151,215,0,0.18);
-}
-
-.card{ border-color: rgba(79,179,255,0.10); }
-.mTitle{ color: var(--text); }
-.mIcon{ background: rgba(255,255,255,0.08); color: var(--text); }
-
-.tag{ background: rgba(255,255,255,0.06); color: rgba(233,242,255,0.72); }
-.tag.pack{ background: rgba(79,179,255,0.18); color: var(--text); }
-.tag.diff{ background: rgba(255,106,0,0.14); color: var(--text); }
-
-.kv{
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(79,179,255,0.16);
-  color: rgba(233,242,255,0.88);
-}
-.kv b{ color: var(--blue); }
-
-.backdrop{
-  background: rgba(0,0,0,0.55);
-}
-
-/* Buttons */
-.btnGhost{
-  background: rgba(255,255,255,0.06);
-  border-color: var(--border);
-  color: var(--text);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-.btnTimer{
-  background: rgba(255,106,0,0.14);
-  border-color: rgba(255,106,0,0.22);
-  color: var(--text);
-}
-.btnPrimary{
-  background: linear-gradient(135deg, rgba(79,179,255,0.95), rgba(2,136,209,0.95));
-  color: #ffffff;
-}
-.btnLime{
-  background: linear-gradient(135deg, rgba(151,215,0,0.95), rgba(118,255,3,0.70));
-  color:#061326;
-}
-
-/* Timer UI */
-#timerUI{
-  background: rgba(255,106,0,0.10);
-  border-color: rgba(255,106,0,0.22);
-}
-#timerDisplay{ color: var(--text); }
-#timerBar{ background: rgba(255,255,255,0.10); }
-#timerFill{ background: var(--orange); }
-
-/* Make "Done" button bigger & more playful */
-#btnToggleDone{
-  flex: 1 1 100%;
-  padding: 16px 18px;
-  font-size: 16px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, rgba(151,215,0,0.95), rgba(79,179,255,0.95));
-  color: #061326;
-  box-shadow: 0 14px 34px rgba(0,0,0,0.35);
-  position: relative;
-  overflow: hidden;
-}
-#btnToggleDone::after{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.35), transparent 55%);
-  transform: rotate(12deg);
-  opacity: .55;
-  pointer-events:none;
-}
-
-/* Links/buttons in footer */
-.linkBtn{
-  background: rgba(255,255,255,0.06);
-  border-color: var(--border);
-  color: var(--text);
-}
-.close{
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.10);
-  color: var(--text);
-}
-
-  
-    /* ---- Readability + Responsive polish (mobile/tablet) ---- */
+/* ---- Readability + Responsive polish (mobile/tablet) ---- */
     html, body{ overflow-x:hidden; }
     body{ padding-bottom: env(safe-area-inset-bottom); }
     .card{ color:#061326; }
     .mMeta{ line-height:1.2; }
-    .search input{ color:#EAF2FF; } /* keep dark-mode search readable */
+    .search input{ color: var(--text); }
 
     /* Ensure pills/tags never go too faint */
     .tag{ filter: saturate(1.02); }
@@ -1294,11 +1125,11 @@ body{
 }
 .sheet{
   background: var(--sheetbg) !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
+  border: 1px solid var(--border) !important;
 }
 .sheet .kv{
   background: var(--sheetpanel) !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
+  border: 1px solid var(--border) !important;
 }
 .sheet .kv h3, .sheet .kv h4, .sheet .kv .k, .sheet .kv .v, .sheet .kv li, .sheet .kv p{
   color: var(--text) !important;
@@ -1406,23 +1237,23 @@ body{
 
 /* Daily mission card: consistent + non-overlapping */
 .dailyBox{
-  background: rgba(14, 26, 52, 0.92) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.30) !important;
+  background: #ffffff !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
 }
 .dailyLeft{ flex: 1 1 auto !important; min-width: 0 !important; }
 .dailyText{ min-width:0 !important; }
-.dailyTitle{ color: rgba(234,242,255,0.80) !important; }
+.dailyTitle{ color: var(--muted) !important; }
 .dailyName{ color: var(--text) !important; max-width: 100% !important; }
-.dailyMeta{ color: rgba(234,242,255,0.70) !important; }
+.dailyMeta{ color: var(--muted) !important; }
 .dailyIcon{
-  background: rgba(255,255,255,0.10) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
+  background: #f8fafc !important;
+  border: 1px solid var(--border) !important;
 }
 .dailyActions{ flex: 0 0 auto !important; }
 .dailyActions .btn{
   min-height: 46px !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
+  border: 1px solid var(--border) !important;
 }
 @media (max-width:520px){
   .dailyBox{ display:flex !important; flex-direction:column !important; align-items:stretch !important; }
@@ -1432,38 +1263,38 @@ body{
 
 /* Mission list cards: make them dark + readable */
 .card{
-  background: rgba(14, 26, 52, 0.92) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.30) !important;
+  background: #ffffff !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
 }
 .mTitle{ color: var(--text) !important; }
-.mMeta{ color: rgba(234,242,255,0.72) !important; }
+.mMeta{ color: var(--muted) !important; }
 .tag{
-  background: rgba(255,255,255,0.10) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-  color: rgba(234,242,255,0.86) !important;
+  background: #f1f5f9 !important;
+  border: 1px solid var(--border) !important;
+  color: #0f172a !important;
 }
-.tag.pack{ background: rgba(79,179,255,0.16) !important; color: #BFE7FF !important; }
-.tag.diff{ background: rgba(255,193,7,0.14) !important; color: #FFE6A6 !important; }
+.tag.pack{ background: rgba(37,99,235,0.10) !important; color: #1d4ed8 !important; }
+.tag.diff{ background: rgba(245,158,11,0.12) !important; color: #b45309 !important; }
 
 /* Done cards (Kids mode unreadable fix) */
 .card.done{
-  background: rgba(10, 44, 26, 0.88) !important;
-  border: 1px solid rgba(151, 215, 0, 0.70) !important;
+  background: #ecfdf3 !important;
+  border: 1px solid rgba(34,197,94,0.35) !important;
 }
 .card.done .mTitle{ color: var(--text) !important; }
-.card.done .mIcon{ background: rgba(151, 215, 0, 0.20) !important; }
+.card.done .mIcon{ background: rgba(34,197,94,0.18) !important; }
 
 /* Mission modal: make footer always visible, body scrolls */
 #backdrop{
-  background: rgba(0,0,0,0.62) !important;
+  background: rgba(2,6,23,0.45) !important;
   backdrop-filter: blur(10px);
   align-items: flex-end;
 }
 #sheet{
-  background: rgba(10, 20, 40, 0.98) !important;
+  background: #ffffff !important;
   color: var(--text) !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
+  border: 1px solid var(--border) !important;
   max-height: calc(100svh - 10px) !important;
   overflow: hidden !important;
   display: flex !important;
@@ -1488,17 +1319,17 @@ body{
 
 /* Detail blocks */
 #sheet .kv{
-  background: rgba(255,255,255,0.06) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
+  background: #f8fafc !important;
+  border: 1px solid var(--border) !important;
 }
-#sheet .kv b{ color:#8FD3FF !important; }
+#sheet .kv b{ color:#2563eb !important; }
 
 /* Footer actions pinned */
 #sheet > .sheetActions{
   margin-top: 0 !important;
   padding: 12px 0 0 !important;
-  background: rgba(10, 20, 40, 0.98) !important;
-  border-top: 1px solid rgba(255,255,255,0.10) !important;
+  background: #ffffff !important;
+  border-top: 1px solid var(--border) !important;
   padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -1511,7 +1342,7 @@ body{
 
 /* Keep "progress saved" note visible but compact */
 #mSmall{
-  color: rgba(234,242,255,0.65) !important;
+  color: var(--muted) !important;
   font-size: 12px !important;
   margin-top: 10px !important;
 }
@@ -1583,7 +1414,7 @@ body{
       <div class="progressBox" aria-label="progress">
         <div class="pLeft">
           <div class="pText" id="progressText">0 / 30 completed</div>
-          <div class="pSub" id="progressSub">Finish all missions to unlock the certificate.</div>
+          <div class="pSub" id="progressSub">Complete missions to unlock your certificate.</div>
         </div>
         <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
           <div id="progressBarFill"></div>
@@ -1616,7 +1447,7 @@ body{
           <div class="certIcon">🏆</div>
           <div class="certText">
             <b>Mission Champion Certificate</b>
-            <div id="certSub">Complete all 30 missions to unlock.</div>
+            <div id="certSub">Complete all missions to unlock.</div>
           </div>
         </div>
         <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
@@ -1642,9 +1473,8 @@ body{
 
     <section class="footer">
       <b>Optional downloads</b><br/>
-      If you add these files to the GitHub repo root, links will work:
-      <div class="links">
-        <a class="linkBtn" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
+            <div class="links">
+        <a class="linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
         <button class="linkBtn" id="btnShare">📤 Share</button>
       </div>
       <div class="small">
@@ -1815,6 +1645,27 @@ body{
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+// Safe localStorage helpers (avoid crashes in private/offline modes)
+const lsGet = (key, fallback = null) => {
+  try{
+    const val = localStorage.getItem(key);
+    return val ?? fallback;
+  }catch(_){
+    return fallback;
+  }
+};
+const lsGetJSON = (key, fallback) => {
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  }catch(_){
+    return fallback;
+  }
+};
+const lsSet = (key, value) => {
+  try{ localStorage.setItem(key, value); }catch(_){ }
+};
+
 /** =======================
  * Disable zoom (iOS + desktop)
  * ======================= */
@@ -1836,7 +1687,7 @@ body{
  * Sound (Web Audio) — works on iOS after first user tap
  * ======================= */
 const SOUND_KEY = "jumvi_sound_on_v1";
-let soundOn = (localStorage.getItem(SOUND_KEY) ?? "1") === "1";
+let soundOn = (lsGet(SOUND_KEY, "1")) === "1";
 let audioCtx = null;
 
 function ensureAudio(){
@@ -1887,6 +1738,29 @@ function showToast(msg){
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=> el.classList.remove("show"), 1800);
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+function withTimeout(promise, ms){
+  let t;
+  const timeout = new Promise((_, rej)=>{ t = setTimeout(()=>rej(new Error("timeout")), ms); });
+  return Promise.race([promise, timeout]).finally(()=> clearTimeout(t));
+}
+async function waitForImages(root, timeoutMs=3000){
+  try{
+    const imgs = Array.from(root.querySelectorAll("img"));
+    if(!imgs.length) return true;
+    const waits = imgs.map(img=>{
+      if(img.complete && img.naturalWidth > 0) return Promise.resolve(true);
+      return new Promise(resolve=>{
+        const done = ()=>{ img.removeEventListener("load", done); img.removeEventListener("error", done); resolve(true); };
+        img.addEventListener("load", done, { once:true });
+        img.addEventListener("error", done, { once:true });
+      });
+    });
+    await withTimeout(Promise.all(waits), timeoutMs);
+    return true;
+  }catch(_){ return false; }
 }
 
 function celebrate(){
@@ -2012,12 +1886,12 @@ const CERT_ID_KEY   = "jumvi_cert_id_v1";
 const CERT_NAME_KEY = "jumvi_cert_name_v1";
 
 function getCertId(){
-  let id = localStorage.getItem(CERT_ID_KEY);
+  let id = lsGet(CERT_ID_KEY);
   if(id) return id;
   // simple readable id: JUMVI-XXXX-XXXX
   const rand = ()=> Math.random().toString(16).slice(2,6).toUpperCase();
   id = `JUMVI-${rand()}-${rand()}`;
-  localStorage.setItem(CERT_ID_KEY, id);
+  lsSet(CERT_ID_KEY, id);
   return id;
 }
 function getToday(){
@@ -2230,11 +2104,11 @@ const BADGES = [
  * State
  * ======================= */
 const LS_KEY = "jumvi_missions_done_v3";
-let done = new Set(JSON.parse(localStorage.getItem(LS_KEY) || "[]"));
+let done = new Set(lsGetJSON(LS_KEY, []));
 let unlockedBefore = done.size >= missions.length;
 
 const ONLY_KEY = "jumvi_only_unfinished_v1";
-let onlyUnfinished = (localStorage.getItem(ONLY_KEY) ?? "0") === "1";
+let onlyUnfinished = (lsGet(ONLY_KEY, "0")) === "1";
 
 /* UI + persistence */
 const PACK_KEY          = "jumvi_current_pack_v1";
@@ -2249,23 +2123,23 @@ const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
 const AVATAR_KEY        = "jumvi_avatar_v1";
 
-let currentPack = localStorage.getItem(PACK_KEY) || "all";
+let currentPack = lsGet(PACK_KEY, "all");
 let searchQuery = "";
 let lastOpenedId = null;
 
-let solidBg = (localStorage.getItem(SOLIDBG_KEY) ?? "0") === "1";
-let kidsMode = (localStorage.getItem(KIDSMODE_KEY) ?? "0") === "1";
+let solidBg = (lsGet(SOLIDBG_KEY, "0")) === "1";
+let kidsMode = (lsGet(KIDSMODE_KEY, "0")) === "1";
 
-let streakCount = Number(localStorage.getItem(STREAK_COUNT_KEY) || "0");
-let bestStreak  = Number(localStorage.getItem(STREAK_BEST_KEY) || "0");
-let lastActiveIso = localStorage.getItem(STREAK_LAST_KEY) || "";
+let streakCount = Number(lsGet(STREAK_COUNT_KEY, "0"));
+let bestStreak  = Number(lsGet(STREAK_BEST_KEY, "0"));
+let lastActiveIso = lsGet(STREAK_LAST_KEY, "");
 
-let dailyIso = localStorage.getItem(DAILY_DATE_KEY) || "";
-let dailyIdStored = Number(localStorage.getItem(DAILY_ID_KEY) || "0");
-let dailyN = Number(localStorage.getItem(DAILY_N_KEY) || "0");
+let dailyIso = lsGet(DAILY_DATE_KEY, "");
+let dailyIdStored = Number(lsGet(DAILY_ID_KEY, "0"));
+let dailyN = Number(lsGet(DAILY_N_KEY, "0"));
 
 const AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
-let currentAvatarIdx = Number(localStorage.getItem(AVATAR_KEY) || "0");
+let currentAvatarIdx = Number(lsGet(AVATAR_KEY, "0"));
 if(isNaN(currentAvatarIdx) || currentAvatarIdx < 0) currentAvatarIdx = 0;
 
 /** =======================
@@ -2445,10 +2319,10 @@ if("speechSynthesis" in window){
  * Helpers
  * ======================= */
 function persist(){
-  localStorage.setItem(LS_KEY, JSON.stringify([...done]));
+  lsSet(LS_KEY, JSON.stringify([...done]));
 }
 function persistOnly(){
-  localStorage.setItem(ONLY_KEY, onlyUnfinished ? "1" : "0");
+  lsSet(ONLY_KEY, onlyUnfinished ? "1" : "0");
 }
 function escapeHtml(str){
   return String(str)
@@ -2496,9 +2370,9 @@ function renderModeChips(){
 
 /* ===== Streak ===== */
 function persistStreak(){
-  localStorage.setItem(STREAK_COUNT_KEY, String(streakCount));
-  localStorage.setItem(STREAK_BEST_KEY, String(bestStreak));
-  localStorage.setItem(STREAK_LAST_KEY, String(lastActiveIso||""));
+  lsSet(STREAK_COUNT_KEY, String(streakCount));
+  lsSet(STREAK_BEST_KEY, String(bestStreak));
+  lsSet(STREAK_LAST_KEY, String(lastActiveIso||""));
 }
 function recordActivityToday(){
   const today = isoLocalDate();
@@ -2533,9 +2407,9 @@ function pickDailyId(iso, n){
   return missions[idx].id;
 }
 function persistDaily(){
-  localStorage.setItem(DAILY_DATE_KEY, String(dailyIso||""));
-  localStorage.setItem(DAILY_ID_KEY, String(dailyIdStored||0));
-  localStorage.setItem(DAILY_N_KEY, String(dailyN||0));
+  lsSet(DAILY_DATE_KEY, String(dailyIso||""));
+  lsSet(DAILY_ID_KEY, String(dailyIdStored||0));
+  lsSet(DAILY_N_KEY, String(dailyN||0));
 }
 function ensureDailyMission(){
   const today = isoLocalDate();
@@ -2588,11 +2462,40 @@ function platformHint(){
 }
 function maybeShowA2HS(){
   if(!a2hsBanner) return;
-  const dismissed = (localStorage.getItem(A2HS_DISMISS_KEY) ?? "0") === "1";
+  const dismissed = (lsGet(A2HS_DISMISS_KEY, "0")) === "1";
   if(dismissed || isStandalone()) return;
   if(a2hsHint) a2hsHint.textContent = platformHint();
   a2hsBanner.style.display = "flex";
 }
+
+/* ===== Optional downloads ===== */
+function disableOptionalLink(el, label){
+  if(!el) return;
+  el.classList.add("disabled");
+  el.setAttribute("aria-disabled", "true");
+  if(label) el.textContent = label;
+  el.removeAttribute("href");
+  el.removeAttribute("target");
+  el.removeAttribute("rel");
+}
+async function checkOptionalDownloads(){
+  const links = Array.from(document.querySelectorAll("[data-optional-file]"));
+  if(!links.length) return;
+  for(const link of links){
+    const file = link.getAttribute("data-optional-file");
+    if(!file) continue;
+    try{
+      const res = await fetch(file, { method: "HEAD", cache: "no-store" });
+      if(res.ok) continue;
+      if(res.status === 404 || res.status === 403){
+        disableOptionalLink(link, "Coming soon");
+      }
+    }catch(_){
+      // Offline: keep existing UI
+    }
+  }
+}
+
 
 /* ===== Backup / Restore ===== */
 function b64UrlEncode(str){
@@ -2621,7 +2524,7 @@ function buildBackupPayload(){
     kidsMode,
     streak: { c: streakCount||0, b: bestStreak||0, l: lastActiveIso||"" },
     daily:  { d: dailyIso||"", id: dailyIdStored||0, n: dailyN||0 },
-    cert:   { name: localStorage.getItem(CERT_NAME_KEY) || "" },
+    cert:   { name: lsGet(CERT_NAME_KEY) || "" },
     avatar: currentAvatarIdx
   };
 }
@@ -2642,16 +2545,16 @@ function applyBackupPayload(p){
   persistOnly();
 
   currentPack = String(p.currentPack || "all");
-  localStorage.setItem(PACK_KEY, currentPack);
+  lsSet(PACK_KEY, currentPack);
 
   soundOn = !!p.soundOn;
-  localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+  lsSet(SOUND_KEY, soundOn ? "1" : "0");
 
   solidBg = !!p.solidBg;
-  localStorage.setItem(SOLIDBG_KEY, solidBg ? "1" : "0");
+  lsSet(SOLIDBG_KEY, solidBg ? "1" : "0");
 
   kidsMode = !!p.kidsMode;
-  localStorage.setItem(KIDSMODE_KEY, kidsMode ? "1" : "0");
+  lsSet(KIDSMODE_KEY, kidsMode ? "1" : "0");
 
   // streak
   streakCount = Number(p.streak?.c || 0);
@@ -2668,13 +2571,13 @@ function applyBackupPayload(p){
   // Avatar
   if(typeof p.avatar === "number") {
     currentAvatarIdx = p.avatar;
-    localStorage.setItem(AVATAR_KEY, currentAvatarIdx);
+    lsSet(AVATAR_KEY, currentAvatarIdx);
     renderAvatar();
   }
 
   // certificate name (optional)
   if(p.cert && typeof p.cert.name === "string"){
-    localStorage.setItem(CERT_NAME_KEY, p.cert.name);
+    lsSet(CERT_NAME_KEY, p.cert.name);
     if(certNameInput) certNameInput.value = p.cert.name;
     buildCertificate();
   }
@@ -2702,7 +2605,7 @@ function renderFilters(){
     b.onclick = ()=>{
       clickSound("click");
       currentPack = p.key;
-      localStorage.setItem(PACK_KEY, currentPack);
+      lsSet(PACK_KEY, currentPack);
       renderFilters();
       renderList();
     };
@@ -2768,6 +2671,15 @@ function renderList(){
   updateProgress();
 }
 
+function remainingMissions(){
+  return Math.max(0, missions.length - done.size);
+}
+function remainingText(){
+  const remaining = remainingMissions();
+  if(remaining <= 0) return "";
+  return remaining === 1 ? "1 mission left to unlock." : `${remaining} missions left to unlock.`;
+}
+
 function updateBadges(){
   badgesRow.innerHTML = "";
   const unlocked = new Set();
@@ -2791,7 +2703,7 @@ function updateBadges(){
       <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(0,0,0,.1); background: #F5F5F5; margin-top:10px;">
         <div style="font-size:22px; width:34px">${b.icon}</div>
         <div style="flex:1">
-          <div style="font-weight:950; color: #0277BD;">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
+          <div style="font-weight:950; color: #2563eb;">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
           <div style="color: #546E7A; font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
         </div>
       </div>
@@ -2805,13 +2717,13 @@ function updateBadges(){
     certBtn.classList.remove("locked");
     certBtn.textContent = "Open";
     certBtn.setAttribute("aria-disabled","false");
-    certSub.textContent = "Unlocked! Tap to open and print.";
+    certSub.textContent = "Unlocked! Tap to open and save.";
   }else{
     certBtn.classList.remove("unlocked");
     certBtn.classList.add("locked");
     certBtn.textContent = "Locked";
     certBtn.setAttribute("aria-disabled","true");
-    certSub.textContent = "Complete all 30 missions to unlock.";
+    certSub.textContent = remainingText();
   }
 
   // unlock celebration (only when crossing 30/30)
@@ -2841,12 +2753,9 @@ function updateProgress(){
 
   if(completed>=total){
     progressSub.textContent = "All missions completed! Certificate unlocked 🏆";
-  }else if(completed>=15){
-    progressSub.textContent = "Halfway there — keep going!";
-  }else if(completed>=5){
-    progressSub.textContent = "Nice start — build the streak!";
   }else{
-    progressSub.textContent = "Finish all missions to unlock the certificate.";
+    const remaining = total - completed;
+    progressSub.textContent = `${remaining} mission${remaining===1 ? "" : "s"} left to unlock the certificate.`;
   }
 
   renderStreakUI();
@@ -3104,7 +3013,7 @@ function closeMission(){
 function buildCertificate(){
   if(!certNameInput || !certNameText) return;
   const raw = (certNameInput.value || "").trim();
-  localStorage.setItem(CERT_NAME_KEY, raw);
+  lsSet(CERT_NAME_KEY, raw);
 
   const displayName = raw ? raw : "JUMVI Champion";
   certNameText.textContent = displayName;
@@ -3211,6 +3120,10 @@ async function ensureHtml2Canvas(){
 // iOS fallback: open image in a new tab (works even when downloads are blocked)
 function openImageForSave(url){
   try{
+    const win = window.open(url, "_blank", "noopener");
+    if(win) return true;
+  }catch(_){ }
+  try{
     const a = document.createElement("a");
     a.href = url;
     a.target = "_blank";
@@ -3220,6 +3133,7 @@ function openImageForSave(url){
     a.remove();
     return true;
   }catch(_){
+    try{ window.location.href = url; }catch(_){}
     return false;
   }
 }
@@ -3227,8 +3141,8 @@ function openImageForSave(url){
 async function downloadCertificatePNG({auto=true}={}){
   // iOS Safari/Chrome (WebKit) restricts programmatic downloads.
   // Reliable iPhone flow:
-  // - Show an in-app preview (overlay) and let users long-press → Save to Photos
-  // - Try Share Sheet (if available) after image is ready (best UX)
+  // - Use Share Sheet when file sharing is supported
+  // - Otherwise open the PNG in a new tab + show long-press save hint
   const cert = document.getElementById("certPaper") || document.getElementById("certificate");
   if(!cert){ showToast("Certificate is not ready yet."); return; }
 
@@ -3237,8 +3151,8 @@ async function downloadCertificatePNG({auto=true}={}){
 
   // iPhone: give instant feedback (avoid "nothing happened" feeling)
   if(isiOS){
-    try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){}
-    try{ showToast("Preparing certificate…"); }catch(_){}
+    try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){ }
+    try{ showToast("Preparing certificate…"); }catch(_){ }
     if(btnCertDownload){
       btnCertDownload.disabled = true;
       btnCertDownload.dataset.prevText = btnCertDownload.textContent || "";
@@ -3259,14 +3173,33 @@ async function downloadCertificatePNG({auto=true}={}){
       return;
     }
 
-    const scale = Math.min(2, window.devicePixelRatio || 1);
-    const canvas = await window.html2canvas(cert, {
+    // Wait for images/fonts to avoid blank exports on iOS
+    await waitForImages(cert, 3000);
+    if(document.fonts && document.fonts.ready){
+      try{ await withTimeout(document.fonts.ready, 2000); }catch(_){}
+    }
+
+    if(isiOS){
+      // if render takes long, update hint
+      setTimeout(()=>{ try{ if(saveSub) saveSub.textContent = "Still preparing… please wait."; }catch(_){} }, 2500);
+    }
+
+    const scale = isiOS ? Math.min(1.6, window.devicePixelRatio || 1) : Math.min(2, window.devicePixelRatio || 1);
+    const renderPromise = window.html2canvas(cert, {
       backgroundColor: "#ffffff",
       scale,
       useCORS: true,
       logging: false,
-      removeContainer: true
+      removeContainer: true,
+      onclone: (doc)=>{
+        try{
+          const cloned = doc.getElementById("certPaper") || doc.getElementById("certificate");
+          if(cloned) _inlineAllStyles(cloned);
+        }catch(_){}
+      }
     });
+
+    const canvas = await withTimeout(renderPromise, isiOS ? 9000 : 7000);
 
     const blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
     if(!blob){
@@ -3275,23 +3208,24 @@ async function downloadCertificatePNG({auto=true}={}){
     }
 
     if(isiOS){
-      const url = URL.createObjectURL(blob);
-
-      // Show preview for long-press save (most reliable)
-      showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
-
-      // Try Share Sheet (optional best UX)
-      try{
-        const file = new File([blob], filename, {type:"image/png"});
-        if(window.isSecureContext && navigator.canShare && navigator.canShare({files:[file]})){
+      // Prefer Share Sheet with files
+      const file = new File([blob], filename, {type:"image/png"});
+      const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
+      if(canShareFile){
+        try{
           await navigator.share({files:[file], title:"JUMVI Certificate"});
-          if(!auto) showToast("Saved ✅");
+          hideSaveOverlay();
+          if(!auto) showToast("Share sheet opened");
+          return;
+        }catch(_){
+          // fall through to long-press save
         }
-      }catch(_){
-        // ignore (user cancelled / not supported)
       }
 
-      // cleanup will happen when overlay closes
+      const url = URL.createObjectURL(blob);
+      // Open in new tab + show on-screen hint
+      openImageForSave(url);
+      showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
       return;
     }
 
@@ -3303,11 +3237,16 @@ async function downloadCertificatePNG({auto=true}={}){
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
     if(!auto) showToast("Saved ✅");
 
   }catch(err){
-    if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+    if(String(err && err.message).includes("timeout")){
+      if(isiOS){
+        showSaveOverlay("", "Couldn’t generate the image. Try again or take a screenshot.");
+      }
+      showToast("Rendering timed out. Try again.");
+    }else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
       showToast("iPhone blocks auto-download. Use Save → long-press image.");
     }else{
       showToast("Save blocked by browser. Tap Save again.");
@@ -3461,7 +3400,7 @@ if(btnSolidBg){
   btnSolidBg.onclick = ()=>{
     clickSound("click");
     solidBg = !solidBg;
-    localStorage.setItem(SOLIDBG_KEY, solidBg ? "1" : "0");
+    lsSet(SOLIDBG_KEY, solidBg ? "1" : "0");
     applyBodyClasses();
     renderModeChips();
     showToast(solidBg ? "Solid background ON" : "Solid background OFF");
@@ -3471,7 +3410,7 @@ if(btnKidsMode){
   btnKidsMode.onclick = ()=>{
     clickSound("click");
     kidsMode = !kidsMode;
-    localStorage.setItem(KIDSMODE_KEY, kidsMode ? "1" : "0");
+    lsSet(KIDSMODE_KEY, kidsMode ? "1" : "0");
     applyBodyClasses();
     renderModeChips();
     showToast(kidsMode ? "Kids Mode ON" : "Kids Mode OFF");
@@ -3505,7 +3444,7 @@ function renderAvatar(){
 avatarBtn.onclick = () => {
     clickSound("click");
     currentAvatarIdx = (currentAvatarIdx + 1) % AVATARS.length;
-    localStorage.setItem(AVATAR_KEY, currentAvatarIdx);
+    lsSet(AVATAR_KEY, currentAvatarIdx);
     renderAvatar();
     fireConfetti(500); // small confetti for fun
 }
@@ -3576,7 +3515,7 @@ if(btnRestore){
 if(btnA2hsClose){
   btnA2hsClose.onclick = ()=>{
     clickSound("click");
-    localStorage.setItem(A2HS_DISMISS_KEY, "1");
+    lsSet(A2HS_DISMISS_KEY, "1");
     if(a2hsBanner) a2hsBanner.style.display = "none";
   };
 }
@@ -3590,7 +3529,7 @@ function renderSoundToggle(){
 }
 soundToggle.onclick = ()=>{
   soundOn = !soundOn;
-  localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+  lsSet(SOUND_KEY, soundOn ? "1" : "0");
   renderSoundToggle();
   // If turning on, try to unlock audio on tap
   if(soundOn){
@@ -3617,10 +3556,11 @@ function init(){
   renderAvatar();
 
   maybeShowA2HS();
+  checkOptionalDownloads();
 
   // restore certificate name (optional)
   if(certNameInput){
-    certNameInput.value = localStorage.getItem(CERT_NAME_KEY) || "";
+    certNameInput.value = lsGet(CERT_NAME_KEY) || "";
     buildCertificate();
   }
 }
