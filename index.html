@@ -1903,6 +1903,84 @@ function getToday(){
   }
 }
 
+async function renderSimpleCertificateBlob(){
+  try{
+    const name = (certNameInput && certNameInput.value || "JUMVI Champion").trim() || "JUMVI Champion";
+    const dateText = getToday();
+    const certId = getCertId();
+
+    const canvas = document.createElement("canvas");
+    const width = 1600;
+    const height = 1200;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+
+    // background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,width,height);
+
+    // border
+    ctx.strokeStyle = "#f59e0b";
+    ctx.lineWidth = 18;
+    ctx.strokeRect(30,30,width-60,height-60);
+
+    // inner border
+    ctx.strokeStyle = "#e5e7eb";
+    ctx.lineWidth = 6;
+    ctx.strokeRect(60,60,width-120,height-120);
+
+    // header
+    ctx.fillStyle = "#2563eb";
+    ctx.font = "700 36px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText("JUMVI Missions Program", 90, 130);
+
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "700 64px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText("MISSION CHAMPION", 90, 240);
+    ctx.font = "700 52px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText("& STAR CATCHER", 90, 310);
+
+    // body
+    ctx.fillStyle = "#334155";
+    ctx.font = "500 28px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText("This certificate is proudly presented to", 90, 420);
+
+    // name
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "700 54px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText(name, 90, 500);
+
+    // line
+    ctx.strokeStyle = "#cbd5f5";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(90, 520);
+    ctx.lineTo(850, 520);
+    ctx.stroke();
+
+    // details
+    ctx.fillStyle = "#334155";
+    ctx.font = "500 26px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText("Completed all 30 missions in the JUMVI Toss & Catch program.", 90, 590);
+    ctx.fillText("Safe play • Kids 3–8 • Great focus & coordination", 90, 630);
+
+    // footer
+    ctx.fillStyle = "#64748b";
+    ctx.font = "500 22px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText(`Date: ${dateText}`, 90, 1060);
+    ctx.fillText(`Certificate ID: ${certId}`, 90, 1095);
+
+    ctx.fillStyle = "#0f172a";
+    ctx.font = "600 24px 'Helvetica Neue', Arial, sans-serif";
+    ctx.fillText("JUMVI Team", 1220, 1060);
+
+    return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+  }catch(_){
+    return null;
+  }
+}
+
 
 /** =======================
  * Data
@@ -3201,7 +3279,10 @@ async function downloadCertificatePNG({auto=true}={}){
 
     const canvas = await withTimeout(renderPromise, isiOS ? 9000 : 7000);
 
-    const blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+    let blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+    if(!blob){
+      blob = await renderSimpleCertificateBlob();
+    }
     if(!blob){
       showToast("Save blocked on this device. Try again.");
       return;
@@ -3244,6 +3325,30 @@ async function downloadCertificatePNG({auto=true}={}){
     if(String(err && err.message).includes("timeout")){
       if(isiOS){
         showSaveOverlay("", "Couldn’t generate the image. Try again or take a screenshot.");
+      }
+      const fallback = await renderSimpleCertificateBlob();
+      if(fallback){
+        if(isiOS){
+          const file = new File([fallback], filename, {type:"image/png"});
+          const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
+          if(canShareFile){
+            try{ await navigator.share({files:[file], title:"JUMVI Certificate"}); hideSaveOverlay(); return; }catch(_){}
+          }
+          const url = URL.createObjectURL(fallback);
+          openImageForSave(url);
+          showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
+          return;
+        }else{
+          const url = URL.createObjectURL(fallback);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+          return;
+        }
       }
       showToast("Rendering timed out. Try again.");
     }else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
