@@ -1204,6 +1204,14 @@
 }
 .saveHint{ color:#fff; font-weight:950; font-size:14px; line-height:1.1; }
 .saveSub{ color: rgba(255,255,255,0.75); font-size:12px; margin-top:3px; }
+.saveOpenBtn{
+  background: #ffffff;
+  border: 1px solid rgba(255,255,255,0.18);
+  color:#0f172a;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 800;
+}
 .saveCloseBtn{
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.14);
@@ -1636,7 +1644,10 @@ body{
           <div class="saveHint">Save to Photos</div>
           <div class="saveSub" id="saveSub">iPhone: press & hold the image → “Save to Photos”.</div>
         </div>
-        <button class="saveCloseBtn" id="saveOverlayClose" type="button">✕</button>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="saveOpenBtn" id="saveOpenBtn" type="button">Open Image</button>
+          <button class="saveCloseBtn" id="saveOverlayClose" type="button">✕</button>
+        </div>
       </div>
       <img id="saveImg" alt="Certificate image" />
     </div>
@@ -2294,6 +2305,7 @@ const btnCertDownload = document.getElementById("btnCertDownload");
 /* Save Overlay Refs (iOS long-press fallback) */
 const saveOverlay = document.getElementById("saveOverlay");
 const saveOverlayClose = document.getElementById("saveOverlayClose");
+const saveOpenBtn = document.getElementById("saveOpenBtn");
 const saveImg = document.getElementById("saveImg");
 const saveSub = document.getElementById("saveSub");
 
@@ -2329,6 +2341,7 @@ function hideSaveOverlay(){
   saveOverlay.setAttribute("aria-hidden","true");
 }
 if(saveOverlayClose) saveOverlayClose.onclick = hideSaveOverlay;
+if(saveOpenBtn) saveOpenBtn.onclick = ()=>{ const url = saveOverlay?.dataset?.url || ""; if(url) openImageForSave(url); };
 if(saveOverlay){
   saveOverlay.addEventListener("click",(e)=>{ if(e.target===saveOverlay) hideSaveOverlay(); });
 }
@@ -3219,6 +3232,7 @@ function openImageForSave(url){
 async function downloadCertificatePNG({auto=true}={}){
   // iOS Safari/Chrome (WebKit) restricts programmatic downloads.
   // Reliable iPhone flow:
+  // - Prefer a simple canvas renderer for iOS reliability
   // - Use Share Sheet when file sharing is supported
   // - Otherwise open the PNG in a new tab + show long-press save hint
   const cert = document.getElementById("certPaper") || document.getElementById("certificate");
@@ -3241,54 +3255,40 @@ async function downloadCertificatePNG({auto=true}={}){
   try{
     cert.classList.add("isRendering");
 
-    // Ensure renderer is available (multiple CDNs)
-    const ok = await ensureHtml2Canvas();
-    if(!ok){
-      if(isiOS){
-        showSaveOverlay("", "Needs internet to generate image (html2canvas).");
-      }
-      showToast("Certificate save needs internet (html2canvas).");
-      return;
-    }
-
-    // Wait for images/fonts to avoid blank exports on iOS
-    await waitForImages(cert, 3000);
-    if(document.fonts && document.fonts.ready){
-      try{ await withTimeout(document.fonts.ready, 2000); }catch(_){}
-    }
-
     if(isiOS){
-      // if render takes long, update hint
-      setTimeout(()=>{ try{ if(saveSub) saveSub.textContent = "Still preparing… please wait."; }catch(_){} }, 2500);
-    }
-
-    const scale = isiOS ? Math.min(1.6, window.devicePixelRatio || 1) : Math.min(2, window.devicePixelRatio || 1);
-    const renderPromise = window.html2canvas(cert, {
-      backgroundColor: "#ffffff",
-      scale,
-      useCORS: true,
-      logging: false,
-      removeContainer: true,
-      onclone: (doc)=>{
-        try{
-          const cloned = doc.getElementById("certPaper") || doc.getElementById("certificate");
-          if(cloned) _inlineAllStyles(cloned);
-        }catch(_){}
+      // iOS-first: simple renderer is far more reliable than html2canvas
+      let blob = await renderSimpleCertificateBlob();
+      if(!blob){
+        // fallback to html2canvas if simple render failed
+        const ok = await ensureHtml2Canvas();
+        if(ok){
+          await waitForImages(cert, 3000);
+          if(document.fonts && document.fonts.ready){
+            try{ await withTimeout(document.fonts.ready, 2000); }catch(_){}
+          }
+          const renderPromise = window.html2canvas(cert, {
+            backgroundColor: "#ffffff",
+            scale: Math.min(1.4, window.devicePixelRatio || 1),
+            useCORS: true,
+            logging: false,
+            removeContainer: true,
+            onclone: (doc)=>{
+              try{
+                const cloned = doc.getElementById("certPaper") || doc.getElementById("certificate");
+                if(cloned) _inlineAllStyles(cloned);
+              }catch(_){}
+            }
+          });
+          const canvas = await withTimeout(renderPromise, 7000);
+          blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+        }
       }
-    });
 
-    const canvas = await withTimeout(renderPromise, isiOS ? 9000 : 7000);
+      if(!blob){
+        showSaveOverlay("", "Couldn’t generate the image. Try again.");
+        return;
+      }
 
-    let blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
-    if(!blob){
-      blob = await renderSimpleCertificateBlob();
-    }
-    if(!blob){
-      showToast("Save blocked on this device. Try again.");
-      return;
-    }
-
-    if(isiOS){
       // Prefer Share Sheet with files
       const file = new File([blob], filename, {type:"image/png"});
       const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
@@ -3304,13 +3304,45 @@ async function downloadCertificatePNG({auto=true}={}){
       }
 
       const url = URL.createObjectURL(blob);
-      // Open in new tab + show on-screen hint
       openImageForSave(url);
       showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
       return;
     }
 
-    // Android / desktop: normal download
+    // Non‑iOS: html2canvas + direct download
+    const ok = await ensureHtml2Canvas();
+    if(!ok){
+      showToast("Certificate save needs internet (html2canvas).");
+      return;
+    }
+
+    await waitForImages(cert, 3000);
+    if(document.fonts && document.fonts.ready){
+      try{ await withTimeout(document.fonts.ready, 2000); }catch(_){}
+    }
+
+    const scale = Math.min(2, window.devicePixelRatio || 1);
+    const renderPromise = window.html2canvas(cert, {
+      backgroundColor: "#ffffff",
+      scale,
+      useCORS: true,
+      logging: false,
+      removeContainer: true,
+      onclone: (doc)=>{
+        try{
+          const cloned = doc.getElementById("certPaper") || doc.getElementById("certificate");
+          if(cloned) _inlineAllStyles(cloned);
+        }catch(_){}
+      }
+    });
+
+    const canvas = await withTimeout(renderPromise, 7000);
+    const blob = await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+    if(!blob){
+      showToast("Save blocked on this device. Try again.");
+      return;
+    }
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -3322,36 +3354,7 @@ async function downloadCertificatePNG({auto=true}={}){
     if(!auto) showToast("Saved ✅");
 
   }catch(err){
-    if(String(err && err.message).includes("timeout")){
-      if(isiOS){
-        showSaveOverlay("", "Couldn’t generate the image. Try again or take a screenshot.");
-      }
-      const fallback = await renderSimpleCertificateBlob();
-      if(fallback){
-        if(isiOS){
-          const file = new File([fallback], filename, {type:"image/png"});
-          const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
-          if(canShareFile){
-            try{ await navigator.share({files:[file], title:"JUMVI Certificate"}); hideSaveOverlay(); return; }catch(_){}
-          }
-          const url = URL.createObjectURL(fallback);
-          openImageForSave(url);
-          showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
-          return;
-        }else{
-          const url = URL.createObjectURL(fallback);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
-          return;
-        }
-      }
-      showToast("Rendering timed out. Try again.");
-    }else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+    if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
       showToast("iPhone blocks auto-download. Use Save → long-press image.");
     }else{
       showToast("Save blocked by browser. Tap Save again.");
