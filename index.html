@@ -1918,7 +1918,7 @@ const CERT_TEMPLATE_SRC = "certificate-template.png";
 const CERT_NAME_COLOR = "#1d4ed8";
 const CERT_META_COLOR = "#475569";
 const CERT_NAME_FONT = "700 64px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
-const CERT_META_FONT = "600 24px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
+const CERT_META_FONT = "600 20px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
 
 function loadImage(src){
   return new Promise((resolve, reject)=>{
@@ -1958,7 +1958,7 @@ async function renderSimpleCertificateBlob(){
 
     // Name (centered, on the dotted line area)
     const nameX = width * 0.5;
-    const nameY = height * 0.565;
+    const nameY = height * 0.555;
     const maxNameWidth = width * 0.62;
     const baseNameSize = Math.round(width * 0.055);
     const nameSize = fitText(ctx, name, maxNameWidth, baseNameSize, "'Poppins', 'Helvetica Neue', Arial, sans-serif");
@@ -1969,12 +1969,29 @@ async function renderSimpleCertificateBlob(){
     ctx.fillText(name, nameX, nameY);
 
     // Meta (top-right)
+    const metaX = width * 0.93;
+    const metaY1 = height * 0.13;
+    const metaY2 = height * 0.165;
+    ctx.font = CERT_META_FONT;
+    const m1 = `Date: ${dateText}`;
+    const m2 = `Certificate ID: ${certId}`;
+    const w1 = ctx.measureText(m1).width;
+    const w2 = ctx.measureText(m2).width;
+    const boxW = Math.max(w1, w2) + width * 0.02;
+    const boxH = height * 0.055;
+    const boxX = metaX - boxW;
+    const boxY = metaY1 - boxH + height * 0.01;
+    ctx.fillStyle = "rgba(255,255,255,0.75)";
+    ctx.strokeStyle = "rgba(71,85,105,0.15)";
+    ctx.lineWidth = 2;
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
     ctx.fillStyle = CERT_META_COLOR;
     ctx.textAlign = "right";
     ctx.textBaseline = "alphabetic";
     ctx.font = CERT_META_FONT;
-    ctx.fillText(`Date: ${dateText}`, width * 0.92, height * 0.105);
-    ctx.fillText(`Certificate ID: ${certId}`, width * 0.92, height * 0.145);
+    ctx.fillText(m1, metaX, metaY1);
+    ctx.fillText(m2, metaX, metaY2);
 
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){
