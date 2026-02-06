@@ -370,6 +370,7 @@ const DAILY_ID_KEY      = "jumvi_daily_id_v1";
 const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
 const AVATAR_KEY        = "jumvi_avatar_v1";
+const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
@@ -394,7 +395,8 @@ const state = {
   dailyIso: lsGet(DAILY_DATE_KEY, ""),
   dailyIdStored: Number(lsGet(DAILY_ID_KEY, "0")),
   dailyN: Number(lsGet(DAILY_N_KEY, "0")),
-  currentAvatarIdx: Number(lsGet(AVATAR_KEY, "0"))
+  currentAvatarIdx: Number(lsGet(AVATAR_KEY, "0")),
+  autoDoneOnEnd: (lsGet(AUTO_DONE_KEY, "0")) === "1"
 };
 if(isNaN(state.currentAvatarIdx) || state.currentAvatarIdx < 0) state.currentAvatarIdx = 0;
 state.unlockedBefore = state.done.size >= missions.length;
@@ -417,6 +419,7 @@ let dailyIso = state.dailyIso;
 let dailyIdStored = state.dailyIdStored;
 let dailyN = state.dailyN;
 let currentAvatarIdx = state.currentAvatarIdx;
+let autoDoneOnEnd = state.autoDoneOnEnd;
 
 function setState(key, value){
   state[key] = value;
@@ -563,6 +566,7 @@ const btnStartTimer = document.getElementById("btnStartTimer");
 const timerUI = document.getElementById("timerUI");
 const timerDisplay = document.getElementById("timerDisplay");
 const timerFill = document.getElementById("timerFill");
+const autoDoneToggle = document.getElementById("autoDoneToggle");
 
 
 /* ===== Kid-friendly Voice (TTS) ===== */
@@ -1360,6 +1364,9 @@ function updateTimerTick(){
     timerState = "idle";
     timerDisplay.textContent = "Time's Up!";
     setTimerButtonLabel();
+    if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
+      markMissionDone(lastOpenedId, "auto");
+    }
     return;
   }
 
@@ -1481,11 +1488,13 @@ function openMission(id){
     <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
   `;
 
+  const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
   mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px">
-    ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
+    ${steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
   </ol>`;
 
-  mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
+  const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
+  mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
   mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   if(mKidsTip){
     mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
@@ -1869,11 +1878,27 @@ if(certBox){
 btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
 
+function markMissionDone(id, source="manual"){
+  if(id==null || done.has(id)) return;
+  done.add(id);
+  bumpDoneVersion();
+
+  const changed = recordActivityToday();
+  if(changed && streakCount > 1) showToast(`🔥 Streak: ${streakCount} days!`);
+
+  persist();
+  renderList();
+  clickSound("success");
+  celebrate();
+  if(source === "auto") showToast("✅ Mission marked done.");
+  openMission(id);
+}
+
 btnToggleDone.onclick = ()=>{
   if(lastOpenedId==null) return;
   const wasDone = done.has(lastOpenedId);
   if(wasDone) done.delete(lastOpenedId);
-  else done.add(lastOpenedId);
+  else return markMissionDone(lastOpenedId, "manual");
   bumpDoneVersion();
 
   // streak counts once per day when you complete at least one mission
@@ -2122,6 +2147,14 @@ function init(){
 
   applyBodyClasses();
   renderModeChips();
+
+  if(autoDoneToggle){
+    autoDoneToggle.checked = !!autoDoneOnEnd;
+    autoDoneToggle.onchange = ()=>{
+      autoDoneOnEnd = setState("autoDoneOnEnd", !!autoDoneToggle.checked);
+      lsSet(AUTO_DONE_KEY, autoDoneOnEnd ? "1" : "0");
+    };
+  }
 
   renderSoundToggle();
   renderFilters();

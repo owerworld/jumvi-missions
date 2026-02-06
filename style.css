@@ -1179,6 +1179,21 @@ body{
   min-width: 0 !important;
 }
 
+.autoDoneToggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  font-weight:700;
+  color:#546E7A;
+  margin:2px 0 10px;
+}
+.autoDoneToggle input{
+  width:18px;
+  height:18px;
+  accent-color: var(--lime);
+}
+
 /* Detail blocks */
 #sheet .kv{
   background: #f8fafc !important;
