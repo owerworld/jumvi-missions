@@ -7,7 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>JUMVI Missions</title>
   <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
-  <meta name="theme-color" content="#f5f7fb" />
+  <meta name="theme-color" content="#4FB3FF" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
   <style>
     :root{
@@ -19,9 +23,9 @@
   --muted: #64748b;
   --border: rgba(15, 23, 42, 0.12);
 
-  --blue: #2563eb;
-  --lime: #22c55e;
-  --orange: #f59e0b;
+  --blue: #4FB3FF;
+  --lime: #97D700;
+  --orange: #FF6A00;
 
   --radius: 20px;
   --shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
@@ -72,7 +76,7 @@
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:10px 14px 10px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: #2563eb; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: var(--blue); }
     .logoWrap{
       width:42px; height:42px; border-radius:14px;
       background: #FFFFFF;
@@ -149,7 +153,7 @@
     }
     .btn:active{ transform: scale(.96); }
     .btnPrimary{
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      background: linear-gradient(135deg, #4FB3FF, #2999FF);
       color:#FFFFFF;
       box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
       text-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -161,7 +165,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
     .btnLime{
-      background: linear-gradient(135deg, #34d399, #22c55e);
+      background: linear-gradient(135deg, #97D700, #7CC000);
       color:#064e3b;
       box-shadow: 0 10px 24px rgba(34, 197, 94, 0.25);
     }
@@ -181,8 +185,9 @@
       background: #FFFFFF; /* Clean white */
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     }
-    .pText{ font-weight:950; letter-spacing:.2px; color: #2563eb; font-size: 15px; }
+    .pText{ font-weight:950; letter-spacing:.2px; color: var(--blue); font-size: 15px; }
     .pSub{ color:var(--muted); font-size:12px; margin-top:3px; font-weight: 700; }
+    .pExtra{ color:#475569; font-size:12px; margin-top:6px; font-weight:700; }
     .bar{
       flex:1; min-width:180px;
       height:16px; border-radius:999px;
@@ -193,7 +198,7 @@
     }
     .bar>div{
       height:100%; width:0%;
-      background: linear-gradient(90deg, #FFAB00, #00B0FF, #76FF03);
+      background: linear-gradient(90deg, #FF6A00, #4FB3FF, #97D700);
       border-radius:999px;
       transition: width .35s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy transition */
     }
@@ -258,6 +263,7 @@
     /* Pack filter row */
     .filters{
       margin-top:14px;
+      display:flex; flex-wrap:wrap; gap:8px;
       display:flex; gap:10px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
@@ -295,7 +301,7 @@
       flex:0 0 auto;
     }
     .mMain{ flex:1; min-width:0; }
-    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: #2563eb; }
+    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: var(--blue); }
     .mMeta{
       margin-top:6px;
       display:flex; flex-wrap:wrap; gap:8px;
@@ -312,7 +318,7 @@
       font-size:11px;
       font-weight:800;
     }
-    .tag.pack{ background: #E1F5FE; color: #2563eb; }
+    .tag.pack{ background: #E1F5FE; color: var(--blue); }
     .tag.diff{ background: #FFF3E0; color: #E65100; }
     .tag.smallHide{ display:inline-flex; }
     
@@ -367,7 +373,7 @@
       box-shadow: 0 4px 12px rgba(118, 255, 3, 0.2);
     }
     .badgeIcon{ font-size:26px; }
-    .badgeName{ margin-top:8px; font-weight:950; font-size:14px; color: #2563eb; }
+    .badgeName{ margin-top:8px; font-weight:950; font-size:14px; color: var(--blue); }
     .badgeReq{ margin-top:4px; color: var(--muted); font-size:11px; font-weight:700; }
 
     .certBox{
@@ -416,12 +422,14 @@
       line-height:1.5;
     }
     .links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+    .linkGroup{ display:flex; flex-direction:column; gap:6px; }
+    .linkDesc{ font-size:11px; color: var(--muted); font-weight:700; }
     .linkBtn{
       border:1px solid var(--border);
       background: #FFFFFF;
       padding:10px 14px;
       border-radius:16px;
-      color: #2563eb;
+      color: var(--blue);
       font-weight:800;
       font-size:13px;
       cursor:pointer;
@@ -475,7 +483,7 @@
       line-height:1.5;
       font-size:15px; /* Bigger text for kids/parents */
     }
-    .kv b{ color: #2563eb; }
+    .kv b{ color: var(--blue); }
     .sheetActions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
     .small{ font-size:12px; color: #90A4AE; margin-top:10px; }
     
@@ -724,7 +732,7 @@
       font-size: 32px; /* HUGE title */
       font-weight: 1000;
       letter-spacing: -1px;
-      color: #2563eb;
+      color: var(--blue);
       text-transform: uppercase;
       text-shadow: 2px 2px 0px #E1F5FE;
       line-height: 1;
@@ -801,7 +809,7 @@
     .sigText{
       font-size: 14px;
       font-weight: 950;
-      color: #2563eb;
+      color: var(--blue);
       font-family: "Comic Sans MS", "Chalkboard SE", sans-serif; /* Handwritten feel */
     }
 
@@ -937,7 +945,7 @@
       gap:10px;
       box-shadow: var(--shadow);
     }
-    .a2hsText b{ font-weight:950; color: #2563eb; }
+    .a2hsText b{ font-weight:950; color: var(--blue); }
     .a2hsText div{
       color: rgba(6,19,38,0.72);
       font-size:12px;
@@ -1030,7 +1038,7 @@
       overflow:hidden;
       text-overflow:ellipsis;
       max-width: 52vw;
-      color: #2563eb;
+      color: var(--blue);
     }
     .dailyMeta{
       margin-top:4px;
@@ -1078,6 +1086,7 @@
     body.kidsMode .sub{ display:none; }
     body.kidsMode .search{ display:none; }
     body.kidsMode .filters{ display:none; }
+    body.kidsMode .filterGroups{ display:none; }
     body.kidsMode .footer{ display:none; }
     body.kidsMode .mMeta{ display:none; }
     body.kidsMode .card{ padding:20px; }
@@ -1391,7 +1400,7 @@ body{
         <span>JUMVI Missions</span>
         
         <!-- Avatar Selector -->
-        <div class="avatarBtn" id="avatarBtn">🦁</div>
+        <div class="avatarBtn" id="avatarBtn" aria-label="Change avatar">🦁</div>
       </div>
       <div class="pill">Kids 3–8 • Safe play</div>
     </div>
@@ -1399,30 +1408,33 @@ body{
 
   <div class="wrap">
     <section class="hero">
-      <h1 class="h1">Scan → Play → Finish 30 Missions</h1>
+      <h1 class="h1">Scan → Play → Grow Skills</h1>
       <p class="sub">
-        Tap a mission to see full details. Mark missions as done to track progress.
-        <br><b>Safety:</b> throw below face level, keep 1–3 meters distance, adult supervision.
+        Pick a mission, play together, and tap Done to track progress.
+        <br>Build reflex • focus • teamwork • confidence
+        <br><b>Safe play tips:</b> throw below face level, keep 1–3 meters distance, play with adult supervision.
       </p>
 
       <div class="a2hs" id="a2hsBanner" style="display:none;">
         <div class="a2hsText">
           <b>📲 Add to Home Screen</b>
-          <div id="a2hsHint">Tip: Add this page to your Home Screen for app-like use.</div>
+          <div id="a2hsHint">Use JUMVI like an app — no download needed.</div>
+          <div id="a2hsSteps">Share → Add to Home Screen</div>
         </div>
-        <button class="a2hsClose" id="btnA2hsClose" type="button">✕</button>
+        <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button">✕</button>
       </div>
 
       <div class="row">
-        <button class="btn btnPrimary" id="btnRandomAll">🎲 Random</button>
-        <button class="btn btnGhost" id="btnBadges">🏅 Badges</button>
-        <button class="btn btnLime" id="btnReset">Reset</button>
+        <button class="btn btnPrimary" id="btnRandomAll" aria-label="Pick a random mission">🎲 Random</button>
+        <button class="btn btnGhost" id="btnBadges" aria-label="Open badges">🏅 Badges</button>
+        <button class="btn btnLime" id="btnReset" aria-label="Reset progress">Reset</button>
       </div>
 
       <div class="progressBox" aria-label="progress">
         <div class="pLeft">
           <div class="pText" id="progressText">0 / 30 completed</div>
           <div class="pSub" id="progressSub">Complete missions to unlock your certificate.</div>
+          <div class="pExtra" id="progressExtra">You’re doing great! Complete missions to unlock your certificate.</div>
         </div>
         <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
           <div id="progressBarFill"></div>
@@ -1430,6 +1442,7 @@ body{
         <div class="streakBox" aria-label="streak">
           <div class="streakPill" id="streakPill">🔥 Streak: 0</div>
           <div class="streakSub" id="streakSub">Best: 0</div>
+          <div class="streakTip" id="streakTip">Play again tomorrow to grow your streak!</div>
         </div>
       </div>
 
@@ -1443,8 +1456,8 @@ body{
           </div>
         </div>
         <div class="dailyActions">
-          <button class="btn btnGhost" id="btnDailyNew" type="button">🔁 New</button>
-          <button class="btn btnPrimary" id="btnDailyPlay" type="button">▶︎ Play</button>
+          <button class="btn btnGhost" id="btnDailyNew" aria-label="New daily mission" type="button">🔁 New</button>
+          <button class="btn btnPrimary" id="btnDailyPlay" aria-label="Play today's mission" type="button">▶︎ Play</button>
         </div>
       </div>
 
@@ -1464,27 +1477,46 @@ body{
       <div class="controls">
         <div class="search">
           <div class="searchIcon">🔎</div>
-          <input id="searchInput" type="text" placeholder="Search missions (e.g. catch, calm, team)" autocomplete="off" />
+          <input id="searchInput" type="text" placeholder="Search missions (catch, calm, team...)" autocomplete="off" />
         </div>
 
         <div class="toggleRow">
-          <button class="chip limeActive" id="btnOnlyUnfinished" type="button">Only Unfinished</button>
-          <button class="chip" id="btnChoosePack" type="button">Choose Pack</button>
-                    <button class="chip" id="btnKidsMode" type="button">Kids Mode</button>
+          <button class="chip limeActive" id="btnOnlyUnfinished" aria-label="Show only unfinished missions" type="button">Only Unfinished</button>
+          <button class="chip" id="btnChoosePack" aria-label="Choose a pack" type="button">Choose Pack</button>
+                    <button class="chip" id="btnKidsMode" aria-label="Toggle kids mode" type="button">Kids Mode</button>
                   </div>
       </div>
 
       <div class="filters" id="filters" aria-label="packs"></div>
+
+      <div class="filterGroups" id="filterGroups">
+        <div class="filterGroup">
+          <div class="filterLabel">Category</div>
+          <div class="filterChips" id="filterCategory"></div>
+        </div>
+        <div class="filterGroup">
+          <div class="filterLabel">Players</div>
+          <div class="filterChips" id="filterPlayers"></div>
+        </div>
+        <div class="filterGroup">
+          <div class="filterLabel">Difficulty</div>
+          <div class="filterChips" id="filterDifficulty"></div>
+        </div>
+      </div>
     </section>
 
     <section class="list" id="list" aria-label="missions"></section>
 
     <section class="footer">
-      <b>Optional downloads</b><br/>
+      <b>Extras</b><br/>
             <div class="links">
-        <a class="linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
-        <button class="linkBtn" id="btnShare">📤 Share</button>
+        <div class="linkGroup">
+          <a class="linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
+          <div class="linkDesc">Printable mission list for parents.</div>
+        </div>
+        <button class="linkBtn" id="btnShare" aria-label="Share progress">📤 Share</button>
       </div>
+      <div class="small">Progress is saved on this device.</div>
       <div class="small">
         Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
       </div>
@@ -1499,7 +1531,7 @@ body{
           <div class="sheetTitle" id="mTitle">Mission</div>
           <div class="sheetMeta" id="mMeta"></div>
         </div>
-        <button class="close" id="btnClose">✕</button>
+        <button class="close" id="btnClose" aria-label="Close mission">✕</button>
       </div>
       <div class="sheetBody" id="sheetBody">
       <!-- New: Timer UI (Hidden by default) -->
@@ -1510,22 +1542,23 @@ body{
 
       <div class="mTopActions" style="margin-top:10px; margin-bottom:10px; justify-content:flex-start;">
         <!-- New Buttons -->
-        <button class="btn btnTimer" id="btnStartTimer">⏱️ Start Timer</button>
-        <button class="btn btnGhost" id="btnSpeak">🗣️ Read to Me</button>
+        <button class="btn btnTimer" id="btnStartTimer" aria-label="Start or pause timer">⏱️ Start Timer</button>
+        <button class="btn btnGhost" id="btnSpeak" aria-label="Read mission aloud">🗣️ Read to Me</button>
       </div>
 
       <div class="kv" id="mSteps"></div>
       <div class="kv" id="mWin"></div>
       <div class="kv" id="mTip"></div>
+      <div class="kv" id="mKidsTip"></div>
       <div class="kv" id="mSafety"></div>
 
       <div class="small" id="mSmall"></div>
       </div>
 
       <div class="sheetActions">
-        <button class="btn btnPrimary" id="btnToggleDone">✅ Mark as Done</button>
-        <button class="btn btnGhost" id="btnNext">➡️ Next</button>
-        <button class="btn btnGhost" id="btnRandomPack">🎲 Random from Pack</button>
+        <button class="btn btnPrimary" id="btnToggleDone" aria-label="Mark mission done">✅ Mark as Done</button>
+        <button class="btn btnGhost" id="btnNext" aria-label="Next mission">➡️ Next</button>
+        <button class="btn btnGhost" id="btnRandomPack" aria-label="Random mission from pack">🎲 Random from Pack</button>
       </div>
 
       
@@ -1540,7 +1573,7 @@ body{
           <div class="sheetTitle">🏅 Badges</div>
           <div class="small">Unlock badges by completing missions.</div>
         </div>
-        <button class="close" id="btnBadgesClose">✕</button>
+        <button class="close" id="btnBadgesClose" aria-label="Close badges">✕</button>
       </div>
       <div class="kv" id="badgesList"></div>
       <div class="small">Badges update automatically on this phone.</div>
@@ -1557,17 +1590,18 @@ body{
           <div class="sheetTitle">🌟 Mission Champion • Star Catcher</div>
           <div class="small">Print on US Letter or A4 (Save as PDF).</div>
         </div>
-        <button class="close" id="btnCertClose">✕</button>
+        <button class="close" id="btnCertClose" aria-label="Close certificate">✕</button>
       </div>
 
       <div class="certWrap">
         <div class="field" style="justify-content:space-between; flex-wrap:wrap;">
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <label for="certNameInput">Name on certificate</label>
+            <label for="certNameInput">Child’s Name (optional)</label>
             <input id="certNameInput" type="text" placeholder="(Optional) e.g. Alex" autocomplete="off" />
           </div>
           <div class="certControls">
-            <button class="btn btnLime" id="btnCertDownload">⬇️ Save to Photos</button>
+            <button class="btn btnLime" id="btnCertSavePng" aria-label="Save certificate as PNG">Save as Image (PNG)</button>
+            <button class="btn btnGhost" id="btnCertSavePdf" aria-label="Save certificate as PDF">Save as PDF</button>
           </div>
         </div>
 
@@ -1590,7 +1624,7 @@ body{
                 </div>
               </div>
               <div class="certMetaMini">
-                <div id="certDateText">Date: —</div>
+                <div id="certDateText">Completed on: —</div>
                 <div id="certIdText">Certificate ID: —</div>
               </div>
             </div>
@@ -1634,7 +1668,7 @@ body{
 
 
   <!-- Floating sound toggle -->
-  <button class="soundToggle" id="soundToggle" title="Toggle sound">🔊</button>
+  <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
 
   <!-- iOS-friendly Save overlay (no extra main buttons) -->
   <div class="saveOverlay" id="saveOverlay" aria-hidden="true">
@@ -1642,11 +1676,11 @@ body{
       <div class="saveRow">
         <div>
           <div class="saveHint">Save to Photos</div>
-          <div class="saveSub" id="saveSub">iPhone: press & hold the image → “Save to Photos”.</div>
+          <div class="saveSub" id="saveSub">Tap and hold the image → Save Image</div>
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
-          <button class="saveOpenBtn" id="saveOpenBtn" type="button">Open Image</button>
-          <button class="saveCloseBtn" id="saveOverlayClose" type="button">✕</button>
+          <button class="saveOpenBtn" id="saveOpenBtn" aria-label="Open image" type="button">Open Image</button>
+          <button class="saveCloseBtn" id="saveOverlayClose" aria-label="Close save overlay" type="button">✕</button>
         </div>
       </div>
       <img id="saveImg" alt="Certificate image" />
@@ -1654,7 +1688,6 @@ body{
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 // Safe localStorage helpers (avoid crashes in private/offline modes)
 const lsGet = (key, fallback = null) => {
@@ -1676,6 +1709,16 @@ const lsGetJSON = (key, fallback) => {
 const lsSet = (key, value) => {
   try{ localStorage.setItem(key, value); }catch(_){ }
 };
+const storageAvailable = (()=>{
+  try{
+    const k = "__jumvi_test__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    return true;
+  }catch(_){
+    return false;
+  }
+})();
 
 /** =======================
  * Disable zoom (iOS + desktop)
@@ -1738,6 +1781,8 @@ function clickSound(type="click"){
   osc.stop(t0 + 0.07);
 }
 
+const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /** =======================
  * Toast (small notification)
  * ======================= */
@@ -1775,6 +1820,7 @@ async function waitForImages(root, timeoutMs=3000){
 }
 
 function celebrate(){
+  if(prefersReducedMotion) return;
   try{
     // Prefer canvas-confetti when available
     if(window.confetti){
@@ -1813,6 +1859,7 @@ function celebrate(){
  * Confetti (tiny, no library)
  * ======================= */
 function fireConfetti(durationMs=1100){
+  if(prefersReducedMotion) return;
   const canvas = document.getElementById("confettiCanvas");
   if(!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -1973,7 +2020,7 @@ async function renderSimpleCertificateBlob(){
     const metaY1 = height * 0.13;
     const metaY2 = height * 0.165;
     ctx.font = CERT_META_FONT;
-    const m1 = `Date: ${dateText}`;
+    const m1 = `Completed on: ${dateText}`;
     const m2 = `Certificate ID: ${certId}`;
     const w1 = ctx.measureText(m1).width;
     const w2 = ctx.measureText(m2).width;
@@ -2020,8 +2067,8 @@ function m(id, pack, icon, title, difficulty, players, time, age, steps, win, sa
 const missions = [
   // Reflex Rush (6)
   m(1,"Reflex Rush","⚡","Flash Catch",1,"2","45s","3+",
-    ["Stand 2 meters apart.","Quick gentle throws only.","Count clean catches."],
-    "Most catches in 45 seconds wins.",
+    ["Stand about 2 big steps apart (≈2 m).","Throw gently and quickly.","Count your clean catches!"],
+    "Catch as many times as you can in 45 seconds!",
     "Keep throws below face level.",
     "Go slower for younger kids."),
   m(2,"Reflex Rush","🟢","Go / Stop Catch",1,"2-3","60s","4+",
@@ -2184,9 +2231,9 @@ const BADGES = [
     check: (done)=>done.size>=1 },
   { id:"speedy", icon:"⚡", name:"Speed Demon", req:"Complete all Reflex Rush",
     check: (done)=>missions.filter(x=>x.pack==="Reflex Rush" && done.has(x.id)).length>=6 },
-  { id:"sharp", icon:"🎯", name:"Sharpshooter", req:"Complete all Aim Master",
+  { id:"sharp", icon:"🎯", name:"Aim Star", req:"Complete all Aim Master",
     check: (done)=>missions.filter(x=>x.pack==="Aim Master" && done.has(x.id)).length>=6 },
-  { id:"zen", icon:"🧘", name:"Zen Master", req:"Complete all Focus Control",
+  { id:"zen", icon:"🧘", name:"Calm Hero", req:"Complete all Focus Control",
     check: (done)=>missions.filter(x=>x.pack==="Focus Control" && done.has(x.id)).length>=6 },
   { id:"team", icon:"👥", name:"Team Player", req:"Complete all Team Duo",
     check: (done)=>missions.filter(x=>x.pack==="Team Duo" && done.has(x.id)).length>=6 },
@@ -2220,8 +2267,15 @@ const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
 const AVATAR_KEY        = "jumvi_avatar_v1";
 
 let currentPack = lsGet(PACK_KEY, "all");
+let currentCategory = "all";
+let currentPlayers = "all";
+let currentDifficulty = "all";
 let searchQuery = "";
 let lastOpenedId = null;
+
+const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
+const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
+const DIFFICULTY_OPTIONS = ["all","Easy","Medium","Hard"];
 
 let solidBg = (lsGet(SOLIDBG_KEY, "0")) === "1";
 let kidsMode = (lsGet(KIDSMODE_KEY, "0")) === "1";
@@ -2243,6 +2297,9 @@ if(isNaN(currentAvatarIdx) || currentAvatarIdx < 0) currentAvatarIdx = 0;
  * ======================= */
 const listEl = document.getElementById("list");
 const filtersEl = document.getElementById("filters");
+const filterCategoryEl = document.getElementById("filterCategory");
+const filterPlayersEl = document.getElementById("filterPlayers");
+const filterDifficultyEl = document.getElementById("filterDifficulty");
 const progressText = document.getElementById("progressText");
 const progressSub = document.getElementById("progressSub");
 const progressFill = document.getElementById("progressBarFill");
@@ -2259,6 +2316,7 @@ const mMeta  = document.getElementById("mMeta");
 const mSteps = document.getElementById("mSteps");
 const mWin   = document.getElementById("mWin");
 const mTip   = document.getElementById("mTip");
+const mKidsTip = document.getElementById("mKidsTip");
 const mSafety= document.getElementById("mSafety");
 const mSmall = document.getElementById("mSmall");
 
@@ -2307,7 +2365,8 @@ const certNameInput = document.getElementById("certNameInput");
 const certNameText  = document.getElementById("certNameText");
 const certDateText  = document.getElementById("certDateText");
 const certIdText    = document.getElementById("certIdText");
-const btnCertDownload = document.getElementById("btnCertDownload");
+const btnCertSavePng = document.getElementById("btnCertSavePng");
+const btnCertSavePdf = document.getElementById("btnCertSavePdf");
 
 /* Save Overlay Refs (iOS long-press fallback) */
 const saveOverlay = document.getElementById("saveOverlay");
@@ -2342,7 +2401,7 @@ function hideSaveOverlay(){
     saveImg.style.display = "block";
   }
   if(saveSub){
-    saveSub.textContent = "iPhone: press & hold the image → “Save to Photos”.";
+    saveSub.textContent = "Tap and hold the image → Save Image";
   }
   saveOverlay.classList.remove("show");
   saveOverlay.setAttribute("aria-hidden","true");
@@ -2416,6 +2475,11 @@ if("speechSynthesis" in window){
 /** =======================
  * Helpers
  * ======================= */
+function hideReadToMeIfUnsupported(){
+  if(!btnSpeak) return;
+  if(!("speechSynthesis" in window)) btnSpeak.style.display = "none";
+}
+
 function persist(){
   lsSet(LS_KEY, JSON.stringify([...done]));
 }
@@ -2434,6 +2498,21 @@ function diffLabel(d){
   if(d===1) return "Easy";
   if(d===2) return "Medium";
   return "Hard";
+}
+
+function mapPackToCategory(pack){
+  if(pack === "Reflex Rush") return "Reflex";
+  if(pack === "Aim Master") return "Aim";
+  if(pack === "Focus Control") return "Focus";
+  if(pack === "Team Duo") return "Team";
+  if(pack === "Indoor Compact") return "Indoor";
+  return "Other";
+}
+function normalizePlayers(str){
+  const s = String(str || "");
+  if(/1/.test(s) && !/2|3|4|5|6/.test(s)) return "Solo";
+  if(/2/.test(s) && !/3|4|5|6|\+/.test(s)) return "2";
+  return "3+";
 }
 
 
@@ -2543,26 +2622,23 @@ function renderDailyUI(){
 }
 
 /* ===== A2HS helper ===== */
+function isIOSWeb(){
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/i.test(ua);
+  const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/i.test(ua);
+  return isIOS && isSafari;
+}
 function isStandalone(){
   return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
 }
-function platformHint(){
-  const ua = navigator.userAgent || "";
-  const isIOS = /iPad|iPhone|iPod/i.test(ua);
-  const isAndroid = /Android/i.test(ua);
-  if(isIOS){
-    return "iPhone/iPad: Tap Share ▸ “Add to Home Screen”.";
-  }
-  if(isAndroid){
-    return "Android: Open browser menu ▸ “Add to Home screen”.";
-  }
-  return "Tip: Add this page to your Home Screen for app-like use.";
-}
 function maybeShowA2HS(){
   if(!a2hsBanner) return;
+  if(!isIOSWeb()) return;
   const dismissed = (lsGet(A2HS_DISMISS_KEY, "0")) === "1";
   if(dismissed || isStandalone()) return;
-  if(a2hsHint) a2hsHint.textContent = platformHint();
+  if(a2hsHint) a2hsHint.textContent = "Use JUMVI like an app — no download needed.";
+  const steps = document.getElementById("a2hsSteps");
+  if(steps) steps.textContent = "Share → Add to Home Screen";
   a2hsBanner.style.display = "flex";
 }
 
@@ -2686,6 +2762,7 @@ function applyBackupPayload(p){
   renderModeChips();
   renderSoundToggle();
   renderFilters();
+  renderFilterGroups();
   renderList();
   renderStreakUI();
   renderDailyUI();
@@ -2694,6 +2771,54 @@ function applyBackupPayload(p){
 /** =======================
  * Rendering
  * ======================= */
+function renderFilterGroups(){
+  if(filterCategoryEl){
+    filterCategoryEl.innerHTML = "";
+    CATEGORY_OPTIONS.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className = "chip" + (opt===currentCategory ? " active" : "");
+      b.textContent = opt === "all" ? "All" : opt;
+      b.onclick = ()=>{
+        clickSound("click");
+        currentCategory = opt;
+        renderFilterGroups();
+        renderList();
+      };
+      filterCategoryEl.appendChild(b);
+    });
+  }
+  if(filterPlayersEl){
+    filterPlayersEl.innerHTML = "";
+    PLAYERS_OPTIONS.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className = "chip" + (opt===currentPlayers ? " active" : "");
+      b.textContent = opt === "all" ? "All" : opt;
+      b.onclick = ()=>{
+        clickSound("click");
+        currentPlayers = opt;
+        renderFilterGroups();
+        renderList();
+      };
+      filterPlayersEl.appendChild(b);
+    });
+  }
+  if(filterDifficultyEl){
+    filterDifficultyEl.innerHTML = "";
+    DIFFICULTY_OPTIONS.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className = "chip" + (opt===currentDifficulty ? " active" : "");
+      b.textContent = opt === "all" ? "All" : opt;
+      b.onclick = ()=>{
+        clickSound("click");
+        currentDifficulty = opt;
+        renderFilterGroups();
+        renderList();
+      };
+      filterDifficultyEl.appendChild(b);
+    });
+  }
+}
+
 function renderFilters(){
   filtersEl.innerHTML = "";
   PACKS.forEach(p=>{
@@ -2718,17 +2843,31 @@ function getVisibleMissions(){
     list = list.filter(x=>x.pack===currentPack);
   }
 
+  if(currentCategory !== "all"){
+    list = list.filter(x=>mapPackToCategory(x.pack) === currentCategory);
+  }
+
+  if(currentPlayers !== "all"){
+    list = list.filter(x=>normalizePlayers(x.players) === currentPlayers);
+  }
+
+  if(currentDifficulty !== "all"){
+    list = list.filter(x=>diffLabel(x.difficulty) === currentDifficulty);
+  }
+
   if(onlyUnfinished){
     list = list.filter(x=>!done.has(x.id));
   }
 
-  const q = searchQuery.trim().toLowerCase();
-  if(q){
-    list = list.filter(x=>{
-      const hay = `${x.title} ${x.pack} ${x.steps.join(" ")} ${x.tip} ${x.win}`.toLowerCase();
-      return hay.includes(q);
-    });
+  if(searchQuery){
+    const q = searchQuery.toLowerCase();
+    list = list.filter(x=>
+      x.title.toLowerCase().includes(q) ||
+      x.pack.toLowerCase().includes(q) ||
+      x.steps.join(" ").toLowerCase().includes(q)
+    );
   }
+
   return list;
 }
 
@@ -2801,7 +2940,7 @@ function updateBadges(){
       <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(0,0,0,.1); background: #F5F5F5; margin-top:10px;">
         <div style="font-size:22px; width:34px">${b.icon}</div>
         <div style="flex:1">
-          <div style="font-weight:950; color: #2563eb;">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
+          <div style="font-weight:950; color: var(--blue);">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
           <div style="color: #546E7A; font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
         </div>
       </div>
@@ -2815,7 +2954,7 @@ function updateBadges(){
     certBtn.classList.remove("locked");
     certBtn.textContent = "Open";
     certBtn.setAttribute("aria-disabled","false");
-    certSub.textContent = "Unlocked! Tap to open and save.";
+    certSub.textContent = "Unlocked! Open and save your printable certificate.";
   }else{
     certBtn.classList.remove("unlocked");
     certBtn.classList.add("locked");
@@ -2913,7 +3052,6 @@ function updateTimerTick(){
     timerState = "idle";
     timerDisplay.textContent = "Time's Up!";
     setTimerButtonLabel();
-    clickSound("success");
     return;
   }
 
@@ -3041,13 +3179,16 @@ function openMission(id){
 
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
   mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
+  if(mKidsTip){
+    mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">Watch the ball and use two hands if needed.</div>`;
+  }
   mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
 
   const isDone = done.has(ms.id);
-  btnToggleDone.textContent = isDone ? "↩️ Undo (Not Done)" : "🎉 I Did It!";
+  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "🎉 I Did It!";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
 
-  mSmall.textContent = "Progress is saved on this phone automatically.";
+  mSmall.textContent = "Progress is saved on this device automatically.";
 
   // Timer Setup
   let seconds = 60; // default
@@ -3068,31 +3209,48 @@ if(!btnStartTimer.dataset.holdBound){
 }
   
   // TTS Setup (kid-friendly voice)
-btnSpeak.onclick = () => {
-   clickSound("click");
-   if('speechSynthesis' in window){
-       window.speechSynthesis.cancel(); // stop previous
+let isSpeaking = false;
+function updateSpeakButton(){
+  if(!btnSpeak) return;
+  btnSpeak.classList.toggle("speaking", isSpeaking);
+  btnSpeak.textContent = isSpeaking ? "■ Stop" : "🗣️ Read to Me";
+  btnSpeak.setAttribute("aria-label", isSpeaking ? "Playing… Tap to stop" : "Read to Me");
+}
 
-       // Keep it short + clear for parents & kids
-       const text =
-         `Mission: ${ms.title}. ` +
-         `Steps: ${ms.steps.join(". ")}. ` +
-         `Win: ${ms.win}.`;
+if(btnSpeak){
+  btnSpeak.onclick = () => {
+    clickSound("click");
+    if(!("speechSynthesis" in window)){
+      showToast("Not supported on this device.");
+      return;
+    }
 
-       const utter = new SpeechSynthesisUtterance(text);
-       utter.lang = 'en-US';
+    if(isSpeaking){
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
+      updateSpeakButton();
+      return;
+    }
 
-       // Child-friendly tone (usually higher pitch + normal speed)
-       utter.rate = 1.0;
-       utter.pitch = 1.15;
+    window.speechSynthesis.cancel(); // stop previous
+    const text =
+      `Mission: ${ms.title}. ` +
+      `Steps: ${ms.steps.join(". ")}. ` +
+      `Win: ${ms.win}.`;
 
-       if(kidVoice) utter.voice = kidVoice;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 1.0;
+    utter.pitch = 1.15;
+    if(kidVoice) utter.voice = kidVoice;
+    utter.onend = ()=>{ isSpeaking = false; updateSpeakButton(); };
+    utter.onerror = ()=>{ isSpeaking = false; updateSpeakButton(); };
 
-       window.speechSynthesis.speak(utter);
-   } else {
-       showToast("Not supported on this device.");
-   }
-};
+    isSpeaking = true;
+    updateSpeakButton();
+    window.speechSynthesis.speak(utter);
+  };
+}
 
   backdrop.classList.add("show");
   sheet.scrollTop = 0;
@@ -3116,7 +3274,7 @@ function buildCertificate(){
   const displayName = raw ? raw : "JUMVI Champion";
   certNameText.textContent = displayName;
 
-  if(certDateText) certDateText.textContent = "Date: " + getToday();
+  if(certDateText) certDateText.textContent = "Completed on: " + getToday();
   if(certIdText)   certIdText.textContent   = "Certificate ID: " + getCertId();
 }
 
@@ -3215,6 +3373,21 @@ async function ensureHtml2Canvas(){
   }
   return !!window.html2canvas;
 }
+
+async function ensurePdfLib(){
+  if(window.PDFLib) return true;
+  const cdns = [
+    "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
+  ];
+  for(const src of cdns){
+    try{
+      await _loadScriptOnce(src);
+      if(window.PDFLib) return true;
+    }catch(_){ }
+  }
+  return !!window.PDFLib;
+}
 // iOS fallback: open image in a new tab (works even when downloads are blocked)
 function openImageForSave(url){
   try{
@@ -3252,10 +3425,10 @@ async function downloadCertificatePNG({auto=true}={}){
   if(isiOS){
     try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){ }
     try{ showToast("Preparing certificate…"); }catch(_){ }
-    if(btnCertDownload){
-      btnCertDownload.disabled = true;
-      btnCertDownload.dataset.prevText = btnCertDownload.textContent || "";
-      btnCertDownload.textContent = "⏳ Preparing…";
+    if(btnCertSavePng){
+      btnCertSavePng.disabled = true;
+      btnCertSavePng.dataset.prevText = btnCertSavePng.textContent || "";
+      btnCertSavePng.textContent = "⏳ Preparing…";
     }
   }
 
@@ -3312,7 +3485,7 @@ async function downloadCertificatePNG({auto=true}={}){
 
       const url = URL.createObjectURL(blob);
       openImageForSave(url);
-      showSaveOverlay(url, "iPhone: press & hold the image → “Save to Photos”.");
+      showSaveOverlay(url, "Tap and hold the image → Save Image");
       return;
     }
 
@@ -3368,20 +3541,92 @@ async function downloadCertificatePNG({auto=true}={}){
     }
   }finally{
     cert.classList.remove("isRendering");
-    if(isiOS && btnCertDownload){
-      btnCertDownload.disabled = false;
-      btnCertDownload.textContent = btnCertDownload.dataset.prevText || "⬇️ Save to Photos";
-      delete btnCertDownload.dataset.prevText;
+    if(isiOS && btnCertSavePng){
+      btnCertSavePng.disabled = false;
+      btnCertSavePng.textContent = btnCertSavePng.dataset.prevText || "Save as Image (PNG)";
+      delete btnCertSavePng.dataset.prevText;
     }
   }
 }
 
+
+async function downloadCertificatePDF(){
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.pdf`;
+  try{
+    const ok = await ensurePdfLib();
+    if(!ok){
+      showToast("PDF export needs internet.");
+      return;
+    }
+
+    const pngBlob = await renderSimpleCertificateBlob();
+    if(!pngBlob){
+      showToast("Couldn’t generate image for PDF.");
+      return;
+    }
+
+    const { PDFDocument } = window.PDFLib;
+    const pdfDoc = await PDFDocument.create();
+    const pngBytes = await pngBlob.arrayBuffer();
+    const pngImage = await pdfDoc.embedPng(pngBytes);
+
+    // A4 landscape in points: 842 x 595
+    const page = pdfDoc.addPage([842, 595]);
+    const { width, height } = page.getSize();
+    const imgWidth = pngImage.width;
+    const imgHeight = pngImage.height;
+    const scale = Math.min(width / imgWidth, height / imgHeight);
+    const w = imgWidth * scale;
+    const h = imgHeight * scale;
+    const x = (width - w) / 2;
+    const y = (height - h) / 2;
+    page.drawImage(pngImage, { x, y, width: w, height: h });
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+
+    if(isiOS){
+      const file = new File([blob], filename, {type:"application/pdf"});
+      const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
+      if(canShareFile){
+        try{
+          await navigator.share({files:[file], title:"JUMVI Certificate"});
+          return;
+        }catch(_){ }
+      }
+      const url = URL.createObjectURL(blob);
+      openImageForSave(url);
+      showSaveOverlay(url, "Tap and hold the image → Save Image");
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+  }catch(_){
+    showToast("PDF export failed. Try again.");
+  }
+}
+
 // Wire up the single control button
-if(btnCertDownload){
-  btnCertDownload.onclick = ()=>{
+if(btnCertSavePng){
+  btnCertSavePng.onclick = ()=>{
     try{ clickSound("click"); }catch(_){ }
     buildCertificate();
     downloadCertificatePNG({auto:false});
+  };
+}
+if(btnCertSavePdf){
+  btnCertSavePdf.onclick = ()=>{
+    try{ clickSound("click"); }catch(_){ }
+    buildCertificate();
+    downloadCertificatePDF();
   };
 }
 
@@ -3453,7 +3698,9 @@ btnRandomPack.onclick = ()=>{
  * ======================= */
 document.getElementById("btnRandomAll").onclick = ()=>{
   clickSound("click");
-  const pick = missions[Math.floor(Math.random()*missions.length)];
+  const list = getVisibleMissions();
+  const pick = list[Math.floor(Math.random()*list.length)];
+  if(!pick){ showToast("No missions match the filters."); return; }
   openMission(pick.id);
 };
 
@@ -3664,12 +3911,15 @@ function init(){
 
   renderSoundToggle();
   renderFilters();
+  renderFilterGroups();
   renderList();
 
   renderStreakUI();
   renderDailyUI();
   renderAvatar();
 
+  hideReadToMeIfUnsupported();
+  if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
   maybeShowA2HS();
   checkOptionalDownloads();
 
