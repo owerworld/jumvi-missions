@@ -13,6 +13,9 @@
 
   --radius: 20px;
   --shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  --shadow-card: 0 10px 24px rgba(15, 23, 42, 0.06);
+  --shadow-soft: 0 6px 14px rgba(15, 23, 42, 0.05);
+  --ring: 0 0 0 3px rgba(79, 179, 255, 0.18);
 
   --sheetbg: rgba(255,255,255,0.96);
   --sheetpanel: rgba(248,250,252,0.95);
@@ -36,9 +39,9 @@
     .bgLayer{
       position:fixed; inset:0; z-index:-1;
       background:
-        radial-gradient(circle at 15% 10%, rgba(37, 99, 235, 0.10), transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(34, 197, 94, 0.08), transparent 48%),
-        linear-gradient(180deg, #f5f7fb 0%, #edf2f7 100%);
+        radial-gradient(circle at 15% 10%, rgba(79, 179, 255, 0.08), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(151, 215, 0, 0.08), transparent 48%),
+        linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%);
       transform: translateZ(0);
     }
 
@@ -98,11 +101,11 @@
     /* Hero card */
     .hero{
       margin-top:12px;
-      border:1px solid #FFFFFF;
-      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.9));
+      border:1px solid rgba(15, 23, 42, 0.06);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.94));
       border-radius: 26px;
       padding:16px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-card);
     }
     .h1{
       margin:0;
@@ -139,14 +142,13 @@
     .btnPrimary{
       background: linear-gradient(135deg, #4FB3FF, #2999FF);
       color:#FFFFFF;
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
     }
     .btnGhost{
       background: #FFFFFF;
       border:1px solid var(--border);
       color: var(--text);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      box-shadow: var(--shadow-soft);
     }
     .btnLime{
       background: linear-gradient(135deg, #97D700, #7CC000);
@@ -167,7 +169,7 @@
       border-radius:22px;
       border:1px solid #FFF;
       background: #FFFFFF; /* Clean white */
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      box-shadow: var(--shadow-soft);
     }
     .pText{ font-weight:950; letter-spacing:.2px; color: var(--blue); font-size: 15px; }
     .pSub{ color:var(--muted); font-size:12px; margin-top:3px; font-weight: 700; }
@@ -235,7 +237,7 @@
       border-color: var(--blue);
       background: #E1F5FE;
       color: #0f172a;
-      box-shadow: 0 0 0 3px rgba(3, 169, 244, 0.15);
+      box-shadow: var(--ring);
     }
     .chip.limeActive.active{
       border-color: #64DD17;
@@ -305,7 +307,7 @@
       background: #FFFFFF;
       border-radius: 24px;
       padding:16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05); /* Soft cloud shadow */
+      box-shadow: var(--shadow-card); /* Soft cloud shadow */
       cursor:pointer;
       display:flex;
       gap:14px;
@@ -382,7 +384,7 @@
       background: #FFFFFF;
       padding:14px;
       text-align:left;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+      box-shadow: var(--shadow-soft);
       opacity:.6;
       filter: grayscale(1);
     }
@@ -404,7 +406,7 @@
       background: #FFFFFF;
       padding:16px;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-card);
     }
     .certLeft{ display:flex; align-items:center; gap:12px; }
     .certIcon{ font-size:32px; }
@@ -441,6 +443,7 @@
       color: rgba(6,19,38,0.72);
       font-size:12px;
       line-height:1.5;
+      box-shadow: var(--shadow-soft);
     }
     .links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
     .linkGroup{ display:flex; flex-direction:column; gap:6px; }
