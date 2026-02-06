@@ -332,30 +332,18 @@ async function renderSimpleCertificateBlob(){
     ctx.font = `700 ${nameSize}px 'Poppins', 'Helvetica Neue', Arial, sans-serif`;
     ctx.fillText(name, nameX, nameY);
 
-    // Meta (top-right)
-    const metaX = width * 0.93;
-    const metaY1 = height * 0.13;
-    const metaY2 = height * 0.165;
-    ctx.font = CERT_META_FONT;
-    const m1 = `Completed on: ${dateText}`;
-    const m2 = `Certificate ID: ${certId}`;
-    const w1 = ctx.measureText(m1).width;
-    const w2 = ctx.measureText(m2).width;
-    const boxW = Math.max(w1, w2) + width * 0.02;
-    const boxH = height * 0.055;
-    const boxX = metaX - boxW;
-    const boxY = metaY1 - boxH + height * 0.01;
-    ctx.fillStyle = "rgba(255,255,255,0.75)";
-    ctx.strokeStyle = "rgba(71,85,105,0.15)";
-    ctx.lineWidth = 2;
-    ctx.fillRect(boxX, boxY, boxW, boxH);
-    ctx.strokeRect(boxX, boxY, boxW, boxH);
-    ctx.fillStyle = CERT_META_COLOR;
-    ctx.textAlign = "right";
-    ctx.textBaseline = "alphabetic";
-    ctx.font = CERT_META_FONT;
-    ctx.fillText(m1, metaX, metaY1);
-    ctx.fillText(m2, metaX, metaY2);
+  // Meta (top-right) - draw directly on template (no box)
+  const metaX = width * 0.93;
+  const metaY = height * 0.105;
+  const lineGap = height * 0.028;
+  const m1 = `Completed on: ${dateText}`;
+  const m2 = `Certificate ID: ${certId}`;
+  ctx.fillStyle = CERT_META_COLOR;
+  ctx.textAlign = "right";
+  ctx.textBaseline = "top";
+  ctx.font = CERT_META_FONT;
+  ctx.fillText(m1, metaX, metaY);
+  ctx.fillText(m2, metaX, metaY + lineGap);
 
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){
