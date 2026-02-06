@@ -1,15 +1,15 @@
 :root{
   /* Premium, clean theme (Apple-like) */
-  --bg: #f5f7fb;
+  --bg: #eaf6ff;
   --card: #ffffff;
   --card2: #f8fafc;
-  --text: #0b1220;
+  --text: #020617;
   --muted: #64748b;
   --border: rgba(15, 23, 42, 0.12);
 
-  --blue: #4FB3FF;
-  --lime: #97D700;
-  --orange: #FF6A00;
+  --blue: #4fb3ff;
+  --lime: #97d700;
+  --orange: #ff6a00;
 
   --radius: 20px;
   --shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
@@ -39,9 +39,9 @@
     .bgLayer{
       position:fixed; inset:0; z-index:-1;
       background:
-        radial-gradient(circle at 15% 10%, rgba(79, 179, 255, 0.08), transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(151, 215, 0, 0.08), transparent 48%),
-        linear-gradient(180deg, #f7f9fc 0%, #eef3f8 100%);
+        radial-gradient(circle at 15% 10%, rgba(79, 179, 255, 0.10), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(151, 215, 0, 0.10), transparent 48%),
+        linear-gradient(180deg, #eaf6ff 0%, #f7fbff 100%);
       transform: translateZ(0);
     }
 
