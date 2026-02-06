@@ -1,0 +1,2072 @@
+// Safe localStorage helpers (avoid crashes in private/offline modes)
+const lsGet = (key, fallback = null) => {
+  try{
+    const val = localStorage.getItem(key);
+    return val ?? fallback;
+  }catch(_){
+    return fallback;
+  }
+};
+const lsGetJSON = (key, fallback) => {
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  }catch(_){
+    return fallback;
+  }
+};
+const lsSet = (key, value) => {
+  try{ localStorage.setItem(key, value); }catch(_){ }
+};
+const storageAvailable = (()=>{
+  try{
+    const k = "__jumvi_test__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    return true;
+  }catch(_){
+    return false;
+  }
+})();
+
+const _lsDebounceTimers = new Map();
+function lsSetDebounced(key, value, delay=500){
+  if(!storageAvailable) return;
+  if(_lsDebounceTimers.has(key)) clearTimeout(_lsDebounceTimers.get(key));
+  const t = setTimeout(()=>{ lsSet(key, value); }, delay);
+  _lsDebounceTimers.set(key, t);
+}
+
+/** =======================
+ * Disable zoom (iOS + desktop)
+ * ======================= */
+(function disableZoom(){
+  ["gesturestart","gesturechange","gestureend"].forEach(evt=>{
+    document.addEventListener(evt, (e)=>e.preventDefault(), { passive:false });
+  });
+  let lastTouchEnd = 0;
+  document.addEventListener("touchend", function(e){
+    const now = Date.now();
+    if(now - lastTouchEnd <= 300){ e.preventDefault(); }
+    lastTouchEnd = now;
+  }, { passive:false });
+  document.addEventListener("dblclick", (e)=>e.preventDefault(), { passive:false });
+  document.addEventListener("wheel", (e)=>{ if(e.ctrlKey) e.preventDefault(); }, { passive:false });
+})();
+
+/** =======================
+ * Sound (Web Audio) — works on iOS after first user tap
+ * ======================= */
+const SOUND_KEY = "jumvi_sound_on_v1";
+let soundOn = (lsGet(SOUND_KEY, "1")) === "1";
+let audioCtx = null;
+
+function ensureAudio(){
+  if(!soundOn) return null;
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    audioCtx = new AC();
+  }
+  if(audioCtx.state === "suspended"){
+    // will resume on user gesture
+    audioCtx.resume().catch(()=>{});
+  }
+  return audioCtx;
+}
+
+function clickSound(type="click"){
+  if(!soundOn) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  // short, soft UI click
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(type==="success" ? 820 : 1050, t0);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(type==="success" ? 0.08 : 0.06, t0 + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.06);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start(t0);
+  osc.stop(t0 + 0.07);
+}
+
+const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** =======================
+ * Toast (small notification)
+ * ======================= */
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById("toast");
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove("show"), 1800);
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+function withTimeout(promise, ms){
+  let t;
+  const timeout = new Promise((_, rej)=>{ t = setTimeout(()=>rej(new Error("timeout")), ms); });
+  return Promise.race([promise, timeout]).finally(()=> clearTimeout(t));
+}
+async function waitForImages(root, timeoutMs=3000){
+  try{
+    const imgs = Array.from(root.querySelectorAll("img"));
+    if(!imgs.length) return true;
+    const waits = imgs.map(img=>{
+      if(img.complete && img.naturalWidth > 0) return Promise.resolve(true);
+      return new Promise(resolve=>{
+        const done = ()=>{ img.removeEventListener("load", done); img.removeEventListener("error", done); resolve(true); };
+        img.addEventListener("load", done, { once:true });
+        img.addEventListener("error", done, { once:true });
+      });
+    });
+    await withTimeout(Promise.all(waits), timeoutMs);
+    return true;
+  }catch(_){ return false; }
+}
+
+function celebrate(){
+  if(prefersReducedMotion) return;
+  try{
+    // Prefer canvas-confetti when available
+    if(window.confetti){
+      const origin = { x: 0.5, y: 0.75 };
+      window.confetti({ particleCount: 70, spread: 70, origin });
+      window.confetti({ particleCount: 40, spread: 110, origin, startVelocity: 35 });
+      return;
+    }
+  }catch(_){}
+
+  // Fallback: tiny star burst
+  const root = document.createElement("div");
+  root.className = "fxBurst";
+  const stars = ["⭐","✨","🌟","💫","🎉"];
+  for(let i=0;i<18;i++){
+    const s = document.createElement("div");
+    s.className = "fxStar";
+    s.textContent = stars[i % stars.length];
+    const cx = window.innerWidth * (0.25 + Math.random()*0.5);
+    const cy = window.innerHeight * (0.35 + Math.random()*0.35);
+    const dx = (Math.random()*2-1) * 140;
+    const dy = (Math.random()*2-1) * 180;
+    s.style.left = cx + "px";
+    s.style.top  = cy + "px";
+    s.style.setProperty("--x0", "0px");
+    s.style.setProperty("--y0", "0px");
+    s.style.setProperty("--x1", dx + "px");
+    s.style.setProperty("--y1", dy + "px");
+    root.appendChild(s);
+  }
+  document.body.appendChild(root);
+  setTimeout(()=>{ try{ root.remove(); }catch(_){} }, 950);
+}
+
+/** =======================
+ * Confetti (tiny, no library)
+ * ======================= */
+function fireConfetti(durationMs=1100){
+  if(prefersReducedMotion) return;
+  const canvas = document.getElementById("confettiCanvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const resize = ()=>{
+    canvas.width  = Math.floor(window.innerWidth * DPR);
+    canvas.height = Math.floor(window.innerHeight * DPR);
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  };
+  resize();
+  canvas.style.display = "block";
+
+  const colors = ["#4FB3FF","#97D700","#FF6A00","#EAF2FF"];
+  const parts = [];
+  const n = 130;
+
+  for(let i=0;i<n;i++){
+    parts.push({
+      x: Math.random()*window.innerWidth,
+      y: -20 - Math.random()*window.innerHeight*0.4,
+      r: 3 + Math.random()*4,
+      vx: -2.5 + Math.random()*5,
+      vy: 2 + Math.random()*5,
+      rot: Math.random()*Math.PI,
+      vr: -0.2 + Math.random()*0.4,
+      c: colors[Math.floor(Math.random()*colors.length)],
+      a: 0.9
+    });
+  }
+
+  const tStart = performance.now();
+  function step(t){
+    const elapsed = t - tStart;
+    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+
+    parts.forEach(p=>{
+      p.vy += 0.045; // gravity
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.a = Math.max(0, 0.9 - elapsed/(durationMs*1.15));
+
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*1.2);
+      ctx.restore();
+    });
+
+    if(elapsed < durationMs){
+      requestAnimationFrame(step);
+    }else{
+      canvas.style.display = "none";
+      ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+/** =======================
+ * Ensure iOS audio works (resume on first tap)
+ * ======================= */
+let audioUnlocked = false;
+function unlockAudioOnce(){
+  if(audioUnlocked || !soundOn) return;
+  const ctx = ensureAudio();
+  if(ctx){
+    ctx.resume().then(()=>{ audioUnlocked = true; }).catch(()=>{});
+  }
+}
+window.addEventListener("pointerdown", unlockAudioOnce, { passive:true });
+window.addEventListener("touchstart", unlockAudioOnce, { passive:true });
+
+/** =======================
+ * Certificate helpers
+ * ======================= */
+const CERT_ID_KEY   = "jumvi_cert_id_v1";
+const CERT_NAME_KEY = "jumvi_cert_name_v1";
+
+function getCertId(){
+  let id = lsGet(CERT_ID_KEY);
+  if(id) return id;
+  // simple readable id: JUMVI-XXXX-XXXX
+  const rand = ()=> Math.random().toString(16).slice(2,6).toUpperCase();
+  id = `JUMVI-${rand()}-${rand()}`;
+  lsSet(CERT_ID_KEY, id);
+  return id;
+}
+function getToday(){
+  try{
+    return new Date().toLocaleDateString("en-US", { year:"numeric", month:"short", day:"2-digit" });
+  }catch(e){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+}
+
+const CERT_TEMPLATE_SRC = "certificate-template.png";
+const CERT_NAME_COLOR = "#1d4ed8";
+const CERT_META_COLOR = "#475569";
+const CERT_NAME_FONT = "700 64px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
+const CERT_META_FONT = "600 20px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
+
+function loadImage(src){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=> resolve(img);
+    img.onerror = ()=> reject(new Error("img_load_failed"));
+    img.src = src;
+  });
+}
+function fitText(ctx, text, maxWidth, startSize, fontFamily){
+  let size = startSize;
+  while(size > 22){
+    ctx.font = `700 ${size}px ${fontFamily}`;
+    if(ctx.measureText(text).width <= maxWidth) return size;
+    size -= 2;
+  }
+  return size;
+}
+
+async function renderSimpleCertificateBlob(){
+  try{
+    const name = (certNameInput && certNameInput.value || "JUMVI Champion").trim() || "JUMVI Champion";
+    const dateText = getToday();
+    const certId = getCertId();
+
+    const img = await loadImage(CERT_TEMPLATE_SRC);
+    const width = img.naturalWidth || 1600;
+    const height = img.naturalHeight || 1200;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+
+    // Draw template
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // Name (centered, on the dotted line area)
+    const nameX = width * 0.5;
+    const nameY = height * 0.555;
+    const maxNameWidth = width * 0.62;
+    const baseNameSize = Math.round(width * 0.055);
+    const nameSize = fitText(ctx, name, maxNameWidth, baseNameSize, "'Poppins', 'Helvetica Neue', Arial, sans-serif");
+    ctx.fillStyle = CERT_NAME_COLOR;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `700 ${nameSize}px 'Poppins', 'Helvetica Neue', Arial, sans-serif`;
+    ctx.fillText(name, nameX, nameY);
+
+    // Meta (top-right)
+    const metaX = width * 0.93;
+    const metaY1 = height * 0.13;
+    const metaY2 = height * 0.165;
+    ctx.font = CERT_META_FONT;
+    const m1 = `Completed on: ${dateText}`;
+    const m2 = `Certificate ID: ${certId}`;
+    const w1 = ctx.measureText(m1).width;
+    const w2 = ctx.measureText(m2).width;
+    const boxW = Math.max(w1, w2) + width * 0.02;
+    const boxH = height * 0.055;
+    const boxX = metaX - boxW;
+    const boxY = metaY1 - boxH + height * 0.01;
+    ctx.fillStyle = "rgba(255,255,255,0.75)";
+    ctx.strokeStyle = "rgba(71,85,105,0.15)";
+    ctx.lineWidth = 2;
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
+    ctx.fillStyle = CERT_META_COLOR;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "alphabetic";
+    ctx.font = CERT_META_FONT;
+    ctx.fillText(m1, metaX, metaY1);
+    ctx.fillText(m2, metaX, metaY2);
+
+    return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
+  }catch(_){
+    return null;
+  }
+}
+
+
+/** =======================
+ * State
+ * ======================= */
+const LS_KEY = "jumvi_missions_done_v3";
+const ONLY_KEY = "jumvi_only_unfinished_v1";
+
+/* UI + persistence */
+const PACK_KEY          = "jumvi_current_pack_v1";
+const SOLIDBG_KEY       = "jumvi_solid_bg_v1";
+const KIDSMODE_KEY      = "jumvi_kids_mode_v1";
+const STREAK_COUNT_KEY  = "jumvi_streak_count_v1";
+const STREAK_BEST_KEY   = "jumvi_streak_best_v1";
+const STREAK_LAST_KEY   = "jumvi_streak_last_v1";
+const DAILY_DATE_KEY    = "jumvi_daily_date_v1";
+const DAILY_ID_KEY      = "jumvi_daily_id_v1";
+const DAILY_N_KEY       = "jumvi_daily_n_v1";
+const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
+const AVATAR_KEY        = "jumvi_avatar_v1";
+
+const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
+const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
+const DIFFICULTY_OPTIONS = ["all","Easy","Medium","Hard"];
+const AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
+
+const state = {
+  done: new Set(lsGetJSON(LS_KEY, [])),
+  unlockedBefore: false,
+  onlyUnfinished: (lsGet(ONLY_KEY, "0")) === "1",
+  currentPack: lsGet(PACK_KEY, "all"),
+  currentCategory: "all",
+  currentPlayers: "all",
+  currentDifficulty: "all",
+  searchQuery: "",
+  lastOpenedId: null,
+  solidBg: (lsGet(SOLIDBG_KEY, "0")) === "1",
+  kidsMode: (lsGet(KIDSMODE_KEY, "0")) === "1",
+  streakCount: Number(lsGet(STREAK_COUNT_KEY, "0")),
+  bestStreak: Number(lsGet(STREAK_BEST_KEY, "0")),
+  lastActiveIso: lsGet(STREAK_LAST_KEY, ""),
+  dailyIso: lsGet(DAILY_DATE_KEY, ""),
+  dailyIdStored: Number(lsGet(DAILY_ID_KEY, "0")),
+  dailyN: Number(lsGet(DAILY_N_KEY, "0")),
+  currentAvatarIdx: Number(lsGet(AVATAR_KEY, "0"))
+};
+if(isNaN(state.currentAvatarIdx) || state.currentAvatarIdx < 0) state.currentAvatarIdx = 0;
+state.unlockedBefore = state.done.size >= missions.length;
+
+const done = state.done;
+let unlockedBefore = state.unlockedBefore;
+let onlyUnfinished = state.onlyUnfinished;
+let currentPack = state.currentPack;
+let currentCategory = state.currentCategory;
+let currentPlayers = state.currentPlayers;
+let currentDifficulty = state.currentDifficulty;
+let searchQuery = state.searchQuery;
+let lastOpenedId = state.lastOpenedId;
+let solidBg = state.solidBg;
+let kidsMode = state.kidsMode;
+let streakCount = state.streakCount;
+let bestStreak  = state.bestStreak;
+let lastActiveIso = state.lastActiveIso;
+let dailyIso = state.dailyIso;
+let dailyIdStored = state.dailyIdStored;
+let dailyN = state.dailyN;
+let currentAvatarIdx = state.currentAvatarIdx;
+
+function setState(key, value){
+  state[key] = value;
+  return value;
+}
+
+/** =======================
+ * Refs
+ * ======================= */
+const listEl = document.getElementById("list");
+const filtersEl = document.getElementById("filters");
+const filterCategoryEl = document.getElementById("filterCategory");
+const filterPlayersEl = document.getElementById("filterPlayers");
+const filterDifficultyEl = document.getElementById("filterDifficulty");
+const progressText = document.getElementById("progressText");
+const progressSub = document.getElementById("progressSub");
+const progressFill = document.getElementById("progressBarFill");
+const certBtn = document.getElementById("certBtn");
+const certSub = document.getElementById("certSub");
+const badgesRow = document.getElementById("badgesRow");
+
+const backdrop = document.getElementById("backdrop");
+const btnClose = document.getElementById("btnClose");
+const sheet = document.getElementById("sheet");
+
+const mTitle = document.getElementById("mTitle");
+const mMeta  = document.getElementById("mMeta");
+const mSteps = document.getElementById("mSteps");
+const mWin   = document.getElementById("mWin");
+const mTip   = document.getElementById("mTip");
+const mKidsTip = document.getElementById("mKidsTip");
+const mSafety= document.getElementById("mSafety");
+const mSmall = document.getElementById("mSmall");
+
+const btnToggleDone = document.getElementById("btnToggleDone");
+const btnNext = document.getElementById("btnNext");
+const btnRandomPack = document.getElementById("btnRandomPack");
+
+const badgesBackdrop = document.getElementById("badgesBackdrop");
+const btnBadgesClose = document.getElementById("btnBadgesClose");
+const badgesList = document.getElementById("badgesList");
+
+const searchInput = document.getElementById("searchInput");
+const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
+const soundToggle = document.getElementById("soundToggle");
+
+const btnSolidBg = document.getElementById("btnSolidBg");
+const btnKidsMode = document.getElementById("btnKidsMode");
+const btnBackup = document.getElementById("btnBackup");
+
+const streakPill = document.getElementById("streakPill");
+
+const dailyBox = document.getElementById("dailyBox");
+const dailyIcon = document.getElementById("dailyIcon");
+const dailyName = document.getElementById("dailyName");
+const dailyMeta = document.getElementById("dailyMeta");
+const btnDailyPlay = document.getElementById("btnDailyPlay");
+const btnDailyNew = document.getElementById("btnDailyNew");
+
+const a2hsBanner = document.getElementById("a2hsBanner");
+const a2hsHint = document.getElementById("a2hsHint");
+const btnA2hsClose = document.getElementById("btnA2hsClose");
+
+const backupBackdrop = document.getElementById("backupBackdrop");
+const btnBackupClose = document.getElementById("btnBackupClose");
+const backupCode = document.getElementById("backupCode");
+const restoreInput = document.getElementById("restoreInput");
+const btnBackupCopy = document.getElementById("btnBackupCopy");
+const btnBackupRefresh = document.getElementById("btnBackupRefresh");
+const btnRestore = document.getElementById("btnRestore");
+
+
+const certBackdrop = document.getElementById("certBackdrop");
+const btnCertClose = document.getElementById("btnCertClose");
+const certNameInput = document.getElementById("certNameInput");
+const certMetaLine  = document.getElementById("certMetaLine");
+const certPreviewImg = document.getElementById("certPreviewImg");
+const btnCertSavePng = document.getElementById("btnCertSavePng");
+const btnCertSavePdf = document.getElementById("btnCertSavePdf");
+
+/* Save Overlay Refs (iOS long-press fallback) */
+const saveOverlay = document.getElementById("saveOverlay");
+const saveOverlayClose = document.getElementById("saveOverlayClose");
+const saveOpenBtn = document.getElementById("saveOpenBtn");
+const saveImg = document.getElementById("saveImg");
+const saveSub = document.getElementById("saveSub");
+const fallbackBackdrop = document.getElementById("fallbackBackdrop");
+const fallbackCloseBtn = document.getElementById("fallbackCloseBtn");
+
+function showSaveOverlay(imgUrl, subText){
+  if(!saveOverlay) return;
+  if(saveSub && typeof subText === "string") saveSub.textContent = subText;
+  saveOverlay.dataset.url = imgUrl || "";
+  if(saveImg){
+    if(imgUrl){
+      saveImg.style.display = "block";
+      saveImg.src = imgUrl;
+    }else{
+      saveImg.style.display = "none";
+      saveImg.src = "";
+    }
+  }
+  saveOverlay.classList.add("show");
+  saveOverlay.setAttribute("aria-hidden","false");
+}
+function hideSaveOverlay(){
+  if(!saveOverlay) return;
+  const url = saveOverlay.dataset.url;
+  if(url) try{ URL.revokeObjectURL(url); }catch(_){}
+  saveOverlay.dataset.url = "";
+  if(saveImg){
+    saveImg.src = "";
+    saveImg.style.display = "block";
+  }
+  if(saveSub){
+    saveSub.textContent = "Tap and hold the image → Save Image";
+  }
+  saveOverlay.classList.remove("show");
+  saveOverlay.setAttribute("aria-hidden","true");
+}
+if(saveOverlayClose) saveOverlayClose.onclick = hideSaveOverlay;
+if(saveOpenBtn) saveOpenBtn.onclick = ()=>{ const url = saveOverlay?.dataset?.url || ""; if(url) openImageForSave(url); };
+if(saveOverlay){
+  saveOverlay.addEventListener("click",(e)=>{ if(e.target===saveOverlay) hideSaveOverlay(); });
+}
+
+function showFallbackModal(){
+  if(fallbackBackdrop) fallbackBackdrop.classList.add("show");
+}
+function hideFallbackModal(){
+  if(fallbackBackdrop) fallbackBackdrop.classList.remove("show");
+}
+if(fallbackCloseBtn){
+  fallbackCloseBtn.onclick = ()=>{ try{ clickSound("click"); }catch(_){ } hideFallbackModal(); };
+}
+if(fallbackBackdrop){
+  fallbackBackdrop.addEventListener("click",(e)=>{ if(e.target===fallbackBackdrop) hideFallbackModal(); });
+}
+
+/* New Feature Refs */
+const avatarBtn = document.getElementById("avatarBtn");
+const btnSpeak = document.getElementById("btnSpeak");
+const btnStartTimer = document.getElementById("btnStartTimer");
+const timerUI = document.getElementById("timerUI");
+const timerDisplay = document.getElementById("timerDisplay");
+const timerFill = document.getElementById("timerFill");
+
+
+/* ===== Kid-friendly Voice (TTS) ===== */
+let kidVoice = null;
+
+function pickKidVoice(voices){
+  const list = (voices || []).filter(v => (v.lang || "").toLowerCase().startsWith("en"));
+  if(!list.length) return null;
+
+  const prefer = [
+    "Samantha","Karen","Tessa","Serena","Jenny","Aria","Zira",
+    "Google US English","Google UK English Female","Microsoft Aria"
+  ];
+
+  function score(v){
+    const name = (v.name || "").toLowerCase();
+    const lang = (v.lang || "").toLowerCase();
+    let s = 0;
+
+    if(lang.startsWith("en-us")) s += 4;
+    if(lang.startsWith("en-gb")) s += 2;
+    if(v.localService) s += 1;
+
+    // Prefer bright/friendly voices (heuristic)
+    if(name.includes("female")) s += 4;
+    if(name.includes("child") || name.includes("kid")) s += 6;
+    if(name.includes("male")) s -= 4;
+    if(name.includes("fred")) s -= 6;
+
+    for(const p of prefer){
+      if(name.includes(p.toLowerCase())) s += 6;
+    }
+    return s;
+  }
+
+  return list.sort((a,b)=>score(b)-score(a))[0] || null;
+}
+
+function loadKidVoice(){
+  try{
+    const voices = window.speechSynthesis.getVoices();
+    kidVoice = pickKidVoice(voices);
+  }catch(e){
+    kidVoice = null;
+  }
+}
+
+if("speechSynthesis" in window){
+  loadKidVoice();
+  window.speechSynthesis.onvoiceschanged = loadKidVoice;
+}
+
+
+/** =======================
+ * Helpers
+ * ======================= */
+function hideReadToMeIfUnsupported(){
+  if(!btnSpeak) return;
+  if(!("speechSynthesis" in window)) btnSpeak.style.display = "none";
+}
+
+function persist(){
+  lsSetDebounced(LS_KEY, JSON.stringify([...done]), 500);
+}
+function persistOnly(){
+  lsSetDebounced(ONLY_KEY, onlyUnfinished ? "1" : "0", 500);
+}
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function diffLabel(d){
+  if(d===1) return "Easy";
+  if(d===2) return "Medium";
+  return "Hard";
+}
+
+function mapPackToCategory(pack){
+  if(pack === "Reflex Rush") return "Reflex";
+  if(pack === "Aim Master") return "Aim";
+  if(pack === "Focus Control") return "Focus";
+  if(pack === "Team Duo") return "Team";
+  if(pack === "Indoor Compact") return "Indoor";
+  return "Other";
+}
+function normalizePlayers(str){
+  const s = String(str || "");
+  if(/1/.test(s) && !/2|3|4|5|6/.test(s)) return "Solo";
+  if(/2/.test(s) && !/3|4|5|6|\+/.test(s)) return "2";
+  return "3+";
+}
+
+
+/* ===== Local date (streak + daily) ===== */
+function isoLocalDate(d=new Date()){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function isoToDate(iso){
+  const parts = String(iso||"").split("-");
+  if(parts.length!==3) return new Date();
+  const y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
+  return new Date(y, (m||1)-1, d||1);
+}
+function yesterdayIso(isoToday){
+  const dt = isoToDate(isoToday);
+  dt.setDate(dt.getDate()-1);
+  return isoLocalDate(dt);
+}
+
+/* ===== Modes ===== */
+function applyBodyClasses(){
+  document.body.classList.toggle("solidBg", !!solidBg);
+  document.body.classList.toggle("kidsMode", !!kidsMode);
+}
+function renderModeChips(){
+  if(btnSolidBg) btnSolidBg.classList.toggle("active", !!solidBg);
+  if(btnKidsMode) btnKidsMode.classList.toggle("active", !!kidsMode);
+}
+
+/* ===== Streak ===== */
+function persistStreak(){
+  lsSetDebounced(STREAK_COUNT_KEY, String(streakCount), 500);
+  lsSetDebounced(STREAK_BEST_KEY, String(bestStreak), 500);
+  lsSetDebounced(STREAK_LAST_KEY, String(lastActiveIso||""), 500);
+}
+function recordActivityToday(){
+  const today = isoLocalDate();
+  if(lastActiveIso === today) return false; // already counted today
+  if(lastActiveIso === yesterdayIso(today)){
+    streakCount = setState("streakCount", Math.max(0, streakCount) + 1);
+  }else{
+    streakCount = setState("streakCount", 1);
+  }
+  bestStreak = setState("bestStreak", Math.max(bestStreak, streakCount));
+  lastActiveIso = setState("lastActiveIso", today);
+  persistStreak();
+  return true;
+}
+function renderStreakUI(){
+  if(streakPill) streakPill.textContent = `🔥 Streak: ${streakCount || 0} days`;
+}
+
+/* ===== Daily mission ===== */
+function hashFNV1a(str){
+  let h = 0x811c9dc5;
+  for(let i=0;i<str.length;i++){
+    h ^= str.charCodeAt(i);
+    h = (h + ((h<<1) + (h<<4) + (h<<7) + (h<<8) + (h<<24))) >>> 0;
+  }
+  return h >>> 0;
+}
+function pickDailyId(iso, n){
+  const h = hashFNV1a(`${iso}|${n}|JUMVI`);
+  const idx = h % missions.length;
+  return missions[idx].id;
+}
+function persistDaily(){
+  lsSetDebounced(DAILY_DATE_KEY, String(dailyIso||""), 500);
+  lsSetDebounced(DAILY_ID_KEY, String(dailyIdStored||0), 500);
+  lsSetDebounced(DAILY_N_KEY, String(dailyN||0), 500);
+}
+function ensureDailyMission(){
+  const today = isoLocalDate();
+  if(dailyIso !== today){
+    dailyIso = setState("dailyIso", today);
+    dailyN = setState("dailyN", 0);
+    dailyIdStored = setState("dailyIdStored", pickDailyId(today, dailyN));
+    persistDaily();
+  }
+  if(!dailyIdStored || !missions.find(x=>x.id===dailyIdStored)){
+    dailyIdStored = setState("dailyIdStored", pickDailyId(today, dailyN||0));
+    persistDaily();
+  }
+}
+function renderDailyUI(){
+  ensureDailyMission();
+  const ms = missions.find(x=>x.id===dailyIdStored);
+  if(!ms) return;
+  const doneToday = done.has(ms.id);
+
+  if(dailyIcon) dailyIcon.textContent = doneToday ? "✅" : ms.icon;
+  if(dailyName) dailyName.textContent = ms.title;
+  if(dailyMeta){
+    dailyMeta.innerHTML = `
+      <span class="tag pack">${escapeHtml(ms.pack)}</span>
+      <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+      <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+    `;
+  }
+  if(btnDailyPlay){
+    btnDailyPlay.textContent = doneToday ? "✅ View" : "▶︎ Play";
+  }
+}
+
+/* ===== A2HS helper ===== */
+function isIOSWeb(){
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/i.test(ua);
+  const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/i.test(ua);
+  return isIOS && isSafari;
+}
+function isStandalone(){
+  return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
+}
+function maybeShowA2HS(){
+  if(!a2hsBanner) return;
+  if(!isIOSWeb()) return;
+  const dismissed = (lsGet(A2HS_DISMISS_KEY, "0")) === "1";
+  if(dismissed || isStandalone()) return;
+  if(a2hsHint) a2hsHint.textContent = "Use JUMVI like an app — no download needed.";
+  const steps = document.getElementById("a2hsSteps");
+  if(steps) steps.textContent = "Share → Add to Home Screen";
+  a2hsBanner.style.display = "flex";
+}
+
+/* ===== Optional downloads ===== */
+function disableOptionalLink(el, label){
+  if(!el) return;
+  el.classList.add("disabled");
+  el.setAttribute("aria-disabled", "true");
+  if(label) el.textContent = label;
+  el.removeAttribute("href");
+  el.removeAttribute("target");
+  el.removeAttribute("rel");
+}
+async function checkOptionalDownloads(){
+  const links = Array.from(document.querySelectorAll("[data-optional-file]"));
+  if(!links.length) return;
+  for(const link of links){
+    const file = link.getAttribute("data-optional-file");
+    if(!file) continue;
+    try{
+      const res = await fetch(file, { method: "HEAD", cache: "no-store" });
+      if(res.ok) continue;
+      if(res.status === 404 || res.status === 403){
+        disableOptionalLink(link, "Coming soon");
+      }
+    }catch(_){
+      // Offline: keep existing UI
+    }
+  }
+}
+
+
+/* ===== Backup / Restore ===== */
+function b64UrlEncode(str){
+  return str.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64UrlDecode(str){
+  const s = str.replace(/-/g,"+").replace(/_/g,"/");
+  const pad = s.length % 4 ? "=".repeat(4 - (s.length % 4)) : "";
+  return s + pad;
+}
+function b64EncodeUnicode(s){
+  return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g, (_,p)=>String.fromCharCode(parseInt(p,16))));
+}
+function b64DecodeUnicode(b64){
+  return decodeURIComponent(Array.prototype.map.call(atob(b64), c => "%" + ("00"+c.charCodeAt(0).toString(16)).slice(-2)).join(""));
+}
+function buildBackupPayload(){
+  return {
+    v: 1,
+    ts: Date.now(),
+    done: [...done],
+    onlyUnfinished,
+    currentPack,
+    soundOn,
+    solidBg,
+    kidsMode,
+    streak: { c: streakCount||0, b: bestStreak||0, l: lastActiveIso||"" },
+    daily:  { d: dailyIso||"", id: dailyIdStored||0, n: dailyN||0 },
+    cert:   { name: lsGet(CERT_NAME_KEY) || "" },
+    avatar: currentAvatarIdx
+  };
+}
+function makeBackupCode(){
+  const payload = JSON.stringify(buildBackupPayload());
+  const b64 = b64EncodeUnicode(payload);
+  return "JUMVI1." + b64UrlEncode(b64);
+}
+function applyBackupPayload(p){
+  if(!p || p.v!==1) throw new Error("bad_version");
+
+  // done
+  setDoneFromArray(Array.isArray(p.done) ? p.done : []);
+  persist();
+
+  // toggles
+  onlyUnfinished = setState("onlyUnfinished", !!p.onlyUnfinished);
+  persistOnly();
+
+  currentPack = setState("currentPack", String(p.currentPack || "all"));
+  lsSet(PACK_KEY, currentPack);
+
+  soundOn = !!p.soundOn;
+  lsSet(SOUND_KEY, soundOn ? "1" : "0");
+
+  solidBg = setState("solidBg", !!p.solidBg);
+  lsSet(SOLIDBG_KEY, solidBg ? "1" : "0");
+
+  kidsMode = setState("kidsMode", !!p.kidsMode);
+  lsSet(KIDSMODE_KEY, kidsMode ? "1" : "0");
+
+  // streak
+  streakCount = setState("streakCount", Number(p.streak?.c || 0));
+  bestStreak  = setState("bestStreak", Number(p.streak?.b || 0));
+  lastActiveIso = setState("lastActiveIso", String(p.streak?.l || ""));
+  persistStreak();
+
+  // daily
+  dailyIso = setState("dailyIso", String(p.daily?.d || ""));
+  dailyIdStored = setState("dailyIdStored", Number(p.daily?.id || 0));
+  dailyN = setState("dailyN", Number(p.daily?.n || 0));
+  persistDaily();
+  
+  // Avatar
+  if(typeof p.avatar === "number") {
+    currentAvatarIdx = setState("currentAvatarIdx", p.avatar);
+    lsSet(AVATAR_KEY, currentAvatarIdx);
+    renderAvatar();
+  }
+
+  // certificate name (optional)
+  if(p.cert && typeof p.cert.name === "string"){
+    lsSet(CERT_NAME_KEY, p.cert.name);
+    if(certNameInput) certNameInput.value = p.cert.name;
+    buildCertificate();
+  }
+
+  // refresh UI
+  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+  applyBodyClasses();
+  renderModeChips();
+  renderSoundToggle();
+  renderFilters();
+  renderFilterGroups();
+  renderList();
+  renderStreakUI();
+  renderDailyUI();
+}
+
+/** =======================
+ * Rendering
+ * ======================= */
+let _visibleCacheKey = "";
+let _visibleCacheList = [];
+let _doneVersion = 0;
+
+function bumpDoneVersion(){
+  _doneVersion += 1;
+  _visibleCacheKey = "";
+}
+
+function setDoneFromArray(arr){
+  done.clear();
+  (arr || []).forEach(id=> done.add(id));
+  bumpDoneVersion();
+}
+
+function renderFilterGroups(){
+  if(filterCategoryEl){
+    filterCategoryEl.innerHTML = "";
+    CATEGORY_OPTIONS.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className = "chip" + (opt===currentCategory ? " active" : "");
+      b.textContent = opt === "all" ? "All" : opt;
+      b.onclick = ()=>{
+        clickSound("click");
+        currentCategory = setState("currentCategory", opt);
+        renderFilterGroups();
+        renderList();
+      };
+      filterCategoryEl.appendChild(b);
+    });
+  }
+  if(filterPlayersEl){
+    filterPlayersEl.innerHTML = "";
+    PLAYERS_OPTIONS.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className = "chip" + (opt===currentPlayers ? " active" : "");
+      b.textContent = opt === "all" ? "All" : opt;
+      b.onclick = ()=>{
+        clickSound("click");
+        currentPlayers = setState("currentPlayers", opt);
+        renderFilterGroups();
+        renderList();
+      };
+      filterPlayersEl.appendChild(b);
+    });
+  }
+  if(filterDifficultyEl){
+    filterDifficultyEl.innerHTML = "";
+    DIFFICULTY_OPTIONS.forEach(opt=>{
+      const b = document.createElement("button");
+      b.className = "chip" + (opt===currentDifficulty ? " active" : "");
+      b.textContent = opt === "all" ? "All" : opt;
+      b.onclick = ()=>{
+        clickSound("click");
+        currentDifficulty = setState("currentDifficulty", opt);
+        renderFilterGroups();
+        renderList();
+      };
+      filterDifficultyEl.appendChild(b);
+    });
+  }
+}
+
+function renderFilters(){
+  filtersEl.innerHTML = "";
+  PACKS.forEach(p=>{
+    const b = document.createElement("button");
+    b.className = "chip" + (p.key===currentPack ? " active" : "");
+    b.textContent = p.name;
+    b.onclick = ()=>{
+      clickSound("click");
+      currentPack = setState("currentPack", p.key);
+      lsSet(PACK_KEY, currentPack);
+      renderFilters();
+      renderList();
+    };
+    filtersEl.appendChild(b);
+  });
+}
+
+function getVisibleMissions(){
+  const key = [
+    currentPack,
+    currentCategory,
+    currentPlayers,
+    currentDifficulty,
+    onlyUnfinished ? "1" : "0",
+    searchQuery || "",
+    String(_doneVersion)
+  ].join("|");
+  if(key === _visibleCacheKey) return _visibleCacheList;
+
+  let list = missions;
+
+  if(currentPack !== "all"){
+    list = list.filter(x=>x.pack===currentPack);
+  }
+
+  if(currentCategory !== "all"){
+    list = list.filter(x=>mapPackToCategory(x.pack) === currentCategory);
+  }
+
+  if(currentPlayers !== "all"){
+    list = list.filter(x=>normalizePlayers(x.players) === currentPlayers);
+  }
+
+  if(currentDifficulty !== "all"){
+    list = list.filter(x=>diffLabel(x.difficulty) === currentDifficulty);
+  }
+
+  if(onlyUnfinished){
+    list = list.filter(x=>!done.has(x.id));
+  }
+
+  if(searchQuery){
+    const q = searchQuery.toLowerCase();
+    list = list.filter(x=>
+      x.title.toLowerCase().includes(q) ||
+      x.pack.toLowerCase().includes(q) ||
+      x.steps.join(" ").toLowerCase().includes(q)
+    );
+  }
+
+  _visibleCacheKey = key;
+  _visibleCacheList = list;
+  return list;
+}
+
+const listItemCache = new Map();
+
+function createMissionCard(ms){
+  const c = document.createElement("div");
+  c.className = "card";
+  c.dataset.id = String(ms.id);
+
+  const icon = document.createElement("div");
+  icon.className = "mIcon";
+
+  const main = document.createElement("div");
+  main.className = "mMain";
+
+  const title = document.createElement("div");
+  title.className = "mTitle";
+
+  const meta = document.createElement("div");
+  meta.className = "mMeta";
+
+  const packTag = document.createElement("span");
+  packTag.className = "tag pack";
+  const diffTag = document.createElement("span");
+  diffTag.className = "tag diff";
+  const playersTag = document.createElement("span");
+  playersTag.className = "tag";
+  const ageTag = document.createElement("span");
+  ageTag.className = "tag";
+
+  meta.appendChild(packTag);
+  meta.appendChild(diffTag);
+  meta.appendChild(playersTag);
+  meta.appendChild(ageTag);
+
+  main.appendChild(title);
+  main.appendChild(meta);
+
+  const donePill = document.createElement("div");
+  donePill.className = "donePill";
+  donePill.textContent = "Done ✓";
+
+  c.appendChild(icon);
+  c.appendChild(main);
+  c.appendChild(donePill);
+
+  c._refs = { icon, title, packTag, diffTag, playersTag, ageTag };
+  return c;
+}
+
+function updateMissionCard(card, ms, isDone){
+  const r = card._refs;
+  if(r){
+    r.icon.textContent = ms.icon;
+    r.title.textContent = ms.title;
+    r.packTag.textContent = ms.pack;
+    r.diffTag.textContent = `${diffLabel(ms.difficulty)} • ${ms.time}`;
+    r.playersTag.textContent = `👥 ${ms.players}`;
+    r.ageTag.textContent = `🎂 ${ms.age}`;
+  }
+  card.classList.toggle("done", isDone);
+  card.onclick = ()=>{ clickSound("click"); openMission(ms.id); };
+}
+
+function renderList(){
+  const list = getVisibleMissions();
+
+  if(list.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "kv";
+    empty.innerHTML = "<b>No missions found.</b><br/>Try a different pack or clear search.";
+    listEl.replaceChildren(empty);
+    updateProgress();
+    return;
+  }
+
+  const frag = document.createDocumentFragment();
+  for(const ms of list){
+    let card = listItemCache.get(ms.id);
+    if(!card){
+      card = createMissionCard(ms);
+      listItemCache.set(ms.id, card);
+    }
+    updateMissionCard(card, ms, done.has(ms.id));
+    frag.appendChild(card);
+  }
+  listEl.replaceChildren(frag);
+  updateProgress();
+}
+
+function remainingMissions(){
+  return Math.max(0, missions.length - done.size);
+}
+function remainingText(){
+  const remaining = remainingMissions();
+  if(remaining <= 0) return "";
+  return remaining === 1 ? "1 mission left to unlock." : `${remaining} missions left to unlock.`;
+}
+
+function updateBadges(){
+  badgesRow.innerHTML = "";
+  const unlocked = new Set();
+  BADGES.forEach(b=>{
+    const ok = !!b.check(done);
+    if(ok) unlocked.add(b.id);
+    const el = document.createElement("div");
+    el.className = "badge" + (ok ? " unlocked" : "");
+    el.innerHTML = `
+      <div class="badgeIcon">${b.icon}</div>
+      <div class="badgeName">${escapeHtml(b.name)}</div>
+      <div class="badgeReq">${escapeHtml(b.req)}</div>
+    `;
+    badgesRow.appendChild(el);
+  });
+
+  // badges modal list (pretty)
+  badgesList.innerHTML = BADGES.map(b=>{
+    const ok = !!b.check(done);
+    return `
+      <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(0,0,0,.1); background: #F5F5F5; margin-top:10px;">
+        <div style="font-size:22px; width:34px">${b.icon}</div>
+        <div style="flex:1">
+          <div style="font-weight:950; color: var(--blue);">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
+          <div style="color: #546E7A; font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // certificate unlock
+  const unlockedAll = done.size >= missions.length;
+  if(unlockedAll){
+    certBtn.classList.add("unlocked");
+    certBtn.classList.remove("locked");
+    certBtn.textContent = "Open";
+    certBtn.setAttribute("aria-disabled","false");
+    certSub.textContent = "Unlocked! Open and save your printable certificate.";
+  }else{
+    certBtn.classList.remove("unlocked");
+    certBtn.classList.add("locked");
+    certBtn.textContent = "Locked";
+    certBtn.setAttribute("aria-disabled","true");
+    certSub.textContent = remainingText();
+  }
+
+  // unlock celebration (only when crossing 30/30)
+  if(unlockedAll && !unlockedBefore){
+    unlockedBefore = setState("unlockedBefore", true);
+    const box = document.getElementById("certBox");
+    if(box){
+      box.classList.add("unlockedPulse");
+      setTimeout(()=> box.classList.remove("unlockedPulse"), 1150);
+    }
+    clickSound("success");
+    fireConfetti();
+    showToast("🏆 Unlocked! Open your certificate.");
+  }
+  if(!unlockedAll && unlockedBefore){
+    unlockedBefore = setState("unlockedBefore", false);
+  }
+}
+
+function updateProgress(){
+  const total = missions.length;
+  const completed = done.size;
+  progressText.textContent = `${completed} / ${total} completed`;
+  const pct = Math.round((completed/total)*100);
+  progressFill.style.width = pct + "%";
+  document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
+
+  if(completed>=total){
+    progressSub.textContent = "All missions completed! Certificate unlocked 🏆";
+  }else{
+    const remaining = total - completed;
+    progressSub.textContent = `${remaining} mission${remaining===1 ? "" : "s"} left to unlock the certificate.`;
+  }
+
+  renderStreakUI();
+  renderDailyUI();
+  updateBadges();
+}
+
+/** =======================
+ * Modal
+ * ======================= */
+let timerInterval = null;
+let timerState = "idle";   // "idle" | "running" | "paused"
+let timerTotal = 0;
+let timerLeft = 0;
+let timerEndAt = 0;
+let timerHoldResetArmed = false;
+let timerHoldResetT = null;
+
+function setTimerButtonLabel(){
+  if(timerState === "running"){
+    btnStartTimer.textContent = "⏸️ Pause Timer";
+  }else if(timerState === "paused"){
+    btnStartTimer.textContent = "▶️ Resume Timer";
+  }else{
+    btnStartTimer.textContent = "⏱️ Start Timer";
+  }
+}
+
+function resetTimerUI() {
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  timerState = "idle";
+  timerTotal = 0;
+  timerLeft = 0;
+  timerEndAt = 0;
+
+  timerUI.style.display = "none";
+  timerFill.style.transition = "none";
+  timerFill.style.width = "0%";
+  timerDisplay.textContent = "60s";
+  setTimerButtonLabel();
+}
+
+function updateTimerTick(){
+  if(timerState !== "running") return;
+
+  const now = Date.now();
+  const msLeft = Math.max(0, timerEndAt - now);
+  const secLeft = Math.ceil(msLeft / 1000);
+
+  timerLeft = secLeft;
+
+  if(secLeft <= 0){
+    if(timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+
+    timerState = "idle";
+    timerDisplay.textContent = "Time's Up!";
+    setTimerButtonLabel();
+    return;
+  }
+
+  timerDisplay.textContent = secLeft + "s";
+}
+
+function startTimer(durationSeconds) {
+  if(timerInterval) clearInterval(timerInterval);
+
+  timerUI.style.display = "block";
+
+  timerTotal = durationSeconds;
+  timerLeft = durationSeconds;
+  timerState = "running";
+  setTimerButtonLabel();
+
+  // UI baseline
+  timerDisplay.textContent = timerLeft + "s";
+
+  // Progress bar animation (100% -> 0%)
+  timerFill.style.transition = "none";
+  timerFill.style.width = "100%";
+  void timerFill.offsetWidth; // reflow
+  timerFill.style.transition = `width ${timerLeft}s linear`;
+  timerFill.style.width = "0%";
+
+  timerEndAt = Date.now() + (timerLeft * 1000);
+
+  clickSound("click");
+
+  // Update text smoothly (and accurate if tab is throttled)
+  timerInterval = setInterval(updateTimerTick, 200);
+}
+
+function pauseTimer(){
+  if(timerState !== "running") return;
+
+  const now = Date.now();
+  const msLeft = Math.max(0, timerEndAt - now);
+  timerLeft = Math.ceil(msLeft / 1000);
+
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+
+  timerState = "paused";
+  setTimerButtonLabel();
+
+  // Freeze bar where it is now
+  const pct = timerTotal > 0 ? (msLeft / (timerTotal * 1000)) * 100 : 0;
+  timerFill.style.transition = "none";
+  timerFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+
+  timerDisplay.textContent = timerLeft + "s";
+  clickSound("click");
+}
+
+function resumeTimer(){
+  if(timerState !== "paused") return;
+  if(timerLeft <= 0){
+    resetTimerUI();
+    return;
+  }
+
+  timerState = "running";
+  setTimerButtonLabel();
+
+  // Animate bar from current % to 0% in remaining seconds
+  const pct = timerTotal > 0 ? (timerLeft / timerTotal) * 100 : 0;
+  timerFill.style.transition = "none";
+  timerFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+  void timerFill.offsetWidth;
+  timerFill.style.transition = `width ${timerLeft}s linear`;
+  timerFill.style.width = "0%";
+
+  timerEndAt = Date.now() + (timerLeft * 1000);
+
+  clickSound("click");
+
+  timerInterval = setInterval(updateTimerTick, 200);
+}
+
+function toggleTimer(durationSeconds){
+  if(timerState === "idle"){
+    startTimer(durationSeconds);
+  }else if(timerState === "running"){
+    pauseTimer();
+  }else{
+    resumeTimer();
+  }
+}
+
+// Hold-to-reset (works on mobile)
+function armHoldToReset(){
+  if(timerHoldResetT) clearTimeout(timerHoldResetT);
+  timerHoldResetT = setTimeout(()=>{
+    timerHoldResetArmed = true;
+    resetTimerUI();
+    showToast("Timer reset ✅");
+  }, 650);
+}
+function disarmHoldToReset(){
+  if(timerHoldResetT) clearTimeout(timerHoldResetT);
+  timerHoldResetT = null;
+  setTimeout(()=>{ timerHoldResetArmed = false; }, 80);
+}
+
+function openMission(id){
+  const ms = missions.find(x=>x.id===id);
+  if(!ms) return;
+  lastOpenedId = setState("lastOpenedId", id);
+  
+  resetTimerUI(); // Ensure timer is reset when opening
+
+  mTitle.textContent = `${ms.icon} ${ms.title}`;
+  mMeta.innerHTML = `
+    <span class="tag pack">${escapeHtml(ms.pack)}</span>
+    <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+    <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+    <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
+  `;
+
+  mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px">
+    ${ms.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
+  </ol>`;
+
+  mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
+  mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
+  if(mKidsTip){
+    mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">Watch the ball and use two hands if needed.</div>`;
+  }
+  mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
+
+  const isDone = done.has(ms.id);
+  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "🎉 I Did It!";
+  btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+
+  mSmall.textContent = "Progress is saved on this device automatically.";
+
+  // Timer Setup
+  let seconds = 60; // default
+  if(ms.time.includes("s")) seconds = parseInt(ms.time) || 60;
+  
+  btnStartTimer.onclick = () => {
+    if(timerHoldResetArmed) return; // ignore click right after a hold-reset
+    toggleTimer(seconds); // tap: start / pause / resume
+};
+
+// Tip: hold the timer button to reset (kid-friendly, no extra buttons)
+if(!btnStartTimer.dataset.holdBound){
+    btnStartTimer.dataset.holdBound = "1";
+    btnStartTimer.addEventListener("pointerdown", armHoldToReset);
+    btnStartTimer.addEventListener("pointerup", disarmHoldToReset);
+    btnStartTimer.addEventListener("pointercancel", disarmHoldToReset);
+    btnStartTimer.addEventListener("pointerleave", disarmHoldToReset);
+}
+  
+  // TTS Setup (kid-friendly voice)
+let isSpeaking = false;
+function updateSpeakButton(){
+  if(!btnSpeak) return;
+  btnSpeak.classList.toggle("speaking", isSpeaking);
+  btnSpeak.textContent = isSpeaking ? "■ Stop" : "🗣️ Read to Me";
+  btnSpeak.setAttribute("aria-label", isSpeaking ? "Playing… Tap to stop" : "Read to Me");
+}
+
+if(btnSpeak){
+  btnSpeak.onclick = () => {
+    clickSound("click");
+    if(!("speechSynthesis" in window)){
+      showToast("Not supported on this device.");
+      return;
+    }
+
+    if(isSpeaking){
+      window.speechSynthesis.cancel();
+      isSpeaking = false;
+      updateSpeakButton();
+      return;
+    }
+
+    window.speechSynthesis.cancel(); // stop previous
+    const text =
+      `Mission: ${ms.title}. ` +
+      `Steps: ${ms.steps.join(". ")}. ` +
+      `Win: ${ms.win}.`;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 1.0;
+    utter.pitch = 1.15;
+    if(kidVoice) utter.voice = kidVoice;
+    utter.onend = ()=>{ isSpeaking = false; updateSpeakButton(); };
+    utter.onerror = ()=>{ isSpeaking = false; updateSpeakButton(); };
+
+    isSpeaking = true;
+    updateSpeakButton();
+    window.speechSynthesis.speak(utter);
+  };
+}
+
+  backdrop.classList.add("show");
+  sheet.scrollTop = 0;
+}
+
+function closeMission(){
+  resetTimerUI(); // Stop + reset timer on close
+  if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
+  backdrop.classList.remove("show");
+}
+
+
+/** =======================
+ * Certificate modal
+ * ======================= */
+let certPreviewUrl = "";
+let certPreviewTimer = null;
+
+async function updateCertificatePreview(){
+  if(!certPreviewImg) return;
+  const blob = await renderSimpleCertificateBlob();
+  if(!blob) return;
+  const url = URL.createObjectURL(blob);
+  if(certPreviewUrl){
+    try{ URL.revokeObjectURL(certPreviewUrl); }catch(_){}
+  }
+  certPreviewUrl = url;
+  certPreviewImg.src = url;
+}
+
+function scheduleCertificatePreview(){
+  if(certPreviewTimer) clearTimeout(certPreviewTimer);
+  certPreviewTimer = setTimeout(()=>{ updateCertificatePreview(); }, 120);
+}
+
+function buildCertificate(){
+  if(!certNameInput) return;
+  const raw = (certNameInput.value || "").trim();
+  lsSet(CERT_NAME_KEY, raw);
+  if(certMetaLine){
+    certMetaLine.textContent = "Completed on: " + getToday() + " • Certificate ID: " + getCertId();
+  }
+  scheduleCertificatePreview();
+}
+
+function openCertificate(){
+  if(!certBackdrop) return;
+  buildCertificate();
+  certBackdrop.classList.add("show");
+  const sheet = document.getElementById("certSheet");
+  if(sheet) sheet.scrollTop = 0;
+  // NOTE: "Open" should only open. Saving is done via the Save button inside the sheet.
+}
+
+function closeCertificate(){
+  if(!certBackdrop) return;
+  certBackdrop.classList.remove("show");
+  if(certPreviewUrl){
+    try{ URL.revokeObjectURL(certPreviewUrl); }catch(_){}
+    certPreviewUrl = "";
+  }
+  if(certPreviewImg) certPreviewImg.src = "";
+}
+
+// Close handlers
+if(btnCertClose){
+  btnCertClose.onclick = ()=>{ clickSound("click"); closeCertificate(); };
+}
+if(certBackdrop){
+  certBackdrop.addEventListener("click",(e)=>{
+    if(e.target===certBackdrop){ clickSound("click"); closeCertificate(); }
+  });
+}
+if(certNameInput){
+  certNameInput.addEventListener("input", ()=>{ buildCertificate(); });
+}
+
+// Save certificate (PNG download)
+let _certAutoDownloaded = false;
+
+// ---- Certificate export helpers (iOS-safe) ----
+function _loadScriptOnce(src){
+  return new Promise((resolve, reject)=>{
+    // If already present, resolve
+    for(const s of Array.from(document.scripts||[])){
+      if(s.src && s.src.indexOf(src) !== -1) return resolve();
+    }
+    const el = document.createElement("script");
+    el.src = src;
+    el.async = true;
+    el.onload = ()=> resolve();
+    el.onerror = ()=> reject(new Error("script load failed: "+src));
+    document.head.appendChild(el);
+  });
+}
+async function ensurePdfLib(){
+  if(window.PDFLib) return true;
+  const cdns = [
+    "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
+  ];
+  for(const src of cdns){
+    try{
+      await _loadScriptOnce(src);
+      if(window.PDFLib) return true;
+    }catch(_){ }
+  }
+  return !!window.PDFLib;
+}
+// iOS fallback: open image in a new tab (works even when downloads are blocked)
+function openImageForSave(url){
+  try{
+    const win = window.open(url, "_blank", "noopener");
+    if(win) return true;
+  }catch(_){ }
+  try{
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return true;
+  }catch(_){
+    try{ window.location.href = url; }catch(_){}
+    return false;
+  }
+}
+
+async function downloadCertificatePNG({auto=true}={}){
+  // iOS Safari/Chrome (WebKit) restricts programmatic downloads.
+  // Reliable iPhone flow:
+  // - Prefer a simple canvas renderer for iOS reliability
+  // - Use Share Sheet when file sharing is supported
+  // - Otherwise open the PNG in a new tab + show long-press save hint
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+
+  // iPhone: give instant feedback (avoid "nothing happened" feeling)
+  if(isiOS){
+    try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){ }
+    try{ showToast("Preparing certificate…"); }catch(_){ }
+    if(btnCertSavePng){
+      btnCertSavePng.disabled = true;
+      btnCertSavePng.dataset.prevText = btnCertSavePng.textContent || "";
+      btnCertSavePng.textContent = "⏳ Preparing…";
+    }
+  }
+
+  try{
+    // Single source of truth: template-based render
+    const blob = await renderSimpleCertificateBlob();
+    if(!blob){
+      hideSaveOverlay();
+      showFallbackModal();
+      return;
+    }
+
+    if(isiOS){
+      // Prefer Share Sheet with files
+      const file = new File([blob], filename, {type:"image/png"});
+      const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
+      if(canShareFile){
+        try{
+          await navigator.share({files:[file], title:"JUMVI Certificate"});
+          hideSaveOverlay();
+          if(!auto) showToast("Share sheet opened");
+          return;
+        }catch(_){
+          // fall through to long-press save
+        }
+      }
+
+      const url = URL.createObjectURL(blob);
+      openImageForSave(url);
+      showSaveOverlay(url, "Tap and hold the image → Save Image");
+      return;
+    }
+
+    // Non‑iOS: direct download from blob
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+    if(!auto) showToast("Saved ✅");
+
+  }catch(err){
+    hideSaveOverlay();
+    showFallbackModal();
+  }finally{
+    if(isiOS && btnCertSavePng){
+      btnCertSavePng.disabled = false;
+      btnCertSavePng.textContent = btnCertSavePng.dataset.prevText || "Save as Image (PNG)";
+      delete btnCertSavePng.dataset.prevText;
+    }
+  }
+}
+
+
+async function downloadCertificatePDF(){
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.pdf`;
+  try{
+    const ok = await ensurePdfLib();
+    if(!ok){
+      showToast("PDF export needs internet.");
+      return;
+    }
+
+    const pngBlob = await renderSimpleCertificateBlob();
+    if(!pngBlob){
+      showToast("Couldn’t generate image for PDF.");
+      return;
+    }
+
+    const { PDFDocument } = window.PDFLib;
+    const pdfDoc = await PDFDocument.create();
+    const pngBytes = await pngBlob.arrayBuffer();
+    const pngImage = await pdfDoc.embedPng(pngBytes);
+
+    // A4 landscape in points: 842 x 595
+    const page = pdfDoc.addPage([842, 595]);
+    const { width, height } = page.getSize();
+    const imgWidth = pngImage.width;
+    const imgHeight = pngImage.height;
+    const scale = Math.min(width / imgWidth, height / imgHeight);
+    const w = imgWidth * scale;
+    const h = imgHeight * scale;
+    const x = (width - w) / 2;
+    const y = (height - h) / 2;
+    page.drawImage(pngImage, { x, y, width: w, height: h });
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+
+    if(isiOS){
+      const file = new File([blob], filename, {type:"application/pdf"});
+      const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
+      if(canShareFile){
+        try{
+          await navigator.share({files:[file], title:"JUMVI Certificate"});
+          return;
+        }catch(_){ }
+      }
+      const url = URL.createObjectURL(blob);
+      openImageForSave(url);
+      showSaveOverlay(url, "Tap and hold the image → Save Image");
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+  }catch(_){
+    showToast("PDF export failed. Try again.");
+  }
+}
+
+// Wire up the single control button
+if(btnCertSavePng){
+  btnCertSavePng.onclick = ()=>{
+    try{ clickSound("click"); }catch(_){ }
+    buildCertificate();
+    downloadCertificatePNG({auto:false});
+  };
+}
+if(btnCertSavePdf){
+  btnCertSavePdf.onclick = ()=>{
+    try{ clickSound("click"); }catch(_){ }
+    buildCertificate();
+    downloadCertificatePDF();
+  };
+}
+
+// Open certificate (only if unlocked)
+if(certBtn){
+  certBtn.onclick = ()=>{
+    clickSound("click");
+    const unlocked = done.size >= missions.length;
+    if(unlocked){
+      openCertificate();
+    }else{
+      showToast("Finish all 30 missions to unlock.");
+    }
+  };
+}
+const certBox = document.getElementById("certBox");
+if(certBox){
+  certBox.addEventListener("click", ()=>{
+    const unlocked = done.size >= missions.length;
+    if(unlocked){
+      clickSound("click");
+      openCertificate();
+    }
+  });
+}
+
+btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
+backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
+
+btnToggleDone.onclick = ()=>{
+  if(lastOpenedId==null) return;
+  const wasDone = done.has(lastOpenedId);
+  if(wasDone) done.delete(lastOpenedId);
+  else done.add(lastOpenedId);
+  bumpDoneVersion();
+
+  // streak counts once per day when you complete at least one mission
+  if(!wasDone){
+    const changed = recordActivityToday();
+    if(changed && streakCount > 1) showToast(`🔥 Streak: ${streakCount} days!`);
+  }
+
+  persist();
+  renderList();
+  clickSound(wasDone ? "click" : "success");
+  if(!wasDone){ celebrate(); }
+  openMission(lastOpenedId); // refresh modal state
+};
+
+btnNext.onclick = ()=>{
+  if(lastOpenedId==null) return;
+  const list = getVisibleMissions();
+  const idx = list.findIndex(x=>x.id===lastOpenedId);
+  const next = list[(idx+1) % list.length];
+  clickSound("click");
+  openMission(next.id);
+};
+
+btnRandomPack.onclick = ()=>{
+  if(lastOpenedId==null) return;
+  const ms = missions.find(x=>x.id===lastOpenedId);
+  const list = missions.filter(x=>x.pack===ms.pack);
+  const pick = list[Math.floor(Math.random()*list.length)];
+  clickSound("click");
+  openMission(pick.id);
+};
+
+/** =======================
+ * Actions
+ * ======================= */
+document.getElementById("btnRandomAll").onclick = ()=>{
+  clickSound("click");
+  const list = getVisibleMissions();
+  const pick = list[Math.floor(Math.random()*list.length)];
+  if(!pick){ showToast("No missions match the filters."); return; }
+  openMission(pick.id);
+};
+
+document.getElementById("btnReset").onclick = ()=>{
+  clickSound("click");
+  if(!confirm("Reset progress on this phone?")) return;
+  setDoneFromArray([]);
+  unlockedBefore = setState("unlockedBefore", false);
+  persist();
+  renderList();
+  closeMission();
+  closeCertificate();
+};
+
+document.getElementById("btnBadges").onclick = ()=>{
+  clickSound("click");
+  badgesBackdrop.classList.add("show");
+};
+
+btnBadgesClose.onclick = ()=>{ clickSound("click"); badgesBackdrop.classList.remove("show"); };
+badgesBackdrop.addEventListener("click",(e)=>{ if(e.target===badgesBackdrop){ clickSound("click"); badgesBackdrop.classList.remove("show"); } });
+
+document.getElementById("btnShare").onclick = async ()=>{
+  clickSound("click");
+  const url = location.href;
+  const text = `JUMVI Missions progress: ${done.size}/${missions.length}`;
+  try{
+    if(navigator.share){
+      await navigator.share({ title:"JUMVI Missions", text, url });
+    }else{
+      await navigator.clipboard.writeText(url);
+      alert("Link copied!");
+    }
+  }catch(e){}
+};
+
+document.getElementById("btnChoosePack").onclick = ()=>{
+  clickSound("click");
+  document.getElementById("filters").scrollIntoView({behavior:"smooth", block:"start"});
+};
+
+searchInput.addEventListener("input", ()=>{
+  searchQuery = setState("searchQuery", searchInput.value || "");
+  renderList();
+});
+
+btnOnlyUnfinished.onclick = ()=>{
+  clickSound("click");
+  onlyUnfinished = setState("onlyUnfinished", !onlyUnfinished);
+  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+  persistOnly();
+  renderList();
+};
+
+/** =======================
+ * New UI buttons
+ * ======================= */
+if(btnSolidBg){
+  btnSolidBg.onclick = ()=>{
+    clickSound("click");
+    solidBg = setState("solidBg", !solidBg);
+    lsSet(SOLIDBG_KEY, solidBg ? "1" : "0");
+    applyBodyClasses();
+    renderModeChips();
+    showToast(solidBg ? "Solid background ON" : "Solid background OFF");
+  };
+}
+if(btnKidsMode){
+  btnKidsMode.onclick = ()=>{
+    clickSound("click");
+    kidsMode = setState("kidsMode", !kidsMode);
+    lsSet(KIDSMODE_KEY, kidsMode ? "1" : "0");
+    applyBodyClasses();
+    renderModeChips();
+    showToast(kidsMode ? "Kids Mode ON" : "Kids Mode OFF");
+  };
+}
+
+/* Daily mission buttons */
+if(btnDailyPlay){
+  btnDailyPlay.onclick = ()=>{
+    clickSound("click");
+    ensureDailyMission();
+    openMission(dailyIdStored);
+  };
+}
+if(btnDailyNew){
+  btnDailyNew.onclick = ()=>{
+    clickSound("click");
+    ensureDailyMission();
+    dailyN = setState("dailyN", (dailyN || 0) + 1);
+    dailyIdStored = setState("dailyIdStored", pickDailyId(dailyIso || isoLocalDate(), dailyN));
+    persistDaily();
+    renderDailyUI();
+    showToast("New daily mission selected!");
+  };
+}
+
+/* Avatar Feature */
+function renderAvatar(){
+    avatarBtn.textContent = AVATARS[currentAvatarIdx];
+}
+avatarBtn.onclick = () => {
+    clickSound("click");
+    currentAvatarIdx = setState("currentAvatarIdx", (currentAvatarIdx + 1) % AVATARS.length);
+    lsSet(AVATAR_KEY, currentAvatarIdx);
+    renderAvatar();
+    fireConfetti(500); // small confetti for fun
+}
+
+
+/* Backup modal */
+function openBackup(){
+  if(!backupBackdrop) return;
+  if(backupCode) backupCode.value = makeBackupCode();
+  if(restoreInput) restoreInput.value = "";
+  backupBackdrop.classList.add("show");
+}
+function closeBackup(){
+  if(!backupBackdrop) return;
+  backupBackdrop.classList.remove("show");
+}
+if(btnBackup){
+  btnBackup.onclick = ()=>{ clickSound("click"); openBackup(); };
+}
+if(btnBackupClose){
+  btnBackupClose.onclick = ()=>{ clickSound("click"); closeBackup(); };
+}
+if(backupBackdrop){
+  backupBackdrop.addEventListener("click",(e)=>{ if(e.target===backupBackdrop){ clickSound("click"); closeBackup(); } });
+}
+if(btnBackupRefresh){
+  btnBackupRefresh.onclick = ()=>{ clickSound("click"); if(backupCode) backupCode.value = makeBackupCode(); showToast("Backup code refreshed."); };
+}
+if(btnBackupCopy){
+  btnBackupCopy.onclick = async ()=>{
+    clickSound("click");
+    const code = backupCode ? backupCode.value : makeBackupCode();
+    try{
+      if(navigator.clipboard){
+        await navigator.clipboard.writeText(code);
+        showToast("Copied!");
+      }else{
+        if(backupCode){ backupCode.focus(); backupCode.select(); }
+        document.execCommand("copy");
+        showToast("Copied!");
+      }
+    }catch(e){
+      showToast("Copy failed. Select and copy manually.");
+    }
+  };
+}
+if(btnRestore){
+  btnRestore.onclick = ()=>{
+    clickSound("click");
+    const raw = (restoreInput?.value || "").trim();
+    if(!raw) return showToast("Paste a backup code first.");
+    if(!raw.startsWith("JUMVI1.")) return showToast("Invalid code.");
+    if(!confirm("Restore progress on this phone? This will replace current progress.")) return;
+    try{
+      const part = raw.split("JUMVI1.")[1] || "";
+      const json = b64DecodeUnicode(b64UrlDecode(part));
+      const payload = JSON.parse(json);
+      applyBackupPayload(payload);
+      closeBackup();
+      showToast("Restored!");
+    }catch(e){
+      showToast("Restore failed. Check the code.");
+    }
+  };
+}
+
+/* A2HS banner */
+if(btnA2hsClose){
+  btnA2hsClose.onclick = ()=>{
+    clickSound("click");
+    lsSet(A2HS_DISMISS_KEY, "1");
+    if(a2hsBanner) a2hsBanner.style.display = "none";
+  };
+}
+
+/** =======================
+ * Sound toggle
+ * ======================= */
+function renderSoundToggle(){
+  soundToggle.classList.toggle("muted", !soundOn);
+  soundToggle.textContent = soundOn ? "🔊" : "🔇";
+}
+soundToggle.onclick = ()=>{
+  soundOn = !soundOn;
+  lsSet(SOUND_KEY, soundOn ? "1" : "0");
+  renderSoundToggle();
+  // If turning on, try to unlock audio on tap
+  if(soundOn){
+    ensureAudio();
+    clickSound("click");
+  }
+};
+
+/** =======================
+ * Init
+ * ======================= */
+function init(){
+  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+
+  applyBodyClasses();
+  renderModeChips();
+
+  renderSoundToggle();
+  renderFilters();
+  renderFilterGroups();
+  renderList();
+
+  renderStreakUI();
+  renderDailyUI();
+  renderAvatar();
+
+  hideReadToMeIfUnsupported();
+  if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
+  maybeShowA2HS();
+  checkOptionalDownloads();
+
+  // restore certificate name (optional)
+  if(certNameInput){
+    certNameInput.value = lsGet(CERT_NAME_KEY) || "";
+    buildCertificate();
+  }
+}
+init();
