@@ -644,6 +644,86 @@ function diffLabel(d){
   return "Hard";
 }
 
+function pickByKey(key, list){
+  if(!list || list.length === 0) return "";
+  const h = hashFNV1a(String(key));
+  return list[h % list.length];
+}
+
+function getSafetyText(ms){
+  const basePool = [
+    "Throw softly below face level. Stay 1–3 m apart. Adult supervision required.",
+    "Adult supervision required. Keep throws gentle and below face level. Stay 1–3 m apart.",
+    "Soft tosses only. Keep 1–3 m distance and aim below face level. Play with an adult nearby.",
+    "Stay 1–3 m apart. Throw gently and below face level. An adult should be nearby.",
+    "Keep it gentle: soft throws, below face level, 1–3 m apart, adult supervision."
+  ];
+
+  const packPool = {
+    "Reflex Rush": [
+      "Focus on control: soft throws below face level, 1–3 m apart, adult nearby.",
+      "Quick does not mean hard: gentle throws below face level, 1–3 m apart, adult supervision."
+    ],
+    "Aim Master": [
+      "Aim first, then throw soft: below face level, 1–3 m apart, adult nearby.",
+      "Keep targets close: 1–3 m apart, soft throws below face level, adult supervision."
+    ],
+    "Focus Control": [
+      "Slow and steady: soft throws below face level, 1–3 m apart, adult nearby.",
+      "Stay calm and safe: gentle throws below face level, 1–3 m apart, adult supervision."
+    ],
+    "Team Duo": [
+      "Give each player space: 1–3 m apart, soft throws below face level, adult supervision.",
+      "Team safety: gentle throws, below face level, 1–3 m apart, adult nearby."
+    ],
+    "Indoor Compact": [
+      "Indoor safe play: soft throws below face level, 1–3 m apart, adult supervision.",
+      "Small space rules: gentle throws below face level, 1–3 m apart, adult nearby."
+    ]
+  };
+
+  const packList = packPool[ms.pack] || [];
+  const base = packList.length ? pickByKey(`${ms.id}|${ms.pack}|${ms.difficulty}`, packList) : pickByKey(`${ms.id}|base`, basePool);
+  const extra = String(ms.safety || "").trim();
+  const genericSafetyRe = /(below face level|1–3|1-3|soft|gentle|adult)/i;
+  if(extra && !genericSafetyRe.test(extra) && !base.toLowerCase().includes(extra.toLowerCase())) return `${base} ${extra}`;
+  return base;
+}
+
+function getKidsTip(ms){
+  const tipsByPack = {
+    "Reflex Rush": [
+      "Try a small step back only after 3 clean catches.",
+      "Keep your elbows close to your body.",
+      "Watch the ball all the way into your hands."
+    ],
+    "Aim Master": [
+      "Point your belly button at the target.",
+      "Use two hands to aim, then one to throw.",
+      "Say “target” out loud before you throw."
+    ],
+    "Focus Control": [
+      "Breathe slowly and count in your head.",
+      "Freeze your feet like statues before each throw.",
+      "Use a quiet voice to stay calm."
+    ],
+    "Team Duo": [
+      "Call your partner’s name before you throw.",
+      "Take turns and cheer for each other.",
+      "If someone drops, give a friendly high‑five."
+    ],
+    "Indoor Compact": [
+      "Use short, easy throws in small spaces.",
+      "Stand on a small floor mark to stay steady.",
+      "Keep throws low and slow indoors."
+    ]
+  };
+
+  const list = tipsByPack[ms.pack] || [];
+  const base = list.length ? pickByKey(`${ms.id}|${ms.pack}|${ms.difficulty}`, list) : "Watch the ball and use two hands if needed.";
+  return base;
+}
+
 function mapPackToCategory(pack){
   if(pack === "Reflex Rush") return "Reflex";
   if(pack === "Aim Master") return "Aim";
@@ -1037,6 +1117,12 @@ function getVisibleMissions(){
     );
   }
 
+  list = list.slice().sort((a,b)=>
+    (a.difficulty - b.difficulty) ||
+    a.pack.localeCompare(b.pack) ||
+    (a.id - b.id)
+  );
+
   _visibleCacheKey = key;
   _visibleCacheList = list;
   return list;
@@ -1402,9 +1488,9 @@ function openMission(id){
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(ms.win)}</div>`;
   mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   if(mKidsTip){
-    mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">Watch the ball and use two hands if needed.</div>`;
+    mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
   }
-  mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(ms.safety)}</div>`;
+  mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(getSafetyText(ms))}</div>`;
 
   const isDone = done.has(ms.id);
   btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "🎉 I Did It!";
