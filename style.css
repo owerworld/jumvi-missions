@@ -302,6 +302,24 @@ html.theme--dark .certBtn.locked{
   color:#e5e7eb;
   background: rgba(255,255,255,0.18);
 }
+
+/* Today's mission card in dark mode */
+html.theme--dark .dailyBox{
+  background: rgba(17,24,39,0.9) !important;
+  border-color: rgba(255,255,255,0.28) !important;
+}
+html.theme--dark .dailyBox .dailyTitle,
+html.theme--dark .dailyBox .dailyName,
+html.theme--dark .dailyBox .dailyMeta{
+  color:#f8fafc !important;
+}
+
+/* Mission modal action area background */
+html.theme--dark #sheet .sheetActions{
+  background: rgba(15,23,42,0.85);
+  border-radius: 18px;
+  padding: 10px;
+}
 html.theme--dark .search input{
   color:#f8fafc !important;
 }
