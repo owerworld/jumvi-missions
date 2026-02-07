@@ -471,6 +471,12 @@ const mHint = document.getElementById("mHint");
 const holdHint = document.getElementById("holdHint");
 const dashReport = document.getElementById("dashReport");
 const dashBars = document.getElementById("dashBars");
+const seasonalBackdrop = document.getElementById("seasonalBackdrop");
+const seasonalList = document.getElementById("seasonalList");
+const seasonalSub = document.getElementById("seasonalSub");
+const btnSeasonalClose = document.getElementById("btnSeasonalClose");
+const btnSeasonalIndoor = document.getElementById("btnSeasonalIndoor");
+const btnSeasonalOutdoor = document.getElementById("btnSeasonalOutdoor");
 const mSmall = document.getElementById("mSmall");
 
 const btnToggleDone = document.getElementById("btnToggleDone");
@@ -801,34 +807,41 @@ function getWeekKey(d = new Date()){
   return `${date.getUTCFullYear()}-W${week}`;
 }
 
-function getMilestoneLine(){
-  const pool = [
-    "This week helped build focus, coordination, and confidence.",
-    "Great progress in reflexes and teamwork this week.",
-    "Consistent play supports hand‑eye coordination.",
-    "Nice progress in aim and calm control this week."
-  ];
-  const key = getWeekKey();
-  const idx = hashFNV1a(key) % pool.length;
-  return pool[idx];
+function getMilestoneLine(counts){
+  const top = Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1])
+    .filter(([,v])=>v>0)
+    .slice(0,2)
+    .map(([k])=>k);
+  if(!top.length){
+    return "This week supported steady focus and coordination.";
+  }
+  if(top.length === 1){
+    return `Nice progress in ${top[0].toLowerCase()} this week.`;
+  }
+  return `Great progress in ${top[0].toLowerCase()} and ${top[1].toLowerCase()} this week.`;
 }
 
 function renderParentDashboard(){
   if(!dashBars || !dashReport) return;
-  dashReport.textContent = getMilestoneLine();
   const packs = [
-    { key:"Reflex Rush", label:"Reflex" },
-    { key:"Aim Master", label:"Aim" },
-    { key:"Focus Control", label:"Focus" },
-    { key:"Team Duo", label:"Team" },
-    { key:"Indoor Compact", label:"Indoor" }
+    { key:"Reflex Rush", label:"Reflex", icon:"⚡" },
+    { key:"Aim Master", label:"Aim", icon:"🎯" },
+    { key:"Focus Control", label:"Focus", icon:"🧘" },
+    { key:"Team Duo", label:"Team", icon:"👥" },
+    { key:"Indoor Compact", label:"Indoor", icon:"🏠" }
   ];
+  const counts = {};
   const frag = document.createDocumentFragment();
   packs.forEach(p=>{
     const doneCount = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
+    counts[p.label] = doneCount;
     const pct = Math.round((doneCount / 6) * 100);
     const row = document.createElement("div");
     row.className = "dashRow";
+    const icon = document.createElement("div");
+    icon.className = "dashIcon";
+    icon.textContent = p.icon;
     const label = document.createElement("div");
     label.className = "dashLabel";
     label.textContent = p.label;
@@ -841,12 +854,14 @@ function renderParentDashboard(){
     const count = document.createElement("div");
     count.className = "dashCount";
     count.textContent = `${doneCount}/6`;
+    row.appendChild(icon);
     row.appendChild(label);
     row.appendChild(bar);
     row.appendChild(count);
     frag.appendChild(row);
   });
   dashBars.replaceChildren(frag);
+  dashReport.textContent = getMilestoneLine(counts);
 }
 
 function mapPackToCategory(pack){
@@ -2042,6 +2057,46 @@ function markMissionDone(id, source="manual"){
   openMission(id);
 }
 
+function renderSeasonalList(type){
+  if(!seasonalList || !seasonalBackdrop) return;
+  const seasonal = {
+    indoor: {
+      title: "Indoor/Home Edition",
+      ids: [25, 26, 27, 28, 29, 18]
+    },
+    outdoor: {
+      title: "Beach/Park Edition",
+      ids: [1, 7, 9, 19, 20, 24]
+    }
+  };
+  const cfg = seasonal[type];
+  if(!cfg) return;
+  if(seasonalSub) seasonalSub.textContent = cfg.title;
+  const list = cfg.ids.map(id=>missions.find(m=>m.id===id)).filter(Boolean);
+  seasonalList.innerHTML = "";
+  list.forEach(ms=>{
+    const row = document.createElement("div");
+    row.className = "seasonalItem";
+    row.innerHTML = `
+      <div style="font-size:18px; width:26px; text-align:center">${ms.icon}</div>
+      <div style="flex:1">
+        <div style="font-weight:900; color:#0f172a">${escapeHtml(ms.title)}</div>
+        <div style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap">
+          <span class="tag pack">${escapeHtml(ms.pack)}</span>
+          <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
+        </div>
+      </div>
+    `;
+    row.onclick = ()=>{
+      clickSound("click");
+      seasonalBackdrop.classList.remove("show");
+      openMission(ms.id);
+    };
+    seasonalList.appendChild(row);
+  });
+  seasonalBackdrop.classList.add("show");
+}
+
 btnToggleDone.onclick = ()=>{
   if(lastOpenedId==null) return;
   const wasDone = done.has(lastOpenedId);
@@ -2139,6 +2194,19 @@ document.getElementById("btnBadges").onclick = ()=>{
 
 btnBadgesClose.onclick = ()=>{ clickSound("click"); badgesBackdrop.classList.remove("show"); };
 badgesBackdrop.addEventListener("click",(e)=>{ if(e.target===badgesBackdrop){ clickSound("click"); badgesBackdrop.classList.remove("show"); } });
+
+if(btnSeasonalClose){
+  btnSeasonalClose.onclick = ()=>{ clickSound("click"); seasonalBackdrop.classList.remove("show"); };
+}
+if(seasonalBackdrop){
+  seasonalBackdrop.addEventListener("click",(e)=>{ if(e.target===seasonalBackdrop){ clickSound("click"); seasonalBackdrop.classList.remove("show"); } });
+}
+if(btnSeasonalIndoor){
+  btnSeasonalIndoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("indoor"); };
+}
+if(btnSeasonalOutdoor){
+  btnSeasonalOutdoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("outdoor"); };
+}
 
 document.getElementById("btnShare").onclick = async ()=>{
   clickSound("click");

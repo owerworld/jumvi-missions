@@ -117,8 +117,8 @@
         <div class="seasonalTitle">Seasonal Packs</div>
         <div class="seasonalSub">Fresh ways to play all year.</div>
         <div class="seasonalRow">
-          <button class="btn btnGhost seasonalBtn" type="button">🏠 Indoor/Home Edition</button>
-          <button class="btn btnGhost seasonalBtn" type="button">🏖️ Beach/Park Edition</button>
+          <button class="btn btnGhost seasonalBtn" id="btnSeasonalIndoor" type="button">🏠 Indoor/Home Edition</button>
+          <button class="btn btnGhost seasonalBtn" id="btnSeasonalOutdoor" type="button">🏖️ Beach/Park Edition</button>
         </div>
       </div>
 
@@ -232,6 +232,21 @@
       </div>
       <div class="kv" id="badgesList"></div>
       <div class="small">Badges update automatically on this phone.</div>
+    </div>
+  </div>
+
+  <!-- Seasonal Modal -->
+  <div class="backdrop" id="seasonalBackdrop" role="dialog" aria-modal="true" aria-label="Seasonal Packs">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">Seasonal Packs</div>
+          <div class="small" id="seasonalSub">Fresh ways to play all year.</div>
+        </div>
+        <button class="close" id="btnSeasonalClose" aria-label="Close seasonal packs">✕</button>
+      </div>
+      <div class="kv" id="seasonalList"></div>
+      <div class="small">Tap a mission to open it.</div>
     </div>
   </div>
 
