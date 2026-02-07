@@ -1041,9 +1041,44 @@ body[data-theme="dark"]{
       .mIcon { width: 54px; height: 54px; }
     }
 
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
-    }
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}
+
+/* Performance mode for low-end devices */
+html.perf-low .hero::before,
+html.perf-low .progressBox::before,
+html.perf-low .dailyBox::before,
+html.perf-low .certBox::before,
+html.perf-low .footer::before,
+html.perf-low .dashCard::before,
+html.perf-low .seasonalCard::before,
+html.perf-low .filterGroups::before,
+html.perf-low .search::before,
+html.perf-low .card::before,
+html.perf-low .badge::before,
+html.perf-low .sheet::before{
+  display:none !important;
+}
+html.perf-low .hero,
+html.perf-low .progressBox,
+html.perf-low .dailyBox,
+html.perf-low .certBox,
+html.perf-low .footer,
+html.perf-low .dashCard,
+html.perf-low .seasonalCard,
+html.perf-low .filterGroups,
+html.perf-low .search,
+html.perf-low .card,
+html.perf-low .badge,
+html.perf-low .sheet{
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
+}
+html.perf-low .bgLayer{
+  animation: none !important;
+}
   
     /* Certificate + confetti + toast */
     .certBox.unlockedPulse{

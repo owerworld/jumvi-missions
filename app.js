@@ -2397,6 +2397,13 @@ function init(){
   renderModeChips();
   applyTheme();
 
+  // Low-end perf hint (reduce heavy effects on Android tablets)
+  try{
+    const dm = navigator.deviceMemory || 0;
+    const isLow = dm && dm <= 3;
+    if(isLow) document.documentElement.classList.add("perf-low");
+  }catch(_){}
+
   if(autoDoneToggle){
     autoDoneToggle.checked = !!autoDoneOnEnd;
     autoDoneToggle.onchange = ()=>{
