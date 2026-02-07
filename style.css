@@ -106,24 +106,15 @@ html{ -webkit-text-size-adjust:100%; }
     .brandSub{ font-size:11px; font-weight:700; color: var(--muted); }
     .logoWrap{
       width:42px; height:42px; border-radius:14px;
-      background: rgba(79,179,255,0.18);
-      border:1px solid rgba(79,179,255,0.35);
+      background: transparent;
+      border:0;
       display:flex; align-items:center; justify-content:center;
       overflow:hidden;
-      box-shadow: 0 4px 10px rgba(0,176,255,.12);
+      box-shadow: none;
       flex: 0 0 auto;
     }
-    .logoImg{ width:100%; height:100%; object-fit:contain; padding:4px; }
-    .logoFallback{
-      position:absolute;
-      font-weight:950;
-      color: #ffffff;
-      font-size:18px;
-      line-height:1;
-      opacity:.85;
-      pointer-events:none;
-    }
-    html.theme--light .logoFallback{ color:#4fb3ff; }
+    .logoPic, .logoImg{ width:100%; height:100%; display:block; }
+    .logoImg{ object-fit:contain; }
     
     /* New Avatar Feature */
     .avatarBtn{
