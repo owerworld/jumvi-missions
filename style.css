@@ -1724,3 +1724,40 @@ body{
   15%  { opacity: 1; }
   100% { opacity: 0; transform: translate(var(--x1), var(--y1)) scale(1.15); }
 }
+
+/* Performance: keep visuals, reduce paint cost */
+.wrap{
+  contain: layout paint;
+}
+.sticky{
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+.hero,
+.progressBox,
+.dailyBox,
+.dashCard,
+.seasonalCard,
+.certBox,
+.footer{
+  contain: layout paint;
+  content-visibility: auto;
+  contain-intrinsic-size: 180px 900px;
+}
+.list{
+  contain: layout paint;
+}
+.card{
+  contain: content;
+  content-visibility: auto;
+  contain-intrinsic-size: 120px 1000px;
+}
+.badge{
+  contain: content;
+  content-visibility: auto;
+  contain-intrinsic-size: 110px 220px;
+}
+#sheet{
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
