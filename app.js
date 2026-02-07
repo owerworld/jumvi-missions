@@ -869,14 +869,16 @@ function renderParentDashboard(){
 }
 
 function applyTheme(){
-  const root = document.body;
+  const root = document.documentElement;
   const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   let mode = themeMode;
   if(mode !== "dark" && mode !== "light") mode = "system";
   if(mode === "system"){
-    root.dataset.theme = systemDark ? "dark" : "light";
+    root.classList.remove("theme--light","theme--dark");
+    root.classList.add(systemDark ? "theme--dark" : "theme--light");
   }else{
-    root.dataset.theme = mode;
+    root.classList.remove("theme--light","theme--dark");
+    root.classList.add(mode === "dark" ? "theme--dark" : "theme--light");
   }
   if(themeToggle){
     const label = mode === "system" ? "System" : (mode === "dark" ? "Dark" : "Light");
