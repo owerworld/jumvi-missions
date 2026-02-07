@@ -1562,21 +1562,21 @@ body{
   .dailyActions .btn{ flex: 1 1 100% !important; }
 }
 
-/* Mission list cards: make them dark + readable */
+/* Mission list cards: follow glass tokens */
 .card{
-  background: #ffffff !important;
-  border: 1px solid var(--border) !important;
+  background: var(--glass) !important;
+  border: 1px solid var(--glass-border) !important;
   box-shadow: var(--shadow) !important;
 }
 .mTitle{ color: var(--text) !important; }
 .mMeta{ color: var(--muted) !important; }
 .tag{
-  background: #f1f5f9 !important;
-  border: 1px solid var(--border) !important;
-  color: #0f172a !important;
+  background: rgba(255,255,255,0.25) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text) !important;
 }
-.tag.pack{ background: rgba(37,99,235,0.10) !important; color: #1d4ed8 !important; }
-.tag.diff{ background: rgba(245,158,11,0.12) !important; color: #b45309 !important; }
+.tag.pack{ background: rgba(79,179,255,0.20) !important; color: var(--accent-blue) !important; }
+.tag.diff{ background: rgba(255,106,0,0.18) !important; color: var(--accent-orange) !important; }
 
 /* Done cards (Kids mode unreadable fix) */
 .card.done{
@@ -1593,9 +1593,9 @@ body{
   align-items: flex-end;
 }
 #sheet{
-  background: #ffffff !important;
+  background: var(--glass) !important;
   color: var(--text) !important;
-  border: 1px solid var(--border) !important;
+  border: 1px solid var(--glass-border) !important;
   max-height: calc(100svh - 10px) !important;
   overflow: hidden !important;
   display: flex !important;
@@ -1635,17 +1635,17 @@ body{
 
 /* Detail blocks */
 #sheet .kv{
-  background: #f8fafc !important;
-  border: 1px solid var(--border) !important;
+  background: var(--glass) !important;
+  border: 1px solid var(--glass-border) !important;
 }
-#sheet .kv b{ color:#2563eb !important; }
+#sheet .kv b{ color: var(--accent-blue) !important; }
 
 /* Footer actions pinned */
 #sheet > .sheetActions{
   margin-top: 0 !important;
   padding: 12px 0 0 !important;
-  background: #ffffff !important;
-  border-top: 1px solid var(--border) !important;
+  background: var(--glass) !important;
+  border-top: 1px solid var(--glass-border) !important;
   padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
