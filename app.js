@@ -382,6 +382,7 @@ const AVATAR_KEY        = "jumvi_avatar_v1";
 const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
 const ATTEMPTS_KEY      = "jumvi_attempts_v1";
 const SKIPS_KEY         = "jumvi_skips_v1";
+const THEME_KEY         = "jumvi_theme_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
@@ -409,7 +410,8 @@ const state = {
   currentAvatarIdx: Number(lsGet(AVATAR_KEY, "0")),
   autoDoneOnEnd: (lsGet(AUTO_DONE_KEY, "0")) === "1",
   attempts: lsGetJSON(ATTEMPTS_KEY, {}),
-  skips: lsGetJSON(SKIPS_KEY, {})
+  skips: lsGetJSON(SKIPS_KEY, {}),
+  themeMode: lsGet(THEME_KEY, "system")
 };
 if(isNaN(state.currentAvatarIdx) || state.currentAvatarIdx < 0) state.currentAvatarIdx = 0;
 state.unlockedBefore = state.done.size >= missions.length;
@@ -435,6 +437,7 @@ let currentAvatarIdx = state.currentAvatarIdx;
 let autoDoneOnEnd = state.autoDoneOnEnd;
 let attempts = state.attempts;
 let skips = state.skips;
+let themeMode = state.themeMode;
 
 function setState(key, value){
   state[key] = value;
@@ -477,6 +480,7 @@ const seasonalSub = document.getElementById("seasonalSub");
 const btnSeasonalClose = document.getElementById("btnSeasonalClose");
 const btnSeasonalIndoor = document.getElementById("btnSeasonalIndoor");
 const btnSeasonalOutdoor = document.getElementById("btnSeasonalOutdoor");
+const themeToggle = document.getElementById("themeToggle");
 const mSmall = document.getElementById("mSmall");
 
 const btnToggleDone = document.getElementById("btnToggleDone");
@@ -862,6 +866,31 @@ function renderParentDashboard(){
   });
   dashBars.replaceChildren(frag);
   dashReport.textContent = getMilestoneLine(counts);
+}
+
+function applyTheme(){
+  const root = document.body;
+  const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  let mode = themeMode;
+  if(mode !== "dark" && mode !== "light") mode = "system";
+  if(mode === "system"){
+    root.dataset.theme = systemDark ? "dark" : "light";
+  }else{
+    root.dataset.theme = mode;
+  }
+  if(themeToggle){
+    const label = mode === "system" ? "System" : (mode === "dark" ? "Dark" : "Light");
+    themeToggle.textContent = `🌓 ${label}`;
+    themeToggle.setAttribute("aria-label", `Theme: ${label}`);
+  }
+}
+
+function cycleTheme(){
+  const order = ["system", "light", "dark"];
+  const idx = order.indexOf(themeMode);
+  themeMode = setState("themeMode", order[(idx + 1) % order.length]);
+  lsSet(THEME_KEY, themeMode);
+  applyTheme();
 }
 
 function mapPackToCategory(pack){
@@ -2394,6 +2423,7 @@ function init(){
 
   applyBodyClasses();
   renderModeChips();
+  applyTheme();
 
   if(autoDoneToggle){
     autoDoneToggle.checked = !!autoDoneOnEnd;
@@ -2411,6 +2441,19 @@ function init(){
   renderStreakUI();
   renderDailyUI();
   renderAvatar();
+
+  if(themeToggle){
+    themeToggle.onclick = ()=>{ clickSound("click"); cycleTheme(); };
+  }
+
+  if(window.matchMedia){
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if(mq && mq.addEventListener){
+      mq.addEventListener("change", ()=>{ if(themeMode === "system") applyTheme(); });
+    }else if(mq && mq.addListener){
+      mq.addListener(()=>{ if(themeMode === "system") applyTheme(); });
+    }
+  }
 
   hideReadToMeIfUnsupported();
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }

@@ -97,6 +97,8 @@
       white-space: nowrap;
       font-weight: 800;
     }
+    .topRight{ display:flex; align-items:center; gap:8px; }
+    .themeToggle{ cursor:pointer; }
 
     /* Hero card */
     .hero{
@@ -588,6 +590,71 @@
   cursor:pointer;
 }
 .seasonalItem .tag{ font-size:10px; }
+
+/* Theme overrides */
+body[data-theme="dark"]{
+  color:#e5e7eb;
+  background:#0b1220;
+}
+body[data-theme="dark"] .bgLayer{
+  background:
+    radial-gradient(circle at 15% 10%, rgba(79, 179, 255, 0.12), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(151, 215, 0, 0.10), transparent 48%),
+    linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+}
+body[data-theme="dark"] .sticky{
+  background: rgba(15,23,42,0.85);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+body[data-theme="dark"] .hero,
+body[data-theme="dark"] .progressBox,
+body[data-theme="dark"] .dailyBox,
+body[data-theme="dark"] .certBox,
+body[data-theme="dark"] .footer,
+body[data-theme="dark"] .dashCard,
+body[data-theme="dark"] .seasonalCard,
+body[data-theme="dark"] .filters,
+body[data-theme="dark"] .search,
+body[data-theme="dark"] .card,
+body[data-theme="dark"] .badge,
+body[data-theme="dark"] .sheet,
+body[data-theme="dark"] #sheet .kv{
+  background:#0f172a !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color:#e5e7eb;
+}
+body[data-theme="dark"] .sub,
+body[data-theme="dark"] .pSub,
+body[data-theme="dark"] .pExtra,
+body[data-theme="dark"] .dashSub,
+body[data-theme="dark"] .dashReport,
+body[data-theme="dark"] .small{
+  color:#94a3b8;
+}
+body[data-theme="dark"] .chip{
+  background:#111827;
+  color:#e5e7eb;
+  border-color: rgba(255,255,255,0.08);
+}
+body[data-theme="dark"] .tag{
+  background:#111827;
+  color:#cbd5f5;
+}
+body[data-theme="dark"] .bar{
+  background:#111827;
+  border-color: rgba(255,255,255,0.06);
+}
+body[data-theme="dark"] .mTitle,
+body[data-theme="dark"] .dashTitle,
+body[data-theme="dark"] .seasonalTitle,
+body[data-theme="dark"] .sheetTitle{
+  color:#e5e7eb;
+}
+body[data-theme="dark"] .logoWrap,
+body[data-theme="dark"] .avatarBtn{
+  background:#0f172a;
+  border-color: rgba(255,255,255,0.08);
+}
 .hintBox{
   border:1px dashed rgba(2,6,23,0.2) !important;
   background:#f7fbff !important;
