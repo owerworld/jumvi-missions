@@ -158,6 +158,7 @@
   transform-origin: left;
   transition: transform 0.6s linear;
   pointer-events:none;
+  will-change: transform;
 }
 .holdBtn.holding::after{
   transform: scaleX(1);
@@ -496,11 +497,13 @@
       border-radius: 28px 28px 0 0;
       background: #FFFFFF;
       border:none;
-      box-shadow: 0 -20px 60px rgba(0,0,0,0.15);
+      box-shadow: 0 -12px 28px rgba(0,0,0,0.12);
       padding:18px 18px 24px;
       max-height: 88vh;
       overflow:auto;
       color: #37474F;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: auto;
     }
     .sheetTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
     .close{
@@ -1011,6 +1014,8 @@
 .sheet{
   background: var(--sheetbg) !important;
   border: 1px solid var(--border) !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: auto !important;
 }
 .sheet .kv{
   background: var(--sheetpanel) !important;
