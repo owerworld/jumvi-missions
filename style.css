@@ -106,8 +106,8 @@ html{ -webkit-text-size-adjust:100%; }
     .brandSub{ font-size:11px; font-weight:700; color: var(--muted); }
     .logoWrap{
       width:42px; height:42px; border-radius:14px;
-      background: var(--glass);
-      border:1px solid var(--glass-border);
+      background: rgba(79,179,255,0.18);
+      border:1px solid rgba(79,179,255,0.35);
       display:flex; align-items:center; justify-content:center;
       overflow:hidden;
       box-shadow: 0 4px 10px rgba(0,176,255,.12);
@@ -117,12 +117,13 @@ html{ -webkit-text-size-adjust:100%; }
     .logoFallback{
       position:absolute;
       font-weight:950;
-      color: var(--accent-blue);
+      color: #ffffff;
       font-size:18px;
       line-height:1;
       opacity:.85;
       pointer-events:none;
     }
+    html.theme--light .logoFallback{ color:#4fb3ff; }
     
     /* New Avatar Feature */
     .avatarBtn{
@@ -285,6 +286,22 @@ html.theme--dark .chip{
 html.theme--dark .pill{
   color:#e5e7eb;
   background: rgba(15,23,42,0.65);
+}
+
+/* A2HS banner dark mode */
+html.theme--dark .a2hs{
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+html.theme--dark .a2hsText,
+html.theme--dark #a2hsHint,
+html.theme--dark #a2hsSteps{
+  color:#e5e7eb !important;
+}
+html.theme--dark .a2hsClose{
+  background: rgba(255,255,255,0.08);
+  color:#e5e7eb;
+  border-color: rgba(255,255,255,0.2);
 }
 
 /* Ensure key labels in dark mode are readable */
