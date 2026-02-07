@@ -371,6 +371,8 @@ const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
 const AVATAR_KEY        = "jumvi_avatar_v1";
 const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
+const ATTEMPTS_KEY      = "jumvi_attempts_v1";
+const SKIPS_KEY         = "jumvi_skips_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
@@ -396,7 +398,9 @@ const state = {
   dailyIdStored: Number(lsGet(DAILY_ID_KEY, "0")),
   dailyN: Number(lsGet(DAILY_N_KEY, "0")),
   currentAvatarIdx: Number(lsGet(AVATAR_KEY, "0")),
-  autoDoneOnEnd: (lsGet(AUTO_DONE_KEY, "0")) === "1"
+  autoDoneOnEnd: (lsGet(AUTO_DONE_KEY, "0")) === "1",
+  attempts: lsGetJSON(ATTEMPTS_KEY, {}),
+  skips: lsGetJSON(SKIPS_KEY, {})
 };
 if(isNaN(state.currentAvatarIdx) || state.currentAvatarIdx < 0) state.currentAvatarIdx = 0;
 state.unlockedBefore = state.done.size >= missions.length;
@@ -420,6 +424,8 @@ let dailyIdStored = state.dailyIdStored;
 let dailyN = state.dailyN;
 let currentAvatarIdx = state.currentAvatarIdx;
 let autoDoneOnEnd = state.autoDoneOnEnd;
+let attempts = state.attempts;
+let skips = state.skips;
 
 function setState(key, value){
   state[key] = value;
@@ -452,6 +458,8 @@ const mWin   = document.getElementById("mWin");
 const mTip   = document.getElementById("mTip");
 const mKidsTip = document.getElementById("mKidsTip");
 const mSafety= document.getElementById("mSafety");
+const mHint = document.getElementById("mHint");
+const holdHint = document.getElementById("holdHint");
 const mSmall = document.getElementById("mSmall");
 
 const btnToggleDone = document.getElementById("btnToggleDone");
@@ -634,6 +642,40 @@ function persist(){
 function persistOnly(){
   lsSetDebounced(ONLY_KEY, onlyUnfinished ? "1" : "0", 500);
 }
+function persistAttempts(){
+  lsSetDebounced(ATTEMPTS_KEY, JSON.stringify(attempts), 500);
+}
+function persistSkips(){
+  lsSetDebounced(SKIPS_KEY, JSON.stringify(skips), 500);
+}
+function getAttemptCount(id){
+  return Number(attempts?.[id] || 0);
+}
+function incAttempt(id){
+  if(id==null) return;
+  attempts[id] = getAttemptCount(id) + 1;
+  persistAttempts();
+}
+function incSkip(id){
+  if(id==null) return;
+  const cur = Number(skips?.[id] || 0);
+  skips[id] = cur + 1;
+  persistSkips();
+}
+
+function topSkippedText(){
+  const entries = Object.entries(skips || {})
+    .map(([id,count])=>({ id:Number(id), count:Number(count)||0 }))
+    .filter(x=>x.count>0)
+    .sort((a,b)=>b.count - a.count)
+    .slice(0,3);
+  if(!entries.length) return "";
+  const names = entries
+    .map(e=>missions.find(m=>m.id===e.id)?.title)
+    .filter(Boolean);
+  if(!names.length) return "";
+  return `Top skipped missions: ${names.join(", ")}`;
+}
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -681,8 +723,8 @@ function getSafetyText(ms){
       "Team safety: gentle throws, below face level, 1–3 m apart, adult nearby."
     ],
     "Indoor Compact": [
-      "Indoor safe play: soft throws below face level, 1–3 m apart, adult supervision.",
-      "Small space rules: gentle throws below face level, 1–3 m apart, adult nearby."
+      "Indoor safe play: soft throws below face level, 1–3 m apart, adult supervision. Clear area from breakables.",
+      "Small space rules: gentle throws below face level, 1–3 m apart, adult nearby. Clear area from breakables."
     ]
   };
 
@@ -726,6 +768,17 @@ function getKidsTip(ms){
   const list = tipsByPack[ms.pack] || [];
   const base = list.length ? pickByKey(`${ms.id}|${ms.pack}|${ms.difficulty}`, list) : "Watch the ball and use two hands if needed.";
   return base;
+}
+
+function buildSoftHints(ms){
+  const hints = [
+    "Try standing a little closer.",
+    "Use two hands to catch for extra control.",
+    "Slow the throws down and focus on clean catches."
+  ];
+  if(String(ms.players).includes("1")) hints.push("Short, gentle tosses are best for solo play.");
+  if(ms.pack === "Indoor Compact") hints.push("Keep throws low and soft indoors.");
+  return hints;
 }
 
 function mapPackToCategory(pack){
@@ -1322,6 +1375,7 @@ let timerLeft = 0;
 let timerEndAt = 0;
 let timerHoldResetArmed = false;
 let timerHoldResetT = null;
+let missionOpenedAt = 0;
 
 function setTimerButtonLabel(){
   if(timerState === "running"){
@@ -1366,6 +1420,8 @@ function updateTimerTick(){
     setTimerButtonLabel();
     if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
       markMissionDone(lastOpenedId, "auto");
+    }else if(lastOpenedId != null && !done.has(lastOpenedId)){
+      incAttempt(lastOpenedId);
     }
     return;
   }
@@ -1477,6 +1533,7 @@ function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
   lastOpenedId = setState("lastOpenedId", id);
+  missionOpenedAt = Date.now();
   
   resetTimerUI(); // Ensure timer is reset when opening
 
@@ -1500,10 +1557,26 @@ function openMission(id){
     mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
   }
   mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(getSafetyText(ms))}</div>`;
+  if(mHint){
+    const attemptsCount = getAttemptCount(ms.id);
+    if(attemptsCount >= 3){
+      const hints = buildSoftHints(ms).slice(0,3);
+      mHint.style.display = "block";
+      mHint.innerHTML = `<b>Try an easier version</b><br/><ul style="margin:8px 0 0; padding-left:18px">
+        ${hints.map(h=>`<li>${escapeHtml(h)}</li>`).join("")}
+      </ul>`;
+    }else{
+      mHint.style.display = "none";
+      mHint.innerHTML = "";
+    }
+  }
 
   const isDone = done.has(ms.id);
   btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "🎉 I Did It!";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+  if(holdHint){
+    holdHint.style.display = isDone ? "none" : "block";
+  }
 
   mSmall.textContent = "Progress is saved on this device automatically.";
 
@@ -1574,6 +1647,12 @@ if(btnSpeak){
 }
 
 function closeMission(){
+  if(lastOpenedId != null && !done.has(lastOpenedId)){
+    const openFor = Date.now() - (missionOpenedAt || 0);
+    if(openFor >= 20000){
+      incAttempt(lastOpenedId);
+    }
+  }
   resetTimerUI(); // Stop + reset timer on close
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   backdrop.classList.remove("show");
@@ -1897,8 +1976,12 @@ function markMissionDone(id, source="manual"){
 btnToggleDone.onclick = ()=>{
   if(lastOpenedId==null) return;
   const wasDone = done.has(lastOpenedId);
-  if(wasDone) done.delete(lastOpenedId);
-  else return markMissionDone(lastOpenedId, "manual");
+  if(wasDone){
+    done.delete(lastOpenedId);
+  }else{
+    // Hold-to-finish handled via pointer events
+    return;
+  }
   bumpDoneVersion();
 
   // streak counts once per day when you complete at least one mission
@@ -1914,11 +1997,33 @@ btnToggleDone.onclick = ()=>{
   openMission(lastOpenedId); // refresh modal state
 };
 
+let holdToFinishT = null;
+function armHoldToFinish(){
+  if(lastOpenedId==null) return;
+  if(done.has(lastOpenedId)) return;
+  if(holdToFinishT) clearTimeout(holdToFinishT);
+  holdToFinishT = setTimeout(()=>{
+    holdToFinishT = null;
+    markMissionDone(lastOpenedId, "manual");
+  }, 600);
+}
+function disarmHoldToFinish(){
+  if(holdToFinishT) clearTimeout(holdToFinishT);
+  holdToFinishT = null;
+}
+if(btnToggleDone){
+  btnToggleDone.addEventListener("pointerdown", armHoldToFinish);
+  btnToggleDone.addEventListener("pointerup", disarmHoldToFinish);
+  btnToggleDone.addEventListener("pointercancel", disarmHoldToFinish);
+  btnToggleDone.addEventListener("pointerleave", disarmHoldToFinish);
+}
+
 btnNext.onclick = ()=>{
   if(lastOpenedId==null) return;
   const list = getVisibleMissions();
   const idx = list.findIndex(x=>x.id===lastOpenedId);
   const next = list[(idx+1) % list.length];
+  if(!done.has(lastOpenedId)) incSkip(lastOpenedId);
   clickSound("click");
   openMission(next.id);
 };
@@ -1928,6 +2033,7 @@ btnRandomPack.onclick = ()=>{
   const ms = missions.find(x=>x.id===lastOpenedId);
   const list = missions.filter(x=>x.pack===ms.pack);
   const pick = list[Math.floor(Math.random()*list.length)];
+  if(!done.has(lastOpenedId)) incSkip(lastOpenedId);
   clickSound("click");
   openMission(pick.id);
 };
@@ -1965,7 +2071,8 @@ badgesBackdrop.addEventListener("click",(e)=>{ if(e.target===badgesBackdrop){ cl
 document.getElementById("btnShare").onclick = async ()=>{
   clickSound("click");
   const url = location.href;
-  const text = `JUMVI Missions progress: ${done.size}/${missions.length}`;
+  const diag = topSkippedText();
+  const text = `JUMVI Missions progress: ${done.size}/${missions.length}${diag ? `\n${diag}` : ""}`;
   try{
     if(navigator.share){
       await navigator.share({ title:"JUMVI Missions", text, url });
