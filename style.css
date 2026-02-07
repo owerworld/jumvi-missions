@@ -620,6 +620,7 @@ html.theme--dark #certSheet input::placeholder{
       display:flex;
       flex-direction:column;
       gap:14px;
+      contain: layout paint;
     }
     .card{
       border:1px solid transparent;
@@ -721,6 +722,9 @@ html.theme--dark .tag.diff{
       box-shadow: 0 4px 12px var(--shadow);
       opacity:.6;
       filter: grayscale(1);
+      contain: content;
+      content-visibility: auto;
+      contain-intrinsic-size: 110px 220px;
     }
     .badge.unlocked{
       opacity:1;
@@ -1598,11 +1602,14 @@ body{
 }
 
 /* Mission list cards: follow glass tokens */
-.card{
-  background: var(--glass) !important;
-  border: 1px solid var(--glass-border) !important;
-  box-shadow: var(--shadow) !important;
-}
+    .card{
+      background: var(--glass) !important;
+      border: 1px solid var(--glass-border) !important;
+      box-shadow: var(--shadow) !important;
+      contain: content;
+      content-visibility: auto;
+      contain-intrinsic-size: 120px 1000px;
+    }
 .mTitle{ color: var(--text) !important; }
 .mMeta{ color: var(--muted) !important; }
 .tag{
