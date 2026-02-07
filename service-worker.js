@@ -6,8 +6,6 @@ const CORE_ASSETS = [
   "/app.js",
   "/data.js",
   "/manifest.webmanifest",
-  "/certificate-template.webp",
-  "/certificate-template.png",
   "/mission-book.pdf",
   "/jumvi_logo.webp",
   "/jumvi_logo.png",
@@ -31,6 +29,11 @@ self.addEventListener("activate", (event) => {
   );
   self.clients.claim();
 });
+
+const LARGE_ASSETS = new Set([
+  "/certificate-template.webp",
+  "/certificate-template.png"
+]);
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
@@ -56,6 +59,10 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
+      // For large assets, avoid blocking UI on first load
+      if(LARGE_ASSETS.has(url.pathname)){
+        return fetch(req);
+      }
       return fetch(req).then((res) => {
         const copy = res.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));

@@ -38,20 +38,17 @@ function lsSetDebounced(key, value, delay=500){
 }
 
 /** =======================
- * Disable zoom (iOS + desktop)
+ * Disable zoom (modern, less aggressive)
  * ======================= */
 (function disableZoom(){
-  ["gesturestart","gesturechange","gestureend"].forEach(evt=>{
-    document.addEventListener(evt, (e)=>e.preventDefault(), { passive:false });
-  });
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(!isIOS) return;
   let lastTouchEnd = 0;
   document.addEventListener("touchend", function(e){
     const now = Date.now();
     if(now - lastTouchEnd <= 300){ e.preventDefault(); }
     lastTouchEnd = now;
   }, { passive:false });
-  document.addEventListener("dblclick", (e)=>e.preventDefault(), { passive:false });
-  document.addEventListener("wheel", (e)=>{ if(e.ctrlKey) e.preventDefault(); }, { passive:false });
 })();
 
 /** =======================
@@ -106,8 +103,10 @@ const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-re
 let toastTimer = null;
 function showToast(msg){
   const el = document.getElementById("toast");
+  const live = document.getElementById("statusLive");
   if(!el) return;
   el.textContent = msg;
+  if(live) live.textContent = msg;
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=> el.classList.remove("show"), 1800);
