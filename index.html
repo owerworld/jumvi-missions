@@ -24,8 +24,10 @@
     <div class="topbar">
       <div class="brand">
         <div class="logoWrap" title="JUMVI">
-          <!-- Put jumvi_logo.png in the same GitHub folder as this HTML -->
-          <img class="logoImg" src="jumvi_logo.png" alt="JUMVI logo" onerror="this.style.display='none'; this.parentElement.textContent='J';" />
+          <picture>
+            <source srcset="jumvi_logo.webp" type="image/webp" />
+            <img class="logoImg" src="jumvi_logo.png" alt="JUMVI logo" decoding="async" onerror="this.style.display='none'; this.parentElement.textContent='J';" />
+          </picture>
         </div>
         <span>JUMVI Missions</span>
         
@@ -74,6 +76,15 @@
         </div>
       </div>
 
+      <div class="dashCard" id="parentDashboard" aria-label="Parent's Dashboard">
+        <div class="dashHeader">
+          <div class="dashTitle">Parent’s Dashboard</div>
+          <div class="dashSub">Developmental Milestone Report</div>
+        </div>
+        <div class="dashReport" id="dashReport">This week helped build focus, coordination, and confidence.</div>
+        <div class="dashBars" id="dashBars"></div>
+      </div>
+
       <div class="dailyBox" id="dailyBox" aria-label="daily mission">
         <div class="dailyLeft">
           <div class="dailyIcon" id="dailyIcon">📅</div>
@@ -100,6 +111,15 @@
           </div>
         </div>
         <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
+      </div>
+
+      <div class="seasonalCard" id="seasonalCard" aria-label="Seasonal Packs">
+        <div class="seasonalTitle">Seasonal Packs</div>
+        <div class="seasonalSub">Fresh ways to play all year.</div>
+        <div class="seasonalRow">
+          <button class="btn btnGhost seasonalBtn" type="button">🏠 Indoor/Home Edition</button>
+          <button class="btn btnGhost seasonalBtn" type="button">🏖️ Beach/Park Edition</button>
+        </div>
       </div>
 
       <div class="controls">
@@ -242,7 +262,7 @@
 
         <div class="certMetaLine" id="certMetaLine">Completed on: — • Certificate ID: —</div>
         <div class="certPreviewWrap">
-          <img id="certPreviewImg" alt="Certificate preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+          <img id="certPreviewImg" alt="Certificate preview" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
         </div>
 
         <div class="small">Tip: For best print quality, choose “Background graphics” ON in print settings.</div>
@@ -267,7 +287,7 @@
           <button class="saveCloseBtn" id="saveOverlayClose" aria-label="Close save overlay" type="button">✕</button>
         </div>
       </div>
-      <img id="saveImg" alt="Certificate image" />
+      <img id="saveImg" alt="Certificate image" loading="lazy" decoding="async" />
     </div>
   </div>
 

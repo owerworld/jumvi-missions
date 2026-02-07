@@ -278,7 +278,7 @@ function getToday(){
   }
 }
 
-const CERT_TEMPLATE_SRC = "certificate-template.png";
+const CERT_TEMPLATE_SOURCES = ["certificate-template.webp", "certificate-template.png"];
 const CERT_NAME_COLOR = "#1d4ed8";
 const CERT_META_COLOR = "#475569";
 const CERT_NAME_FONT = "700 64px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
@@ -291,6 +291,15 @@ function loadImage(src){
     img.onerror = ()=> reject(new Error("img_load_failed"));
     img.src = src;
   });
+}
+async function loadImageWithFallback(sources){
+  for(const src of sources){
+    try{
+      const img = await loadImage(src);
+      return img;
+    }catch(_){}
+  }
+  throw new Error("img_load_failed");
 }
 function fitText(ctx, text, maxWidth, startSize, fontFamily){
   let size = startSize;
@@ -308,7 +317,7 @@ async function renderSimpleCertificateBlob(){
     const dateText = getToday();
     const certId = getCertId();
 
-    const img = await loadImage(CERT_TEMPLATE_SRC);
+    const img = await loadImageWithFallback(CERT_TEMPLATE_SOURCES);
     const width = img.naturalWidth || 1600;
     const height = img.naturalHeight || 1200;
 
@@ -460,6 +469,8 @@ const mKidsTip = document.getElementById("mKidsTip");
 const mSafety= document.getElementById("mSafety");
 const mHint = document.getElementById("mHint");
 const holdHint = document.getElementById("holdHint");
+const dashReport = document.getElementById("dashReport");
+const dashBars = document.getElementById("dashBars");
 const mSmall = document.getElementById("mSmall");
 
 const btnToggleDone = document.getElementById("btnToggleDone");
@@ -779,6 +790,63 @@ function buildSoftHints(ms){
   if(String(ms.players).includes("1")) hints.push("Short, gentle tosses are best for solo play.");
   if(ms.pack === "Indoor Compact") hints.push("Keep throws low and soft indoors.");
   return hints;
+}
+
+function getWeekKey(d = new Date()){
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  return `${date.getUTCFullYear()}-W${week}`;
+}
+
+function getMilestoneLine(){
+  const pool = [
+    "This week helped build focus, coordination, and confidence.",
+    "Great progress in reflexes and teamwork this week.",
+    "Consistent play supports hand‑eye coordination.",
+    "Nice progress in aim and calm control this week."
+  ];
+  const key = getWeekKey();
+  const idx = hashFNV1a(key) % pool.length;
+  return pool[idx];
+}
+
+function renderParentDashboard(){
+  if(!dashBars || !dashReport) return;
+  dashReport.textContent = getMilestoneLine();
+  const packs = [
+    { key:"Reflex Rush", label:"Reflex" },
+    { key:"Aim Master", label:"Aim" },
+    { key:"Focus Control", label:"Focus" },
+    { key:"Team Duo", label:"Team" },
+    { key:"Indoor Compact", label:"Indoor" }
+  ];
+  const frag = document.createDocumentFragment();
+  packs.forEach(p=>{
+    const doneCount = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
+    const pct = Math.round((doneCount / 6) * 100);
+    const row = document.createElement("div");
+    row.className = "dashRow";
+    const label = document.createElement("div");
+    label.className = "dashLabel";
+    label.textContent = p.label;
+    const bar = document.createElement("div");
+    bar.className = "dashBar";
+    const fill = document.createElement("div");
+    fill.className = "dashFill";
+    fill.style.width = `${pct}%`;
+    bar.appendChild(fill);
+    const count = document.createElement("div");
+    count.className = "dashCount";
+    count.textContent = `${doneCount}/6`;
+    row.appendChild(label);
+    row.appendChild(bar);
+    row.appendChild(count);
+    frag.appendChild(row);
+  });
+  dashBars.replaceChildren(frag);
 }
 
 function mapPackToCategory(pack){
@@ -1363,6 +1431,7 @@ function updateProgress(){
   renderStreakUI();
   renderDailyUI();
   updateBadges();
+  renderParentDashboard();
 }
 
 /** =======================

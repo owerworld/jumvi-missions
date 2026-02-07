@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumvi-missions-v1";
+const CACHE_NAME = "jumvi-missions-v2";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -6,8 +6,10 @@ const CORE_ASSETS = [
   "/app.js",
   "/data.js",
   "/manifest.webmanifest",
+  "/certificate-template.webp",
   "/certificate-template.png",
   "/mission-book.pdf",
+  "/jumvi_logo.webp",
   "/jumvi_logo.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",

@@ -181,8 +181,8 @@
     }
 
     /* Progress */
-    .progressBox{
-      margin-top:16px;
+.progressBox{
+  margin-top:16px;
       display:flex; gap:12px; align-items:center; flex-wrap:wrap;
       padding:14px;
       border-radius:22px;
@@ -536,6 +536,40 @@
   font-weight:700;
   color:#6b7280;
 }
+
+/* Parent Dashboard */
+.dashCard{
+  margin-top:14px;
+  border-radius:22px;
+  border:1px solid rgba(2,6,23,0.08);
+  background:#FFFFFF;
+  padding:14px;
+  box-shadow: var(--shadow-soft);
+}
+.dashHeader{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.dashTitle{ font-weight:950; font-size:16px; color: var(--text); }
+.dashSub{ font-size:12px; color:#64748b; font-weight:700; }
+.dashReport{ margin-top:6px; font-size:13px; color:#334155; font-weight:700; }
+.dashBars{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.dashRow{ display:flex; align-items:center; gap:10px; }
+.dashLabel{ width:72px; font-size:12px; font-weight:800; color:#0f172a; }
+.dashCount{ width:48px; font-size:11px; font-weight:800; color:#475569; text-align:right; }
+.dashBar{ flex:1; height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; border:1px solid rgba(2,6,23,0.06); }
+.dashFill{ height:100%; width:0%; background: linear-gradient(90deg, var(--blue), var(--lime)); border-radius:999px; transition: width .35s ease; }
+
+/* Seasonal Packs */
+.seasonalCard{
+  margin-top:14px;
+  border-radius:22px;
+  border:1px solid rgba(2,6,23,0.08);
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  padding:14px;
+  box-shadow: var(--shadow-soft);
+}
+.seasonalTitle{ font-weight:950; font-size:16px; color: var(--text); }
+.seasonalSub{ font-size:12px; color:#64748b; font-weight:700; margin-top:4px; }
+.seasonalRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.seasonalBtn{ min-height:44px; }
 .hintBox{
   border:1px dashed rgba(2,6,23,0.2) !important;
   background:#f7fbff !important;
