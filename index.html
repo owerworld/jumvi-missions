@@ -24,9 +24,10 @@
     <div class="topbar">
       <div class="brand">
         <div class="logoWrap" title="JUMVI">
+          <span class="logoFallback">J</span>
           <picture>
             <source srcset="jumvi_logo.webp" type="image/webp" />
-            <img class="logoImg" src="jumvi_logo.png" alt="JUMVI logo" decoding="async" onerror="this.style.display='none'; this.parentElement.textContent='J';" />
+            <img class="logoImg" src="jumvi_logo.png" alt="JUMVI logo" decoding="async" onload="this.previousElementSibling && (this.previousElementSibling.style.display='none')" onerror="this.style.display='none'" />
           </picture>
         </div>
         <div class="brandText">
