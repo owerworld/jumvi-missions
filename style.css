@@ -208,6 +208,54 @@ html.theme--dark .sheet{
   opacity: .22;
   pointer-events:none;
 }
+
+/* Force readable text inside glass in dark mode */
+html.theme--dark .hero,
+html.theme--dark .progressBox,
+html.theme--dark .dailyBox,
+html.theme--dark .certBox,
+html.theme--dark .footer,
+html.theme--dark .dashCard,
+html.theme--dark .seasonalCard,
+html.theme--dark .filterGroups,
+html.theme--dark .search,
+html.theme--dark .card,
+html.theme--dark .badge,
+html.theme--dark .sheet{
+  color:#e5e7eb;
+}
+html.theme--dark .hero *,
+html.theme--dark .progressBox *,
+html.theme--dark .dailyBox *,
+html.theme--dark .certBox *,
+html.theme--dark .footer *,
+html.theme--dark .dashCard *,
+html.theme--dark .seasonalCard *,
+html.theme--dark .filterGroups *,
+html.theme--dark .search *,
+html.theme--dark .card *,
+html.theme--dark .badge *,
+html.theme--dark .sheet *{
+  color: inherit;
+}
+html.theme--dark .sub,
+html.theme--dark .pSub,
+html.theme--dark .pExtra,
+html.theme--dark .dashSub,
+html.theme--dark .dashReport,
+html.theme--dark .small{
+  color:#cbd5f5;
+}
+html.theme--dark .tag{
+  color:#e5e7eb;
+}
+html.theme--dark .chip{
+  color:#e5e7eb;
+}
+html.theme--dark .pill{
+  color:#e5e7eb;
+  background: rgba(15,23,42,0.65);
+}
     .sub b { color: var(--orange); }
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
