@@ -1572,7 +1572,7 @@ function openMission(id){
   }
 
   const isDone = done.has(ms.id);
-  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "🎉 I Did It!";
+  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "✅ Hold to Finish";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
   if(holdHint){
     holdHint.style.display = isDone ? "none" : "block";
@@ -2001,15 +2001,18 @@ let holdToFinishT = null;
 function armHoldToFinish(){
   if(lastOpenedId==null) return;
   if(done.has(lastOpenedId)) return;
+  btnToggleDone.classList.add("holding");
   if(holdToFinishT) clearTimeout(holdToFinishT);
   holdToFinishT = setTimeout(()=>{
     holdToFinishT = null;
+    btnToggleDone.classList.remove("holding");
     markMissionDone(lastOpenedId, "manual");
   }, 600);
 }
 function disarmHoldToFinish(){
   if(holdToFinishT) clearTimeout(holdToFinishT);
   holdToFinishT = null;
+  btnToggleDone.classList.remove("holding");
 }
 if(btnToggleDone){
   btnToggleDone.addEventListener("pointerdown", armHoldToFinish);

@@ -139,11 +139,29 @@
       font-size: 15px;
     }
     .btn:active{ transform: scale(.96); }
-    .btnPrimary{
-      background: linear-gradient(135deg, #4FB3FF, #2999FF);
-      color:#FFFFFF;
-      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
-    }
+.btnPrimary{
+  background: linear-gradient(135deg, #4FB3FF, #2999FF);
+  color:#FFFFFF;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+}
+
+.holdBtn{
+  position:relative;
+  overflow:hidden;
+}
+.holdBtn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(255,255,255,0.28);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s linear;
+  pointer-events:none;
+}
+.holdBtn.holding::after{
+  transform: scaleX(1);
+}
     .btnGhost{
       background: #FFFFFF;
       border:1px solid var(--border);
