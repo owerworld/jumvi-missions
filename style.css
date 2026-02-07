@@ -256,6 +256,34 @@ html.theme--dark .pill{
   color:#e5e7eb;
   background: rgba(15,23,42,0.65);
 }
+
+/* Badges modal readability in dark mode */
+html.theme--dark #badgesList > div{
+  background: rgba(255,255,255,0.92) !important;
+  border-color: rgba(2,6,23,0.1) !important;
+  color:#0f172a !important;
+}
+html.theme--dark #badgesList > div *{
+  color:#0f172a !important;
+}
+
+/* Certificate modal readability in dark mode */
+html.theme--dark #certSheet{
+  color:#e5e7eb;
+}
+html.theme--dark .certMetaLine{
+  color:#e2e8f0;
+}
+html.theme--dark #certSheet label{
+  color:#e5e7eb;
+}
+html.theme--dark #certSheet input{
+  color:#0f172a;
+  background:#ffffff;
+}
+html.theme--dark #certSheet input::placeholder{
+  color:#64748b;
+}
     .sub b { color: var(--orange); }
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
