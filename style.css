@@ -100,7 +100,10 @@ html{ -webkit-text-size-adjust:100%; }
       display:flex; align-items:center; justify-content:space-between; gap:12px;
       padding:10px 14px 10px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: var(--blue); }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:.2px; color: var(--accent-blue); }
+    .brandText{ display:flex; flex-direction:column; line-height:1.1; }
+    .brandTitle{ font-size:16px; font-weight:950; color: var(--text); }
+    .brandSub{ font-size:11px; font-weight:700; color: var(--muted); }
     .logoWrap{
       width:42px; height:42px; border-radius:14px;
       background: #FFFFFF;
@@ -135,6 +138,7 @@ html{ -webkit-text-size-adjust:100%; }
       font-weight: 800;
     }
     .topRight{ display:flex; align-items:center; gap:8px; }
+    .headerPlay{ min-height:36px; padding:8px 14px; font-size:13px; border-radius:999px; }
     .themeToggle{ cursor:pointer; }
 
     /* Hero card */

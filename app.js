@@ -480,6 +480,7 @@ const btnSeasonalClose = document.getElementById("btnSeasonalClose");
 const btnSeasonalIndoor = document.getElementById("btnSeasonalIndoor");
 const btnSeasonalOutdoor = document.getElementById("btnSeasonalOutdoor");
 const themeToggle = document.getElementById("themeToggle");
+const btnHeaderPlay = document.getElementById("btnHeaderPlay");
 const mSmall = document.getElementById("mSmall");
 
 const btnToggleDone = document.getElementById("btnToggleDone");
@@ -2422,6 +2423,13 @@ function init(){
 
   if(themeToggle){
     themeToggle.onclick = ()=>{ clickSound("click"); cycleTheme(); };
+  }
+  if(btnHeaderPlay){
+    btnHeaderPlay.onclick = ()=>{
+      clickSound("click");
+      ensureDailyMission();
+      if(dailyIdStored){ openMission(dailyIdStored); }
+    };
   }
 
   if(window.matchMedia){
