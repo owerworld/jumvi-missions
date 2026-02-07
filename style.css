@@ -278,6 +278,30 @@ html.theme--dark .tag{
 html.theme--dark .chip{
   color:#e5e7eb !important;
 }
+
+/* Dark mode: mission list & cert readability */
+html.theme--dark .card{
+  background: rgba(17,24,39,0.9) !important;
+  border-color: rgba(255,255,255,0.28) !important;
+}
+html.theme--dark .card .mTitle{
+  color:#f8fafc !important;
+}
+html.theme--dark .card .mMeta,
+html.theme--dark .card .mMeta *{
+  color:#e5e7eb !important;
+}
+html.theme--dark .certBox .certText b,
+html.theme--dark #certSub{
+  color:#f8fafc !important;
+}
+html.theme--dark .certBox{
+  background: rgba(17,24,39,0.9) !important;
+}
+html.theme--dark .certBtn.locked{
+  color:#e5e7eb;
+  background: rgba(255,255,255,0.18);
+}
 html.theme--dark .search input{
   color:#f8fafc !important;
 }
