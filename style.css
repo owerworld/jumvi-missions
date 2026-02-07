@@ -190,6 +190,24 @@ html.theme--dark .sheet{
   background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)), var(--glass);
   border-color: rgba(255,255,255,0.28);
 }
+
+/* Subtle glass noise texture */
+.hero, .progressBox, .dailyBox, .certBox, .footer, .dashCard, .seasonalCard,
+.filterGroups, .search, .card, .badge, .sheet{
+  position: relative;
+  overflow: hidden;
+}
+.hero::before, .progressBox::before, .dailyBox::before, .certBox::before, .footer::before,
+.dashCard::before, .seasonalCard::before, .filterGroups::before, .search::before,
+.card::before, .badge::before, .sheet::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-radial-gradient(circle at 0 0, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px);
+  opacity: .22;
+  pointer-events:none;
+}
     .sub b { color: var(--orange); }
 
     .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
@@ -588,6 +606,14 @@ html.theme--dark .tag.diff{
       scroll-behavior: auto;
     }
     .sheetTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .sheetHandle{
+      width:46px;
+      height:5px;
+      border-radius:999px;
+      margin:4px auto 10px;
+      background: rgba(2,6,23,0.15);
+    }
+    html.theme--dark .sheetHandle{ background: rgba(255,255,255,0.25); }
     .close{
       border:1px solid #EEE;
       background: #F5F5F5;
@@ -826,12 +852,14 @@ body[data-theme="dark"]{
       z-index:95;
       padding:14px 20px;
       border-radius: 999px;
-      border:none;
-      background: #37474F;
-      color: #FFF;
+      border:1px solid var(--glass-border);
+      background: var(--glass);
+      color: var(--text);
       font-weight:950;
       font-size:14px;
       box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
       opacity:0;
       pointer-events:none;
       transition: opacity .2s ease, transform .2s ease;
