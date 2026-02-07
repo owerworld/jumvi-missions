@@ -187,8 +187,8 @@ html.theme--dark .search,
 html.theme--dark .card,
 html.theme--dark .badge,
 html.theme--dark .sheet{
-  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)), var(--glass);
-  border-color: rgba(255,255,255,0.28);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)), var(--glass);
+  border-color: rgba(255,255,255,0.32);
 }
 
 /* Subtle glass noise texture */
@@ -256,6 +256,53 @@ html.theme--dark .pill{
   color:#e5e7eb;
   background: rgba(15,23,42,0.65);
 }
+
+/* Mission modal readability (dark) */
+html.theme--dark #sheet{
+  background: rgba(15,23,42,0.9) !important;
+  color:#e5e7eb !important;
+}
+html.theme--dark #sheet .kv,
+html.theme--dark #sheet .kv *{
+  color:#e5e7eb !important;
+}
+html.theme--dark #sheet .kv{
+  background: rgba(15,23,42,0.7) !important;
+  border-color: rgba(255,255,255,0.22) !important;
+}
+html.theme--dark #sheet .sheetTitle,
+html.theme--dark #sheet .sheetMeta,
+html.theme--dark #sheet .tag{ color:#e5e7eb !important; }
+
+/* Badges modal readability (dark) */
+html.theme--dark #badgesBackdrop .sheet{
+  background: rgba(15,23,42,0.9) !important;
+  color:#e5e7eb !important;
+}
+html.theme--dark #badgesList > div{
+  background: #f8fafc !important;
+  border-color: rgba(2,6,23,0.12) !important;
+  color:#0f172a !important;
+}
+html.theme--dark #badgesList > div *{
+  color:#0f172a !important;
+}
+
+/* Certificate modal readability (dark) */
+html.theme--dark #certSheet{
+  background: rgba(15,23,42,0.9) !important;
+  color:#e5e7eb !important;
+}
+html.theme--dark .certMetaLine{
+  color:#f8fafc !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+html.theme--dark #certSheet label{ color:#e5e7eb !important; }
+html.theme--dark #certSheet input{
+  color:#0f172a !important;
+  background:#ffffff !important;
+}
+html.theme--dark #certSheet input::placeholder{ color:#64748b !important; }
 
 /* Badges modal readability in dark mode */
 html.theme--dark #badgesList > div{
