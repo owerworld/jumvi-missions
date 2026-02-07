@@ -1475,7 +1475,7 @@ html.perf-low .bgLayer{
 
     /* Better tap targets + wrapping on small screens */
     @media (max-width: 900px){
-      .wrap{ padding-left: clamp(14px, 4vw, 28px); padding-right: clamp(14px, 4vw, 28px); }
+      .wrap{ max-width: 100%; padding-left: clamp(10px, 3vw, 20px); padding-right: clamp(10px, 3vw, 20px); }
     }
     @media (max-width: 760px){
       .card{ padding:14px; border-radius:22px; }
@@ -1509,6 +1509,8 @@ html.perf-low .bgLayer{
 .sheet .kv .v{ opacity: .95 !important; }
 
 @media (max-width: 520px){
+  .wrap{ max-width: 100%; padding:10px 10px 22px; }
+  .card{ width:100%; }
   /* Keep everything inside the viewport */
   .sheet{
     width: min(96vw, 560px) !important;
