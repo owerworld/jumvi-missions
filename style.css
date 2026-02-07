@@ -257,6 +257,56 @@ html.theme--dark .pill{
   background: rgba(15,23,42,0.65);
 }
 
+/* Ensure key labels in dark mode are readable */
+html.theme--dark .mTitle,
+html.theme--dark .dailyTitle,
+html.theme--dark .dailyName,
+html.theme--dark .dailyMeta,
+html.theme--dark .pText,
+html.theme--dark .pSub,
+html.theme--dark .pExtra,
+html.theme--dark .certText b,
+html.theme--dark #certSub,
+html.theme--dark .filterLabel,
+html.theme--dark .badgeName,
+html.theme--dark .badgeReq{
+  color:#e5e7eb !important;
+}
+html.theme--dark .tag{
+  color:#e5e7eb !important;
+}
+html.theme--dark .chip{
+  color:#e5e7eb !important;
+}
+html.theme--dark .search input{
+  color:#f8fafc !important;
+}
+html.theme--dark .search input::placeholder{
+  color:#94a3b8 !important;
+}
+
+/* Dark mode buttons inside sheets */
+html.theme--dark .btnGhost{
+  background: rgba(15,23,42,0.75) !important;
+  border-color: rgba(255,255,255,0.25) !important;
+  color:#e5e7eb !important;
+}
+html.theme--dark .btnTimer{
+  background: rgba(255,153,0,0.15) !important;
+  border-color: rgba(255,153,0,0.35) !important;
+  color:#fde68a !important;
+}
+html.theme--dark .btnPrimary{
+  color:#ffffff !important;
+}
+
+/* Daily + badges cards */
+html.theme--dark .dailyBox *,
+html.theme--dark .badgeRow *,
+html.theme--dark .card *{
+  color: inherit;
+}
+
 /* Mission modal readability (dark) */
 html.theme--dark #sheet{
   background: rgba(15,23,42,0.9) !important;
