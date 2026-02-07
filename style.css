@@ -148,6 +148,16 @@ html{ -webkit-text-size-adjust:100%; }
     }
     .topRight{ display:flex; align-items:center; gap:8px; }
     .headerPlay{ min-height:36px; padding:8px 14px; font-size:13px; border-radius:999px; }
+
+    @media (max-width: 520px){
+      .topbar{ flex-wrap:wrap; gap:8px; }
+      .brandSub{ display:none; }
+      .avatarBtn{ display:none; }
+      .pill{ display:none; }
+      .headerPlay{ min-height:32px; padding:6px 10px; font-size:12px; }
+      .logoWrap{ width:36px; height:36px; border-radius:12px; }
+      .brandTitle{ font-size:15px; }
+    }
     .themeToggle{ cursor:pointer; }
 
     /* Hero card */
