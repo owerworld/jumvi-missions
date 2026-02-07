@@ -1687,10 +1687,10 @@ function openMission(id){
   }
 
   const isDone = done.has(ms.id);
-  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "✅ Hold to Finish";
+  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "✅ Mark as Done";
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
   if(holdHint){
-    holdHint.style.display = isDone ? "none" : "block";
+    holdHint.style.display = "none";
   }
 
   mSmall.textContent = "Progress is saved on this device automatically.";
@@ -2128,52 +2128,22 @@ function renderSeasonalList(type){
   seasonalBackdrop.classList.add("show");
 }
 
-btnToggleDone.onclick = ()=>{
-  if(lastOpenedId==null) return;
-  const wasDone = done.has(lastOpenedId);
-  if(wasDone){
-    done.delete(lastOpenedId);
-  }else{
-    // Hold-to-finish handled via pointer events
-    return;
-  }
-  bumpDoneVersion();
-
-  // streak counts once per day when you complete at least one mission
-  if(!wasDone){
-    const changed = recordActivityToday();
-    if(changed && streakCount > 1) showToast(`🔥 Streak: ${streakCount} days!`);
-  }
-
-  persist();
-  renderList();
-  clickSound(wasDone ? "click" : "success");
-  if(!wasDone){ celebrate(); }
-  openMission(lastOpenedId); // refresh modal state
-};
-
-let holdToFinishT = null;
-function armHoldToFinish(){
-  if(lastOpenedId==null) return;
-  if(done.has(lastOpenedId)) return;
-  btnToggleDone.classList.add("holding");
-  if(holdToFinishT) clearTimeout(holdToFinishT);
-  holdToFinishT = setTimeout(()=>{
-    holdToFinishT = null;
-    btnToggleDone.classList.remove("holding");
-    markMissionDone(lastOpenedId, "manual");
-  }, 600);
-}
-function disarmHoldToFinish(){
-  if(holdToFinishT) clearTimeout(holdToFinishT);
-  holdToFinishT = null;
-  btnToggleDone.classList.remove("holding");
-}
+// click to mark done (no hold)
 if(btnToggleDone){
-  btnToggleDone.addEventListener("pointerdown", armHoldToFinish);
-  btnToggleDone.addEventListener("pointerup", disarmHoldToFinish);
-  btnToggleDone.addEventListener("pointercancel", disarmHoldToFinish);
-  btnToggleDone.addEventListener("pointerleave", disarmHoldToFinish);
+  btnToggleDone.onclick = ()=>{
+    if(lastOpenedId==null) return;
+    const wasDone = done.has(lastOpenedId);
+    if(wasDone){
+      done.delete(lastOpenedId);
+      bumpDoneVersion();
+      persist();
+      renderList();
+      clickSound("click");
+      openMission(lastOpenedId);
+      return;
+    }
+    markMissionDone(lastOpenedId, "manual");
+  };
 }
 
 btnNext.onclick = ()=>{
