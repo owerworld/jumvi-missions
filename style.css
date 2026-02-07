@@ -475,8 +475,8 @@ html.theme--dark #certSheet input::placeholder{
     }
     .btnTimer{
         background: #FFF3E0;
-        color: #E65100;
-        border: 1px solid #FFE0B2;
+        color: #b45309;
+        border: 1px solid #ffd7a1;
     }
 
     /* Progress */
@@ -668,8 +668,8 @@ html.theme--dark #certSheet input::placeholder{
       font-size:11px;
       font-weight:800;
     }
-.tag.pack{ background: rgba(79,179,255,0.18); color: var(--accent-blue); }
-.tag.diff{ background: rgba(255,106,0,0.18); color: var(--accent-orange); }
+.tag.pack{ background: rgba(79,179,255,0.14); color: #1f6fb2; }
+.tag.diff{ background: rgba(255,106,0,0.14); color: #b45309; }
 
 html.theme--dark .tag.pack{
   box-shadow: 0 0 0 1px rgba(79,179,255,0.35), 0 0 12px rgba(79,179,255,0.25);
@@ -1575,8 +1575,8 @@ body{
   border: 1px solid var(--glass-border) !important;
   color: var(--text) !important;
 }
-.tag.pack{ background: rgba(79,179,255,0.20) !important; color: var(--accent-blue) !important; }
-.tag.diff{ background: rgba(255,106,0,0.18) !important; color: var(--accent-orange) !important; }
+.tag.pack{ background: rgba(79,179,255,0.14) !important; color: #1f6fb2 !important; }
+.tag.diff{ background: rgba(255,106,0,0.14) !important; color: #b45309 !important; }
 
 /* Done cards (Kids mode unreadable fix) */
 .card.done{
@@ -1638,7 +1638,7 @@ body{
   background: var(--glass) !important;
   border: 1px solid var(--glass-border) !important;
 }
-#sheet .kv b{ color: var(--accent-blue) !important; }
+#sheet .kv b{ color: #1f6fb2 !important; }
 
 /* Footer actions pinned */
 #sheet > .sheetActions{
