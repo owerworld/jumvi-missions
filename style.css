@@ -984,6 +984,28 @@ html.theme--dark .tag.diff{
       font-size: 16px;
     }
     .sheetTitle{ font-weight:950; font-size:20px; color: #0f172a; }
+
+    html.theme--light .sheet{
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,252,255,0.92));
+      border-color: rgba(79,179,255,0.35);
+      color: #0f172a;
+    }
+    html.theme--light .sheet .chip,
+    html.theme--light .sheet .pill{
+      background: rgba(255,255,255,0.85);
+      border-color: rgba(79,179,255,0.25);
+      color: #0f172a;
+      box-shadow: 0 2px 10px rgba(15,23,42,0.08);
+    }
+    html.theme--light .sheet .chip.active{
+      background: rgba(79,179,255,0.24);
+      border-color: rgba(79,179,255,0.5);
+    }
+    html.theme--light .sheet .kv{
+      background: #e8f3ff;
+      border-color: rgba(79,179,255,0.35);
+      color: #0b1220;
+    }
     .sheetMeta{ margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; }
     .kv{
       margin-top:12px;
