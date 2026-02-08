@@ -13,6 +13,16 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
+  <script>
+    (function(){
+      try{
+        var mode = localStorage.getItem("jumvi_theme_v1") || "system";
+        var systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var useDark = mode === "dark" || (mode !== "light" && systemDark);
+        document.documentElement.classList.add(useDark ? "theme--dark" : "theme--light");
+      }catch(_){ }
+    })();
+  </script>
   <link rel="stylesheet" href="style.css">
 
 </head>
