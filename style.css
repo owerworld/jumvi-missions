@@ -2143,3 +2143,21 @@ html, body {
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
 }
+
+
+/* Remove bottom whitespace, keep only safe-area */
+body {
+  padding-bottom: env(safe-area-inset-bottom) !important;
+  margin-bottom: 0 !important;
+}
+#app-wrapper {
+  padding-bottom: env(safe-area-inset-bottom) !important;
+  margin-bottom: 0 !important;
+}
+.wrap, .footer, .bottom-section {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+#btnReset, #btnRandomAll, #btnBadges, #btnDailyPlay, #btnDailyNew, .btn {
+  margin-bottom: 0 !important;
+}
