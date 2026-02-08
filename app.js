@@ -893,6 +893,7 @@ function cycleTheme(){
   themeMode = setState("themeMode", order[(idx + 1) % order.length]);
   lsSet(THEME_KEY, themeMode);
   applyTheme();
+  try{ window.dispatchEvent(new Event("themechange")); }catch(_){ }
 }
 
 function mapPackToCategory(pack){

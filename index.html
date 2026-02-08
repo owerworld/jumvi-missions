@@ -24,6 +24,23 @@
     })();
   </script>
   <link rel="stylesheet" href="style.css">
+  <script>
+    (function(){
+      try{
+        var meta = document.querySelector('meta[name="theme-color"]');
+        var getBg = function(){
+          var cs = getComputedStyle(document.documentElement);
+          return (cs.getPropertyValue('--page-bg') || '#0a1628').trim();
+        };
+        var update = function(){
+          if(meta) meta.setAttribute('content', getBg());
+        };
+        update();
+        window.addEventListener('themechange', update);
+      }catch(_){ }
+    })();
+  </script>
+
 
 </head>
 
