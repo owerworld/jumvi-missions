@@ -1999,3 +1999,25 @@ body{
 .sticky.hidden{
   transform: translateY(-120%);
 }
+
+
+/* iOS Safari scroll strategy (body scroll) */
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+  position: static;
+}
+
+#app-wrapper {
+  position: relative;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+}
