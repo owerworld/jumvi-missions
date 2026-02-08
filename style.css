@@ -2161,3 +2161,18 @@ body {
 #btnReset, #btnRandomAll, #btnBadges, #btnDailyPlay, #btnDailyNew, .btn {
   margin-bottom: 0 !important;
 }
+
+
+/* Safe-area top padding for mission sheet (avoid notch overlap) */
+.sheet{
+  padding-top: calc(18px + env(safe-area-inset-top));
+}
+.sheetTop{
+  padding-top: env(safe-area-inset-top);
+}
+
+@supports (padding: max(0px)) {
+  .sheet{
+    padding-top: max(18px, calc(18px + env(safe-area-inset-top)));
+  }
+}
