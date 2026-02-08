@@ -40,7 +40,7 @@ html.theme--dark{
     *{ box-sizing:border-box; }
 html,body{ height:100%; }
 html{ -webkit-text-size-adjust:100%; }
-    body{
+body{
       margin:0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
       color:var(--text);
@@ -48,15 +48,21 @@ html{ -webkit-text-size-adjust:100%; }
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior: none;
     }
+html.theme--dark body{
+  background: #0b1220;
+}
 
     /* Fixed background layer = Sunny Day Gradient */
-    .bgLayer{
+.bgLayer{
       position:fixed; inset:0; z-index:-1;
       background: var(--bg);
       background-size: cover;
       background-attachment: fixed;
       transform: translateZ(0);
     }
+html.theme--dark .bgLayer{
+  background-color:#0b1220;
+}
 
     @media (prefers-reduced-motion: no-preference){
       @keyframes aurora {
@@ -1158,6 +1164,11 @@ html.perf-low .bgLayer{
       max-width: calc(100vw - 24px);
       text-align:center;
     }
+html.theme--dark .toast{
+  background: rgba(15,23,42,0.92);
+  border-color: rgba(255,255,255,0.25);
+  color:#e5e7eb;
+}
     .toast.show{
       opacity:1;
       transform: translateX(-50%) translateY(0);
