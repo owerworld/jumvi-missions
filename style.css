@@ -71,10 +71,10 @@ body {
 
 :root{
   /* Base theme defaults (light) to prevent flash before JS sets class */
-  --page-bg: #f3f7ff;
-  --bg: radial-gradient(circle at 20% 30%, rgba(79,179,255,0.25), transparent 70%),
-        radial-gradient(circle at 80% 70%, rgba(151,215,0,0.22), transparent 70%),
-        linear-gradient(115deg, rgba(79,179,255,0.15), rgba(151,215,0,0.15));
+  --page-bg: #e9f2ff;
+  --bg: radial-gradient(circle at 20% 25%, rgba(79,179,255,0.42), transparent 65%),
+        radial-gradient(circle at 85% 70%, rgba(151,215,0,0.28), transparent 68%),
+        linear-gradient(115deg, rgba(79,179,255,0.22), rgba(151,215,0,0.18));
   --text: #0a0a0a;
   --muted: #64748b;
   --glass: rgba(255,255,255,0.45);
@@ -103,10 +103,10 @@ body {
 }
 
 html.theme--light{
-  --page-bg: #f3f7ff;
-  --bg: radial-gradient(circle at 20% 30%, rgba(79,179,255,0.25), transparent 70%),
-        radial-gradient(circle at 80% 70%, rgba(151,215,0,0.22), transparent 70%),
-        linear-gradient(115deg, rgba(79,179,255,0.15), rgba(151,215,0,0.15));
+  --page-bg: #e9f2ff;
+  --bg: radial-gradient(circle at 20% 25%, rgba(79,179,255,0.42), transparent 65%),
+        radial-gradient(circle at 85% 70%, rgba(151,215,0,0.28), transparent 68%),
+        linear-gradient(115deg, rgba(79,179,255,0.22), rgba(151,215,0,0.18));
   --text: #0a0a0a;
   --muted: #64748b;
   --glass: rgba(255,255,255,0.45);
@@ -1429,7 +1429,7 @@ html.theme--dark .toast{
   
     /* ===== Add-on features (Daily Mission, Streak, Backup, A2HS, Modes) ===== */
     body.solidBg .bgLayer{
-      background: linear-gradient(180deg, #E1F5FE 0%, #E1F5FE 100%) !important;
+      background: linear-gradient(180deg, #cfe6ff 0%, #e9f6ff 100%) !important;
     }
 
     /* A2HS banner */
