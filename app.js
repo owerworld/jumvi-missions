@@ -2453,4 +2453,26 @@ function init(){
     buildCertificate();
   }
 }
+
+// Hide header on scroll down (iOS Safari friendly)
+(function hideHeaderOnScroll(){
+  const wrap = document.getElementById("app-wrapper");
+  const sticky = document.querySelector(".sticky");
+  if(!wrap || !sticky) return;
+  let last = 0;
+  let ticking = false;
+  const onScroll = ()=>{
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(()=>{
+      const y = wrap.scrollTop;
+      const goingDown = y > last && y > 8;
+      sticky.classList.toggle("hidden", goingDown);
+      last = y;
+      ticking = false;
+    });
+  };
+  wrap.addEventListener("scroll", onScroll, { passive:true });
+})();
+
 init();
