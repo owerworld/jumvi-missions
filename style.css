@@ -2021,3 +2021,22 @@ body {
   min-height: 100%;
   overflow: visible;
 }
+
+
+/* iOS PWA safe-area fix */
+html {
+  background-color: var(--page-bg);
+  height: -webkit-fill-available;
+}
+
+body {
+  background-color: var(--page-bg);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.footer, .bottom-section {
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
