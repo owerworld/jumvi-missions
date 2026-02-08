@@ -2176,3 +2176,52 @@ body {
     padding-top: max(18px, calc(18px + env(safe-area-inset-top)));
   }
 }
+
+
+/* Mission sheet visual polish */
+.sheet{
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+.sheetMeta .chip{
+  font-weight: 800;
+  padding: 8px 12px;
+}
+
+html.theme--light .sheet{
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,249,255,0.98));
+  border-color: rgba(15,23,42,0.18);
+  box-shadow: 0 -16px 40px rgba(15,23,42,0.12);
+}
+html.theme--light .sheet .kv{
+  background: #ffffff;
+  border-color: rgba(15,23,42,0.12);
+  box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+}
+html.theme--light .sheet .kv b{
+  color:#0b1220;
+}
+
+html.theme--dark .sheet{
+  background: linear-gradient(180deg, rgba(8,13,26,0.98), rgba(6,10,20,0.98));
+  border-color: rgba(255,255,255,0.16);
+  box-shadow: 0 -18px 44px rgba(0,0,0,0.55);
+}
+html.theme--dark .sheet .kv{
+  background: rgba(6,10,20,0.85);
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+/* Buttons inside sheet: clearer hierarchy */
+#sheet .btnPrimary{
+  box-shadow: 0 10px 22px rgba(79,179,255,0.28);
+}
+#sheet .btnGhost{
+  background: rgba(255,255,255,0.85);
+  border-color: rgba(15,23,42,0.14);
+}
+html.theme--dark #sheet .btnGhost{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+}
