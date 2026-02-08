@@ -2123,3 +2123,23 @@ html.theme--dark .sheet .kv{
 }
 
 .btn{ min-height:44px; }
+
+
+/* FIX: prevent background/page scroll in all themes */
+html, body {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#app-wrapper {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
