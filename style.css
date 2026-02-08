@@ -2063,3 +2063,27 @@ html.theme--light .dashReport,
 html.theme--light .badgeReq {
   color: #2b2b2b;
 }
+
+
+/* Force scroll on wrapper to keep background fixed (iOS) */
+html, body {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+#app-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bgLayer{
+  background-attachment: scroll;
+}
