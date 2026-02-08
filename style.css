@@ -2121,3 +2121,5 @@ html.theme--dark .sheet .kv{
   border-color: rgba(255,255,255,0.14);
   color: #e5e7eb;
 }
+
+.btn{ min-height:44px; }

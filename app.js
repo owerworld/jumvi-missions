@@ -1026,6 +1026,30 @@ function isIOSWeb(){
 function isStandalone(){
   return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
 }
+
+// Android Add to Home Screen prompt
+let deferredInstallPrompt = null;
+const btnA2hsInstall = document.getElementById("btnA2hsInstall");
+window.addEventListener("beforeinstallprompt", (e)=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  if(a2hsBanner && !isStandalone()) {
+    if(a2hsHint) a2hsHint.textContent = "Install JUMVI for quick access.";
+    const steps = document.getElementById("a2hsSteps");
+    if(steps) steps.textContent = "Tap Install";
+    a2hsBanner.style.display = "flex";
+  }
+});
+if(btnA2hsInstall){
+  btnA2hsInstall.onclick = async ()=>{
+    if(!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    try{ await deferredInstallPrompt.userChoice; }catch(_){ }
+    deferredInstallPrompt = null;
+    if(a2hsBanner) a2hsBanner.style.display = "none";
+  };
+}
+
 function maybeShowA2HS(){
   if(!a2hsBanner) return;
   if(!isIOSWeb()) return;
