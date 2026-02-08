@@ -131,8 +131,8 @@ body {
   --bg: radial-gradient(circle at 20% 25%, rgba(79,179,255,0.42), transparent 65%),
         radial-gradient(circle at 85% 70%, rgba(151,215,0,0.28), transparent 68%),
         linear-gradient(115deg, rgba(79,179,255,0.22), rgba(151,215,0,0.18));
-  --text: #0a0a0a;
-  --muted: #64748b;
+  --text: #1a1a1a;
+  --muted: #2b2b2b;
   --glass: rgba(255,255,255,0.45);
   --glass-border: rgba(255,255,255,0.8);
   --shadow: rgba(0,0,0,0.06);
@@ -163,8 +163,8 @@ html.theme--light{
   --bg: radial-gradient(circle at 20% 25%, rgba(79,179,255,0.42), transparent 65%),
         radial-gradient(circle at 85% 70%, rgba(151,215,0,0.28), transparent 68%),
         linear-gradient(115deg, rgba(79,179,255,0.22), rgba(151,215,0,0.18));
-  --text: #0a0a0a;
-  --muted: #64748b;
+  --text: #1a1a1a;
+  --muted: #2b2b2b;
   --glass: rgba(255,255,255,0.45);
   --glass-border: rgba(255,255,255,0.8);
   --shadow: rgba(0,0,0,0.06);
@@ -2039,4 +2039,27 @@ body {
 
 .footer, .bottom-section {
   padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+
+html.theme--light body,
+html.theme--light .wrap,
+html.theme--light .sheet,
+html.theme--light .kv,
+html.theme--light .card,
+html.theme--light .pill,
+html.theme--light .chip,
+html.theme--light .badge,
+html.theme--light .search input {
+  color: #1a1a1a;
+}
+
+html.theme--light .body,
+html.theme--light .sub,
+html.theme--light .small,
+html.theme--light .holdHint,
+html.theme--light .dashSub,
+html.theme--light .dashReport,
+html.theme--light .badgeReq {
+  color: #2b2b2b;
 }
