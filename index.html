@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8" />
   <!-- Mobile-first: lock zoom (per your request) + notch safe area -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>JUMVI Missions</title>
   <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
-  <meta name="theme-color" content="#4FB3FF" />
+  <meta name="theme-color" content="#0a1628" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <link rel="stylesheet" href="style.css">
 
@@ -19,6 +19,7 @@
 
 <body>
   <div class="bgLayer" aria-hidden="true"></div>
+  <div class="app-shell">
 
   <div class="sticky">
     <div class="topbar">
@@ -328,6 +329,7 @@
       </div>
     </div>
   </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
 <script src="data.js" defer></script>
@@ -339,3 +341,6 @@
     });
   }
 </script>
+
+</body>
+</html>
