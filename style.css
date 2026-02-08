@@ -6,14 +6,14 @@
 
 html, 
 html {
-  background-color: #0a1628;
+  background-color: var(--page-bg);
 }
 
 body::before {
   content: "";
   position: fixed;
   inset: -50vh 0;
-  background-color: #0a1628;
+  background-color: var(--page-bg);
   z-index: -2;
 }
 body {
@@ -24,14 +24,14 @@ body {
   overflow-x: hidden;
   position: fixed;
   -webkit-overflow-scrolling: touch;
-  background-color: #0a1628;
+  background-color: var(--page-bg);
 }
 
 body {
   min-height: 100vh;
   min-height: 100svh;
   min-height: -webkit-fill-available;
-  background-color: #0a1628;
+  background-color: var(--page-bg);
 }
 
 #root, #app, .main-container {
@@ -40,7 +40,7 @@ body {
   min-height: 100svh;
   min-height: -webkit-fill-available;
   position: relative;
-  background-color: #0a1628;
+  background-color: var(--page-bg);
 }
 
 .app-shell {
@@ -52,7 +52,7 @@ body {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
   position: relative;
-  background-color: #0a1628;
+  background-color: var(--page-bg);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -68,6 +68,7 @@ body {
 }
 
 html.theme--light{
+  --page-bg: #f8fafc;
   --bg: radial-gradient(circle at 20% 30%, rgba(79,179,255,0.25), transparent 70%),
         radial-gradient(circle at 80% 70%, rgba(151,215,0,0.22), transparent 70%),
         linear-gradient(115deg, rgba(79,179,255,0.15), rgba(151,215,0,0.15));
@@ -82,6 +83,7 @@ html.theme--light{
 }
 
 html.theme--dark{
+  --page-bg: #0a1628;
   --bg: radial-gradient(circle at 20% 30%, rgba(79,179,255,0.18), transparent 70%),
         radial-gradient(circle at 80% 70%, rgba(151,215,0,0.12), transparent 70%),
         linear-gradient(115deg, #0a1e2a, #02220a);
@@ -102,12 +104,12 @@ body{
       margin:0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
       color:var(--text);
-      background: #0a1628;
+      background: var(--page-bg);
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior: none;
     }
 html.theme--dark body{
-  background: #0a1628;
+  background: var(--page-bg);
 }
 
     /* Fixed background layer = Sunny Day Gradient */
@@ -119,7 +121,7 @@ html.theme--dark body{
       transform: translateZ(0);
     }
 html.theme--dark .bgLayer{
-  background-color:#0a1628;
+  background-color: var(--page-bg);
 }
 
     @media (prefers-reduced-motion: no-preference){
