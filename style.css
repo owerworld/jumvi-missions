@@ -127,7 +127,7 @@ body {
 
 :root{
   /* Base theme defaults (light) to prevent flash before JS sets class */
-  --page-bg: #e9f2ff;
+  --page-bg: ;
   --bg: radial-gradient(circle at 20% 25%, rgba(79,179,255,0.42), transparent 65%),
         radial-gradient(circle at 85% 70%, rgba(151,215,0,0.28), transparent 68%),
         linear-gradient(115deg, rgba(79,179,255,0.22), rgba(151,215,0,0.18));
@@ -159,7 +159,7 @@ body {
 }
 
 html.theme--light{
-  --page-bg: #e9f2ff;
+  --page-bg: ;
   --bg: radial-gradient(circle at 20% 25%, rgba(79,179,255,0.42), transparent 65%),
         radial-gradient(circle at 85% 70%, rgba(151,215,0,0.28), transparent 68%),
         linear-gradient(115deg, rgba(79,179,255,0.22), rgba(151,215,0,0.18));
