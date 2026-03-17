@@ -2258,27 +2258,33 @@ html.theme--dark #sheet .btnGhost{
   color: #e5e7eb;
 }
 
-/* Light mode modal fix v20260317 */
+/* Light mode modal fix v20260318 */
 html.theme--light .backdrop {
   background: rgba(60, 100, 160, 0.30) !important;
 }
-html.theme--light .sheet {
-  background: rgba(255, 255, 255, 0.94) !important;
+html.theme--light .sheet,
+html.theme--light #sheet {
+  background: rgba(255, 255, 255, 0.96) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.12) !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.14) !important;
 }
+html.theme--light .sheet .kv,
+html.theme--light #sheet .kv,
 html.theme--light .kv {
-  background: rgba(245, 249, 255, 0.92) !important;
-  border: 1px solid rgba(79, 179, 255, 0.18) !important;
+  background: rgba(248, 251, 255, 0.97) !important;
+  border: 1px solid rgba(79, 179, 255, 0.20) !important;
 }
-html.theme--light .kv,
+html.theme--light .sheet .kv *,
+html.theme--light #sheet .kv *,
 html.theme--light .kv * {
   color: #1a1a1a !important;
 }
-html.theme--light .sheetTitle {
+html.theme--light .sheetTitle,
+html.theme--light .sheet .sheetTitle {
   color: #111 !important;
 }
-html.theme--light .sheetMeta {
+html.theme--light .sheetMeta,
+html.theme--light .sheet .sheetMeta {
   color: #444 !important;
 }
