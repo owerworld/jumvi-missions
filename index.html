@@ -24,7 +24,10 @@
       }catch(_){ }
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=20260318-1">
+  <!-- Preload above-the-fold assets -->
+  <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
+  <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
+  <link rel="stylesheet" href="style.css?v=20260319-1">
   <script>
     (function(){
       try{
@@ -53,12 +56,8 @@
     <div class="topbar">
       <div class="brand">
         <div class="logoWrap" title="JUMVI">
-          <picture class="logoPic">
-            <source media="(prefers-color-scheme: dark)" srcset="jumvi_logo_light.webp" type="image/webp" />
-            <source media="(prefers-color-scheme: dark)" srcset="jumvi_logo_light.png" type="image/png" />
-            <source srcset="jumvi_logo_dark.webp" type="image/webp" />
-            <img class="logoImg" src="jumvi_logo_dark.png" alt="JUMVI logo" decoding="async" />
-          </picture>
+          <img class="logoImg logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" fetchpriority="high" />
+          <img class="logoImg logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
         </div>
         <div class="brandText">
           <div class="brandTitle">JUMVI Missions</div>
@@ -82,8 +81,11 @@
       <p class="sub">
         Pick a mission, play together, and tap Done to track progress.
         <br>Build reflex • focus • teamwork • confidence
-        <br><b>Safe play tips:</b> throw below face level, keep 1–3 meters distance, play with adult supervision.
       </p>
+      <details class="safetyDetails">
+        <summary>⚠️ Safe play tips</summary>
+        Throw below face level · keep 1–3 m distance · adult supervision required.
+      </details>
 
       <div class="a2hs" id="a2hsBanner" style="display:none;">
         <div class="a2hsText">
@@ -98,7 +100,6 @@
       <div class="row">
         <button class="btn btnPrimary" id="btnRandomAll" aria-label="Pick a random mission">🎲 Random</button>
         <button class="btn btnGhost" id="btnBadges" aria-label="Open badges">🏅 Badges</button>
-        <button class="btn btnLime" id="btnReset" aria-label="Reset progress">Reset</button>
       </div>
 
       <div class="progressBox" aria-label="progress">
@@ -153,11 +154,12 @@
       </div>
 
       <div class="seasonalCard" id="seasonalCard" aria-label="Seasonal Packs">
-        <div class="seasonalTitle">Seasonal Packs</div>
-        <div class="seasonalSub">Fresh ways to play all year.</div>
-        <div class="seasonalRow">
-          <button class="btn btnGhost seasonalBtn" id="btnSeasonalIndoor" type="button">🏠 Indoor/Home Edition</button>
-          <button class="btn btnGhost seasonalBtn" id="btnSeasonalOutdoor" type="button">🏖️ Beach/Park Edition</button>
+        <div class="seasonalHeader">
+          <div class="seasonalTitle">Seasonal Packs</div>
+          <div class="seasonalRow">
+            <button class="btn btnGhost seasonalBtn" id="btnSeasonalIndoor" type="button">🏠 Indoor</button>
+            <button class="btn btnGhost seasonalBtn" id="btnSeasonalOutdoor" type="button">🏖️ Beach/Park</button>
+          </div>
         </div>
       </div>
 
@@ -207,6 +209,9 @@
       <div class="small">Adult supervision required.</div>
       <div class="small">
         Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
+      </div>
+      <div style="margin-top:14px;">
+        <button class="btn btnResetFooter" id="btnReset" aria-label="Reset progress">🗑️ Reset Progress</button>
       </div>
     </section>
   </div>
@@ -329,6 +334,8 @@
   <!-- Floating sound toggle -->
   <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
   <div id="statusLive" class="sr-only" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="assertive" aria-atomic="true"></div>
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 
   <!-- iOS-friendly Save overlay (no extra main buttons) -->
   <div class="saveOverlay" id="saveOverlay" aria-hidden="true">
@@ -360,13 +367,13 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
-<script src="data.js?v=20260318-1" defer></script>
-<script src="app.js?v=20260318-1" defer></script>
+<script src="confetti.min.js?v=20260319-1" defer></script>
+<script src="data.js?v=20260319-1" defer></script>
+<script src="app.js?v=20260319-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260318-1").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-1").catch(()=>{});
     });
   }
 </script>

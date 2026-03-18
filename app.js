@@ -385,7 +385,7 @@ const THEME_KEY         = "jumvi_theme_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
-const DIFFICULTY_OPTIONS = ["all","Easy","Medium","Hard"];
+const DIFFICULTY_OPTIONS = ["all","Easy","Medium"];
 const AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
 
 const state = {
@@ -1441,11 +1441,11 @@ function updateBadges(){
   badgesList.innerHTML = BADGES.map(b=>{
     const ok = !!b.check(done);
     return `
-      <div style="display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:14px; border:1px solid rgba(0,0,0,.1); background: #F5F5F5; margin-top:10px;">
+      <div class="badgesListItem">
         <div style="font-size:22px; width:34px">${b.icon}</div>
         <div style="flex:1">
-          <div style="font-weight:950; color: var(--blue);">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
-          <div style="color: #546E7A; font-size:12px; font-weight:850; margin-top:3px">${escapeHtml(b.req)}</div>
+          <div class="badgesListName">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
+          <div class="badgesListReq">${escapeHtml(b.req)}</div>
         </div>
       </div>
     `;
@@ -1503,6 +1503,8 @@ function updateProgress(){
   renderDailyUI();
   updateBadges();
   renderParentDashboard();
+  const dash = document.getElementById("parentDashboard");
+  if(dash) dash.style.display = done.size === 0 ? "none" : "";
 }
 
 /** =======================
@@ -2136,7 +2138,7 @@ function renderSeasonalList(type){
     row.innerHTML = `
       <div style="font-size:18px; width:26px; text-align:center">${ms.icon}</div>
       <div style="flex:1">
-        <div style="font-weight:900; color:#0f172a">${escapeHtml(ms.title)}</div>
+        <div class="seasonalItemTitle">${escapeHtml(ms.title)}</div>
         <div style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap">
           <span class="tag pack">${escapeHtml(ms.pack)}</span>
           <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
@@ -2440,6 +2442,8 @@ function init(){
   renderSoundToggle();
   renderFilters();
   renderFilterGroups();
+  const _dash = document.getElementById("parentDashboard");
+  if(_dash) _dash.style.display = done.size === 0 ? "none" : "";
   renderList();
 
   renderStreakUI();

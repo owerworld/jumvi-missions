@@ -1,10 +1,12 @@
 {
   "name": "JUMVI Missions",
   "short_name": "JUMVI",
+  "description": "30 toss & catch missions for kids — play, track progress, earn a certificate.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "",
-  "theme_color": "#0a1628",
+  "orientation": "portrait",
+  "background_color": "#f5f9ff",
+  "theme_color": "#4FB3FF",
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -17,6 +19,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
