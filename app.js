@@ -353,6 +353,15 @@ async function renderSimpleCertificateBlob(){
   ctx.fillText(m1, metaX, metaY);
   ctx.fillText(m2, metaX, metaY + lineGap);
 
+    // Footer branding
+    const footerY = height * 0.965;
+    const footerSize = Math.round(width * 0.018);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `600 ${footerSize}px 'Helvetica Neue', Arial, sans-serif`;
+    ctx.fillStyle = "rgba(80,80,100,0.55)";
+    ctx.fillText("🎾 Played with JUMVI Toss & Catch Paddle Set", width * 0.5, footerY);
+
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){
     return null;
@@ -811,6 +820,26 @@ function getWeekKey(d = new Date()){
   return `${date.getUTCFullYear()}-W${week}`;
 }
 
+function parseTimeSecs(timeStr){
+  if(!timeStr) return 60;
+  const m = String(timeStr).match(/(\d+)/);
+  return m ? parseInt(m[1], 10) : 60;
+}
+
+function getEstimatedPlayMinutes(){
+  let total = 0;
+  for(const id of done){
+    const ms = missions.find(x=>x.id===id);
+    if(ms) total += parseTimeSecs(ms.time);
+  }
+  return Math.round(total / 60);
+}
+
+function getTopSkill(counts){
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0);
+  return top.length ? top[0][0] : null;
+}
+
 function getMilestoneLine(counts){
   const top = Object.entries(counts)
     .sort((a,b)=>b[1]-a[1])
@@ -866,6 +895,25 @@ function renderParentDashboard(){
   });
   dashBars.replaceChildren(frag);
   dashReport.textContent = getMilestoneLine(counts);
+
+  // Stats row
+  const statsEl = document.getElementById("dashStats");
+  if(statsEl){
+    const mins = getEstimatedPlayMinutes();
+    const topSkill = getTopSkill(counts);
+    const topSkillPack = topSkill ? [
+      { key:"Reflex Rush", label:"Reflex", icon:"⚡" },
+      { key:"Aim Master", label:"Aim", icon:"🎯" },
+      { key:"Focus Control", label:"Focus", icon:"🧘" },
+      { key:"Team Duo", label:"Team", icon:"👥" },
+      { key:"Indoor Compact", label:"Indoor", icon:"🏠" }
+    ].find(p=>p.label===topSkill) : null;
+    statsEl.innerHTML = `
+      <div class="dashStatItem"><span class="dashStatVal">${mins}</span><span class="dashStatLbl">min total play</span></div>
+      <div class="dashStatItem"><span class="dashStatVal">${streakCount}</span><span class="dashStatLbl">day streak</span></div>
+      ${topSkillPack ? `<div class="dashStatItem"><span class="dashStatVal">${topSkillPack.icon}</span><span class="dashStatLbl">top skill: ${topSkillPack.label}</span></div>` : ""}
+    `;
+  }
 }
 
 function applyTheme(){
@@ -1505,6 +1553,22 @@ function updateProgress(){
   renderParentDashboard();
   const dash = document.getElementById("parentDashboard");
   if(dash) dash.style.display = done.size === 0 ? "none" : "";
+  renderShareCard();
+}
+
+function renderShareCard(){
+  const card = document.getElementById("shareScoreCard");
+  if(!card) return;
+  if(done.size === 0){ card.style.display = "none"; return; }
+  card.style.display = "";
+  document.getElementById("shareScoreNum").textContent = done.size;
+  // Pick best unlocked badge (last in priority order)
+  let topBadge = null;
+  for(const b of BADGES){
+    if(b.check(done)) topBadge = b;
+  }
+  const badgeEl = document.getElementById("shareScoreBadge");
+  badgeEl.textContent = topBadge ? `${topBadge.icon} ${topBadge.name}` : "";
 }
 
 /** =======================
@@ -1993,6 +2057,41 @@ async function downloadCertificatePNG({auto=true}={}){
 }
 
 
+async function shareCertificate(){
+  clickSound("click");
+  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+  try{
+    const blob = await renderSimpleCertificateBlob();
+    if(!blob){ showToast("Couldn't generate certificate."); return; }
+    const file = new File([blob], filename, {type:"image/png"});
+    if(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:"JUMVI Champion Certificate", text:"🏆 Completed all 30 JUMVI missions!"});
+    }else if(navigator.share){
+      const url = URL.createObjectURL(blob);
+      await navigator.share({title:"JUMVI Champion Certificate", text:"🏆 Completed all 30 JUMVI missions!", url: location.href});
+      setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+    }else{
+      // Desktop: trigger download
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+      showToast("Certificate saved!");
+    }
+  }catch(e){
+    if(e.name !== "AbortError") showToast("Share failed. Try Save as Image.");
+  }
+}
+
+async function shareCertificateWhatsApp(){
+  clickSound("click");
+  const name = (certNameInput && certNameInput.value || "").trim();
+  const namePart = name ? ` ${name}` : "";
+  const text = `🏆${namePart} completed all 30 JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+}
+
 async function downloadCertificatePDF(){
   const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.pdf`;
@@ -2071,6 +2170,15 @@ if(btnCertSavePdf){
     buildCertificate();
     downloadCertificatePDF();
   };
+}
+
+const btnCertShare = document.getElementById("btnCertShare");
+const btnCertWhatsApp = document.getElementById("btnCertWhatsApp");
+if(btnCertShare){
+  btnCertShare.onclick = ()=>{ buildCertificate(); shareCertificate(); };
+}
+if(btnCertWhatsApp){
+  btnCertWhatsApp.onclick = ()=>{ shareCertificateWhatsApp(); };
 }
 
 // Open certificate (only if unlocked)
@@ -2235,6 +2343,87 @@ if(btnSeasonalIndoor){
 if(btnSeasonalOutdoor){
   btnSeasonalOutdoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("outdoor"); };
 }
+
+// Parent Dashboard — Print Report
+const btnDashPrint = document.getElementById("btnDashPrint");
+if(btnDashPrint){
+  btnDashPrint.onclick = ()=>{
+    clickSound("click");
+    const packs = [
+      { key:"Reflex Rush", label:"Reflex", icon:"⚡" },
+      { key:"Aim Master", label:"Aim", icon:"🎯" },
+      { key:"Focus Control", label:"Focus", icon:"🧘" },
+      { key:"Team Duo", label:"Team", icon:"👥" },
+      { key:"Indoor Compact", label:"Indoor", icon:"🏠" }
+    ];
+    const rows = packs.map(p=>{
+      const n = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
+      const bar = "█".repeat(n) + "░".repeat(6-n);
+      return `<tr><td>${p.icon} ${p.label}</td><td style="font-family:monospace;letter-spacing:1px">${bar}</td><td>${n}/6</td></tr>`;
+    }).join("");
+    const mins = getEstimatedPlayMinutes();
+    const dateStr = getToday();
+    const html = `<!doctype html><html><head><meta charset="utf-8">
+<title>JUMVI Weekly Report</title>
+<style>
+  body{font-family:-apple-system,Arial,sans-serif;max-width:520px;margin:40px auto;padding:20px;color:#0f172a;}
+  h1{font-size:22px;margin-bottom:4px;}
+  .sub{color:#64748b;font-size:13px;margin-bottom:24px;}
+  table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+  td{padding:8px 6px;font-size:14px;border-bottom:1px solid #e5e7eb;}
+  td:last-child{text-align:right;font-weight:700;}
+  .stats{display:flex;gap:24px;margin-bottom:20px;}
+  .stat{text-align:center;}
+  .statVal{font-size:28px;font-weight:900;color:#4FB3FF;}
+  .statLbl{font-size:12px;color:#64748b;font-weight:600;}
+  .footer{margin-top:32px;font-size:11px;color:#94a3b8;border-top:1px solid #e5e7eb;padding-top:12px;}
+  @media print{body{margin:20px;}}
+</style></head><body>
+<h1>🎾 JUMVI Missions — Parent Report</h1>
+<div class="sub">Generated: ${dateStr}</div>
+<div class="stats">
+  <div class="stat"><div class="statVal">${done.size}</div><div class="statLbl">missions done</div></div>
+  <div class="stat"><div class="statVal">${mins}</div><div class="statLbl">min total play</div></div>
+  <div class="stat"><div class="statVal">${streakCount}</div><div class="statLbl">day streak</div></div>
+</div>
+<table>${rows}</table>
+<div class="footer">JUMVI Toss &amp; Catch Paddle Set • jumvi.co • Progress saved on device</div>
+</body></html>`;
+    const win = window.open("", "_blank", "width=580,height=680");
+    if(win){
+      win.document.write(html);
+      win.document.close();
+      setTimeout(()=>{ try{ win.print(); }catch(_){ } }, 400);
+    }
+  };
+}
+
+// Share Score Card buttons
+document.getElementById("btnShareWhatsApp").onclick = ()=>{
+  clickSound("click");
+  const url = location.href;
+  let topBadge = null;
+  for(const b of BADGES){ if(b.check(done)) topBadge = b; }
+  const badgePart = topBadge ? `Top badge: ${topBadge.icon} ${topBadge.name}\n` : "";
+  const text = `🎯 We completed ${done.size}/30 JUMVI missions!\n${badgePart}Try it: ${url}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+};
+document.getElementById("btnShareCopy").onclick = async ()=>{
+  clickSound("click");
+  const url = location.href;
+  let topBadge = null;
+  for(const b of BADGES){ if(b.check(done)) topBadge = b; }
+  const badgePart = topBadge ? ` | Badge: ${topBadge.icon} ${topBadge.name}` : "";
+  const text = `🎯 ${done.size}/30 JUMVI missions completed${badgePart} → ${url}`;
+  try{
+    if(navigator.share){
+      await navigator.share({ title:"JUMVI Missions", text, url });
+    }else{
+      await navigator.clipboard.writeText(text);
+      showToast("Copied to clipboard!");
+    }
+  }catch(e){}
+};
 
 document.getElementById("btnShare").onclick = async ()=>{
   clickSound("click");

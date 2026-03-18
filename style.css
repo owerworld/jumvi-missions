@@ -1061,6 +1061,84 @@ html.theme--dark .tag.diff{
   color:#6b7280;
 }
 
+/* Share Score Card */
+.shareScoreCard{
+  margin-top:14px;
+  border-radius:22px;
+  border:1px solid rgba(79,179,255,0.25);
+  background: linear-gradient(135deg, #e8f4ff 0%, #f0fdf4 100%);
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  box-shadow: 0 2px 10px rgba(79,179,255,0.12);
+}
+html.theme--dark .shareScoreCard{
+  background: linear-gradient(135deg, rgba(79,179,255,0.12) 0%, rgba(163,230,53,0.08) 100%);
+  border-color: rgba(79,179,255,0.2);
+}
+.shareScoreLeft{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  min-width:54px;
+}
+.shareScoreNum{
+  font-size:32px;
+  font-weight:950;
+  line-height:1;
+  color: var(--blue);
+}
+.shareScoreMeta{
+  font-size:10px;
+  font-weight:700;
+  color: var(--muted);
+  white-space:nowrap;
+}
+.shareScoreBadge{
+  margin-top:4px;
+  font-size:11px;
+  font-weight:700;
+  color: var(--text);
+  text-align:center;
+  background: rgba(79,179,255,0.12);
+  border-radius:999px;
+  padding:2px 8px;
+  display:none;
+}
+.shareScoreBadge:not(:empty){ display:block; }
+.shareScoreRight{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.shareScoreTitle{
+  font-size:14px;
+  font-weight:800;
+  color: var(--text);
+}
+.shareScoreBtns{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.shareWhatsAppBtn{
+  background:#25D366;
+  color:#fff;
+  border:none;
+  font-size:13px;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:700;
+}
+.shareWhatsAppBtn:active{ opacity:0.85; }
+.shareCopyBtn{
+  font-size:13px;
+  padding:8px 14px;
+}
+
 /* Parent Dashboard */
 .dashCard{
   margin-top:14px;
@@ -1076,6 +1154,64 @@ html.theme--dark .tag.diff{
 .dashReport{ margin-top:6px; font-size:13px; color:#334155; font-weight:700; }
 .dashReport{ color: var(--text); }
 .dashSub{ color: var(--muted); }
+.dashStats{
+  display:flex;
+  gap:0;
+  margin-top:10px;
+  margin-bottom:4px;
+  border:1px solid rgba(2,6,23,0.07);
+  border-radius:14px;
+  overflow:hidden;
+}
+.dashStatItem{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:8px 4px;
+  border-right:1px solid rgba(2,6,23,0.07);
+  background: rgba(248,250,255,0.7);
+}
+.dashStatItem:last-child{ border-right:none; }
+.dashStatVal{
+  font-size:20px;
+  font-weight:950;
+  color: var(--blue);
+  line-height:1.1;
+}
+.dashStatLbl{
+  font-size:9px;
+  font-weight:700;
+  color: var(--muted);
+  text-align:center;
+  margin-top:2px;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+}
+html.theme--dark .dashStatItem{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+html.theme--dark .dashStats{
+  border-color: rgba(255,255,255,0.08);
+}
+.dashFooter{
+  margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+}
+.dashPrintBtn{
+  font-size:12px;
+  padding:6px 14px;
+  border-radius:999px;
+  background: transparent;
+  border:1px solid rgba(2,6,23,0.15);
+  color: var(--muted);
+  font-weight:700;
+  cursor:pointer;
+}
+.dashPrintBtn:active{ opacity:0.7; }
+html.theme--dark .dashPrintBtn{ border-color: rgba(255,255,255,0.15); }
 .dashBars{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 .dashRow{ display:flex; align-items:center; gap:10px; }
 .dashIcon{ width:22px; font-size:16px; text-align:center; }
@@ -1358,9 +1494,29 @@ html.theme--dark .toast{
 
     .certControls{
       display:flex;
-      gap:10px;
+      gap:8px;
       flex-wrap:wrap;
     }
+    .certShareBtn{
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color:#fff;
+      border:none;
+      font-weight:700;
+      font-size:13px;
+      padding:8px 14px;
+      border-radius:999px;
+    }
+    .certShareBtn:active{ opacity:0.85; }
+    .certWhatsAppBtn{
+      background:#25D366;
+      color:#fff;
+      border:none;
+      font-weight:700;
+      font-size:13px;
+      padding:8px 14px;
+      border-radius:999px;
+    }
+    .certWhatsAppBtn:active{ opacity:0.85; }
     .field{
       display:flex;
       gap:10px;

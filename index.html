@@ -116,13 +116,33 @@
         </div>
       </div>
 
+      <!-- Share Score Card — shown when progress > 0 -->
+      <div class="shareScoreCard" id="shareScoreCard" style="display:none" aria-label="Share your score">
+        <div class="shareScoreLeft">
+          <div class="shareScoreNum" id="shareScoreNum">0</div>
+          <div class="shareScoreMeta">/ 30 missions</div>
+          <div class="shareScoreBadge" id="shareScoreBadge"></div>
+        </div>
+        <div class="shareScoreRight">
+          <div class="shareScoreTitle">Share with family! 🎉</div>
+          <div class="shareScoreBtns">
+            <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button">💬 WhatsApp</button>
+            <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button">🔗 Copy Link</button>
+          </div>
+        </div>
+      </div>
+
       <div class="dashCard" id="parentDashboard" aria-label="Parent's Dashboard">
         <div class="dashHeader">
           <div class="dashTitle">Parent’s Dashboard</div>
           <div class="dashSub">Developmental Milestone Report</div>
         </div>
         <div class="dashReport" id="dashReport">This week helped build focus, coordination, and confidence.</div>
+        <div class="dashStats" id="dashStats"></div>
         <div class="dashBars" id="dashBars"></div>
+        <div class="dashFooter">
+          <button class="btn dashPrintBtn" id="btnDashPrint" type="button">🖨️ Print Weekly Report</button>
+        </div>
       </div>
 
       <div class="dailyBox" id="dailyBox" aria-label="daily mission">
@@ -315,8 +335,10 @@
             <input id="certNameInput" type="text" placeholder="(Optional) e.g. Alex" autocomplete="off" />
           </div>
           <div class="certControls">
-            <button class="btn btnLime" id="btnCertSavePng" aria-label="Save certificate as PNG">Save as Image (PNG)</button>
-            <button class="btn btnGhost" id="btnCertSavePdf" aria-label="Save certificate as PDF">Save as PDF</button>
+            <button class="btn btnLime" id="btnCertSavePng" aria-label="Save certificate as PNG">💾 Save as Image</button>
+            <button class="btn btnGhost" id="btnCertSavePdf" aria-label="Save certificate as PDF">📄 Save as PDF</button>
+            <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share</button>
+            <button class="btn certWhatsAppBtn" id="btnCertWhatsApp" aria-label="Share to WhatsApp">💬 WhatsApp</button>
           </div>
         </div>
 
