@@ -6,13 +6,14 @@ const PACKS = [
   { key:"Focus Control", name:"Focus Control" },
   { key:"Team Duo", name:"Team Duo" },
   { key:"Indoor Compact", name:"Indoor Compact" },
+  { key:"Beach/Park", name:"Beach/Park" },
 ];
 
 function m(id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip){
   return { id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip };
 }
 
-// 30 missions (5 packs × 6)
+// 36 missions (6 packs × 6)
 const missions = [
   // Reflex Rush (6)
   m(1,"Reflex Rush","⚡","Flash Catch",1,"2","45s","3+",
@@ -48,12 +49,12 @@ const missions = [
 
   // Aim Master (6)
   m(7,"Aim Master","🎯","Target Ladder",2,"2","90s","4+",
-    ["Put a sticker dot in the paddle center.","Start close (about 5 feet / 1–2 big steps) and aim for the dot.","After 5 hits, step back one big step."],
+    ["Mark the paddle center with any small household object — a coin, hair clip, or piece of folded paper works great.","Start close (about 5 feet / 1–2 big steps) and aim for the mark.","After 5 hits, step back one big step."],
     "Get 8 dot hits in 12 throws.",
     "Keep throws below face level.",
     "Big dot first, then small dot."),
   m(8,"Aim Master","🟧","Ring Landing",2,"1-2","90s","4+",
-    ["Make a tape ring on the floor between you.","Throw so the ball lands inside the ring.","Catcher lets it bounce once, then catches."],
+    ["Mark a circle on the floor using a shoelace, belt, or a few small household objects placed in a ring.","Throw so the ball lands inside the circle.","Catcher lets it bounce once, then catches."],
     "Make 5 ring land-and-catches.",
     "Use a soft ball only.",
     "Keep the ring within about 3–6 feet (1–2 big steps)."),
@@ -73,7 +74,7 @@ const missions = [
     "No rushing.",
     "Perfect for younger kids."),
   m(12,"Aim Master","🚪","Gate Pass",2,"2","120s","6+",
-    ["Place two markers one paddle‑width apart as a gate.","Throw through the gate at chest‑low height.","Catcher catches and throws back."],
+    ["Place any two household objects (shoes, cups, or books) one paddle‑width apart as a gate.","Throw through the gate at chest‑low height.","Catcher catches and throws back."],
     "Complete 10 clean gate passes.",
     "Keep throws soft and low.",
     "Make the gate closer for younger kids."),
@@ -158,21 +159,53 @@ const missions = [
     "Complete 10 clean signal catches.",
     "Signals should be easy.",
     "Keep throws low."),
-  m(28,"Indoor Compact","🧱","Floor Bounce Solo",1,"1","120s","6+",
-    ["Stand about 3 feet (1 big step) from a floor mark.","Toss softly so the ball bounces back.","Catch the bounce and repeat."],
-    "10 clean bounce catches.",
-    "Use soft tosses only.",
-    "Clear space before you start."),
+  m(28,"Indoor Compact","🧱","Wall Rally",2,"1","120s","5+",
+    ["Stand about 2 feet from a clear wall.","Toss the ball gently against the wall.","Catch the rebound on your paddle and repeat."],
+    "10 clean wall catches in a row.",
+    "Soft tosses only — no hard throws at the wall.",
+    "Move closer to the wall to make it easier; step back to challenge yourself."),
   m(29,"Indoor Compact","🧊","No-Run Rule",1,"2","120s","3+",
     ["Both players keep feet planted.","Soft toss only.","Catch and return."],
     "20 clean catches wins.",
     "If it gets wild, slow down.",
     "Safe default mode."),
   m(30,"Indoor Compact","🎨","Color Call Catch",2,"2","90s","5+",
-    ["Place a sticker on left and right sides of the paddle.","Caller says Left or Right before the throw.","Catcher aims for that sticker."],
+    ["Mark the left and right sides of the paddle with any small household object — a coin or hair clip on each side works well.","Caller says Left or Right before the throw.","Catcher aims for that side."],
     "Score 8 correct color hits.",
     "Use soft tosses only.",
     "Switch caller every 5 throws."),
+
+  // Beach/Park (6)
+  m(31,"Beach/Park","☀️","Sky Toss",1,"2","60s","4+",
+    ["Stand about 6 feet (2 big steps) apart.","Throw high up into the open sky.","Catcher watches and catches on the way down."],
+    "10 sky catches wins.",
+    "Throw up, never directly at each other.",
+    "Open skies make ball tracking so much easier — great starter."),
+  m(32,"Beach/Park","🌿","Grass Glide",1,"2","90s","4+",
+    ["Find a flat patch of grass.","Thrower rolls or skips the ball along the ground toward the catcher.","Catcher stops it with the paddle face-down."],
+    "5 clean grass stops wins.",
+    "Only on flat, clear ground — no holes or rocks.",
+    "Try different power levels to find the sweet spot."),
+  m(33,"Beach/Park","💨","Wind Detective",2,"2","120s","6+",
+    ["Feel the wind direction together before you start.","Thrower tilts the throw slightly into the wind.","Catcher adjusts their position to match the drift."],
+    "8 wind-adjusted catches wins.",
+    "Skip this one if wind is very strong.",
+    "Teaches real-world ball physics — why does it curve?"),
+  m(34,"Beach/Park","🏃","Run & Catch",2,"2","120s","5+",
+    ["Thrower tosses the ball ahead of the catcher.","Catcher runs to meet it.","Catch before it hits the ground."],
+    "7 running catches wins.",
+    "No throwing too far — keep it catchable.",
+    "Flat open ground only; agree on the run zone first."),
+  m(35,"Beach/Park","🌀","Around the World",2,"2","150s","6+",
+    ["Make a soft throw to your partner.","Receiver passes it back around their back.","Switch roles every 3 throws."],
+    "Complete 8 around-the-back returns.",
+    "Use gentle throws only.",
+    "Laugh it off when you miss — that's the game!"),
+  m(36,"Beach/Park","🌊","Long Rally",1,"2","180s","4+",
+    ["Start close and keep a rally going together.","After every 5 clean catches, each player steps one big step back.","See how far apart you can get."],
+    "Reach 20 catches without a drop.",
+    "Stop stepping back when throws start getting wild.",
+    "Try to beat your distance record every session."),
 ];
 
 const BADGES = [
@@ -188,10 +221,12 @@ const BADGES = [
     check: (done)=>missions.filter(x=>x.pack==="Team Duo" && done.has(x.id)).length>=6 },
   { id:"indoor", icon:"🏠", name:"Indoor Hero", req:"Complete all Indoor Compact",
     check: (done)=>missions.filter(x=>x.pack==="Indoor Compact" && done.has(x.id)).length>=6 },
+  { id:"outdoor", icon:"🏖️", name:"Outdoor Explorer", req:"Complete all Beach/Park missions",
+    check: (done)=>missions.filter(x=>x.pack==="Beach/Park" && done.has(x.id)).length>=6 },
   { id:"streak3", icon:"🎖️", name:"3-Day Streak", req:"Play 3 days in a row",
     check: (_done, ctx)=>(ctx?.streakCount||0)>=3 },
   { id:"streak7", icon:"🔥", name:"Week Champion", req:"Play 7 days in a row",
     check: (_done, ctx)=>(ctx?.streakCount||0)>=7 },
-  { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 30 missions",
-    check: (done)=>done.size>=30 },
+  { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 36 missions",
+    check: (done)=>done.size>=36 },
 ];
