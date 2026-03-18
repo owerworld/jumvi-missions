@@ -2659,17 +2659,21 @@ function showWelcomeOverlay(){
   const startBtn = document.getElementById("btnWelcomeStart");
   if(startBtn){
     startBtn.addEventListener("click", ()=>{
-      lsSet(ONBOARD_KEY, "1");
-      lsSet(AGE_KEY, selectedDiff);
-      // Apply age-based difficulty filter
-      if(selectedDiff !== "all"){
-        currentDifficulty = setState("currentDifficulty", selectedDiff);
-        renderFilterGroups();
-        renderList();
-      }
+      // Always close overlay first — nothing should block this
       overlay.classList.add("hiding");
       setTimeout(()=>{ overlay.style.display = "none"; }, 380);
       clickSound("click");
+      // Persist selection
+      try { lsSet(ONBOARD_KEY, "1"); } catch(e){}
+      try { lsSet(AGE_KEY, selectedDiff); } catch(e){}
+      // Apply difficulty filter after overlay starts closing
+      try {
+        if(selectedDiff !== "all"){
+          currentDifficulty = setState("currentDifficulty", selectedDiff);
+          renderFilterGroups();
+          renderList();
+        }
+      } catch(e){ console.warn("Welcome filter:", e); }
     });
   }
 }
