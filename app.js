@@ -360,7 +360,7 @@ async function renderSimpleCertificateBlob(){
     ctx.textBaseline = "middle";
     ctx.font = `600 ${footerSize}px 'Helvetica Neue', Arial, sans-serif`;
     ctx.fillStyle = "rgba(80,80,100,0.55)";
-    ctx.fillText("🎾 Played with JUMVI Toss & Catch Paddle Set", width * 0.5, footerY);
+    ctx.fillText("🎾 JUMVI Toss & Catch Paddle Set • Available on Amazon", width * 0.5, footerY);
 
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){
@@ -386,6 +386,8 @@ const DAILY_DATE_KEY    = "jumvi_daily_date_v1";
 const DAILY_ID_KEY      = "jumvi_daily_id_v1";
 const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
+const ONBOARD_KEY       = "jumvi_onboarded_v1";
+const AGE_KEY           = "jumvi_age_v1";
 const AVATAR_KEY        = "jumvi_avatar_v1";
 const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
 const ATTEMPTS_KEY      = "jumvi_attempts_v1";
@@ -1008,8 +1010,15 @@ function recordActivityToday(){
   persistStreak();
   return true;
 }
-function renderStreakUI(){
-  if(streakPill) streakPill.textContent = `🔥 Streak: ${streakCount || 0} days`;
+function renderStreakUI(animate=false){
+  if(!streakPill) return;
+  streakPill.textContent = `🔥 Streak: ${streakCount || 0} days`;
+  if(animate && streakCount > 0){
+    streakPill.classList.remove("pulse");
+    void streakPill.offsetWidth; // reflow to restart animation
+    streakPill.classList.add("pulse");
+    setTimeout(()=> streakPill.classList.remove("pulse"), 600);
+  }
 }
 
 /* ===== Daily mission ===== */
@@ -1472,8 +1481,9 @@ function remainingText(){
 function updateBadges(){
   badgesRow.innerHTML = "";
   const unlocked = new Set();
+  const badgeCtx = { streakCount, bestStreak };
   BADGES.forEach(b=>{
-    const ok = !!b.check(done);
+    const ok = !!b.check(done, badgeCtx);
     if(ok) unlocked.add(b.id);
     const el = document.createElement("div");
     el.className = "badge" + (ok ? " unlocked" : "");
@@ -1487,7 +1497,7 @@ function updateBadges(){
 
   // badges modal list (pretty)
   badgesList.innerHTML = BADGES.map(b=>{
-    const ok = !!b.check(done);
+    const ok = !!b.check(done, badgeCtx);
     return `
       <div class="badgesListItem">
         <div style="font-size:22px; width:34px">${b.icon}</div>
@@ -2213,13 +2223,34 @@ function markMissionDone(id, source="manual"){
   bumpDoneVersion();
 
   const changed = recordActivityToday();
-  if(changed && streakCount > 1) showToast(`🔥 Streak: ${streakCount} days!`);
 
   persist();
   renderList();
   clickSound("success");
   celebrate();
-  if(source === "auto") showToast("✅ Mission marked done.");
+
+  if(source === "auto"){
+    showToast("✅ Mission marked done.");
+  } else {
+    // Immediate completion toast
+    const remaining = missions.length - done.size;
+    if(remaining > 0){
+      showToast(`⭐ Great job! ${remaining} mission${remaining===1?"":"s"} left!`);
+    }
+    // Streak milestones — delayed so they don't overwrite the completion toast
+    if(changed){
+      const delay = 2100;
+      if(streakCount === 7){
+        setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("🔥 Week Champion! 7-day streak!"); }, delay);
+      } else if(streakCount === 3){
+        setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("🎖️ 3-Day Streak! Keep it up!"); }, delay);
+      } else if(streakCount > 1){
+        setTimeout(()=>{ renderStreakUI(true); showToast(`🔥 Streak: ${streakCount} days!`); }, delay);
+      } else {
+        setTimeout(()=> renderStreakUI(true), 300);
+      }
+    }
+  }
   openMission(id);
 }
 
@@ -2586,6 +2617,48 @@ if(btnA2hsClose){
 }
 
 /** =======================
+ * Welcome Overlay (first-time onboarding)
+ * ======================= */
+function showWelcomeOverlay(){
+  const overlay = document.getElementById("welcomeOverlay");
+  if(!overlay) return;
+  // Already onboarded — hide immediately without animation
+  if(lsGet(ONBOARD_KEY, "0") === "1"){
+    overlay.style.display = "none";
+    return;
+  }
+  // Default: first age group selected
+  let selectedDiff = "Easy";
+  const ageBtns = overlay.querySelectorAll(".ageBtn");
+  ageBtns.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      clickSound("click");
+      ageBtns.forEach(b=>b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedDiff = btn.dataset.diff || "all";
+    });
+  });
+  if(ageBtns[0]) ageBtns[0].classList.add("selected");
+
+  const startBtn = document.getElementById("btnWelcomeStart");
+  if(startBtn){
+    startBtn.addEventListener("click", ()=>{
+      lsSet(ONBOARD_KEY, "1");
+      lsSet(AGE_KEY, selectedDiff);
+      // Apply age-based difficulty filter
+      if(selectedDiff !== "all"){
+        currentDifficulty = setState("currentDifficulty", selectedDiff);
+        renderFilterGroups();
+        renderList();
+      }
+      overlay.classList.add("hiding");
+      setTimeout(()=>{ overlay.style.display = "none"; }, 380);
+      clickSound("click");
+    });
+  }
+}
+
+/** =======================
  * Sound toggle
  * ======================= */
 function renderSoundToggle(){
@@ -2661,6 +2734,7 @@ function init(){
 
   hideReadToMeIfUnsupported();
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
+  showWelcomeOverlay();
   maybeShowA2HS();
   checkOptionalDownloads();
 

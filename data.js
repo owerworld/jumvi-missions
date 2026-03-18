@@ -188,6 +188,10 @@ const BADGES = [
     check: (done)=>missions.filter(x=>x.pack==="Team Duo" && done.has(x.id)).length>=6 },
   { id:"indoor", icon:"🏠", name:"Indoor Hero", req:"Complete all Indoor Compact",
     check: (done)=>missions.filter(x=>x.pack==="Indoor Compact" && done.has(x.id)).length>=6 },
+  { id:"streak3", icon:"🎖️", name:"3-Day Streak", req:"Play 3 days in a row",
+    check: (_done, ctx)=>(ctx?.streakCount||0)>=3 },
+  { id:"streak7", icon:"🔥", name:"Week Champion", req:"Play 7 days in a row",
+    check: (_done, ctx)=>(ctx?.streakCount||0)>=7 },
   { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 30 missions",
     check: (done)=>done.size>=30 },
 ];

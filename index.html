@@ -27,7 +27,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260319-1">
+  <link rel="stylesheet" href="style.css?v=20260319-2">
   <script>
     (function(){
       try{
@@ -50,6 +50,24 @@
 
 <body>
   <div class="bgLayer" aria-hidden="true"></div>
+
+  <!-- Welcome Overlay — shown once for new visitors -->
+  <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
+    <div class="welcomePanel">
+      <img class="welcomeLogo logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" />
+      <img class="welcomeLogo logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
+      <div class="welcomeTagline">Scan. Play. Grow.</div>
+      <div class="welcomeSub">JUMVI Toss &amp; Catch Missions<br>Pick your child's age to start:</div>
+      <div class="welcomeAges" id="welcomeAges">
+        <button class="ageBtn" data-diff="Easy" type="button">🐣<span>Ages 3–5</span></button>
+        <button class="ageBtn" data-diff="all" type="button">🚀<span>Ages 6–8</span></button>
+        <button class="ageBtn" data-diff="all" type="button">⚡<span>Ages 8+</span></button>
+      </div>
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Start Playing</button>
+      <div class="welcomeNote">Progress saved on this device. No account needed.</div>
+    </div>
+  </div>
+
   <div class="app-shell" id="app-wrapper">
 
   <div class="sticky">
@@ -389,13 +407,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-1" defer></script>
-<script src="data.js?v=20260319-1" defer></script>
-<script src="app.js?v=20260319-1" defer></script>
+<script src="confetti.min.js?v=20260319-2" defer></script>
+<script src="data.js?v=20260319-2" defer></script>
+<script src="app.js?v=20260319-2" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-1").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-2").catch(()=>{});
     });
   }
 </script>
