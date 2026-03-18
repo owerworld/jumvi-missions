@@ -2539,6 +2539,14 @@ html.theme--light .ageBtn.selected{
   background:rgba(79,179,255,0.12);
   border-color:#1d6fb5;
 }
+.welcomeMissionCount{
+  font-size:12px;
+  font-weight:700;
+  color:var(--blue,#4FB3FF);
+  letter-spacing:0.2px;
+  transition:opacity 0.15s;
+}
+html.theme--light .welcomeMissionCount{ color:#1d6fb5; }
 .welcomeStart{
   width:100%;
   padding:14px;

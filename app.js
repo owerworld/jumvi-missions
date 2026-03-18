@@ -386,8 +386,8 @@ const DAILY_DATE_KEY    = "jumvi_daily_date_v1";
 const DAILY_ID_KEY      = "jumvi_daily_id_v1";
 const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
-const ONBOARD_KEY       = "jumvi_onboarded_v1";
-const AGE_KEY           = "jumvi_age_v1";
+const ONBOARD_KEY       = "jumvi_onboarded_v2";
+const AGE_KEY           = "jumvi_age_v2";
 const AVATAR_KEY        = "jumvi_avatar_v1";
 const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
 const ATTEMPTS_KEY      = "jumvi_attempts_v1";
@@ -2630,15 +2630,31 @@ function showWelcomeOverlay(){
   // Default: first age group selected
   let selectedDiff = "Easy";
   const ageBtns = overlay.querySelectorAll(".ageBtn");
+  const countEl  = document.getElementById("welcomeMissionCount");
+
+  function getMissionCount(diff){
+    if(diff === "all") return missions.length;
+    if(diff === "Easy")   return missions.filter(x=>x.difficulty===1).length;
+    if(diff === "Medium") return missions.filter(x=>x.difficulty===2).length;
+    return missions.length;
+  }
+  function updateCount(diff){
+    if(!countEl) return;
+    const n = getMissionCount(diff);
+    countEl.textContent = n + " missions for this age";
+  }
+
   ageBtns.forEach(btn=>{
     btn.addEventListener("click", ()=>{
       clickSound("click");
       ageBtns.forEach(b=>b.classList.remove("selected"));
       btn.classList.add("selected");
       selectedDiff = btn.dataset.diff || "all";
+      updateCount(selectedDiff);
     });
   });
   if(ageBtns[0]) ageBtns[0].classList.add("selected");
+  updateCount(selectedDiff);
 
   const startBtn = document.getElementById("btnWelcomeStart");
   if(startBtn){
