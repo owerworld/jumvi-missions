@@ -1860,6 +1860,9 @@ if(btnSpeak){
 
   backdrop.classList.add("show");
   sheet.scrollTop = 0;
+  // Lock background scroll while modal is open
+  const _aw = document.getElementById("app-wrapper");
+  if(_aw) _aw.style.overflowY = "hidden";
 }
 
 function closeMission(){
@@ -1872,6 +1875,9 @@ function closeMission(){
   resetTimerUI(); // Stop + reset timer on close
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   backdrop.classList.remove("show");
+  // Restore background scroll
+  const _aw = document.getElementById("app-wrapper");
+  if(_aw) _aw.style.overflowY = "";
 }
 
 

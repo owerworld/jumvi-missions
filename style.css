@@ -776,32 +776,51 @@ html.theme--dark .badgesListReq{ color:#94a3b8; }
       contain: layout paint;
     }
     .card{
-      border:1px solid transparent;
-      background: var(--glass);
-      border:1px solid var(--glass-border);
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(79,179,255,0.22);
       border-radius: 24px;
       padding:16px;
-      box-shadow: 0 4px 12px var(--shadow);
+      box-shadow: 0 2px 8px rgba(79,179,255,0.10), 0 1px 3px rgba(0,0,0,0.05);
       cursor:pointer;
       display:flex;
       gap:14px;
       align-items:center;
+    }
+    /* Completed card: lime-green tint */
+    html.theme--light .card.done{
+      background: rgba(244,255,232,0.97);
+      border-color: rgba(97,182,0,0.28);
+      box-shadow: 0 2px 8px rgba(97,182,0,0.10), 0 1px 3px rgba(0,0,0,0.04);
+    }
+    html.theme--dark .card{
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 12px var(--shadow);
     }
 
     @media (prefers-reduced-motion: no-preference){
       .btn{ transition: transform .12s ease, filter .12s ease; }
       .card{ transition: transform .18s ease, box-shadow .18s ease; }
       .card:hover,
-      .card:focus{ transform: translateY(-2px); box-shadow: 0 8px 20px -6px var(--shadow); }
+      .card:focus{
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(79,179,255,0.18), 0 2px 6px rgba(0,0,0,0.06);
+      }
+      html.theme--dark .card:hover,
+      html.theme--dark .card:focus{ box-shadow: 0 8px 20px -6px var(--shadow); }
     }
     .card:active{ transform: scale(.98); }
     .mIcon{
       width:50px; height:50px; border-radius:18px;
       display:flex; align-items:center; justify-content:center;
       font-size:24px;
-      background: #F5F5F5;
+      background: rgba(79,179,255,0.10);
       color: #333;
       flex:0 0 auto;
+    }
+    html.theme--dark .mIcon{
+      background: rgba(255,255,255,0.08);
+      color: #e5e7eb;
     }
     .mMain{ flex:1; min-width:0; }
     .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: var(--blue); }
@@ -984,6 +1003,9 @@ html.theme--dark .tag.diff{
       display:none;
       align-items:flex-end;
       padding-bottom: env(safe-area-inset-bottom);
+      /* Prevent background scroll bleed-through on touch */
+      touch-action: none;
+      overflow: hidden;
     }
     .backdrop.show{ display:flex; }
     .sheet{
@@ -996,10 +1018,14 @@ html.theme--dark .tag.diff{
       box-shadow: 0 -12px 28px rgba(0,0,0,0.12);
       padding:18px 18px 24px;
       max-height: 88vh;
-      overflow:auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       color: #37474F;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: auto;
+      /* Contain scroll inside sheet — don't let it bubble to page */
+      overscroll-behavior: contain;
+      touch-action: pan-y;
     }
     .sheetTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
     .sheetHandle{
