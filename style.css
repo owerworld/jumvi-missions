@@ -687,7 +687,7 @@ html.theme--dark .badgesListReq{ color:#94a3b8; }
     html.theme--dark .search input{ color:#f8fafc; }
     .search input::placeholder{ color: #90A4AE; font-weight:700; }
 
-    .toggleRow{ display:flex; gap:10px; flex-wrap:wrap; }
+    .toggleRow{ display:flex; gap:8px; flex-wrap:nowrap; margin-top:10px; }
     .chip{
       border:1px solid var(--glass-border);
       background: var(--glass);
@@ -718,52 +718,70 @@ html.theme--dark .badgesListReq{ color:#94a3b8; }
       box-shadow: 0 0 0 3px rgba(118, 255, 3, 0.2);
     }
 
-    /* Pack filter row */
+    /* Pack filter row — single horizontal scroll, no wrap */
     .filters{
-      margin-top:14px;
-      display:flex; flex-wrap:wrap; gap:8px;
-      display:flex; gap:10px;
+      margin-top:10px;
+      display:flex;
+      flex-wrap:nowrap;
+      gap:8px;
       overflow-x:auto;
       -webkit-overflow-scrolling: touch;
-      padding-bottom:10px;
-      padding-left: 4px; /* padding for shadow visibility */
+      padding-bottom:4px;
+      padding-left: 2px;
     }
     .filters::-webkit-scrollbar{ display:none; }
 
-    /* Filter groups (Category / Players / Difficulty) */
+    /* Filter groups (Players / Difficulty) — compact inline rows */
     .filterGroups{
-      margin-top:12px;
+      margin-top:10px;
       display:flex;
       flex-direction:column;
-      gap:12px;
-      padding:12px;
+      gap:6px;
+      padding:10px 12px;
       border-radius:16px;
-      border:1px solid var(--glass-border);
-      background: var(--glass);
-      box-shadow: 0 6px 16px var(--shadow);
+      border:1px solid rgba(79,179,255,0.18);
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 2px 8px rgba(79,179,255,0.07);
       scroll-margin-top: 90px;
     }
+    html.theme--dark .filterGroups{
+      background: rgba(15,23,42,0.6);
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    /* Each row: Label left, chips scroll right */
     .filterGroup{
       display:flex;
-      flex-direction:column;
-      gap:8px;
-      min-height:56px;
+      flex-direction:row;
+      align-items:center;
+      gap:10px;
+      min-height:40px;
     }
     .filterLabel{
-      font-size:12px;
+      font-size:11px;
       font-weight:950;
-      color:#475569;
-      letter-spacing:.2px;
+      color:#64748b;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+      white-space:nowrap;
+      min-width:64px;
     }
+    html.theme--dark .filterLabel{ color:#94a3b8; }
     .filterChips{
       display:flex;
-      flex-wrap:wrap;
-      gap:8px;
+      flex-wrap:nowrap;
+      gap:6px;
       align-items:center;
-      min-height:44px;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:2px;
     }
+    .filterChips::-webkit-scrollbar{ display:none; }
     .filterChips .chip{
-      min-width:54px;
+      min-width:44px;
+      padding:7px 12px;
+      font-size:12px;
+      min-height:36px;
       line-height:1;
     }
 

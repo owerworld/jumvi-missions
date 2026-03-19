@@ -2479,10 +2479,7 @@ document.getElementById("btnShare").onclick = async ()=>{
   }catch(e){}
 };
 
-document.getElementById("btnChoosePack").onclick = ()=>{
-  clickSound("click");
-  document.getElementById("filters").scrollIntoView({behavior:"smooth", block:"start"});
-};
+// btnChoosePack removed from UI — pack filter row handles this directly
 
 searchInput.addEventListener("input", ()=>{
   searchQuery = setState("searchQuery", searchInput.value || "");

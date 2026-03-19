@@ -210,18 +210,12 @@
 
         <div class="toggleRow">
           <button class="chip limeActive" id="btnOnlyUnfinished" aria-label="Show only unfinished missions" type="button">Only Unfinished</button>
-          <button class="chip" id="btnChoosePack" aria-label="Choose a pack" type="button">Choose Pack</button>
-                    <button class="chip" id="btnKidsMode" aria-label="Toggle kids mode" type="button">Kids Mode</button>
-                  </div>
+        </div>
       </div>
 
       <div class="filters" id="filters" aria-label="packs"></div>
 
       <div class="filterGroups" id="filterGroups">
-        <div class="filterGroup">
-          <div class="filterLabel">Category</div>
-          <div class="filterChips" id="filterCategory"></div>
-        </div>
         <div class="filterGroup">
           <div class="filterLabel">Players</div>
           <div class="filterChips" id="filterPlayers"></div>
@@ -249,8 +243,9 @@
       <div class="small">
         Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
       </div>
-      <div style="margin-top:14px;">
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn btnResetFooter" id="btnReset" aria-label="Reset progress">🗑️ Reset Progress</button>
+        <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button">🧒 Kids Mode</button>
       </div>
     </section>
   </div>
