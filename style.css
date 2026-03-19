@@ -998,12 +998,12 @@ html.theme--dark .tag.diff{
     /* Modal (bottom sheet) - LIGHT THEME */
     .backdrop{
       position:fixed; inset:0; z-index:80;
-      background: rgba(33, 150, 243, 0.25); /* Blue tinted backdrop */
+      background: rgba(33, 150, 243, 0.25);
       backdrop-filter: none;
       display:none;
       align-items:flex-end;
-      padding-bottom: env(safe-area-inset-bottom);
-      /* Prevent background scroll bleed-through on touch */
+      /* No padding-bottom here — sheet handles safe-area internally */
+      padding-bottom: 0;
       touch-action: none;
       overflow: hidden;
     }
@@ -1016,14 +1016,17 @@ html.theme--dark .tag.diff{
       background: var(--glass);
       border:1px solid var(--glass-border);
       box-shadow: 0 -12px 28px rgba(0,0,0,0.12);
-      padding:18px 18px 24px;
+      padding: 18px 18px 0;
+      /* Bottom padding accounts for iPhone home indicator */
+      padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 20px));
+      /* svh = small viewport height = always excludes Safari toolbar — prevents bottom clip */
       max-height: 88vh;
+      max-height: 88svh;
       overflow-y: auto;
       overflow-x: hidden;
       color: #37474F;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: auto;
-      /* Contain scroll inside sheet — don't let it bubble to page */
       overscroll-behavior: contain;
       touch-action: pan-y;
     }

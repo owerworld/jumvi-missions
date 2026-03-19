@@ -1112,9 +1112,11 @@ function maybeShowA2HS(){
   if(!isIOSWeb()) return;
   const dismissed = (lsGet(A2HS_DISMISS_KEY, "0")) === "1";
   if(dismissed || isStandalone()) return;
-  if(a2hsHint) a2hsHint.textContent = "Use JUMVI like an app — no download needed.";
+  if(a2hsHint) a2hsHint.textContent = "Full screen + offline support";
   const steps = document.getElementById("a2hsSteps");
-  if(steps) steps.textContent = "Share → Add to Home Screen";
+  if(steps) steps.innerHTML = "Tap <b>Share</b> → <b>Add to Home Screen</b>";
+  // Hide the Install button on iOS (beforeinstallprompt doesn't fire on iOS Safari)
+  if(btnA2hsInstall) btnA2hsInstall.style.display = "none";
   a2hsBanner.style.display = "flex";
 }
 
