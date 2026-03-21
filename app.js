@@ -1,3 +1,9 @@
+/*!
+ * JUMVI Missions — qr.jumvi.co
+ * Copyright © 2026 JUMVI / SAY23 LLC. All rights reserved.
+ * Unauthorized copying, modification, or redistribution of this
+ * interface, missions, or structure is strictly prohibited.
+ */
 // Safe localStorage helpers (avoid crashes in private/offline modes)
 const lsGet = (key, fallback = null) => {
   try{
