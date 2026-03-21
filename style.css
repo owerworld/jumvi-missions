@@ -2641,12 +2641,12 @@ html.theme--light .welcomeMissionCount{ color:#1d6fb5; }
 /* ===================================================
    PACK COLOR ACCENTS — left border per mission card
    =================================================== */
-.card.pack--reflex-rush  { border-left: 3px solid #F97316; }
-.card.pack--aim-master   { border-left: 3px solid #3B82F6; }
-.card.pack--focus-control{ border-left: 3px solid #10B981; }
-.card.pack--team-duo     { border-left: 3px solid #8B5CF6; }
-.card.pack--indoor-compact{ border-left: 3px solid #06B6D4; }
-.card.pack--beach-park   { border-left: 3px solid #F59E0B; }
+html .card.pack--reflex-rush  { background: linear-gradient(to right, #F97316 5px, var(--glass) 5px) !important; }
+html .card.pack--aim-master   { background: linear-gradient(to right, #3B82F6 5px, var(--glass) 5px) !important; }
+html .card.pack--focus-control{ background: linear-gradient(to right, #10B981 5px, var(--glass) 5px) !important; }
+html .card.pack--team-duo     { background: linear-gradient(to right, #8B5CF6 5px, var(--glass) 5px) !important; }
+html .card.pack--indoor-compact{ background: linear-gradient(to right, #06B6D4 5px, var(--glass) 5px) !important; }
+html .card.pack--beach-park   { background: linear-gradient(to right, #F59E0B 5px, var(--glass) 5px) !important; }
 
 /* Badge hint */
 .badgesHint{
