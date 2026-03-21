@@ -27,7 +27,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260319-14">
+  <link rel="stylesheet" href="style.css?v=20260319-15">
   <script>
     (function(){
       try{
@@ -291,7 +291,7 @@
         <button class="btn btnGhost" id="btnNext" aria-label="Next mission">➡️ Next</button>
         <button class="btn btnGhost" id="btnRandomPack" aria-label="Random mission from pack">🎲 Random from Pack</button>
       </div>
-      <div class="small holdHint" id="holdHint" style="display:none">Hold “Mark as Done” to finish.</div>
+      <div class="small holdHint" id="holdHint" style="display:none">Hold "Mark as Done" to finish.</div>
 
       
     </div>
@@ -330,48 +330,48 @@
 
 
   <!-- Certificate Modal -->
-  <div class=”backdrop” id=”certBackdrop” role=”dialog” aria-modal=”true” aria-label=”Certificate”>
-    <div class=”sheet” id=”certSheet”>
+  <div class="backdrop" id="certBackdrop" role="dialog" aria-modal="true" aria-label="Certificate">
+    <div class="sheet" id="certSheet">
 
       <!-- Header -->
-      <div class=”sheetTop certSheetTop”>
-        <div class=”certHeader”>
-          <div class=”certHeaderEmoji”>🏆</div>
+      <div class="sheetTop certSheetTop">
+        <div class="certHeader">
+          <div class="certHeaderEmoji">🏆</div>
           <div>
-            <div class=”sheetTitle certSheetTitle”>You Did It!</div>
-            <div class=”certHeaderSub”>Your certificate is ready to save &amp; share</div>
+            <div class="sheetTitle certSheetTitle">You Did It!</div>
+            <div class="certHeaderSub">Your certificate is ready to save &amp; share</div>
           </div>
         </div>
-        <button class=”close certCloseBtn” id=”btnCertClose” aria-label=”Close certificate”>✕</button>
+        <button class="close certCloseBtn" id="btnCertClose" aria-label="Close certificate">✕</button>
       </div>
 
-      <div class=”certWrap”>
+      <div class="certWrap">
 
         <!-- Child name input -->
-        <div class=”certNameRow”>
-          <label class=”certNameLabel” for=”certNameInput”>Child’s name</label>
-          <input id=”certNameInput” class=”certNameInput” type=”text” placeholder=”Optional — e.g. Alex” autocomplete=”off” />
+        <div class="certNameRow">
+          <label class="certNameLabel" for="certNameInput">Child’s name</label>
+          <input id="certNameInput" class="certNameInput" type="text" placeholder="Optional — e.g. Alex" autocomplete="off" />
         </div>
 
         <!-- Certificate preview -->
-        <div class=”certPreviewWrap”>
-          <img id=”certPreviewImg” alt=”Certificate preview” loading=”lazy” decoding=”async” src=”data:image/gif;base64,R0lGODlhAQABAAAAACw=” />
+        <div class="certPreviewWrap">
+          <img id="certPreviewImg" alt="Certificate preview" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
         </div>
 
         <!-- Certificate ID badge -->
-        <div class=”certIdBadge” id=”certMetaLine”>📅 — &nbsp;·&nbsp; 🔖 —</div>
+        <div class="certIdBadge" id="certMetaLine">📅 — &nbsp;·&nbsp; 🔖 —</div>
 
         <!-- Primary CTA -->
-        <button class=”btn btnCertPrimary” id=”btnCertSavePng” aria-label=”Save certificate as image”>💾 Save to Photos</button>
+        <button class="btn btnCertPrimary" id="btnCertSavePng" aria-label="Save certificate as image">💾 Save to Photos</button>
 
         <!-- Secondary row -->
-        <div class=”certSecondaryRow”>
-          <button class=”btn certShareBtn” id=”btnCertShare” aria-label=”Share certificate”>📤 Share</button>
-          <button class=”btn certWhatsAppBtn” id=”btnCertWhatsApp” aria-label=”Share via WhatsApp”>💬 WhatsApp</button>
+        <div class="certSecondaryRow">
+          <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share</button>
+          <button class="btn certWhatsAppBtn" id="btnCertWhatsApp" aria-label="Share via WhatsApp">💬 WhatsApp</button>
         </div>
 
         <!-- Tertiary: PDF -->
-        <button class=”btn certPdfBtn” id=”btnCertSavePdf” aria-label=”Save as PDF”>📄 Save as PDF instead</button>
+        <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">📄 Save as PDF instead</button>
 
       </div>
     </div>
@@ -414,13 +414,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-14" defer></script>
-<script src="data.js?v=20260319-14" defer></script>
-<script src="app.js?v=20260319-14" defer></script>
+<script src="confetti.min.js?v=20260319-15" defer></script>
+<script src="data.js?v=20260319-15" defer></script>
+<script src="app.js?v=20260319-15" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-14").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-15").catch(()=>{});
     });
   }
 </script>
