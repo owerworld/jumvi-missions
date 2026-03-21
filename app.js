@@ -1404,6 +1404,7 @@ function createMissionCard(ms){
   // Add pack-slug class for color accent (e.g. pack--reflex-rush)
   const packSlug = "pack--" + (ms.pack || "").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
   c.className = "card " + packSlug;
+  c._packSlug = packSlug;
   c.dataset.id = String(ms.id);
 
   const icon = document.createElement("div");
@@ -1780,7 +1781,15 @@ function openMission(id){
   if(!ms) return;
   lastOpenedId = setState("lastOpenedId", id);
   missionOpenedAt = Date.now();
-  
+
+  // Stamp pack slug on #sheet so dark-mode chip CSS can target it
+  const sheetEl = document.getElementById("sheet");
+  if(sheetEl){
+    sheetEl.className = sheetEl.className.replace(/\bpack--[\w-]+\b/g,"").trim();
+    const slug = "pack--" + (ms.pack||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    sheetEl.classList.add(slug);
+  }
+
   resetTimerUI(); // Ensure timer is reset when opening
 
   mTitle.textContent = `${ms.icon} ${ms.title}`;
