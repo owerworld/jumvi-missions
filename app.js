@@ -1012,7 +1012,14 @@ function recordActivityToday(){
 }
 function renderStreakUI(animate=false){
   if(!streakPill) return;
-  streakPill.textContent = `🔥 Streak: ${streakCount || 0} days`;
+  const sc = streakCount || 0;
+  if(sc === 0){
+    streakPill.textContent = `🔥 Start your streak!`;
+    streakPill.style.opacity = "0.55";
+  } else {
+    streakPill.textContent = `🔥 ${sc} day${sc === 1 ? "" : "s"} streak`;
+    streakPill.style.opacity = "";
+  }
   if(animate && streakCount > 0){
     streakPill.classList.remove("pulse");
     void streakPill.offsetWidth; // reflow to restart animation
@@ -1416,16 +1423,18 @@ function createMissionCard(ms){
   diffTag.className = "tag diff";
   const playersTag = document.createElement("span");
   playersTag.className = "tag";
-  const ageTag = document.createElement("span");
-  ageTag.className = "tag";
+
+  // Teaser: first step trimmed to 55 chars
+  const teaser = document.createElement("div");
+  teaser.className = "cardTeaser";
 
   meta.appendChild(packTag);
   meta.appendChild(diffTag);
   meta.appendChild(playersTag);
-  meta.appendChild(ageTag);
 
   main.appendChild(title);
   main.appendChild(meta);
+  main.appendChild(teaser);
 
   const donePill = document.createElement("div");
   donePill.className = "donePill";
@@ -1435,7 +1444,7 @@ function createMissionCard(ms){
   c.appendChild(main);
   c.appendChild(donePill);
 
-  c._refs = { icon, title, packTag, diffTag, playersTag, ageTag };
+  c._refs = { icon, title, packTag, diffTag, playersTag, teaser };
   return c;
 }
 
@@ -1447,7 +1456,11 @@ function updateMissionCard(card, ms, isDone){
     r.packTag.textContent = ms.pack;
     r.diffTag.textContent = `${diffLabel(ms.difficulty)} • ${ms.time}`;
     r.playersTag.textContent = `👥 ${ms.players}`;
-    r.ageTag.textContent = `🎂 ${ms.age}`;
+    // Teaser: first step, max 58 chars
+    if(r.teaser){
+      const first = (ms.steps && ms.steps[0]) || "";
+      r.teaser.textContent = first.length > 58 ? first.slice(0,55) + "…" : first;
+    }
   }
   card.classList.toggle("done", isDone);
   card.onclick = ()=>{ clickSound("click"); openMission(ms.id); };
@@ -1485,7 +1498,9 @@ function remainingMissions(){
 function remainingText(){
   const remaining = remainingMissions();
   if(remaining <= 0) return "";
-  return remaining === 1 ? "1 mission left to unlock." : `${remaining} missions left to unlock.`;
+  const done = missions.length - remaining;
+  if(done === 0) return "Complete all 36 missions to unlock.";
+  return `${done} / ${missions.length} done — keep going!`;
 }
 
 function updateBadges(){
@@ -2267,7 +2282,7 @@ function markMissionDone(id, source="manual"){
       } else if(streakCount === 3){
         setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("🎖️ 3-Day Streak! Keep it up!"); }, delay);
       } else if(streakCount > 1){
-        setTimeout(()=>{ renderStreakUI(true); showToast(`🔥 Streak: ${streakCount} days!`); }, delay);
+        setTimeout(()=>{ renderStreakUI(true); showToast(`🔥 ${streakCount} day${streakCount===1?"":"s"} streak!`); }, delay);
       } else {
         setTimeout(()=> renderStreakUI(true), 300);
       }

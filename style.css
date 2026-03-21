@@ -2702,3 +2702,48 @@ html.theme--light .dailyHint{ color:#1d6fb5; }
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
 }
+
+/* ===================================================
+   AUDIT FIXES — polish pass
+   =================================================== */
+
+/* Card teaser text */
+.cardTeaser{
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 5px;
+  line-height: 1.35;
+  opacity: 0.82;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html.theme--light .cardTeaser{ color: #4b5563; opacity: 1; }
+html.theme--dark .cardTeaser{ color: #9ca3af; }
+
+/* Sheet action button hierarchy — Next gets more visual weight after done */
+.sheetActions{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#btnToggleDone{
+  font-size: 17px;
+  min-height: 52px;
+  letter-spacing: 0.2px;
+}
+#btnNext{
+  font-size: 15px;
+  min-height: 44px;
+}
+#btnRandomPack{
+  font-size: 13px;
+  min-height: 38px;
+  opacity: 0.75;
+}
+
+/* Streak pill: faded when 0 */
+#streakPill[style*="opacity: 0.55"]{
+  font-weight: 500;
+}

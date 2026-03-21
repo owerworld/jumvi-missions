@@ -27,7 +27,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260319-5">
+  <link rel="stylesheet" href="style.css?v=20260319-6">
   <script>
     (function(){
       try{
@@ -80,7 +80,7 @@
         </div>
         <div class="brandText">
           <div class="brandTitle">JUMVI Missions</div>
-          <div class="brandSub">Play • Progress • Certificate</div>
+          <div class="brandSub">36 missions inside your box</div>
         </div>
         
         <!-- Avatar Selector -->
@@ -194,9 +194,9 @@
         <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
       </div>
 
-      <div class="seasonalCard" id="seasonalCard" aria-label="Seasonal Packs">
+      <div class="seasonalCard" id="seasonalCard" aria-label="Where to Play">
         <div class="seasonalHeader">
-          <div class="seasonalTitle">Seasonal Packs</div>
+          <div class="seasonalTitle">Where to Play</div>
           <div class="seasonalRow">
             <button class="btn btnGhost seasonalBtn" id="btnSeasonalIndoor" type="button">🏠 Indoor</button>
             <button class="btn btnGhost seasonalBtn" id="btnSeasonalOutdoor" type="button">🏖️ Beach/Park</button>
@@ -314,11 +314,11 @@
   </div>
 
   <!-- Seasonal Modal -->
-  <div class="backdrop" id="seasonalBackdrop" role="dialog" aria-modal="true" aria-label="Seasonal Packs">
+  <div class="backdrop" id="seasonalBackdrop" role="dialog" aria-modal="true" aria-label="Where to Play">
     <div class="sheet">
       <div class="sheetTop">
         <div>
-          <div class="sheetTitle">Seasonal Packs</div>
+          <div class="sheetTitle">Where to Play</div>
           <div class="small" id="seasonalSub">Fresh ways to play all year.</div>
         </div>
         <button class="close" id="btnSeasonalClose" aria-label="Close seasonal packs">✕</button>
@@ -402,13 +402,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-5" defer></script>
-<script src="data.js?v=20260319-5" defer></script>
-<script src="app.js?v=20260319-5" defer></script>
+<script src="confetti.min.js?v=20260319-6" defer></script>
+<script src="data.js?v=20260319-6" defer></script>
+<script src="app.js?v=20260319-6" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-5").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-6").catch(()=>{});
     });
   }
 </script>
