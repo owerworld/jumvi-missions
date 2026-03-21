@@ -31,6 +31,8 @@ body::before {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  /* pan-y: browser handles vertical scroll immediately without waiting for JS */
+  touch-action: pan-y;
 }
 .app-shell {
   width: 100%;
@@ -1460,7 +1462,12 @@ html.theme--dark .btnLime{
   *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
 }
 
-/* Performance mode for low-end devices */
+/* ============================================================
+   PERFORMANCE MODE — low-end Android + RAM-constrained devices
+   Triggered by html.perf-low (set in app.js via UA/deviceMemory)
+   ============================================================ */
+
+/* 1. Kill noise-texture pseudo-elements (rasterisation cost) */
 html.perf-low .hero::before,
 html.perf-low .progressBox::before,
 html.perf-low .dailyBox::before,
@@ -1474,9 +1481,12 @@ html.perf-low .card::before,
 html.perf-low .badge::before,
 html.perf-low .sheet::before,
 html.perf-low .sticky::before,
-html.perf-low .welcomeBox::before{
+html.perf-low .backdrop::before,
+html.perf-low #welcomeOverlay::before{
   display:none !important;
 }
+
+/* 2. Remove ALL backdrop-filter blurs (GPU software fallback on Android) */
 html.perf-low .hero,
 html.perf-low .progressBox,
 html.perf-low .dailyBox,
@@ -1489,26 +1499,40 @@ html.perf-low .search,
 html.perf-low .card,
 html.perf-low .badge,
 html.perf-low .sheet,
+html.perf-low #sheet,
 html.perf-low .sticky,
-html.perf-low .welcomeBox{
+html.perf-low .backdrop,
+html.perf-low #backdrop,
+html.perf-low #welcomeOverlay,
+html.perf-low .toast,
+html.perf-low #toast{
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
 }
-/* Solid fallback backgrounds in perf-low mode */
+
+/* 3. Solid fallback backgrounds (replaces glass — no blur needed) */
 html.perf-low.theme--light .sticky{
   background: rgba(255,255,255,0.97) !important;
 }
 html.perf-low.theme--dark .sticky{
   background: rgba(10,15,30,0.97) !important;
 }
-html.perf-low.theme--light .sheet{
+/* Higher specificity (0,3,1) beats light-mode sheet !important at (0,2,1) */
+html.perf-low.theme--light .sheet,
+html.perf-low.theme--light #sheet{
   background: rgba(255,255,255,0.99) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
-html.perf-low.theme--dark .sheet{
+html.perf-low.theme--dark .sheet,
+html.perf-low.theme--dark #sheet{
   background: rgba(8,13,26,0.99) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
-/* Kill aurora animation & card transitions on low-end */
+
+/* 4. Kill aurora animation + all card/btn/chip transitions */
 html.perf-low .bgLayer{
   animation: none !important;
 }
