@@ -932,7 +932,8 @@ function applyTheme(){
   }
   if(themeToggle){
     const label = mode === "system" ? "System" : (mode === "dark" ? "Dark" : "Light");
-    themeToggle.textContent = `🌓 ${label}`;
+    const icons = { dark: "🌙", light: "☀️", system: "🌓" };
+    themeToggle.textContent = icons[mode] || "🌓";
     themeToggle.setAttribute("aria-label", `Theme: ${label}`);
   }
 }
