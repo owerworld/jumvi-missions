@@ -2771,11 +2771,12 @@ function init(){
   renderModeChips();
   applyTheme();
 
-  // Low-end perf hint (reduce heavy effects on Android tablets)
+  // Low-end perf hint — disable backdrop-filter on Android + low-RAM devices
   try{
     const dm = navigator.deviceMemory || 0;
-    const isLow = dm && dm <= 3;
-    if(isLow) document.documentElement.classList.add("perf-low");
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isLowRAM = dm > 0 && dm <= 4;
+    if(isAndroid || isLowRAM) document.documentElement.classList.add("perf-low");
   }catch(_){}
 
   if(autoDoneToggle){
