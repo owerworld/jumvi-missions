@@ -1787,7 +1787,7 @@ function openMission(id){
     <span class="tag pack">${escapeHtml(ms.pack)}</span>
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag">👥 ${escapeHtml(ms.players)}</span>
-    <span class="tag">🎂 ${escapeHtml(ms.age)}</span>
+    <span class="tag">Ages ${escapeHtml(ms.age)}</span>
   `;
 
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
@@ -1818,7 +1818,18 @@ function openMission(id){
 
   const isDone = done.has(ms.id);
   btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "✅ Mark as Done";
+  btnToggleDone.classList.toggle("btnDone", isDone);
+  // After completing: promote "Next" as the clear CTA
+  btnNext.textContent = isDone ? "▶ Next Mission!" : "➡️ Next";
+  btnNext.classList.toggle("btnNextHighlight", isDone);
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+  // Auto-scroll sheet body to bottom when done so actions are visible
+  if(isDone){
+    setTimeout(()=>{
+      const sb = document.getElementById("sheetBody");
+      if(sb) sb.scrollTo({ top: sb.scrollHeight, behavior: "smooth" });
+    }, 80);
+  }
   if(holdHint){
     holdHint.style.display = "none";
   }
@@ -2686,10 +2697,16 @@ function showWelcomeOverlay(){
     if(diff === "Medium") return missions.filter(x=>x.difficulty===2).length;
     return missions.length;
   }
+  const welcomeLabels = {
+    "Easy":   (n) => `${n} beginner-friendly missions 🐣`,
+    "all":    (n) => `All ${n} missions unlocked 🚀`,
+    "Medium": (n) => `${n} missions — good challenge ⚡`,
+  };
   function updateCount(diff){
     if(!countEl) return;
     const n = getMissionCount(diff);
-    countEl.textContent = n + " missions for this age";
+    const fn = welcomeLabels[diff] || ((n)=> `${n} missions`);
+    countEl.textContent = fn(n);
   }
 
   ageBtns.forEach(btn=>{

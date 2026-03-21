@@ -27,7 +27,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260319-6">
+  <link rel="stylesheet" href="style.css?v=20260319-7">
   <script>
     (function(){
       try{
@@ -88,8 +88,7 @@
       </div>
       <div class="topRight">
         <button class="btn btnPrimary headerPlay" id="btnHeaderPlay" aria-label="Play today's mission">▶︎ Play Today</button>
-        <div class="pill">Kids 3–8 • Safe play</div>
-        <button class="pill themeToggle" id="themeToggle" type="button" aria-label="Theme: System">🌓 Theme</button>
+        <button class="themeToggleIcon" id="themeToggle" type="button" aria-label="Toggle theme">🌓</button>
       </div>
     </div>
   </div>
@@ -402,13 +401,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-6" defer></script>
-<script src="data.js?v=20260319-6" defer></script>
-<script src="app.js?v=20260319-6" defer></script>
+<script src="confetti.min.js?v=20260319-7" defer></script>
+<script src="data.js?v=20260319-7" defer></script>
+<script src="app.js?v=20260319-7" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-6").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-7").catch(()=>{});
     });
   }
 </script>
