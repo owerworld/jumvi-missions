@@ -27,7 +27,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260319-13">
+  <link rel="stylesheet" href="style.css?v=20260319-14">
   <script>
     (function(){
       try{
@@ -330,36 +330,49 @@
 
 
   <!-- Certificate Modal -->
-  <div class="backdrop" id="certBackdrop" role="dialog" aria-modal="true" aria-label="Certificate">
-    <div class="sheet" id="certSheet">
-      <div class="sheetTop">
-        <div>
-          <div class="sheetTitle">🌟 Mission Champion • Star Catcher</div>
-          <div class="small">Print on US Letter or A4 (Save as PDF).</div>
+  <div class=”backdrop” id=”certBackdrop” role=”dialog” aria-modal=”true” aria-label=”Certificate”>
+    <div class=”sheet” id=”certSheet”>
+
+      <!-- Header -->
+      <div class=”sheetTop certSheetTop”>
+        <div class=”certHeader”>
+          <div class=”certHeaderEmoji”>🏆</div>
+          <div>
+            <div class=”sheetTitle certSheetTitle”>You Did It!</div>
+            <div class=”certHeaderSub”>Your certificate is ready to save &amp; share</div>
+          </div>
         </div>
-        <button class="close" id="btnCertClose" aria-label="Close certificate">✕</button>
+        <button class=”close certCloseBtn” id=”btnCertClose” aria-label=”Close certificate”>✕</button>
       </div>
 
-      <div class="certWrap">
-        <div class="field" style="justify-content:space-between; flex-wrap:wrap;">
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <label for="certNameInput">Child’s Name (optional)</label>
-            <input id="certNameInput" type="text" placeholder="(Optional) e.g. Alex" autocomplete="off" />
-          </div>
-          <div class="certControls">
-            <button class="btn btnLime" id="btnCertSavePng" aria-label="Save certificate as PNG">💾 Save as Image</button>
-            <button class="btn btnGhost" id="btnCertSavePdf" aria-label="Save certificate as PDF">📄 Save as PDF</button>
-            <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share</button>
-            <button class="btn certWhatsAppBtn" id="btnCertWhatsApp" aria-label="Share to WhatsApp">💬 WhatsApp</button>
-          </div>
+      <div class=”certWrap”>
+
+        <!-- Child name input -->
+        <div class=”certNameRow”>
+          <label class=”certNameLabel” for=”certNameInput”>Child’s name</label>
+          <input id=”certNameInput” class=”certNameInput” type=”text” placeholder=”Optional — e.g. Alex” autocomplete=”off” />
         </div>
 
-        <div class="certMetaLine" id="certMetaLine">Completed on: — • Certificate ID: —</div>
-        <div class="certPreviewWrap">
-          <img id="certPreviewImg" alt="Certificate preview" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+        <!-- Certificate preview -->
+        <div class=”certPreviewWrap”>
+          <img id=”certPreviewImg” alt=”Certificate preview” loading=”lazy” decoding=”async” src=”data:image/gif;base64,R0lGODlhAQABAAAAACw=” />
         </div>
 
-        <div class="small">Tip: For best print quality, choose “Background graphics” ON in print settings.</div>
+        <!-- Certificate ID badge -->
+        <div class=”certIdBadge” id=”certMetaLine”>📅 — &nbsp;·&nbsp; 🔖 —</div>
+
+        <!-- Primary CTA -->
+        <button class=”btn btnCertPrimary” id=”btnCertSavePng” aria-label=”Save certificate as image”>💾 Save to Photos</button>
+
+        <!-- Secondary row -->
+        <div class=”certSecondaryRow”>
+          <button class=”btn certShareBtn” id=”btnCertShare” aria-label=”Share certificate”>📤 Share</button>
+          <button class=”btn certWhatsAppBtn” id=”btnCertWhatsApp” aria-label=”Share via WhatsApp”>💬 WhatsApp</button>
+        </div>
+
+        <!-- Tertiary: PDF -->
+        <button class=”btn certPdfBtn” id=”btnCertSavePdf” aria-label=”Save as PDF”>📄 Save as PDF instead</button>
+
       </div>
     </div>
   </div>
@@ -401,13 +414,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-13" defer></script>
-<script src="data.js?v=20260319-13" defer></script>
-<script src="app.js?v=20260319-13" defer></script>
+<script src="confetti.min.js?v=20260319-14" defer></script>
+<script src="data.js?v=20260319-14" defer></script>
+<script src="app.js?v=20260319-14" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-13").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-14").catch(()=>{});
     });
   }
 </script>

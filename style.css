@@ -3017,3 +3017,197 @@ html, body {
 button, a, input, textarea, select, label {
   touch-action: manipulation;
 }
+
+/* ============================================================
+   CERTIFICATE MODAL — 10/10 REDESIGN
+   ============================================================ */
+
+/* ── Header ──────────────────────────────────────────────── */
+.certSheetTop {
+  align-items: flex-start !important;
+}
+.certHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.certHeaderEmoji {
+  font-size: 36px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.certSheetTitle {
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+}
+.certHeaderSub {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.certCloseBtn {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── Wrap ────────────────────────────────────────────────── */
+.certWrap {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+/* ── Name input ──────────────────────────────────────────── */
+.certNameRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.certNameLabel {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.certNameInput {
+  width: 100%;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  background: #ffffff;
+  color: #111827;
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-weight: 700;
+  font-size: 16px; /* iOS: prevents auto-zoom */
+  min-height: 50px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.certNameInput:focus {
+  border-color: #4FB3FF;
+  box-shadow: 0 0 0 3px rgba(79,179,255,0.18);
+}
+
+/* ── Preview ─────────────────────────────────────────────── */
+.certPreviewWrap {
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2.5px solid #FFD580;
+  box-shadow: 0 8px 32px rgba(255,180,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+  background: #fff;
+}
+#certPreviewImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+}
+
+/* ── ID badge ────────────────────────────────────────────── */
+.certIdBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--muted);
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 999px;
+  padding: 7px 16px;
+  letter-spacing: 0.01em;
+}
+
+/* ── Primary CTA ─────────────────────────────────────────── */
+.btnCertPrimary {
+  width: 100%;
+  min-height: 54px !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  border-radius: 16px !important;
+  background: linear-gradient(135deg, #4ade80, #16a34a) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 8px 24px rgba(22,163,74,0.40) !important;
+  letter-spacing: -0.01em;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.btnCertPrimary:active {
+  transform: scale(0.97) !important;
+  box-shadow: 0 4px 12px rgba(22,163,74,0.35) !important;
+}
+
+/* ── Secondary row ───────────────────────────────────────── */
+.certSecondaryRow {
+  display: flex;
+  gap: 10px;
+}
+.certSecondaryRow .certShareBtn,
+.certSecondaryRow .certWhatsAppBtn {
+  flex: 1;
+  min-height: 46px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  border-radius: 14px !important;
+}
+.certShareBtn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.30) !important;
+}
+.certShareBtn:active { transform: scale(0.97) !important; }
+
+.certWhatsAppBtn {
+  background: #25D366 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(37,211,102,0.30) !important;
+}
+.certWhatsAppBtn:active { transform: scale(0.97) !important; }
+
+/* ── Tertiary: PDF ───────────────────────────────────────── */
+.certPdfBtn {
+  background: none !important;
+  border: none !important;
+  color: var(--muted) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  min-height: 36px !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 6px 0 !important;
+  box-shadow: none !important;
+  align-self: center;
+}
+.certPdfBtn:active { opacity: 0.6 !important; }
+
+/* ── Dark mode overrides ─────────────────────────────────── */
+html.theme--dark .certHeaderSub {
+  color: #94a3b8;
+}
+html.theme--dark .certNameLabel {
+  color: #64748b;
+}
+html.theme--dark .certNameInput {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(255,255,255,0.18) !important;
+}
+html.theme--dark .certIdBadge {
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #94a3b8 !important;
+}
+html.theme--dark .certPdfBtn {
+  color: #64748b !important;
+}
+html.theme--dark .certPreviewWrap {
+  border-color: #d97706 !important;
+  box-shadow: 0 8px 32px rgba(217,119,6,0.25), 0 2px 8px rgba(0,0,0,0.40) !important;
+}

@@ -1965,7 +1965,7 @@ function buildCertificate(){
   const raw = (certNameInput.value || "").trim();
   lsSet(CERT_NAME_KEY, raw);
   if(certMetaLine){
-    certMetaLine.textContent = "Completed on: " + getToday() + " • Certificate ID: " + getCertId();
+    certMetaLine.innerHTML = "📅 " + getToday() + " &nbsp;·&nbsp; 🔖 " + getCertId();
   }
   scheduleCertificatePreview();
 }
