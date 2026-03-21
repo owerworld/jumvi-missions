@@ -2873,3 +2873,138 @@ html.theme--dark #btnRandomPack{
   border-color: rgba(255,255,255,0.32) !important;
   color: #cbd5e1 !important;
 }
+
+/* ============================================================
+   10/10 DARK MODE FINAL POLISH PASS — v20260322
+   ============================================================ */
+
+/* ── 1. Start Timer: real amber CTA (not a ghost tint) ─────── */
+html.theme--dark .btnTimer {
+  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+  box-shadow:
+    0 6px 22px rgba(249,115,22,0.55),
+    0 2px 6px rgba(234,88,12,0.4) !important;
+}
+html.theme--dark .btnTimer:active {
+  transform: scale(0.97) !important;
+  box-shadow: 0 3px 10px rgba(249,115,22,0.45) !important;
+}
+
+/* ── 2. kv section headers: premium small-caps labels ───────── */
+html.theme--dark .sheet .kv h3,
+html.theme--dark .sheet .kv h4 {
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: #94a3b8 !important;
+  margin-bottom: 10px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.09) !important;
+}
+
+/* ── 3. kv boxes: glass highlight top edge ──────────────────── */
+html.theme--dark .sheet .kv {
+  background: rgba(15,23,42,0.75) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 8px 24px rgba(0,0,0,0.45) !important;
+  border-radius: 14px !important;
+}
+
+/* ── 4. Badges button: visually secondary vs Random ─────────── */
+#btnBadges {
+  font-size: 13px !important;
+  min-height: 40px !important;
+  padding: 8px 14px !important;
+  opacity: 0.85;
+}
+html.theme--dark #btnBadges {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.20) !important;
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+
+/* ── 5. Mission card pack accent glow (dark mode depth) ─────── */
+html.theme--dark .card.pack--reflex-rush {
+  box-shadow: -1px 0 14px rgba(249,115,22,0.22), 0 4px 18px rgba(0,0,0,0.35) !important;
+}
+html.theme--dark .card.pack--aim-master {
+  box-shadow: -1px 0 14px rgba(59,130,246,0.22), 0 4px 18px rgba(0,0,0,0.35) !important;
+}
+html.theme--dark .card.pack--focus-control {
+  box-shadow: -1px 0 14px rgba(16,185,129,0.22), 0 4px 18px rgba(0,0,0,0.35) !important;
+}
+html.theme--dark .card.pack--team-duo {
+  box-shadow: -1px 0 14px rgba(139,92,246,0.22), 0 4px 18px rgba(0,0,0,0.35) !important;
+}
+html.theme--dark .card.pack--indoor-compact {
+  box-shadow: -1px 0 14px rgba(6,182,212,0.22), 0 4px 18px rgba(0,0,0,0.35) !important;
+}
+html.theme--dark .card.pack--beach-park {
+  box-shadow: -1px 0 14px rgba(245,158,11,0.22), 0 4px 18px rgba(0,0,0,0.35) !important;
+}
+
+/* ── 6. Sheet mission title: premium weight + sizing ────────── */
+html.theme--dark .sheetTitle {
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.025em !important;
+  color: #f1f5f9 !important;
+  line-height: 1.15 !important;
+}
+
+/* ── 7. themeToggleIcon: visible in dark mode ───────────────── */
+html.theme--dark .themeToggleIcon {
+  border-color: rgba(255,255,255,0.28) !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+html.theme--dark .themeToggleIcon:active {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* ── 8. Progress bar track: visible even when empty ─────────── */
+html.theme--dark .bar {
+  background: rgba(255,255,255,0.10) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+html.theme--dark .bar > div {
+  box-shadow: 0 0 10px rgba(79,179,255,0.5) !important;
+}
+
+/* ── 9. Topbar: subtle bottom separator in dark mode ────────── */
+html.theme--dark .topbar {
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* ── 10. Next Mission highlight: stronger lime pop ──────────── */
+html.theme--dark .btnNextHighlight {
+  background: linear-gradient(135deg, #a3e635, #65a30d) !important;
+  color: #052e16 !important;
+  font-weight: 800 !important;
+  border-color: transparent !important;
+  box-shadow:
+    0 6px 22px rgba(132,204,22,0.55),
+    0 2px 6px rgba(101,163,13,0.4) !important;
+}
+
+/* ── 11. "Done ✓" card badge: more vivid in dark ───────────── */
+html.theme--dark .doneBadge,
+html.theme--dark .card .done-badge,
+html.theme--dark .card [class*="done"] {
+  box-shadow: 0 0 10px rgba(52,211,153,0.40) !important;
+}
+
+/* ── 12. Read to Me: teal glow to match Start Timer energy ──── */
+html.theme--dark #btnSpeak {
+  background: rgba(6,182,212,0.18) !important;
+  border-color: rgba(6,182,212,0.55) !important;
+  color: #67e8f9 !important;
+  font-weight: 700 !important;
+}
