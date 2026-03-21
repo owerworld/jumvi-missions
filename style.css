@@ -2637,3 +2637,68 @@ html.theme--light .welcomeMissionCount{ color:#1d6fb5; }
   opacity:0.7;
   line-height:1.4;
 }
+
+/* ===================================================
+   PACK COLOR ACCENTS — left border per mission card
+   =================================================== */
+.card.pack--reflex-rush  { border-left: 3px solid #F97316; }
+.card.pack--aim-master   { border-left: 3px solid #3B82F6; }
+.card.pack--focus-control{ border-left: 3px solid #10B981; }
+.card.pack--team-duo     { border-left: 3px solid #8B5CF6; }
+.card.pack--indoor-compact{ border-left: 3px solid #06B6D4; }
+.card.pack--beach-park   { border-left: 3px solid #F59E0B; }
+
+/* Badge hint */
+.badgesHint{
+  font-size:11px;
+  color:var(--muted);
+  opacity:0.6;
+  text-align:right;
+  padding:2px 4px 0;
+  margin-top:-4px;
+}
+html.theme--light .badgesHint{ color:#374151; }
+
+/* Daily mission context hint */
+.dailyHint{
+  display:block;
+  margin-top:5px;
+  font-size:11px;
+  color:var(--blue,#4FB3FF);
+  font-style:italic;
+}
+html.theme--light .dailyHint{ color:#1d6fb5; }
+
+/* Mission Book in hero row */
+.missionBookBtn{
+  font-size:13px;
+  padding:8px 12px;
+  text-decoration:none;
+}
+
+/* Filters toggle chip */
+#btnToggleFilters.active{
+  background: rgba(79,179,255,0.15);
+  border-color: var(--blue,#4FB3FF);
+  color: var(--blue,#4FB3FF);
+}
+
+/* iOS safe-area: ensure sheet actions clear the home indicator */
+.sheetActions{
+  padding-bottom: max(16px, calc(10px + env(safe-area-inset-bottom)));
+}
+
+/* Sheet scroll isolation — prevent background scroll bleed */
+.sheet{
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.backdrop.show{
+  overscroll-behavior: none;
+  touch-action: none;
+}
+.sheetBody{
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}

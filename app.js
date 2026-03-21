@@ -1062,10 +1062,13 @@ function renderDailyUI(){
   if(dailyIcon) dailyIcon.textContent = doneToday ? "✅" : ms.icon;
   if(dailyName) dailyName.textContent = ms.title;
   if(dailyMeta){
+    const contextHints = ["Great for first-time players!","Fun warm-up for today!","A quick favorite — try it!","Perfect for 5 minutes of play.","Challenge yourselves today!"];
+    const hint = contextHints[ms.id % contextHints.length];
     dailyMeta.innerHTML = `
       <span class="tag pack">${escapeHtml(ms.pack)}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
       <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+      <span class="dailyHint">${hint}</span>
     `;
   }
   if(btnDailyPlay){
@@ -1090,12 +1093,15 @@ const btnA2hsInstall = document.getElementById("btnA2hsInstall");
 window.addEventListener("beforeinstallprompt", (e)=>{
   e.preventDefault();
   deferredInstallPrompt = e;
-  if(a2hsBanner && !isStandalone()) {
-    if(a2hsHint) a2hsHint.textContent = "Install JUMVI for quick access.";
-    const steps = document.getElementById("a2hsSteps");
-    if(steps) steps.textContent = "Tap Install";
-    a2hsBanner.style.display = "flex";
-  }
+  // Delay Android A2HS banner too — same 30s rule
+  setTimeout(()=>{
+    if(a2hsBanner && !isStandalone()) {
+      if(a2hsHint) a2hsHint.textContent = "Install JUMVI for quick access.";
+      const steps = document.getElementById("a2hsSteps");
+      if(steps) steps.textContent = "Tap Install";
+      a2hsBanner.style.display = "flex";
+    }
+  }, 30000);
 });
 if(btnA2hsInstall){
   btnA2hsInstall.onclick = async ()=>{
@@ -1387,7 +1393,9 @@ const listItemCache = new Map();
 
 function createMissionCard(ms){
   const c = document.createElement("div");
-  c.className = "card";
+  // Add pack-slug class for color accent (e.g. pack--reflex-rush)
+  const packSlug = "pack--" + (ms.pack || "").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  c.className = "card " + packSlug;
   c.dataset.id = String(ms.id);
 
   const icon = document.createElement("div");
@@ -1547,16 +1555,20 @@ function updateBadges(){
 function updateProgress(){
   const total = missions.length;
   const completed = done.size;
-  progressText.textContent = `${completed} / ${total} completed`;
+  progressText.textContent = `${completed} / ${total} missions done`;
   const pct = Math.round((completed/total)*100);
   progressFill.style.width = pct + "%";
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
 
   if(completed>=total){
     progressSub.textContent = "All missions completed! Certificate unlocked 🏆";
-  }else{
+  } else if(completed === 0){
+    progressSub.textContent = "Pick 1 mission today → build your streak → unlock your certificate.";
+  } else if(completed <= 3){
+    progressSub.textContent = `Great start! 🎉 Keep going — ${total - completed} missions to go.`;
+  } else {
     const remaining = total - completed;
-    progressSub.textContent = `${remaining} mission${remaining===1 ? "" : "s"} left to unlock the certificate.`;
+    progressSub.textContent = `${remaining} mission${remaining===1?"":"s"} left to unlock your certificate.`;
   }
 
   renderStreakUI();
@@ -1770,9 +1782,9 @@ function openMission(id){
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
-  mTip.innerHTML = `<b>Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
+  mTip.innerHTML = `<b>👨‍👩‍👧 Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   if(mKidsTip){
-    mKidsTip.innerHTML = `<b>Kids tip</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
+    mKidsTip.innerHTML = `<b>🧒 Kids Challenge</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
   }
   mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(getSafetyText(ms))}</div>`;
   if(mHint){
@@ -2240,9 +2252,11 @@ function markMissionDone(id, source="manual"){
   if(source === "auto"){
     showToast("✅ Mission marked done.");
   } else {
-    // Immediate completion toast
+    // First ever completion — special moment
     const remaining = missions.length - done.size;
-    if(remaining > 0){
+    if(done.size === 1){
+      setTimeout(()=>{ fireConfetti(1800); showToast("🎉 First mission done! Your streak has started!"); }, 400);
+    } else if(remaining > 0){
       showToast(`⭐ Great job! ${remaining} mission${remaining===1?"":"s"} left!`);
     }
     // Streak milestones — delayed so they don't overwrite the completion toast
@@ -2493,6 +2507,20 @@ btnOnlyUnfinished.onclick = ()=>{
   persistOnly();
   renderList();
 };
+
+// Filters toggle (Players + Difficulty collapsed by default)
+const btnToggleFilters = document.getElementById("btnToggleFilters");
+const filterGroupsEl = document.getElementById("filterGroups");
+let filtersOpen = false;
+if(btnToggleFilters && filterGroupsEl){
+  btnToggleFilters.addEventListener("click", ()=>{
+    clickSound("click");
+    filtersOpen = !filtersOpen;
+    filterGroupsEl.style.display = filtersOpen ? "" : "none";
+    btnToggleFilters.classList.toggle("active", filtersOpen);
+    btnToggleFilters.textContent = filtersOpen ? "✕ Filters" : "⚙️ Filters";
+  });
+}
 
 /** =======================
  * New UI buttons
@@ -2760,7 +2788,8 @@ function init(){
   hideReadToMeIfUnsupported();
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
   showWelcomeOverlay();
-  maybeShowA2HS();
+  // Delay A2HS banner — don't interrupt the first impression
+  setTimeout(maybeShowA2HS, 30000);
   checkOptionalDownloads();
 
   // restore certificate name (optional)

@@ -27,7 +27,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260319-3">
+  <link rel="stylesheet" href="style.css?v=20260319-4">
   <script>
     (function(){
       try{
@@ -96,9 +96,9 @@
 
   <div class="wrap">
     <section class="hero">
-      <h1 class="h1">Scan → Play → Grow Skills</h1>
+      <h1 class="h1">36 Missions for Your JUMVI Paddle Set</h1>
       <p class="sub">
-        Pick a mission, play together, and tap Done to track progress.
+        Pick a mission, grab your paddles &amp; ball, and play together.
         <br>Build reflex • focus • teamwork • confidence
       </p>
       <details class="safetyDetails">
@@ -119,13 +119,14 @@
       <div class="row">
         <button class="btn btnPrimary" id="btnRandomAll" aria-label="Pick a random mission">🎲 Random</button>
         <button class="btn btnGhost" id="btnBadges" aria-label="Open badges">🏅 Badges</button>
+        <a class="btn btnGhost missionBookBtn" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener" aria-label="Download Mission Book">📘 Mission Book</a>
       </div>
 
       <div class="progressBox" aria-label="progress">
         <div class="pLeft">
-          <div class="pText" id="progressText">0 / 30 completed</div>
-          <div class="pSub" id="progressSub">Complete missions to unlock your certificate.</div>
-          <div class="pExtra" id="progressExtra">You’re doing great! Complete missions to unlock your certificate.</div>
+          <div class="pText" id="progressText">0 / 36 completed</div>
+          <div class="pSub" id="progressSub">Pick 1 mission today → build your streak → unlock your certificate.</div>
+          <div class="pExtra" id="progressExtra">Your adventure starts now! Tap any mission to begin.</div>
         </div>
         <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
           <div id="progressBarFill"></div>
@@ -180,6 +181,7 @@
       </div>
 
       <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+      <div class="badgesHint" id="badgesHint">Swipe to see all badges →</div>
 
       <div class="certBox" id="certBox">
         <div class="certLeft">
@@ -210,12 +212,13 @@
 
         <div class="toggleRow">
           <button class="chip limeActive" id="btnOnlyUnfinished" aria-label="Show only unfinished missions" type="button">Only Unfinished</button>
+          <button class="chip" id="btnToggleFilters" aria-label="Show more filters" type="button">⚙️ Filters</button>
         </div>
       </div>
 
       <div class="filters" id="filters" aria-label="packs"></div>
 
-      <div class="filterGroups" id="filterGroups">
+      <div class="filterGroups" id="filterGroups" style="display:none">
         <div class="filterGroup">
           <div class="filterLabel">Players</div>
           <div class="filterChips" id="filterPlayers"></div>
@@ -273,10 +276,6 @@
         <button class="btn btnTimer" id="btnStartTimer" aria-label="Start or pause timer">⏱️ Start Timer</button>
         <button class="btn btnGhost" id="btnSpeak" aria-label="Read mission aloud">🗣️ Read to Me</button>
       </div>
-      <label class="autoDoneToggle" for="autoDoneToggle">
-        <input type="checkbox" id="autoDoneToggle" />
-        Auto‑complete when timer ends
-      </label>
 
       <div class="kv" id="mSteps"></div>
       <div class="kv" id="mWin"></div>
@@ -403,13 +402,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-3" defer></script>
-<script src="data.js?v=20260319-3" defer></script>
-<script src="app.js?v=20260319-3" defer></script>
+<script src="confetti.min.js?v=20260319-4" defer></script>
+<script src="data.js?v=20260319-4" defer></script>
+<script src="app.js?v=20260319-4" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-3").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260319-4").catch(()=>{});
     });
   }
 </script>
