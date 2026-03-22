@@ -289,13 +289,22 @@ const CERT_META_COLOR = "#475569";
 const CERT_NAME_FONT = "700 64px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
 const CERT_META_FONT = "600 20px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
 
+// FIX: crossOrigin prevents canvas tainting when template served from CDN/different origin
 function loadImage(src){
   return new Promise((resolve, reject)=>{
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.onload = ()=> resolve(img);
     img.onerror = ()=> reject(new Error("img_load_failed"));
     img.src = src;
   });
+}
+
+// FIX: Shared iOS/iPadOS detection — modern iPads show "Macintosh" UA
+function isIosDevice(){
+  return (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+          (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) &&
+         !window.MSStream;
 }
 async function loadImageWithFallback(sources){
   for(const src of sources){
@@ -578,7 +587,7 @@ function hideSaveOverlay(){
   saveOverlay.dataset.url = "";
   if(saveImg){
     saveImg.src = "";
-    saveImg.style.display = "block";
+    saveImg.style.display = "none"; // FIX: hide image on close (was "block")
   }
   if(saveSub){
     saveSub.textContent = "Tap and hold the image → Save Image";
@@ -1945,13 +1954,17 @@ let certPreviewTimer = null;
 
 async function updateCertificatePreview(){
   if(!certPreviewImg) return;
+  // FIX: dim preview while generating — instant loading feedback
+  certPreviewImg.style.opacity = "0.35";
+  certPreviewImg.style.transition = "opacity 0.25s";
   const blob = await renderSimpleCertificateBlob();
-  if(!blob) return;
+  if(!blob){ certPreviewImg.style.opacity = "1"; return; }
   const url = URL.createObjectURL(blob);
   if(certPreviewUrl){
     try{ URL.revokeObjectURL(certPreviewUrl); }catch(_){}
   }
   certPreviewUrl = url;
+  certPreviewImg.onload = ()=>{ certPreviewImg.style.opacity = "1"; };
   certPreviewImg.src = url;
 }
 
@@ -2056,27 +2069,21 @@ function openImageForSave(url){
 }
 
 async function downloadCertificatePNG({auto=true}={}){
-  // iOS Safari/Chrome (WebKit) restricts programmatic downloads.
-  // Reliable iPhone flow:
-  // - Prefer a simple canvas renderer for iOS reliability
-  // - Use Share Sheet when file sharing is supported
-  // - Otherwise open the PNG in a new tab + show long-press save hint
-  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isiOS = isIosDevice();
   const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
 
-  // iPhone: give instant feedback (avoid "nothing happened" feeling)
+  // FIX: loading state on BOTH iOS + Android (prevents double-tap, gives feedback)
+  const origHTML = btnCertSavePng ? btnCertSavePng.innerHTML : "";
+  if(btnCertSavePng){
+    btnCertSavePng.disabled = true;
+    btnCertSavePng.textContent = "⏳ Preparing…";
+  }
   if(isiOS){
-    try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){ }
-    try{ showToast("Preparing certificate…"); }catch(_){ }
-    if(btnCertSavePng){
-      btnCertSavePng.disabled = true;
-      btnCertSavePng.dataset.prevText = btnCertSavePng.textContent || "";
-      btnCertSavePng.textContent = "⏳ Preparing…";
-    }
+    try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){}
+    try{ showToast("Preparing certificate…"); }catch(_){}
   }
 
   try{
-    // Single source of truth: template-based render
     const blob = await renderSimpleCertificateBlob();
     if(!blob){
       hideSaveOverlay();
@@ -2085,27 +2092,30 @@ async function downloadCertificatePNG({auto=true}={}){
     }
 
     if(isiOS){
-      // Prefer Share Sheet with files
+      // iOS/iPadOS: prefer Share Sheet with file attachment
       const file = new File([blob], filename, {type:"image/png"});
-      const canShareFile = !!(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]}));
+      const canShareFile = !!(window.isSecureContext && navigator.share &&
+                              navigator.canShare && navigator.canShare({files:[file]}));
       if(canShareFile){
         try{
-          await navigator.share({files:[file], title:"JUMVI Certificate"});
+          await navigator.share({files:[file], title:"JUMVI Certificate",
+                                 text:"🏆 My JUMVI Champion Certificate!"});
           hideSaveOverlay();
-          if(!auto) showToast("Share sheet opened");
+          if(!auto) showToast("✅ Saved to Photos!");
           return;
-        }catch(_){
-          // fall through to long-press save
+        }catch(e){
+          if(e.name === "AbortError"){ hideSaveOverlay(); return; }
+          // fall through to long-press overlay
         }
       }
-
+      // Fallback: open in new tab + long-press hint
       const url = URL.createObjectURL(blob);
       openImageForSave(url);
-      showSaveOverlay(url, "Tap and hold the image → Save Image");
+      showSaveOverlay(url, "Tap and hold the image → Save to Photos");
       return;
     }
 
-    // Non‑iOS: direct download from blob
+    // Android / Desktop: direct download
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -2113,17 +2123,17 @@ async function downloadCertificatePNG({auto=true}={}){
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
-    if(!auto) showToast("Saved ✅");
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
+    if(!auto) showToast("✅ Certificate saved!");
 
   }catch(err){
     hideSaveOverlay();
     showFallbackModal();
   }finally{
-    if(isiOS && btnCertSavePng){
+    // FIX: restore original button HTML (not hardcoded old text)
+    if(btnCertSavePng){
       btnCertSavePng.disabled = false;
-      btnCertSavePng.textContent = btnCertSavePng.dataset.prevText || "Save as Image (PNG)";
-      delete btnCertSavePng.dataset.prevText;
+      btnCertSavePng.innerHTML = origHTML || "💾 Save to Photos";
     }
   }
 }
@@ -2132,27 +2142,32 @@ async function downloadCertificatePNG({auto=true}={}){
 async function shareCertificate(){
   clickSound("click");
   const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+  // FIX: correct mission count (36) + always try image file first
+  const shareText = "🏆 Completed all 36 JUMVI Toss & Catch missions!";
   try{
     const blob = await renderSimpleCertificateBlob();
     if(!blob){ showToast("Couldn't generate certificate."); return; }
     const file = new File([blob], filename, {type:"image/png"});
-    if(window.isSecureContext && navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file], title:"JUMVI Champion Certificate", text:"🏆 Completed all 30 JUMVI missions!"});
+    if(window.isSecureContext && navigator.share && navigator.canShare &&
+       navigator.canShare({files:[file]})){
+      // Best path: share actual image file (iOS + Android Chrome)
+      await navigator.share({files:[file], title:"JUMVI Champion Certificate",
+                             text: shareText});
     }else if(navigator.share){
-      const url = URL.createObjectURL(blob);
-      await navigator.share({title:"JUMVI Champion Certificate", text:"🏆 Completed all 30 JUMVI missions!", url: location.href});
-      setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+      // Fallback: share URL with text (no file support)
+      await navigator.share({title:"JUMVI Champion Certificate",
+                             text: shareText, url: location.href});
     }else{
-      // Desktop: trigger download
+      // Desktop: download the file
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url; a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
-      showToast("Certificate saved!");
+      setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
+      showToast("✅ Certificate saved!");
     }
   }catch(e){
-    if(e.name !== "AbortError") showToast("Share failed. Try Save as Image.");
+    if(e.name !== "AbortError") showToast("Share failed. Try Save to Photos.");
   }
 }
 
@@ -2160,12 +2175,33 @@ async function shareCertificateWhatsApp(){
   clickSound("click");
   const name = (certNameInput && certNameInput.value || "").trim();
   const namePart = name ? ` ${name}` : "";
-  const text = `🏆${namePart} completed all 30 JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+  // FIX: correct mission count (36)
+  const shareText = `🏆${namePart} completed all 36 JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
+
+  // FIX: try Web Share API with image file first (works on iOS + Android Chrome)
+  // — this opens WhatsApp natively if the user picks it from the share sheet
+  try{
+    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+    const blob = await renderSimpleCertificateBlob();
+    if(blob){
+      const file = new File([blob], filename, {type:"image/png"});
+      if(window.isSecureContext && navigator.share && navigator.canShare &&
+         navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:"JUMVI Certificate", text: shareText});
+        return;
+      }
+    }
+  }catch(e){
+    if(e.name === "AbortError") return;
+    // fall through to wa.me deep link
+  }
+
+  // Fallback: wa.me deep link (opens WhatsApp with pre-filled text + link)
+  window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank", "noopener");
 }
 
 async function downloadCertificatePDF(){
-  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isiOS = isIosDevice(); // FIX: use shared helper (catches modern iPad)
   const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.pdf`;
   try{
     const ok = await ensurePdfLib();
@@ -2211,7 +2247,8 @@ async function downloadCertificatePDF(){
       }
       const url = URL.createObjectURL(blob);
       openImageForSave(url);
-      showSaveOverlay(url, "Tap and hold the image → Save Image");
+      // FIX: PDF-appropriate instruction (not "save image")
+      showSaveOverlay(url, "Tap 'Open in…' → Save to Files or AirPrint");
       return;
     }
 
@@ -2222,7 +2259,8 @@ async function downloadCertificatePDF(){
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){ } }, 3000);
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
+    showToast("✅ PDF saved!");
   }catch(_){
     showToast("PDF export failed. Try again.");
   }
@@ -2261,7 +2299,7 @@ if(certBtn){
     if(unlocked){
       openCertificate();
     }else{
-      showToast("Finish all 30 missions to unlock.");
+      showToast("Finish all 36 missions to unlock.");
     }
   };
 }
@@ -2500,7 +2538,7 @@ document.getElementById("btnShareWhatsApp").onclick = ()=>{
   let topBadge = null;
   for(const b of BADGES){ if(b.check(done)) topBadge = b; }
   const badgePart = topBadge ? `Top badge: ${topBadge.icon} ${topBadge.name}\n` : "";
-  const text = `🎯 We completed ${done.size}/30 JUMVI missions!\n${badgePart}Try it: ${url}`;
+  const text = `🎯 We completed ${done.size}/36 JUMVI missions!\n${badgePart}Try it: ${url}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
 };
 document.getElementById("btnShareCopy").onclick = async ()=>{
@@ -2509,7 +2547,7 @@ document.getElementById("btnShareCopy").onclick = async ()=>{
   let topBadge = null;
   for(const b of BADGES){ if(b.check(done)) topBadge = b; }
   const badgePart = topBadge ? ` | Badge: ${topBadge.icon} ${topBadge.name}` : "";
-  const text = `🎯 ${done.size}/30 JUMVI missions completed${badgePart} → ${url}`;
+  const text = `🎯 ${done.size}/36 JUMVI missions completed${badgePart} → ${url}`;
   try{
     if(navigator.share){
       await navigator.share({ title:"JUMVI Missions", text, url });
