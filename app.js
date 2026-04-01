@@ -1925,6 +1925,8 @@ if(btnSpeak){
 
   backdrop.classList.add("show");
   sheet.scrollTop = 0;
+  const _sb = document.getElementById("sheetBody");
+  if(_sb) _sb.scrollTop = 0;
   // Lock background scroll while modal is open
   const _aw = document.getElementById("app-wrapper");
   if(_aw) _aw.style.overflowY = "hidden";
@@ -2781,7 +2783,7 @@ function showWelcomeOverlay(){
       // Always close overlay first — nothing should block this
       overlay.classList.add("hiding");
       setTimeout(()=>{ overlay.style.display = "none"; }, 380);
-      clickSound("click");
+      clickSound("success");
       // Persist selection
       try { lsSet(ONBOARD_KEY, "1"); } catch(e){}
       try { lsSet(AGE_KEY, selectedDiff); } catch(e){}
@@ -2793,6 +2795,15 @@ function showWelcomeOverlay(){
           renderList();
         }
       } catch(e){ console.warn("Welcome filter:", e); }
+      // Splash transition: "Let's Play!" for 1.5s
+      if(!prefersReducedMotion){
+        const splash = document.getElementById("splashOverlay");
+        if(splash){
+          splash.classList.add("show");
+          setTimeout(()=> splash.classList.add("hiding"), 1100);
+          setTimeout(()=>{ splash.classList.remove("show","hiding"); }, 1500);
+        }
+      }
     });
   }
 }
@@ -2857,6 +2868,14 @@ function init(){
   }
   if(btnHeaderPlay){
     btnHeaderPlay.onclick = ()=>{
+      clickSound("click");
+      ensureDailyMission();
+      if(dailyIdStored){ openMission(dailyIdStored); }
+    };
+  }
+  const btnPlayToday = document.getElementById("btnPlayToday");
+  if(btnPlayToday){
+    btnPlayToday.onclick = ()=>{
       clickSound("click");
       ensureDailyMission();
       if(dailyIdStored){ openMission(dailyIdStored); }
