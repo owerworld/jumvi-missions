@@ -51,6 +51,15 @@
 <body>
   <div class="bgLayer" aria-hidden="true"></div>
 
+  <!-- Splash transition overlay — shown after age selection -->
+  <div id="splashOverlay" class="splashOverlay" aria-hidden="true">
+    <div class="splashContent">
+      <div class="splashEmoji">🎉</div>
+      <div class="splashTitle">Let's Play!</div>
+      <div class="splashSub">Grab your paddles!</div>
+    </div>
+  </div>
+
   <!-- Welcome Overlay — shown once for new visitors -->
   <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
     <div class="welcomePanel">
@@ -95,15 +104,8 @@
 
   <div class="wrap">
     <section class="hero">
-      <h1 class="h1">36 Missions for Your JUMVI Paddle Set</h1>
-      <p class="sub">
-        Pick a mission, grab your paddles &amp; ball, and play together.
-        <br>Build reflex • focus • teamwork • confidence
-      </p>
-      <details class="safetyDetails">
-        <summary>⚠️ Safe play tips</summary>
-        Throw below face level · keep 1–3 m distance · adult supervision required.
-      </details>
+      <h1 class="h1">Let's Play Together</h1>
+      <p class="sub">36 missions • ages 3–8 • grab your paddles &amp; go</p>
 
       <div class="a2hs" id="a2hsBanner" style="display:none;">
         <div class="a2hsText">
@@ -115,10 +117,13 @@
         <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button">✕</button>
       </div>
 
-      <div class="row">
-        <button class="btn btnPrimary" id="btnRandomAll" aria-label="Pick a random mission">🎲 Random</button>
-        <button class="btn btnGhost" id="btnBadges" aria-label="Open badges">🏅 Badges</button>
-        <a class="btn btnGhost missionBookBtn" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener" aria-label="Download Mission Book">📘 Mission Book</a>
+      <div class="heroActions">
+        <button class="btn btnPrimary btnPlayToday" id="btnPlayToday" aria-label="Play today's mission">▶ Play Today</button>
+        <div class="row heroSecondaryRow">
+          <button class="btn btnGhost" id="btnRandomAll" aria-label="Pick a random mission">🎲 Random</button>
+          <button class="btn btnGhost" id="btnBadges" aria-label="Open badges">🏅 Badges</button>
+        </div>
+        <a class="btnTextLink" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener" aria-label="Download Mission Book">📘 Mission Book</a>
       </div>
 
       <div class="progressBox" aria-label="progress">
@@ -281,6 +286,10 @@
       <div class="kv" id="mTip"></div>
       <div class="kv" id="mKidsTip"></div>
       <div class="kv" id="mSafety"></div>
+      <details class="safetyDetails modalSafetyDetails">
+        <summary>⚠️ General safe play tips</summary>
+        Throw below face level · keep 1–3 m distance · adult supervision required.
+      </details>
       <div class="kv hintBox" id="mHint" style="display:none"></div>
 
       <div class="small" id="mSmall"></div>
