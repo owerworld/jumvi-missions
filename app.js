@@ -408,6 +408,7 @@ const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
 const ATTEMPTS_KEY      = "jumvi_attempts_v1";
 const SKIPS_KEY         = "jumvi_skips_v1";
 const THEME_KEY         = "jumvi_theme_v1";
+const BADGES_UNLOCKED_KEY = "jumvi_badges_unlocked_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
@@ -1036,11 +1037,27 @@ function renderStreakUI(animate=false){
     streakPill.textContent = `🔥 ${sc} day${sc === 1 ? "" : "s"} streak`;
     streakPill.style.opacity = "";
   }
+  // Renk seviyesi: 7+ kırmızı, 3+ turuncu, normal sarı
+  streakPill.classList.remove("streak-warm", "streak-hot");
+  if(sc >= 7) streakPill.classList.add("streak-hot");
+  else if(sc >= 3) streakPill.classList.add("streak-warm");
+
   if(animate && streakCount > 0){
     streakPill.classList.remove("pulse");
-    void streakPill.offsetWidth; // reflow to restart animation
+    void streakPill.offsetWidth;
     streakPill.classList.add("pulse");
     setTimeout(()=> streakPill.classList.remove("pulse"), 600);
+  }
+}
+
+function checkStreakWarning(){
+  if(streakCount <= 0) return;
+  const today = isoLocalDate();
+  if(lastActiveIso === today) return; // bugün zaten oynadı
+  // Streak kırılma riski — dün oynadıysa uyar
+  const yesterday = yesterdayIso(today);
+  if(lastActiveIso === yesterday){
+    setTimeout(()=> showToast("Don't lose your streak! Play today 🔥"), 2000);
   }
 }
 
@@ -1520,13 +1537,38 @@ function remainingText(){
   return `${done} / ${missions.length} done — keep going!`;
 }
 
+function showBadgeUnlockModal(badge){
+  const modal = document.getElementById("badgeUnlockModal");
+  if(!modal) return;
+  const emojiEl = document.getElementById("badgeUnlockEmoji");
+  const nameEl  = document.getElementById("badgeUnlockName");
+  const reqEl   = document.getElementById("badgeUnlockReq");
+  const closeBtn = document.getElementById("badgeUnlockClose");
+  if(emojiEl) emojiEl.textContent = badge.icon;
+  if(nameEl)  nameEl.textContent  = badge.name;
+  if(reqEl)   reqEl.textContent   = badge.req;
+  modal.classList.add("show");
+  if(!prefersReducedMotion) fireConfetti(2000);
+  clickSound("success");
+  const dismiss = ()=>{ modal.classList.remove("show"); };
+  if(closeBtn){ closeBtn.onclick = dismiss; }
+  modal.onclick = (e)=>{ if(e.target===modal) dismiss(); };
+}
+
 function updateBadges(){
   badgesRow.innerHTML = "";
-  const unlocked = new Set();
   const badgeCtx = { streakCount, bestStreak };
+  const prevUnlocked = new Set(lsGetJSON(BADGES_UNLOCKED_KEY, []));
+  const nowUnlocked  = new Set();
+  const newlyUnlocked = [];
+
   BADGES.forEach(b=>{
     const ok = !!b.check(done, badgeCtx);
-    if(ok) unlocked.add(b.id);
+    if(ok){
+      nowUnlocked.add(b.id);
+      if(!prevUnlocked.has(b.id)) newlyUnlocked.push(b);
+    }
+    // Ana sayfa scroll-row badge'i
     const el = document.createElement("div");
     el.className = "badge" + (ok ? " unlocked" : "");
     el.innerHTML = `
@@ -1537,50 +1579,76 @@ function updateBadges(){
     badgesRow.appendChild(el);
   });
 
-  // badges modal list (pretty)
+  // Yeni kazanılan badge'leri kaydet
+  if(nowUnlocked.size > 0){
+    lsSet(BADGES_UNLOCKED_KEY, JSON.stringify([...nowUnlocked]));
+  }
+
+  // Badges modal — 2 kolonlu grid
   badgesList.innerHTML = BADGES.map(b=>{
     const ok = !!b.check(done, badgeCtx);
+    const totalInPack = 6; // her kategori 6 mission
+    // Kilitli badge için kaç mission kaldı — basit tahmin
+    let toGo = "";
+    if(!ok){
+      // Badge req metninden sayı çıkarmaya çalış
+      const m = b.req.match(/(\d+)/);
+      if(m){
+        const needed = parseInt(m[1]);
+        const current = done.size;
+        const left = Math.max(0, needed - current);
+        if(left > 0) toGo = `${left} mission${left===1?"":"s"} to go`;
+      }
+    }
     return `
-      <div class="badgesListItem">
-        <div style="font-size:22px; width:34px">${b.icon}</div>
-        <div style="flex:1">
-          <div class="badgesListName">${escapeHtml(b.name)} ${ok ? "✅" : "🔒"}</div>
-          <div class="badgesListReq">${escapeHtml(b.req)}</div>
-        </div>
+      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}">
+        <div class="badgesListIcon">${b.icon}</div>
+        <div class="badgesListName">${escapeHtml(b.name)}</div>
+        <div class="badgesListReq">${escapeHtml(b.req)}</div>
+        <div class="badgesListStatus">${ok ? "✓ Earned" : (toGo || "🔒 Locked")}</div>
       </div>
     `;
   }).join("");
 
-  // certificate unlock
-  const unlockedAll = done.size >= missions.length;
+  // Certificate unlock + progress bar
+  const total = missions.length;
+  const completed = done.size;
+  const unlockedAll = completed >= total;
+  const certFill = document.getElementById("certProgressFill");
+  if(certFill) certFill.style.width = Math.round((completed/total)*100) + "%";
+
   if(unlockedAll){
     certBtn.classList.add("unlocked");
     certBtn.classList.remove("locked");
     certBtn.textContent = "Open";
     certBtn.setAttribute("aria-disabled","false");
-    certSub.textContent = "Unlocked! Open and save your printable certificate.";
+    certSub.textContent = "Unlocked! 🏆 Open and save your certificate.";
   }else{
     certBtn.classList.remove("unlocked");
     certBtn.classList.add("locked");
     certBtn.textContent = "Locked";
     certBtn.setAttribute("aria-disabled","true");
-    certSub.textContent = remainingText();
+    const left = total - completed;
+    certSub.textContent = `${completed} / ${total} done — ${left} more to go!`;
   }
 
-  // unlock celebration (only when crossing 30/30)
+  // Sertifika kutlaması (tüm mission tamamlandığında)
   if(unlockedAll && !unlockedBefore){
     unlockedBefore = setState("unlockedBefore", true);
     const box = document.getElementById("certBox");
-    if(box){
-      box.classList.add("unlockedPulse");
-      setTimeout(()=> box.classList.remove("unlockedPulse"), 1150);
-    }
+    if(box){ box.classList.add("unlockedPulse"); setTimeout(()=> box.classList.remove("unlockedPulse"), 1150); }
     clickSound("success");
     fireConfetti();
     showToast("🏆 Unlocked! Open your certificate.");
   }
   if(!unlockedAll && unlockedBefore){
     unlockedBefore = setState("unlockedBefore", false);
+  }
+
+  // Yeni badge kutlaması (sadece gerçekten yeni unlock'larda)
+  if(newlyUnlocked.length > 0 && done.size > 0){
+    // Birden fazla unlock varsa en son kazanılanı göster
+    setTimeout(()=> showBadgeUnlockModal(newlyUnlocked[newlyUnlocked.length - 1]), 800);
   }
 }
 
@@ -2894,6 +2962,7 @@ function init(){
   hideReadToMeIfUnsupported();
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
   showWelcomeOverlay();
+  checkStreakWarning();
   // Delay A2HS banner — don't interrupt the first impression
   setTimeout(maybeShowA2HS, 30000);
   checkOptionalDownloads();

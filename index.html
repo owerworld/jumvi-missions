@@ -192,7 +192,10 @@
           <div class="certIcon">🏆</div>
           <div class="certText">
             <b>Mission Champion Certificate</b>
-            <div id="certSub">Complete all missions to unlock.</div>
+            <div class="certProgressWrap">
+              <div class="certProgressBar"><div class="certProgressFill" id="certProgressFill"></div></div>
+              <div class="certProgressText" id="certSub">Complete all missions to unlock.</div>
+            </div>
           </div>
         </div>
         <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
@@ -386,6 +389,17 @@
     </div>
   </div>
 
+
+  <!-- Badge Unlock Modal -->
+  <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-label="Badge unlocked">
+    <div class="badgeUnlockPanel">
+      <div class="badgeUnlockEmoji" id="badgeUnlockEmoji">🏅</div>
+      <div class="badgeUnlockTitle">Badge Unlocked!</div>
+      <div class="badgeUnlockName" id="badgeUnlockName"></div>
+      <div class="badgeUnlockReq" id="badgeUnlockReq"></div>
+      <button class="badgeUnlockBtn" id="badgeUnlockClose" type="button">Awesome! 🎉</button>
+    </div>
+  </div>
 
   <!-- Floating sound toggle -->
   <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>

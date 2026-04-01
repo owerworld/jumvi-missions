@@ -576,21 +576,114 @@ html.theme--dark #certSheet input{
 html.theme--dark #certSheet input::placeholder{ color:#64748b !important; }
 
 /* Badge modal list items */
-.badgesListItem{
-  display:flex; align-items:flex-start; gap:10px;
-  padding:10px; border-radius:14px;
-  border:1px solid rgba(0,0,0,.08);
-  background: #F5F5F5;
+/* Badge grid in modal */
+#badgesList{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
   margin-top:10px;
 }
-.badgesListName{ font-weight:950; color: var(--blue); }
-.badgesListReq{ color: #546E7A; font-size:12px; font-weight:850; margin-top:3px; }
+.badgesListItem{
+  display:flex; flex-direction:column; gap:6px;
+  padding:14px 12px; border-radius:18px;
+  border:2px solid rgba(0,0,0,.08);
+  background: #F5F5F5;
+  position:relative; overflow:hidden;
+}
+.badgesListItem.badge-earned{
+  background: linear-gradient(135deg, #F1F8E9, #fff);
+  border-color: #66BB6A;
+  box-shadow: 0 4px 14px rgba(102,187,106,0.18);
+}
+.badgesListItem.badge-locked{
+  opacity:0.7; filter:grayscale(0.5);
+}
+.badgesListIcon{ font-size:28px; line-height:1; }
+.badgesListName{ font-weight:950; color: var(--blue); font-size:13px; }
+.badgesListReq{ color: #546E7A; font-size:11px; font-weight:700; margin-top:2px; }
+.badgesListStatus{
+  margin-top:4px; font-size:11px; font-weight:800;
+  display:inline-block; padding:2px 8px; border-radius:999px;
+}
+.badgesListItem.badge-earned .badgesListStatus{
+  background:#E8F5E9; color:#2E7D32;
+}
+.badgesListItem.badge-locked .badgesListStatus{
+  background:rgba(0,0,0,0.06); color:#78909C;
+}
 html.theme--dark .badgesListItem{
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.07);
   border-color: rgba(255,255,255,0.12);
 }
+html.theme--dark .badgesListItem.badge-earned{
+  background: linear-gradient(135deg, rgba(102,187,106,0.15), rgba(255,255,255,0.05));
+  border-color: #66BB6A;
+}
+html.theme--dark .badgesListItem.badge-locked{ opacity:0.6; }
 html.theme--dark .badgesListName{ color:#93c5fd; }
 html.theme--dark .badgesListReq{ color:#94a3b8; }
+html.theme--dark .badgesListItem.badge-earned .badgesListStatus{
+  background:rgba(102,187,106,0.2); color:#a5d6a7;
+}
+html.theme--dark .badgesListItem.badge-locked .badgesListStatus{
+  background:rgba(255,255,255,0.08); color:#90a4ae;
+}
+
+/* Badge unlock modal */
+.badgeUnlockModal{
+  position:fixed; inset:0; z-index:9998;
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  background:rgba(10,22,40,0.7);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  opacity:0; pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+.badgeUnlockModal.show{ opacity:1; pointer-events:auto; }
+.badgeUnlockPanel{
+  background:var(--glass, rgba(255,255,255,0.14));
+  border:1px solid var(--border, rgba(255,255,255,0.2));
+  border-radius:28px; padding:32px 24px 26px;
+  max-width:300px; width:100%; text-align:center;
+  box-shadow:0 8px 48px rgba(0,0,0,0.25);
+  display:flex; flex-direction:column; align-items:center; gap:14px;
+  animation:welcomeIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+html.theme--light .badgeUnlockPanel{
+  background:rgba(255,255,255,0.97);
+  border-color:rgba(79,179,255,0.2);
+}
+.badgeUnlockEmoji{ font-size:56px; line-height:1; }
+.badgeUnlockTitle{ font-size:13px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+.badgeUnlockName{ font-size:22px; font-weight:950; color:var(--text); letter-spacing:-0.5px; }
+.badgeUnlockReq{ font-size:12px; color:var(--muted); font-weight:700; }
+.badgeUnlockBtn{
+  margin-top:6px; width:100%;
+  background: linear-gradient(135deg, #FFD600, #FFAB00);
+  color:#3E2723; font-weight:900; font-size:16px;
+  border:none; border-radius:18px; padding:14px;
+  min-height:50px; cursor:pointer;
+}
+
+/* Certificate progress bar */
+.certProgressWrap{
+  margin-top:8px; display:flex; flex-direction:column; gap:4px;
+}
+.certProgressBar{
+  height:8px; border-radius:999px;
+  background:rgba(0,0,0,0.07);
+  overflow:hidden;
+}
+.certProgressFill{
+  height:100%;
+  background: linear-gradient(90deg, #4FB3FF, #22c55e);
+  border-radius:999px;
+  transition: width 0.5s ease;
+}
+.certProgressText{
+  font-size:11px; font-weight:700; color:var(--muted);
+}
+html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     .sub b { color: var(--orange); }
 
     /* Hero action buttons hierarchy */
@@ -719,17 +812,20 @@ html.theme--dark .badgesListReq{ color:#94a3b8; }
     .pExtra{ color:#475569; font-size:12px; margin-top:6px; font-weight:700; }
 .bar{
   flex:1; min-width:180px;
-  height:16px; border-radius:999px;
-  background: rgba(255,255,255,0.35);
+  height:40px; border-radius:999px;
+  background: rgba(255,255,255,0.25);
   overflow:hidden;
   border:1px solid rgba(255,255,255,0.2);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
 }
     .bar>div{
       height:100%; width:0%;
-      background: linear-gradient(90deg, #FF6A00, #4FB3FF, #97D700);
+      background: linear-gradient(90deg, #4FB3FF 0%, #22c55e 100%);
       border-radius:999px;
-      transition: width .35s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy transition */
+      transition: width .5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .bar>div{ transition: width .2s ease !important; }
     }
 
     /* Search + quick toggles */
@@ -1858,24 +1954,38 @@ html.theme--dark .toast{
       flex:0 0 auto;
     }
     .streakPill{
-      padding:10px 16px;
+      padding:12px 20px;
       border-radius:999px;
       border:2px solid #FFAB00;
       background: #FFF3CC;
       color: #92400E;
-      font-weight:800;
-      font-size:15px;
+      font-weight:900;
+      font-size:17px;
       white-space:nowrap;
       letter-spacing:-0.2px;
       box-shadow: 0 2px 8px rgba(255,171,0,0.18);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.4s ease, border-color 0.4s ease;
+    }
+    /* 3+ gün streak: turuncu */
+    .streakPill.streak-warm{
+      background: linear-gradient(135deg, #FFD600, #FF8C00);
+      border-color: #FF6A00;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(255,106,0,0.3);
+    }
+    /* 7+ gün streak: kırmızı ateş */
+    .streakPill.streak-hot{
+      background: linear-gradient(135deg, #FF6A00, #DC2626);
+      border-color: #DC2626;
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(220,38,38,0.35);
     }
     .streakPill.pulse{
       animation: streakPulse 0.55s ease-out;
     }
     @keyframes streakPulse{
       0%  { transform:scale(1); }
-      35% { transform:scale(1.18); box-shadow:0 4px 16px rgba(255,171,0,0.38); }
+      35% { transform:scale(1.2); box-shadow:0 6px 20px rgba(255,171,0,0.45); }
       100%{ transform:scale(1); }
     }
     html.theme--dark .streakPill{
@@ -1883,6 +1993,14 @@ html.theme--dark .toast{
       border-color: rgba(255,171,0,0.5);
       color: #FCD34D;
       box-shadow: 0 2px 8px rgba(255,171,0,0.12);
+    }
+    html.theme--dark .streakPill.streak-warm{
+      background: linear-gradient(135deg, rgba(255,214,0,0.8), rgba(255,140,0,0.9));
+      color:#fff; border-color:#FF8C00;
+    }
+    html.theme--dark .streakPill.streak-hot{
+      background: linear-gradient(135deg, rgba(255,106,0,0.9), rgba(220,38,38,0.9));
+      color:#fff; border-color:#DC2626;
     }
 
     /* Daily mission */
