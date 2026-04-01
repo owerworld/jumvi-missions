@@ -914,6 +914,18 @@ function renderParentDashboard(){
   dashBars.replaceChildren(frag);
   dashReport.textContent = getMilestoneLine(counts);
 
+  // Dinamik alt başlık — hangi skill en çok tamamlandıysa
+  const dynSub = document.getElementById("dashDynSub");
+  if(dynSub){
+    const topSkill = getTopSkill(counts);
+    const skillEmoji = { Reflex:"⚡", Aim:"🎯", Focus:"🧘", Team:"👥", Indoor:"🏠" };
+    if(topSkill && counts[topSkill] > 0){
+      dynSub.textContent = `Your child is building ${topSkill.toUpperCase()} this week ${skillEmoji[topSkill]||""}`;
+    } else {
+      dynSub.textContent = "Keep playing to see your child's skills grow!";
+    }
+  }
+
   // Stats row
   const statsEl = document.getElementById("dashStats");
   if(statsEl){
@@ -1677,7 +1689,6 @@ function updateProgress(){
   renderParentDashboard();
   const dash = document.getElementById("parentDashboard");
   if(dash) dash.style.display = done.size === 0 ? "none" : "";
-  renderShareCard();
 }
 
 function renderShareCard(){
@@ -1916,6 +1927,11 @@ function openMission(id){
   btnNext.textContent = isDone ? "▶ Next Mission!" : "➡️ Next";
   btnNext.classList.toggle("btnNextHighlight", isDone);
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+
+  // Modal paylaşım bölümü — sadece done ise göster
+  const modalShare = document.getElementById("modalShareSection");
+  if(modalShare) modalShare.style.display = isDone ? "" : "none";
+
   // Auto-scroll sheet body to bottom when done so actions are visible
   if(isDone){
     setTimeout(()=>{
@@ -2947,6 +2963,37 @@ function init(){
       clickSound("click");
       ensureDailyMission();
       if(dailyIdStored){ openMission(dailyIdStored); }
+    };
+  }
+
+  // Modal paylaşım butonları
+  const btnModalWA = document.getElementById("btnModalShareWhatsApp");
+  if(btnModalWA){
+    btnModalWA.onclick = ()=>{
+      clickSound("click");
+      const url = location.href;
+      let topBadge = null;
+      for(const b of BADGES){ if(b.check(done)) topBadge = b; }
+      const badgePart = topBadge ? `Top badge: ${topBadge.icon} ${topBadge.name}\n` : "";
+      const msDone = lastOpenedId ? missions.find(x=>x.id===lastOpenedId) : null;
+      const missionPart = msDone ? `Just completed: ${msDone.icon} ${msDone.title}\n` : "";
+      const text = `🎯 ${missionPart}${badgePart}${done.size}/36 JUMVI missions done! Try it: ${url}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+    };
+  }
+  const btnModalCopy = document.getElementById("btnModalShareCopy");
+  if(btnModalCopy){
+    btnModalCopy.onclick = async ()=>{
+      clickSound("click");
+      const url = location.href;
+      let topBadge = null;
+      for(const b of BADGES){ if(b.check(done)) topBadge = b; }
+      const badgePart = topBadge ? ` | Badge: ${topBadge.icon} ${topBadge.name}` : "";
+      const text = `🎯 ${done.size}/36 JUMVI missions completed${badgePart} → ${url}`;
+      try{
+        if(navigator.share){ await navigator.share({ title:"JUMVI Missions", text, url }); }
+        else{ await navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); }
+      }catch(e){}
     };
   }
 
