@@ -1928,10 +1928,6 @@ function openMission(id){
   btnNext.classList.toggle("btnNextHighlight", isDone);
   btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
 
-  // Modal paylaşım bölümü — sadece done ise göster
-  const modalShare = document.getElementById("modalShareSection");
-  if(modalShare) modalShare.style.display = isDone ? "" : "none";
-
   // Auto-scroll sheet body to bottom when done so actions are visible
   if(isDone){
     setTimeout(()=>{
