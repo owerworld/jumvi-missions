@@ -5,9 +5,50 @@
   <meta charset="utf-8" />
   <!-- Mobile-first: lock zoom (per your request) + notch safe area -->
   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>JUMVI Missions</title>
-  <meta name="description" content="Scan QR → start 30 missions for JUMVI Toss & Catch Paddle Set (Kids 3–8)." />
+  <title>JUMVI Missions — 36 Toss & Catch Games for Kids 3–8</title>
+  <meta name="description" content="36 fun missions for the JUMVI Toss & Catch Paddle Set. Build reflex, focus, teamwork & confidence in kids ages 3–8. Track progress, earn badges, unlock the champion certificate." />
+  <meta name="keywords" content="JUMVI, paddle set, toss and catch, kids games, ages 3-8, paddle ball, kids missions, family games" />
+  <meta name="author" content="SAY23 LLC / JUMVI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://qr.jumvi.co/" />
   <meta name="theme-color" content="#f5f9ff" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://qr.jumvi.co/" />
+  <meta property="og:title" content="JUMVI Missions — 36 Toss & Catch Games for Kids" />
+  <meta property="og:description" content="36 fun missions to play with the JUMVI Toss & Catch Paddle Set. Track progress, earn badges, unlock the certificate." />
+  <meta property="og:image" content="https://qr.jumvi.co/jumvi_logo.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="JUMVI" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://qr.jumvi.co/" />
+  <meta name="twitter:title" content="JUMVI Missions — Kids Paddle Set Games" />
+  <meta name="twitter:description" content="36 fun missions for kids ages 3–8. Build skills, earn badges, unlock the champion certificate." />
+  <meta name="twitter:image" content="https://qr.jumvi.co/jumvi_logo.png" />
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "JUMVI Missions",
+    "url": "https://qr.jumvi.co/",
+    "description": "36 toss & catch missions for kids ages 3–8 with the JUMVI Paddle Set.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "audience": { "@type": "PeopleAudience", "suggestedMinAge": 3, "suggestedMaxAge": 8 },
+    "publisher": { "@type": "Organization", "name": "SAY23 LLC", "url": "https://jumvi.co" }
+  }
+  </script>
+
+  <!-- Privacy-friendly analytics (Plausible) -->
+  <script defer data-domain="qr.jumvi.co" src="https://plausible.io/js/script.tagged-events.js"></script>
+  <script>window.plausible = window.plausible || function(){(window.plausible.q = window.plausible.q || []).push(arguments)}</script>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -27,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260402-3">
+  <link rel="stylesheet" href="style.css?v=20260428-1">
   <script>
     (function(){
       try{
@@ -399,6 +440,20 @@
   </div>
 
 
+  <!-- First-time Guided Tutorial (3-step spotlight) -->
+  <div id="tutorialOverlay" class="tutorialOverlay" aria-hidden="true">
+    <div class="tutorialSpotlight" id="tutorialSpotlight"></div>
+    <div class="tutorialCard" id="tutorialCard">
+      <div class="tutorialStep" id="tutorialStep">1 / 3</div>
+      <div class="tutorialTitle" id="tutorialTitle"></div>
+      <div class="tutorialDesc" id="tutorialDesc"></div>
+      <div class="tutorialBtns">
+        <button class="tutorialSkip" id="tutorialSkip" type="button">Skip</button>
+        <button class="tutorialNext" id="tutorialNext" type="button">Next →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Badge Unlock Modal -->
   <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-label="Badge unlocked">
     <div class="badgeUnlockPanel">
@@ -446,13 +501,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260319-16" defer></script>
-<script src="data.js?v=20260319-16" defer></script>
-<script src="app.js?v=20260402-3" defer></script>
+<script src="confetti.min.js?v=20260428-1" defer></script>
+<script src="data.js?v=20260428-1" defer></script>
+<script src="app.js?v=20260428-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260319-16").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-1").catch(()=>{});
     });
   }
 </script>

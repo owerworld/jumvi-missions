@@ -35,6 +35,15 @@ const storageAvailable = (()=>{
   }
 })();
 
+/* ===== Privacy-friendly analytics helper ===== */
+function trackEvent(name, props){
+  try{
+    if(typeof window.plausible === "function"){
+      props ? window.plausible(name, { props }) : window.plausible(name);
+    }
+  }catch(_){}
+}
+
 const _lsDebounceTimers = new Map();
 function lsSetDebounced(key, value, delay=500){
   if(!storageAvailable) return;
@@ -409,6 +418,7 @@ const ATTEMPTS_KEY      = "jumvi_attempts_v1";
 const SKIPS_KEY         = "jumvi_skips_v1";
 const THEME_KEY         = "jumvi_theme_v1";
 const BADGES_UNLOCKED_KEY = "jumvi_badges_unlocked_v1";
+const TUTORIAL_KEY      = "jumvi_tutorial_done_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
@@ -1758,6 +1768,8 @@ function updateTimerTick(){
 
     timerState = "idle";
     timerDisplay.textContent = "Time's Up!";
+    timerDisplay.classList.remove("timerUrgent");
+    if(timerFill) timerFill.classList.remove("timerUrgent");
     setTimerButtonLabel();
     if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
       markMissionDone(lastOpenedId, "auto");
@@ -1765,6 +1777,25 @@ function updateTimerTick(){
       incAttempt(lastOpenedId);
     }
     return;
+  }
+
+  // Son 3 saniye: kırmızı pulse + ses
+  if(secLeft <= 3 && secLeft > 0){
+    if(!timerDisplay.classList.contains("timerUrgent")){
+      timerDisplay.classList.add("timerUrgent");
+      if(timerFill) timerFill.classList.add("timerUrgent");
+    }
+    // Saniye değiştiğinde tik sesi
+    const lastDisplay = timerDisplay.textContent;
+    const newText = secLeft + "s";
+    if(lastDisplay !== newText){
+      clickSound("click");
+    }
+  } else {
+    if(timerDisplay.classList.contains("timerUrgent")){
+      timerDisplay.classList.remove("timerUrgent");
+      if(timerFill) timerFill.classList.remove("timerUrgent");
+    }
   }
 
   timerDisplay.textContent = secLeft + "s";
@@ -2410,6 +2441,21 @@ function markMissionDone(id, source="manual"){
   renderList();
   clickSound("success");
   celebrate();
+  fireDoneBurst(document.getElementById("btnToggleDone"));
+  // Streak +1 olduysa fire burst
+  if(changed && streakCount >= 1){
+    setTimeout(()=> fireStreakBurst(), 500);
+  }
+  // Plausible event
+  const ms = missions.find(x=>x.id===id);
+  trackEvent("Mission Completed", {
+    pack: ms ? ms.pack : "?",
+    source: source,
+    total: done.size
+  });
+  if(done.size === missions.length){
+    trackEvent("All Missions Completed");
+  }
 
   if(source === "auto"){
     showToast("✅ Mission marked done.");
@@ -2496,13 +2542,42 @@ if(btnToggleDone){
   };
 }
 
+function pickSmartNextMission(currentId){
+  // Mevcut mission tamamlandıysa: en az tamamlanan pack'ten yeni mission öner (çeşitlilik)
+  const current = missions.find(x=>x.id===currentId);
+  if(!current) return null;
+  if(!done.has(currentId)) return null; // sadece tamamlanmışsa akıllı öneri
+  const packs = ["Reflex Rush","Aim Master","Focus Control","Team Duo","Indoor Compact","Beach/Park"];
+  const packCounts = packs.map(p=>({
+    pack:p,
+    doneCount: missions.filter(m=>m.pack===p && done.has(m.id)).length,
+    pending: missions.filter(m=>m.pack===p && !done.has(m.id))
+  })).filter(x=>x.pending.length>0);
+  if(!packCounts.length) return null;
+  // En az tamamlanan pack
+  packCounts.sort((a,b)=>a.doneCount - b.doneCount);
+  const targetPack = packCounts[0];
+  // Pack içinden rastgele tamamlanmamış mission
+  const pick = targetPack.pending[Math.floor(Math.random()*targetPack.pending.length)];
+  return pick ? pick.id : null;
+}
+
 btnNext.onclick = ()=>{
   if(lastOpenedId==null) return;
+  clickSound("click");
+  // Akıllı öneri (mevcut mission tamamlandıysa)
+  const smartId = pickSmartNextMission(lastOpenedId);
+  if(smartId){
+    trackEvent("Mission Next Smart");
+    openMission(smartId);
+    return;
+  }
+  // Fallback: görünür listede sıradaki
   const list = getVisibleMissions();
   const idx = list.findIndex(x=>x.id===lastOpenedId);
   const next = list[(idx+1) % list.length];
   if(!done.has(lastOpenedId)) incSkip(lastOpenedId);
-  clickSound("click");
+  trackEvent("Mission Next Linear");
   openMission(next.id);
 };
 
@@ -2881,10 +2956,134 @@ function showWelcomeOverlay(){
         if(splash){
           splash.classList.add("show");
           setTimeout(()=> splash.classList.add("hiding"), 1100);
-          setTimeout(()=>{ splash.classList.remove("show","hiding"); }, 1500);
+          setTimeout(()=>{
+            splash.classList.remove("show","hiding");
+            // Splash kapanınca tutorial başlat
+            setTimeout(()=> showTutorial(), 350);
+          }, 1500);
         }
+      } else {
+        // Reduced motion: splash atla, tutorial direkt başlat
+        setTimeout(()=> showTutorial(), 500);
       }
     });
+  }
+}
+
+/** =======================
+ * First-time Guided Tutorial (3-step spotlight)
+ * ======================= */
+function showTutorial(){
+  if(lsGet(TUTORIAL_KEY, "0") === "1") return;
+  const overlay   = document.getElementById("tutorialOverlay");
+  const spotlight = document.getElementById("tutorialSpotlight");
+  const card      = document.getElementById("tutorialCard");
+  const stepEl    = document.getElementById("tutorialStep");
+  const titleEl   = document.getElementById("tutorialTitle");
+  const descEl    = document.getElementById("tutorialDesc");
+  const btnNextEl = document.getElementById("tutorialNext");
+  const btnSkipEl = document.getElementById("tutorialSkip");
+  if(!overlay || !spotlight || !card) return;
+
+  const steps = [
+    { selector: "#btnPlayToday",
+      title: "▶ Play Today",
+      desc: "Tap here to start today's daily mission. A new one each day!" },
+    { selector: "#streakPill",
+      title: "🔥 Build Your Streak",
+      desc: "Play one mission every day to keep your streak alive. The longer it grows, the hotter it gets!" },
+    { selector: "#badgesRow",
+      title: "🏅 Earn Badges",
+      desc: "Complete missions to unlock badges. Finish all 36 to earn the Champion Certificate!" }
+  ];
+
+  let idx = 0;
+  const finish = (action)=>{
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden","true");
+    lsSet(TUTORIAL_KEY, "1");
+    trackEvent("Tutorial " + (action||"completed"));
+  };
+
+  const positionSpotlight = ()=>{
+    const step = steps[idx];
+    const el = document.querySelector(step.selector);
+    if(!el){ next(); return; }
+    // Scroll target into view
+    try{ el.scrollIntoView({ behavior:"smooth", block:"center" }); }catch(_){}
+    setTimeout(()=>{
+      const r = el.getBoundingClientRect();
+      const pad = 8;
+      spotlight.style.left   = `${r.left - pad}px`;
+      spotlight.style.top    = `${r.top - pad}px`;
+      spotlight.style.width  = `${r.width + pad*2}px`;
+      spotlight.style.height = `${r.height + pad*2}px`;
+
+      // Card position: alta yer varsa altta, yoksa üstte
+      const vh = window.innerHeight;
+      const cardH = 160; // tahmin
+      const below = (r.bottom + 16 + cardH) < vh;
+      card.style.left = "16px";
+      card.style.right = "16px";
+      card.style.maxWidth = "320px";
+      card.style.margin = "0 auto";
+      if(below){
+        card.style.top = `${r.bottom + 14}px`;
+        card.style.bottom = "auto";
+      }else{
+        card.style.bottom = `${vh - r.top + 14}px`;
+        card.style.top = "auto";
+      }
+    }, 360);
+
+    stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
+    titleEl.textContent = step.title;
+    descEl.textContent  = step.desc;
+    btnNextEl.textContent = idx === steps.length-1 ? "Got it! 🎉" : "Next →";
+  };
+
+  const next = ()=>{
+    idx++;
+    if(idx >= steps.length){ finish("completed"); return; }
+    positionSpotlight();
+  };
+
+  btnNextEl.onclick = ()=>{ clickSound("click"); next(); };
+  btnSkipEl.onclick = ()=>{ clickSound("click"); finish("skipped"); };
+
+  overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden","false");
+  trackEvent("Tutorial Started");
+  positionSpotlight();
+}
+
+/** =======================
+ * Mikro-kutlamalar
+ * ======================= */
+function fireDoneBurst(btn){
+  if(!btn || prefersReducedMotion) return;
+  btn.classList.add("btnDoneBurst","firing");
+  setTimeout(()=> btn.classList.remove("firing"), 650);
+}
+
+function fireStreakBurst(){
+  if(prefersReducedMotion) return;
+  const pill = document.getElementById("streakPill");
+  if(!pill) return;
+  const r = pill.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top + r.height/2;
+  for(let i=0;i<5;i++){
+    const el = document.createElement("div");
+    el.className = "streakFireBurst";
+    el.textContent = "🔥";
+    el.style.left = `${cx - 16}px`;
+    el.style.top  = `${cy - 16}px`;
+    el.style.setProperty("--dx", `${(Math.random()-0.5)*120}px`);
+    el.style.fontSize = `${24 + Math.random()*16}px`;
+    el.style.animationDelay = `${i*60}ms`;
+    document.body.appendChild(el);
+    setTimeout(()=> el.remove(), 1400);
   }
 }
 
@@ -2957,6 +3156,7 @@ function init(){
   if(btnPlayToday){
     btnPlayToday.onclick = ()=>{
       clickSound("click");
+      trackEvent("Play Today Clicked");
       ensureDailyMission();
       if(dailyIdStored){ openMission(dailyIdStored); }
     };
@@ -3006,6 +3206,13 @@ function init(){
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
   showWelcomeOverlay();
   checkStreakWarning();
+  // Tutorial — onboarded ama tutorial görmemiş kullanıcılar için
+  // Welcome overlay açıksa onun kapanmasını bekleyelim
+  setTimeout(()=>{
+    if(lsGet(ONBOARD_KEY, "0") === "1" && lsGet(TUTORIAL_KEY, "0") === "0"){
+      showTutorial();
+    }
+  }, 800);
   // Delay A2HS banner — don't interrupt the first impression
   setTimeout(maybeShowA2HS, 30000);
   checkOptionalDownloads();
