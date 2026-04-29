@@ -495,6 +495,7 @@ const ONBOARD_KEY       = "jumvi_onboarded_v2";
 const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
 const THEME_KEY         = "jumvi_theme_v1";
 const TUTORIAL_KEY      = "jumvi_tutorial_done_v1";
+const HIGH_SCORES_KEY   = _PP + "high_scores_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
@@ -2114,6 +2115,10 @@ if(btnSpeak){
   sheet.scrollTop = 0;
   const _sb = document.getElementById("sheetBody");
   if(_sb) _sb.scrollTop = 0;
+  // Score tracker reset & best değer güncelle
+  toggleScoreTracker(false);
+  resetScore();
+  renderScoreTracker();
   // Lock background scroll while modal is open
   const _aw = document.getElementById("app-wrapper");
   if(_aw) _aw.style.overflowY = "hidden";
@@ -2128,6 +2133,9 @@ function closeMission(){
   }
   resetTimerUI(); // Stop + reset timer on close
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
+  // Score tracker temizle
+  stopAutoCount();
+  toggleScoreTracker(false);
   backdrop.classList.remove("show");
   // Restore background scroll
   const _aw = document.getElementById("app-wrapper");
@@ -2521,6 +2529,10 @@ function markMissionDone(id, source="manual"){
   // Streak +1 olduysa fire burst
   if(changed && streakCount >= 1){
     setTimeout(()=> fireStreakBurst(), 500);
+  }
+  // Score özeti — eğer tracker açıksa ve skor varsa
+  if(_scoreTrackerOpen && _currentScore > 0){
+    showScoreSummary(id);
   }
   // Plausible event
   const ms = missions.find(x=>x.id===id);
@@ -3366,6 +3378,178 @@ function showWelcomeOverlay(){
     });
   }
 }
+
+/** =======================
+ * Score Tracker (kişisel rekor)
+ * ======================= */
+let _currentScore = 0;
+let _scoreTrackerOpen = false;
+let _autoCountActive = false;
+let _autoCountHandler = null;
+let _autoCountLastSpike = 0;
+
+function getHighScores(){
+  return lsGetJSON(HIGH_SCORES_KEY, {}) || {};
+}
+function getMissionBest(missionId){
+  const scores = getHighScores();
+  return Number(scores[missionId] || 0);
+}
+function setMissionBest(missionId, score){
+  const scores = getHighScores();
+  const current = Number(scores[missionId] || 0);
+  if(score > current){
+    scores[missionId] = score;
+    lsSet(HIGH_SCORES_KEY, JSON.stringify(scores));
+    return true; // yeni rekor
+  }
+  return false;
+}
+
+function renderScoreTracker(){
+  const numEl = document.getElementById("scoreTrackerNumber");
+  const bestEl = document.getElementById("scoreTrackerBest");
+  if(numEl) numEl.textContent = _currentScore;
+  if(bestEl){
+    const best = lastOpenedId ? getMissionBest(lastOpenedId) : 0;
+    bestEl.textContent = `Best: ${best}`;
+  }
+}
+
+function bumpScore(){
+  _currentScore++;
+  const numEl = document.getElementById("scoreTrackerNumber");
+  if(numEl){
+    numEl.textContent = _currentScore;
+    if(!prefersReducedMotion){
+      numEl.classList.remove("bump");
+      void numEl.offsetWidth;
+      numEl.classList.add("bump");
+      setTimeout(()=> numEl.classList.remove("bump"), 360);
+    }
+  }
+  // Hafif tap sesi
+  clickSound("click");
+}
+
+function resetScore(){
+  _currentScore = 0;
+  renderScoreTracker();
+  const summary = document.getElementById("scoreTrackerSummary");
+  if(summary){ summary.style.display = "none"; summary.classList.remove("newRecord"); }
+}
+
+function showScoreSummary(missionId){
+  if(_currentScore === 0) return;
+  const summary = document.getElementById("scoreTrackerSummary");
+  if(!summary) return;
+  const wasRecord = setMissionBest(missionId, _currentScore);
+  const best = getMissionBest(missionId);
+  summary.style.display = "";
+  if(wasRecord){
+    summary.classList.add("newRecord");
+    summary.innerHTML = `<span class="summaryEmoji">🏆</span><b>NEW RECORD!</b> ${_currentScore} catches!`;
+    if(!prefersReducedMotion) fireConfetti(1200);
+    trackEvent("Score New Record", { mission: missionId, score: _currentScore });
+  } else {
+    summary.classList.remove("newRecord");
+    const diff = best - _currentScore;
+    summary.innerHTML = `<span class="summaryEmoji">⭐</span>You scored <b>${_currentScore}</b> · Best: ${best} (${diff} more to beat!)`;
+    trackEvent("Score Recorded", { mission: missionId, score: _currentScore });
+  }
+  // Best değerini header'da yenile
+  renderScoreTracker();
+}
+
+function toggleScoreTracker(force){
+  const tracker = document.getElementById("scoreTracker");
+  const btn = document.getElementById("btnScoreToggle");
+  if(!tracker || !btn) return;
+  const next = (typeof force === "boolean") ? force : !_scoreTrackerOpen;
+  _scoreTrackerOpen = next;
+  tracker.style.display = next ? "" : "none";
+  btn.classList.toggle("active", next);
+  btn.textContent = next ? "📊 Tracking" : "📊 Track Score";
+  if(next){
+    resetScore();
+    trackEvent("Score Tracker Opened");
+  } else {
+    stopAutoCount();
+  }
+}
+
+/* Cihaz hareketi ile otomatik sayma (DeviceMotionEvent) */
+function startAutoCount(){
+  if(_autoCountActive) return;
+  if(typeof DeviceMotionEvent === "undefined"){
+    showToast("Motion sensor not available on this device.");
+    return;
+  }
+  const startListener = ()=>{
+    _autoCountHandler = (e)=>{
+      const acc = e.accelerationIncludingGravity || e.acceleration;
+      if(!acc) return;
+      const mag = Math.sqrt((acc.x||0)**2 + (acc.y||0)**2 + (acc.z||0)**2);
+      // Threshold: 18 m/s² üzeri = ani darbe (paddle vuruşu)
+      // Telefon yatay durduğunda gravity ~9.8, ani vuruş 18+ olur
+      const now = Date.now();
+      if(mag > 18 && (now - _autoCountLastSpike) > 350){
+        _autoCountLastSpike = now;
+        bumpScore();
+      }
+    };
+    window.addEventListener("devicemotion", _autoCountHandler);
+    _autoCountActive = true;
+    updateAutoCountBtn();
+    showToast("📱 Place phone on table near play area");
+    trackEvent("Auto Count Enabled");
+  };
+  // iOS 13+ permission gerekli
+  if(typeof DeviceMotionEvent.requestPermission === "function"){
+    DeviceMotionEvent.requestPermission().then(state => {
+      if(state === "granted") startListener();
+      else showToast("Motion permission denied.");
+    }).catch(()=>{
+      showToast("Could not request motion permission.");
+    });
+  } else {
+    startListener();
+  }
+}
+function stopAutoCount(){
+  if(_autoCountHandler){
+    window.removeEventListener("devicemotion", _autoCountHandler);
+    _autoCountHandler = null;
+  }
+  _autoCountActive = false;
+  updateAutoCountBtn();
+}
+function updateAutoCountBtn(){
+  const btn = document.getElementById("scoreTrackerAuto");
+  if(!btn) return;
+  btn.setAttribute("aria-pressed", _autoCountActive ? "true" : "false");
+  btn.textContent = _autoCountActive ? "📱 Auto-count: ON" : "📱 Auto-count: OFF";
+}
+
+// Score tracker DOM event handlers
+document.addEventListener("DOMContentLoaded", ()=>{
+  const toggleBtn = document.getElementById("btnScoreToggle");
+  if(toggleBtn) toggleBtn.onclick = ()=>{ clickSound("click"); toggleScoreTracker(); };
+  const tapBtn = document.getElementById("scoreTrackerTap");
+  if(tapBtn){
+    tapBtn.addEventListener("click", (e)=>{ e.preventDefault(); bumpScore(); });
+    // Touch için ekstra hızlı yanıt
+    tapBtn.addEventListener("touchstart", (e)=>{ e.preventDefault(); bumpScore(); }, { passive: false });
+  }
+  const resetBtn = document.getElementById("scoreTrackerReset");
+  if(resetBtn) resetBtn.onclick = ()=>{ clickSound("click"); resetScore(); };
+  const autoBtn = document.getElementById("scoreTrackerAuto");
+  if(autoBtn) autoBtn.onclick = ()=>{
+    clickSound("click");
+    if(_autoCountActive) stopAutoCount();
+    else startAutoCount();
+  };
+});
 
 /** =======================
  * First-time Guided Tutorial (3-step spotlight)

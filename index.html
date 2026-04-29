@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-7">
+  <link rel="stylesheet" href="style.css?v=20260428-8">
   <script>
     (function(){
       try{
@@ -330,6 +330,25 @@
         <!-- New Buttons -->
         <button class="btn btnTimer" id="btnStartTimer" aria-label="Start or pause timer">⏱️ Start Timer</button>
         <button class="btn btnGhost" id="btnSpeak" aria-label="Read mission aloud">🗣️ Read to Me</button>
+        <button class="btn btnGhost btnScoreToggle" id="btnScoreToggle" aria-label="Track score">📊 Track Score</button>
+      </div>
+
+      <!-- Score Tracker — kişisel rekor mekanik -->
+      <div class="scoreTracker" id="scoreTracker" style="display:none">
+        <div class="scoreTrackerHeader">
+          <div class="scoreTrackerLabel">Your catches</div>
+          <div class="scoreTrackerBest" id="scoreTrackerBest">Best: 0</div>
+        </div>
+        <div class="scoreTrackerNumber" id="scoreTrackerNumber">0</div>
+        <button class="scoreTrackerTap" id="scoreTrackerTap" type="button" aria-label="Add one to score">
+          <span class="scoreTrackerTapIcon">+1</span>
+          <span class="scoreTrackerTapHint">Tap on every catch</span>
+        </button>
+        <div class="scoreTrackerActions">
+          <button class="scoreTrackerReset" id="scoreTrackerReset" type="button">↺ Reset</button>
+          <button class="scoreTrackerAuto" id="scoreTrackerAuto" type="button" aria-pressed="false">📱 Auto-count: OFF</button>
+        </div>
+        <div class="scoreTrackerSummary" id="scoreTrackerSummary" style="display:none"></div>
       </div>
 
       <div class="kv" id="mSteps"></div>
@@ -551,13 +570,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-7" defer></script>
-<script src="data.js?v=20260428-7" defer></script>
-<script src="app.js?v=20260428-7" defer></script>
+<script src="confetti.min.js?v=20260428-8" defer></script>
+<script src="data.js?v=20260428-8" defer></script>
+<script src="app.js?v=20260428-8" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-7").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-8").catch(()=>{});
     });
   }
 </script>
