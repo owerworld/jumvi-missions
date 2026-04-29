@@ -258,11 +258,16 @@ html.theme--dark .bgLayer{
     @media (max-width: 520px){
       .topbar{ flex-wrap:wrap; gap:8px; }
       .brandSub{ display:none; }
-      .avatarBtn{ display:none; }
       .pill{ display:none; }
       .headerPlay{ min-height:32px; padding:6px 10px; font-size:12px; }
       .logoWrap{ width:36px; height:36px; border-radius:12px; }
       .brandTitle{ font-size:15px; }
+      /* Mobilde avatar butonu daha küçük ama görünür */
+      .avatarBtn{
+        width:34px; height:34px;
+        font-size:18px;
+        margin-left:auto;
+      }
     }
     .themeToggle{ cursor:pointer; }
     .themeToggleIcon{
