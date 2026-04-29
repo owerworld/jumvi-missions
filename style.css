@@ -3479,6 +3479,46 @@ html.theme--dark .certPreviewWrap {
 }
 
 /* ============================================
+ * Timer Countdown Overlay (3-2-1-GO)
+ * ============================================ */
+.timerCountdown{
+  position:fixed; inset:0; z-index:10001;
+  display:none;
+  align-items:center; justify-content:center;
+  flex-direction:column; gap:12px;
+  background: rgba(10,22,40,0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.timerCountdown.show{ display:flex; }
+.timerCountdownNum{
+  font-size: 160px;
+  font-weight: 950;
+  color: #fff;
+  letter-spacing: -6px;
+  line-height: 1;
+  text-shadow: 0 8px 32px rgba(79,179,255,0.4);
+}
+.timerCountdownNum.pop{
+  animation: countdownPop 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes countdownPop{
+  0%  { opacity:0; transform: scale(0.4); }
+  40% { opacity:1; transform: scale(1.2); color: #4FB3FF; }
+  100%{ opacity:1; transform: scale(1); color: #fff; }
+}
+.timerCountdownLabel{
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+@media (prefers-reduced-motion: reduce){
+  .timerCountdownNum.pop{ animation:none !important; }
+}
+
+/* ============================================
  * Score Tracker (kişisel rekor sayacı)
  * ============================================ */
 .scoreTracker{

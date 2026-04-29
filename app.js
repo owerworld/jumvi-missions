@@ -1848,12 +1848,25 @@ function updateTimerTick(){
     timerDisplay.classList.remove("timerUrgent");
     if(timerFill) timerFill.classList.remove("timerUrgent");
     setTimerButtonLabel();
+    // Coach: time's up announcement
+    if(_currentScore > 0){
+      coachSpeak(`Time's up! You got ${_currentScore}!`);
+    } else {
+      coachSpeak("Time's up! Great job!");
+    }
     if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
       markMissionDone(lastOpenedId, "auto");
     }else if(lastOpenedId != null && !done.has(lastOpenedId)){
       incAttempt(lastOpenedId);
     }
     return;
+  }
+
+  // Mid-play encouragement: timer'ın yarısı geçince bir kez söyle
+  if(!_midplayAnnounced && timerTotal > 10 && secLeft <= timerTotal / 2){
+    _midplayAnnounced = true;
+    const line = _midplayLines[Math.floor(Math.random() * _midplayLines.length)];
+    coachSpeak(line, { rate: 1.1, pitch: 1.2 });
   }
 
   // Son 3 saniye: kırmızı pulse + ses
@@ -1878,6 +1891,70 @@ function updateTimerTick(){
   timerDisplay.textContent = secLeft + "s";
 }
 
+/* =======================
+ * Voice Coaching helpers
+ * ======================= */
+function coachSpeak(text, opts={}){
+  if(!soundOn) return;
+  if(!("speechSynthesis" in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = opts.rate || 1.05;
+    u.pitch = opts.pitch || 1.25;
+    u.volume = 1;
+    if(typeof kidVoice !== "undefined" && kidVoice) u.voice = kidVoice;
+    window.speechSynthesis.speak(u);
+  }catch(_){}
+}
+
+const _midplayLines = [
+  "Keep going!",
+  "Halfway there!",
+  "You can do it!",
+  "Awesome work!",
+  "Don't stop!"
+];
+let _midplayAnnounced = false;
+
+/* Visual countdown 3-2-1-GO before timer starts */
+function showCountdownThenStart(durationSeconds){
+  const overlay = document.getElementById("timerCountdown");
+  if(!overlay){
+    // Yedek: overlay yoksa direkt başlat
+    startTimer(durationSeconds);
+    return;
+  }
+  let n = 3;
+  overlay.classList.add("show");
+  const display = overlay.querySelector(".timerCountdownNum");
+  const announce = (val)=>{
+    if(display) display.textContent = val;
+    if(display){
+      display.classList.remove("pop");
+      void display.offsetWidth;
+      display.classList.add("pop");
+    }
+    coachSpeak(val === "GO!" ? "Go!" : String(val), { rate: 1.1, pitch: 1.3 });
+    clickSound("click");
+  };
+  announce(n);
+  const tick = setInterval(()=>{
+    n--;
+    if(n > 0){
+      announce(String(n));
+    } else {
+      announce("GO!");
+      clearInterval(tick);
+      setTimeout(()=>{
+        overlay.classList.remove("show");
+        startTimer(durationSeconds);
+      }, 600);
+    }
+  }, 800);
+}
+
 function startTimer(durationSeconds) {
   if(timerInterval) clearInterval(timerInterval);
 
@@ -1886,6 +1963,7 @@ function startTimer(durationSeconds) {
   timerTotal = durationSeconds;
   timerLeft = durationSeconds;
   timerState = "running";
+  _midplayAnnounced = false;
   setTimerButtonLabel();
 
   // UI baseline
@@ -1955,7 +2033,8 @@ function resumeTimer(){
 
 function toggleTimer(durationSeconds){
   if(timerState === "idle"){
-    startTimer(durationSeconds);
+    // İlk başlatmada countdown göster — sesli koçluk için
+    showCountdownThenStart(durationSeconds);
   }else if(timerState === "running"){
     pauseTimer();
   }else{

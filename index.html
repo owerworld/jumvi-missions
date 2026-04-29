@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-8">
+  <link rel="stylesheet" href="style.css?v=20260428-9">
   <script>
     (function(){
       try{
@@ -534,6 +534,12 @@
     </div>
   </div>
 
+  <!-- Timer Countdown Overlay (Ready, Set, GO!) -->
+  <div id="timerCountdown" class="timerCountdown" aria-hidden="true">
+    <div class="timerCountdownNum">3</div>
+    <div class="timerCountdownLabel">Get ready!</div>
+  </div>
+
   <!-- Floating sound toggle -->
   <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
   <div id="statusLive" class="sr-only" role="status" aria-live="polite"></div>
@@ -570,13 +576,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-8" defer></script>
-<script src="data.js?v=20260428-8" defer></script>
-<script src="app.js?v=20260428-8" defer></script>
+<script src="confetti.min.js?v=20260428-9" defer></script>
+<script src="data.js?v=20260428-9" defer></script>
+<script src="app.js?v=20260428-9" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-8").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-9").catch(()=>{});
     });
   }
 </script>
