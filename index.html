@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-6">
+  <link rel="stylesheet" href="style.css?v=20260428-7">
   <script>
     (function(){
       try{
@@ -129,17 +129,15 @@
           <img class="logoImg logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
         </div>
         <div class="brandText">
-          <div class="brandTitle">JUMVI Missions</div>
-          <div class="brandSub">36 missions inside your box</div>
+          <div class="brandTitle">JUMVI</div>
+          <div class="brandSub">Missions</div>
         </div>
-        
-        <!-- Avatar Selector -->
-        <div class="avatarBtn" id="avatarBtn" aria-label="Change avatar">🦁</div>
       </div>
-      <div class="topRight">
-        <button class="btn btnPrimary headerPlay" id="btnHeaderPlay" aria-label="Play today's mission">▶︎ Play Today</button>
-        <button class="themeToggleIcon" id="themeToggle" type="button" aria-label="Toggle theme">🌓</button>
-      </div>
+      <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
+        <span class="profilePillAvatar" id="profilePillAvatar">🦁</span>
+        <span class="profilePillName" id="profilePillName">Player</span>
+        <span class="profilePillChevron">▾</span>
+      </button>
     </div>
   </div>
 
@@ -470,6 +468,25 @@
         <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
         <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
       </div>
+
+      <!-- Settings section -->
+      <div class="profileSettingsSection">
+        <div class="profileSectionTitle">⚙️ Settings</div>
+        <button class="profileSettingRow" id="profileThemeBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon" id="profileThemeIcon">🌓</span>
+            <span class="profileSettingText">Theme</span>
+          </span>
+          <span class="profileSettingValue" id="profileThemeValue">System</span>
+        </button>
+        <button class="profileSettingRow" id="profileSoundBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon" id="profileSoundIcon">🔊</span>
+            <span class="profileSettingText">Sound</span>
+          </span>
+          <span class="profileSettingValue" id="profileSoundValue">On</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -534,13 +551,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-6" defer></script>
-<script src="data.js?v=20260428-6" defer></script>
-<script src="app.js?v=20260428-6" defer></script>
+<script src="confetti.min.js?v=20260428-7" defer></script>
+<script src="data.js?v=20260428-7" defer></script>
+<script src="app.js?v=20260428-7" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-6").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-7").catch(()=>{});
     });
   }
 </script>

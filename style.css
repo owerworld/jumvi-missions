@@ -230,18 +230,55 @@ html.theme--dark .bgLayer{
     html.theme--dark .logoDark{ display:block; }
     html.theme--dark .logoLight{ display:none; }
     
-    /* New Avatar Feature */
-    .avatarBtn{
-      background: #FFF;
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      width: 40px; height: 40px;
-      font-size: 22px;
-      display: flex; align-items: center; justify-content: center;
+    /* Profile pill — replaces old avatarBtn */
+    .profilePill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 14px 6px 6px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      user-select: none;
+      font-size:14px;
+      font-weight:800;
+      color: var(--text);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.15s ease, background 0.15s ease;
+      min-height:42px;
     }
+    .profilePill:active{ transform: scale(0.96); }
+    .profilePill:hover{ background: rgba(255,255,255,0.95); }
+    html.theme--dark .profilePill{
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+    html.theme--dark .profilePill:hover{ background: rgba(255,255,255,0.12); }
+    .profilePillAvatar{
+      font-size:22px; line-height:1;
+      width:30px; height:30px;
+      display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg, rgba(79,179,255,0.15), rgba(151,215,0,0.10));
+      border-radius:50%;
+      flex-shrink:0;
+    }
+    html.theme--dark .profilePillAvatar{
+      background: linear-gradient(135deg, rgba(79,179,255,0.22), rgba(151,215,0,0.14));
+    }
+    .profilePillName{
+      max-width:120px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      letter-spacing:-0.2px;
+    }
+    .profilePillChevron{
+      font-size:11px;
+      color: var(--muted);
+      margin-left:-2px;
+    }
+
+    /* Backwards compat: keep old .avatarBtn rule slot but it's now profilePill */
+    .avatarBtn{ /* selector now matches button#avatarBtn which has class profilePill — no styles here */ }
 
     .pill{
       font-size:12px; color:var(--muted);
@@ -260,42 +297,30 @@ html.theme--dark .bgLayer{
         flex-wrap:nowrap; gap:10px;
         padding:12px 14px;
       }
-      .brand{ gap:10px; min-width:0; flex:1; }
-      .brandSub{ display:none; }
+      .brand{ gap:10px; min-width:0; }
       .pill{ display:none; }
-      .brandText{ min-width:0; flex:1; }
-      .brandTitle{
-        font-size:16px;
-        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      .brandText{ display:flex; flex-direction:row; gap:5px; align-items:baseline; }
+      .brandTitle{ font-size:16px; }
+      .brandSub{
+        display:inline; font-size:13px; font-weight:700;
+        color: var(--muted); margin-top:0;
       }
-      .logoWrap{ width:38px; height:38px; border-radius:12px; flex-shrink:0; }
+      .logoWrap{ width:36px; height:36px; border-radius:12px; flex-shrink:0; }
       /* Play Today header butonu mobilde gizli — hero'daki büyük buton var */
       .headerPlay{ display:none; }
-      .topRight{ gap:8px; flex-shrink:0; }
-      .avatarBtn{
-        width:38px; height:38px;
-        font-size:20px;
+      .profilePill{
+        font-size:13px;
+        padding:5px 12px 5px 5px;
+        gap:7px; min-height:38px;
         flex-shrink:0;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       }
-      .themeToggleIcon{
-        font-size:20px;
-        width:38px; height:38px;
-        display:flex; align-items:center; justify-content:center;
-        border-radius:12px;
-      }
-      .avatarBtn::after{
-        width:13px; height:13px;
-        font-size:8px;
-        bottom:-2px; right:-3px;
-      }
+      .profilePillAvatar{ width:28px; height:28px; font-size:18px; }
+      .profilePillName{ max-width:90px; }
     }
     @media (max-width: 360px){
-      .brandTitle{ font-size:14px; }
-      .topbar{ padding:10px 12px; gap:8px; }
-      .avatarBtn, .themeToggleIcon, .logoWrap{ width:34px; height:34px; }
-      .avatarBtn{ font-size:18px; }
-      .themeToggleIcon{ font-size:18px; }
+      .brandText{ display:none; } /* Çok dar ekranda sadece logo */
+      .topbar{ padding:10px 12px; }
+      .profilePillName{ max-width:70px; font-size:12px; }
     }
     .themeToggle{ cursor:pointer; }
     .themeToggleIcon{
@@ -3624,20 +3649,45 @@ html.theme--dark .profileEditSection{ border-top-color: rgba(255,255,255,0.1); }
   box-shadow: 0 4px 14px rgba(220,38,38,0.3);
 }
 
-/* Header avatar = active profile avatar */
-.avatarBtn{ position:relative; }
-.avatarBtn::after{
-  content:"▾";
-  position:absolute;
-  bottom:-2px; right:-4px;
-  background: var(--accent-blue);
-  color:#fff;
-  font-size:9px; font-weight:900;
-  width:14px; height:14px;
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  border: 1.5px solid var(--page-bg, #fff);
+/* Settings rows in profile sheet */
+.profileSettingsSection{
+  margin-top:18px; padding-top:14px;
+  border-top: 1px solid rgba(0,0,0,0.08);
 }
+html.theme--dark .profileSettingsSection{ border-top-color: rgba(255,255,255,0.1); }
+.profileSettingRow{
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%;
+  padding:12px 14px;
+  background: rgba(255,255,255,0.55);
+  border:1px solid rgba(0,0,0,0.08);
+  border-radius:14px;
+  cursor:pointer;
+  margin-bottom:8px;
+  font-size:14px;
+  font-weight:700;
+  color: var(--text);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.profileSettingRow:active{ transform: scale(0.98); }
+.profileSettingRow:hover{ background: rgba(255,255,255,0.85); }
+html.theme--dark .profileSettingRow{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+html.theme--dark .profileSettingRow:hover{ background: rgba(255,255,255,0.1); }
+.profileSettingLabel{
+  display:flex; align-items:center; gap:10px;
+}
+.profileSettingIcon{ font-size:18px; }
+.profileSettingText{ font-weight:800; }
+.profileSettingValue{
+  color: var(--accent-blue);
+  font-weight:800;
+  font-size:13px;
+}
+
+/* Profile pill chevron is built-in via .profilePillChevron */
 
 /* ============================================
  * First-time Guided Tutorial

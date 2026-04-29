@@ -2879,19 +2879,25 @@ if(btnDailyNew){
   };
 }
 
-/* Avatar — şimdi aktif profilin emoji'sini gösteriyor */
+/* Profile pill render — avatar + isim + chevron */
 function renderAvatar(){
     const ap = getActiveProfile();
-    if(ap && ap.avatar){
-      avatarBtn.textContent = ap.avatar;
+    const avatarEl = document.getElementById("profilePillAvatar");
+    const nameEl   = document.getElementById("profilePillName");
+    if(ap){
+      if(avatarEl) avatarEl.textContent = ap.avatar || "🦁";
+      if(nameEl)   nameEl.textContent   = ap.name   || "Player";
     } else {
-      avatarBtn.textContent = AVATARS[currentAvatarIdx] || "🦁";
+      if(avatarEl) avatarEl.textContent = AVATARS[currentAvatarIdx] || "🦁";
+      if(nameEl)   nameEl.textContent   = "Player";
     }
 }
-avatarBtn.onclick = () => {
+if(avatarBtn){
+  avatarBtn.onclick = () => {
     clickSound("click");
     openProfileSheet();
-};
+  };
+}
 
 /* =======================
  * Profile Sheet (multi-child)
@@ -2904,10 +2910,31 @@ function openProfileSheet(){
   closeProfileEdit(); // edit paneli kapalı başlasın
   renderProfileList();
   renderProfileAvatarPicker();
+  renderSettingsRows();
   const nameInput = document.getElementById("profileNewName");
   if(nameInput) nameInput.value = "";
   bk.classList.add("show");
   trackEvent("Profile Sheet Opened");
+}
+
+function renderSettingsRows(){
+  // Theme row
+  const themeIcon = document.getElementById("profileThemeIcon");
+  const themeVal  = document.getElementById("profileThemeValue");
+  if(themeIcon && themeVal){
+    const labels = { dark:"Dark", light:"Light", system:"System" };
+    const icons  = { dark:"🌙", light:"☀️", system:"🌓" };
+    const mode = (typeof themeMode !== "undefined") ? themeMode : "system";
+    themeIcon.textContent = icons[mode] || "🌓";
+    themeVal.textContent  = labels[mode] || "System";
+  }
+  // Sound row
+  const soundIcon = document.getElementById("profileSoundIcon");
+  const soundVal  = document.getElementById("profileSoundValue");
+  if(soundIcon && soundVal){
+    soundIcon.textContent = soundOn ? "🔊" : "🔇";
+    soundVal.textContent  = soundOn ? "On" : "Off";
+  }
 }
 function closeProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
@@ -3160,6 +3187,29 @@ document.addEventListener("DOMContentLoaded", ()=>{
   if(bk) bk.addEventListener("click", (e)=>{ if(e.target === bk){ clickSound("click"); closeProfileSheet(); } });
   const addBtn = document.getElementById("btnProfileAdd");
   if(addBtn) addBtn.onclick = ()=>{ clickSound("click"); addNewChildProfile(); };
+
+  // Settings: theme cycle
+  const themeBtn = document.getElementById("profileThemeBtn");
+  if(themeBtn){
+    themeBtn.onclick = ()=>{
+      clickSound("click");
+      cycleTheme();
+      renderSettingsRows();
+      trackEvent("Theme Toggled");
+    };
+  }
+  // Settings: sound toggle
+  const soundBtn = document.getElementById("profileSoundBtn");
+  if(soundBtn){
+    soundBtn.onclick = ()=>{
+      soundOn = !soundOn;
+      lsSet(SOUND_KEY, soundOn ? "1" : "0");
+      renderSoundToggle();
+      renderSettingsRows();
+      if(soundOn){ ensureAudio(); clickSound("click"); }
+      trackEvent("Sound Toggled");
+    };
+  }
 });
 
 
