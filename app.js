@@ -270,9 +270,9 @@ window.addEventListener("touchstart", unlockAudioOnce, { passive:true });
 
 /** =======================
  * Certificate helpers
+ * (Note: CERT_ID_KEY and CERT_NAME_KEY are declared in the profile-aware
+ *  constants block below — per-profile keys.)
  * ======================= */
-const CERT_ID_KEY   = "jumvi_cert_id_v1";
-const CERT_NAME_KEY = "jumvi_cert_name_v1";
 
 function getCertId(){
   let id = lsGet(CERT_ID_KEY);
@@ -394,30 +394,106 @@ async function renderSimpleCertificateBlob(){
 
 
 /** =======================
+ * Multi-Profile System
+ * ======================= */
+const PROFILES_KEY        = "jumvi_profiles_v1";
+const ACTIVE_PROFILE_KEY  = "jumvi_active_profile_v1";
+const PROFILE_AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼","🐯","🐨","🐸","🦋"];
+
+function getProfiles(){
+  return lsGetJSON(PROFILES_KEY, []);
+}
+function getActiveProfileId(){
+  return lsGet(ACTIVE_PROFILE_KEY, "p1");
+}
+function getActiveProfile(){
+  const id = getActiveProfileId();
+  return getProfiles().find(p => p.id === id) || null;
+}
+function saveProfiles(arr){
+  try { lsSet(PROFILES_KEY, JSON.stringify(arr)); } catch(_){}
+}
+function nextProfileId(){
+  const ps = getProfiles();
+  let n = 1;
+  while(ps.find(p => p.id === ("p"+n))) n++;
+  return "p"+n;
+}
+
+/* Migration: tek kullanıcı → "Default" profile */
+(function migrateToProfiles(){
+  if(!storageAvailable) return;
+  if(lsGet(PROFILES_KEY, null) !== null) return; // zaten migrate edildi
+
+  const oldKeys = [
+    "missions_done_v3","streak_count_v1","streak_best_v1","streak_last_v1",
+    "daily_date_v1","daily_id_v1","daily_n_v1",
+    "attempts_v1","skips_v1","badges_unlocked_v1",
+    "age_v2","cert_name_v1","cert_id_v1","avatar_v1"
+  ];
+  oldKeys.forEach(k => {
+    const oldKey = "jumvi_" + k;
+    const val = lsGet(oldKey, null);
+    if(val !== null){
+      try { lsSet("jumvi_p1_" + k, val); } catch(_){}
+    }
+  });
+
+  const oldAvatarIdx = Number(lsGet("jumvi_avatar_v1", "0")) || 0;
+  const defaultAvatar = PROFILE_AVATARS[oldAvatarIdx] || "🦁";
+
+  const profiles = [{
+    id: "p1",
+    name: "Player",
+    avatar: defaultAvatar,
+    createdAt: new Date().toISOString()
+  }];
+  saveProfiles(profiles);
+  lsSet(ACTIVE_PROFILE_KEY, "p1");
+})();
+
+/* Tek profil bile yoksa (yeni cihaz) — boş bir başlangıç profili oluştur */
+(function ensureAtLeastOneProfile(){
+  if(!storageAvailable) return;
+  const ps = getProfiles();
+  if(ps.length === 0){
+    const p = { id:"p1", name:"Player", avatar:"🦁", createdAt: new Date().toISOString() };
+    saveProfiles([p]);
+    lsSet(ACTIVE_PROFILE_KEY, "p1");
+  }
+})();
+
+const _PP = "jumvi_" + getActiveProfileId() + "_"; // profile prefix
+
+/** =======================
  * State
  * ======================= */
-const LS_KEY = "jumvi_missions_done_v3";
+const LS_KEY = _PP + "missions_done_v3";
 const ONLY_KEY = "jumvi_only_unfinished_v1";
 
-/* UI + persistence */
+/* UI + persistence (per-profile) */
+const STREAK_COUNT_KEY  = _PP + "streak_count_v1";
+const STREAK_BEST_KEY   = _PP + "streak_best_v1";
+const STREAK_LAST_KEY   = _PP + "streak_last_v1";
+const DAILY_DATE_KEY    = _PP + "daily_date_v1";
+const DAILY_ID_KEY      = _PP + "daily_id_v1";
+const DAILY_N_KEY       = _PP + "daily_n_v1";
+const AGE_KEY           = _PP + "age_v2";
+const ATTEMPTS_KEY      = _PP + "attempts_v1";
+const SKIPS_KEY         = _PP + "skips_v1";
+const BADGES_UNLOCKED_KEY = _PP + "badges_unlocked_v1";
+const AVATAR_KEY        = _PP + "avatar_v1";
+const CERT_ID_KEY       = _PP + "cert_id_v1";
+const CERT_NAME_KEY     = _PP + "cert_name_v1";
+
+/* Global (UI/UX prefs — paylaşılan) */
 const PACK_KEY          = "jumvi_current_pack_v1";
 const SOLIDBG_KEY       = "jumvi_solid_bg_v1";
 const KIDSMODE_KEY      = "jumvi_kids_mode_v1";
-const STREAK_COUNT_KEY  = "jumvi_streak_count_v1";
-const STREAK_BEST_KEY   = "jumvi_streak_best_v1";
-const STREAK_LAST_KEY   = "jumvi_streak_last_v1";
-const DAILY_DATE_KEY    = "jumvi_daily_date_v1";
-const DAILY_ID_KEY      = "jumvi_daily_id_v1";
-const DAILY_N_KEY       = "jumvi_daily_n_v1";
 const A2HS_DISMISS_KEY  = "jumvi_a2hs_dismiss_v1";
 const ONBOARD_KEY       = "jumvi_onboarded_v2";
-const AGE_KEY           = "jumvi_age_v2";
-const AVATAR_KEY        = "jumvi_avatar_v1";
 const AUTO_DONE_KEY     = "jumvi_auto_done_v1";
-const ATTEMPTS_KEY      = "jumvi_attempts_v1";
-const SKIPS_KEY         = "jumvi_skips_v1";
 const THEME_KEY         = "jumvi_theme_v1";
-const BADGES_UNLOCKED_KEY = "jumvi_badges_unlocked_v1";
 const TUTORIAL_KEY      = "jumvi_tutorial_done_v1";
 
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
@@ -2803,17 +2879,133 @@ if(btnDailyNew){
   };
 }
 
-/* Avatar Feature */
+/* Avatar — şimdi aktif profilin emoji'sini gösteriyor */
 function renderAvatar(){
-    avatarBtn.textContent = AVATARS[currentAvatarIdx];
+    const ap = getActiveProfile();
+    if(ap && ap.avatar){
+      avatarBtn.textContent = ap.avatar;
+    } else {
+      avatarBtn.textContent = AVATARS[currentAvatarIdx] || "🦁";
+    }
 }
 avatarBtn.onclick = () => {
     clickSound("click");
-    currentAvatarIdx = setState("currentAvatarIdx", (currentAvatarIdx + 1) % AVATARS.length);
-    lsSet(AVATAR_KEY, currentAvatarIdx);
-    renderAvatar();
-    fireConfetti(500); // small confetti for fun
+    openProfileSheet();
+};
+
+/* =======================
+ * Profile Sheet (multi-child)
+ * ======================= */
+let _profileSelectedAvatar = "🦁";
+
+function openProfileSheet(){
+  const bk = document.getElementById("profileBackdrop");
+  if(!bk) return;
+  renderProfileList();
+  renderProfileAvatarPicker();
+  const nameInput = document.getElementById("profileNewName");
+  if(nameInput) nameInput.value = "";
+  bk.classList.add("show");
+  trackEvent("Profile Sheet Opened");
 }
+function closeProfileSheet(){
+  const bk = document.getElementById("profileBackdrop");
+  if(!bk) return;
+  bk.classList.remove("show");
+}
+function renderProfileList(){
+  const list = document.getElementById("profileList");
+  if(!list) return;
+  const profiles = getProfiles();
+  const activeId = getActiveProfileId();
+  list.innerHTML = "";
+  profiles.forEach(p => {
+    const isActive = p.id === activeId;
+    // Get done count for this profile
+    const doneRaw = lsGetJSON("jumvi_" + p.id + "_missions_done_v3", []);
+    const doneCount = Array.isArray(doneRaw) ? doneRaw.length : 0;
+    const streak = Number(lsGet("jumvi_" + p.id + "_streak_count_v1", "0")) || 0;
+    const item = document.createElement("div");
+    item.className = "profileItem" + (isActive ? " active" : "");
+    item.innerHTML = `
+      <div class="profileItemAvatar">${escapeHtml(p.avatar || "🦁")}</div>
+      <div class="profileItemBody">
+        <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
+        <div class="profileItemMeta">${doneCount}/36 missions · 🔥 ${streak} day${streak===1?"":"s"}</div>
+      </div>
+      ${isActive ? '<div class="profileItemActive">●</div>' : ""}
+    `;
+    item.onclick = ()=>{
+      if(isActive){ closeProfileSheet(); return; }
+      switchProfile(p.id);
+    };
+    list.appendChild(item);
+  });
+}
+function renderProfileAvatarPicker(){
+  const picker = document.getElementById("profileAvatarPicker");
+  if(!picker) return;
+  if(!_profileSelectedAvatar) _profileSelectedAvatar = PROFILE_AVATARS[0];
+  picker.innerHTML = "";
+  PROFILE_AVATARS.forEach(em => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "profileAvatarOption" + (em === _profileSelectedAvatar ? " selected" : "");
+    btn.textContent = em;
+    btn.onclick = ()=>{
+      clickSound("click");
+      _profileSelectedAvatar = em;
+      renderProfileAvatarPicker();
+    };
+    picker.appendChild(btn);
+  });
+}
+function switchProfile(id){
+  if(!id) return;
+  clickSound("success");
+  lsSet(ACTIVE_PROFILE_KEY, id);
+  trackEvent("Profile Switched");
+  // Sayfa yenile — tüm state yeni profilden okunur
+  showToast("Switching player...");
+  setTimeout(()=>{ location.reload(); }, 350);
+}
+function addNewChildProfile(){
+  const nameInput = document.getElementById("profileNewName");
+  if(!nameInput) return;
+  const name = (nameInput.value || "").trim().slice(0, 20);
+  if(!name){
+    showToast("Please enter a name first.");
+    nameInput.focus();
+    return;
+  }
+  const profiles = getProfiles();
+  if(profiles.length >= 6){
+    showToast("Maximum 6 children supported.");
+    return;
+  }
+  const newProfile = {
+    id: nextProfileId(),
+    name: name,
+    avatar: _profileSelectedAvatar || "🦁",
+    createdAt: new Date().toISOString()
+  };
+  profiles.push(newProfile);
+  saveProfiles(profiles);
+  trackEvent("Profile Added");
+  showToast(`👋 Hi ${name}! Let's play!`);
+  // Yeni profile geç (page reload)
+  switchProfile(newProfile.id);
+}
+
+// Profile sheet event handlers
+document.addEventListener("DOMContentLoaded", ()=>{
+  const closeBtn = document.getElementById("btnProfileClose");
+  if(closeBtn) closeBtn.onclick = ()=>{ clickSound("click"); closeProfileSheet(); };
+  const bk = document.getElementById("profileBackdrop");
+  if(bk) bk.addEventListener("click", (e)=>{ if(e.target === bk){ clickSound("click"); closeProfileSheet(); } });
+  const addBtn = document.getElementById("btnProfileAdd");
+  if(addBtn) addBtn.onclick = ()=>{ clickSound("click"); addNewChildProfile(); };
+});
 
 
 /* Backup modal */
@@ -3219,7 +3411,10 @@ function init(){
 
   // restore certificate name (optional)
   if(certNameInput){
-    certNameInput.value = lsGet(CERT_NAME_KEY) || "";
+    // Cert name: önce kayıtlı, yoksa aktif profile adı, yoksa boş
+    const savedCertName = lsGet(CERT_NAME_KEY);
+    const ap = getActiveProfile();
+    certNameInput.value = savedCertName || (ap && ap.name && ap.name !== "Player" ? ap.name : "");
     buildCertificate();
   }
 }

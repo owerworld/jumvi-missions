@@ -3421,6 +3421,133 @@ html.theme--dark .certPreviewWrap {
 }
 
 /* ============================================
+ * Multi-Profile UI
+ * ============================================ */
+.profileList{
+  display:flex; flex-direction:column; gap:8px;
+  margin:14px 0 6px;
+}
+.profileItem{
+  display:flex; align-items:center; gap:14px;
+  padding:14px;
+  border-radius:18px;
+  border:2px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.55);
+  cursor:pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.profileItem:active{ transform: scale(0.98); }
+.profileItem.active{
+  border-color: var(--accent-blue);
+  background: linear-gradient(135deg, rgba(79,179,255,0.12), rgba(151,215,0,0.08));
+  box-shadow: 0 4px 14px rgba(79,179,255,0.18);
+}
+html.theme--dark .profileItem{
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+html.theme--dark .profileItem.active{
+  background: linear-gradient(135deg, rgba(79,179,255,0.18), rgba(151,215,0,0.1));
+  border-color: rgba(79,179,255,0.5);
+}
+.profileItemAvatar{
+  font-size:36px; line-height:1;
+  width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(255,255,255,0.6);
+  border-radius:14px;
+  flex-shrink:0;
+}
+html.theme--dark .profileItemAvatar{ background: rgba(255,255,255,0.08); }
+.profileItemBody{ flex:1; }
+.profileItemName{
+  font-size:16px; font-weight:950;
+  color: var(--text);
+  letter-spacing:-0.2px;
+}
+.profileItemMeta{
+  font-size:11px; font-weight:700;
+  color: var(--muted);
+  margin-top:2px;
+}
+.profileItemActive{
+  color: var(--accent-blue);
+  font-size:18px; font-weight:900;
+  flex-shrink:0;
+}
+
+.profileAddSection{
+  margin-top:18px; padding-top:14px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+html.theme--dark .profileAddSection{ border-top-color: rgba(255,255,255,0.1); }
+.profileSectionTitle{
+  font-size:13px; font-weight:900;
+  color: var(--muted); text-transform:uppercase;
+  letter-spacing:1px; margin-bottom:10px;
+}
+.profileNameInput{
+  width:100%; padding:12px 14px;
+  border-radius:14px;
+  border:1.5px solid rgba(0,0,0,0.12);
+  background: #fff;
+  font-size:15px; font-weight:700;
+  color: var(--text);
+  margin-bottom:10px;
+}
+.profileNameInput:focus{
+  outline:none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(79,179,255,0.15);
+}
+html.theme--dark .profileNameInput{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.15);
+  color: var(--text);
+}
+.profileAvatarPicker{
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:6px;
+  margin-bottom:12px;
+}
+.profileAvatarOption{
+  font-size:24px; line-height:1;
+  padding:8px 0;
+  border-radius:12px;
+  border:2px solid transparent;
+  background: rgba(255,255,255,0.55);
+  cursor:pointer;
+  transition: all 0.15s ease;
+}
+.profileAvatarOption:active{ transform: scale(0.92); }
+.profileAvatarOption.selected{
+  border-color: var(--accent-blue);
+  background: linear-gradient(135deg, rgba(79,179,255,0.18), rgba(151,215,0,0.1));
+  box-shadow: 0 2px 8px rgba(79,179,255,0.2);
+}
+html.theme--dark .profileAvatarOption{ background: rgba(255,255,255,0.06); }
+html.theme--dark .profileAvatarOption.selected{
+  background: linear-gradient(135deg, rgba(79,179,255,0.22), rgba(151,215,0,0.12));
+}
+.profileAddBtn{ width:100%; }
+
+/* Header avatar = active profile avatar */
+.avatarBtn{ position:relative; }
+.avatarBtn::after{
+  content:"▾";
+  position:absolute;
+  bottom:-2px; right:-4px;
+  background: var(--accent-blue);
+  color:#fff;
+  font-size:9px; font-weight:900;
+  width:14px; height:14px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  border: 1.5px solid var(--page-bg, #fff);
+}
+
+/* ============================================
  * First-time Guided Tutorial
  * ============================================ */
 .tutorialOverlay{

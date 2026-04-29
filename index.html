@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-1">
+  <link rel="stylesheet" href="style.css?v=20260428-2">
   <script>
     (function(){
       try{
@@ -440,6 +440,27 @@
   </div>
 
 
+  <!-- Profile Sheet (multi-child) -->
+  <div class="backdrop" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Choose player">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">👤 Choose Player</div>
+          <div class="small">Each child has their own progress, streak & badges.</div>
+        </div>
+        <button class="close" id="btnProfileClose" aria-label="Close player picker">✕</button>
+      </div>
+      <div class="profileList" id="profileList"></div>
+
+      <div class="profileAddSection">
+        <div class="profileSectionTitle">➕ Add a new child</div>
+        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20" autocomplete="off" />
+        <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
+        <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
+      </div>
+    </div>
+  </div>
+
   <!-- First-time Guided Tutorial (3-step spotlight) -->
   <div id="tutorialOverlay" class="tutorialOverlay" aria-hidden="true">
     <div class="tutorialSpotlight" id="tutorialSpotlight"></div>
@@ -501,13 +522,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-1" defer></script>
-<script src="data.js?v=20260428-1" defer></script>
-<script src="app.js?v=20260428-1" defer></script>
+<script src="confetti.min.js?v=20260428-2" defer></script>
+<script src="data.js?v=20260428-2" defer></script>
+<script src="app.js?v=20260428-2" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-1").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-2").catch(()=>{});
     });
   }
 </script>
