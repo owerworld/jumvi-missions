@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-9">
+  <link rel="stylesheet" href="style.css?v=20260428-10">
   <script>
     (function(){
       try{
@@ -333,6 +333,18 @@
         <button class="btn btnGhost btnScoreToggle" id="btnScoreToggle" aria-label="Track score">📊 Track Score</button>
       </div>
 
+      <!-- Story Banner — opsiyonel hayal katmanı -->
+      <div class="storyBanner" id="storyBanner" style="display:none">
+        <div class="storyBannerInner">
+          <div class="storyEmoji" id="storyEmoji">⚡</div>
+          <div class="storyText">
+            <div class="storyTitle" id="storyTitle">Lightning Strike</div>
+            <div class="storyTagline" id="storyTagline">Catch the lightning!</div>
+          </div>
+          <button class="storyToggle" id="storyToggle" aria-label="Hide story" title="Hide story">×</button>
+        </div>
+      </div>
+
       <!-- Score Tracker — kişisel rekor mekanik -->
       <div class="scoreTracker" id="scoreTracker" style="display:none">
         <div class="scoreTrackerHeader">
@@ -576,13 +588,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-9" defer></script>
-<script src="data.js?v=20260428-9" defer></script>
-<script src="app.js?v=20260428-9" defer></script>
+<script src="confetti.min.js?v=20260428-10" defer></script>
+<script src="data.js?v=20260428-10" defer></script>
+<script src="app.js?v=20260428-10" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-9").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-10").catch(()=>{});
     });
   }
 </script>

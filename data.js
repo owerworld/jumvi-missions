@@ -9,6 +9,47 @@ const PACKS = [
   { key:"Beach/Park", name:"Beach/Park" },
 ];
 
+// Pack-level imagination themes — opsiyonel hayal katmanı
+// Görev kurallarını DEĞIŞTIRMEZ — sadece çocuğun zihninde sahneyi kurar
+const PACK_THEMES = {
+  "Reflex Rush": {
+    emoji: "⚡",
+    name: "Lightning Strike",
+    tagline: "Catch the lightning before it disappears!",
+    color: "#FF6A00"
+  },
+  "Aim Master": {
+    emoji: "🎯",
+    name: "Bullseye Hunter",
+    tagline: "Every throw aims for the perfect spot.",
+    color: "#4FB3FF"
+  },
+  "Focus Control": {
+    emoji: "🧘",
+    name: "Zen Garden",
+    tagline: "Calm body, sharp mind, steady hand.",
+    color: "#22c55e"
+  },
+  "Team Duo": {
+    emoji: "🚁",
+    name: "Rescue Mission",
+    tagline: "Two heroes, one team — work together!",
+    color: "#FFAB00"
+  },
+  "Indoor Compact": {
+    emoji: "🏠",
+    name: "Living Room Olympics",
+    tagline: "Small space, BIG champion energy!",
+    color: "#A855F7"
+  },
+  "Beach/Park": {
+    emoji: "🏴‍☠️",
+    name: "Pirate Treasure",
+    tagline: "X marks the spot — find the treasure!",
+    color: "#06B6D4"
+  }
+};
+
 function m(id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip){
   return { id, pack, icon, title, difficulty, players, time, age, steps, win, safety, tip };
 }

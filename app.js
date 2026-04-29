@@ -2073,6 +2073,24 @@ function openMission(id){
 
   resetTimerUI(); // Ensure timer is reset when opening
 
+  // Story banner — pack temasından hayal katmanı
+  // Görev kurallarını DEĞIŞTIRMEZ; sadece sahneyi kurar
+  const storyBanner = document.getElementById("storyBanner");
+  const theme = (typeof PACK_THEMES !== "undefined") ? PACK_THEMES[ms.pack] : null;
+  if(storyBanner && theme){
+    const inner = storyBanner.querySelector(".storyBannerInner");
+    if(inner) inner.style.setProperty("--story-color", theme.color || "#4FB3FF");
+    const eEl = document.getElementById("storyEmoji");
+    const tEl = document.getElementById("storyTitle");
+    const lEl = document.getElementById("storyTagline");
+    if(eEl) eEl.textContent = theme.emoji;
+    if(tEl) tEl.textContent = theme.name;
+    if(lEl) lEl.textContent = theme.tagline;
+    storyBanner.style.display = "";
+  } else if(storyBanner){
+    storyBanner.style.display = "none";
+  }
+
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
     <span class="tag pack">${escapeHtml(ms.pack)}</span>
@@ -3628,6 +3646,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
     if(_autoCountActive) stopAutoCount();
     else startAutoCount();
   };
+  // Story banner toggle — sadece mevcut görev için gizle (sonraki görevde tekrar gelir)
+  const storyToggle = document.getElementById("storyToggle");
+  if(storyToggle){
+    storyToggle.onclick = ()=>{
+      clickSound("click");
+      const banner = document.getElementById("storyBanner");
+      if(banner) banner.style.display = "none";
+      trackEvent("Story Banner Dismissed");
+    };
+  }
 });
 
 /** =======================

@@ -3479,6 +3479,60 @@ html.theme--dark .certPreviewWrap {
 }
 
 /* ============================================
+ * Story Banner (hikaye katmanı — opsiyonel hayal katmanı)
+ * Görevi BOZMAZ, sadece sahneyi kurar
+ * ============================================ */
+.storyBanner{
+  margin: 6px 0 14px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  position: relative;
+}
+.storyBannerInner{
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 14px 14px 14px;
+  background: linear-gradient(135deg, var(--story-color, #4FB3FF) 0%, rgba(79,179,255,0.7) 100%);
+  position: relative;
+}
+.storyEmoji{
+  font-size: 36px;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.storyText{ flex: 1; min-width: 0; }
+.storyTitle{
+  font-size: 15px;
+  font-weight: 950;
+  color: #fff;
+  letter-spacing: -0.3px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.storyTagline{
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  margin-top: 2px;
+  line-height: 1.35;
+}
+.storyToggle{
+  width: 26px; height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s ease;
+}
+.storyToggle:hover, .storyToggle:active{ background: rgba(255,255,255,0.4); }
+html.theme--dark .storyBanner{ border-color: rgba(255,255,255,0.08); }
+
+/* ============================================
  * Timer Countdown Overlay (3-2-1-GO)
  * ============================================ */
 .timerCountdown{
