@@ -2901,6 +2901,7 @@ let _profileSelectedAvatar = "🦁";
 function openProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
   if(!bk) return;
+  closeProfileEdit(); // edit paneli kapalı başlasın
   renderProfileList();
   renderProfileAvatarPicker();
   const nameInput = document.getElementById("profileNewName");
@@ -2921,7 +2922,6 @@ function renderProfileList(){
   list.innerHTML = "";
   profiles.forEach(p => {
     const isActive = p.id === activeId;
-    // Get done count for this profile
     const doneRaw = lsGetJSON("jumvi_" + p.id + "_missions_done_v3", []);
     const doneCount = Array.isArray(doneRaw) ? doneRaw.length : 0;
     const streak = Number(lsGet("jumvi_" + p.id + "_streak_count_v1", "0")) || 0;
@@ -2933,8 +2933,18 @@ function renderProfileList(){
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
         <div class="profileItemMeta">${doneCount}/36 missions · 🔥 ${streak} day${streak===1?"":"s"}</div>
       </div>
+      <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button">✏️</button>
       ${isActive ? '<div class="profileItemActive">●</div>' : ""}
     `;
+    // Edit pencil click — opens edit panel
+    const pencil = item.querySelector(".profileEditPencil");
+    if(pencil){
+      pencil.onclick = (e)=>{
+        e.stopPropagation();
+        clickSound("click");
+        openProfileEdit(p.id);
+      };
+    }
     item.onclick = ()=>{
       if(isActive){ closeProfileSheet(); return; }
       switchProfile(p.id);
@@ -2942,6 +2952,151 @@ function renderProfileList(){
     list.appendChild(item);
   });
 }
+
+/* Profil düzenleme paneli */
+let _profileEditingId = null;
+let _profileEditingAvatar = "🦁";
+let _deleteConfirmTimer = null;
+
+function openProfileEdit(id){
+  const p = getProfiles().find(x => x.id === id);
+  if(!p) return;
+  _profileEditingId = id;
+  _profileEditingAvatar = p.avatar || "🦁";
+
+  const editSection = document.getElementById("profileEditSection");
+  const addSection  = document.getElementById("profileAddSection");
+  const titleEl = document.getElementById("profileEditTitle");
+  const nameEl  = document.getElementById("profileEditName");
+  const deleteBtn = document.getElementById("btnProfileDelete");
+  if(editSection) editSection.style.display = "";
+  if(addSection)  addSection.style.display  = "none";
+  if(titleEl) titleEl.textContent = "✏️ Edit " + (p.name || "Player");
+  if(nameEl){ nameEl.value = p.name || ""; nameEl.focus(); }
+
+  // Delete butonu: tek profil varsa devre dışı
+  const profiles = getProfiles();
+  if(deleteBtn){
+    deleteBtn.disabled = profiles.length <= 1;
+    deleteBtn.classList.remove("confirming");
+    deleteBtn.textContent = profiles.length <= 1
+      ? "🗑️ Delete (need at least 1 profile)"
+      : "🗑️ Delete this profile";
+    deleteBtn.style.opacity = profiles.length <= 1 ? "0.4" : "1";
+  }
+
+  renderProfileEditAvatarPicker();
+}
+function closeProfileEdit(){
+  _profileEditingId = null;
+  const editSection = document.getElementById("profileEditSection");
+  const addSection  = document.getElementById("profileAddSection");
+  if(editSection) editSection.style.display = "none";
+  if(addSection)  addSection.style.display  = "";
+}
+function renderProfileEditAvatarPicker(){
+  const picker = document.getElementById("profileEditAvatarPicker");
+  if(!picker) return;
+  picker.innerHTML = "";
+  PROFILE_AVATARS.forEach(em => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "profileAvatarOption" + (em === _profileEditingAvatar ? " selected" : "");
+    btn.textContent = em;
+    btn.onclick = ()=>{
+      clickSound("click");
+      _profileEditingAvatar = em;
+      renderProfileEditAvatarPicker();
+    };
+    picker.appendChild(btn);
+  });
+}
+function saveProfileEdit(){
+  if(!_profileEditingId) return;
+  const nameEl = document.getElementById("profileEditName");
+  const newName = (nameEl && nameEl.value || "").trim().slice(0, 20);
+  if(!newName){
+    showToast("Please enter a name.");
+    if(nameEl) nameEl.focus();
+    return;
+  }
+  const profiles = getProfiles();
+  const idx = profiles.findIndex(x => x.id === _profileEditingId);
+  if(idx === -1) return;
+  profiles[idx].name = newName;
+  profiles[idx].avatar = _profileEditingAvatar;
+  saveProfiles(profiles);
+  trackEvent("Profile Edited");
+  closeProfileEdit();
+  renderProfileList();
+  // Aktif profil düzenlendiyse header avatarını da yenile
+  if(_profileEditingId === getActiveProfileId()){
+    renderAvatar();
+  }
+  showToast("✅ Profile updated.");
+}
+function deleteProfile(){
+  const id = _profileEditingId;
+  if(!id) return;
+  const profiles = getProfiles();
+  if(profiles.length <= 1){
+    showToast("Cannot delete the only profile.");
+    return;
+  }
+  // Tüm profile-specific veriyi sil
+  const keysToRemove = [
+    "missions_done_v3","streak_count_v1","streak_best_v1","streak_last_v1",
+    "daily_date_v1","daily_id_v1","daily_n_v1",
+    "attempts_v1","skips_v1","badges_unlocked_v1",
+    "age_v2","cert_name_v1","cert_id_v1","avatar_v1"
+  ];
+  keysToRemove.forEach(k => {
+    try { localStorage.removeItem("jumvi_" + id + "_" + k); } catch(_){}
+  });
+  // Profile listesinden çıkar
+  const filtered = profiles.filter(p => p.id !== id);
+  saveProfiles(filtered);
+  trackEvent("Profile Deleted");
+  // Eğer aktif profil silindiyse, ilk kalan profile geç (reload tetiklenir)
+  if(getActiveProfileId() === id){
+    lsSet(ACTIVE_PROFILE_KEY, filtered[0].id);
+    showToast("Profile deleted. Switching...");
+    setTimeout(()=>{ location.reload(); }, 600);
+    return;
+  }
+  closeProfileEdit();
+  renderProfileList();
+  showToast("Profile deleted.");
+}
+
+// Edit panel buton handler'ları (DOM ready'de bağlanır)
+document.addEventListener("DOMContentLoaded", ()=>{
+  const cancelBtn = document.getElementById("btnProfileEditCancel");
+  if(cancelBtn) cancelBtn.onclick = ()=>{ clickSound("click"); closeProfileEdit(); };
+  const saveBtn = document.getElementById("btnProfileEditSave");
+  if(saveBtn) saveBtn.onclick = ()=>{ clickSound("click"); saveProfileEdit(); };
+  const deleteBtn = document.getElementById("btnProfileDelete");
+  if(deleteBtn){
+    deleteBtn.onclick = ()=>{
+      if(deleteBtn.disabled) return;
+      clickSound("click");
+      // 2-step confirm
+      if(deleteBtn.classList.contains("confirming")){
+        deleteProfile();
+        if(_deleteConfirmTimer){ clearTimeout(_deleteConfirmTimer); _deleteConfirmTimer = null; }
+      } else {
+        deleteBtn.classList.add("confirming");
+        deleteBtn.textContent = "Tap again to confirm 🗑️";
+        if(_deleteConfirmTimer) clearTimeout(_deleteConfirmTimer);
+        _deleteConfirmTimer = setTimeout(()=>{
+          deleteBtn.classList.remove("confirming");
+          deleteBtn.textContent = "🗑️ Delete this profile";
+          _deleteConfirmTimer = null;
+        }, 3500);
+      }
+    };
+  }
+});
 function renderProfileAvatarPicker(){
   const picker = document.getElementById("profileAvatarPicker");
   if(!picker) return;

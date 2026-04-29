@@ -3532,6 +3532,65 @@ html.theme--dark .profileAvatarOption.selected{
 }
 .profileAddBtn{ width:100%; }
 
+.profileItem{
+  position:relative;
+}
+.profileEditPencil{
+  position:absolute;
+  top:50%; right:14px;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.6);
+  border:1px solid rgba(0,0,0,0.08);
+  border-radius:10px;
+  padding:6px 10px;
+  font-size:14px;
+  cursor:pointer;
+  font-weight:700;
+  color: var(--muted);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.profileEditPencil:active{ transform: translateY(-50%) scale(0.92); }
+.profileEditPencil:hover{ background: rgba(255,255,255,0.85); }
+html.theme--dark .profileEditPencil{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+}
+.profileItem.active .profileEditPencil{ right:46px; }
+
+.profileEditSection{
+  margin-top:18px; padding-top:14px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  animation: panelSlideIn 0.25s ease-out;
+}
+@keyframes panelSlideIn{
+  from{ opacity:0; transform: translateY(-8px); }
+  to  { opacity:1; transform: translateY(0); }
+}
+html.theme--dark .profileEditSection{ border-top-color: rgba(255,255,255,0.1); }
+.profileEditActions{
+  display:flex; gap:10px; margin-bottom:12px;
+}
+.profileEditActions .btn{ flex:1; }
+.profileDeleteBtn{
+  width:100%;
+  background: transparent;
+  border:1px solid rgba(220,38,38,0.3);
+  color: #DC2626;
+  padding:10px 14px;
+  border-radius:14px;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition: all 0.15s ease;
+}
+.profileDeleteBtn:active{ transform: scale(0.97); background: rgba(220,38,38,0.08); }
+.profileDeleteBtn.confirming{
+  background: #DC2626;
+  color:#fff;
+  border-color: #DC2626;
+  box-shadow: 0 4px 14px rgba(220,38,38,0.3);
+}
+
 /* Header avatar = active profile avatar */
 .avatarBtn{ position:relative; }
 .avatarBtn::after{
