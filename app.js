@@ -1807,11 +1807,11 @@ let missionOpenedAt = 0;
 
 function setTimerButtonLabel(){
   if(timerState === "running"){
-    btnStartTimer.textContent = "⏸️ Pause Timer";
+    btnStartTimer.textContent = "⏸ Pause";
   }else if(timerState === "paused"){
-    btnStartTimer.textContent = "▶️ Resume Timer";
+    btnStartTimer.textContent = "▶ Resume";
   }else{
-    btnStartTimer.textContent = "⏱️ Start Timer";
+    btnStartTimer.textContent = "▶ Start";
   }
 }
 
@@ -2169,8 +2169,9 @@ let isSpeaking = false;
 function updateSpeakButton(){
   if(!btnSpeak) return;
   btnSpeak.classList.toggle("speaking", isSpeaking);
-  btnSpeak.textContent = isSpeaking ? "■ Stop" : "🗣️ Read to Me";
-  btnSpeak.setAttribute("aria-label", isSpeaking ? "Playing… Tap to stop" : "Read to Me");
+  btnSpeak.textContent = isSpeaking ? "■" : "🗣️";
+  btnSpeak.setAttribute("title", isSpeaking ? "Stop reading" : "Read aloud");
+  btnSpeak.setAttribute("aria-label", isSpeaking ? "Playing… Tap to stop" : "Read mission aloud");
 }
 
 if(btnSpeak){
@@ -3566,7 +3567,7 @@ function toggleScoreTracker(force){
   _scoreTrackerOpen = next;
   tracker.style.display = next ? "" : "none";
   btn.classList.toggle("active", next);
-  btn.textContent = next ? "📊 Tracking" : "📊 Track Score";
+  btn.setAttribute("title", next ? "Tracking score (tap to hide)" : "Track score");
   if(next){
     resetScore();
     trackEvent("Score Tracker Opened");

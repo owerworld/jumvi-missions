@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-11">
+  <link rel="stylesheet" href="style.css?v=20260429-1">
   <script>
     (function(){
       try{
@@ -326,13 +326,6 @@
         <div id="timerBar"><div id="timerFill"></div></div>
       </div>
 
-      <div class="mTopActions" style="margin-top:10px; margin-bottom:10px; justify-content:flex-start;">
-        <!-- New Buttons -->
-        <button class="btn btnTimer" id="btnStartTimer" aria-label="Start or pause timer">⏱️ Start Timer</button>
-        <button class="btn btnGhost" id="btnSpeak" aria-label="Read mission aloud">🗣️ Read to Me</button>
-        <button class="btn btnGhost btnScoreToggle" id="btnScoreToggle" aria-label="Track score">📊 Track Score</button>
-      </div>
-
       <!-- Story Banner — opsiyonel hayal katmanı -->
       <div class="storyBanner" id="storyBanner" style="display:none">
         <div class="storyBannerInner">
@@ -345,7 +338,18 @@
         </div>
       </div>
 
-      <!-- Score Tracker — kişisel rekor mekanik -->
+      <!-- Steps + Win — birincil bilgi -->
+      <div class="kv" id="mSteps"></div>
+      <div class="kv kvWin" id="mWin"></div>
+
+      <!-- Primary action row — tek dominant Start + ikon yardımcılar -->
+      <div class="missionPrimary">
+        <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer">▶ Start</button>
+        <button class="missionIconBtn" id="btnSpeak" aria-label="Read mission aloud" title="Read aloud">🗣️</button>
+        <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track score" title="Track score">📊</button>
+      </div>
+
+      <!-- Score Tracker — sadece tracking açıksa görünür -->
       <div class="scoreTracker" id="scoreTracker" style="display:none">
         <div class="scoreTrackerHeader">
           <div class="scoreTrackerLabel">Your catches</div>
@@ -363,16 +367,25 @@
         <div class="scoreTrackerSummary" id="scoreTrackerSummary" style="display:none"></div>
       </div>
 
-      <div class="kv" id="mSteps"></div>
-      <div class="kv" id="mWin"></div>
-      <div class="kv" id="mTip"></div>
-      <div class="kv" id="mKidsTip"></div>
-      <div class="kv" id="mSafety"></div>
-      <details class="safetyDetails modalSafetyDetails">
-        <summary>⚠️ General safe play tips</summary>
-        Throw below face level · keep 1–3 m distance · adult supervision required.
-      </details>
+      <!-- Hint box (3+ deneme sonrası açılan ipucu) -->
       <div class="kv hintBox" id="mHint" style="display:none"></div>
+
+      <!-- More info akordion — secondary content (Tip, Kids, Safety) -->
+      <details class="moreInfoDetails">
+        <summary>
+          <span class="moreInfoSummaryText">📚 More tips &amp; safety</span>
+          <span class="moreInfoSummaryArrow">▾</span>
+        </summary>
+        <div class="moreInfoContent">
+          <div class="kv" id="mTip"></div>
+          <div class="kv" id="mKidsTip"></div>
+          <div class="kv" id="mSafety"></div>
+          <details class="safetyDetails modalSafetyDetails">
+            <summary>⚠️ General safe play tips</summary>
+            Throw below face level · keep 1–3 m distance · adult supervision required.
+          </details>
+        </div>
+      </details>
 
       <div class="small" id="mSmall"></div>
       </div>
@@ -610,13 +623,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-11" defer></script>
-<script src="data.js?v=20260428-11" defer></script>
-<script src="app.js?v=20260428-11" defer></script>
+<script src="confetti.min.js?v=20260429-1" defer></script>
+<script src="data.js?v=20260429-1" defer></script>
+<script src="app.js?v=20260429-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-11").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260429-1").catch(()=>{});
     });
   }
 </script>
