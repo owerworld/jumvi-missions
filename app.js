@@ -1571,7 +1571,8 @@ function createMissionCard(ms){
 
   const donePill = document.createElement("div");
   donePill.className = "donePill";
-  donePill.textContent = "Done ✓";
+  donePill.setAttribute("aria-label", "Mission completed");
+  donePill.setAttribute("title", "Done");
 
   c.appendChild(icon);
   c.appendChild(main);

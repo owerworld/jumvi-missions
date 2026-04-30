@@ -1021,18 +1021,36 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     }
     .card{
       background: #ffffff;
-      border: 1px solid rgba(79,179,255,0.28);
+      border: 1px solid rgba(79,179,255,0.18);
       border-radius: 20px;
-      padding:14px 16px;
+      padding:16px 18px 16px 22px;
       box-shadow:
-        0 1px 0 rgba(79,179,255,0.12),
-        0 4px 14px rgba(0,0,0,0.09),
-        0 1px 3px rgba(0,0,0,0.06);
+        0 1px 0 rgba(79,179,255,0.08),
+        0 4px 14px rgba(0,0,0,0.06),
+        0 1px 3px rgba(0,0,0,0.04);
       cursor:pointer;
       display:flex;
       gap:14px;
       align-items:center;
+      position: relative;
+      overflow: hidden;
     }
+    /* Pack-renk dikey şerit — sol kenarda */
+    .card::after{
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background: var(--card-accent, #4FB3FF);
+      border-radius: 0;
+    }
+    /* Pack-specific accent renkleri */
+    .pack--reflex-rush    { --card-accent: #FF6A00; }
+    .pack--aim-master     { --card-accent: #4FB3FF; }
+    .pack--focus-control  { --card-accent: #22c55e; }
+    .pack--team-duo       { --card-accent: #A855F7; }
+    .pack--indoor-compact { --card-accent: #06B6D4; }
+    .pack--beach-park     { --card-accent: #FFAB00; }
     /* Completed card: solid green tint — clearly distinct */
     html.theme--light .card.done{
       background: #f0fce8;
@@ -1064,23 +1082,34 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     }
     .card:active{ transform: scale(.98); }
     .mIcon{
-      width:50px; height:50px; border-radius:18px;
+      width:58px; height:58px; border-radius:18px;
       display:flex; align-items:center; justify-content:center;
-      font-size:24px;
-      background: rgba(79,179,255,0.10);
+      font-size:30px;
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--card-accent, #4FB3FF) 18%, transparent),
+        color-mix(in srgb, var(--card-accent, #4FB3FF) 8%, transparent));
       color: #333;
       flex:0 0 auto;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    /* Tarayıcı color-mix desteklemiyorsa fallback */
+    @supports not (background: color-mix(in srgb, red 10%, transparent)){
+      .mIcon{ background: rgba(79,179,255,0.12); }
     }
     html.theme--dark .mIcon{
       background: rgba(255,255,255,0.08);
       color: #e5e7eb;
     }
+    .card:active .mIcon{ transform: scale(0.92) rotate(-3deg); }
+    .card.done .mIcon{
+      background: linear-gradient(135deg, #DCEDC8, #C5E1A5) !important;
+    }
     .mMain{ flex:1; min-width:0; }
-    .mTitle{ font-weight:950; letter-spacing:-.1px; font-size:17px; color: var(--blue); }
-    html.theme--dark .mTitle{ color:#93c5fd; }
+    .mTitle{ font-weight:950; letter-spacing:-.2px; font-size:17px; color: var(--text); line-height:1.25; }
+    html.theme--dark .mTitle{ color: var(--text); }
     .mMeta{
-      margin-top:6px;
-      display:flex; flex-wrap:wrap; gap:8px;
+      margin-top:8px;
+      display:flex; flex-wrap:wrap; gap:6px;
       color: rgba(6,19,38,0.72);
       font-size:12px;
       font-weight:800;
@@ -1112,24 +1141,42 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
     .tag.smallHide{ display:inline-flex; }
     
     .donePill{
-      padding:8px 12px;
-      border-radius:999px;
-      background: #76FF03;
-      color: #1B5E20;
-      font-weight:950;
-      font-size:12px;
-      flex:0 0 auto;
-      display:none;
-      box-shadow: 0 4px 10px rgba(118, 255, 3, 0.3);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #66BB6A, #43A047);
+      color: #fff;
+      font-weight: 950;
+      font-size: 16px;
+      flex: 0 0 auto;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(67,160,71,0.35);
+      letter-spacing: 0;
+      animation: doneCheck 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
-    .card.done .donePill{ display:inline-flex; }
+    .donePill::before{
+      content: "✓";
+      line-height: 1;
+    }
+    @keyframes doneCheck{
+      0%  { opacity: 0; transform: scale(0.5); }
+      100%{ opacity: 1; transform: scale(1); }
+    }
+    .card.done .donePill{ display: inline-flex; }
     .card.done{
-      background: #F1F8E9;
-      border: 1px solid #76FF03;
-      box-shadow: 0 4px 10px rgba(118, 255, 3, 0.1);
+      background: linear-gradient(135deg, #F1F8E9, #ffffff);
+      border: 1px solid rgba(102,187,106,0.35);
+      box-shadow: 0 4px 14px rgba(102,187,106,0.12);
     }
-    .card.done .mTitle { color: #33691E; text-decoration: none; }
-    .card.done .mIcon { background: #DCEDC8; }
+    html.theme--dark .card.done{
+      background: linear-gradient(135deg, rgba(102,187,106,0.12), rgba(255,255,255,0.04));
+      border-color: rgba(102,187,106,0.3);
+    }
+    .card.done .mTitle{ color: var(--text); }
+    @media (prefers-reduced-motion: reduce){
+      .donePill{ animation: none !important; }
+    }
 
     /* Badges + certificate */
     .badgeRow{
