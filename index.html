@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260428-10">
+  <link rel="stylesheet" href="style.css?v=20260428-11">
   <script>
     (function(){
       try{
@@ -552,6 +552,28 @@
     <div class="timerCountdownLabel">Get ready!</div>
   </div>
 
+  <!-- Auto-count Calibration Overlay -->
+  <div id="autoCountOverlay" class="autoCountOverlay" aria-hidden="true">
+    <div class="autoCountPanel">
+      <div class="autoCountIcon">📱</div>
+      <div class="autoCountTitle">Auto-count Mode</div>
+      <div class="autoCountDesc">
+        Place your phone <b>flat on a table or floor</b> near where you play.<br>
+        The phone detects each paddle hit automatically.
+      </div>
+      <div class="autoCountSensitivity">
+        <div class="autoCountSensitivityLabel">Sensitivity</div>
+        <div class="autoCountSensitivityBtns">
+          <button class="autoCountSensBtn" data-sens="22" type="button">Low</button>
+          <button class="autoCountSensBtn active" data-sens="18" type="button">Medium</button>
+          <button class="autoCountSensBtn" data-sens="14" type="button">High</button>
+        </div>
+      </div>
+      <button class="autoCountStart" id="btnAutoCountStart" type="button">📱 Place Phone &amp; Start</button>
+      <button class="autoCountCancel" id="btnAutoCountCancel" type="button">Cancel</button>
+    </div>
+  </div>
+
   <!-- Floating sound toggle -->
   <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound">🔊</button>
   <div id="statusLive" class="sr-only" role="status" aria-live="polite"></div>
@@ -588,13 +610,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260428-10" defer></script>
-<script src="data.js?v=20260428-10" defer></script>
-<script src="app.js?v=20260428-10" defer></script>
+<script src="confetti.min.js?v=20260428-11" defer></script>
+<script src="data.js?v=20260428-11" defer></script>
+<script src="app.js?v=20260428-11" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260428-10").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260428-11").catch(()=>{});
     });
   }
 </script>

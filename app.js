@@ -3576,38 +3576,64 @@ function toggleScoreTracker(force){
 }
 
 /* Cihaz hareketi ile otomatik sayma (DeviceMotionEvent) */
+let _autoCountThreshold = 18; // medium default
+
+function showAutoCountOverlay(){
+  const overlay = document.getElementById("autoCountOverlay");
+  if(!overlay) return;
+  overlay.classList.add("show");
+  trackEvent("Auto Count Overlay Shown");
+}
+function hideAutoCountOverlay(){
+  const overlay = document.getElementById("autoCountOverlay");
+  if(!overlay) return;
+  overlay.classList.remove("show");
+}
+
 function startAutoCount(){
   if(_autoCountActive) return;
   if(typeof DeviceMotionEvent === "undefined"){
     showToast("Motion sensor not available on this device.");
     return;
   }
+  // Önce calibration overlay göster
+  showAutoCountOverlay();
+}
+
+function _activateAutoCount(){
   const startListener = ()=>{
     _autoCountHandler = (e)=>{
       const acc = e.accelerationIncludingGravity || e.acceleration;
       if(!acc) return;
       const mag = Math.sqrt((acc.x||0)**2 + (acc.y||0)**2 + (acc.z||0)**2);
-      // Threshold: 18 m/s² üzeri = ani darbe (paddle vuruşu)
-      // Telefon yatay durduğunda gravity ~9.8, ani vuruş 18+ olur
       const now = Date.now();
-      if(mag > 18 && (now - _autoCountLastSpike) > 350){
+      // Threshold ayarlı (low/medium/high)
+      // Cooldown: aynı vuruşu 2 kez saymamak için
+      if(mag > _autoCountThreshold && (now - _autoCountLastSpike) > 350){
         _autoCountLastSpike = now;
         bumpScore();
+        // Hafif vibrate (varsa)
+        try{ if(navigator.vibrate) navigator.vibrate(20); }catch(_){}
       }
     };
     window.addEventListener("devicemotion", _autoCountHandler);
     _autoCountActive = true;
     updateAutoCountBtn();
-    showToast("📱 Place phone on table near play area");
-    trackEvent("Auto Count Enabled");
+    // Tracker'a visual indicator
+    const tracker = document.getElementById("scoreTracker");
+    if(tracker) tracker.classList.add("autoCountActive");
+    hideAutoCountOverlay();
+    coachSpeak("Auto-count is on. Place the phone on the table.");
+    trackEvent("Auto Count Activated", { sensitivity: _autoCountThreshold });
   };
   // iOS 13+ permission gerekli
   if(typeof DeviceMotionEvent.requestPermission === "function"){
     DeviceMotionEvent.requestPermission().then(state => {
       if(state === "granted") startListener();
-      else showToast("Motion permission denied.");
+      else { showToast("Motion permission denied."); hideAutoCountOverlay(); }
     }).catch(()=>{
       showToast("Could not request motion permission.");
+      hideAutoCountOverlay();
     });
   } else {
     startListener();
@@ -3620,6 +3646,8 @@ function stopAutoCount(){
   }
   _autoCountActive = false;
   updateAutoCountBtn();
+  const tracker = document.getElementById("scoreTracker");
+  if(tracker) tracker.classList.remove("autoCountActive");
 }
 function updateAutoCountBtn(){
   const btn = document.getElementById("scoreTrackerAuto");
@@ -3656,6 +3684,26 @@ document.addEventListener("DOMContentLoaded", ()=>{
       trackEvent("Story Banner Dismissed");
     };
   }
+
+  // Auto-count overlay buttons
+  const autoStart = document.getElementById("btnAutoCountStart");
+  if(autoStart) autoStart.onclick = ()=>{
+    clickSound("click");
+    _activateAutoCount();
+  };
+  const autoCancel = document.getElementById("btnAutoCountCancel");
+  if(autoCancel) autoCancel.onclick = ()=>{
+    clickSound("click");
+    hideAutoCountOverlay();
+  };
+  document.querySelectorAll(".autoCountSensBtn").forEach(btn => {
+    btn.onclick = ()=>{
+      clickSound("click");
+      document.querySelectorAll(".autoCountSensBtn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      _autoCountThreshold = Number(btn.dataset.sens) || 18;
+    };
+  });
 });
 
 /** =======================
