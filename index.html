@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260429-2">
+  <link rel="stylesheet" href="style.css?v=20260429-3">
   <script>
     (function(){
       try{
@@ -156,115 +156,65 @@
         <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button">✕</button>
       </div>
 
-      <div class="heroActions">
-        <button class="btn btnPrimary btnPlayToday" id="btnPlayToday" aria-label="Play today's mission">▶ Play Today</button>
-        <div class="row heroSecondaryRow">
-          <button class="btn btnGhost" id="btnRandomAll" aria-label="Pick a random mission">🎲 Random</button>
-          <button class="btn btnGhost" id="btnBadges" aria-label="Open badges">🏅 Badges</button>
+      <!-- TODAY'S MISSION — promoted hero card -->
+      <div class="dailyBox dailyBoxPromoted" id="dailyBox" aria-label="daily mission">
+        <div class="dailyEyebrow">📅 TODAY'S MISSION</div>
+        <div class="dailyContent">
+          <div class="dailyIconBig" id="dailyIcon">⚡</div>
+          <div class="dailyText">
+            <div class="dailyName" id="dailyName">—</div>
+            <div class="dailyMeta" id="dailyMeta">—</div>
+          </div>
         </div>
-        <a class="btnTextLink" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener" aria-label="Download Mission Book">📘 Mission Book</a>
+        <div class="dailyActionsBig">
+          <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Play today's mission" type="button">▶ Play This Mission</button>
+          <button class="dailyNewSmall" id="btnDailyNew" aria-label="New daily mission" type="button">🔁 Pick another</button>
+        </div>
+        <!-- Hidden Play Today proxy button (eski JS bağlantıları için) -->
+        <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
+        <div class="dailyTitle" style="display:none">Today's Mission</div>
       </div>
 
-      <div class="progressBox" aria-label="progress">
-        <div class="pLeft">
-          <div class="pText" id="progressText">0 / 36 completed</div>
-          <div class="pSub" id="progressSub">Pick 1 mission today → build your streak → unlock your certificate.</div>
-          <div class="pExtra" id="progressExtra">Your adventure starts now! Tap any mission to begin.</div>
-        </div>
-        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="30">
-          <div id="progressBarFill"></div>
+      <!-- COMPACT STATS BAR -->
+      <div class="statsCompact" aria-label="progress">
+        <div class="statsCompactLeft">
+          <div class="statsCompactText" id="progressText">0 / 36 missions</div>
+          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="36">
+            <div id="progressBarFill"></div>
+          </div>
         </div>
         <div class="streakBox" aria-label="streak">
           <div class="streakPill" id="streakPill">🔥 Streak: 0</div>
         </div>
       </div>
-
-      <!-- Parent’s Dashboard — progress/streak bloğunun hemen altında -->
-      <div class="dashCard" id="parentDashboard" aria-label="This Week’s Progress">
-        <div class="dashHeader">
-          <div class="dashTitle">📊 This Week’s Progress</div>
-          <div class="dashSub" id="dashDynSub">Keep playing to see your child’s skills grow!</div>
-        </div>
-        <div class="dashReport" id="dashReport"></div>
-        <div class="dashStats" id="dashStats"></div>
-        <div class="dashBars" id="dashBars"></div>
-        <div class="dashFooter">
-          <div class="dashPrintWrap">
-            <button class="btn dashPrintBtn" id="btnDashPrint" type="button">
-              <span class="dashPrintIcon">🖨️</span>
-              <span class="dashPrintLabel">
-                <span class="dashPrintMain">Print Weekly Report</span>
-                <span class="dashPrintSub">Print or save as PDF</span>
-              </span>
-            </button>
-          </div>
-        </div>
+      <!-- Hidden helpers for JS backward compatibility -->
+      <div class="pSubBox" style="display:none">
+        <div class="pSub" id="progressSub"></div>
+        <div class="pExtra" id="progressExtra"></div>
       </div>
 
-      <!-- Share Score Card — hidden here, shown in modal after Mark as Done -->
-      <div class="shareScoreCard" id="shareScoreCard" style="display:none" aria-label="Share your score">
-        <div class="shareScoreLeft">
-          <div class="shareScoreNum" id="shareScoreNum">0</div>
-          <div class="shareScoreMeta">/ 36 missions</div>
-          <div class="shareScoreBadge" id="shareScoreBadge"></div>
-        </div>
-        <div class="shareScoreRight">
-          <div class="shareScoreTitle">Share with family! 🎉</div>
-          <div class="shareScoreBtns">
-            <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button">💬 WhatsApp</button>
-            <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button">🔗 Copy Link</button>
-          </div>
-        </div>
+      <!-- QUICK ACTION CHIPS -->
+      <div class="quickChips" aria-label="Quick actions">
+        <button class="quickChip" id="btnRandomAll" type="button" aria-label="Pick a random mission">
+          <span class="quickChipIcon">🎲</span>
+          <span class="quickChipText">Random</span>
+        </button>
+        <button class="quickChip" id="btnBadges" type="button" aria-label="Open badges">
+          <span class="quickChipIcon">🏅</span>
+          <span class="quickChipText">Badges</span>
+        </button>
+        <a class="quickChip" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener" aria-label="Download Mission Book">
+          <span class="quickChipIcon">📘</span>
+          <span class="quickChipText">Book</span>
+        </a>
       </div>
 
-      <div class="dailyBox" id="dailyBox" aria-label="daily mission">
-        <div class="dailyLeft">
-          <div class="dailyIcon" id="dailyIcon">📅</div>
-          <div class="dailyText">
-            <div class="dailyTitle">Today’s Mission</div>
-            <div class="dailyName" id="dailyName">—</div>
-            <div class="dailyMeta" id="dailyMeta">—</div>
-          </div>
-        </div>
-        <div class="dailyActions">
-          <button class="btn btnGhost" id="btnDailyNew" aria-label="New daily mission" type="button">🔁 New</button>
-          <button class="btn btnPrimary" id="btnDailyPlay" aria-label="Play today's mission" type="button">▶︎ Play</button>
-        </div>
-      </div>
-
-      <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
-      <div class="badgesHint" id="badgesHint">Swipe to see all badges →</div>
-
-      <div class="certBox" id="certBox">
-        <div class="certLeft">
-          <div class="certIcon">🏆</div>
-          <div class="certText">
-            <b>Mission Champion Certificate</b>
-            <div class="certProgressWrap">
-              <div class="certProgressBar"><div class="certProgressFill" id="certProgressFill"></div></div>
-              <div class="certProgressText" id="certSub">Complete all missions to unlock.</div>
-            </div>
-          </div>
-        </div>
-        <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
-      </div>
-
-      <div class="seasonalCard" id="seasonalCard" aria-label="Where to Play">
-        <div class="seasonalHeader">
-          <div class="seasonalTitle">Where to Play</div>
-          <div class="seasonalRow">
-            <button class="btn btnGhost seasonalBtn" id="btnSeasonalIndoor" type="button">🏠 Indoor</button>
-            <button class="btn btnGhost seasonalBtn" id="btnSeasonalOutdoor" type="button">🏖️ Beach/Park</button>
-          </div>
-        </div>
-      </div>
-
+      <!-- Search + filters -->
       <div class="controls">
         <div class="search">
           <div class="searchIcon">🔎</div>
           <input id="searchInput" type="text" placeholder="Search missions (catch, calm, team...)" autocomplete="off" />
         </div>
-
         <div class="toggleRow">
           <button class="chip limeActive" id="btnOnlyUnfinished" aria-label="Show only unfinished missions" type="button">Only Unfinished</button>
           <button class="chip" id="btnToggleFilters" aria-label="Show more filters" type="button">⚙️ Filters</button>
@@ -286,6 +236,88 @@
     </section>
 
     <section class="list" id="list" aria-label="missions"></section>
+
+    <!-- BADGES section after list -->
+    <section class="badgesSection">
+      <h2 class="sectionTitle">🏅 Your Badges</h2>
+      <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+      <div class="badgesHint" id="badgesHint">Swipe to see all badges →</div>
+    </section>
+
+    <!-- MORE SECTION — secondary content in accordion -->
+    <details class="moreSection" id="moreSection">
+      <summary class="moreSectionSummary">
+        <span class="moreSectionTitle">📊 More info &amp; insights</span>
+        <span class="moreSectionArrow">▾</span>
+      </summary>
+      <div class="moreSectionContent">
+
+        <!-- Parent Dashboard -->
+        <div class="dashCard" id="parentDashboard" aria-label="This Week's Progress">
+          <div class="dashHeader">
+            <div class="dashTitle">📊 This Week's Progress</div>
+            <div class="dashSub" id="dashDynSub">Keep playing to see your child's skills grow!</div>
+          </div>
+          <div class="dashReport" id="dashReport"></div>
+          <div class="dashStats" id="dashStats"></div>
+          <div class="dashBars" id="dashBars"></div>
+          <div class="dashFooter">
+            <div class="dashPrintWrap">
+              <button class="btn dashPrintBtn" id="btnDashPrint" type="button">
+                <span class="dashPrintIcon">🖨️</span>
+                <span class="dashPrintLabel">
+                  <span class="dashPrintMain">Print Weekly Report</span>
+                  <span class="dashPrintSub">Print or save as PDF</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certificate -->
+        <div class="certBox" id="certBox">
+          <div class="certLeft">
+            <div class="certIcon">🏆</div>
+            <div class="certText">
+              <b>Mission Champion Certificate</b>
+              <div class="certProgressWrap">
+                <div class="certProgressBar"><div class="certProgressFill" id="certProgressFill"></div></div>
+                <div class="certProgressText" id="certSub">Complete all missions to unlock.</div>
+              </div>
+            </div>
+          </div>
+          <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
+        </div>
+
+        <!-- Where to Play -->
+        <div class="seasonalCard" id="seasonalCard" aria-label="Where to Play">
+          <div class="seasonalHeader">
+            <div class="seasonalTitle">Where to Play</div>
+            <div class="seasonalRow">
+              <button class="btn btnGhost seasonalBtn" id="btnSeasonalIndoor" type="button">🏠 Indoor</button>
+              <button class="btn btnGhost seasonalBtn" id="btnSeasonalOutdoor" type="button">🏖️ Beach/Park</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share Score Card (hidden, used by JS) -->
+        <div class="shareScoreCard" id="shareScoreCard" style="display:none" aria-label="Share your score">
+          <div class="shareScoreLeft">
+            <div class="shareScoreNum" id="shareScoreNum">0</div>
+            <div class="shareScoreMeta">/ 36 missions</div>
+            <div class="shareScoreBadge" id="shareScoreBadge"></div>
+          </div>
+          <div class="shareScoreRight">
+            <div class="shareScoreTitle">Share with family! 🎉</div>
+            <div class="shareScoreBtns">
+              <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button">💬 WhatsApp</button>
+              <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button">🔗 Copy Link</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
 
     <section class="footer">
       <b>Extras</b><br/>
@@ -623,13 +655,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260429-2" defer></script>
-<script src="data.js?v=20260429-2" defer></script>
-<script src="app.js?v=20260429-2" defer></script>
+<script src="confetti.min.js?v=20260429-3" defer></script>
+<script src="data.js?v=20260429-3" defer></script>
+<script src="app.js?v=20260429-3" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260429-2").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260429-3").catch(()=>{});
     });
   }
 </script>
