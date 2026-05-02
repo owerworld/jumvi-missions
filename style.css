@@ -224,25 +224,25 @@ html.theme--dark .bgLayer{
     .profilePill{
       display:inline-flex; align-items:center; gap:8px;
       padding:6px 14px 6px 6px;
-      background: linear-gradient(135deg, rgba(79,179,255,0.14), rgba(151,215,0,0.10));
+      background: linear-gradient(135deg, #4FB3FF, #2999FF);
       border: 1px solid rgba(15,23,42,0.18);
       border-radius: 999px;
       cursor: pointer;
       font-size:14px;
       font-weight:800;
-      color: var(--text);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      transition: transform 0.15s ease, background 0.15s ease;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+      transition: transform 0.15s ease, filter 0.15s ease;
       min-height:42px;
     }
     .profilePill:active{ transform: scale(0.96); }
-    .profilePill:hover{ background: linear-gradient(135deg, rgba(79,179,255,0.22), rgba(151,215,0,0.16)); }
+    .profilePill:hover{ filter: brightness(1.06); }
     html.theme--dark .profilePill{
-      background: linear-gradient(135deg, rgba(79,179,255,0.22), rgba(151,215,0,0.14));
+      background: linear-gradient(135deg, #4FB3FF, #2477E0);
       border-color: rgba(255,255,255,0.28);
-      color: var(--text);
+      color: #ffffff;
     }
-    html.theme--dark .profilePill:hover{ background: linear-gradient(135deg, rgba(79,179,255,0.32), rgba(151,215,0,0.20)); }
+    html.theme--dark .profilePill:hover{ filter: brightness(1.1); }
     .profilePillAvatar{
       font-size:22px; line-height:1;
       width:30px; height:30px;
@@ -265,7 +265,7 @@ html.theme--dark .bgLayer{
     }
     .profilePillChevron{
       font-size:11px;
-      color: var(--muted);
+      color: rgba(255,255,255,0.85);
       margin-left:-2px;
     }
 
