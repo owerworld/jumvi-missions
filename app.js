@@ -3736,43 +3736,61 @@ function showTutorial(){
   ];
 
   let idx = 0;
+  let repositionPending = false;
+  const scrollContainer = document.getElementById("app-wrapper");
+
+  const onReposition = ()=>{
+    if(repositionPending) return;
+    repositionPending = true;
+    requestAnimationFrame(()=>{
+      repositionPending = false;
+      placeSpotlight();
+    });
+  };
+
   const finish = (action)=>{
     overlay.classList.remove("show");
     overlay.setAttribute("aria-hidden","true");
     lsSet(TUTORIAL_KEY, "1");
+    window.removeEventListener("resize", onReposition);
+    if(scrollContainer) scrollContainer.removeEventListener("scroll", onReposition);
     trackEvent("Tutorial " + (action||"completed"));
+  };
+
+  const placeSpotlight = ()=>{
+    const step = steps[idx];
+    const el = document.querySelector(step.selector);
+    if(!el) return;
+    const r = el.getBoundingClientRect();
+    const pad = 8;
+    spotlight.style.left   = `${r.left - pad}px`;
+    spotlight.style.top    = `${r.top - pad}px`;
+    spotlight.style.width  = `${r.width + pad*2}px`;
+    spotlight.style.height = `${r.height + pad*2}px`;
+
+    const vh = window.innerHeight;
+    const cardH = card.offsetHeight || 160;
+    const below = (r.bottom + 16 + cardH) < vh;
+    card.style.left = "16px";
+    card.style.right = "16px";
+    card.style.maxWidth = "320px";
+    card.style.margin = "0 auto";
+    if(below){
+      card.style.top = `${r.bottom + 14}px`;
+      card.style.bottom = "auto";
+    }else{
+      card.style.bottom = `${vh - r.top + 14}px`;
+      card.style.top = "auto";
+    }
   };
 
   const positionSpotlight = ()=>{
     const step = steps[idx];
     const el = document.querySelector(step.selector);
     if(!el){ next(); return; }
-    // Scroll target into view
-    try{ el.scrollIntoView({ behavior:"smooth", block:"center" }); }catch(_){}
-    setTimeout(()=>{
-      const r = el.getBoundingClientRect();
-      const pad = 8;
-      spotlight.style.left   = `${r.left - pad}px`;
-      spotlight.style.top    = `${r.top - pad}px`;
-      spotlight.style.width  = `${r.width + pad*2}px`;
-      spotlight.style.height = `${r.height + pad*2}px`;
-
-      // Card position: alta yer varsa altta, yoksa üstte
-      const vh = window.innerHeight;
-      const cardH = 160; // tahmin
-      const below = (r.bottom + 16 + cardH) < vh;
-      card.style.left = "16px";
-      card.style.right = "16px";
-      card.style.maxWidth = "320px";
-      card.style.margin = "0 auto";
-      if(below){
-        card.style.top = `${r.bottom + 14}px`;
-        card.style.bottom = "auto";
-      }else{
-        card.style.bottom = `${vh - r.top + 14}px`;
-        card.style.top = "auto";
-      }
-    }, 360);
+    // Instant scroll so getBoundingClientRect is accurate on next frame.
+    try{ el.scrollIntoView({ behavior:"auto", block:"center" }); }catch(_){}
+    requestAnimationFrame(()=> requestAnimationFrame(placeSpotlight));
 
     stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
     titleEl.textContent = step.title;
@@ -3791,6 +3809,8 @@ function showTutorial(){
 
   overlay.classList.add("show");
   overlay.setAttribute("aria-hidden","false");
+  window.addEventListener("resize", onReposition);
+  if(scrollContainer) scrollContainer.addEventListener("scroll", onReposition, { passive:true });
   trackEvent("Tutorial Started");
   positionSpotlight();
 }
