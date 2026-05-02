@@ -3737,6 +3737,7 @@ function showTutorial(){
 
   let idx = 0;
   let repositionPending = false;
+  let pendingRaf = 0;
   const scrollContainer = document.getElementById("app-wrapper");
 
   const onReposition = ()=>{
@@ -3754,6 +3755,15 @@ function showTutorial(){
     lsSet(TUTORIAL_KEY, "1");
     window.removeEventListener("resize", onReposition);
     if(scrollContainer) scrollContainer.removeEventListener("scroll", onReposition);
+    if(pendingRaf){ cancelAnimationFrame(pendingRaf); pendingRaf = 0; }
+    // Tutorial scrolled to the bottom for the last step — bring the user back up.
+    try{
+      const target = scrollContainer || window;
+      target.scrollTo({ top:0, behavior:"smooth" });
+    }catch(_){
+      if(scrollContainer) scrollContainer.scrollTop = 0;
+      else window.scrollTo(0, 0);
+    }
     trackEvent("Tutorial " + (action||"completed"));
   };
 
@@ -3784,13 +3794,26 @@ function showTutorial(){
     }
   };
 
+  const isInView = (el)=>{
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight;
+    return r.top >= 60 && r.bottom <= vh - 20;
+  };
+
   const positionSpotlight = ()=>{
     const step = steps[idx];
     const el = document.querySelector(step.selector);
     if(!el){ next(); return; }
-    // Instant scroll so getBoundingClientRect is accurate on next frame.
-    try{ el.scrollIntoView({ behavior:"auto", block:"center" }); }catch(_){}
-    requestAnimationFrame(()=> requestAnimationFrame(placeSpotlight));
+    if(!isInView(el)){
+      try{ el.scrollIntoView({ behavior:"auto", block:"center" }); }catch(_){}
+    }
+    if(pendingRaf) cancelAnimationFrame(pendingRaf);
+    pendingRaf = requestAnimationFrame(()=>{
+      pendingRaf = requestAnimationFrame(()=>{
+        pendingRaf = 0;
+        placeSpotlight();
+      });
+    });
 
     stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
     titleEl.textContent = step.title;
