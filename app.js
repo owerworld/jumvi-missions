@@ -1156,7 +1156,7 @@ function checkStreakWarning(){
   // Streak kırılma riski — dün oynadıysa uyar
   const yesterday = yesterdayIso(today);
   if(lastActiveIso === yesterday){
-    setTimeout(()=> showToast("Don't lose your streak! Play today 🔥"), 2000);
+    setTimeout(()=> showToast("🦁 The lion misses you! Play today to keep your streak 🔥"), 2000);
   }
 }
 
@@ -1204,7 +1204,7 @@ function renderDailyUI(){
     const contextHints = ["Great for first-time players!","Fun warm-up for today!","A quick favorite — try it!","Perfect for 5 minutes of play.","Challenge yourselves today!"];
     const hint = contextHints[ms.id % contextHints.length];
     dailyMeta.innerHTML = `
-      <span class="tag pack">${escapeHtml(ms.pack)}</span>
+      <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
       <span class="tag">👥 ${escapeHtml(ms.players)}</span>
       <span class="dailyHint">${hint}</span>
@@ -1587,7 +1587,7 @@ function updateMissionCard(card, ms, isDone){
   if(r){
     r.icon.textContent = ms.icon;
     r.title.textContent = ms.title;
-    r.packTag.textContent = ms.pack;
+    r.packTag.textContent = getPackName(ms.pack);
     r.diffTag.textContent = `${diffLabel(ms.difficulty)} • ${ms.time}`;
     r.playersTag.textContent = `👥 ${ms.players}`;
     // Teaser: first step, max 58 chars
@@ -1775,8 +1775,27 @@ function updateProgress(){
   renderDailyUI();
   updateBadges();
   renderParentDashboard();
+
+  // 0 progress'te boş kartları gizle (yeni kullanıcı için temiz arayüz)
+  const isFresh = done.size === 0;
   const dash = document.getElementById("parentDashboard");
-  if(dash) dash.style.display = done.size === 0 ? "none" : "";
+  if(dash) dash.style.display = isFresh ? "none" : "";
+  // Sertifika sadece ≥3 görev tamamlanınca göster (motivasyon için)
+  const cert = document.getElementById("certBox");
+  if(cert) cert.style.display = done.size >= 3 ? "" : "none";
+  // Where to Play sadece progress varsa
+  const seasonal = document.getElementById("seasonalCard");
+  if(seasonal) seasonal.style.display = isFresh ? "none" : "";
+  // Badges row da boşsa gizle
+  const badgesRowEl = document.getElementById("badgesRow");
+  const badgesHintEl = document.getElementById("badgesHint");
+  if(isFresh){
+    if(badgesRowEl) badgesRowEl.style.display = "none";
+    if(badgesHintEl) badgesHintEl.style.display = "none";
+  } else {
+    if(badgesRowEl) badgesRowEl.style.display = "";
+    if(badgesHintEl) badgesHintEl.style.display = "";
+  }
 }
 
 function renderShareCard(){
@@ -2094,7 +2113,7 @@ function openMission(id){
 
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
-    <span class="tag pack">${escapeHtml(ms.pack)}</span>
+    <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag">👥 ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
@@ -2645,24 +2664,30 @@ function markMissionDone(id, source="manual"){
   }
 
   if(source === "auto"){
-    showToast("✅ Mission marked done.");
+    showToast("✅ Mission complete!");
   } else {
-    // First ever completion — special moment
+    // First ever completion — Coach Leo special moment
     const remaining = missions.length - done.size;
     if(done.size === 1){
-      setTimeout(()=>{ fireConfetti(1800); showToast("🎉 First mission done! Your streak has started!"); }, 400);
+      setTimeout(()=>{ fireConfetti(2000); showToast("🦁 High-five, paddle pro! Your first mission is done!"); }, 400);
+    } else if(done.size === 5){
+      setTimeout(()=>{ fireConfetti(1500); showToast("🔥 5 down! You're on fire — Coach Leo is proud!"); }, 400);
+    } else if(done.size === 18){
+      setTimeout(()=>{ fireConfetti(2000); showToast("🌟 Halfway there! 18 missions crushed!"); }, 400);
     } else if(remaining > 0){
-      showToast(`⭐ Great job! ${remaining} mission${remaining===1?"":"s"} left!`);
+      const cheers = ["⭐ Awesome!", "🎯 Nailed it!", "🦁 Boom!", "🔥 You got this!", "💪 Amazing!"];
+      const cheer = cheers[Math.floor(Math.random()*cheers.length)];
+      showToast(`${cheer} ${remaining} mission${remaining===1?"":"s"} to go!`);
     }
     // Streak milestones — delayed so they don't overwrite the completion toast
     if(changed){
       const delay = 2100;
       if(streakCount === 7){
-        setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("🔥 Week Champion! 7-day streak!"); }, delay);
+        setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("🔥 WEEK CHAMPION! 7 days in a row — incredible!"); }, delay);
       } else if(streakCount === 3){
-        setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("🎖️ 3-Day Streak! Keep it up!"); }, delay);
+        setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("🎖️ 3-day streak! Keep showing up!"); }, delay);
       } else if(streakCount > 1){
-        setTimeout(()=>{ renderStreakUI(true); showToast(`🔥 ${streakCount} day${streakCount===1?"":"s"} streak!`); }, delay);
+        setTimeout(()=>{ renderStreakUI(true); showToast(`🔥 ${streakCount} days in a row — keep it going!`); }, delay);
       } else {
         setTimeout(()=> renderStreakUI(true), 300);
       }
@@ -3459,6 +3484,15 @@ function showWelcomeOverlay(){
         }
       } catch(e){ console.warn("Welcome filter:", e); }
       // Splash transition: "Let's Play!" for 1.5s
+      const afterSplash = ()=>{
+        // Yeni kullanıcı: ilk easy mission'ı otomatik aç (deneyimi yaşat)
+        const firstMissionId = pickFirstMissionForNewUser(selectedDiff);
+        if(firstMissionId){
+          setTimeout(()=> openMission(firstMissionId), 350);
+        } else {
+          setTimeout(()=> showTutorial(), 350);
+        }
+      };
       if(!prefersReducedMotion){
         const splash = document.getElementById("splashOverlay");
         if(splash){
@@ -3466,16 +3500,38 @@ function showWelcomeOverlay(){
           setTimeout(()=> splash.classList.add("hiding"), 1100);
           setTimeout(()=>{
             splash.classList.remove("show","hiding");
-            // Splash kapanınca tutorial başlat
-            setTimeout(()=> showTutorial(), 350);
+            afterSplash();
           }, 1500);
+        } else {
+          afterSplash();
         }
       } else {
-        // Reduced motion: splash atla, tutorial direkt başlat
-        setTimeout(()=> showTutorial(), 500);
+        setTimeout(afterSplash, 200);
       }
     });
   }
+}
+
+/** =======================
+ * Yeni kullanıcı için ilk mission önerisi
+ * Kolay, kısa, beğenilen klasik bir mission seç
+ * ======================= */
+function pickFirstMissionForNewUser(selectedDiff){
+  // Önerilen ilk mission'lar (yaşa göre): kolay + güzel deneyim
+  const recommendations = {
+    "Easy":   [18, 25, 1, 6, 11, 31],   // Count to 10, Chill Catch, Speed Demon, Number Echo, Sky Floater, Cloud Chaser
+    "Medium": [10, 7, 4, 17, 28, 33],   // Power Step, Rainbow Throws, Switcharoo, Mirror Mode, Mind Reader, How Far
+    "all":    [1, 18, 25, 31, 7, 10]    // Genel yaş için karışık
+  };
+  const list = recommendations[selectedDiff] || recommendations["all"];
+  // İlk tamamlanmamış öneriyi al
+  for(const id of list){
+    if(!done.has(id)){
+      const ms = missions.find(x=>x.id===id);
+      if(ms) return id;
+    }
+  }
+  return null;
 }
 
 /** =======================

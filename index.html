@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260504-2">
+  <link rel="stylesheet" href="style.css?v=20260504-3">
   <script>
     (function(){
       try{
@@ -106,16 +106,16 @@
     <div class="welcomePanel">
       <img class="welcomeLogo logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" />
       <img class="welcomeLogo logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
-      <div class="welcomeTagline">Scan. Play. Grow.</div>
-      <div class="welcomeSub">JUMVI Toss &amp; Catch Missions<br>Pick your child's age to start:</div>
+      <div class="welcomeTagline">Hey, paddle pro! 🦁</div>
+      <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.<br>How old's your kid?</div>
       <div class="welcomeAges" id="welcomeAges">
-        <button class="ageBtn" data-diff="Easy" type="button">🐣<span>Ages 3–5</span></button>
-        <button class="ageBtn" data-diff="all" type="button">🚀<span>Ages 6–8</span></button>
-        <button class="ageBtn" data-diff="Medium" type="button">⚡<span>Ages 8+</span></button>
+        <button class="ageBtn" data-diff="Easy" type="button">🐣<span>3–5 years</span></button>
+        <button class="ageBtn" data-diff="all" type="button">🚀<span>6–8 years</span></button>
+        <button class="ageBtn" data-diff="Medium" type="button">⚡<span>8+ years</span></button>
       </div>
-      <div class="welcomeMissionCount" id="welcomeMissionCount">18 missions for this age</div>
-      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Start Playing</button>
-      <div class="welcomeNote">Progress saved on this device. No account needed.</div>
+      <div class="welcomeMissionCount" id="welcomeMissionCount">18 missions ready for this age</div>
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Let's Play!</button>
+      <div class="welcomeNote">✅ No sign-up · 🔒 Stays on your phone · 💝 Free forever</div>
     </div>
   </div>
 
@@ -143,8 +143,8 @@
 
   <div class="wrap">
     <section class="hero">
-      <h1 class="h1">Let's Play Together</h1>
-      <p class="sub">36 missions • ages 3–8 • grab your paddles &amp; go</p>
+      <h1 class="h1">Hey, Paddle Pro! 🦁</h1>
+      <p class="sub">Grab your paddles, pick a mission, and let's play!</p>
 
       <div class="a2hs" id="a2hsBanner" style="display:none;">
         <div class="a2hsText">
@@ -623,13 +623,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260504-2" defer></script>
-<script src="data.js?v=20260504-2" defer></script>
-<script src="app.js?v=20260504-2" defer></script>
+<script src="confetti.min.js?v=20260504-3" defer></script>
+<script src="data.js?v=20260504-3" defer></script>
+<script src="app.js?v=20260504-3" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260504-2").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260504-3").catch(()=>{});
     });
   }
 </script>
