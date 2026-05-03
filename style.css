@@ -1043,7 +1043,6 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
       width: 5px;
       background: var(--card-accent, #4FB3FF);
       border-radius: 0;
-      pointer-events: none;
     }
     /* Pack-specific accent renkleri */
     .pack--reflex-rush    { --card-accent: #FF6A00; }
@@ -3526,29 +3525,6 @@ html.theme--dark .certPreviewWrap {
   box-shadow: 0 8px 32px rgba(217,119,6,0.25), 0 2px 8px rgba(0,0,0,0.40) !important;
 }
 
-/* Browser scroll anchoring — açıklamak gerekirse, content shift olunca tarayıcı
-   görünümü sabitlemeye çalışır ve sayfayı kendi kendine kaydırır. Disable. */
-html, body, .app-shell{
-  overflow-anchor: none;
-}
-
-/* Görünmez stub elementler ölçü almasın */
-#btnPlayToday[style*="display:none"],
-#btnPlayToday[style*="display: none"]{
-  display: none !important;
-  pointer-events: none !important;
-}
-
-/* Tüm overlay default'lar — body veya parent'a sızmasın */
-.welcomeOverlay:not(.show):not([style*="display"]),
-.splashOverlay:not(.show),
-.timerCountdown:not(.show),
-.autoCountOverlay:not(.show),
-.badgeUnlockModal:not(.show),
-.tutorialOverlay:not(.show){
-  pointer-events: none;
-}
-
 /* ============================================
  * Hero — Cephe 3 Sadeleştirme
  * ============================================ */
@@ -3566,9 +3542,8 @@ html, body, .app-shell{
   font-weight: 700;
 }
 
-/* Today's Mission — promoted hero card.
-   Yuksek specificity: .dailyBox.dailyBoxPromoted (2 class) > .dailyBox (1 class) */
-.dailyBox.dailyBoxPromoted{
+/* Today's Mission — promoted hero card */
+.dailyBoxPromoted{
   margin: 0 0 16px !important;
   padding: 18px 18px 16px !important;
   border-radius: 24px !important;
@@ -3578,8 +3553,6 @@ html, body, .app-shell{
   display: block !important;
   position: relative;
   overflow: hidden;
-  flex-direction: column !important;
-  align-items: stretch !important;
 }
 .dailyBoxPromoted::before{
   content: "";
@@ -3611,7 +3584,7 @@ html, body, .app-shell{
   flex-shrink: 0;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
 }
-.dailyBox.dailyBoxPromoted .dailyName{
+.dailyBoxPromoted .dailyName{
   font-size: 22px !important;
   font-weight: 950 !important;
   color: #fff !important;
@@ -3619,15 +3592,11 @@ html, body, .app-shell{
   line-height: 1.15;
   margin: 0 !important;
 }
-.dailyBox.dailyBoxPromoted .dailyMeta{
+.dailyBoxPromoted .dailyMeta{
   font-size: 12px !important;
   color: rgba(255,255,255,0.85) !important;
   font-weight: 700 !important;
   margin-top: 4px !important;
-}
-.dailyBox.dailyBoxPromoted .dailyIconBig{
-  background: rgba(255,255,255,0.2) !important;
-  border: none !important;
 }
 .dailyActionsBig{
   display: flex;
