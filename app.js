@@ -3724,15 +3724,15 @@ function showTutorial(){
   if(!overlay || !spotlight || !card) return;
 
   const steps = [
-    { selector: "#btnDailyPlay",
-      title: "▶ Today's Mission",
-      desc: "Each day a fresh mission is picked for you. Tap here to start playing!" },
+    { selector: "#btnPlayToday",
+      title: "▶ Play Today",
+      desc: "Tap here to start today's daily mission. A new one each day!" },
     { selector: "#streakPill",
       title: "🔥 Build Your Streak",
       desc: "Play one mission every day to keep your streak alive. The longer it grows, the hotter it gets!" },
-    { selector: ".moreSection",
-      title: "📊 More info",
-      desc: "Tap here for the parent dashboard, certificate progress, and more options." }
+    { selector: "#badgesRow",
+      title: "🏅 Earn Badges",
+      desc: "Complete missions to unlock badges. Finish all 36 to earn the Champion Certificate!" }
   ];
 
   let idx = 0;
