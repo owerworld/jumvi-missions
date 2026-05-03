@@ -1043,6 +1043,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
       width: 5px;
       background: var(--card-accent, #4FB3FF);
       border-radius: 0;
+      pointer-events: none;
     }
     /* Pack-specific accent renkleri */
     .pack--reflex-rush    { --card-accent: #FF6A00; }
