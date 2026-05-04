@@ -4466,7 +4466,48 @@ html.theme--dark .bottomNav{
 .app-shell{
   padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
-body.modalOpen .bottomNav{ display: none; }
+body.modalOpen .bottomNav{ display: none !important; }
+
+/* Modern :has() ile herhangi bir backdrop/overlay açıkken bottom nav gizle */
+body:has(.backdrop.show) .bottomNav,
+body:has(.splashOverlay.show) .bottomNav,
+body:has(.timerCountdown.show) .bottomNav,
+body:has(.autoCountOverlay.show) .bottomNav,
+body:has(.badgeUnlockModal.show) .bottomNav,
+body:has(.tutorialOverlay.show) .bottomNav{
+  display: none !important;
+}
+
+/* Stats tab empty state */
+.emptyState{
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+.emptyStateIcon{
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 14px;
+  opacity: 0.4;
+}
+.emptyStateTitle{
+  font-size: 18px;
+  font-weight: 950;
+  color: var(--text);
+  margin: 0 0 8px;
+  letter-spacing: -0.2px;
+}
+.emptyStateDesc{
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+.emptyStateBtn{
+  display: inline-flex;
+  width: auto !important;
+  padding: 12px 24px !important;
+}
 
 /* Tab panels */
 .tabPanel{ animation: tabFadeIn 0.25s ease-out; }
@@ -4733,20 +4774,119 @@ html.theme--dark .dailyChallengeBar{ background: rgba(255,255,255,0.08); }
 }
 
 /* Profile tab */
-.profileTabIntro{
-  padding: 16px 0;
+.profileCard{
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(79,179,255,0.18), rgba(151,215,0,0.10));
+  border: 1px solid rgba(79,179,255,0.25);
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(79,179,255,0.12);
+}
+.profileCardAvatar{
+  width: 64px; height: 64px;
+  font-size: 38px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.65);
+  border-radius: 18px;
+  flex-shrink: 0;
+}
+html.theme--dark .profileCardAvatar{ background: rgba(255,255,255,0.12); }
+.profileCardBody{ flex: 1; min-width: 0; }
+.profileCardName{
+  font-size: 18px;
+  font-weight: 950;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.profileCardStats{
+  font-size: 12px;
+  font-weight: 700;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
+  margin-top: 4px;
 }
 .profileTabOpenBtn{
   width: 100%;
-  font-size: 16px !important;
-  padding: 16px !important;
-  min-height: 56px !important;
+  font-size: 15px !important;
+  padding: 14px !important;
+  min-height: 52px !important;
+  margin-bottom: 18px;
 }
-.profileTabExtras{
-  margin-top: 24px;
+
+.profileQuickLinks{
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 24px;
+}
+.profileQuickLink{
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.1s ease;
+  text-align: left;
+}
+.profileQuickLink:active{ transform: scale(0.98); }
+.profileQuickIcon{
+  font-size: 22px;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(79,179,255,0.1);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+html.theme--dark .profileQuickIcon{ background: rgba(255,255,255,0.06); }
+.profileQuickInfo{ flex: 1; min-width: 0; }
+.profileQuickTitle{
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--text);
+}
+.profileQuickSub{
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.profileQuickArrow{
+  font-size: 22px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.profileFooterInfo{
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.06);
   text-align: center;
+}
+html.theme--dark .profileFooterInfo{ border-top-color: rgba(255,255,255,0.06); }
+.trustBadges{
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.trustBadges span{
+  background: rgba(0,0,0,0.04);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+html.theme--dark .trustBadges span{ background: rgba(255,255,255,0.06); }
+.profileSupport{
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.profileSupport a{
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 800;
 }

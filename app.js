@@ -1783,19 +1783,15 @@ function updateProgress(){
   // Sertifika sadece ≥3 görev tamamlanınca göster (motivasyon için)
   const cert = document.getElementById("certBox");
   if(cert) cert.style.display = done.size >= 3 ? "" : "none";
-  // Where to Play sadece progress varsa
+  // Where to Play sadece progress varsa (artık kart gizli zaten - geriye uyum)
   const seasonal = document.getElementById("seasonalCard");
-  if(seasonal) seasonal.style.display = isFresh ? "none" : "";
-  // Badges row da boşsa gizle
-  const badgesRowEl = document.getElementById("badgesRow");
-  const badgesHintEl = document.getElementById("badgesHint");
-  if(isFresh){
-    if(badgesRowEl) badgesRowEl.style.display = "none";
-    if(badgesHintEl) badgesHintEl.style.display = "none";
-  } else {
-    if(badgesRowEl) badgesRowEl.style.display = "";
-    if(badgesHintEl) badgesHintEl.style.display = "";
-  }
+  if(seasonal && seasonal.dataset.deprecated !== "1"){ seasonal.style.display = isFresh ? "none" : ""; }
+  // Badges section bütünüyle (heading dahil)
+  const badgesSection = document.querySelector(".statsBadgesSection");
+  if(badgesSection) badgesSection.style.display = isFresh ? "none" : "";
+  // Stats tab empty state — yeni kullanıcı için davet
+  const emptyState = document.getElementById("statsEmptyState");
+  if(emptyState) emptyState.style.display = isFresh ? "" : "none";
 }
 
 function renderShareCard(){
@@ -3543,18 +3539,39 @@ function switchTab(tabName){
   document.body.classList.remove("tab-today","tab-browse","tab-stats","tab-profile");
   document.body.classList.add("tab-" + tabName);
 
+  // Tab içine özel render'lar
+  if(tabName === "profile") renderProfileTab();
+  if(tabName === "today") {
+    renderContinueHint();
+    renderDailyChallenge();
+  }
+
   // Tab değişince scroll'u en üste al
   try {
     const wrap = document.getElementById("app-wrapper");
     if(wrap) wrap.scrollTop = 0;
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   } catch(_){}
 
   // Aktif tab'ı kaydet
   try { lsSet(NAV_TAB_KEY, tabName); } catch(_){}
 
-  // Profile tab'a girince profile sheet açma değil — kullanıcı butona tıklasın
   trackEvent("Tab Switched", { tab: tabName });
+}
+
+function renderProfileTab(){
+  const ap = getActiveProfile();
+  if(!ap) return;
+  const avatarEl = document.getElementById("profileCardAvatar");
+  const nameEl   = document.getElementById("profileCardName");
+  const statsEl  = document.getElementById("profileCardStats");
+  if(avatarEl) avatarEl.textContent = ap.avatar || "🦁";
+  if(nameEl)   nameEl.textContent   = ap.name   || "Player";
+  if(statsEl){
+    const total = done.size;
+    const sc    = streakCount || 0;
+    statsEl.textContent = `${total} mission${total===1?"":"s"} · 🔥 ${sc} day${sc===1?"":"s"} streak`;
+  }
 }
 
 function initBottomNav(){
@@ -3564,6 +3581,18 @@ function initBottomNav(){
       clickSound("click");
       const tab = btn.dataset.tab;
       switchTab(tab);
+    });
+  });
+
+  // [data-go-tab="X"] olan butonlar — örn empty state'teki "Go to Today" butonu
+  document.querySelectorAll("[data-go-tab]").forEach(el => {
+    el.addEventListener("click", (e)=>{
+      e.preventDefault();
+      const tab = el.dataset.goTab;
+      if(tab){
+        clickSound("click");
+        switchTab(tab);
+      }
     });
   });
 
@@ -3964,15 +3993,15 @@ function showTutorial(){
   if(!overlay || !spotlight || !card) return;
 
   const steps = [
-    { selector: "#btnPlayToday",
-      title: "▶ Play Today",
-      desc: "Tap here to start today's daily mission. A new one each day!" },
+    { selector: "#btnDailyPlay",
+      title: "▶ Today's Mission",
+      desc: "A fresh mission is picked for you each day. Tap here to start playing!" },
     { selector: "#streakPill",
       title: "🔥 Build Your Streak",
       desc: "Play one mission every day to keep your streak alive. The longer it grows, the hotter it gets!" },
-    { selector: "#badgesRow",
-      title: "🏅 Earn Badges",
-      desc: "Complete missions to unlock badges. Finish all 36 to earn the Champion Certificate!" }
+    { selector: '.navTab[data-tab="stats"]',
+      title: "📊 Track Progress",
+      desc: "Tap Stats anytime to see weekly progress, badges earned, and the Champion Certificate." }
   ];
 
   let idx = 0;

@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260504-4">
+  <link rel="stylesheet" href="style.css?v=20260504-5">
   <script>
     (function(){
       try{
@@ -89,7 +89,7 @@
 
 </head>
 
-<body>
+<body class="tab-today">
   <div class="bgLayer" aria-hidden="true"></div>
 
   <!-- Splash transition overlay — shown after age selection -->
@@ -262,6 +262,14 @@
       <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
         <h2 class="tabHeading">📊 Your Progress</h2>
 
+        <!-- Empty state — yeni kullanıcı için -->
+        <div class="emptyState" id="statsEmptyState" style="display:none">
+          <div class="emptyStateIcon">📊</div>
+          <div class="emptyStateTitle">Your stats will appear here</div>
+          <div class="emptyStateDesc">Complete your first mission to unlock the dashboard, badges, and Champion Certificate!</div>
+          <button class="btn btnPrimary emptyStateBtn" data-go-tab="today" type="button">▶ Go to Today</button>
+        </div>
+
         <!-- Parent Dashboard -->
         <div class="dashCard" id="parentDashboard" aria-label="This Week's Progress">
           <div class="dashHeader">
@@ -340,14 +348,59 @@
       <!-- ============== TAB: PROFILE ============== -->
       <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
         <h2 class="tabHeading">🦁 Profile</h2>
-        <div class="profileTabIntro">
-          <p>Manage your players, switch profiles, and adjust settings.</p>
+
+        <!-- Active profile preview card -->
+        <div class="profileCard" id="profileCard">
+          <div class="profileCardAvatar" id="profileCardAvatar">🦁</div>
+          <div class="profileCardBody">
+            <div class="profileCardName" id="profileCardName">Player</div>
+            <div class="profileCardStats" id="profileCardStats">0 missions · 0 day streak</div>
+          </div>
         </div>
+
+        <!-- Primary action: switch/manage profiles -->
         <button class="profileTabOpenBtn btn btnPrimary" id="btnOpenProfileFromTab" type="button">
-          👤 Open Profile Settings
+          👤 Switch Player or Add Child
         </button>
-        <div class="profileTabExtras">
-          <a class="btnTextLink" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener" aria-label="Download Mission Book">📘 Mission Book (PDF)</a>
+
+        <!-- Quick links -->
+        <div class="profileQuickLinks">
+          <button class="profileQuickLink" data-go-tab="stats" type="button">
+            <span class="profileQuickIcon">📊</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">View Progress</div>
+              <div class="profileQuickSub">Dashboard, badges & certificate</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+          <a class="profileQuickLink" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener">
+            <span class="profileQuickIcon">📘</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Mission Book PDF</div>
+              <div class="profileQuickSub">Printable list for parents</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </a>
+          <button class="profileQuickLink" id="btnReset" type="button">
+            <span class="profileQuickIcon">🗑️</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Reset Progress</div>
+              <div class="profileQuickSub">Clear all data on this device</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+        </div>
+
+        <!-- Trust + support -->
+        <div class="profileFooterInfo">
+          <div class="trustBadges">
+            <span>✅ No sign-up</span>
+            <span>🔒 Stays on phone</span>
+            <span>💝 Free forever</span>
+          </div>
+          <div class="profileSupport">
+            Need help? <a href="mailto:support@jumvi.co">support@jumvi.co</a>
+          </div>
         </div>
       </div>
     </section>
@@ -712,13 +765,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260504-4" defer></script>
-<script src="data.js?v=20260504-4" defer></script>
-<script src="app.js?v=20260504-4" defer></script>
+<script src="confetti.min.js?v=20260504-5" defer></script>
+<script src="data.js?v=20260504-5" defer></script>
+<script src="app.js?v=20260504-5" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260504-4").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260504-5").catch(()=>{});
     });
   }
 </script>
