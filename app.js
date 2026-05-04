@@ -2082,6 +2082,8 @@ function openMission(id){
   if(!ms) return;
   lastOpenedId = setState("lastOpenedId", id);
   missionOpenedAt = Date.now();
+  // "Continue where you left off" için kaydet
+  try { lsSet(LAST_OPENED_KEY, String(id)); } catch(_){}
 
   // Stamp pack slug on #sheet so dark-mode chip CSS can target it
   const sheetEl = document.getElementById("sheet");
@@ -2113,7 +2115,6 @@ function openMission(id){
 
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
-    <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag">👥 ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
@@ -2151,7 +2152,7 @@ function openMission(id){
   // After completing: promote "Next" as the clear CTA
   btnNext.textContent = isDone ? "▶ Next Mission!" : "➡️ Next";
   btnNext.classList.toggle("btnNextHighlight", isDone);
-  btnRandomPack.textContent = `🎲 Random from ${ms.pack}`;
+  if(btnRandomPack) btnRandomPack.textContent = `🎲 Random from ${getPackName(ms.pack)}`;
 
   // Auto-scroll sheet body to bottom when done so actions are visible
   if(isDone){
@@ -2230,6 +2231,7 @@ if(btnSpeak){
 }
 
   backdrop.classList.add("show");
+  document.body.classList.add("modalOpen");
   sheet.scrollTop = 0;
   const _sb = document.getElementById("sheetBody");
   if(_sb) _sb.scrollTop = 0;
@@ -2255,9 +2257,12 @@ function closeMission(){
   stopAutoCount();
   toggleScoreTracker(false);
   backdrop.classList.remove("show");
+  document.body.classList.remove("modalOpen");
   // Restore background scroll
   const _aw = document.getElementById("app-wrapper");
   if(_aw) _aw.style.overflowY = "";
+  // Continue hint güncelle (last opened değişti)
+  renderContinueHint();
 }
 
 
@@ -2643,6 +2648,8 @@ function markMissionDone(id, source="manual"){
   renderList();
   clickSound("success");
   celebrate();
+  // Daily mini-challenge counter
+  bumpDailyChallenge();
   fireDoneBurst(document.getElementById("btnToggleDone"));
   // Streak +1 olduysa fire burst
   if(changed && streakCount >= 1){
@@ -3513,6 +3520,183 @@ function showWelcomeOverlay(){
 }
 
 /** =======================
+ * Bottom Navigation — Tab Switching (2026 redesign)
+ * ======================= */
+const NAV_TAB_KEY = "jumvi_active_tab_v1";
+
+function switchTab(tabName){
+  if(!tabName) tabName = "today";
+  const validTabs = ["today","browse","stats","profile"];
+  if(!validTabs.includes(tabName)) tabName = "today";
+
+  // Tab panel görünürlüğü
+  document.querySelectorAll(".tabPanel").forEach(p => {
+    p.style.display = (p.dataset.tab === tabName) ? "" : "none";
+  });
+
+  // Bottom nav aktif state
+  document.querySelectorAll(".navTab").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === tabName);
+  });
+
+  // Body class — mission list ve footer görünürlüğü için
+  document.body.classList.remove("tab-today","tab-browse","tab-stats","tab-profile");
+  document.body.classList.add("tab-" + tabName);
+
+  // Tab değişince scroll'u en üste al
+  try {
+    const wrap = document.getElementById("app-wrapper");
+    if(wrap) wrap.scrollTop = 0;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  } catch(_){}
+
+  // Aktif tab'ı kaydet
+  try { lsSet(NAV_TAB_KEY, tabName); } catch(_){}
+
+  // Profile tab'a girince profile sheet açma değil — kullanıcı butona tıklasın
+  trackEvent("Tab Switched", { tab: tabName });
+}
+
+function initBottomNav(){
+  const navBtns = document.querySelectorAll(".navTab");
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", ()=>{
+      clickSound("click");
+      const tab = btn.dataset.tab;
+      switchTab(tab);
+    });
+  });
+
+  // İlk yükleme: kayıtlı tab veya "today"
+  const saved = lsGet(NAV_TAB_KEY, "today");
+  switchTab(saved);
+
+  // Profil tab'ından profile sheet aç
+  const openFromTab = document.getElementById("btnOpenProfileFromTab");
+  if(openFromTab){
+    openFromTab.addEventListener("click", ()=>{
+      clickSound("click");
+      openProfileSheet();
+    });
+  }
+
+  // Continue where you left off
+  const btnContinue = document.getElementById("btnContinue");
+  if(btnContinue){
+    btnContinue.addEventListener("click", ()=>{
+      clickSound("click");
+      const lastId = Number(lsGet("jumvi_last_opened_id_v1", "0"));
+      if(lastId){
+        const ms = missions.find(x=>x.id===lastId);
+        if(ms) openMission(lastId);
+      }
+    });
+  }
+
+  // Daily card fully tappable (whole card opens mission)
+  const dailyBox = document.getElementById("dailyBox");
+  if(dailyBox){
+    dailyBox.addEventListener("click", (e)=>{
+      // Buton zaten click yakaladıysa çift tetikleme önle
+      if(e.target.closest("button")) return;
+      const btnPlay = document.getElementById("btnDailyPlay");
+      if(btnPlay) btnPlay.click();
+    });
+    dailyBox.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        const btnPlay = document.getElementById("btnDailyPlay");
+        if(btnPlay) btnPlay.click();
+      }
+    });
+  }
+
+  // Search toggle (Browse tab)
+  const searchToggle = document.getElementById("searchToggleBtn");
+  const searchBox = document.getElementById("searchBox");
+  if(searchToggle && searchBox){
+    searchToggle.addEventListener("click", ()=>{
+      clickSound("click");
+      const isOpen = searchBox.style.display !== "none";
+      searchBox.style.display = isOpen ? "none" : "";
+      if(!isOpen){
+        const inp = document.getElementById("searchInput");
+        if(inp) setTimeout(()=> inp.focus(), 60);
+      }
+    });
+  }
+}
+
+/** =======================
+ * Daily Mini-Challenge — bugün 1 mission tamamla = ⭐
+ * ======================= */
+const DAILY_CHALLENGE_KEY = _PP + "daily_challenge_v1"; // { iso, count, reward }
+
+function getDailyChallengeState(){
+  const today = isoLocalDate();
+  let state = lsGetJSON(DAILY_CHALLENGE_KEY, null);
+  if(!state || state.iso !== today){
+    state = { iso: today, count: 0, claimed: false };
+    lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+  }
+  return state;
+}
+
+function bumpDailyChallenge(){
+  const state = getDailyChallengeState();
+  state.count++;
+  lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+  renderDailyChallenge();
+  // 1 mission tamamlandı = ⭐ kazandı
+  if(state.count === 1 && !state.claimed){
+    state.claimed = true;
+    lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+    setTimeout(()=>{
+      showToast("⭐ Daily Champion! Goal completed!");
+      if(!prefersReducedMotion) fireConfetti(1500);
+    }, 1200);
+  }
+}
+
+function renderDailyChallenge(){
+  const state = getDailyChallengeState();
+  const goal = 1;
+  const card = document.getElementById("dailyChallenge");
+  const status = document.getElementById("dailyChallengeStatus");
+  const fill = document.getElementById("dailyChallengeFill");
+  const reward = document.getElementById("dailyChallengeReward");
+  if(!card) return;
+
+  const completed = state.count >= goal;
+  card.classList.toggle("completed", completed);
+  if(status) status.textContent = `${Math.min(state.count, goal)} / ${goal}`;
+  if(fill) fill.style.width = (Math.min(state.count, goal) / goal * 100) + "%";
+  if(reward){
+    reward.textContent = completed
+      ? "⭐ Completed! See you tomorrow for a new goal!"
+      : "Play 1 mission today → earn the Daily Champion star ⭐";
+  }
+}
+
+/** =======================
+ * Continue where you left off
+ * ======================= */
+const LAST_OPENED_KEY = "jumvi_last_opened_id_v1";
+
+function renderContinueHint(){
+  const hint = document.getElementById("continueHint");
+  const nameEl = document.getElementById("continueHintName");
+  if(!hint) return;
+  const lastId = Number(lsGet(LAST_OPENED_KEY, "0"));
+  if(!lastId){ hint.style.display = "none"; return; }
+  const ms = missions.find(x=>x.id===lastId);
+  if(!ms){ hint.style.display = "none"; return; }
+  // Sadece bugün oynanmamışsa göster (eğer bugün zaten oynadıysa, "continue" değil)
+  hint.style.display = "";
+  if(nameEl) nameEl.textContent = `${ms.icon} ${ms.title}`;
+}
+
+/** =======================
  * Yeni kullanıcı için ilk mission önerisi
  * Kolay, kısa, beğenilen klasik bir mission seç
  * ======================= */
@@ -4000,6 +4184,10 @@ function init(){
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
   showWelcomeOverlay();
   checkStreakWarning();
+  // Bottom nav + Today-first UI elementleri
+  initBottomNav();
+  renderDailyChallenge();
+  renderContinueHint();
   // Tutorial — onboarded ama tutorial görmemiş kullanıcılar için
   // Welcome overlay açıksa onun kapanmasını bekleyelim
   setTimeout(()=>{
