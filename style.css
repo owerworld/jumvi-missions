@@ -5153,26 +5153,31 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
 .navTab{
   color: #94a3b8 !important;
   font-weight: 700 !important;
-  transition: color 0.2s ease, transform 0.2s ease !important;
+  transition: color 0.25s ease, transform 0.2s ease !important;
+  z-index: 1;
 }
 .navTab .navTabIcon{
   font-size: 22px !important;
-  filter: grayscale(0.4);
-  opacity: 0.7;
-  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1) !important;
+  filter: grayscale(0.5);
+  opacity: 0.65;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1) !important;
+  position: relative;
+  z-index: 2;
 }
 .navTab .navTabLabel{
   font-size: 10px !important;
   font-weight: 700 !important;
-  opacity: 0.85;
-  transition: all 0.2s ease;
+  opacity: 0.8;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 2;
 }
 
-/* ACTIVE TAB: cok belirgin
-   - Mavi renk
-   - Ust kismi gradient bar (4px)
-   - Ikon 1.3x buyuk + saturated
-   - Label bold */
+/* ============================================
+ * 💎 LIQUID GLASS ACTIVE TAB
+ * Apple iOS 26 Liquid Glass aesthetic
+ * Frosted pill + glow + scale + animate-in
+ * ============================================ */
 .navTab.active{
   color: #1E88E5 !important;
   font-weight: 950 !important;
@@ -5180,41 +5185,132 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
 .navTab.active .navTabIcon{
   filter: none !important;
   opacity: 1 !important;
-  transform: scale(1.25) translateY(-1px) !important;
+  transform: scale(1.3) translateY(-2px) !important;
+  text-shadow: 0 2px 8px rgba(79,179,255,0.4);
 }
 .navTab.active .navTabLabel{
-  font-weight: 900 !important;
+  font-weight: 950 !important;
   opacity: 1 !important;
-  font-size: 10.5px !important;
-  letter-spacing: 0.1px;
+  font-size: 11px !important;
+  letter-spacing: 0;
+  color: #1E88E5;
 }
-/* Active tab UPPER BAR — gradient, animated */
+
+/* Liquid Glass pill background — büyük yumuşak frosted */
 .navTab.active::before{
   content: "";
   position: absolute;
-  top: 0;
-  left: 25%;
-  right: 25%;
+  top: 4px; left: 8%; right: 8%; bottom: 4px;
+  background: linear-gradient(135deg,
+    rgba(79,179,255,0.22) 0%,
+    rgba(30,136,229,0.28) 50%,
+    rgba(79,179,255,0.18) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 18px;
+  border: 1.5px solid rgba(79,179,255,0.35);
+  box-shadow:
+    0 4px 18px rgba(37,99,235,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.4),
+    inset 0 -1px 0 rgba(30,136,229,0.15);
+  z-index: 0;
+  animation: liquidIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Üst gradient ışığı — sıcak vurgu */
+.navTab.active::after{
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 30%; right: 30%;
   height: 3px;
-  background: linear-gradient(90deg, #4FB3FF, #1E88E5);
-  border-radius: 0 0 3px 3px;
-  animation: navBarSlide 0.3s ease-out;
+  background: linear-gradient(90deg,
+    transparent,
+    #4FB3FF 30%,
+    #1E88E5 50%,
+    #4FB3FF 70%,
+    transparent);
+  border-radius: 0 0 8px 8px;
+  filter: blur(0.5px);
+  animation: liquidGlow 1.8s ease-in-out infinite;
+  z-index: 3;
 }
-@keyframes navBarSlide{
-  from{ left: 50%; right: 50%; opacity: 0; }
-  to  { left: 25%; right: 25%; opacity: 1; }
+
+@keyframes liquidIn{
+  0%   { opacity: 0; transform: scale(0.6); }
+  60%  { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
 }
+@keyframes liquidGlow{
+  0%, 100%{ opacity: 0.8; filter: blur(0.5px); }
+  50%   { opacity: 1; filter: blur(1px) brightness(1.2); }
+}
+
 @media (prefers-reduced-motion: reduce){
-  .navTab.active::before{ animation: none; }
+  .navTab.active::before,
+  .navTab.active::after{ animation: none !important; }
   .navTab .navTabIcon{ transition: none !important; }
 }
 
-/* Dark mode: active rengi acik mavi */
-html.theme--dark .navTab.active{ color: #60A5FA !important; }
+/* DARK MODE Liquid Glass — soğuk mavi tonu */
 html.theme--dark .navTab{ color: #64748b !important; }
+html.theme--dark .navTab.active{ color: #60A5FA !important; }
+html.theme--dark .navTab.active .navTabLabel{ color: #93C5FD; }
 html.theme--dark .navTab.active::before{
-  background: linear-gradient(90deg, #60A5FA, #4FB3FF);
+  background: linear-gradient(135deg,
+    rgba(96,165,250,0.20) 0%,
+    rgba(37,99,235,0.32) 50%,
+    rgba(147,197,253,0.18) 100%);
+  border-color: rgba(96,165,250,0.45);
+  box-shadow:
+    0 4px 22px rgba(37,99,235,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(37,99,235,0.25);
 }
+html.theme--dark .navTab.active::after{
+  background: linear-gradient(90deg,
+    transparent,
+    #60A5FA 30%,
+    #93C5FD 50%,
+    #60A5FA 70%,
+    transparent);
+}
+
+/* ============================================
+ * KESIN TAB IZOLASYONU
+ * Hangi tab acildiysa SADECE o gorulur
+ * ============================================ */
+
+/* Today/Stats/Profile'da mission listesi gizli */
+body.tab-today .list,
+body.tab-stats .list,
+body.tab-profile .list{
+  display: none !important;
+}
+/* Footer her tab'da sadece onun olmasi gereken icerik */
+body.tab-today .footer,
+body.tab-stats .footer,
+body.tab-profile .footer{
+  display: none !important;
+}
+body.tab-browse .footer{
+  display: block !important;
+  margin-top: var(--sp-5) !important;
+}
+
+/* Browse'da hero baska iceriklerini gizle, sadece search/filter ve list olsun */
+body.tab-browse #tabToday,
+body.tab-browse #tabStats,
+body.tab-browse #tabProfile{ display: none !important; }
+body.tab-today #tabBrowse,
+body.tab-today #tabStats,
+body.tab-today #tabProfile{ display: none !important; }
+body.tab-stats #tabToday,
+body.tab-stats #tabBrowse,
+body.tab-stats #tabProfile{ display: none !important; }
+body.tab-profile #tabToday,
+body.tab-profile #tabBrowse,
+body.tab-profile #tabStats{ display: none !important; }
 
 /* Tab pages — aktif sayfada kucuk bir "tab basligi" gibi belirginlik */
 #tabBrowse .tabHeading,
