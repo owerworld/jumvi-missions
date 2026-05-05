@@ -5118,15 +5118,28 @@ body.tab-browse .footer{
  * iPhone 13 mobil sorunlari
  * ============================================================ */
 
-/* 1) DOUBLE-TAP ZOOM kilitle */
-html, body, .app-shell{
-  touch-action: manipulation;
-  -webkit-touch-callout: none;
+/* 1) DOUBLE-TAP ZOOM — sadece interactive elementlere (parent'a degil!) */
+html, body{
   -webkit-text-size-adjust: 100%;
 }
-button, a, .navTab, .quickChip, .profilePill, .dailyBox,
-.todayQuickAction, .profileQuickLink{
+/* Sadece tikayanabilir elementlerde manipulation; parent'a vermek iOS'te
+   tum click event'leri bozabiliyor */
+button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
+.dailyNewSmall, .todayQuickAction, .profileQuickLink, .scoreTrackerTap,
+.btn, .chip, input[type="button"], input[type="submit"]{
   touch-action: manipulation;
+}
+
+/* Bottom nav kesin tikalanir + her durumda gorulur */
+.bottomNav{
+  z-index: 9500 !important;
+  pointer-events: auto !important;
+}
+.navTab{
+  pointer-events: auto !important;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* 2) DAILY PLAY BUTON beyaz arka planda mavi text — KESIN GORULSUN */
