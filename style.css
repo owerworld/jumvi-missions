@@ -5063,3 +5063,52 @@ html.theme--dark .searchToggleBtn{
   flex: 1 1 auto;
   min-width: 0;
 }
+
+/* 12) BOTTOM NAV CONTENT BLOCKING — kapsamlı çözüm
+   Bottom nav fixed, content alt kısmı kapanmasın diye agresif padding */
+.app-shell{
+  padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+}
+.wrap{
+  padding-bottom: 24px !important;
+}
+/* Modal açıkken bottom nav gizleniyor — modal içeriği için padding gerekmez */
+body.modalOpen .app-shell{
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+/* 13) Today tab içeriği için breathing space */
+#tabToday{
+  display: flex;
+  flex-direction: column;
+}
+#tabToday > *{ flex-shrink: 0; }
+#tabToday .h1{ margin-top: 8px !important; margin-bottom: 6px !important; }
+#tabToday .sub{ margin-bottom: 14px !important; }
+
+/* 14) A2HS banner — daha hafif, sadece browse tab'inde göster */
+body.tab-today .a2hs,
+body.tab-stats .a2hs,
+body.tab-profile .a2hs{ display: none !important; }
+.a2hs{
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 14px;
+}
+
+/* 15) Continue hint + Daily card daha rahat ayrılsın */
+.continueHint{ margin-bottom: 14px !important; }
+
+/* 16) Today tab "Surprise me" buton fixed clear */
+.todayQuickAction{
+  margin-top: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+/* 17) Footer mission browse tab'inde alt nav'dan uzakta kalsın */
+body.tab-browse .footer{
+  margin-bottom: 24px;
+}
+
+/* 18) Profile tab footer info breathing room */
+.profileFooterInfo{ margin-bottom: 24px; }

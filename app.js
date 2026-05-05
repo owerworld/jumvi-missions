@@ -3545,6 +3545,12 @@ function switchTab(tabName){
     renderContinueHint();
     renderDailyChallenge();
   }
+  if(tabName === "stats") {
+    // Badge ve dashboard taze render
+    updateBadges();
+    renderParentDashboard();
+    updateProgress();
+  }
 
   // Tab değişince scroll'u en üste al
   try {
@@ -4225,7 +4231,7 @@ function init(){
     }
   }, 800);
   // Delay A2HS banner — don't interrupt the first impression
-  setTimeout(maybeShowA2HS, 30000);
+  setTimeout(maybeShowA2HS, 60000);
   checkOptionalDownloads();
 
   // restore certificate name (optional)
