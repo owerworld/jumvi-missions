@@ -5112,3 +5112,166 @@ body.tab-browse .footer{
 
 /* 18) Profile tab footer info breathing room */
 .profileFooterInfo{ margin-bottom: 24px; }
+
+/* ============================================================
+ * 2026-05-05 KRITIK STABILITE PASS
+ * Bottom nav arkasında kalan içerik, A2HS dengesizliği,
+ * badges aktif olmama, topbar sıkışıklık — hepsi tek pakette
+ * ============================================================ */
+
+/* A. BOTTOM NAV CONTENT KAPATMA — final çözüm
+   Her tab için generous bottom space (180px = 100px nav + 80px nefes) */
+.app-shell{
+  padding-bottom: calc(180px + env(safe-area-inset-bottom)) !important;
+}
+.wrap{
+  padding-bottom: 40px !important;
+}
+body.modalOpen .app-shell{
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+/* Mission listesi son kart bottom nav'a değmesin */
+.list{
+  padding-bottom: 24px !important;
+}
+
+/* Footer alt nav'dan kesin uzakta */
+.footer{
+  margin-bottom: 24px !important;
+}
+
+/* B. A2HS BANNER — agresif gizleme her durumda
+   Çok dengesiz duruyordu, yeni layout'la uyumsuz */
+.a2hs{
+  display: none !important;
+}
+
+/* C. BADGES SECTION GORUNURLUK — done.size>0 oldugunda kesin gorulsun */
+.statsBadgesSection{
+  display: block !important;
+}
+body.tab-stats #badgesRow{
+  display: flex !important;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+/* Empty state varken badges gizle - JS de bunu yapıyor ama CSS güçlendirme */
+body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection{
+  display: block !important;
+}
+
+/* D. TODAY TAB CONTENT — topbar'dan biraz uzak başlasın */
+#tabToday{
+  padding-top: 4px;
+}
+#tabToday .h1{
+  font-size: 24px !important;
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+}
+#tabToday .sub{
+  font-size: 13px !important;
+  margin-bottom: 16px !important;
+}
+
+/* E. CONTINUE HINT — Daily card'dan biraz ayrılsın */
+.continueHint{
+  margin-bottom: 12px !important;
+  padding: 12px 14px !important;
+}
+
+/* F. DAILY MISSION CARD ile sonraki content arasında nefes */
+.dailyBox.dailyBoxPromoted{
+  margin: 0 0 16px !important;
+}
+
+/* G. SURPRISE ME buton bottom nav'dan kesin uzakta */
+.todayQuickAction{
+  margin-top: 18px !important;
+  margin-bottom: 24px !important;
+}
+
+/* H. STATS TAB — kartlar arasında nefes */
+#tabStats > *{
+  margin-bottom: 14px;
+}
+#tabStats > *:last-child{
+  margin-bottom: 24px;
+}
+
+/* I. PROFILE TAB — alt elemanlar bottom nav'dan uzak */
+#tabProfile{
+  padding-bottom: 24px;
+}
+.profileFooterInfo{
+  margin-top: 24px !important;
+  margin-bottom: 32px !important;
+}
+
+/* J. MOBİL TOPBAR — son nokta (üst sıkışıklık) */
+@media (max-width: 520px){
+  .sticky{
+    padding-top: env(safe-area-inset-top, 0) !important;
+  }
+  .topbar{
+    padding: 6px 10px !important;
+    gap: 8px !important;
+    min-height: 48px;
+  }
+  .brandText{
+    flex-direction: column !important;
+    gap: 0 !important;
+    align-items: flex-start !important;
+  }
+  .brandTitle{
+    font-size: 14px !important;
+    line-height: 1.1;
+  }
+  .brandSub{
+    font-size: 10px !important;
+    color: var(--muted);
+  }
+  .logoWrap{
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .profilePill{
+    padding: 4px 10px 4px 4px !important;
+    min-height: 32px !important;
+    gap: 6px !important;
+  }
+  .profilePillAvatar{
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 14px !important;
+  }
+  .profilePillName{
+    max-width: 60px !important;
+    font-size: 12px !important;
+  }
+
+  /* Today tab'da hero üstüne nefes ekle */
+  #tabToday{
+    padding-top: 8px !important;
+  }
+
+  /* Hero h1 mobilde daha kompakt */
+  #tabToday .h1{ font-size: 20px !important; }
+  #tabToday .sub{ font-size: 12px !important; margin-bottom: 12px !important; }
+}
+
+@media (max-width: 360px){
+  .brandText{ display: none !important; }
+}
+
+/* K. BOTTOM NAV — daha düşük profil ve sabit yükseklik */
+.bottomNav{
+  padding: 5px 0 calc(5px + env(safe-area-inset-bottom)) !important;
+}
+.navTab{
+  min-height: 50px !important;
+  padding: 6px 2px !important;
+}
+.navTabIcon{ font-size: 20px !important; }
+.navTabLabel{ font-size: 10px !important; }
