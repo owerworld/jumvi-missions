@@ -5114,6 +5114,114 @@ body.tab-browse .footer{
 .profileFooterInfo{ margin-bottom: 24px; }
 
 /* ============================================================
+ * 2026-05-05 KULLANICI BILDIRIMI FIX'LERI
+ * iPhone 13 mobil sorunlari
+ * ============================================================ */
+
+/* 1) DOUBLE-TAP ZOOM kilitle */
+html, body, .app-shell{
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
+}
+button, a, .navTab, .quickChip, .profilePill, .dailyBox,
+.todayQuickAction, .profileQuickLink{
+  touch-action: manipulation;
+}
+
+/* 2) DAILY PLAY BUTON beyaz arka planda mavi text — KESIN GORULSUN */
+.dailyBox.dailyBoxPromoted .dailyPlayBig,
+.dailyBox.dailyBoxPromoted button.dailyPlayBig{
+  background: #ffffff !important;
+  color: #1E88E5 !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: #1E88E5 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+/* btn btnPrimary inheritance ezme */
+.dailyBox.dailyBoxPromoted .dailyPlayBig.btnPrimary{
+  background: #ffffff !important;
+  color: #1E88E5 !important;
+  -webkit-text-fill-color: #1E88E5 !important;
+}
+
+/* 3) FLOATING SOUND BUTTON kesin gizli (CSS override) */
+.soundToggle{ display: none !important; }
+
+/* 4) WHERE TO PLAY card her durumda gizli */
+#seasonalCard{
+  display: none !important;
+}
+.seasonalBackdrop, #seasonalBackdrop{
+  display: none !important;
+}
+
+/* 5) TODAY TAB SPACING — birbirine girmesinler */
+#tabToday{
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+#tabToday > *{
+  margin: 0 !important;
+}
+#tabToday .h1{ margin-bottom: 0 !important; }
+#tabToday .sub{ margin-bottom: 0 !important; }
+#tabToday .continueHint{ margin: 0 !important; }
+#tabToday .dailyBox.dailyBoxPromoted{ margin: 0 !important; }
+#tabToday .dailyChallenge{ margin: 0 !important; }
+#tabToday .statsCompact{ margin: 0 !important; }
+#tabToday .pSubBox{ display: none !important; }
+#tabToday .todayQuickAction{
+  margin: 4px 0 32px 0 !important;
+}
+
+/* 6) Compact stats bar — streak ve text rahat sığsın */
+.statsCompact{
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  padding: 12px 14px !important;
+}
+.statsCompactLeft{
+  flex: 1 1 100% !important;
+  min-width: 0 !important;
+  order: 2;
+}
+.statsCompact .streakBox{
+  flex: 0 0 auto !important;
+  order: 1;
+  margin-left: auto;
+}
+@media (max-width: 520px){
+  .statsCompact{
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .statsCompact .streakBox{
+    align-self: flex-start;
+    margin-left: 0;
+  }
+  .statsCompactLeft{
+    flex: 1 1 auto !important;
+  }
+}
+
+/* 7) DAILY CHALLENGE açık ayrılsın */
+.dailyChallenge{
+  padding: 14px !important;
+}
+
+/* 8) BOTTOM NAV — content kapatma kesin çözüm (üstüne ekleme) */
+.app-shell{
+  padding-bottom: calc(140px + env(safe-area-inset-bottom)) !important;
+}
+
+/* ============================================================
  * 2026-05-05 KRITIK STABILITE PASS
  * Bottom nav arkasında kalan içerik, A2HS dengesizliği,
  * badges aktif olmama, topbar sıkışıklık — hepsi tek pakette
