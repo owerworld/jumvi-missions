@@ -4890,3 +4890,176 @@ html.theme--dark .trustBadges span{ background: rgba(255,255,255,0.06); }
   text-decoration: none;
   font-weight: 800;
 }
+
+/* ============================================================
+ * STABILIZATION FIXES — dark mode coverage + mobile + button spacing
+ * Sona eklendiği için en yüksek öncelik
+ * ============================================================ */
+
+/* 1) Dark mode'da promoted Daily card mavi gradient'i koru
+   (eski .dailyBox dark rule specificity sorununa karşı) */
+html.theme--dark .dailyBox.dailyBoxPromoted{
+  background: linear-gradient(135deg, #4FB3FF 0%, #2999FF 60%, #1E88E5 100%) !important;
+  border: none !important;
+}
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyName{ color: #fff !important; }
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyMeta,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyMeta *{ color: rgba(255,255,255,0.85) !important; }
+
+/* 2) Today tab bileşenleri dark mode'da net görünsün */
+html.theme--dark .continueHint{
+  background: linear-gradient(135deg, rgba(255,171,0,0.18), rgba(255,106,0,0.08));
+  border-color: rgba(255,171,0,0.35);
+}
+html.theme--dark .continueHintText{ color: #f1f5f9; }
+html.theme--dark .continueHintText b{ color: #FCD34D; }
+
+html.theme--dark .dailyChallenge{
+  background: linear-gradient(135deg, rgba(255,214,0,0.1), rgba(255,171,0,0.16));
+  border-color: rgba(255,171,0,0.35);
+}
+html.theme--dark .dailyChallengeStatus{
+  background: rgba(255,171,0,0.22);
+  color: #FCD34D;
+}
+html.theme--dark .dailyChallenge.completed .dailyChallengeStatus{
+  background: rgba(102,187,106,0.25);
+  color: #a5d6a7;
+}
+
+html.theme--dark .statsCompact{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+html.theme--dark .statsCompact .bar{
+  background: rgba(255,255,255,0.12);
+}
+
+html.theme--dark .todayQuickAction{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+  color: var(--text);
+}
+
+/* 3) Profile tab dark coverage */
+html.theme--dark .profileCard{
+  background: linear-gradient(135deg, rgba(79,179,255,0.18), rgba(151,215,0,0.10));
+  border-color: rgba(79,179,255,0.3);
+}
+html.theme--dark .profileQuickLink{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* 4) Stats empty state dark */
+html.theme--dark .emptyStateTitle{ color: #f1f5f9; }
+html.theme--dark .emptyStateDesc{ color: #94a3b8; }
+
+/* 5) Browse tab search button dark */
+html.theme--dark .searchToggleBtn{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+  color: #94a3b8;
+}
+
+/* 6) MOBİL TOPBAR — DAHA KOMPAKT */
+@media (max-width: 520px){
+  .topbar{
+    padding: 8px 10px !important;
+    gap: 8px !important;
+  }
+  .brand{ gap: 8px !important; min-width: 0; flex: 0 1 auto; }
+  .logoWrap{ width: 32px !important; height: 32px !important; flex-shrink: 0; }
+  .brandText{ display: flex !important; flex-direction: row !important; gap: 4px !important; align-items: baseline !important; min-width: 0; }
+  .brandTitle{
+    font-size: 14px !important;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .brandSub{
+    display: inline !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: var(--muted);
+    margin: 0 !important;
+  }
+
+  /* Profile pill mobile compact */
+  .profilePill{
+    font-size: 12px !important;
+    padding: 4px 10px 4px 4px !important;
+    gap: 6px !important;
+    min-height: 34px !important;
+    flex-shrink: 0;
+  }
+  .profilePillAvatar{ width: 26px !important; height: 26px !important; font-size: 16px !important; }
+  .profilePillName{ max-width: 70px !important; font-size: 12px !important; }
+  .profilePillChevron{ font-size: 10px !important; }
+}
+
+@media (max-width: 360px){
+  .brandText{ display: none !important; } /* Çok dar ekranda sadece logo */
+  .profilePillName{ max-width: 60px !important; }
+}
+
+/* 7) BUTTON OVERLAP FIX — promoted card buttons */
+.dailyBox.dailyBoxPromoted .dailyActionsBig{
+  gap: 10px !important;
+}
+.dailyBox.dailyBoxPromoted .dailyPlayBig{
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+.dailyBox.dailyBoxPromoted .dailyNewSmall{
+  align-self: center !important;
+  margin: 0 !important;
+}
+
+/* 8) Modal primary row — clear separation */
+.missionPrimary{
+  gap: 8px !important;
+  align-items: stretch;
+  flex-wrap: nowrap !important;
+}
+.missionStartBtn{
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.missionIconBtn{
+  flex: 0 0 54px !important;
+  width: 54px !important;
+  min-width: 54px;
+}
+
+/* 9) Bottom nav button spacing */
+.bottomNav{ gap: 0 !important; }
+.navTab{ flex: 1 1 0 !important; min-width: 0 !important; padding: 8px 2px !important; }
+.navTabLabel{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* 10) Pack filter chips wrap properly on mobile */
+.filters{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+@media (max-width: 520px){
+  .filters .chip{
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* 11) Modal Mark as Done + Next horizontal spacing fix */
+.sheetActions{ gap: 8px !important; }
+.sheetActions .btn{
+  flex: 1 1 auto;
+  min-width: 0;
+}
