@@ -5246,6 +5246,374 @@ html.theme--dark #tabProfile .tabHeading{
   border-radius: 2px;
 }
 
+/* ============================================================
+ * 🎨 GLOBAL POLISH PASS — ahenk + hizalama + nefes
+ * Tüm bileşenler tutarlı tasarım dili paylaşır
+ * ============================================================ */
+
+/* === DESIGN TOKENS (CSS custom properties) === */
+:root{
+  /* Spacing scale — 4px base */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 40px;
+
+  /* Border radius scale */
+  --r-sm: 10px;   /* small chips, badges */
+  --r-md: 14px;   /* secondary buttons, links */
+  --r-lg: 18px;   /* primary buttons, cards */
+  --r-xl: 22px;   /* hero cards */
+  --r-pill: 999px; /* pills */
+
+  /* Typography */
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-md: 13px;
+  --fs-lg: 14px;
+  --fs-xl: 16px;
+  --fs-2xl: 20px;
+  --fs-3xl: 24px;
+
+  /* Shadows */
+  --sh-soft: 0 2px 8px rgba(0,0,0,0.06);
+  --sh-mid: 0 4px 14px rgba(0,0,0,0.08);
+  --sh-strong: 0 8px 24px rgba(37,99,235,0.18);
+
+  /* Animation */
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+  --ease-smooth: cubic-bezier(0.4,0,0.2,1);
+  --dur-fast: 0.15s;
+  --dur-mid: 0.25s;
+  --dur-slow: 0.4s;
+}
+
+/* === BUTTON HARMONY ===
+   Tüm buttonlar aynı dile sahip:
+   - Primary: yüksek vurgu, büyük, gradient
+   - Secondary: ghost-style, glass bg
+   - Pill: yuvarlak, kompakt */
+
+/* Primary button standard */
+.btn.btnPrimary:not(.dailyPlayBig):not(.scoreTrackerTap):not(.profileTabOpenBtn):not(.welcomeStart):not(.btnPlayToday):not(.headerPlay):not(.dailyChallengeStatus){
+  border-radius: var(--r-lg) !important;
+  padding: 14px 18px !important;
+  min-height: 48px !important;
+  font-weight: 900;
+  letter-spacing: -0.2px;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.22) !important;
+}
+
+/* Ghost / secondary button standard */
+.btn.btnGhost{
+  border-radius: var(--r-md) !important;
+  padding: 12px 16px !important;
+  min-height: 44px !important;
+  font-weight: 800;
+  letter-spacing: -0.1px;
+}
+
+/* Pill chips */
+.chip{
+  border-radius: var(--r-pill) !important;
+  padding: 8px 14px !important;
+  font-size: var(--fs-md) !important;
+  font-weight: 800;
+  min-height: 36px;
+  letter-spacing: -0.1px;
+}
+
+/* === CARD HARMONY === */
+.dashCard,
+.certBox,
+.profileCard,
+.statsCompact,
+.continueHint,
+.dailyChallenge,
+.todayQuickAction,
+.searchToggleBtn,
+.profileQuickLink{
+  border-radius: var(--r-lg) !important;
+}
+
+/* Hero promoted (Daily mission) — daha büyük radius */
+.dailyBox.dailyBoxPromoted{
+  border-radius: var(--r-xl) !important;
+}
+
+/* === SHADOW HARMONY ===
+   Tüm kartlar aynı yumuşak gölge profili */
+.dashCard,
+.certBox,
+.profileCard,
+.statsCompact,
+.continueHint,
+.dailyChallenge,
+.todayQuickAction,
+.searchToggleBtn,
+.profileQuickLink,
+.scoreTracker{
+  box-shadow: var(--sh-soft) !important;
+}
+.dailyBox.dailyBoxPromoted{
+  box-shadow: 0 12px 32px rgba(37,99,235,0.28) !important;
+}
+
+/* === VERTICAL RHYTHM ===
+   Her tab içinde 16px gap (mobil), 20px (geniş) */
+#tabToday,
+#tabBrowse,
+#tabStats,
+#tabProfile{
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--sp-4) !important;
+}
+#tabBrowse > *,
+#tabStats > *,
+#tabProfile > *{ margin: 0 !important; }
+@media (min-width: 521px){
+  #tabToday,
+  #tabBrowse,
+  #tabStats,
+  #tabProfile{ gap: var(--sp-5) !important; }
+}
+
+/* === TYPOGRAPHY HIERARCHY === */
+.tabHeading{
+  font-size: var(--fs-2xl) !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.4px !important;
+  margin: 0 !important;
+}
+#tabToday .h1{
+  font-size: var(--fs-3xl) !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.5px !important;
+  margin: 0 !important;
+}
+#tabToday .sub{
+  font-size: var(--fs-md) !important;
+  font-weight: 700 !important;
+  color: var(--muted) !important;
+  margin: 0 !important;
+  line-height: 1.5;
+}
+
+/* === MISSION MODAL SHEET TITLE === */
+.sheetTitle{
+  font-size: var(--fs-2xl) !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.4px !important;
+}
+
+/* === PROFILE PILL — header'da kompakt + dengeli === */
+.profilePill{
+  padding: 4px 14px 4px 4px !important;
+  gap: 10px !important;
+  border-radius: var(--r-pill) !important;
+  min-height: 40px !important;
+  box-shadow: var(--sh-soft) !important;
+}
+.profilePillAvatar{
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: var(--r-pill) !important;
+  font-size: 18px !important;
+}
+.profilePillName{ font-size: var(--fs-md) !important; }
+@media (max-width: 520px){
+  .profilePill{
+    min-height: 34px !important;
+    padding: 3px 10px 3px 3px !important;
+    gap: 6px !important;
+  }
+  .profilePillAvatar{ width: 26px !important; height: 26px !important; font-size: 14px !important; }
+  .profilePillName{ font-size: var(--fs-sm) !important; max-width: 70px !important; }
+}
+
+/* === BOTTOM NAV — final touches === */
+.bottomNav{
+  padding: var(--sp-2) 0 calc(var(--sp-2) + env(safe-area-inset-bottom)) !important;
+  gap: 0 !important;
+}
+.navTab{
+  padding: 6px 4px !important;
+  gap: 4px !important;
+  min-height: 50px !important;
+}
+
+/* === STATS COMPACT — kompakt + hizalanmış === */
+.statsCompact{
+  padding: var(--sp-3) var(--sp-4) !important;
+  gap: var(--sp-3) !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+}
+@media (max-width: 520px){
+  .statsCompact{
+    flex-direction: row !important;
+    justify-content: space-between;
+  }
+}
+.statsCompactLeft{
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.statsCompact .bar{
+  height: 8px !important;
+  border-radius: var(--r-pill) !important;
+}
+.statsCompact .streakBox{
+  flex: 0 0 auto !important;
+}
+.streakPill{
+  padding: 7px 14px !important;
+  font-size: var(--fs-md) !important;
+  border-radius: var(--r-pill) !important;
+  border-width: 1.5px !important;
+  font-weight: 900 !important;
+}
+
+/* === TODAY QUICK ACTION (Surprise me) — kompakt kart === */
+.todayQuickAction{
+  padding: var(--sp-3) var(--sp-4) !important;
+  gap: var(--sp-3) !important;
+  border-radius: var(--r-lg) !important;
+}
+
+/* === DAILY CHALLENGE — temiz === */
+.dailyChallenge{
+  padding: var(--sp-3) var(--sp-4) !important;
+}
+.dailyChallengeBar{
+  height: 6px !important;
+  border-radius: var(--r-pill) !important;
+}
+
+/* === CONTINUE HINT — kompakt === */
+.continueHint{
+  padding: 10px 12px !important;
+}
+
+/* === PROFILE QUICK LINKS — yumuşak === */
+.profileQuickLink{
+  padding: var(--sp-3) var(--sp-4) !important;
+  gap: var(--sp-3) !important;
+}
+.profileQuickIcon{
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 20px !important;
+  border-radius: var(--r-md) !important;
+}
+
+/* === SEARCH TOGGLE — temiz === */
+.searchToggleBtn{
+  padding: var(--sp-3) var(--sp-4) !important;
+  gap: var(--sp-2) !important;
+}
+
+/* === MISSION CARDS — list === */
+.list{
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--sp-3) !important;
+}
+.card{
+  border-radius: var(--r-lg) !important;
+  padding: 14px 16px 14px 22px !important;
+}
+
+/* === SHEET ACTIONS — modal alt butonlar === */
+.sheetActions{
+  display: flex;
+  gap: var(--sp-2) !important;
+  padding-top: var(--sp-2);
+}
+.sheetActions .btn{
+  flex: 1;
+  min-height: 50px !important;
+  border-radius: var(--r-lg) !important;
+}
+
+/* === MISSION PRIMARY (Start + icons) === */
+.missionPrimary{
+  gap: var(--sp-2) !important;
+}
+.missionStartBtn{
+  border-radius: var(--r-lg) !important;
+  min-height: 54px !important;
+  font-size: var(--fs-xl) !important;
+}
+.missionIconBtn{
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: var(--r-lg) !important;
+}
+
+/* === FILTER CHIPS row === */
+.filters{
+  gap: var(--sp-2) !important;
+  padding: 0 !important;
+}
+
+/* === PACK CHIP active state === */
+.chip.active{
+  background: linear-gradient(135deg, #4FB3FF, #2999FF) !important;
+  color: #fff !important;
+  border: none;
+  font-weight: 900;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.25) !important;
+}
+
+/* === EMPTY STATE === */
+.emptyState{
+  padding: var(--sp-7) var(--sp-5) !important;
+}
+
+/* === KAPSAYAN PADDING (mobile-first) === */
+.wrap{
+  padding: var(--sp-3) var(--sp-3) var(--sp-5) !important;
+}
+@media (min-width: 521px){
+  .wrap{ padding: var(--sp-4) var(--sp-4) var(--sp-6) !important; }
+}
+
+/* === TÜM ANIMASYONLAR — aynı easing === */
+.btn,
+.chip,
+.navTab,
+.profilePill,
+.dailyBox,
+.todayQuickAction,
+.profileQuickLink,
+.searchToggleBtn,
+.scoreTrackerTap{
+  transition: transform var(--dur-fast) var(--ease-smooth),
+              box-shadow var(--dur-mid) var(--ease-smooth),
+              background var(--dur-fast) var(--ease-smooth) !important;
+}
+
+/* === ACTIVE PRESS STATE — tüm tıklanabilirlerde aynı === */
+.btn:active,
+.chip:active,
+.profilePill:active,
+.todayQuickAction:active,
+.profileQuickLink:active,
+.searchToggleBtn:active,
+.dailyBox.dailyBoxPromoted:active{
+  transform: scale(0.97) !important;
+}
+
 /* 2) DAILY PLAY BUTON beyaz arka planda mavi text — KESIN GORULSUN */
 .dailyBox.dailyBoxPromoted .dailyPlayBig,
 .dailyBox.dailyBoxPromoted button.dailyPlayBig{
