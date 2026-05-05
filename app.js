@@ -53,17 +53,58 @@ function lsSetDebounced(key, value, delay=500){
 }
 
 /** =======================
- * Disable zoom (modern, less aggressive)
+ * Disable zoom — kapsamlı (iOS + Android + desktop)
+ * Kazara pinch/double-tap/Cmd+scroll zoom = kullanıcı kaybı
  * ======================= */
 (function disableZoom(){
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  if(!isIOS) return;
+  // 1. Double-tap zoom (iOS)
   let lastTouchEnd = 0;
   document.addEventListener("touchend", function(e){
     const now = Date.now();
     if(now - lastTouchEnd <= 300){ e.preventDefault(); }
     lastTouchEnd = now;
   }, { passive:false });
+
+  // 2. Pinch zoom (iOS gestureXxx)
+  ["gesturestart","gesturechange","gestureend"].forEach(evt => {
+    document.addEventListener(evt, function(e){ e.preventDefault(); }, { passive:false });
+  });
+
+  // 3. Multi-touch zoom (Android Chrome)
+  document.addEventListener("touchstart", function(e){
+    if(e.touches && e.touches.length > 1){
+      e.preventDefault();
+    }
+  }, { passive:false });
+
+  // 4. Wheel zoom (desktop Cmd/Ctrl + scroll)
+  document.addEventListener("wheel", function(e){
+    if(e.ctrlKey || e.metaKey){ e.preventDefault(); }
+  }, { passive:false });
+})();
+
+/** =======================
+ * Selection / context menu disable
+ * Kazara metin secimi, copy menu, drag'i engelle
+ * ======================= */
+(function lockInteractions(){
+  // Sag tik / long-press menusu — sadece input/textarea harici
+  document.addEventListener("contextmenu", function(e){
+    const tag = (e.target && e.target.tagName) || "";
+    if(tag === "INPUT" || tag === "TEXTAREA") return;
+    e.preventDefault();
+  });
+  // Selection start engelleme — sadece input/textarea harici
+  document.addEventListener("selectstart", function(e){
+    const tag = (e.target && e.target.tagName) || "";
+    if(tag === "INPUT" || tag === "TEXTAREA") return;
+    e.preventDefault();
+  });
+  // Drag start — image / link draglarini engelle
+  document.addEventListener("dragstart", function(e){
+    const tag = (e.target && e.target.tagName) || "";
+    if(tag === "IMG" || tag === "A"){ e.preventDefault(); }
+  });
 })();
 
 /** =======================
@@ -960,26 +1001,31 @@ function getMilestoneLine(counts){
   return `Great progress in ${top[0].toLowerCase()} and ${top[1].toLowerCase()} this week.`;
 }
 
+/* Skill packs — yeni dile uygun, tam 6 kategori, pack-renk eşleşmeli */
+const SKILL_PACKS = [
+  { key:"Reflex Rush",    label:"Lightning Hands", icon:"⚡", color:"#FF6A00" },
+  { key:"Aim Master",     label:"Bullseye!",       icon:"🎯", color:"#4FB3FF" },
+  { key:"Focus Control",  label:"Zen Mode",        icon:"🧘", color:"#22c55e" },
+  { key:"Team Duo",       label:"Team Up",         icon:"👥", color:"#A855F7" },
+  { key:"Indoor Compact", label:"Indoor Fun",      icon:"🏠", color:"#06B6D4" },
+  { key:"Beach/Park",     label:"Outdoor",         icon:"🏖️", color:"#FFAB00" }
+];
+
 function renderParentDashboard(){
   if(!dashBars || !dashReport) return;
-  const packs = [
-    { key:"Reflex Rush", label:"Reflex", icon:"⚡" },
-    { key:"Aim Master", label:"Aim", icon:"🎯" },
-    { key:"Focus Control", label:"Focus", icon:"🧘" },
-    { key:"Team Duo", label:"Team", icon:"👥" },
-    { key:"Indoor Compact", label:"Indoor", icon:"🏠" }
-  ];
   const counts = {};
   const frag = document.createDocumentFragment();
-  packs.forEach(p=>{
+  SKILL_PACKS.forEach(p=>{
     const doneCount = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
+    const total = missions.filter(m=>m.pack===p.key).length || 6;
     counts[p.label] = doneCount;
-    const pct = Math.round((doneCount / 6) * 100);
+    const pct = Math.round((doneCount / total) * 100);
     const row = document.createElement("div");
-    row.className = "dashRow";
+    row.className = "dashRow" + (doneCount >= total ? " dashRowComplete" : (doneCount > 0 ? " dashRowActive" : ""));
+    row.style.setProperty("--skill-color", p.color);
     const icon = document.createElement("div");
     icon.className = "dashIcon";
-    icon.textContent = p.icon;
+    icon.textContent = doneCount >= total ? "✓" : p.icon;
     const label = document.createElement("div");
     label.className = "dashLabel";
     label.textContent = p.label;
@@ -991,7 +1037,7 @@ function renderParentDashboard(){
     bar.appendChild(fill);
     const count = document.createElement("div");
     count.className = "dashCount";
-    count.textContent = `${doneCount}/6`;
+    count.textContent = `${doneCount}/${total}`;
     row.appendChild(icon);
     row.appendChild(label);
     row.appendChild(bar);
@@ -1005,9 +1051,9 @@ function renderParentDashboard(){
   const dynSub = document.getElementById("dashDynSub");
   if(dynSub){
     const topSkill = getTopSkill(counts);
-    const skillEmoji = { Reflex:"⚡", Aim:"🎯", Focus:"🧘", Team:"👥", Indoor:"🏠" };
-    if(topSkill && counts[topSkill] > 0){
-      dynSub.textContent = `Your child is building ${topSkill.toUpperCase()} this week ${skillEmoji[topSkill]||""}`;
+    const topSkillPack = topSkill ? SKILL_PACKS.find(p=>p.label===topSkill) : null;
+    if(topSkillPack && counts[topSkill] > 0){
+      dynSub.textContent = `Building ${topSkillPack.label} skills ${topSkillPack.icon}`;
     } else {
       dynSub.textContent = "Keep playing to see your child's skills grow!";
     }
@@ -1018,17 +1064,11 @@ function renderParentDashboard(){
   if(statsEl){
     const mins = getEstimatedPlayMinutes();
     const topSkill = getTopSkill(counts);
-    const topSkillPack = topSkill ? [
-      { key:"Reflex Rush", label:"Reflex", icon:"⚡" },
-      { key:"Aim Master", label:"Aim", icon:"🎯" },
-      { key:"Focus Control", label:"Focus", icon:"🧘" },
-      { key:"Team Duo", label:"Team", icon:"👥" },
-      { key:"Indoor Compact", label:"Indoor", icon:"🏠" }
-    ].find(p=>p.label===topSkill) : null;
+    const topSkillPack = topSkill ? SKILL_PACKS.find(p=>p.label===topSkill) : null;
     statsEl.innerHTML = `
       <div class="dashStatItem"><span class="dashStatVal">${mins}</span><span class="dashStatLbl">min total play</span></div>
       <div class="dashStatItem"><span class="dashStatVal">${streakCount}</span><span class="dashStatLbl">day streak</span></div>
-      ${topSkillPack ? `<div class="dashStatItem"><span class="dashStatVal">${topSkillPack.icon}</span><span class="dashStatLbl">top skill: ${topSkillPack.label}</span></div>` : ""}
+      ${topSkillPack ? `<div class="dashStatItem"><span class="dashStatVal">${topSkillPack.icon}</span><span class="dashStatLbl">top: ${topSkillPack.label}</span></div>` : ""}
     `;
   }
 }
@@ -1773,13 +1813,33 @@ function updateBadges(){
       nowUnlocked.add(b.id);
       if(!prevUnlocked.has(b.id)) newlyUnlocked.push(b);
     }
-    // Ana sayfa scroll-row badge'i
+    // Pack badge'i için ilerleme detayı (3/6 gibi)
+    let progressText = "";
+    if(b.category === "pack" && b.pack){
+      const total = missions.filter(m=>m.pack===b.pack).length || 6;
+      const doneInPack = missions.filter(m=>m.pack===b.pack && done.has(m.id)).length;
+      progressText = `${doneInPack}/${total}`;
+    } else if(b.category === "streak"){
+      const target = (b.id === "streak7") ? 7 : 3;
+      const cur = Math.min(streakCount || 0, target);
+      progressText = `${cur}/${target}`;
+    } else if(b.id === "first"){
+      progressText = `${Math.min(done.size, 1)}/1`;
+    } else if(b.id === "champ"){
+      progressText = `${done.size}/36`;
+    }
+
     const el = document.createElement("div");
     el.className = "badge" + (ok ? " unlocked" : "");
+    if(b.pack){
+      const slug = "pack--" + b.pack.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+      el.classList.add(slug);
+    }
     el.innerHTML = `
       <div class="badgeIcon">${b.icon}</div>
       <div class="badgeName">${escapeHtml(b.name)}</div>
       <div class="badgeReq">${escapeHtml(b.req)}</div>
+      ${progressText ? `<div class="badgeProgress">${ok ? "✓ Earned" : progressText}</div>` : ""}
     `;
     badgesRow.appendChild(el);
   });
@@ -1789,28 +1849,41 @@ function updateBadges(){
     lsSet(BADGES_UNLOCKED_KEY, JSON.stringify([...nowUnlocked]));
   }
 
-  // Badges modal — 2 kolonlu grid
+  // Badges modal — 2 kolonlu grid (her badge için DOĞRU progress)
   badgesList.innerHTML = BADGES.map(b=>{
     const ok = !!b.check(done, badgeCtx);
-    const totalInPack = 6; // her kategori 6 mission
-    // Kilitli badge için kaç mission kaldı — basit tahmin
     let toGo = "";
     if(!ok){
-      // Badge req metninden sayı çıkarmaya çalış
-      const m = b.req.match(/(\d+)/);
-      if(m){
-        const needed = parseInt(m[1]);
-        const current = done.size;
-        const left = Math.max(0, needed - current);
-        if(left > 0) toGo = `${left} mission${left===1?"":"s"} to go`;
+      if(b.category === "pack" && b.pack){
+        const total = missions.filter(m=>m.pack===b.pack).length || 6;
+        const doneInPack = missions.filter(m=>m.pack===b.pack && done.has(m.id)).length;
+        const left = Math.max(0, total - doneInPack);
+        toGo = `${doneInPack}/${total} · ${left} to go`;
+      } else if(b.category === "streak"){
+        const target = (b.id === "streak7") ? 7 : 3;
+        const cur = Math.min(streakCount || 0, target);
+        const left = Math.max(0, target - cur);
+        toGo = `${cur}/${target} · ${left} day${left===1?"":"s"} to go`;
+      } else if(b.id === "first"){
+        toGo = "Start your first mission!";
+      } else if(b.id === "champ"){
+        const left = Math.max(0, 36 - done.size);
+        toGo = `${done.size}/36 · ${left} more to go`;
+      } else {
+        toGo = "🔒 Locked";
       }
     }
+    let extraClass = "";
+    if(b.pack){
+      const slug = "pack--" + b.pack.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+      extraClass = " " + slug;
+    }
     return `
-      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}">
+      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}${extraClass}">
         <div class="badgesListIcon">${b.icon}</div>
         <div class="badgesListName">${escapeHtml(b.name)}</div>
         <div class="badgesListReq">${escapeHtml(b.req)}</div>
-        <div class="badgesListStatus">${ok ? "✓ Earned" : (toGo || "🔒 Locked")}</div>
+        <div class="badgesListStatus">${ok ? "✓ Earned" : toGo}</div>
       </div>
     `;
   }).join("");

@@ -255,25 +255,33 @@ const missions = [
     "📈 Try to beat your distance every time you play!"),
 ];
 
+// Badges - 6 pack badge'i (her pack için 1) + 3 streak/champion + 1 first
+// Mission isimleriyle CAKISMASIN (Speed Demon, Bullseye, etc. mission isimleri)
 const BADGES = [
-  { id:"first", icon:"⭐", name:"First Steps", req:"Complete 1 mission",
+  { id:"first", icon:"⭐", name:"First Steps", req:"Complete your first mission", category:"start",
     check: (done)=>done.size>=1 },
-  { id:"speedy", icon:"⚡", name:"Speed Demon", req:"Complete all Lightning Hands",
+
+  // Pack badges — pack'in TAMAMINI bitirme
+  { id:"reflex", icon:"⚡", name:"Reflex Pro", req:"Finish all Lightning Hands", category:"pack", pack:"Reflex Rush",
     check: (done)=>missions.filter(x=>x.pack==="Reflex Rush" && done.has(x.id)).length>=6 },
-  { id:"sharp", icon:"🎯", name:"Bullseye Pro", req:"Complete all Bullseye missions",
+  { id:"aim", icon:"🎯", name:"Sharp Shooter", req:"Finish all Bullseye missions", category:"pack", pack:"Aim Master",
     check: (done)=>missions.filter(x=>x.pack==="Aim Master" && done.has(x.id)).length>=6 },
-  { id:"zen", icon:"🧘", name:"Zen Master", req:"Complete all Zen Mode missions",
+  { id:"zen", icon:"🧘", name:"Zen Master", req:"Finish all Zen Mode missions", category:"pack", pack:"Focus Control",
     check: (done)=>missions.filter(x=>x.pack==="Focus Control" && done.has(x.id)).length>=6 },
-  { id:"team", icon:"👥", name:"Team Player", req:"Complete all Team Up missions",
+  { id:"team", icon:"👥", name:"Team Captain", req:"Finish all Team Up missions", category:"pack", pack:"Team Duo",
     check: (done)=>missions.filter(x=>x.pack==="Team Duo" && done.has(x.id)).length>=6 },
-  { id:"indoor", icon:"🏠", name:"Indoor Hero", req:"Complete all Indoor Fun missions",
+  { id:"indoor", icon:"🏠", name:"Living Room Hero", req:"Finish all Indoor Fun missions", category:"pack", pack:"Indoor Compact",
     check: (done)=>missions.filter(x=>x.pack==="Indoor Compact" && done.has(x.id)).length>=6 },
-  { id:"outdoor", icon:"🏖️", name:"Outdoor Explorer", req:"Complete all Outdoor missions",
+  { id:"outdoor", icon:"🏖️", name:"Outdoor Adventurer", req:"Finish all Outdoor missions", category:"pack", pack:"Beach/Park",
     check: (done)=>missions.filter(x=>x.pack==="Beach/Park" && done.has(x.id)).length>=6 },
-  { id:"streak3", icon:"🎖️", name:"3-Day Streak", req:"Play 3 days in a row",
+
+  // Streak badges
+  { id:"streak3", icon:"🎖️", name:"3-Day Streak", req:"Play 3 days in a row", category:"streak",
     check: (_done, ctx)=>(ctx?.streakCount||0)>=3 },
-  { id:"streak7", icon:"🔥", name:"Week Champion", req:"Play 7 days in a row",
+  { id:"streak7", icon:"🔥", name:"Week Warrior", req:"Play 7 days in a row", category:"streak",
     check: (_done, ctx)=>(ctx?.streakCount||0)>=7 },
-  { id:"champ", icon:"🏆", name:"Champion", req:"Complete all 36 missions",
+
+  // Final
+  { id:"champ", icon:"🏆", name:"JUMVI Champion", req:"Complete all 36 missions", category:"champion",
     check: (done)=>done.size>=36 },
 ];

@@ -5818,6 +5818,215 @@ html.theme--dark .todayGoalBadge.completed{
 }
 
 /* ============================================================
+ * SKILL BARS — pack rengiyle eslesmeli, aktif/pasif net
+ * ============================================================ */
+.dashRow{
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 0;
+  transition: opacity 0.25s ease;
+  opacity: 0.7;
+}
+.dashRow.dashRowActive{ opacity: 1; }
+.dashRow.dashRowComplete{
+  opacity: 1;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--skill-color, #4FB3FF) 12%, transparent),
+    transparent);
+  border-radius: var(--r-md);
+  padding: 6px 8px;
+  margin: 0 -8px;
+}
+.dashRow .dashIcon{
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.04);
+  border-radius: var(--r-md);
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+.dashRow.dashRowActive .dashIcon{
+  background: color-mix(in srgb, var(--skill-color, #4FB3FF) 18%, transparent);
+}
+.dashRow.dashRowComplete .dashIcon{
+  background: var(--skill-color, #4FB3FF);
+  color: #fff;
+  font-weight: 950;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--skill-color, #4FB3FF) 35%, transparent);
+}
+html.theme--dark .dashRow .dashIcon{ background: rgba(255,255,255,0.06); }
+
+.dashLabel{
+  flex: 1; min-width: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dashBar{
+  flex: 0 0 80px;
+  height: 8px;
+  background: rgba(0,0,0,0.06);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+html.theme--dark .dashBar{ background: rgba(255,255,255,0.08); }
+.dashFill{
+  height: 100%; width: 0%;
+  background: var(--skill-color, var(--accent-blue));
+  border-radius: var(--r-pill);
+  transition: width 0.5s var(--ease-spring);
+}
+.dashRow.dashRowComplete .dashFill{
+  background: linear-gradient(90deg,
+    var(--skill-color, #4FB3FF),
+    color-mix(in srgb, var(--skill-color, #4FB3FF) 70%, #fff));
+}
+.dashCount{
+  flex: 0 0 auto;
+  min-width: 28px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--muted);
+}
+.dashRow.dashRowActive .dashCount{ color: var(--text); }
+.dashRow.dashRowComplete .dashCount{
+  color: var(--skill-color, var(--accent-blue));
+  font-weight: 950;
+}
+
+/* ============================================================
+ * BADGES — earned/locked net, pack rengiyle uyumlu
+ * ============================================================ */
+.badge{
+  position: relative;
+  flex-shrink: 0;
+  width: 130px;
+  padding: 14px 12px;
+  border-radius: var(--r-lg);
+  background: var(--glass);
+  border: 1.5px solid var(--glass-border);
+  display: flex; flex-direction: column; gap: 4px;
+  text-align: center;
+  align-items: center;
+  transition: all 0.25s ease;
+  opacity: 0.5;
+  filter: grayscale(0.7);
+}
+.badge.unlocked{
+  opacity: 1;
+  filter: none;
+  border-color: var(--card-accent, var(--accent-lime));
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--card-accent, #97D700) 12%, var(--glass)),
+    var(--glass));
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--card-accent, #97D700) 25%, transparent);
+}
+.badge .badgeIcon{
+  font-size: 32px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.badge.unlocked .badgeIcon{
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--card-accent, #97D700) 50%, transparent));
+}
+.badge .badgeName{
+  font-size: 12px;
+  font-weight: 950;
+  color: var(--text);
+  letter-spacing: -0.1px;
+  line-height: 1.2;
+}
+.badge .badgeReq{
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1.3;
+}
+.badge .badgeProgress{
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.06);
+  color: var(--muted);
+}
+.badge.unlocked .badgeProgress{
+  background: linear-gradient(135deg, #66BB6A, #43A047);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(67,160,71,0.3);
+}
+html.theme--dark .badge .badgeProgress{ background: rgba(255,255,255,0.08); }
+html.theme--dark .badge.unlocked{
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--card-accent, #97D700) 18%, rgba(255,255,255,0.06)),
+    rgba(255,255,255,0.05));
+}
+
+/* Modal badge grid — earned/locked aynı pack rengiyle */
+.badgesListItem{ position: relative; }
+.badgesListItem.badge-earned{
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--card-accent, #66BB6A) 14%, var(--glass)),
+    var(--glass));
+  border-color: var(--card-accent, #66BB6A) !important;
+}
+.badgesListItem.badge-earned .badgesListIcon{
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--card-accent, #66BB6A) 50%, transparent));
+}
+
+/* ============================================================
+ * KARARLILIK — kullanıcı deneyimini bozan etkilesimleri kısıtla
+ * ============================================================ */
+
+/* Metin secimi tamamen kapali (UI elementlerinde),
+   sadece input/textarea'larda izin ver */
+*, *::before, *::after{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input, textarea, [contenteditable]{
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Long-press menusu kapali — kazara aktif olmasin */
+img, button, a, .navTab{
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+/* Highlight (gri kutu) tap'larda gozukmesin */
+*{
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS'ta fontlar zoom yapmasin (input focus ile) */
+input, textarea, select{
+  font-size: 16px; /* 16px alti iOS'ta zoom yapar */
+}
+
+/* Kazara cift tiklama icin — debounce zaten JS'te, CSS'de pointer events yumusakca */
+button, a{
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Image dragging kapali — pointer-events korunur, sadece drag yok */
+img{
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* ============================================================
  * 🎨 GLOBAL POLISH PASS — ahenk + hizalama + nefes
  * Tüm bileşenler tutarlı tasarım dili paylaşır
  * ============================================================ */
