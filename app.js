@@ -3539,17 +3539,21 @@ function switchTab(tabName){
   document.body.classList.remove("tab-today","tab-browse","tab-stats","tab-profile");
   document.body.classList.add("tab-" + tabName);
 
-  // Tab içine özel render'lar
-  if(tabName === "profile") renderProfileTab();
-  if(tabName === "today") {
-    renderContinueHint();
-    renderDailyChallenge();
-  }
-  if(tabName === "stats") {
-    // Badge ve dashboard taze render
-    updateBadges();
-    renderParentDashboard();
-    updateProgress();
+  // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
+  try {
+    if(tabName === "profile") renderProfileTab();
+    if(tabName === "today") {
+      renderContinueHint();
+      renderDailyChallenge();
+    }
+    if(tabName === "stats") {
+      // Badge ve dashboard taze render
+      if(typeof updateBadges === "function") updateBadges();
+      if(typeof renderParentDashboard === "function") renderParentDashboard();
+      if(typeof updateProgress === "function") updateProgress();
+    }
+  } catch(e) {
+    console.warn("Tab render error:", e);
   }
 
   // Tab değişince scroll'u en üste al
