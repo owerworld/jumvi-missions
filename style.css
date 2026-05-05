@@ -5582,6 +5582,146 @@ html.theme--dark .profileQuickToggle{
 .profileReminderRow .profileQuickArrow{ display: none; }
 
 /* ============================================================
+ * TODAY TAB SADELESTIRME — 3 element
+ *  1. Greeting (h1 + sub) ya da Continue hint
+ *  2. TODAY'S MISSION promoted card (her şey içinde)
+ *  3. Compact stats bar (progress + streak + goal)
+ *  + Surprise me link (footer-style)
+ * Coach Pick + Daily Challenge görsel olarak gizlendi —
+ * onların değeri compact stats içinde ve daily card'ın içine entegre
+ * ============================================================ */
+
+/* Coach Pick artık görünmüyor — daily card içine entegre edildi */
+#coachPick{ display: none !important; }
+/* Daily Challenge artik gorunmuyor — compact stats icine entegre */
+#dailyChallenge{ display: none !important; }
+
+/* Compact stats — goal + streak + progress hepsi tek satirda */
+.statsCompact{
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: var(--sp-3) !important;
+  padding: 12px 14px !important;
+  flex-wrap: nowrap !important;
+}
+.statsCompactLeft{
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+.statsCompactText{
+  font-size: var(--fs-sm) !important;
+  font-weight: 900 !important;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.statsCompact .bar{
+  height: 6px !important;
+  border-radius: var(--r-pill) !important;
+}
+/* Streak pill mobilde küçük tut, ama görünür olsun */
+.statsCompact .streakPill{
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+  flex-shrink: 0;
+}
+
+/* Today tab sıkı dikey ritm — daha az boşluk */
+#tabToday{
+  gap: 14px !important;
+}
+
+/* Surprise me daha sessiz — primary değil secondary */
+.todayQuickAction{
+  background: transparent !important;
+  border: 1px dashed var(--glass-border) !important;
+  box-shadow: none !important;
+  padding: 12px 14px !important;
+  font-size: var(--fs-md) !important;
+  opacity: 0.85;
+}
+.todayQuickAction:active{ opacity: 1; }
+.todayQuickIcon{ font-size: 20px !important; }
+
+/* Daily promoted card — içine entegre edilen mini-stats */
+.dailyBox.dailyBoxPromoted{
+  position: relative;
+}
+/* Daily card altına bir "alt link satırı" — coach pick yerine */
+.dailyAltSuggestion{
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.18);
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s ease;
+}
+.dailyAltSuggestion:active{ opacity: 0.7; }
+.dailyAltSuggestion .altLabel{ color: rgba(255,255,255,0.6); margin-right: 4px; font-weight: 700; }
+.dailyAltSuggestion .altName{ color: #fff; }
+.dailyAltSuggestion .altArrow{ margin-left: 4px; }
+
+/* Continue hint daha kompakt */
+.continueHint{
+  padding: 10px 12px !important;
+  font-size: 12px !important;
+}
+
+/* Greeting compact */
+#tabToday .h1{
+  font-size: 22px !important;
+  margin-bottom: 2px !important;
+}
+#tabToday .h1::after{
+  bottom: -4px !important;
+  width: 32px !important;
+}
+#tabToday .sub{
+  font-size: 12px !important;
+}
+
+@media (max-width: 380px){
+  #tabToday .h1{ font-size: 19px !important; }
+  .statsCompact{ padding: 10px 12px !important; }
+  .statsCompact .streakPill{ font-size: 11px !important; padding: 5px 10px !important; }
+}
+
+/* Stats compact tek satir — progress + today goal */
+.statsCompactRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.todayGoalBadge{
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #FFD600, #FFAB00);
+  color: #92400E;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.todayGoalBadge.completed{
+  background: linear-gradient(135deg, #66BB6A, #43A047);
+  color: #fff;
+}
+html.theme--dark .todayGoalBadge{
+  background: linear-gradient(135deg, rgba(255,214,0,0.85), rgba(255,171,0,0.95));
+}
+html.theme--dark .todayGoalBadge.completed{
+  background: linear-gradient(135deg, rgba(102,187,106,0.95), rgba(67,160,71,1));
+}
+
+/* ============================================================
  * 🎨 GLOBAL POLISH PASS — ahenk + hizalama + nefes
  * Tüm bileşenler tutarlı tasarım dili paylaşır
  * ============================================================ */

@@ -4007,16 +4007,25 @@ function renderDailyChallenge(){
   const status = document.getElementById("dailyChallengeStatus");
   const fill = document.getElementById("dailyChallengeFill");
   const reward = document.getElementById("dailyChallengeReward");
-  if(!card) return;
-
-  const completed = state.count >= goal;
-  card.classList.toggle("completed", completed);
-  if(status) status.textContent = `${Math.min(state.count, goal)} / ${goal}`;
-  if(fill) fill.style.width = (Math.min(state.count, goal) / goal * 100) + "%";
-  if(reward){
-    reward.textContent = completed
-      ? "⭐ Completed! See you tomorrow for a new goal!"
-      : "Play 1 mission today → earn the Daily Champion star ⭐";
+  if(card){
+    const completed = state.count >= goal;
+    card.classList.toggle("completed", completed);
+    if(status) status.textContent = `${Math.min(state.count, goal)} / ${goal}`;
+    if(fill) fill.style.width = (Math.min(state.count, goal) / goal * 100) + "%";
+    if(reward){
+      reward.textContent = completed
+        ? "⭐ Completed! See you tomorrow for a new goal!"
+        : "Play 1 mission today → earn the Daily Champion star ⭐";
+    }
+  }
+  // Compact stats içindeki todayGoalBadge'i güncelle
+  const badge = document.getElementById("todayGoalBadge");
+  if(badge){
+    const completed = state.count >= goal;
+    badge.textContent = completed
+      ? "⭐ Goal done!"
+      : `⭐ ${state.count}/${goal} today`;
+    badge.classList.toggle("completed", completed);
   }
 }
 
@@ -4139,6 +4148,19 @@ function renderCoachPick(){
     };
   }
   card.style.display = "";
+
+  // Daily card içindeki alt-suggestion link satırı (CSS ile coachPick gizlendi)
+  const alt = document.getElementById("dailyAltSuggestion");
+  const altName = document.getElementById("dailyAltName");
+  if(alt && altName){
+    altName.textContent = `${ms.icon} ${ms.title}`;
+    alt.style.display = "";
+    alt.onclick = ()=>{
+      clickSound("click");
+      trackEvent("Coach Pick Tapped");
+      openMission(ms.id);
+    };
+  }
 }
 
 /** =======================

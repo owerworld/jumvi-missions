@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260506-7">
+  <link rel="stylesheet" href="style.css?v=20260506-8">
   <script>
     (function(){
       try{
@@ -180,6 +180,13 @@
             <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Play today's mission" type="button">▶ Play This Mission</button>
             <button class="dailyNewSmall" id="btnDailyNew" aria-label="Pick another mission" type="button">🔁 Pick another</button>
           </div>
+
+          <!-- Coach pick alternatif — küçük link satırı -->
+          <div class="dailyAltSuggestion" id="dailyAltSuggestion" style="display:none">
+            <span class="altLabel">🦁 Or try:</span>
+            <span class="altName" id="dailyAltName">—</span>
+            <span class="altArrow">→</span>
+          </div>
           <!-- Stub for backward JS compat -->
           <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
           <div class="dailyTitle" style="display:none">Today's Mission</div>
@@ -217,16 +224,19 @@
           <div class="dailyChallengeReward" id="dailyChallengeReward">Play 1 mission → earn the Daily Champion star ⭐</div>
         </div>
 
-        <!-- Compact stats: progress + streak -->
+        <!-- Compact stats: progress + today goal + streak (tek satır) -->
         <div class="statsCompact" aria-label="progress">
           <div class="statsCompactLeft">
-            <div class="statsCompactText" id="progressText">0 / 36 missions</div>
+            <div class="statsCompactRow">
+              <span class="statsCompactText" id="progressText">0 / 36 missions</span>
+              <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal">⭐ 0/1 today</span>
+            </div>
             <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="36">
               <div id="progressBarFill"></div>
             </div>
           </div>
           <div class="streakBox" aria-label="streak">
-            <div class="streakPill" id="streakPill">🔥 Streak: 0</div>
+            <div class="streakPill" id="streakPill">🔥 0</div>
           </div>
         </div>
         <!-- Hidden helpers for JS backward compatibility -->
@@ -804,13 +814,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260506-7" defer></script>
-<script src="data.js?v=20260506-7" defer></script>
-<script src="app.js?v=20260506-7" defer></script>
+<script src="confetti.min.js?v=20260506-8" defer></script>
+<script src="data.js?v=20260506-8" defer></script>
+<script src="app.js?v=20260506-8" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260506-7").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260506-8").catch(()=>{});
     });
   }
 </script>
