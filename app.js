@@ -3489,11 +3489,12 @@ function showWelcomeOverlay(){
       // Splash transition: "Let's Play!" for 1.5s
       const afterSplash = ()=>{
         // Yeni kullanıcı: ilk easy mission'ı otomatik aç (deneyimi yaşat)
+        // Tutorial yerine — yeni today-first UI self-explanatory
+        // Tutorial bayrağını işaretle ki sonradan da çıkmasın
+        try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
         const firstMissionId = pickFirstMissionForNewUser(selectedDiff);
         if(firstMissionId){
           setTimeout(()=> openMission(firstMissionId), 350);
-        } else {
-          setTimeout(()=> showTutorial(), 350);
         }
       };
       if(!prefersReducedMotion){
@@ -4227,13 +4228,9 @@ function init(){
   initBottomNav();
   renderDailyChallenge();
   renderContinueHint();
-  // Tutorial — onboarded ama tutorial görmemiş kullanıcılar için
-  // Welcome overlay açıksa onun kapanmasını bekleyelim
-  setTimeout(()=>{
-    if(lsGet(ONBOARD_KEY, "0") === "1" && lsGet(TUTORIAL_KEY, "0") === "0"){
-      showTutorial();
-    }
-  }, 800);
+  // Tutorial spotlight kaldırıldı — yeni today-first UI self-explanatory.
+  // Var olan kullanıcılar için TUTORIAL_KEY işaretle ki bir daha çıkmasın
+  try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
   // Delay A2HS banner — don't interrupt the first impression
   setTimeout(maybeShowA2HS, 60000);
   checkOptionalDownloads();
