@@ -1113,32 +1113,137 @@ function persistStreak(){
   lsSetDebounced(STREAK_BEST_KEY, String(bestStreak), 500);
   lsSetDebounced(STREAK_LAST_KEY, String(lastActiveIso||""), 500);
 }
+
+/* ===== Streak Freeze (haftada 1 koruma) ===== */
+const STREAK_FREEZE_KEY = _PP + "streak_freeze_v1";
+// State: { available:bool, lastReplenishIso:"YYYY-MM-DD", lastUsedIso:"YYYY-MM-DD" }
+
+function getFreezeState(){
+  const s = lsGetJSON(STREAK_FREEZE_KEY, null);
+  if(s && typeof s.available === "boolean") return s;
+  // İlk kez — bir freeze ile başla
+  const fresh = { available: true, lastReplenishIso: isoLocalDate(), lastUsedIso: "" };
+  lsSet(STREAK_FREEZE_KEY, JSON.stringify(fresh));
+  return fresh;
+}
+function saveFreezeState(s){
+  try { lsSet(STREAK_FREEZE_KEY, JSON.stringify(s)); } catch(_){}
+}
+/* Pazartesi sıfırla — haftada 1 freeze yenilenir */
+function refreshFreezeIfWeekChanged(){
+  const s = getFreezeState();
+  const today = new Date();
+  // ISO week monday: Pazartesi 1, Pazar 0
+  const dayOfWeek = today.getDay(); // 0=Sun..6=Sat
+  // Bu haftanın Pazartesi'sini bul
+  const monday = new Date(today);
+  const offset = (dayOfWeek + 6) % 7; // Pzt=0, Sal=1...
+  monday.setDate(today.getDate() - offset);
+  monday.setHours(0,0,0,0);
+  const mondayIso = isoLocalDate(monday);
+
+  if(s.lastReplenishIso < mondayIso){
+    s.available = true;
+    s.lastReplenishIso = mondayIso;
+    saveFreezeState(s);
+  }
+}
+
 function recordActivityToday(){
   const today = isoLocalDate();
   if(lastActiveIso === today) return false; // already counted today
-  if(lastActiveIso === yesterdayIso(today)){
+
+  refreshFreezeIfWeekChanged();
+  const yesterday = yesterdayIso(today);
+
+  if(lastActiveIso === yesterday){
+    // Normal devam
     streakCount = setState("streakCount", Math.max(0, streakCount) + 1);
-  }else{
+  } else if(lastActiveIso && streakCount > 0){
+    // 1+ gün geçti, streak kırılma riski → freeze varsa kullan
+    const freeze = getFreezeState();
+    // Sadece 2 günlük gap için freeze geçerli (1 gün kaçırma)
+    const dayBeforeYesterday = yesterdayIso(yesterday);
+    if(freeze.available && lastActiveIso === dayBeforeYesterday){
+      // Freeze kullan — streak korunur, +1 ekle
+      freeze.available = false;
+      freeze.lastUsedIso = today;
+      saveFreezeState(freeze);
+      streakCount = setState("streakCount", Math.max(0, streakCount) + 1);
+      // UI'da bildiri (delay ile, completion toast ezmesin)
+      setTimeout(()=>{
+        showToast("🛡️ Streak Freeze used! Your streak is safe.");
+        if(!prefersReducedMotion) fireConfetti(800);
+      }, 2800);
+      trackEvent("Streak Freeze Used");
+    } else {
+      // Freeze yok veya çok gün geçti — streak sıfırla
+      streakCount = setState("streakCount", 1);
+    }
+  } else {
     streakCount = setState("streakCount", 1);
   }
+
   bestStreak = setState("bestStreak", Math.max(bestStreak, streakCount));
   lastActiveIso = setState("lastActiveIso", today);
   persistStreak();
   return true;
 }
+
+/* Public helper: freeze durumunu UI için */
+function getStreakFreezeStatus(){
+  refreshFreezeIfWeekChanged();
+  const s = getFreezeState();
+  return {
+    available: s.available,
+    lastUsedIso: s.lastUsedIso || "",
+    nextReplenishDays: (function(){
+      const today = new Date();
+      const dayOfWeek = today.getDay();
+      // Sonraki Pazartesi'ye kalan gün
+      return (dayOfWeek === 0) ? 1 : (8 - dayOfWeek);
+    })()
+  };
+}
 function renderStreakUI(animate=false){
   if(!streakPill) return;
   const sc = streakCount || 0;
+  // Seviye bazli emoji + label (Duolingo style)
+  let icon = "🔥";
+  let label;
   if(sc === 0){
-    streakPill.textContent = `🔥 Start your streak!`;
-    streakPill.style.opacity = "0.55";
+    icon = "✨";
+    label = "Start your streak!";
+    streakPill.style.opacity = "0.6";
+  } else if(sc >= 30){
+    icon = "💎🔥💎";
+    label = `${sc} day legend!`;
+    streakPill.style.opacity = "";
+  } else if(sc >= 14){
+    icon = "🔥🔥🔥";
+    label = `${sc} days on fire!`;
+    streakPill.style.opacity = "";
+  } else if(sc >= 7){
+    icon = "🔥🔥";
+    label = `${sc} day streak!`;
+    streakPill.style.opacity = "";
+  } else if(sc >= 3){
+    icon = "🔥";
+    label = `${sc} day streak`;
+    streakPill.style.opacity = "";
   } else {
-    streakPill.textContent = `🔥 ${sc} day${sc === 1 ? "" : "s"} streak`;
+    icon = "🔥";
+    label = `${sc} day${sc === 1 ? "" : "s"}`;
     streakPill.style.opacity = "";
   }
-  // Renk seviyesi: 7+ kırmızı, 3+ turuncu, normal sarı
-  streakPill.classList.remove("streak-warm", "streak-hot");
-  if(sc >= 7) streakPill.classList.add("streak-hot");
+  streakPill.innerHTML = `<span class="streakIcon">${icon}</span><span class="streakLabel">${label}</span>`;
+
+  // Seviye class — CSS bunu kullanip gradient/glow uygulayacak
+  streakPill.classList.remove("streak-warm","streak-hot","streak-mega","streak-legendary","streak-zero");
+  if(sc === 0) streakPill.classList.add("streak-zero");
+  else if(sc >= 30) streakPill.classList.add("streak-legendary");
+  else if(sc >= 14) streakPill.classList.add("streak-mega");
+  else if(sc >= 7) streakPill.classList.add("streak-hot");
   else if(sc >= 3) streakPill.classList.add("streak-warm");
 
   if(animate && streakCount > 0){
@@ -3546,12 +3651,14 @@ function switchTab(tabName){
     if(tabName === "today") {
       renderContinueHint();
       renderDailyChallenge();
+      renderCoachPick();
     }
     if(tabName === "stats") {
       // Badge ve dashboard taze render
       if(typeof updateBadges === "function") updateBadges();
       if(typeof renderParentDashboard === "function") renderParentDashboard();
       if(typeof updateProgress === "function") updateProgress();
+      if(typeof renderFamilyInsights === "function") renderFamilyInsights();
     }
   } catch(e) {
     console.warn("Tab render error:", e);
@@ -3582,6 +3689,187 @@ function renderProfileTab(){
     const total = done.size;
     const sc    = streakCount || 0;
     statsEl.textContent = `${total} mission${total===1?"":"s"} · 🔥 ${sc} day${sc===1?"":"s"} streak`;
+  }
+  // Daily reminder toggle durumu
+  renderDailyReminderToggle();
+}
+
+/** =======================
+ * Daily Play Reminder (PWA notification)
+ * Backend yok — Notification API ile local reminder
+ * Kullanıcı izni verirse: app açıldığında zamanı geldiyse gösterir
+ * ======================= */
+const REMINDER_KEY = "jumvi_daily_reminder_enabled_v1"; // global, profile-bağımsız
+const REMINDER_LAST_SHOWN_KEY = "jumvi_daily_reminder_last_v1";
+
+function isReminderEnabled(){
+  return lsGet(REMINDER_KEY, "0") === "1" &&
+         typeof Notification !== "undefined" &&
+         Notification.permission === "granted";
+}
+
+async function enableDailyReminder(){
+  if(typeof Notification === "undefined"){
+    showToast("Notifications not supported on this device.");
+    return false;
+  }
+  let perm = Notification.permission;
+  if(perm === "default"){
+    try{
+      perm = await Notification.requestPermission();
+    }catch(_){
+      perm = "denied";
+    }
+  }
+  if(perm !== "granted"){
+    showToast("Notifications blocked. Enable in browser settings.");
+    return false;
+  }
+  lsSet(REMINDER_KEY, "1");
+  showToast("🔔 Daily reminder enabled!");
+  trackEvent("Daily Reminder Enabled");
+  return true;
+}
+
+function disableDailyReminder(){
+  lsSet(REMINDER_KEY, "0");
+  showToast("🔕 Daily reminder turned off.");
+  trackEvent("Daily Reminder Disabled");
+}
+
+/* Uygulama açıldığında — bugün hatırlatıcı gönderildi mi? Streak risk varsa göster */
+function maybeShowDailyReminder(){
+  if(!isReminderEnabled()) return;
+  const today = isoLocalDate();
+  const lastShown = lsGet(REMINDER_LAST_SHOWN_KEY, "");
+  if(lastShown === today) return; // bugün zaten gösterildi
+
+  // Bugün oynanmış mı?
+  if(lastActiveIso === today) return; // zaten oynadi, hatirlatma gerekmez
+
+  // Streak'i olan kullanıcı bugün oynamamış → hatırlat
+  if(streakCount > 0){
+    try{
+      const ap = getActiveProfile();
+      const name = ap && ap.name && ap.name !== "Player" ? ap.name : "champ";
+      const body = `🦁 Hey ${name}! Don't lose your ${streakCount}-day streak. Today's mission is ready!`;
+      new Notification("JUMVI Missions", {
+        body,
+        icon: "/icons/icon-192.png",
+        badge: "/icons/icon-192.png",
+        tag: "jumvi-daily",
+        renotify: false
+      });
+      lsSet(REMINDER_LAST_SHOWN_KEY, today);
+      trackEvent("Daily Reminder Shown");
+    }catch(_){}
+  }
+}
+
+function renderDailyReminderToggle(){
+  const subEl = document.getElementById("dailyReminderSub");
+  const togEl = document.getElementById("dailyReminderToggle");
+  if(!togEl) return;
+  const on = isReminderEnabled();
+  togEl.textContent = on ? "ON" : "OFF";
+  togEl.classList.toggle("on", on);
+  if(subEl){
+    if(typeof Notification === "undefined"){
+      subEl.textContent = "Not supported on this device";
+      togEl.style.opacity = "0.4";
+    } else if(Notification.permission === "denied"){
+      subEl.textContent = "Blocked — enable in browser settings";
+      togEl.style.opacity = "0.4";
+    } else if(on){
+      subEl.textContent = "Will nudge you when streak is at risk";
+      togEl.style.opacity = "1";
+    } else {
+      subEl.textContent = "Get a friendly nudge to play each day";
+      togEl.style.opacity = "1";
+    }
+  }
+}
+
+/** =======================
+ * Family Insights — Stats tab'da çoklu profil özeti
+ * ======================= */
+function renderFamilyInsights(){
+  const wrap = document.getElementById("familyInsights");
+  const grid = document.getElementById("familyInsightsGrid");
+  const fStreakEl = document.getElementById("familyStreak");
+  if(!wrap || !grid) return;
+
+  const profiles = getProfiles();
+  // Sadece 2+ profil varsa göster (tek profilde anlamı yok)
+  if(profiles.length < 2){
+    wrap.style.display = "none";
+    return;
+  }
+  wrap.style.display = "";
+
+  // Her profil için done count + streak topla
+  const items = profiles.map(p => {
+    const doneRaw = lsGetJSON("jumvi_" + p.id + "_missions_done_v3", []);
+    const doneCount = Array.isArray(doneRaw) ? doneRaw.length : 0;
+    const streak = Number(lsGet("jumvi_" + p.id + "_streak_count_v1", "0")) || 0;
+    const lastIso = lsGet("jumvi_" + p.id + "_streak_last_v1", "") || "";
+    return { p, doneCount, streak, lastIso };
+  });
+
+  // Render her profil için mini kart
+  grid.innerHTML = "";
+  items.forEach(it => {
+    const card = document.createElement("div");
+    card.className = "familyMember";
+    card.innerHTML = `
+      <div class="familyMemberAvatar">${escapeHtml(it.p.avatar || "🦁")}</div>
+      <div class="familyMemberInfo">
+        <div class="familyMemberName">${escapeHtml(it.p.name || "Player")}</div>
+        <div class="familyMemberStats">
+          <span class="familyMemberMissions">${it.doneCount}/36</span>
+          <span class="familyMemberStreak">🔥 ${it.streak}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Family streak: en az 1 profil her gün oynamış olduğu ardışık gün sayısı
+  // Tüm profillerin lastActiveIso'larını al, her ISO'da en az 1 oynama varsa say
+  const today = isoLocalDate();
+  const yesterday = yesterdayIso(today);
+  let familyStreakCount = 0;
+
+  // En son birinin oynadığı tarih = en yakın aktif tarih
+  const allLastIsos = items.map(x => x.lastIso).filter(Boolean);
+  if(allLastIsos.length > 0){
+    const mostRecent = allLastIsos.sort().reverse()[0];
+    if(mostRecent === today || mostRecent === yesterday){
+      // Family streak hesapla: her gün geriye giderek "o gün en az 1 profil oynadı mı" kontrol
+      let cursor = mostRecent;
+      familyStreakCount = 1;
+      // En fazla 30 gün geriye git (fazlasi anlamsiz)
+      for(let i = 0; i < 30; i++){
+        const prev = yesterdayIso(cursor);
+        const anyPlayed = items.some(x => x.lastIso === prev);
+        if(anyPlayed){
+          familyStreakCount++;
+          cursor = prev;
+        } else {
+          break;
+        }
+      }
+    }
+  }
+
+  if(fStreakEl){
+    if(familyStreakCount > 0){
+      fStreakEl.innerHTML = `🔥 <b>Family streak:</b> ${familyStreakCount} day${familyStreakCount===1?"":"s"} together`;
+      fStreakEl.classList.remove("dim");
+    } else {
+      fStreakEl.innerHTML = `✨ Start a family streak today!`;
+      fStreakEl.classList.add("dim");
+    }
   }
 }
 
@@ -3617,6 +3905,20 @@ function initBottomNav(){
     openFromTab.addEventListener("click", ()=>{
       clickSound("click");
       openProfileSheet();
+    });
+  }
+
+  // Daily Reminder toggle (Profile tab içinde)
+  const reminderBtn = document.getElementById("btnDailyReminder");
+  if(reminderBtn){
+    reminderBtn.addEventListener("click", async ()=>{
+      clickSound("click");
+      if(isReminderEnabled()){
+        disableDailyReminder();
+      } else {
+        await enableDailyReminder();
+      }
+      renderDailyReminderToggle();
     });
   }
 
@@ -3734,6 +4036,109 @@ function renderContinueHint(){
   // Sadece bugün oynanmamışsa göster (eğer bugün zaten oynadıysa, "continue" değil)
   hint.style.display = "";
   if(nameEl) nameEl.textContent = `${ms.icon} ${ms.title}`;
+}
+
+/** =======================
+ * Coach Leo's Smart Pick (returning users)
+ * En az tamamlanmış pack'ten + yaş uyumlu öneri
+ * ======================= */
+function getCoachPick(){
+  const todayDone = lsGetJSON(_PP + "today_done_ids_v1", []);
+  const todayIso = isoLocalDate();
+  // Bugün açılan/oynanmış ama tamamlanmamış olabilir, tüm undone'lardan pick
+  const undone = missions.filter(m => !done.has(m.id));
+  if(undone.length === 0) return null;
+
+  const packKeys = ["Reflex Rush","Aim Master","Focus Control","Team Duo","Indoor Compact","Beach/Park"];
+  const packStats = packKeys.map(p => ({
+    key: p,
+    doneCount: missions.filter(m => m.pack === p && done.has(m.id)).length,
+    pending: missions.filter(m => m.pack === p && !done.has(m.id))
+  })).filter(x => x.pending.length > 0);
+
+  if(packStats.length === 0) return null;
+
+  // Sırala: en az tamamlanmış pack başa, ama hiç başlanmamışlar daha öncelikli
+  packStats.sort((a,b) => {
+    // Hiç başlanmamış (0) öncelikli
+    if(a.doneCount === 0 && b.doneCount > 0) return -1;
+    if(b.doneCount === 0 && a.doneCount > 0) return 1;
+    return a.doneCount - b.doneCount;
+  });
+
+  const pickPack = packStats[0];
+  // Pack içinden Easy varsa Easy seç, yoksa medium
+  const easyPending = pickPack.pending.filter(m => m.difficulty === 1);
+  const pool = easyPending.length > 0 ? easyPending : pickPack.pending;
+  // Deterministic: günün hash'ine göre seç (her gün aynı pick)
+  const hash = hashFNV1a(todayIso + "|" + getActiveProfileId() + "|coachpick");
+  const pick = pool[hash % pool.length];
+  return { mission: pick, pack: pickPack };
+}
+
+function buildCoachReason(packStats, pick){
+  const packLabel = getPackName(pick.pack);
+  const doneCount = packStats.doneCount;
+  const total = 6;
+  if(doneCount === 0){
+    return `New pack to try: ${packLabel}!`;
+  }
+  if(doneCount === total - 1){
+    return `Finish ${packLabel} — only 1 left!`;
+  }
+  if(doneCount >= 4){
+    return `Almost there in ${packLabel}!`;
+  }
+  return `Keep building ${packLabel} skills!`;
+}
+
+function renderCoachPick(){
+  const card = document.getElementById("coachPick");
+  if(!card) return;
+  // Bugün daily zaten ne ise — coach pick'i ondan farklı seç
+  ensureDailyMission();
+  const pick = getCoachPick();
+  if(!pick || !pick.mission){
+    card.style.display = "none";
+    return;
+  }
+  // Daily ile aynı mission'sa coach pick gizle (dublication önleme)
+  if(pick.mission.id === dailyIdStored){
+    // Alternatif: ikinci en iyi adayı seç
+    const alt = (function(){
+      const undone = missions.filter(m => !done.has(m.id) && m.id !== dailyIdStored);
+      if(undone.length === 0) return null;
+      // Aynı pack'ten bir alternatif veya farklı pack'ten
+      const sameOrOther = undone.filter(m => m.difficulty === 1);
+      const pool = sameOrOther.length > 0 ? sameOrOther : undone;
+      const hash = hashFNV1a(isoLocalDate() + "|alt|" + getActiveProfileId());
+      return pool[hash % pool.length];
+    })();
+    if(!alt){ card.style.display = "none"; return; }
+    pick.mission = alt;
+    pick.pack = { key: alt.pack, doneCount: missions.filter(m => m.pack === alt.pack && done.has(m.id)).length };
+  }
+
+  const ms = pick.mission;
+  const iconEl   = document.getElementById("coachPickIcon");
+  const nameEl   = document.getElementById("coachPickName");
+  const metaEl   = document.getElementById("coachPickMeta");
+  const reasonEl = document.getElementById("coachPickReason");
+  if(iconEl) iconEl.textContent = ms.icon;
+  if(nameEl) nameEl.textContent = ms.title;
+  if(metaEl) metaEl.textContent = `${getPackName(ms.pack)} · ${ms.time} · 👥 ${ms.players}`;
+  if(reasonEl) reasonEl.textContent = buildCoachReason(pick.pack, ms);
+
+  // Click handler
+  const cardBtn = document.getElementById("coachPickCard");
+  if(cardBtn){
+    cardBtn.onclick = ()=>{
+      clickSound("click");
+      trackEvent("Coach Pick Tapped");
+      openMission(ms.id);
+    };
+  }
+  card.style.display = "";
 }
 
 /** =======================
@@ -4228,6 +4633,9 @@ function init(){
   initBottomNav();
   renderDailyChallenge();
   renderContinueHint();
+  renderCoachPick();
+  // Daily reminder — açıldığında gerekirse hatırlat
+  setTimeout(()=> { try { maybeShowDailyReminder(); } catch(_){} }, 3000);
   // Tutorial spotlight kaldırıldı — yeni today-first UI self-explanatory.
   // Var olan kullanıcılar için TUTORIAL_KEY işaretle ki bir daha çıkmasın
   try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}

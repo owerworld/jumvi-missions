@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260506-6">
+  <link rel="stylesheet" href="style.css?v=20260506-7">
   <script>
     (function(){
       try{
@@ -185,6 +185,25 @@
           <div class="dailyTitle" style="display:none">Today's Mission</div>
         </div>
 
+        <!-- Coach Leo's Smart Pick — recommendation card -->
+        <div class="coachPick" id="coachPick" style="display:none">
+          <div class="coachPickHeader">
+            <span class="coachPickAvatar">🦁</span>
+            <div class="coachPickInfo">
+              <div class="coachPickEyebrow">Coach Leo's pick</div>
+              <div class="coachPickReason" id="coachPickReason">Try something new!</div>
+            </div>
+          </div>
+          <button class="coachPickCard" id="coachPickCard" type="button">
+            <span class="coachPickIcon" id="coachPickIcon">⚡</span>
+            <span class="coachPickBody">
+              <span class="coachPickName" id="coachPickName">—</span>
+              <span class="coachPickMeta" id="coachPickMeta">—</span>
+            </span>
+            <span class="coachPickArrow">▶</span>
+          </button>
+        </div>
+
         <!-- Daily Mini-Challenge: today's goal -->
         <div class="dailyChallenge" id="dailyChallenge">
           <div class="dailyChallengeHeader">
@@ -261,6 +280,16 @@
       <!-- ============== TAB: STATS ============== -->
       <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
         <h2 class="tabHeading">📊 Your Progress</h2>
+
+        <!-- Family Insights — sadece >1 profil varsa görünür -->
+        <div class="familyInsights" id="familyInsights" style="display:none">
+          <div class="familyInsightsHeader">
+            <span class="familyInsightsIcon">👨‍👩‍👧‍👦</span>
+            <span class="familyInsightsTitle">Family Stats</span>
+          </div>
+          <div class="familyInsightsGrid" id="familyInsightsGrid"></div>
+          <div class="familyStreak" id="familyStreak">🔥 Family streak: 0 days</div>
+        </div>
 
         <!-- Empty state — yeni kullanıcı için -->
         <div class="emptyState" id="statsEmptyState" style="display:none">
@@ -365,6 +394,15 @@
 
         <!-- Quick links -->
         <div class="profileQuickLinks">
+          <!-- Daily Reminder toggle (PWA notification) -->
+          <button class="profileQuickLink profileReminderRow" id="btnDailyReminder" type="button">
+            <span class="profileQuickIcon">🔔</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Daily Play Reminder</div>
+              <div class="profileQuickSub" id="dailyReminderSub">Get a friendly nudge to play each day</div>
+            </div>
+            <span class="profileQuickToggle" id="dailyReminderToggle">OFF</span>
+          </button>
           <button class="profileQuickLink" data-go-tab="stats" type="button">
             <span class="profileQuickIcon">📊</span>
             <div class="profileQuickInfo">
@@ -766,13 +804,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260506-6" defer></script>
-<script src="data.js?v=20260506-6" defer></script>
-<script src="app.js?v=20260506-6" defer></script>
+<script src="confetti.min.js?v=20260506-7" defer></script>
+<script src="data.js?v=20260506-7" defer></script>
+<script src="app.js?v=20260506-7" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260506-6").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260506-7").catch(()=>{});
     });
   }
 </script>

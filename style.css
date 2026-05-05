@@ -5246,6 +5246,341 @@ html.theme--dark #tabProfile .tabHeading{
   border-radius: 2px;
 }
 
+/* ============================================
+ * STREAK LEVEL SYSTEM (Duolingo-inspired)
+ * 0 → ✨ Start your streak!
+ * 1-2 → normal sari
+ * 3-6 → turuncu (warm)
+ * 7-13 → kirmizi + glow (hot)
+ * 14-29 → 3x flame + intense glow (mega)
+ * 30+ → diamond + legendary
+ * ============================================ */
+.streakPill{
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap;
+  position: relative;
+  overflow: visible;
+}
+.streakIcon{
+  display: inline-flex; align-items: center;
+  font-size: 16px; line-height: 1;
+  flex-shrink: 0;
+}
+.streakLabel{
+  letter-spacing: -0.1px;
+  font-weight: 900;
+}
+
+/* Zero — solgun davet */
+.streakPill.streak-zero{
+  background: rgba(0,0,0,0.04) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+  color: var(--muted) !important;
+}
+html.theme--dark .streakPill.streak-zero{
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  color: #94a3b8 !important;
+}
+
+/* Default 1-2 — sari sarmal */
+.streakPill{
+  background: linear-gradient(135deg, #FFF8DC, #FFE680) !important;
+  color: #92400E !important;
+  border-color: #FFD600 !important;
+}
+
+/* Warm 3-6 — turuncu */
+.streakPill.streak-warm{
+  background: linear-gradient(135deg, #FFD600, #FF8C00) !important;
+  color: #fff !important;
+  border-color: #FF6A00 !important;
+  box-shadow: 0 4px 14px rgba(255,140,0,0.35) !important;
+}
+
+/* Hot 7-13 — kirmizi + glow */
+.streakPill.streak-hot{
+  background: linear-gradient(135deg, #FF6A00, #DC2626) !important;
+  color: #fff !important;
+  border-color: #DC2626 !important;
+  box-shadow: 0 4px 18px rgba(220,38,38,0.45),
+              0 0 0 2px rgba(255,106,0,0.15) !important;
+  animation: streakHotGlow 2s ease-in-out infinite;
+}
+@keyframes streakHotGlow{
+  0%, 100%{ box-shadow: 0 4px 18px rgba(220,38,38,0.45), 0 0 0 2px rgba(255,106,0,0.15); }
+  50%    { box-shadow: 0 6px 24px rgba(220,38,38,0.6),  0 0 0 4px rgba(255,106,0,0.25); }
+}
+
+/* Mega 14-29 — intense flame */
+.streakPill.streak-mega{
+  background: linear-gradient(135deg, #DC2626, #991B1B 50%, #7F1D1D) !important;
+  color: #fff !important;
+  border-color: #7F1D1D !important;
+  box-shadow: 0 6px 24px rgba(127,29,29,0.55),
+              0 0 0 3px rgba(220,38,38,0.25) !important;
+  animation: streakMegaGlow 1.5s ease-in-out infinite;
+  font-size: 14px !important;
+  padding: 8px 16px !important;
+}
+@keyframes streakMegaGlow{
+  0%, 100%{ filter: brightness(1) saturate(1); transform: translateY(0); }
+  50%    { filter: brightness(1.15) saturate(1.2); transform: translateY(-1px); }
+}
+.streakPill.streak-mega .streakIcon{ font-size: 14px; }
+
+/* Legendary 30+ — diamond crown */
+.streakPill.streak-legendary{
+  background: linear-gradient(135deg, #6366F1, #8B5CF6 33%, #EC4899 66%, #F59E0B) !important;
+  color: #fff !important;
+  border-color: #fff !important;
+  border-width: 2px !important;
+  box-shadow: 0 8px 28px rgba(139,92,246,0.5),
+              0 0 0 4px rgba(245,158,11,0.25),
+              0 0 40px rgba(236,72,153,0.3) !important;
+  animation: streakLegendary 3s linear infinite;
+  font-size: 14px !important;
+  padding: 8px 18px !important;
+  font-weight: 950 !important;
+}
+@keyframes streakLegendary{
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.streakPill.streak-legendary{ background-size: 300% 300% !important; }
+.streakPill.streak-legendary .streakIcon{ font-size: 14px; }
+
+/* Reduced motion — her seviyenin animasyonunu durdur */
+@media (prefers-reduced-motion: reduce){
+  .streakPill.streak-hot,
+  .streakPill.streak-mega,
+  .streakPill.streak-legendary{ animation: none !important; }
+}
+
+/* ============================================
+ * COACH LEO'S SMART PICK — recommendation card
+ * ============================================ */
+.coachPick{
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, rgba(255,171,0,0.10), rgba(255,106,0,0.06));
+  border: 1px solid rgba(255,171,0,0.3);
+  padding: 12px 14px;
+  box-shadow: var(--sh-soft);
+}
+html.theme--dark .coachPick{
+  background: linear-gradient(135deg, rgba(255,171,0,0.18), rgba(255,106,0,0.10));
+  border-color: rgba(255,171,0,0.35);
+}
+.coachPickHeader{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.coachPickAvatar{
+  font-size: 28px;
+  line-height: 1;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.7);
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+}
+html.theme--dark .coachPickAvatar{ background: rgba(255,255,255,0.1); }
+.coachPickInfo{ flex: 1; min-width: 0; }
+.coachPickEyebrow{
+  font-size: 10px;
+  font-weight: 900;
+  color: #B45309;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+html.theme--dark .coachPickEyebrow{ color: #FCD34D; }
+.coachPickReason{
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+  margin-top: 2px;
+}
+.coachPickCard{
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur-fast) var(--ease-smooth);
+  font-family: inherit;
+}
+.coachPickCard:active{ transform: scale(0.98); }
+html.theme--dark .coachPickCard{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+}
+.coachPickIcon{
+  font-size: 28px;
+  line-height: 1;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(79,179,255,0.12), rgba(151,215,0,0.08));
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+}
+html.theme--dark .coachPickIcon{
+  background: linear-gradient(135deg, rgba(79,179,255,0.22), rgba(151,215,0,0.14));
+}
+.coachPickBody{
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.coachPickName{
+  font-size: 15px;
+  font-weight: 950;
+  color: var(--text);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+.coachPickMeta{
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.coachPickArrow{
+  font-size: 14px;
+  color: var(--accent-blue);
+  flex-shrink: 0;
+  font-weight: 900;
+}
+
+/* ============================================
+ * FAMILY INSIGHTS — Stats tab çok profilli özet
+ * ============================================ */
+.familyInsights{
+  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, rgba(168,85,247,0.10), rgba(79,179,255,0.08));
+  border: 1px solid rgba(168,85,247,0.25);
+  padding: 14px;
+  box-shadow: var(--sh-soft);
+}
+html.theme--dark .familyInsights{
+  background: linear-gradient(135deg, rgba(168,85,247,0.18), rgba(79,179,255,0.12));
+  border-color: rgba(168,85,247,0.35);
+}
+.familyInsightsHeader{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.familyInsightsIcon{ font-size: 22px; line-height: 1; }
+.familyInsightsTitle{
+  font-size: 14px;
+  font-weight: 950;
+  color: var(--text);
+  letter-spacing: -0.2px;
+}
+.familyInsightsGrid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.familyMember{
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px;
+  background: rgba(255,255,255,0.6);
+  border-radius: var(--r-md);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+html.theme--dark .familyMember{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.08);
+}
+.familyMemberAvatar{
+  font-size: 24px;
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.5);
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+}
+html.theme--dark .familyMemberAvatar{ background: rgba(255,255,255,0.08); }
+.familyMemberInfo{ flex: 1; min-width: 0; }
+.familyMemberName{
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.1px;
+}
+.familyMemberStats{
+  display: flex; gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.familyStreak{
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+  padding: 8px 12px;
+  background: rgba(255,171,0,0.12);
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255,171,0,0.25);
+}
+.familyStreak b{ color: #FF6A00; }
+.familyStreak.dim{
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+  color: var(--muted);
+}
+html.theme--dark .familyStreak{
+  background: rgba(255,171,0,0.18);
+  border-color: rgba(255,171,0,0.3);
+}
+html.theme--dark .familyStreak.dim{
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: #94a3b8;
+}
+html.theme--dark .familyStreak b{ color: #FCD34D; }
+
+/* ============================================
+ * DAILY REMINDER TOGGLE — Profile tab
+ * ============================================ */
+.profileQuickToggle{
+  font-size: 11px;
+  font-weight: 950;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(0,0,0,0.06);
+  color: var(--muted);
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+}
+.profileQuickToggle.on{
+  background: linear-gradient(135deg, #66BB6A, #43A047);
+  color: #fff;
+  border-color: #43A047;
+  box-shadow: 0 2px 6px rgba(67,160,71,0.3);
+}
+html.theme--dark .profileQuickToggle{
+  background: rgba(255,255,255,0.08);
+  color: #94a3b8;
+}
+.profileReminderRow .profileQuickArrow{ display: none; }
+
 /* ============================================================
  * 🎨 GLOBAL POLISH PASS — ahenk + hizalama + nefes
  * Tüm bileşenler tutarlı tasarım dili paylaşır
