@@ -4382,16 +4382,88 @@ function renderMissionPath(){
     packIdx++;
   });
 
-  // Auto-scroll to "next" mission (sayfa yuklenince) — kullaniciyi gerekli yere goturur
-  setTimeout(()=>{
-    if(!prefersReducedMotion){
-      const nextNode = document.getElementById("pathNodeNext");
-      if(nextNode){
-        nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
+  // Auto-scroll to "next" mission (sadece ilk defa render edilince session basina)
+  if(!_pathScrolledOnce){
+    _pathScrolledOnce = true;
+    setTimeout(()=>{
+      if(!prefersReducedMotion){
+        const nextNode = document.getElementById("pathNodeNext");
+        if(nextNode){
+          nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
       }
-    }
-  }, 500);
+    }, 500);
+  }
+
+  // Pack header click — collapse/expand
+  container.querySelectorAll(".pathSectionHeader").forEach(h => {
+    h.addEventListener("click", ()=>{
+      const sec = h.closest(".pathSection");
+      if(!sec) return;
+      sec.classList.toggle("collapsed");
+      clickSound("click");
+      if(navigator.vibrate) try { navigator.vibrate(8); } catch(_){}
+    });
+  });
+
+  // Done node'lar arasi çizgi dolu — progress line
+  applyPathProgressLines();
+
+  // Floating FAB visibility tracker
+  setupPathFab();
 }
+
+/* Path render flag — sadece ilk renderda auto-scroll yap */
+let _pathScrolledOnce = false;
+
+/* Done node'lar arasındaki track segmentini renkle doldur */
+function applyPathProgressLines(){
+  document.querySelectorAll(".pathTrack").forEach(track => {
+    const wraps = Array.from(track.querySelectorAll(".pathNodeWrap"));
+    let lastDoneIdx = -1;
+    wraps.forEach((w, i) => {
+      const node = w.querySelector(".pathNode");
+      if(node && node.classList.contains("done")) lastDoneIdx = i;
+    });
+    // CSS variable ile track::before height kontrol et
+    if(lastDoneIdx >= 0 && wraps.length > 0){
+      const total = wraps.length;
+      // Done node'a kadarki yukseklik orani
+      const pct = ((lastDoneIdx + 0.5) / total) * 100;
+      track.style.setProperty("--progress-pct", pct + "%");
+    } else {
+      track.style.setProperty("--progress-pct", "0%");
+    }
+  });
+}
+
+/* Floating FAB — eger NEXT node ekranda goruunmuyorsa, FAB goster */
+function setupPathFab(){
+  const fab = document.getElementById("pathJumpFab");
+  if(!fab) return;
+  const nextNode = document.getElementById("pathNodeNext");
+  if(!nextNode){ fab.style.display = "none"; return; }
+
+  // IntersectionObserver — NEXT node ekranda mi kontrol
+  if(_pathFabObserver) _pathFabObserver.disconnect();
+  _pathFabObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      // NEXT goruunuyorsa FAB gizli, gorunmuyorsa goster
+      fab.classList.toggle("show", !e.isIntersecting);
+    });
+  }, { threshold: 0.4 });
+  _pathFabObserver.observe(nextNode);
+
+  fab.onclick = ()=>{
+    clickSound("click");
+    if(navigator.vibrate) try { navigator.vibrate(15); } catch(_){}
+    if(nextNode){
+      nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    trackEvent("Path FAB Jump");
+  };
+}
+let _pathFabObserver = null;
 
 /** =======================
  * Coach Leo's Smart Pick (returning users)

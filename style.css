@@ -6623,9 +6623,204 @@ html.theme--dark .pathPreviewWin{
 .pathPreviewBtn:active{ transform: scale(0.97); }
 
 /* ============================================
- * Connecting line progress (tamamlanmis kismi pack-rengiyle dolar)
- * Şu an statik gradient — gelecekte JS ile partial fill yapilabilir
+ * Connecting line progress — done node'lara kadar dolu
+ * --progress-pct CSS var JS ile hesaplanir
  * ============================================ */
+.pathTrack{ position: relative; }
+.pathTrack::after{
+  content: "";
+  position: absolute;
+  top: 30px; left: 50%;
+  width: 4px;
+  height: var(--progress-pct, 0%);
+  background: linear-gradient(180deg,
+    var(--skill-color, #4FB3FF),
+    color-mix(in srgb, var(--skill-color, #4FB3FF) 70%, #fff 20%));
+  border-radius: 4px;
+  margin-left: -2px;
+  z-index: 0;
+  transition: height 0.6s var(--ease-spring);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--skill-color, #4FB3FF) 30%, transparent);
+}
+
+/* ============================================
+ * STICKY PACK HEADER
+ * Pack icinde scroll edince header yapisik kalir
+ * ============================================ */
+.pathSectionHeader{
+  position: sticky;
+  top: calc(var(--sticky-top-offset, 60px));
+  z-index: 4;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--skill-color, #4FB3FF) 22%, var(--page-bg, #fff)) 0%,
+    color-mix(in srgb, var(--skill-color, #4FB3FF) 14%, var(--page-bg, #fff)) 100%);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  margin: -20px -14px 18px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--skill-color, #4FB3FF) 25%, transparent);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+}
+.pathSectionHeader:active{ filter: brightness(0.95); }
+
+/* Collapse indicator (chevron) */
+.pathSectionHeader::after{
+  content: "▼";
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  font-size: 11px;
+  color: var(--skill-color, #4FB3FF);
+  transition: transform 0.25s var(--ease-spring);
+  pointer-events: none;
+}
+.pathSection.collapsed .pathSectionHeader::after{
+  transform: rotate(-90deg);
+}
+.pathSection.collapsed .pathTrack,
+.pathSection.collapsed .pathPackTrophy{
+  display: none;
+}
+.pathSection.collapsed{
+  padding-bottom: 4px;
+}
+
+/* Sticky-top-offset = topbar yukseklik */
+.app-shell{ --sticky-top-offset: 60px; }
+@media (max-width: 520px){
+  .app-shell{ --sticky-top-offset: 56px; }
+}
+
+/* ============================================
+ * PACK BACKGROUND PATTERNS — her pack'e özel desen
+ * Subtle, distracting olmayan
+ * ============================================ */
+.pathSection{ position: relative; }
+.pathSection > .pathPatternBg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-repeat: repeat;
+  background-size: 60px 60px;
+}
+/* CSS-only desenler — pack key slug'una gore */
+.pathSection.pack--reflex-rush{
+  background-image:
+    radial-gradient(circle at 20% 25%, rgba(255,106,0,0.08) 0%, transparent 30%),
+    radial-gradient(circle at 80% 75%, rgba(255,171,0,0.06) 0%, transparent 30%),
+    linear-gradient(180deg,
+      color-mix(in srgb, #FF6A00 14%, transparent) 0%,
+      color-mix(in srgb, #FF6A00 6%, transparent) 100%);
+}
+.pathSection.pack--aim-master{
+  background-image:
+    radial-gradient(circle at 50% 50%, transparent 30%, rgba(79,179,255,0.06) 30%, rgba(79,179,255,0.06) 32%, transparent 32%),
+    linear-gradient(180deg,
+      color-mix(in srgb, #4FB3FF 14%, transparent) 0%,
+      color-mix(in srgb, #4FB3FF 6%, transparent) 100%);
+  background-size: auto, auto;
+}
+.pathSection.pack--focus-control{
+  background-image:
+    radial-gradient(circle at 25% 35%, rgba(34,197,94,0.07) 0%, transparent 25%),
+    radial-gradient(circle at 75% 65%, rgba(34,197,94,0.05) 0%, transparent 25%),
+    linear-gradient(180deg,
+      color-mix(in srgb, #22c55e 14%, transparent) 0%,
+      color-mix(in srgb, #22c55e 6%, transparent) 100%);
+}
+.pathSection.pack--team-duo{
+  background-image:
+    radial-gradient(circle at 30% 30%, rgba(168,85,247,0.06) 0%, transparent 25%),
+    radial-gradient(circle at 70% 70%, rgba(168,85,247,0.06) 0%, transparent 25%),
+    linear-gradient(180deg,
+      color-mix(in srgb, #A855F7 14%, transparent) 0%,
+      color-mix(in srgb, #A855F7 6%, transparent) 100%);
+}
+.pathSection.pack--indoor-compact{
+  background-image:
+    repeating-linear-gradient(45deg,
+      transparent 0, transparent 20px,
+      rgba(6,182,212,0.04) 20px, rgba(6,182,212,0.04) 21px),
+    linear-gradient(180deg,
+      color-mix(in srgb, #06B6D4 14%, transparent) 0%,
+      color-mix(in srgb, #06B6D4 6%, transparent) 100%);
+}
+.pathSection.pack--beach-park{
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255,171,0,0.12) 0%, transparent 40%),
+    linear-gradient(180deg,
+      color-mix(in srgb, #FFAB00 14%, transparent) 0%,
+      color-mix(in srgb, #FFAB00 6%, transparent) 100%);
+}
+
+/* ============================================
+ * FLOATING "JUMP TO NEXT" FAB
+ * NEXT ekrandan cikinca gorunur, tap ile goturur
+ * ============================================ */
+.pathJumpFab{
+  position: fixed;
+  right: 16px;
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 10px;
+  background: linear-gradient(135deg, #FFD600, #FFAB00);
+  color: #5C2A00;
+  border: none;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 950;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255,171,0,0.45);
+  opacity: 0;
+  transform: scale(0.6) translateX(40px);
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-spring), transform 0.3s var(--ease-spring);
+  -webkit-tap-highlight-color: transparent;
+}
+.pathJumpFab.show{
+  opacity: 1;
+  transform: scale(1) translateX(0);
+  pointer-events: auto;
+  animation: fabBounce 1.5s ease-in-out infinite;
+}
+.pathJumpFab:active{ transform: scale(0.92); }
+.pathJumpFabIcon{
+  font-size: 22px;
+  line-height: 1;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pathJumpFabText{
+  letter-spacing: -0.1px;
+}
+@keyframes fabBounce{
+  0%, 100%{ transform: translateY(0); }
+  50%   { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce){
+  .pathJumpFab.show{ animation: none; }
+}
+
+/* Browse tab disinda FAB hep gizli */
+body:not(.tab-browse) .pathJumpFab{ display: none !important; }
+@media (max-width: 380px){
+  .pathJumpFab{
+    padding: 8px 12px 8px 8px;
+    font-size: 12px;
+  }
+  .pathJumpFabIcon{ width: 26px; height: 26px; font-size: 18px; }
+}
 
 /* Mission label below node */
 .pathNodeLabel{
