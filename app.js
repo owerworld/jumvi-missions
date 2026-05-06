@@ -4156,6 +4156,92 @@ const PACK_TAGLINES = {
   "Beach/Park":     "Outdoor adventures 🏖️"
 };
 
+/* Coach Leo speech bubble — 1. pack için motive, sonrası teşvik */
+function getCoachSpeech(packIdx, mission){
+  const speeches = [
+    "Let's start here!",
+    "You got this!",
+    "Try this one!",
+    "Coach picks this 🦁",
+    "Ready, paddle pro?",
+    "Almost there!",
+    "Keep it going!",
+    "Awesome streak!",
+    "Final stretch!"
+  ];
+  if(done.size === 0) return "Let's begin!";
+  if(packIdx === 0) return speeches[1];
+  if(done.size >= 30) return speeches[8];
+  if(done.size >= 18) return speeches[7];
+  return speeches[(mission.id % speeches.length)] || "You got this!";
+}
+
+/* Long-press preview popup — node yaninda mini bilgi */
+function showPathPreview(anchorNode, mission, pack){
+  // Onceki preview varsa kaldir
+  document.querySelectorAll(".pathPreview").forEach(p => p.remove());
+  const popup = document.createElement("div");
+  popup.className = "pathPreview";
+  popup.style.setProperty("--skill-color", pack.color);
+  const isDone = done.has(mission.id);
+  const winText = mission.win || "";
+  const time = mission.time || "—";
+  const players = mission.players || "—";
+  popup.innerHTML = `
+    <div class="pathPreviewHeader">
+      <span class="pathPreviewIcon">${mission.icon}</span>
+      <div class="pathPreviewInfo">
+        <div class="pathPreviewName">${escapeHtml(mission.title)}</div>
+        <div class="pathPreviewMeta">${escapeHtml(getPackName(mission.pack))} · ${escapeHtml(time)} · 👥 ${escapeHtml(players)}</div>
+      </div>
+      ${isDone ? '<div class="pathPreviewBadge">✓</div>' : ''}
+    </div>
+    <div class="pathPreviewWin">🏆 ${escapeHtml(winText)}</div>
+    <button class="pathPreviewBtn" type="button">▶ Play this mission</button>
+  `;
+  document.body.appendChild(popup);
+
+  // Konum hesapla — node'un yakinina yerlestir
+  const r = anchorNode.getBoundingClientRect();
+  const popH = popup.offsetHeight;
+  const popW = popup.offsetWidth;
+  const vh = window.innerHeight;
+  // Default: nodun ustunde
+  let top = r.top - popH - 12;
+  let left = r.left + r.width/2 - popW/2;
+  // Eger ust kismi tasarsa, alta koy
+  if(top < 80) top = r.bottom + 12;
+  // Yatay tasma
+  if(left < 12) left = 12;
+  if(left + popW > window.innerWidth - 12) left = window.innerWidth - popW - 12;
+  popup.style.top = top + "px";
+  popup.style.left = left + "px";
+  popup.classList.add("show");
+
+  // Buton — mission ac
+  const btn = popup.querySelector(".pathPreviewBtn");
+  if(btn){
+    btn.onclick = (e)=>{
+      e.stopPropagation();
+      popup.remove();
+      clickSound("click");
+      openMission(mission.id);
+    };
+  }
+
+  // Backdrop click — kapat
+  setTimeout(()=>{
+    const closeOnTap = (e)=>{
+      if(popup.contains(e.target)) return;
+      popup.remove();
+      document.removeEventListener("touchstart", closeOnTap);
+      document.removeEventListener("mousedown", closeOnTap);
+    };
+    document.addEventListener("touchstart", closeOnTap, { passive:true });
+    document.addEventListener("mousedown", closeOnTap);
+  }, 100);
+}
+
 /* "Next" mission tespiti — kullanicinin journey'sindeki bir sonraki tamamlanmamis */
 function findNextMissionForUser(){
   // Pack siralamasi takibi: ilk tamamlanmamis pack'in ilk tamamlanmamis mission'i
@@ -4178,6 +4264,7 @@ function renderMissionPath(){
   const nextId = findNextMissionForUser();
 
   let nodeIndex = 0; // global cascade index for stagger animation
+  let packIdx = 0;
 
   SKILL_PACKS.forEach(pack => {
     const packMissions = missions.filter(m => m.pack === pack.key);
@@ -4214,7 +4301,6 @@ function renderMissionPath(){
     packMissions.forEach((m, i) => {
       const wrap = document.createElement("div");
       wrap.className = "pathNodeWrap pos-" + (i % 8);
-      // Cascade: her node sirayla 60ms gecikmeyle gorunur
       wrap.style.setProperty("--cascade-delay", `${nodeIndex * 40}ms`);
       nodeIndex++;
 
@@ -4227,28 +4313,73 @@ function renderMissionPath(){
       if(isDone) node.classList.add("done");
       if(isDaily) node.classList.add("daily");
       if(isNext && !isDone && !isDaily) node.classList.add("next");
-      // ID for auto-scroll target
       if(isNext) node.id = "pathNodeNext";
       node.setAttribute("aria-label", `${m.title} — ${pack.label}${isDone ? " (completed)" : (isNext ? " (next)" : "")}`);
       node.setAttribute("data-mission-id", m.id);
       node.innerHTML = `<span class="pathNodeIcon">${m.icon}</span>`;
+
+      // Tap = open mission
       node.onclick = () => {
         clickSound("click");
+        if(navigator.vibrate) try { navigator.vibrate(10); } catch(_){}
         trackEvent("Path Node Tapped", { mission: m.id, pack: pack.key, isDone, isNext });
         openMission(m.id);
       };
 
+      // Long-press preview (700ms)
+      let pressTimer = null;
+      let previewShown = false;
+      const startPress = (e)=>{
+        previewShown = false;
+        pressTimer = setTimeout(()=>{
+          previewShown = true;
+          showPathPreview(node, m, pack);
+          if(navigator.vibrate) try { navigator.vibrate(20); } catch(_){}
+          trackEvent("Path Preview Shown");
+        }, 700);
+      };
+      const endPress = ()=>{
+        if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+        if(previewShown){
+          // long-press oldu — tap iptal et
+          node.onclick.stopPropagation && node.onclick.stopPropagation();
+        }
+      };
+      node.addEventListener("touchstart", startPress, { passive:true });
+      node.addEventListener("touchend", endPress);
+      node.addEventListener("touchcancel", endPress);
+      node.addEventListener("mousedown", startPress);
+      node.addEventListener("mouseup", endPress);
+      node.addEventListener("mouseleave", endPress);
+
       const label = document.createElement("div");
       label.className = "pathNodeLabel";
       label.textContent = m.title;
+
+      // NEXT node — yanında 🦁 Coach Leo sticker
+      if(isNext && !isDone){
+        const coach = document.createElement("div");
+        coach.className = "pathCoachLeo";
+        coach.innerHTML = `<span class="coachLeoFace">🦁</span><span class="coachLeoBubble">${getCoachSpeech(packIdx, m)}</span>`;
+        wrap.appendChild(coach);
+      }
 
       wrap.appendChild(node);
       wrap.appendChild(label);
       track.appendChild(wrap);
     });
 
+    // Pack complete trofe — eğer all done
+    if(allDone){
+      const trophy = document.createElement("div");
+      trophy.className = "pathPackTrophy";
+      trophy.innerHTML = `<div class="pathPackTrophyIcon">🏆</div><div class="pathPackTrophyText">Pack Complete!<br><b>${escapeHtml(pack.label)} mastered</b></div>`;
+      section.appendChild(trophy);
+    }
+
     section.appendChild(track);
     container.appendChild(section);
+    packIdx++;
   });
 
   // Auto-scroll to "next" mission (sayfa yuklenince) — kullaniciyi gerekli yere goturur
