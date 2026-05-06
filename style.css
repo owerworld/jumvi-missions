@@ -6130,7 +6130,7 @@ html.theme--dark .viewToggleBtn:not(.active):active{ background: rgba(255,255,25
 /* Section per pack */
 .pathSection{
   border-radius: var(--r-xl);
-  padding: 14px 12px 16px;
+  padding: 0 12px 14px;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--skill-color, #4FB3FF) 14%, transparent) 0%,
     color-mix(in srgb, var(--skill-color, #4FB3FF) 6%, transparent) 100%);
@@ -6153,38 +6153,40 @@ html.theme--dark .viewToggleBtn:not(.active):active{ background: rgba(255,255,25
 .pathSectionHeader{
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 6px;
+  gap: 10px;
+  margin-bottom: 8px;
   position: relative;
 }
 .pathSectionIcon{
-  font-size: 28px;
+  font-size: 22px;
   line-height: 1;
-  width: 48px; height: 48px;
+  width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
   background: var(--skill-color, #4FB3FF);
   color: #fff;
   border-radius: var(--r-md);
   flex-shrink: 0;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--skill-color, #4FB3FF) 35%, transparent);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--skill-color, #4FB3FF) 35%, transparent);
 }
 .pathSectionInfo{
   flex: 1;
   min-width: 0;
 }
 .pathSectionName{
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 950;
   color: var(--text);
   letter-spacing: -0.3px;
   display: block;
+  line-height: 1.15;
 }
 .pathSectionTagline{
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--muted);
-  margin-top: 2px;
+  margin-top: 1px;
   display: block;
+  line-height: 1.2;
 }
 .pathSectionProgress{
   font-size: 13px;
@@ -6201,14 +6203,14 @@ html.theme--dark .pathSectionProgress{ background: rgba(255,255,255,0.1); }
 .pathTrack{
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   position: relative;
-  padding: 4px 0 2px;
+  padding: 0;
 }
 .pathTrack::before{
   content: "";
   position: absolute;
-  top: 20px; bottom: 20px; left: 50%;
+  top: 12px; bottom: 12px; left: 50%;
   width: 4px;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--skill-color, #4FB3FF) 25%, transparent),
@@ -6371,8 +6373,8 @@ html.theme--dark .pathSectionProgress{ background: rgba(255,255,255,0.1); }
 
 /* Section mini progress bar — header alti */
 .pathSectionMiniBar{
-  margin-top: 6px;
-  height: 5px;
+  margin-top: 4px;
+  height: 4px;
   background: rgba(255,255,255,0.5);
   border-radius: var(--r-pill);
   overflow: hidden;
@@ -6630,7 +6632,7 @@ html.theme--dark .pathPreviewWin{
 .pathTrack::after{
   content: "";
   position: absolute;
-  top: 20px; left: 50%;
+  top: 12px; left: 50%;
   width: 4px;
   height: var(--progress-pct, 0%);
   background: linear-gradient(180deg,
@@ -6656,8 +6658,8 @@ html.theme--dark .pathPreviewWin{
     color-mix(in srgb, var(--skill-color, #4FB3FF) 14%, var(--page-bg, #fff)) 100%);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  margin: -14px -12px 8px;
-  padding: 12px 14px 10px;
+  margin: 0 -12px 8px;
+  padding: 10px 14px 8px;
   border-bottom: 1px solid color-mix(in srgb, var(--skill-color, #4FB3FF) 25%, transparent);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
