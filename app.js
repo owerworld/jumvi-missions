@@ -4156,6 +4156,17 @@ const PACK_TAGLINES = {
   "Beach/Park":     "Outdoor adventures 🏖️"
 };
 
+/* "Next" mission tespiti — kullanicinin journey'sindeki bir sonraki tamamlanmamis */
+function findNextMissionForUser(){
+  // Pack siralamasi takibi: ilk tamamlanmamis pack'in ilk tamamlanmamis mission'i
+  for(const pack of SKILL_PACKS){
+    const packMissions = missions.filter(m => m.pack === pack.key);
+    const firstUndone = packMissions.find(m => !done.has(m.id));
+    if(firstUndone) return firstUndone.id;
+  }
+  return null;
+}
+
 function renderMissionPath(){
   const container = document.getElementById("missionPath");
   if(!container || typeof SKILL_PACKS === "undefined") return;
@@ -4164,6 +4175,9 @@ function renderMissionPath(){
   // Bugünün daily mission'ı (özel highlight için)
   ensureDailyMission();
   const dailyId = dailyIdStored;
+  const nextId = findNextMissionForUser();
+
+  let nodeIndex = 0; // global cascade index for stagger animation
 
   SKILL_PACKS.forEach(pack => {
     const packMissions = missions.filter(m => m.pack === pack.key);
@@ -4171,6 +4185,7 @@ function renderMissionPath(){
     const doneCount = packMissions.filter(m => done.has(m.id)).length;
     const total = packMissions.length;
     const allDone = doneCount >= total;
+    const pct = Math.round((doneCount/total)*100);
 
     const section = document.createElement("div");
     section.className = "pathSection" + (allDone ? " allDone" : "");
@@ -4178,7 +4193,7 @@ function renderMissionPath(){
     const slug = "pack--" + pack.key.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
     section.classList.add(slug);
 
-    // Section header
+    // Section header — progress bar dahil
     const header = document.createElement("div");
     header.className = "pathSectionHeader";
     header.innerHTML = `
@@ -4186,6 +4201,7 @@ function renderMissionPath(){
       <div class="pathSectionInfo">
         <span class="pathSectionName">${escapeHtml(pack.label)}</span>
         <span class="pathSectionTagline">${escapeHtml(PACK_TAGLINES[pack.key] || "")}</span>
+        <div class="pathSectionMiniBar"><div class="pathSectionMiniFill" style="width:${pct}%"></div></div>
       </div>
       <div class="pathSectionProgress">${doneCount}/${total}</div>
     `;
@@ -4198,17 +4214,27 @@ function renderMissionPath(){
     packMissions.forEach((m, i) => {
       const wrap = document.createElement("div");
       wrap.className = "pathNodeWrap pos-" + (i % 8);
+      // Cascade: her node sirayla 60ms gecikmeyle gorunur
+      wrap.style.setProperty("--cascade-delay", `${nodeIndex * 40}ms`);
+      nodeIndex++;
 
       const node = document.createElement("button");
       node.type = "button";
       node.className = "pathNode";
-      if(done.has(m.id)) node.classList.add("done");
-      if(m.id === dailyId) node.classList.add("daily");
-      node.setAttribute("aria-label", `${m.title} — ${pack.label}`);
+      const isDone = done.has(m.id);
+      const isDaily = m.id === dailyId;
+      const isNext = m.id === nextId;
+      if(isDone) node.classList.add("done");
+      if(isDaily) node.classList.add("daily");
+      if(isNext && !isDone && !isDaily) node.classList.add("next");
+      // ID for auto-scroll target
+      if(isNext) node.id = "pathNodeNext";
+      node.setAttribute("aria-label", `${m.title} — ${pack.label}${isDone ? " (completed)" : (isNext ? " (next)" : "")}`);
+      node.setAttribute("data-mission-id", m.id);
       node.innerHTML = `<span class="pathNodeIcon">${m.icon}</span>`;
       node.onclick = () => {
         clickSound("click");
-        trackEvent("Path Node Tapped", { mission: m.id, pack: pack.key });
+        trackEvent("Path Node Tapped", { mission: m.id, pack: pack.key, isDone, isNext });
         openMission(m.id);
       };
 
@@ -4224,6 +4250,16 @@ function renderMissionPath(){
     section.appendChild(track);
     container.appendChild(section);
   });
+
+  // Auto-scroll to "next" mission (sayfa yuklenince) — kullaniciyi gerekli yere goturur
+  setTimeout(()=>{
+    if(!prefersReducedMotion){
+      const nextNode = document.getElementById("pathNodeNext");
+      if(nextNode){
+        nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, 500);
 }
 
 /** =======================
