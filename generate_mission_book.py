@@ -347,7 +347,7 @@ def draw_cover(c, pw, ph):
     # website
     c.setFillColor(BRAND_BLUE)
     c.setFont("Helvetica-Bold", 12)
-    c.drawCentredString(pw / 2, 24, "jumvigames.com")
+    c.drawCentredString(pw / 2, 24, "qr.jumvi.co")
 
 
 # ── Safety page drawing ───────────────────────────────────────────────────────
@@ -606,14 +606,14 @@ def draw_mission_card(c, x, y, w, mission):
 def draw_page_number(c, page_num):
     c.setFont("Helvetica", 8)
     c.setFillColor(colors.HexColor("#9CA3AF"))
-    c.drawCentredString(PAGE_W / 2, 0.3 * inch, f"jumvigames.com  |  Page {page_num}")
+    c.drawCentredString(PAGE_W / 2, 0.3 * inch, f"qr.jumvi.co  |  Page {page_num}")
 
 
 # ── Main PDF builder ──────────────────────────────────────────────────────────
 def build_pdf():
     c = pdfcanvas.Canvas(OUTPUT_PATH, pagesize=LETTER)
     c.setTitle("JUMVI Mission Book")
-    c.setAuthor("jumvigames.com")
+    c.setAuthor("qr.jumvi.co")
     c.setSubject("36 Fun Tossing & Catching Games for Ages 3-8")
 
     # ── Page 1: Cover ────────────────────────────────────────────────────────

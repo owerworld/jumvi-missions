@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260507-3">
+  <link rel="stylesheet" href="style.css?v=20260507-4">
   <script>
     (function(){
       try{
@@ -305,15 +305,15 @@
           <div class="dashStats" id="dashStats"></div>
           <div class="dashBars" id="dashBars"></div>
           <div class="dashFooter">
-            <div class="dashPrintWrap">
-              <button class="btn dashPrintBtn" id="btnDashPrint" type="button">
-                <span class="dashPrintIcon">🖨️</span>
-                <span class="dashPrintLabel">
-                  <span class="dashPrintMain">Print Weekly Report</span>
-                  <span class="dashPrintSub">Print or save as PDF</span>
-                </span>
-              </button>
+            <div class="dashShareWrap">
+              <div class="dashShareTitle">Share progress with family 🎉</div>
+              <div class="dashShareBtns">
+                <button class="dashShareBtn dashShareWA" id="btnDashShareWA" type="button">💬 WhatsApp</button>
+                <button class="dashShareBtn dashShareCopy" id="btnDashShareCopy" type="button">🔗 Copy</button>
+              </div>
             </div>
+            <!-- Eski print buton stub — JS uyumlulugu icin -->
+            <button id="btnDashPrint" type="button" style="display:none" aria-hidden="true"></button>
           </div>
         </div>
 
@@ -779,13 +779,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260507-3" defer></script>
-<script src="data.js?v=20260507-3" defer></script>
-<script src="app.js?v=20260507-3" defer></script>
+<script src="confetti.min.js?v=20260507-4" defer></script>
+<script src="data.js?v=20260507-4" defer></script>
+<script src="app.js?v=20260507-4" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260507-3").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260507-4").catch(()=>{});
     });
   }
 </script>

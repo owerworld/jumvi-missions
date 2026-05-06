@@ -3061,6 +3061,56 @@ if(btnSeasonalOutdoor){
 }
 
 // Parent Dashboard — Print Report
+/* Stats tab — Aile ile paylas (eski Print Weekly Report yerine) */
+function buildFamilyShareText(){
+  const ap = (typeof getActiveProfile === "function") ? getActiveProfile() : null;
+  const name = ap && ap.name && ap.name !== "Player" ? ap.name : "Our paddle pro";
+  const total = done.size;
+  const sc = streakCount || 0;
+  // Top skill — en cok tamamlanan pack
+  let topPackLabel = null;
+  let topCount = 0;
+  if(typeof SKILL_PACKS !== "undefined"){
+    SKILL_PACKS.forEach(p => {
+      const n = missions.filter(m => m.pack === p.key && done.has(m.id)).length;
+      if(n > topCount){ topCount = n; topPackLabel = p.label; }
+    });
+  }
+  let text = `🦁 ${name}'s JUMVI progress this week:\n`;
+  text += `✅ ${total}/36 missions completed\n`;
+  if(sc > 0) text += `🔥 ${sc}-day streak\n`;
+  if(topPackLabel) text += `🌟 Top skill: ${topPackLabel}\n`;
+  text += `\nPlay along: https://qr.jumvi.co`;
+  return text;
+}
+
+const btnDashShareWA = document.getElementById("btnDashShareWA");
+if(btnDashShareWA){
+  btnDashShareWA.onclick = ()=>{
+    clickSound("click");
+    const text = buildFamilyShareText();
+    window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
+    trackEvent("Dashboard Share WhatsApp");
+  };
+}
+const btnDashShareCopy = document.getElementById("btnDashShareCopy");
+if(btnDashShareCopy){
+  btnDashShareCopy.onclick = async ()=>{
+    clickSound("click");
+    const text = buildFamilyShareText();
+    try{
+      if(navigator.share){
+        await navigator.share({ title: "JUMVI Progress", text, url: "https://qr.jumvi.co" });
+        trackEvent("Dashboard Share Native");
+      } else {
+        await navigator.clipboard.writeText(text);
+        showToast("📋 Copied! Share with family.");
+        trackEvent("Dashboard Share Copy");
+      }
+    }catch(_){}
+  };
+}
+
 const btnDashPrint = document.getElementById("btnDashPrint");
 if(btnDashPrint){
   btnDashPrint.onclick = ()=>{

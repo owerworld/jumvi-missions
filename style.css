@@ -1546,9 +1546,56 @@ html.theme--dark .dashStats{
   border-color: rgba(255,255,255,0.08);
 }
 .dashFooter{
-  margin-top:10px;
-  display:flex;
-  justify-content:flex-end;
+  margin-top: 14px;
+  display: block;
+}
+
+/* Share with family — Print Weekly Report yerine */
+.dashShareWrap{
+  background: linear-gradient(135deg, rgba(79,179,255,0.08), rgba(151,215,0,0.06));
+  border: 1px solid rgba(79,179,255,0.18);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+html.theme--dark .dashShareWrap{
+  background: linear-gradient(135deg, rgba(79,179,255,0.14), rgba(151,215,0,0.08));
+  border-color: rgba(79,179,255,0.25);
+}
+.dashShareTitle{
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.1px;
+}
+.dashShareBtns{
+  display: flex;
+  gap: 8px;
+}
+.dashShareBtn{
+  flex: 1;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  border: none;
+  letter-spacing: -0.1px;
+  transition: transform 0.12s ease;
+}
+.dashShareBtn:active{ transform: scale(0.97); }
+.dashShareWA{
+  background: #25D366;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(37,211,102,0.25);
+}
+.dashShareCopy{
+  background: rgba(79,179,255,0.15);
+  color: #1976D2;
+}
+html.theme--dark .dashShareCopy{
+  background: rgba(96,165,250,0.18);
+  color: #93C5FD;
 }
 .dashPrintWrap{ width:100%; }
 .dashPrintBtn{
