@@ -6128,202 +6128,299 @@ html.theme--dark .viewToggleBtn:not(.active):active{ background: rgba(255,255,25
 }
 
 /* ============================================================
- * MISSION PATH — SADELEŞTİRİLMİŞ GRID (3 kolon)
- * Karmaşık zigzag/sticky/animasyon yok. Pack section + grid + tap.
+ * MISSION PATH — Vertical Linear (Duolingo "the path" style)
+ * Cross-browser uyumlu (iPhone SE → Pro Max, Android 8+)
+ * Standart CSS, no color-mix, no :has, no experimental.
  * ============================================================ */
+
+/* Pack section card */
 .pathSection{
+  --pack-color: #4FB3FF;
   border-radius: 18px;
-  padding: 14px;
-  background: var(--glass);
-  border: 1px solid color-mix(in srgb, var(--skill-color, #4FB3FF) 30%, var(--glass-border));
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 16px 14px 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 html.theme--dark .pathSection{
-  background: rgba(255,255,255,0.04);
-  border-color: color-mix(in srgb, var(--skill-color, #4FB3FF) 35%, rgba(255,255,255,0.08));
-}
-.pathSection.allDone{
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--skill-color, #4FB3FF) 12%, var(--glass)),
-    color-mix(in srgb, #66BB6A 8%, var(--glass)));
-  border-color: #66BB6A;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
+/* Pack-specific accent borders (solid colors, no color-mix) */
+.pathSection.pack--reflex-rush    { --pack-color: #FF6A00; border-color: rgba(255, 106, 0, 0.30); }
+.pathSection.pack--aim-master     { --pack-color: #4FB3FF; border-color: rgba(79, 179, 255, 0.30); }
+.pathSection.pack--focus-control  { --pack-color: #22c55e; border-color: rgba(34, 197, 94, 0.30); }
+.pathSection.pack--team-duo       { --pack-color: #A855F7; border-color: rgba(168, 85, 247, 0.30); }
+.pathSection.pack--indoor-compact { --pack-color: #06B6D4; border-color: rgba(6, 182, 212, 0.30); }
+.pathSection.pack--beach-park     { --pack-color: #FFAB00; border-color: rgba(255, 171, 0, 0.30); }
+
+.pathSection.allDone{
+  border-color: #43A047;
+  background: rgba(76, 175, 80, 0.08);
+}
+
+/* Section header */
 .pathSectionHeader{
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 .pathSectionIcon{
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--skill-color, #4FB3FF);
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pack-color);
   color: #fff;
   border-radius: 12px;
-  font-size: 18px;
+  font-size: 22px;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--skill-color, #4FB3FF) 30%, transparent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.pathSectionInfo{
+  flex: 1;
+  min-width: 0;
 }
 .pathSectionName{
-  flex: 1;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 950;
   color: var(--text);
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.pathSectionMeta{
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 2px;
+}
 .pathSectionProgress{
   font-size: 13px;
   font-weight: 950;
-  color: var(--skill-color, #4FB3FF);
-  background: color-mix(in srgb, var(--skill-color, #4FB3FF) 12%, transparent);
-  padding: 4px 10px;
+  color: var(--pack-color);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 5px 12px;
   border-radius: 999px;
   flex-shrink: 0;
+  border: 1.5px solid currentColor;
+}
+html.theme--dark .pathSectionProgress{
+  background: rgba(255, 255, 255, 0.08);
 }
 .pathSection.allDone .pathSectionProgress{
-  background: #66BB6A;
+  background: #43A047;
   color: #fff;
+  border-color: #43A047;
 }
 
-/* 3-column grid */
-.pathGrid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-@media (max-width: 360px){
-  .pathGrid{ gap: 8px; }
-}
-
-/* Mission tile */
-.pathTile{
+/* Vertical step container */
+.pathSteps{
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 12px 6px 10px;
-  background: rgba(255,255,255,0.5);
-  border: 2px solid color-mix(in srgb, var(--skill-color, #4FB3FF) 20%, transparent);
-  border-radius: 14px;
-  cursor: pointer;
-  font-family: inherit;
-  position: relative;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
 }
-html.theme--dark .pathTile{
-  background: rgba(255,255,255,0.05);
-  border-color: color-mix(in srgb, var(--skill-color, #4FB3FF) 25%, rgba(255,255,255,0.06));
-}
-.pathTile:active{ transform: scale(0.96); }
 
-.pathTileIcon{
-  font-size: 28px;
-  line-height: 1;
-  display: block;
+/* Each step (node + label + line) */
+.pathStep{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 0 14px;
+  width: 100%;
+  max-width: 100%;
 }
-.pathTileLabel{
-  font-size: 10px;
+.pathStep.hasLineAbove{
+  padding-top: 14px;
+}
+/* Connecting line above (between this and previous step) */
+.pathStep.hasLineAbove::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 14px;
+  margin-left: -2px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+}
+html.theme--dark .pathStep.hasLineAbove::before{
+  background: rgba(255, 255, 255, 0.15);
+}
+/* If previous step is done, line is solid colored */
+.pathStep.hasLineAbove.lineSolid::before{
+  background: var(--pack-color);
+  opacity: 0.7;
+}
+
+/* Mission node — circular button */
+.pathStepNode{
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 4px solid var(--pack-color);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  font-family: inherit;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+html.theme--dark .pathStepNode{
+  background: #15233a;
+}
+.pathStepNode:active{
+  transform: scale(0.94);
+}
+.pathStepIcon{
+  font-size: 30px;
+  line-height: 1;
+}
+
+/* Mission label below node */
+.pathStepLabel{
+  margin-top: 8px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--text);
   text-align: center;
   line-height: 1.25;
+  max-width: 140px;
   letter-spacing: -0.1px;
 }
 
-/* Done state */
-.pathTile.done{
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--skill-color, #4FB3FF) 18%, transparent),
-    color-mix(in srgb, var(--skill-color, #4FB3FF) 8%, transparent));
-  border-color: var(--skill-color, #4FB3FF);
+/* DONE — pack color filled */
+.pathStep.done .pathStepNode{
+  background: var(--pack-color);
+  border-color: var(--pack-color);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
-.pathTile.done::after{
+.pathStep.done .pathStepNode::after{
   content: "✓";
   position: absolute;
-  top: 4px; right: 4px;
-  width: 18px; height: 18px;
+  top: -4px;
+  right: -4px;
+  width: 24px;
+  height: 24px;
   background: #43A047;
   color: #fff;
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 950;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 4px rgba(67,160,71,0.3);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(67, 160, 71, 0.4);
+  line-height: 1;
 }
-html.theme--dark .pathTile.done::after{ border-color: #0f1d2e; }
-
-/* Daily — pulsing border */
-.pathTile.daily{
-  border-color: #FF6A00;
-  border-width: 2.5px;
-  animation: pathTileDaily 1.6s ease-in-out infinite;
-}
-.pathTile.daily::before{
-  content: "📅 TODAY";
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 8px;
-  font-weight: 950;
-  letter-spacing: 0.5px;
-  color: #fff;
-  background: linear-gradient(135deg, #FF6A00, #DC2626);
-  padding: 2px 6px;
-  border-radius: 999px;
-  white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(220,38,38,0.3);
-  z-index: 2;
-}
-@keyframes pathTileDaily{
-  0%, 100%{ box-shadow: 0 0 0 0 rgba(255,106,0,0.4); }
-  50%   { box-shadow: 0 0 0 6px rgba(255,106,0,0); }
+html.theme--dark .pathStep.done .pathStepNode::after{
+  border-color: #15233a;
 }
 
-/* Next — gentle highlight (yumuşak vurgu) */
-.pathTile.next{
-  border-color: #FFAB00;
-  background: linear-gradient(135deg, rgba(255,214,0,0.18), rgba(255,171,0,0.10));
+/* NEXT — Coach Leo + glow ring */
+.pathStep.next .pathStepNode{
+  border-width: 5px;
+  box-shadow: 0 0 0 6px rgba(255, 171, 0, 0.20),
+              0 4px 14px rgba(0, 0, 0, 0.10);
+  animation: pathStepNextPulse 2s ease-in-out infinite;
 }
-.pathTile.next::before{
+.pathStep.next::after{
   content: "🦁 NEXT";
   position: absolute;
-  top: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 8px;
+  top: 22px;
+  right: calc(50% - 70px);
+  background: #FFAB00;
+  color: #fff;
+  font-size: 10px;
   font-weight: 950;
   letter-spacing: 0.5px;
-  color: #5C2A00;
-  background: linear-gradient(135deg, #FFD600, #FFAB00);
-  padding: 2px 6px;
+  padding: 4px 10px 4px 8px;
   border-radius: 999px;
   white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(255,171,0,0.3);
+  box-shadow: 0 2px 8px rgba(255, 171, 0, 0.40);
   z-index: 2;
+  pointer-events: none;
+}
+@keyframes pathStepNextPulse{
+  0%, 100%{
+    box-shadow: 0 0 0 6px rgba(255, 171, 0, 0.20),
+                0 4px 14px rgba(0, 0, 0, 0.10);
+  }
+  50%{
+    box-shadow: 0 0 0 12px rgba(255, 171, 0, 0.05),
+                0 4px 14px rgba(0, 0, 0, 0.10);
+  }
 }
 
-/* Just-done celebration (kompakt) */
-.pathTile.justDone{
-  animation: pathTileJustDone 1s ease-out;
+/* TODAY — daily mission pill */
+.pathStep.daily::after{
+  content: "📅 TODAY";
+  position: absolute;
+  top: 22px;
+  left: calc(50% - 70px);
+  right: auto;
+  background: #FF6A00;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(255, 106, 0, 0.40);
+  z-index: 2;
+  pointer-events: none;
 }
-@keyframes pathTileJustDone{
-  0%   { transform: scale(1); box-shadow: 0 0 0 0 color-mix(in srgb, var(--skill-color, #4FB3FF) 40%, transparent); }
-  40%  { transform: scale(1.08); box-shadow: 0 0 0 14px transparent; }
-  100% { transform: scale(1); box-shadow: 0 0 0 20px transparent; }
+.pathStep.daily.next::after{
+  /* Daily kazanir, NEXT pill gizli */
+  content: "📅 TODAY";
+  background: #FF6A00;
+  right: auto;
+  left: calc(50% - 70px);
 }
 
+/* JUST-DONE celebration */
+.pathStep.justDone .pathStepNode{
+  animation: pathStepJustDone 1s ease-out;
+}
+@keyframes pathStepJustDone{
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.15); box-shadow: 0 0 0 16px rgba(67, 160, 71, 0); }
+  60%  { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .pathTile.daily,
-  .pathTile.justDone{ animation: none !important; }
+  .pathStep.next .pathStepNode,
+  .pathStep.justDone .pathStepNode{
+    animation: none;
+  }
+}
+
+/* Mobile küçük ekran (iPhone SE 320px) */
+@media (max-width: 360px){
+  .pathSection{ padding: 12px 10px 16px; }
+  .pathStepNode{ width: 64px; height: 64px; border-width: 3.5px; }
+  .pathStepIcon{ font-size: 26px; }
+  .pathSectionIcon{ width: 38px; height: 38px; font-size: 20px; }
+  .pathSectionName{ font-size: 14px; }
+  .pathStepLabel{ font-size: 11px; max-width: 120px; }
+  .pathStep.next::after,
+  .pathStep.daily::after{ font-size: 9px; padding: 3px 8px; }
 }
 
 /* ============================================================

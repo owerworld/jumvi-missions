@@ -4360,6 +4360,11 @@ function findNextMissionForUser(){
   return null;
 }
 
+/* ============================================
+ * Mission Path — Vertical Linear (Duolingo "the path" style, 2026)
+ * iPhone SE → iPhone Pro Max + tüm Android'lerde sorunsuz çalışır
+ * Standart CSS only (no color-mix, no :has, no experimental)
+ * ============================================ */
 function renderMissionPath(){
   const container = document.getElementById("missionPath");
   if(!container || typeof SKILL_PACKS === "undefined") return;
@@ -4377,66 +4382,92 @@ function renderMissionPath(){
     const allDone = doneCount >= total;
 
     const section = document.createElement("div");
-    section.className = "pathSection" + (allDone ? " allDone" : "");
-    section.style.setProperty("--skill-color", pack.color);
+    section.className = "pathSection";
+    if(allDone) section.classList.add("allDone");
+    section.style.setProperty("--pack-color", pack.color);
+    const slug = "pack--" + pack.key.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    section.classList.add(slug);
 
-    // Sade header
+    // Pack header
     const header = document.createElement("div");
     header.className = "pathSectionHeader";
-    header.innerHTML = `
-      <div class="pathSectionIcon">${pack.icon}</div>
-      <div class="pathSectionName">${escapeHtml(pack.label)}</div>
-      <div class="pathSectionProgress">${doneCount}/${total}</div>
-    `;
+    header.innerHTML =
+      '<div class="pathSectionIcon">' + pack.icon + '</div>' +
+      '<div class="pathSectionInfo">' +
+        '<div class="pathSectionName">' + escapeHtml(pack.label) + '</div>' +
+        '<div class="pathSectionMeta">Pack ' + (SKILL_PACKS.indexOf(pack)+1) + ' of ' + SKILL_PACKS.length + ' · ' + doneCount + '/' + total + '</div>' +
+      '</div>' +
+      '<div class="pathSectionProgress">' + doneCount + '/' + total + '</div>';
     section.appendChild(header);
 
-    // Mission grid (3 column)
-    const grid = document.createElement("div");
-    grid.className = "pathGrid";
-    packMissions.forEach((m) => {
-      const wrap = document.createElement("button");
-      wrap.type = "button";
-      wrap.className = "pathTile";
+    // Vertical steps container
+    const track = document.createElement("div");
+    track.className = "pathSteps";
+
+    packMissions.forEach((m, i) => {
       const isDone = done.has(m.id);
       const isDaily = m.id === dailyId;
       const isNext = m.id === nextId;
-      if(isDone) wrap.classList.add("done");
-      if(isDaily) wrap.classList.add("daily");
-      if(isNext && !isDone && !isDaily) wrap.classList.add("next");
-      if(isNext) wrap.id = "pathNodeNext";
-      wrap.setAttribute("aria-label", `${m.title} — ${pack.label}${isDone ? " (completed)" : ""}`);
-      wrap.setAttribute("data-mission-id", m.id);
-      wrap.innerHTML = `
-        <span class="pathTileIcon">${m.icon}</span>
-        <span class="pathTileLabel">${escapeHtml(m.title)}</span>
-      `;
-      wrap.onclick = () => {
-        clickSound(isDone ? "success" : "click");
-        if(navigator.vibrate) try { navigator.vibrate(8); } catch(_){}
-        trackEvent("Path Tile Tapped", { mission: m.id, pack: pack.key, isDone });
+
+      const step = document.createElement("div");
+      step.className = "pathStep";
+      if(i > 0){
+        step.classList.add("hasLineAbove");
+        if(packMissions[i-1] && done.has(packMissions[i-1].id)){
+          step.classList.add("lineSolid");
+        }
+      }
+      if(isDone) step.classList.add("done");
+      if(isNext && !isDone) step.classList.add("next");
+      if(isDaily && !isDone) step.classList.add("daily");
+
+      const node = document.createElement("button");
+      node.type = "button";
+      node.className = "pathStepNode";
+      node.setAttribute("aria-label", m.title + " — " + pack.label + (isDone ? " (completed)" : ""));
+      node.setAttribute("data-mission-id", m.id);
+      if(isNext) node.id = "pathNodeNext";
+      node.innerHTML = '<span class="pathStepIcon">' + m.icon + '</span>';
+
+      node.addEventListener("click", function(){
+        try{ clickSound(isDone ? "success" : "click"); }catch(_){}
+        if(navigator.vibrate){ try{ navigator.vibrate(8); }catch(_){} }
+        trackEvent("Path Step Tapped", { mission: m.id, pack: pack.key, isDone: isDone });
         openMission(m.id);
-      };
+      });
+
+      const label = document.createElement("div");
+      label.className = "pathStepLabel";
+      label.textContent = m.title;
+
+      step.appendChild(node);
+      step.appendChild(label);
 
       // Just-done celebration
       if(window._justDoneMissionId === m.id){
-        wrap.classList.add("justDone");
-        setTimeout(()=> wrap.classList.remove("justDone"), 1500);
+        step.classList.add("justDone");
+        setTimeout(function(){ step.classList.remove("justDone"); }, 1500);
         window._justDoneMissionId = null;
       }
 
-      grid.appendChild(wrap);
+      track.appendChild(step);
     });
-    section.appendChild(grid);
+
+    section.appendChild(track);
     container.appendChild(section);
   });
 
   // Sadece ilk renderda NEXT'e auto-scroll
   if(!_pathScrolledOnce){
     _pathScrolledOnce = true;
-    setTimeout(()=>{
+    setTimeout(function(){
       if(!prefersReducedMotion){
-        const nextNode = document.getElementById("pathNodeNext");
-        if(nextNode) nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
+        var nextNode = document.getElementById("pathNodeNext");
+        if(nextNode){
+          try{ nextNode.scrollIntoView({ behavior: "smooth", block: "center" }); }catch(_){
+            try{ nextNode.scrollIntoView(); }catch(_){}
+          }
+        }
       }
     }, 400);
   }
