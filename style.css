@@ -6123,14 +6123,14 @@ html.theme--dark .viewToggleBtn:not(.active):active{ background: rgba(255,255,25
 .missionPath{
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding: 8px 0 32px;
+  gap: 16px;
+  padding: 4px 0 24px;
 }
 
 /* Section per pack */
 .pathSection{
   border-radius: var(--r-xl);
-  padding: 20px 14px 28px;
+  padding: 14px 12px 16px;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--skill-color, #4FB3FF) 14%, transparent) 0%,
     color-mix(in srgb, var(--skill-color, #4FB3FF) 6%, transparent) 100%);
@@ -6154,7 +6154,7 @@ html.theme--dark .viewToggleBtn:not(.active):active{ background: rgba(255,255,25
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 6px;
   position: relative;
 }
 .pathSectionIcon{
@@ -6201,14 +6201,14 @@ html.theme--dark .pathSectionProgress{ background: rgba(255,255,255,0.1); }
 .pathTrack{
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   position: relative;
-  padding: 8px 0;
+  padding: 4px 0 2px;
 }
 .pathTrack::before{
   content: "";
   position: absolute;
-  top: 30px; bottom: 30px; left: 50%;
+  top: 20px; bottom: 20px; left: 50%;
   width: 4px;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--skill-color, #4FB3FF) 25%, transparent),
@@ -6630,7 +6630,7 @@ html.theme--dark .pathPreviewWin{
 .pathTrack::after{
   content: "";
   position: absolute;
-  top: 30px; left: 50%;
+  top: 20px; left: 50%;
   width: 4px;
   height: var(--progress-pct, 0%);
   background: linear-gradient(180deg,
@@ -6656,8 +6656,8 @@ html.theme--dark .pathPreviewWin{
     color-mix(in srgb, var(--skill-color, #4FB3FF) 14%, var(--page-bg, #fff)) 100%);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
-  margin: -20px -14px 18px;
-  padding: 14px 14px 12px;
+  margin: -14px -12px 8px;
+  padding: 12px 14px 10px;
   border-bottom: 1px solid color-mix(in srgb, var(--skill-color, #4FB3FF) 25%, transparent);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
