@@ -3733,6 +3733,12 @@ function switchTab(tabName){
       if(typeof updateProgress === "function") updateProgress();
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
     }
+    if(tabName === "browse") {
+      // Path view aktifse yenile (done state vs.)
+      if(getActiveBrowseView() === "path" && typeof renderMissionPath === "function"){
+        renderMissionPath();
+      }
+    }
   } catch(e) {
     console.warn("Tab render error:", e);
   }
@@ -4026,6 +4032,18 @@ function initBottomNav(){
     });
   }
 
+  // View mode toggle (Browse tab — List/Path)
+  document.querySelectorAll(".viewToggleBtn").forEach(b => {
+    b.addEventListener("click", ()=>{
+      clickSound("click");
+      const mode = b.dataset.view;
+      setActiveBrowseView(mode);
+      trackEvent("Browse View Changed", { mode });
+    });
+  });
+  // Sayfa yuklenince kayitli mode'u uygula
+  applyBrowseView();
+
   // Search toggle (Browse tab)
   const searchToggle = document.getElementById("searchToggleBtn");
   const searchBox = document.getElementById("searchBox");
@@ -4118,6 +4136,130 @@ function renderContinueHint(){
   // Sadece bugün oynanmamışsa göster (eğer bugün zaten oynadıysa, "continue" değil)
   hint.style.display = "";
   if(nameEl) nameEl.textContent = `${ms.icon} ${ms.title}`;
+}
+
+/** =======================
+ * Mission Path Tree (Duolingo-inspired)
+ * Browse tab'da alternatif gorunum — pack-by-pack zigzag
+ * ======================= */
+const VIEW_MODE_KEY = "jumvi_browse_view_mode_v1"; // 'list' or 'path'
+
+function getActiveBrowseView(){
+  return lsGet(VIEW_MODE_KEY, "list");
+}
+
+function setActiveBrowseView(mode){
+  if(mode !== "list" && mode !== "path") mode = "list";
+  lsSet(VIEW_MODE_KEY, mode);
+  applyBrowseView();
+}
+
+function applyBrowseView(){
+  const mode = getActiveBrowseView();
+  const pathEl = document.getElementById("missionPath");
+  const listEl = document.getElementById("list");
+  const controls = document.querySelector("#tabBrowse .controls");
+  const filters = document.getElementById("filters");
+  const filterGroups = document.getElementById("filterGroups");
+
+  // Toggle button states
+  document.querySelectorAll(".viewToggleBtn").forEach(b => {
+    b.classList.toggle("active", b.dataset.view === mode);
+  });
+
+  if(mode === "path"){
+    if(pathEl) pathEl.style.display = "";
+    if(listEl) listEl.style.display = "none";
+    if(controls) controls.style.display = "none";
+    if(filters) filters.style.display = "none";
+    if(filterGroups) filterGroups.style.display = "none";
+    renderMissionPath();
+  } else {
+    if(pathEl) pathEl.style.display = "none";
+    if(listEl) listEl.style.display = "";
+    if(controls) controls.style.display = "";
+    if(filters) filters.style.display = "";
+    // filterGroups display dependent on user toggle, default keep hidden
+  }
+}
+
+const PACK_TAGLINES = {
+  "Reflex Rush":    "Lightning fast hands ⚡",
+  "Aim Master":     "Hit the bullseye 🎯",
+  "Focus Control":  "Calm body, sharp mind 🧘",
+  "Team Duo":       "Work together 🤝",
+  "Indoor Compact": "Small space, big fun 🏠",
+  "Beach/Park":     "Outdoor adventures 🏖️"
+};
+
+function renderMissionPath(){
+  const container = document.getElementById("missionPath");
+  if(!container || typeof SKILL_PACKS === "undefined") return;
+  container.innerHTML = "";
+
+  // Bugünün daily mission'ı (özel highlight için)
+  ensureDailyMission();
+  const dailyId = dailyIdStored;
+
+  SKILL_PACKS.forEach(pack => {
+    const packMissions = missions.filter(m => m.pack === pack.key);
+    if(packMissions.length === 0) return;
+    const doneCount = packMissions.filter(m => done.has(m.id)).length;
+    const total = packMissions.length;
+    const allDone = doneCount >= total;
+
+    const section = document.createElement("div");
+    section.className = "pathSection" + (allDone ? " allDone" : "");
+    section.style.setProperty("--skill-color", pack.color);
+    const slug = "pack--" + pack.key.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    section.classList.add(slug);
+
+    // Section header
+    const header = document.createElement("div");
+    header.className = "pathSectionHeader";
+    header.innerHTML = `
+      <div class="pathSectionIcon">${pack.icon}</div>
+      <div class="pathSectionInfo">
+        <span class="pathSectionName">${escapeHtml(pack.label)}</span>
+        <span class="pathSectionTagline">${escapeHtml(PACK_TAGLINES[pack.key] || "")}</span>
+      </div>
+      <div class="pathSectionProgress">${doneCount}/${total}</div>
+    `;
+    section.appendChild(header);
+
+    // Track of nodes
+    const track = document.createElement("div");
+    track.className = "pathTrack";
+
+    packMissions.forEach((m, i) => {
+      const wrap = document.createElement("div");
+      wrap.className = "pathNodeWrap pos-" + (i % 8);
+
+      const node = document.createElement("button");
+      node.type = "button";
+      node.className = "pathNode";
+      if(done.has(m.id)) node.classList.add("done");
+      if(m.id === dailyId) node.classList.add("daily");
+      node.setAttribute("aria-label", `${m.title} — ${pack.label}`);
+      node.innerHTML = `<span class="pathNodeIcon">${m.icon}</span>`;
+      node.onclick = () => {
+        clickSound("click");
+        trackEvent("Path Node Tapped", { mission: m.id, pack: pack.key });
+        openMission(m.id);
+      };
+
+      const label = document.createElement("div");
+      label.className = "pathNodeLabel";
+      label.textContent = m.title;
+
+      wrap.appendChild(node);
+      wrap.appendChild(label);
+      track.appendChild(wrap);
+    });
+
+    section.appendChild(track);
+    container.appendChild(section);
+  });
 }
 
 /** =======================

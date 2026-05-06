@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260506-10">
+  <link rel="stylesheet" href="style.css?v=20260506-11">
   <script>
     (function(){
       try{
@@ -254,7 +254,16 @@
 
       <!-- ============== TAB: BROWSE ============== -->
       <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
-        <h2 class="tabHeading">🎯 Browse Missions</h2>
+        <div class="browseHeader">
+          <h2 class="tabHeading">🎯 Browse Missions</h2>
+          <div class="viewToggle" role="tablist" aria-label="View mode">
+            <button class="viewToggleBtn active" id="viewModeList" data-view="list" type="button">☰ List</button>
+            <button class="viewToggleBtn" id="viewModePath" data-view="path" type="button">🗺️ Path</button>
+          </div>
+        </div>
+
+        <!-- Path view container — populated by JS, hidden by default -->
+        <div class="missionPath" id="missionPath" style="display:none"></div>
 
         <!-- Search collapsible -->
         <div class="controls">
@@ -814,13 +823,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260506-10" defer></script>
-<script src="data.js?v=20260506-10" defer></script>
-<script src="app.js?v=20260506-10" defer></script>
+<script src="confetti.min.js?v=20260506-11" defer></script>
+<script src="data.js?v=20260506-11" defer></script>
+<script src="app.js?v=20260506-11" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260506-10").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260506-11").catch(()=>{});
     });
   }
 </script>
