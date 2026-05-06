@@ -4909,12 +4909,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
   const resetBtn = document.getElementById("scoreTrackerReset");
   if(resetBtn) resetBtn.onclick = ()=>{ clickSound("click"); resetScore(); };
-  const autoBtn = document.getElementById("scoreTrackerAuto");
-  if(autoBtn) autoBtn.onclick = ()=>{
-    clickSound("click");
-    if(_autoCountActive) stopAutoCount();
-    else startAutoCount();
-  };
+  // Auto-count kaldirildi — buton stub gizli
   // Story banner toggle — sadece mevcut görev için gizle (sonraki görevde tekrar gelir)
   const storyToggle = document.getElementById("storyToggle");
   if(storyToggle){

@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260507-1">
+  <link rel="stylesheet" href="style.css?v=20260507-2">
   <script>
     (function(){
       try{
@@ -517,7 +517,8 @@
         </button>
         <div class="scoreTrackerActions">
           <button class="scoreTrackerReset" id="scoreTrackerReset" type="button">↺ Reset</button>
-          <button class="scoreTrackerAuto" id="scoreTrackerAuto" type="button" aria-pressed="false">📱 Auto-count: OFF</button>
+          <!-- Auto-count kaldirildi -->
+          <button id="scoreTrackerAuto" type="button" style="display:none" aria-hidden="true"></button>
         </div>
         <div class="scoreTrackerSummary" id="scoreTrackerSummary" style="display:none"></div>
       </div>
@@ -721,28 +722,6 @@
     <div class="timerCountdownLabel">Get ready!</div>
   </div>
 
-  <!-- Auto-count Calibration Overlay -->
-  <div id="autoCountOverlay" class="autoCountOverlay" aria-hidden="true">
-    <div class="autoCountPanel">
-      <div class="autoCountIcon">📱</div>
-      <div class="autoCountTitle">Auto-count Mode</div>
-      <div class="autoCountDesc">
-        Place your phone <b>flat on a table or floor</b> near where you play.<br>
-        The phone detects each paddle hit automatically.
-      </div>
-      <div class="autoCountSensitivity">
-        <div class="autoCountSensitivityLabel">Sensitivity</div>
-        <div class="autoCountSensitivityBtns">
-          <button class="autoCountSensBtn" data-sens="22" type="button">Low</button>
-          <button class="autoCountSensBtn active" data-sens="18" type="button">Medium</button>
-          <button class="autoCountSensBtn" data-sens="14" type="button">High</button>
-        </div>
-      </div>
-      <button class="autoCountStart" id="btnAutoCountStart" type="button">📱 Place Phone &amp; Start</button>
-      <button class="autoCountCancel" id="btnAutoCountCancel" type="button">Cancel</button>
-    </div>
-  </div>
-
   <!-- Bottom Navigation -->
   <nav class="bottomNav" id="bottomNav" aria-label="Main navigation">
     <button class="navTab active" data-tab="today" type="button">
@@ -800,13 +779,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260507-1" defer></script>
-<script src="data.js?v=20260507-1" defer></script>
-<script src="app.js?v=20260507-1" defer></script>
+<script src="confetti.min.js?v=20260507-2" defer></script>
+<script src="data.js?v=20260507-2" defer></script>
+<script src="app.js?v=20260507-2" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260507-1").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260507-2").catch(()=>{});
     });
   }
 </script>
