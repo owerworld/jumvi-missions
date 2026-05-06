@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260506-16">
+  <link rel="stylesheet" href="style.css?v=20260506-17">
   <script>
     (function(){
       try{
@@ -259,7 +259,10 @@
         <!-- Path view — varsayilan ve tek gorunum -->
         <div class="missionPath" id="missionPath"></div>
 
-        <!-- Floating "Jump to NEXT" FAB — kullanici NEXT'ten uzaktaysa -->
+        <!-- Mini map (sag kenar) — 6 pack overview -->
+        <nav class="pathMiniMap" id="pathMiniMap" aria-label="Pack mini map"></nav>
+
+        <!-- Floating "Jump to NEXT" FAB -->
         <button class="pathJumpFab" id="pathJumpFab" type="button" aria-label="Jump to next mission">
           <span class="pathJumpFabIcon">🦁</span>
           <span class="pathJumpFabText">Jump to NEXT</span>
@@ -749,6 +752,33 @@
     </div>
   </div>
 
+  <!-- Path First-Time Intro Overlay -->
+  <div id="pathIntro" class="pathIntro" aria-hidden="true">
+    <div class="pathIntroBackdrop"></div>
+    <div class="pathIntroPanel">
+      <div class="pathIntroLion">🦁</div>
+      <div class="pathIntroBubble">
+        <div class="pathIntroTitle">Hi, paddle pro!</div>
+        <div class="pathIntroText">This is your <b>Mission Map</b>.<br>Each circle is a fun mission to play.<br>Tap any one to start!</div>
+      </div>
+      <div class="pathIntroSteps">
+        <div class="pathIntroStep">
+          <span class="pathIntroEmoji">🎯</span>
+          <span>Tap a circle to play</span>
+        </div>
+        <div class="pathIntroStep">
+          <span class="pathIntroEmoji">✓</span>
+          <span>Done missions get a checkmark</span>
+        </div>
+        <div class="pathIntroStep">
+          <span class="pathIntroEmoji">🏆</span>
+          <span>Finish a pack to earn a trophy</span>
+        </div>
+      </div>
+      <button class="pathIntroBtn" id="pathIntroDone" type="button">Let's go! 🚀</button>
+    </div>
+  </div>
+
   <!-- Bottom Navigation -->
   <nav class="bottomNav" id="bottomNav" aria-label="Main navigation">
     <button class="navTab active" data-tab="today" type="button">
@@ -806,13 +836,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260506-16" defer></script>
-<script src="data.js?v=20260506-16" defer></script>
-<script src="app.js?v=20260506-16" defer></script>
+<script src="confetti.min.js?v=20260506-17" defer></script>
+<script src="data.js?v=20260506-17" defer></script>
+<script src="app.js?v=20260506-17" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260506-16").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260506-17").catch(()=>{});
     });
   }
 </script>

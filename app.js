@@ -2813,8 +2813,16 @@ backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("cl
 
 function markMissionDone(id, source="manual"){
   if(id==null || done.has(id)) return;
+  // Pack milestone hesabı için ÖN bilgi
+  const ms = missions.find(x=>x.id===id);
+  const packKey = ms ? ms.pack : null;
+  const packBefore = packKey ? missions.filter(m=>m.pack===packKey && done.has(m.id)).length : 0;
+
   done.add(id);
   bumpDoneVersion();
+
+  // Path tree node animasyonu işareti
+  window._justDoneMissionId = id;
 
   const changed = recordActivityToday();
 
@@ -2834,7 +2842,6 @@ function markMissionDone(id, source="manual"){
     showScoreSummary(id);
   }
   // Plausible event
-  const ms = missions.find(x=>x.id===id);
   trackEvent("Mission Completed", {
     pack: ms ? ms.pack : "?",
     source: source,
@@ -2842,6 +2849,24 @@ function markMissionDone(id, source="manual"){
   });
   if(done.size === missions.length){
     trackEvent("All Missions Completed");
+  }
+
+  // Pack milestone — 3/6 halfway veya 6/6 complete
+  if(packKey){
+    const packAfter = packBefore + 1;
+    const packTotal = missions.filter(m=>m.pack===packKey).length || 6;
+    const packLabel = (typeof getPackName === "function") ? getPackName(packKey) : packKey;
+    if(packAfter === Math.ceil(packTotal/2)){
+      // Halfway hint
+      setTimeout(()=>{
+        showToast(`🎯 Halfway through ${packLabel}! Keep going!`);
+        if(navigator.vibrate) try { navigator.vibrate([40, 60, 40]); } catch(_){}
+        pathSound("milestone");
+      }, 1800);
+    } else if(packAfter === packTotal){
+      // Pack complete — büyük kutlama
+      setTimeout(()=> showPackCompleteCelebration(packKey, packLabel), 1800);
+    }
   }
 
   if(source === "auto"){
@@ -4035,6 +4060,19 @@ function initBottomNav(){
   // Browse tab Path-only — toggle kaldirildi
   applyBrowseView();
 
+  // Path intro dismiss
+  const introBtn = document.getElementById("pathIntroDone");
+  if(introBtn) introBtn.addEventListener("click", ()=>{
+    pathSound("done");
+    dismissPathIntro();
+  });
+  const introOverlay = document.getElementById("pathIntro");
+  if(introOverlay){
+    introOverlay.addEventListener("click", (e)=>{
+      if(e.target.classList.contains("pathIntroBackdrop")) dismissPathIntro();
+    });
+  }
+
   // Search toggle (Browse tab)
   const searchToggle = document.getElementById("searchToggleBtn");
   const searchBox = document.getElementById("searchBox");
@@ -4155,6 +4193,80 @@ const PACK_TAGLINES = {
   "Indoor Compact": "Small space, big fun 🏠",
   "Beach/Park":     "Outdoor adventures 🏖️"
 };
+
+/* ============================================
+ * Path Sound Effects
+ * ============================================ */
+function pathSound(type){
+  if(!soundOn) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  const t0 = ctx.currentTime;
+  const make = (freq, dur, gain=0.06, wave="triangle")=>{
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = wave;
+    osc.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(t0); osc.stop(t0 + dur + 0.05);
+  };
+  const makeAt = (freq, delay, dur, gain=0.06, wave="triangle")=>{
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = wave;
+    osc.frequency.setValueAtTime(freq, t0 + delay);
+    g.gain.setValueAtTime(0.0001, t0 + delay);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + delay + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + delay + dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(t0 + delay); osc.stop(t0 + delay + dur + 0.05);
+  };
+  switch(type){
+    case "tap":     make(620, 0.06, 0.04); break;
+    case "done":    makeAt(740,0,0.08,0.06); makeAt(1100,0.04,0.10,0.05); break;
+    case "next":    makeAt(660,0,0.06,0.06); makeAt(880,0.06,0.08,0.05); break;
+    case "preview": make(540, 0.10, 0.04, "sine"); break;
+    case "milestone":
+      makeAt(660,0,0.08,0.06);
+      makeAt(880,0.10,0.08,0.06);
+      makeAt(1100,0.20,0.12,0.06);
+      break;
+    case "trophy":
+      makeAt(660,0,0.10,0.07);
+      makeAt(880,0.12,0.10,0.07);
+      makeAt(1100,0.24,0.12,0.07);
+      makeAt(1320,0.36,0.18,0.07);
+      break;
+    default:        make(620, 0.06, 0.04);
+  }
+}
+
+/* Pack complete — full celebration */
+function showPackCompleteCelebration(packKey, packLabel){
+  // Konfeti yağmuru
+  if(!prefersReducedMotion){
+    if(window.confetti){
+      try{
+        const fire = (delay)=> setTimeout(()=>{
+          window.confetti({
+            particleCount: 80, spread: 90,
+            origin: { x: Math.random(), y: 0.3 + Math.random()*0.2 }
+          });
+        }, delay);
+        fire(0); fire(250); fire(500); fire(750);
+      }catch(_){}
+    } else {
+      fireConfetti(2400);
+    }
+  }
+  pathSound("trophy");
+  showToast(`🏆 ${packLabel} mastered! Pack complete!`);
+  trackEvent("Pack Completed", { pack: packKey });
+  if(navigator.vibrate) try { navigator.vibrate([60, 80, 60, 80, 100]); } catch(_){}
+}
 
 /* Coach Leo speech bubble — 1. pack için motive, sonrası teşvik */
 function getCoachSpeech(packIdx, mission){
@@ -4318,13 +4430,40 @@ function renderMissionPath(){
       node.setAttribute("data-mission-id", m.id);
       node.innerHTML = `<span class="pathNodeIcon">${m.icon}</span>`;
 
-      // Tap = open mission
+      // Tap = open mission (tip-bazli ses)
       node.onclick = () => {
-        clickSound("click");
+        if(isDone) pathSound("done");
+        else if(isNext) pathSound("next");
+        else pathSound("tap");
         if(navigator.vibrate) try { navigator.vibrate(10); } catch(_){}
         trackEvent("Path Node Tapped", { mission: m.id, pack: pack.key, isDone, isNext });
         openMission(m.id);
       };
+
+      // Yeni tamamlanan mission ise animate et
+      if(window._justDoneMissionId === m.id){
+        node.classList.add("justDone");
+        setTimeout(()=>{
+          node.classList.remove("justDone");
+          // Eğer node ekranda görünür değilse scroll et
+          const r = node.getBoundingClientRect();
+          if(r.top < 60 || r.bottom > window.innerHeight - 100){
+            node.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 2200);
+        // Konfeti minik patlamasi
+        if(!prefersReducedMotion){
+          setTimeout(()=>{
+            const r = node.getBoundingClientRect();
+            const cx = (r.left + r.width/2) / window.innerWidth;
+            const cy = (r.top + r.height/2) / window.innerHeight;
+            if(window.confetti){
+              try { window.confetti({ particleCount: 30, spread: 50, origin: { x: cx, y: cy } }); } catch(_){}
+            }
+          }, 200);
+        }
+        window._justDoneMissionId = null;
+      }
 
       // Long-press preview (700ms)
       let pressTimer = null;
@@ -4334,6 +4473,7 @@ function renderMissionPath(){
         pressTimer = setTimeout(()=>{
           previewShown = true;
           showPathPreview(node, m, pack);
+          pathSound("preview");
           if(navigator.vibrate) try { navigator.vibrate(20); } catch(_){}
           trackEvent("Path Preview Shown");
         }, 700);
@@ -4411,6 +4551,12 @@ function renderMissionPath(){
 
   // Floating FAB visibility tracker
   setupPathFab();
+
+  // Mini map render + tracking
+  renderPathMiniMap();
+
+  // First-time intro (sadece ilk kez)
+  maybeShowPathIntro();
 }
 
 /* Path render flag — sadece ilk renderda auto-scroll yap */
@@ -4436,6 +4582,91 @@ function applyPathProgressLines(){
     }
   });
 }
+
+/* ============================================
+ * Path First-Time Intro (Coach Leo)
+ * ============================================ */
+const PATH_INTRO_KEY = "jumvi_path_intro_shown_v1";
+
+function maybeShowPathIntro(){
+  if(lsGet(PATH_INTRO_KEY, "0") === "1") return;
+  const overlay = document.getElementById("pathIntro");
+  if(!overlay) return;
+  // 400ms gecikme ile aç (cascade animation bitti)
+  setTimeout(()=>{
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+    pathSound("milestone");
+    trackEvent("Path Intro Shown");
+  }, 600);
+}
+
+function dismissPathIntro(){
+  const overlay = document.getElementById("pathIntro");
+  if(!overlay) return;
+  overlay.classList.remove("show");
+  overlay.classList.add("hiding");
+  setTimeout(()=>{ overlay.classList.remove("hiding"); }, 350);
+  lsSet(PATH_INTRO_KEY, "1");
+  trackEvent("Path Intro Dismissed");
+}
+
+/* Path Mini Map — sağ kenarda 6 pack dot */
+function renderPathMiniMap(){
+  const map = document.getElementById("pathMiniMap");
+  if(!map || typeof SKILL_PACKS === "undefined") return;
+  map.innerHTML = "";
+  SKILL_PACKS.forEach((pack, idx) => {
+    const total = missions.filter(m => m.pack === pack.key).length || 6;
+    const doneCount = missions.filter(m => m.pack === pack.key && done.has(m.id)).length;
+    const allDone = doneCount >= total;
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "miniMapDot" + (allDone ? " complete" : (doneCount > 0 ? " active" : ""));
+    dot.style.setProperty("--skill-color", pack.color);
+    dot.dataset.packIdx = idx;
+    dot.dataset.packKey = pack.key;
+    dot.setAttribute("aria-label", `${pack.label} ${doneCount}/${total}`);
+    dot.innerHTML = `
+      <span class="miniMapDotIcon">${pack.icon}</span>
+      <span class="miniMapDotLabel">${doneCount}/${total}</span>
+    `;
+    dot.onclick = ()=>{
+      const sec = document.querySelector(`.pathSection.pack--${pack.key.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}`);
+      if(sec){
+        sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        pathSound("tap");
+        if(navigator.vibrate) try { navigator.vibrate(8); } catch(_){}
+      }
+    };
+    map.appendChild(dot);
+  });
+  // Aktif pack tracking — IntersectionObserver
+  setupMiniMapTracking();
+}
+
+function setupMiniMapTracking(){
+  if(_miniMapObserver) _miniMapObserver.disconnect();
+  const sections = document.querySelectorAll(".pathSection");
+  if(sections.length === 0) return;
+  _miniMapObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        const sec = e.target;
+        const slugMatch = Array.from(sec.classList).find(c => c.startsWith("pack--"));
+        if(slugMatch){
+          document.querySelectorAll(".miniMapDot").forEach(d => {
+            const dotKey = d.dataset.packKey || "";
+            const dotSlug = "pack--" + dotKey.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+            d.classList.toggle("inView", dotSlug === slugMatch);
+          });
+        }
+      }
+    });
+  }, { threshold: 0.3, rootMargin: "-30% 0px -30% 0px" });
+  sections.forEach(s => _miniMapObserver.observe(s));
+}
+let _miniMapObserver = null;
 
 /* Floating FAB — eger NEXT node ekranda goruunmuyorsa, FAB goster */
 function setupPathFab(){
