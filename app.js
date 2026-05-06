@@ -4060,19 +4060,6 @@ function initBottomNav(){
   // Browse tab Path-only — toggle kaldirildi
   applyBrowseView();
 
-  // Path intro dismiss
-  const introBtn = document.getElementById("pathIntroDone");
-  if(introBtn) introBtn.addEventListener("click", ()=>{
-    pathSound("done");
-    dismissPathIntro();
-  });
-  const introOverlay = document.getElementById("pathIntro");
-  if(introOverlay){
-    introOverlay.addEventListener("click", (e)=>{
-      if(e.target.classList.contains("pathIntroBackdrop")) dismissPathIntro();
-    });
-  }
-
   // Search toggle (Browse tab)
   const searchToggle = document.getElementById("searchToggleBtn");
   const searchBox = document.getElementById("searchBox");
@@ -4370,13 +4357,9 @@ function renderMissionPath(){
   if(!container || typeof SKILL_PACKS === "undefined") return;
   container.innerHTML = "";
 
-  // Bugünün daily mission'ı (özel highlight için)
   ensureDailyMission();
   const dailyId = dailyIdStored;
   const nextId = findNextMissionForUser();
-
-  let nodeIndex = 0; // global cascade index for stagger animation
-  let packIdx = 0;
 
   SKILL_PACKS.forEach(pack => {
     const packMissions = missions.filter(m => m.pack === pack.key);
@@ -4384,179 +4367,71 @@ function renderMissionPath(){
     const doneCount = packMissions.filter(m => done.has(m.id)).length;
     const total = packMissions.length;
     const allDone = doneCount >= total;
-    const pct = Math.round((doneCount/total)*100);
 
     const section = document.createElement("div");
     section.className = "pathSection" + (allDone ? " allDone" : "");
     section.style.setProperty("--skill-color", pack.color);
-    const slug = "pack--" + pack.key.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-    section.classList.add(slug);
 
-    // Section header — progress bar dahil
+    // Sade header
     const header = document.createElement("div");
     header.className = "pathSectionHeader";
     header.innerHTML = `
       <div class="pathSectionIcon">${pack.icon}</div>
-      <div class="pathSectionInfo">
-        <span class="pathSectionName">${escapeHtml(pack.label)}</span>
-        <span class="pathSectionTagline">${escapeHtml(PACK_TAGLINES[pack.key] || "")}</span>
-        <div class="pathSectionMiniBar"><div class="pathSectionMiniFill" style="width:${pct}%"></div></div>
-      </div>
+      <div class="pathSectionName">${escapeHtml(pack.label)}</div>
       <div class="pathSectionProgress">${doneCount}/${total}</div>
     `;
     section.appendChild(header);
 
-    // Track of nodes
-    const track = document.createElement("div");
-    track.className = "pathTrack";
-
-    packMissions.forEach((m, i) => {
-      const wrap = document.createElement("div");
-      wrap.className = "pathNodeWrap pos-" + (i % 8);
-      wrap.style.setProperty("--cascade-delay", `${nodeIndex * 40}ms`);
-      nodeIndex++;
-
-      const node = document.createElement("button");
-      node.type = "button";
-      node.className = "pathNode";
+    // Mission grid (3 column)
+    const grid = document.createElement("div");
+    grid.className = "pathGrid";
+    packMissions.forEach((m) => {
+      const wrap = document.createElement("button");
+      wrap.type = "button";
+      wrap.className = "pathTile";
       const isDone = done.has(m.id);
       const isDaily = m.id === dailyId;
       const isNext = m.id === nextId;
-      if(isDone) node.classList.add("done");
-      if(isDaily) node.classList.add("daily");
-      if(isNext && !isDone && !isDaily) node.classList.add("next");
-      if(isNext) node.id = "pathNodeNext";
-      node.setAttribute("aria-label", `${m.title} — ${pack.label}${isDone ? " (completed)" : (isNext ? " (next)" : "")}`);
-      node.setAttribute("data-mission-id", m.id);
-      node.innerHTML = `<span class="pathNodeIcon">${m.icon}</span>`;
-
-      // Tap = open mission (tip-bazli ses)
-      node.onclick = () => {
-        if(isDone) pathSound("done");
-        else if(isNext) pathSound("next");
-        else pathSound("tap");
-        if(navigator.vibrate) try { navigator.vibrate(10); } catch(_){}
-        trackEvent("Path Node Tapped", { mission: m.id, pack: pack.key, isDone, isNext });
+      if(isDone) wrap.classList.add("done");
+      if(isDaily) wrap.classList.add("daily");
+      if(isNext && !isDone && !isDaily) wrap.classList.add("next");
+      if(isNext) wrap.id = "pathNodeNext";
+      wrap.setAttribute("aria-label", `${m.title} — ${pack.label}${isDone ? " (completed)" : ""}`);
+      wrap.setAttribute("data-mission-id", m.id);
+      wrap.innerHTML = `
+        <span class="pathTileIcon">${m.icon}</span>
+        <span class="pathTileLabel">${escapeHtml(m.title)}</span>
+      `;
+      wrap.onclick = () => {
+        clickSound(isDone ? "success" : "click");
+        if(navigator.vibrate) try { navigator.vibrate(8); } catch(_){}
+        trackEvent("Path Tile Tapped", { mission: m.id, pack: pack.key, isDone });
         openMission(m.id);
       };
 
-      // Yeni tamamlanan mission ise animate et
+      // Just-done celebration
       if(window._justDoneMissionId === m.id){
-        node.classList.add("justDone");
-        setTimeout(()=>{
-          node.classList.remove("justDone");
-          // Eğer node ekranda görünür değilse scroll et
-          const r = node.getBoundingClientRect();
-          if(r.top < 60 || r.bottom > window.innerHeight - 100){
-            node.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        }, 2200);
-        // Konfeti minik patlamasi
-        if(!prefersReducedMotion){
-          setTimeout(()=>{
-            const r = node.getBoundingClientRect();
-            const cx = (r.left + r.width/2) / window.innerWidth;
-            const cy = (r.top + r.height/2) / window.innerHeight;
-            if(window.confetti){
-              try { window.confetti({ particleCount: 30, spread: 50, origin: { x: cx, y: cy } }); } catch(_){}
-            }
-          }, 200);
-        }
+        wrap.classList.add("justDone");
+        setTimeout(()=> wrap.classList.remove("justDone"), 1500);
         window._justDoneMissionId = null;
       }
 
-      // Long-press preview (700ms)
-      let pressTimer = null;
-      let previewShown = false;
-      const startPress = (e)=>{
-        previewShown = false;
-        pressTimer = setTimeout(()=>{
-          previewShown = true;
-          showPathPreview(node, m, pack);
-          pathSound("preview");
-          if(navigator.vibrate) try { navigator.vibrate(20); } catch(_){}
-          trackEvent("Path Preview Shown");
-        }, 700);
-      };
-      const endPress = ()=>{
-        if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
-        if(previewShown){
-          // long-press oldu — tap iptal et
-          node.onclick.stopPropagation && node.onclick.stopPropagation();
-        }
-      };
-      node.addEventListener("touchstart", startPress, { passive:true });
-      node.addEventListener("touchend", endPress);
-      node.addEventListener("touchcancel", endPress);
-      node.addEventListener("mousedown", startPress);
-      node.addEventListener("mouseup", endPress);
-      node.addEventListener("mouseleave", endPress);
-
-      const label = document.createElement("div");
-      label.className = "pathNodeLabel";
-      label.textContent = m.title;
-
-      // NEXT node — yanında 🦁 Coach Leo sticker
-      if(isNext && !isDone){
-        const coach = document.createElement("div");
-        coach.className = "pathCoachLeo";
-        coach.innerHTML = `<span class="coachLeoFace">🦁</span><span class="coachLeoBubble">${getCoachSpeech(packIdx, m)}</span>`;
-        wrap.appendChild(coach);
-      }
-
-      wrap.appendChild(node);
-      wrap.appendChild(label);
-      track.appendChild(wrap);
+      grid.appendChild(wrap);
     });
-
-    // Pack complete trofe — eğer all done
-    if(allDone){
-      const trophy = document.createElement("div");
-      trophy.className = "pathPackTrophy";
-      trophy.innerHTML = `<div class="pathPackTrophyIcon">🏆</div><div class="pathPackTrophyText">Pack Complete!<br><b>${escapeHtml(pack.label)} mastered</b></div>`;
-      section.appendChild(trophy);
-    }
-
-    section.appendChild(track);
+    section.appendChild(grid);
     container.appendChild(section);
-    packIdx++;
   });
 
-  // Auto-scroll to "next" mission (sadece ilk defa render edilince session basina)
+  // Sadece ilk renderda NEXT'e auto-scroll
   if(!_pathScrolledOnce){
     _pathScrolledOnce = true;
     setTimeout(()=>{
       if(!prefersReducedMotion){
         const nextNode = document.getElementById("pathNodeNext");
-        if(nextNode){
-          nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+        if(nextNode) nextNode.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-    }, 500);
+    }, 400);
   }
-
-  // Pack header click — collapse/expand
-  container.querySelectorAll(".pathSectionHeader").forEach(h => {
-    h.addEventListener("click", ()=>{
-      const sec = h.closest(".pathSection");
-      if(!sec) return;
-      sec.classList.toggle("collapsed");
-      clickSound("click");
-      if(navigator.vibrate) try { navigator.vibrate(8); } catch(_){}
-    });
-  });
-
-  // Done node'lar arasi çizgi dolu — progress line
-  applyPathProgressLines();
-
-  // Floating FAB visibility tracker
-  setupPathFab();
-
-  // Mini map render + tracking
-  renderPathMiniMap();
-
-  // First-time intro (sadece ilk kez)
-  maybeShowPathIntro();
 }
 
 /* Path render flag — sadece ilk renderda auto-scroll yap */
