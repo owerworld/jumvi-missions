@@ -2437,6 +2437,10 @@ function closeMission(){
   if(_aw) _aw.style.overflowY = "";
   // Continue hint güncelle (last opened değişti)
   renderContinueHint();
+  // Browse tab'daysak path'i de yenile — done state guncel olsun
+  if(document.body.classList.contains("tab-browse") && typeof renderMissionPath === "function"){
+    try { renderMissionPath(); } catch(_){}
+  }
 }
 
 
@@ -2821,13 +2825,17 @@ function markMissionDone(id, source="manual"){
   done.add(id);
   bumpDoneVersion();
 
-  // Path tree node animasyonu işareti
+  // Path tree tile animasyonu işareti — render'da kullanılır
   window._justDoneMissionId = id;
 
   const changed = recordActivityToday();
 
   persist();
   renderList();
+  // Path tree'yi anında yenile — done state ✓ rozet gözüksün
+  if(typeof renderMissionPath === "function"){
+    try { renderMissionPath(); } catch(_){}
+  }
   clickSound("success");
   celebrate();
   // Daily mini-challenge counter
