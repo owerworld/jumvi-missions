@@ -3852,8 +3852,7 @@ function renderProfileTab(){
     const sc    = streakCount || 0;
     statsEl.textContent = `${total} mission${total===1?"":"s"} · 🔥 ${sc} day${sc===1?"":"s"} streak`;
   }
-  // Daily reminder toggle durumu
-  renderDailyReminderToggle();
+  // Daily reminder kaldirildi
 }
 
 /** =======================
@@ -4070,19 +4069,7 @@ function initBottomNav(){
     });
   }
 
-  // Daily Reminder toggle (Profile tab içinde)
-  const reminderBtn = document.getElementById("btnDailyReminder");
-  if(reminderBtn){
-    reminderBtn.addEventListener("click", async ()=>{
-      clickSound("click");
-      if(isReminderEnabled()){
-        disableDailyReminder();
-      } else {
-        await enableDailyReminder();
-      }
-      renderDailyReminderToggle();
-    });
-  }
+  // Daily reminder kaldirildi (calismiyor + alakasiz)
 
   // Continue where you left off
   const btnContinue = document.getElementById("btnContinue");
@@ -5264,8 +5251,6 @@ function init(){
   renderDailyChallenge();
   renderContinueHint();
   renderCoachPick();
-  // Daily reminder — açıldığında gerekirse hatırlat
-  setTimeout(()=> { try { maybeShowDailyReminder(); } catch(_){} }, 3000);
   // Tutorial spotlight kaldırıldı — yeni today-first UI self-explanatory.
   // Var olan kullanıcılar için TUTORIAL_KEY işaretle ki bir daha çıkmasın
   try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}

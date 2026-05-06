@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260507-4">
+  <link rel="stylesheet" href="style.css?v=20260507-5">
   <script>
     (function(){
       try{
@@ -390,15 +390,6 @@
 
         <!-- Quick links -->
         <div class="profileQuickLinks">
-          <!-- Daily Reminder toggle (PWA notification) -->
-          <button class="profileQuickLink profileReminderRow" id="btnDailyReminder" type="button">
-            <span class="profileQuickIcon">🔔</span>
-            <div class="profileQuickInfo">
-              <div class="profileQuickTitle">Daily Play Reminder</div>
-              <div class="profileQuickSub" id="dailyReminderSub">Get a friendly nudge to play each day</div>
-            </div>
-            <span class="profileQuickToggle" id="dailyReminderToggle">OFF</span>
-          </button>
           <button class="profileQuickLink" data-go-tab="stats" type="button">
             <span class="profileQuickIcon">📊</span>
             <div class="profileQuickInfo">
@@ -779,13 +770,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260507-4" defer></script>
-<script src="data.js?v=20260507-4" defer></script>
-<script src="app.js?v=20260507-4" defer></script>
+<script src="confetti.min.js?v=20260507-5" defer></script>
+<script src="data.js?v=20260507-5" defer></script>
+<script src="app.js?v=20260507-5" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260507-4").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260507-5").catch(()=>{});
     });
   }
 </script>
