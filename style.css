@@ -6052,6 +6052,19 @@ body.tab-browse .app-shell{
 .missionPath{
   padding-bottom: 32px !important;
 }
+
+/* NORMAL MISSION LIST (.list) — HER ZAMAN GIZLI
+   Path Tree tek görünüm. Eski liste kart sistemi tamamen kaldirildi */
+.list,
+section.list,
+#list{
+  display: none !important;
+}
+/* Footer da hicbir tab'da gorunmez — Mission Book/Reset/Kids Mode artik Profile tab'inde */
+.footer,
+section.footer{
+  display: none !important;
+}
 /* Browse tab'da search/filter UI elementleri kesin gizli — JS uyumlulugu icin DOM'da var
    ama CSS tamamen kaldirir */
 body.tab-browse .controls,
