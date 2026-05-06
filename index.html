@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260506-11">
+  <link rel="stylesheet" href="style.css?v=20260506-12">
   <script>
     (function(){
       try{
@@ -252,47 +252,24 @@
         </button>
       </div>
 
-      <!-- ============== TAB: BROWSE ============== -->
+      <!-- ============== TAB: BROWSE (Path Tree only) ============== -->
       <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
-        <div class="browseHeader">
-          <h2 class="tabHeading">🎯 Browse Missions</h2>
-          <div class="viewToggle" role="tablist" aria-label="View mode">
-            <button class="viewToggleBtn active" id="viewModeList" data-view="list" type="button">☰ List</button>
-            <button class="viewToggleBtn" id="viewModePath" data-view="path" type="button">🗺️ Path</button>
-          </div>
+        <h2 class="tabHeading">🗺️ Mission Path</h2>
+
+        <!-- Path view — varsayilan ve tek gorunum -->
+        <div class="missionPath" id="missionPath"></div>
+
+        <!-- Hidden stubs — JS uyumluluk icin (search/filter logic'i hayatta) -->
+        <div id="searchToggleBtn" style="display:none" aria-hidden="true"></div>
+        <div id="searchBox" style="display:none">
+          <input id="searchInput" type="text" style="display:none" />
         </div>
-
-        <!-- Path view container — populated by JS, hidden by default -->
-        <div class="missionPath" id="missionPath" style="display:none"></div>
-
-        <!-- Search collapsible -->
-        <div class="controls">
-          <button class="searchToggleBtn" id="searchToggleBtn" type="button" aria-label="Toggle search">
-            <span class="searchToggleIcon">🔎</span>
-            <span class="searchToggleText">Search missions</span>
-          </button>
-          <div class="search" id="searchBox" style="display:none">
-            <div class="searchIcon">🔎</div>
-            <input id="searchInput" type="text" placeholder="catch, calm, team..." autocomplete="off" />
-          </div>
-          <div class="toggleRow">
-            <button class="chip limeActive" id="btnOnlyUnfinished" aria-label="Show only unfinished missions" type="button">Only Unfinished</button>
-            <!-- Filters butonu kaldirildi - chip'ler zaten gorunuyor -->
-            <button id="btnToggleFilters" type="button" style="display:none" aria-hidden="true"></button>
-          </div>
-        </div>
-
-        <div class="filters" id="filters" aria-label="packs"></div>
-
-        <div class="filterGroups" id="filterGroups" style="display:none">
-          <div class="filterGroup">
-            <div class="filterLabel">Players</div>
-            <div class="filterChips" id="filterPlayers"></div>
-          </div>
-          <div class="filterGroup">
-            <div class="filterLabel">Difficulty</div>
-            <div class="filterChips" id="filterDifficulty"></div>
-          </div>
+        <button id="btnOnlyUnfinished" type="button" style="display:none" aria-hidden="true"></button>
+        <button id="btnToggleFilters" type="button" style="display:none" aria-hidden="true"></button>
+        <div id="filters" style="display:none"></div>
+        <div id="filterGroups" style="display:none">
+          <div id="filterPlayers" style="display:none"></div>
+          <div id="filterDifficulty" style="display:none"></div>
         </div>
       </div>
 
@@ -823,13 +800,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260506-11" defer></script>
-<script src="data.js?v=20260506-11" defer></script>
-<script src="app.js?v=20260506-11" defer></script>
+<script src="confetti.min.js?v=20260506-12" defer></script>
+<script src="data.js?v=20260506-12" defer></script>
+<script src="app.js?v=20260506-12" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260506-11").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260506-12").catch(()=>{});
     });
   }
 </script>

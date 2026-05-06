@@ -3734,8 +3734,8 @@ function switchTab(tabName){
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
     }
     if(tabName === "browse") {
-      // Path view aktifse yenile (done state vs.)
-      if(getActiveBrowseView() === "path" && typeof renderMissionPath === "function"){
+      // Path her zaman renderlanir (her tab acilis'ta done state guncel olsun)
+      if(typeof renderMissionPath === "function"){
         renderMissionPath();
       }
     }
@@ -4032,16 +4032,7 @@ function initBottomNav(){
     });
   }
 
-  // View mode toggle (Browse tab — List/Path)
-  document.querySelectorAll(".viewToggleBtn").forEach(b => {
-    b.addEventListener("click", ()=>{
-      clickSound("click");
-      const mode = b.dataset.view;
-      setActiveBrowseView(mode);
-      trackEvent("Browse View Changed", { mode });
-    });
-  });
-  // Sayfa yuklenince kayitli mode'u uygula
+  // Browse tab Path-only — toggle kaldirildi
   applyBrowseView();
 
   // Search toggle (Browse tab)
@@ -4140,48 +4131,21 @@ function renderContinueHint(){
 
 /** =======================
  * Mission Path Tree (Duolingo-inspired)
- * Browse tab'da alternatif gorunum — pack-by-pack zigzag
+ * Browse tab artik PATH-ONLY (list kaldirildi)
  * ======================= */
-const VIEW_MODE_KEY = "jumvi_browse_view_mode_v1"; // 'list' or 'path'
-
-function getActiveBrowseView(){
-  return lsGet(VIEW_MODE_KEY, "list");
-}
-
-function setActiveBrowseView(mode){
-  if(mode !== "list" && mode !== "path") mode = "list";
-  lsSet(VIEW_MODE_KEY, mode);
-  applyBrowseView();
-}
 
 function applyBrowseView(){
-  const mode = getActiveBrowseView();
+  // Path view varsayilan ve tek view
   const pathEl = document.getElementById("missionPath");
   const listEl = document.getElementById("list");
-  const controls = document.querySelector("#tabBrowse .controls");
-  const filters = document.getElementById("filters");
-  const filterGroups = document.getElementById("filterGroups");
-
-  // Toggle button states
-  document.querySelectorAll(".viewToggleBtn").forEach(b => {
-    b.classList.toggle("active", b.dataset.view === mode);
-  });
-
-  if(mode === "path"){
-    if(pathEl) pathEl.style.display = "";
-    if(listEl) listEl.style.display = "none";
-    if(controls) controls.style.display = "none";
-    if(filters) filters.style.display = "none";
-    if(filterGroups) filterGroups.style.display = "none";
-    renderMissionPath();
-  } else {
-    if(pathEl) pathEl.style.display = "none";
-    if(listEl) listEl.style.display = "";
-    if(controls) controls.style.display = "";
-    if(filters) filters.style.display = "";
-    // filterGroups display dependent on user toggle, default keep hidden
-  }
+  if(pathEl) pathEl.style.display = "";
+  if(listEl) listEl.style.display = "none";
+  renderMissionPath();
 }
+
+/* Geriye uyumluluk — eski JS bağlantıları için boş stub'lar */
+function getActiveBrowseView(){ return "path"; }
+function setActiveBrowseView(){ applyBrowseView(); }
 
 const PACK_TAGLINES = {
   "Reflex Rush":    "Lightning fast hands ⚡",
