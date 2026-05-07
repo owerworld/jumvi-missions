@@ -382,8 +382,8 @@ async function renderSimpleCertificateBlob(){
     const certId = getCertId();
 
     const img = await loadImageWithFallback(CERT_TEMPLATE_SOURCES);
-    const width = img.naturalWidth || 1600;
-    const height = img.naturalHeight || 1200;
+    const width = img.naturalWidth || 1376;
+    const height = img.naturalHeight || 768;
 
     const canvas = document.createElement("canvas");
     canvas.width = width;
@@ -394,10 +394,11 @@ async function renderSimpleCertificateBlob(){
     ctx.drawImage(img, 0, 0, width, height);
 
     // Name (centered, on the dotted line area)
+    // FIX: New 1376x768 template — dotted line sits at ~57.5% from top
     const nameX = width * 0.5;
-    const nameY = height * 0.555;
-    const maxNameWidth = width * 0.62;
-    const baseNameSize = Math.round(width * 0.055);
+    const nameY = height * 0.575;
+    const maxNameWidth = width * 0.55;
+    const baseNameSize = Math.round(width * 0.06);
     const nameSize = fitText(ctx, name, maxNameWidth, baseNameSize, "'Poppins', 'Helvetica Neue', Arial, sans-serif");
     ctx.fillStyle = CERT_NAME_COLOR;
     ctx.textAlign = "center";
@@ -405,27 +406,23 @@ async function renderSimpleCertificateBlob(){
     ctx.font = `700 ${nameSize}px 'Poppins', 'Helvetica Neue', Arial, sans-serif`;
     ctx.fillText(name, nameX, nameY);
 
-  // Meta (top-right) - draw directly on template (no box)
-  const metaX = width * 0.93;
-  const metaY = height * 0.105;
-  const lineGap = height * 0.028;
-  const m1 = `Completed on: ${dateText}`;
-  const m2 = `Certificate ID: ${certId}`;
-  ctx.fillStyle = CERT_META_COLOR;
-  ctx.textAlign = "right";
-  ctx.textBaseline = "top";
-  ctx.font = CERT_META_FONT;
-  ctx.fillText(m1, metaX, metaY);
-  ctx.fillText(m2, metaX, metaY + lineGap);
+    // Meta strip — date + cert ID combined into one subtle line above footer
+    // (top-right is now occupied by stars/wifi decoration in the new template)
+    const metaSize = Math.max(11, Math.round(width * 0.013));
+    ctx.font = `600 ${metaSize}px 'Poppins', 'Helvetica Neue', Arial, sans-serif`;
+    ctx.fillStyle = CERT_META_COLOR;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`Awarded ${dateText}  ·  ID: ${certId}`, width * 0.5, height * 0.935);
 
     // Footer branding
-    const footerY = height * 0.965;
-    const footerSize = Math.round(width * 0.018);
+    const footerY = height * 0.975;
+    const footerSize = Math.max(11, Math.round(width * 0.015));
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `600 ${footerSize}px 'Helvetica Neue', Arial, sans-serif`;
     ctx.fillStyle = "rgba(80,80,100,0.55)";
-    ctx.fillText("🎾 JUMVI Toss & Catch Paddle Set • Available on Amazon", width * 0.5, footerY);
+    ctx.fillText("🎾 JUMVI Toss & Catch Paddle Set • qr.jumvi.co", width * 0.5, footerY);
 
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){
