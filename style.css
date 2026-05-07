@@ -1598,12 +1598,9 @@ html.theme--dark .dashShareCopy{
   color: #93C5FD;
 }
 .dashBars{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
-.dashRow{ display:flex; align-items:center; gap:10px; }
-.dashIcon{ width:22px; font-size:16px; text-align:center; }
-.dashLabel{ width:72px; font-size:12px; font-weight:800; color:#0f172a; }
-.dashCount{ width:48px; font-size:11px; font-weight:800; color:#475569; text-align:right; }
-.dashLabel, .dashCount{ color: var(--text); }
-.dashBar{ flex:1; height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; border:1px solid rgba(2,6,23,0.06); }
+/* NOTE: detailed rules for .dashRow/.dashIcon/.dashLabel/.dashBar/.dashCount live further down
+   in the SKILL BARS section (~line 5830+). The old fixed-width rules used to be here but they
+   were conflicting with the modern flex layout — kept only .dashBars + .dashFill above. */
 .dashFill{ height:100%; width:0%; background: linear-gradient(90deg, var(--blue), var(--lime)); border-radius:999px; transition: width .35s ease; }
 
 /* Dashboard dynamic sub */
@@ -4478,7 +4475,6 @@ body.modalOpen .bottomNav{ display: none !important; }
 body:has(.backdrop.show) .bottomNav,
 body:has(.splashOverlay.show) .bottomNav,
 body:has(.timerCountdown.show) .bottomNav,
-body:has(.autoCountOverlay.show) .bottomNav,
 body:has(.badgeUnlockModal.show) .bottomNav,
 body:has(.tutorialOverlay.show) .bottomNav{
   display: none !important;
@@ -4594,6 +4590,10 @@ body.tab-browse .footer{ display: block; }
   line-height: 1.15;
   margin: 0 !important;
   max-width: none !important;
+  /* FIX: promoted today card — allow long names like "Red Light, Green Light" to wrap */
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
 }
 .dailyBox.dailyBoxPromoted .dailyMeta,
 .dailyBox.dailyBoxPromoted .dailyMeta *{
@@ -4661,7 +4661,8 @@ body.tab-browse .footer{ display: block; }
 }
 .continueHintIcon{ font-size: 18px; }
 .continueHintText{ flex: 1; color: var(--text); font-weight: 700; min-width: 0; overflow: hidden; }
-.continueHintText b{ color: var(--accent-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 140px; vertical-align: bottom; }
+/* FIX: allow longer mission names like "Step-Back Challenge" to wrap to a second line */
+.continueHintText b{ color: var(--accent-blue); display: inline; }
 .continueHintBtn{
   background: var(--accent-blue);
   color: #fff;
@@ -5868,7 +5869,8 @@ html.theme--dark .todayGoalBadge.completed{
 html.theme--dark .dashRow .dashIcon{ background: rgba(255,255,255,0.06); }
 
 .dashLabel{
-  flex: 1; min-width: 0;
+  /* FIX: bias label to take more room than bar so names don't truncate */
+  flex: 2 1 auto; min-width: 0;
   font-size: 13px;
   font-weight: 800;
   color: var(--text);
@@ -5878,7 +5880,10 @@ html.theme--dark .dashRow .dashIcon{ background: rgba(255,255,255,0.06); }
   text-overflow: ellipsis;
 }
 .dashBar{
-  flex: 0 0 80px;
+  /* FIX: shrink + allow shrinking so longer labels (e.g. "Lightning Hands") fit */
+  flex: 1 1 60px;
+  min-width: 40px;
+  max-width: 80px;
   height: 8px;
   background: rgba(0,0,0,0.06);
   border-radius: var(--r-pill);

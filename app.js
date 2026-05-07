@@ -2425,7 +2425,6 @@ function closeMission(){
   resetTimerUI(); // Stop + reset timer on close
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   // Score tracker temizle
-  stopAutoCount();
   toggleScoreTracker(false);
   backdrop.classList.remove("show");
   document.body.classList.remove("modalOpen");
@@ -4474,9 +4473,6 @@ function pickFirstMissionForNewUser(selectedDiff){
  * ======================= */
 let _currentScore = 0;
 let _scoreTrackerOpen = false;
-let _autoCountActive = false;
-let _autoCountHandler = null;
-let _autoCountLastSpike = 0;
 
 function getHighScores(){
   return lsGetJSON(HIGH_SCORES_KEY, {}) || {};
@@ -4563,8 +4559,6 @@ function toggleScoreTracker(force){
   if(next){
     resetScore();
     trackEvent("Score Tracker Opened");
-  } else {
-    stopAutoCount();
   }
 }
 
@@ -4581,7 +4575,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
   const resetBtn = document.getElementById("scoreTrackerReset");
   if(resetBtn) resetBtn.onclick = ()=>{ clickSound("click"); resetScore(); };
-  // Auto-count kaldirildi — buton stub gizli
   // Story banner toggle — sadece mevcut görev için gizle (sonraki görevde tekrar gelir)
   const storyToggle = document.getElementById("storyToggle");
   if(storyToggle){
@@ -4592,26 +4585,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
       trackEvent("Story Banner Dismissed");
     };
   }
-
-  // Auto-count overlay buttons
-  const autoStart = document.getElementById("btnAutoCountStart");
-  if(autoStart) autoStart.onclick = ()=>{
-    clickSound("click");
-    _activateAutoCount();
-  };
-  const autoCancel = document.getElementById("btnAutoCountCancel");
-  if(autoCancel) autoCancel.onclick = ()=>{
-    clickSound("click");
-    hideAutoCountOverlay();
-  };
-  document.querySelectorAll(".autoCountSensBtn").forEach(btn => {
-    btn.onclick = ()=>{
-      clickSound("click");
-      document.querySelectorAll(".autoCountSensBtn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      _autoCountThreshold = Number(btn.dataset.sens) || 18;
-    };
-  });
 });
 
 /** =======================
