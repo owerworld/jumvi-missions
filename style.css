@@ -1597,28 +1597,6 @@ html.theme--dark .dashShareCopy{
   background: rgba(96,165,250,0.18);
   color: #93C5FD;
 }
-.dashPrintWrap{ width:100%; }
-.dashPrintBtn{
-  width:100%;
-  display:flex; align-items:center; justify-content:center; gap:12px;
-  padding:12px 16px;
-  border-radius:16px;
-  background: #FFFFFF;
-  border:1.5px solid rgba(2,6,23,0.12);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  cursor:pointer;
-  text-align:left;
-}
-.dashPrintBtn:active{ opacity:0.8; transform:scale(0.98); }
-.dashPrintIcon{ font-size:22px; flex-shrink:0; }
-.dashPrintLabel{ display:flex; flex-direction:column; gap:2px; }
-.dashPrintMain{ font-size:14px; font-weight:900; color:var(--text); }
-.dashPrintSub{ font-size:11px; font-weight:700; color:var(--muted); }
-html.theme--dark .dashPrintBtn{
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(255,255,255,0.15);
-}
-html.theme--dark .dashPrintMain{ color:var(--text); }
 .dashBars{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 .dashRow{ display:flex; align-items:center; gap:10px; }
 .dashIcon{ width:22px; font-size:16px; text-align:center; }
@@ -1628,65 +1606,8 @@ html.theme--dark .dashPrintMain{ color:var(--text); }
 .dashBar{ flex:1; height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; border:1px solid rgba(2,6,23,0.06); }
 .dashFill{ height:100%; width:0%; background: linear-gradient(90deg, var(--blue), var(--lime)); border-radius:999px; transition: width .35s ease; }
 
-/* Modal share section (post-done) */
-.modalShareSection{
-  margin:10px 16px 14px;
-  padding:14px;
-  border-radius:18px;
-  background: linear-gradient(135deg, #e8f4ff 0%, #f0fdf4 100%);
-  border:1px solid rgba(79,179,255,0.2);
-}
-html.theme--dark .modalShareSection{
-  background: linear-gradient(135deg, rgba(79,179,255,0.1) 0%, rgba(34,197,94,0.07) 100%);
-  border-color: rgba(79,179,255,0.2);
-}
-.modalShareTitle{
-  font-size:13px; font-weight:800; color:var(--text);
-  margin-bottom:10px;
-}
-.modalShareBtns{ display:flex; gap:8px; flex-wrap:wrap; }
-.modalShareWA{ font-size:13px; padding:9px 16px; }
-.modalShareCopy{ font-size:13px; padding:9px 16px; }
-
 /* Dashboard dynamic sub */
 #dashDynSub{ transition: color 0.3s ease; }
-
-/* Seasonal Packs */
-.seasonalCard{
-  margin-top:14px;
-  border-radius:22px;
-  border:1px solid rgba(2,6,23,0.08);
-  background: linear-gradient(180deg, #ffffff, #f7fbff);
-  padding:14px;
-  box-shadow: var(--shadow-soft);
-}
-.seasonalHeader{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-.seasonalTitle{ font-weight:950; font-size:15px; color: var(--text); }
-.seasonalRow{ display:flex; gap:8px; flex-wrap:wrap; }
-.seasonalBtn{ min-height:40px; padding:8px 14px; font-size:13px; }
-
-.seasonalList{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.seasonalItem{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(2,6,23,0.08);
-  background:#fff;
-  cursor:pointer;
-}
-.seasonalItem .tag{ font-size:10px; }
-.seasonalItemTitle{ font-weight:900; color: var(--text); }
-html.theme--dark .seasonalItem{
-  background: rgba(17,24,39,0.9);
-  border-color: rgba(255,255,255,0.15);
-}
-html.theme--dark .seasonalItemTitle{ color:#f1f5f9; }
 
 .text-orange{ color: var(--accent-orange); }
 .icon-accent{ color: var(--accent-orange); }
@@ -2462,16 +2383,6 @@ body{
 .dailyIcon{
   background: #f8fafc !important;
   border: 1px solid var(--border) !important;
-}
-.dailyActions{ flex: 0 0 auto !important; }
-.dailyActions .btn{
-  min-height: 46px !important;
-  border: 1px solid var(--border) !important;
-}
-@media (max-width:520px){
-  .dailyBox{ display:flex !important; flex-direction:column !important; align-items:stretch !important; }
-  .dailyActions{ width:100% !important; }
-  .dailyActions .btn{ flex: 1 1 100% !important; }
 }
 
 /* Mission list cards: follow glass tokens */
@@ -3887,148 +3798,6 @@ html.theme--dark .sheetMeta .tag{
   color: var(--text);
 }
 
-/* ============================================
- * Auto-count Calibration Overlay
- * ============================================ */
-.autoCountOverlay{
-  position:fixed; inset:0; z-index:10000;
-  display:none;
-  align-items:center; justify-content:center;
-  padding:20px;
-  background: rgba(10,22,40,0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.autoCountOverlay.show{ display:flex; }
-.autoCountPanel{
-  background: rgba(255,255,255,0.98);
-  border-radius: 24px;
-  padding: 28px 22px 18px;
-  max-width: 340px; width: 100%;
-  text-align: center;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.3);
-  animation: welcomeIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-}
-html.theme--dark .autoCountPanel{
-  background: #0f1d2e;
-  color: #e8e8e8;
-}
-.autoCountIcon{
-  font-size: 56px;
-  line-height: 1;
-  margin-bottom: 8px;
-  animation: phoneShake 1.5s ease-in-out infinite;
-}
-@keyframes phoneShake{
-  0%,100%{ transform: rotate(0); }
-  25%   { transform: rotate(-5deg); }
-  75%   { transform: rotate(5deg); }
-}
-.autoCountTitle{
-  font-size: 22px;
-  font-weight: 950;
-  color: var(--text);
-  letter-spacing: -0.3px;
-  margin-bottom: 6px;
-}
-.autoCountDesc{
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.5;
-  margin-bottom: 18px;
-  font-weight: 700;
-}
-.autoCountDesc b{ color: var(--accent-blue); }
-.autoCountSensitivity{
-  margin-bottom: 18px;
-  padding: 12px;
-  background: rgba(79,179,255,0.06);
-  border-radius: 14px;
-}
-.autoCountSensitivityLabel{
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-.autoCountSensitivityBtns{
-  display: flex; gap: 6px;
-}
-.autoCountSensBtn{
-  flex: 1;
-  padding: 8px 4px;
-  border-radius: 10px;
-  border: 1.5px solid rgba(0,0,0,0.08);
-  background: rgba(255,255,255,0.6);
-  color: var(--text);
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.autoCountSensBtn.active{
-  background: var(--accent-blue);
-  color: #fff;
-  border-color: var(--accent-blue);
-  box-shadow: 0 2px 8px rgba(79,179,255,0.3);
-}
-.autoCountStart{
-  width: 100%;
-  background: linear-gradient(135deg, #4FB3FF, #2999FF);
-  color: #fff;
-  border: none;
-  border-radius: 16px;
-  padding: 14px;
-  font-size: 15px;
-  font-weight: 900;
-  cursor: pointer;
-  margin-bottom: 8px;
-  box-shadow: 0 8px 22px rgba(37,99,235,0.3);
-}
-.autoCountStart:active{ transform: scale(0.98); }
-.autoCountCancel{
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 700;
-  padding: 8px;
-  cursor: pointer;
-}
-
-/* Auto-count active visual indicator on score tracker */
-.scoreTracker.autoCountActive{
-  border-color: var(--accent-lime);
-  background: linear-gradient(135deg, rgba(151,215,0,0.18), rgba(79,179,255,0.1));
-  box-shadow: 0 4px 20px rgba(151,215,0,0.2);
-}
-.scoreTracker.autoCountActive::before{
-  content:"📱 Auto-count listening...";
-  display:block;
-  text-align:center;
-  font-size:11px;
-  font-weight:900;
-  color: #064e3b;
-  background: var(--accent-lime);
-  padding: 4px 10px;
-  border-radius: 999px;
-  margin-bottom: 10px;
-  width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  animation: autoPulse 1.5s ease-in-out infinite;
-}
-@keyframes autoPulse{
-  0%,100%{ opacity: 0.7; }
-  50%   { opacity: 1; }
-}
-html.theme--dark .scoreTracker.autoCountActive::before{
-  background: rgba(151,215,0,0.25);
-  color: #a3e635;
-}
 
 /* ============================================
  * Story Banner (hikaye katmanı — opsiyonel hayal katmanı)
