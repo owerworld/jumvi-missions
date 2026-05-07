@@ -31,8 +31,7 @@ self.addEventListener("activate", (event) => {
 });
 
 const LARGE_ASSETS = new Set([
-  "/certificate-template.webp",
-  "/certificate-template.png"
+  "/certificate-template.webp"
 ]);
 
 self.addEventListener("fetch", (event) => {

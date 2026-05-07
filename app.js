@@ -333,7 +333,7 @@ function getToday(){
   }
 }
 
-const CERT_TEMPLATE_SOURCES = ["certificate-template.webp", "certificate-template.png"];
+const CERT_TEMPLATE_SOURCES = ["certificate-template.webp"];
 const CERT_NAME_COLOR = "#1d4ed8";
 const CERT_META_COLOR = "#475569";
 const CERT_NAME_FONT = "700 64px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
