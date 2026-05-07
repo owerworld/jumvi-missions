@@ -333,61 +333,46 @@ function getToday(){
   }
 }
 
+const CERT_TEMPLATE_SOURCES = ["certificate-template.webp"];
+const CERT_NAME_COLOR = "#1d4ed8";
+const CERT_META_COLOR = "#475569";
+const CERT_NAME_FONT = "700 64px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
+const CERT_META_FONT = "600 20px 'Poppins', 'Helvetica Neue', Arial, sans-serif";
+
+// FIX: crossOrigin prevents canvas tainting when template served from CDN/different origin
+function loadImage(src){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = ()=> resolve(img);
+    img.onerror = ()=> reject(new Error("img_load_failed"));
+    img.src = src;
+  });
+}
+
 // FIX: Shared iOS/iPadOS detection — modern iPads show "Macintosh" UA
 function isIosDevice(){
   return (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
           (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)) &&
          !window.MSStream;
 }
-function fitText(ctx, text, maxWidth, startSize, fontFamily, weight){
+async function loadImageWithFallback(sources){
+  for(const src of sources){
+    try{
+      const img = await loadImage(src);
+      return img;
+    }catch(_){}
+  }
+  throw new Error("img_load_failed");
+}
+function fitText(ctx, text, maxWidth, startSize, fontFamily){
   let size = startSize;
-  const w = weight || 700;
   while(size > 22){
-    ctx.font = `${w} ${size}px ${fontFamily}`;
+    ctx.font = `700 ${size}px ${fontFamily}`;
     if(ctx.measureText(text).width <= maxWidth) return size;
     size -= 2;
   }
   return size;
-}
-const EMOJI_FONT = "'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Twemoji Mozilla',sans-serif";
-const POPPINS_FONT = "'Poppins','Helvetica Neue',Arial,sans-serif";
-
-// Helper: 5-point star path
-function drawCertStar(ctx, cx, cy, size, color, alpha){
-  ctx.save();
-  ctx.globalAlpha = (alpha == null ? 1 : alpha);
-  ctx.fillStyle = color;
-  ctx.translate(cx, cy);
-  ctx.beginPath();
-  for(let i=0;i<5;i++){
-    const ang = (i * 2 * Math.PI / 5) - Math.PI/2;
-    const x1 = Math.cos(ang) * size;
-    const y1 = Math.sin(ang) * size;
-    const ang2 = ang + Math.PI/5;
-    const x2 = Math.cos(ang2) * size * 0.45;
-    const y2 = Math.sin(ang2) * size * 0.45;
-    if(i===0) ctx.moveTo(x1, y1); else ctx.lineTo(x1, y1);
-    ctx.lineTo(x2, y2);
-  }
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-}
-
-// Helper: rounded rectangle path
-function certRoundRect(ctx, x, y, w, h, r){
-  const rr = Math.min(r, w/2, h/2);
-  ctx.beginPath();
-  ctx.moveTo(x+rr, y);
-  ctx.lineTo(x+w-rr, y);
-  ctx.quadraticCurveTo(x+w, y, x+w, y+rr);
-  ctx.lineTo(x+w, y+h-rr);
-  ctx.quadraticCurveTo(x+w, y+h, x+w-rr, y+h);
-  ctx.lineTo(x+rr, y+h);
-  ctx.quadraticCurveTo(x, y+h, x, y+h-rr);
-  ctx.lineTo(x, y+rr);
-  ctx.quadraticCurveTo(x, y, x+rr, y);
-  ctx.closePath();
 }
 
 async function renderSimpleCertificateBlob(){
@@ -396,166 +381,51 @@ async function renderSimpleCertificateBlob(){
     const dateText = getToday();
     const certId = getCertId();
 
-    // Live data
-    const totalMissions = (typeof missions !== "undefined" && Array.isArray(missions)) ? missions.length : 36;
-    const completedMissions = (typeof done !== "undefined" && done && typeof done.size === "number") ? done.size : 0;
-    const best = Math.max(0, Number(bestStreak) || 0);
+    const img = await loadImageWithFallback(CERT_TEMPLATE_SOURCES);
+    const width = img.naturalWidth || 1600;
+    const height = img.naturalHeight || 1200;
 
-    // Pack mastery (6 packs)
-    const packs = (typeof SKILL_PACKS !== "undefined" ? SKILL_PACKS : []).map(p=>{
-      const totalP = (typeof missions !== "undefined") ? missions.filter(m=>m.pack===p.key).length : 6;
-      const doneP = (typeof missions !== "undefined" && done) ? missions.filter(m=>m.pack===p.key && done.has(m.id)).length : 0;
-      return { icon:p.icon, label:p.label, color:p.color, doneP, totalP: totalP||6, mastered: doneP >= (totalP||6) };
-    });
-
-    const W = 1600, H = 1200;
     const canvas = document.createElement("canvas");
-    canvas.width = W;
-    canvas.height = H;
+    canvas.width = width;
+    canvas.height = height;
     const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
 
-    // === Background — warm cream/gold gradient ===
-    const bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0,    "#FFFAEC");
-    bg.addColorStop(0.55, "#FFE9B8");
-    bg.addColorStop(1,    "#FFCB7A");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
+    // Draw template
+    ctx.drawImage(img, 0, 0, width, height);
 
-    // Soft decorative blobs in corners
-    ctx.save();
-    ctx.globalAlpha = 0.20;
-    ctx.fillStyle = "#FFB347";
-    ctx.beginPath(); ctx.arc(150, 150, 220, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(W-150, H-150, 260, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = "#FF8A33";
-    ctx.globalAlpha = 0.12;
-    ctx.beginPath(); ctx.arc(W-180, 220, 150, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(180, H-220, 170, 0, Math.PI*2); ctx.fill();
-    ctx.restore();
-
-    // Decorative stars
-    drawCertStar(ctx, 170, 220, 30, "#FFC700", 0.85);
-    drawCertStar(ctx, W-170, 220, 30, "#FFC700", 0.85);
-    drawCertStar(ctx, 130, H-220, 24, "#FF9F1C", 0.75);
-    drawCertStar(ctx, W-130, H-220, 24, "#FF9F1C", 0.75);
-    drawCertStar(ctx, 260, 130, 16, "#FFC700", 0.6);
-    drawCertStar(ctx, W-260, 130, 16, "#FFC700", 0.6);
-
-    // === Borders — gold double frame ===
-    ctx.strokeStyle = "#C99216";
-    ctx.lineWidth = 6;
-    ctx.strokeRect(60, 60, W-120, H-120);
-    ctx.strokeStyle = "rgba(201,146,22,0.45)";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(82, 82, W-164, H-164);
-
+    // Name (centered, on the dotted line area)
+    const nameX = width * 0.5;
+    const nameY = height * 0.555;
+    const maxNameWidth = width * 0.62;
+    const baseNameSize = Math.round(width * 0.055);
+    const nameSize = fitText(ctx, name, maxNameWidth, baseNameSize, "'Poppins', 'Helvetica Neue', Arial, sans-serif");
+    ctx.fillStyle = CERT_NAME_COLOR;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+    ctx.font = `700 ${nameSize}px 'Poppins', 'Helvetica Neue', Arial, sans-serif`;
+    ctx.fillText(name, nameX, nameY);
 
-    // === Trophy emoji (centerpiece) ===
-    ctx.font = `170px ${EMOJI_FONT}`;
-    ctx.fillText("🏆", W/2, 230);
+  // Meta (top-right) - draw directly on template (no box)
+  const metaX = width * 0.93;
+  const metaY = height * 0.105;
+  const lineGap = height * 0.028;
+  const m1 = `Completed on: ${dateText}`;
+  const m2 = `Certificate ID: ${certId}`;
+  ctx.fillStyle = CERT_META_COLOR;
+  ctx.textAlign = "right";
+  ctx.textBaseline = "top";
+  ctx.font = CERT_META_FONT;
+  ctx.fillText(m1, metaX, metaY);
+  ctx.fillText(m2, metaX, metaY + lineGap);
 
-    // === Title — MISSION CHAMPION ===
-    ctx.font = `900 76px ${POPPINS_FONT}`;
-    ctx.fillStyle = "#7A4A00";
-    ctx.fillText("MISSION CHAMPION", W/2, 380);
-
-    // Subtitle
-    ctx.font = `500 26px ${POPPINS_FONT}`;
-    ctx.fillStyle = "#9A7B3C";
-    ctx.fillText("This certificate is proudly awarded to", W/2, 445);
-
-    // === Child name — big, blue, fitted ===
-    const maxNameWidth = W * 0.78;
-    const nameSize = fitText(ctx, name, maxNameWidth, 110, POPPINS_FONT, 900);
-    ctx.font = `900 ${nameSize}px ${POPPINS_FONT}`;
-    ctx.fillStyle = "#1d4ed8";
-    ctx.fillText(name, W/2, 545);
-
-    // Decorative underline below name
-    ctx.strokeStyle = "rgba(29,78,216,0.3)";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(W/2 - 280, 605);
-    ctx.lineTo(W/2 + 280, 605);
-    ctx.stroke();
-    // Tiny diamond accent
-    ctx.fillStyle = "#1d4ed8";
-    ctx.save();
-    ctx.translate(W/2, 605);
-    ctx.rotate(Math.PI/4);
-    ctx.fillRect(-7, -7, 14, 14);
-    ctx.restore();
-
-    // === Stats panel — pill ===
-    ctx.font = `700 36px ${POPPINS_FONT}`;
-    const missionLine = `✓ ${completedMissions} of ${totalMissions} missions completed`;
-    ctx.fillStyle = "#15803d";
-    ctx.fillText(missionLine, W/2, 690);
-
-    if(best > 0){
-      ctx.font = `600 28px ${POPPINS_FONT}`;
-      ctx.fillStyle = "#dc2626";
-      ctx.fillText(`🔥 Best streak: ${best} day${best===1?"":"s"}`, W/2, 740);
-    }
-
-    // === Pack mastery row ===
-    const packTitleY = 810;
-    ctx.font = `700 24px ${POPPINS_FONT}`;
-    ctx.fillStyle = "#5b3d10";
-    ctx.fillText("PACK MASTERY", W/2, packTitleY);
-
-    if(packs.length){
-      const chipW = 200;
-      const totalRow = chipW * packs.length;
-      const startX = (W - totalRow) / 2 + chipW/2;
-      const cy = packTitleY + 95;
-      packs.forEach((p, i)=>{
-        const cx = startX + i * chipW;
-        // Circle
-        ctx.fillStyle = p.mastered ? p.color : "rgba(120,120,120,0.16)";
-        ctx.beginPath(); ctx.arc(cx, cy, 46, 0, Math.PI*2); ctx.fill();
-        // Stroke
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = p.mastered ? p.color : "rgba(120,120,120,0.30)";
-        ctx.beginPath(); ctx.arc(cx, cy, 46, 0, Math.PI*2); ctx.stroke();
-        // Icon
-        ctx.font = `40px ${EMOJI_FONT}`;
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = "#fff";
-        ctx.fillText(p.icon, cx, cy + 2);
-        // Status text
-        ctx.font = `700 15px ${POPPINS_FONT}`;
-        ctx.fillStyle = p.mastered ? "#15803d" : "#94a3b8";
-        ctx.fillText(p.mastered ? "MASTERED" : `${p.doneP}/${p.totalP}`, cx, cy + 75);
-        // Pack short label
-        ctx.font = `600 14px ${POPPINS_FONT}`;
-        ctx.fillStyle = "rgba(80,60,20,0.65)";
-        ctx.fillText(p.label, cx, cy + 95);
-      });
-    }
-
-    // === Date + Cert ID strip ===
-    const stripY = H - 165;
-    ctx.font = `500 22px ${POPPINS_FONT}`;
-    ctx.fillStyle = "#5b3d10";
-    ctx.textAlign = "left";
-    ctx.fillText(`Awarded: ${dateText}`, 140, stripY);
-    ctx.textAlign = "right";
-    ctx.fillText(`ID: ${certId}`, W-140, stripY);
-
-    // === Footer brand ===
+    // Footer branding
+    const footerY = height * 0.965;
+    const footerSize = Math.round(width * 0.018);
     ctx.textAlign = "center";
-    ctx.font = `700 22px ${POPPINS_FONT}`;
-    ctx.fillStyle = "rgba(80,55,15,0.75)";
-    ctx.fillText("🎾 JUMVI Toss & Catch Paddle Set", W/2, H - 100);
-    ctx.font = `500 18px ${POPPINS_FONT}`;
-    ctx.fillStyle = "rgba(80,55,15,0.55)";
-    ctx.fillText("qr.jumvi.co", W/2, H - 72);
+    ctx.textBaseline = "middle";
+    ctx.font = `600 ${footerSize}px 'Helvetica Neue', Arial, sans-serif`;
+    ctx.fillStyle = "rgba(80,80,100,0.55)";
+    ctx.fillText("🎾 JUMVI Toss & Catch Paddle Set • Available on Amazon", width * 0.5, footerY);
 
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){

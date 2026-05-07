@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumvi-missions-v25";
+const CACHE_NAME = "jumvi-missions-v24";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -30,9 +30,15 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+const LARGE_ASSETS = new Set([
+  "/certificate-template.webp"
+]);
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
+
+  const url = new URL(req.url);
 
   // Network-first for HTML/navigation
   if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
@@ -52,6 +58,10 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
+      // For large assets, avoid blocking UI on first load
+      if(LARGE_ASSETS.has(url.pathname)){
+        return fetch(req);
+      }
       return fetch(req).then((res) => {
         const copy = res.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
