@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260508-1">
+  <link rel="stylesheet" href="style.css?v=20260508-2">
   <script>
     (function(){
       try{
@@ -587,43 +587,30 @@
 
       <!-- Header -->
       <div class="sheetTop certSheetTop">
-        <div class="certHeader">
-          <div class="certHeaderEmoji">🏆</div>
-          <div>
-            <div class="sheetTitle certSheetTitle">You Did It!</div>
-            <div class="certHeaderSub">Your certificate is ready to save &amp; share</div>
-          </div>
-        </div>
+        <div class="sheetTitle certSheetTitle">🏆 Champion Certificate</div>
         <button class="close certCloseBtn" id="btnCertClose" aria-label="Close certificate">✕</button>
       </div>
 
       <div class="certWrap">
 
-        <!-- Child name input -->
+        <!-- Child name input (label-less; placeholder is self-explanatory) -->
         <div class="certNameRow">
-          <label class="certNameLabel" for="certNameInput">Child’s name</label>
-          <input id="certNameInput" class="certNameInput" type="text" placeholder="Optional — e.g. Alex" autocomplete="off" />
+          <input id="certNameInput" class="certNameInput" type="text" placeholder="Type child’s name (optional)" autocomplete="off" aria-label="Child’s name" />
         </div>
 
-        <!-- Certificate preview -->
+        <!-- Certificate preview (date + ID already embedded on the image itself) -->
         <div class="certPreviewWrap">
           <img id="certPreviewImg" alt="Certificate preview" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
         </div>
 
-        <!-- Certificate ID badge -->
-        <div class="certIdBadge" id="certMetaLine">📅 — &nbsp;·&nbsp; 🔖 —</div>
-
         <!-- Primary CTA -->
         <button class="btn btnCertPrimary" id="btnCertSavePng" aria-label="Save certificate as image">💾 Save to Photos</button>
 
-        <!-- Secondary row -->
-        <div class="certSecondaryRow">
-          <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share</button>
-          <button class="btn certWhatsAppBtn" id="btnCertWhatsApp" aria-label="Share via WhatsApp">💬 WhatsApp</button>
-        </div>
+        <!-- Secondary CTA — Share opens the OS share sheet (WhatsApp, Messages, Mail, etc. all in one) -->
+        <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share with family</button>
 
-        <!-- Tertiary: PDF -->
-        <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">📄 Save as PDF instead</button>
+        <!-- Tertiary: PDF text link -->
+        <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">Or save as PDF</button>
 
       </div>
     </div>
@@ -770,13 +757,13 @@
   </div>
 </div>
 
-<script src="confetti.min.js?v=20260508-1" defer></script>
-<script src="data.js?v=20260508-1" defer></script>
-<script src="app.js?v=20260508-1" defer></script>
+<script src="confetti.min.js?v=20260508-2" defer></script>
+<script src="data.js?v=20260508-2" defer></script>
+<script src="app.js?v=20260508-2" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260508-1").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260508-2").catch(()=>{});
     });
   }
 </script>

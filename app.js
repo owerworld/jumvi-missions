@@ -332,6 +332,11 @@ function getToday(){
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   }
 }
+// FIX: ISO date for filenames — avoids commas/spaces from getToday() that break some OSes
+function getTodayISO(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
 
 const CERT_TEMPLATE_SOURCES = ["certificate-template.webp"];
 const CERT_NAME_COLOR = "#1d4ed8";
@@ -676,7 +681,7 @@ const btnRestore = document.getElementById("btnRestore");
 const certBackdrop = document.getElementById("certBackdrop");
 const btnCertClose = document.getElementById("btnCertClose");
 const certNameInput = document.getElementById("certNameInput");
-const certMetaLine  = document.getElementById("certMetaLine");
+// certMetaLine removed — date + cert ID are now baked into the cert image itself
 const certPreviewImg = document.getElementById("certPreviewImg");
 const btnCertSavePng = document.getElementById("btnCertSavePng");
 const btnCertSavePdf = document.getElementById("btnCertSavePdf");
@@ -2471,9 +2476,7 @@ function buildCertificate(){
   if(!certNameInput) return;
   const raw = (certNameInput.value || "").trim();
   lsSet(CERT_NAME_KEY, raw);
-  if(certMetaLine){
-    certMetaLine.innerHTML = "📅 " + getToday() + " &nbsp;·&nbsp; 🔖 " + getCertId();
-  }
+  // certMetaLine removed — date + cert ID are now baked into the cert image itself
   scheduleCertificatePreview();
 }
 
@@ -2564,7 +2567,7 @@ function openImageForSave(url){
 
 async function downloadCertificatePNG({auto=true}={}){
   const isiOS = isIosDevice();
-  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+  const filename = `JUMVI-Certificate-${getTodayISO()}.png`;
 
   // FIX: loading state on BOTH iOS + Android (prevents double-tap, gives feedback)
   const origHTML = btnCertSavePng ? btnCertSavePng.innerHTML : "";
@@ -2635,7 +2638,7 @@ async function downloadCertificatePNG({auto=true}={}){
 
 async function shareCertificate(){
   clickSound("click");
-  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+  const filename = `JUMVI-Certificate-${getTodayISO()}.png`;
   // FIX: correct mission count (36) + always try image file first
   const shareText = "🏆 Completed all 36 JUMVI Toss & Catch missions!";
   try{
@@ -2675,7 +2678,7 @@ async function shareCertificateWhatsApp(){
   // FIX: try Web Share API with image file first (works on iOS + Android Chrome)
   // — this opens WhatsApp natively if the user picks it from the share sheet
   try{
-    const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.png`;
+    const filename = `JUMVI-Certificate-${getTodayISO()}.png`;
     const blob = await renderSimpleCertificateBlob();
     if(blob){
       const file = new File([blob], filename, {type:"image/png"});
@@ -2696,7 +2699,7 @@ async function shareCertificateWhatsApp(){
 
 async function downloadCertificatePDF(){
   const isiOS = isIosDevice(); // FIX: use shared helper (catches modern iPad)
-  const filename = `JUMVI-Certificate-${getToday().replaceAll("/","-")}.pdf`;
+  const filename = `JUMVI-Certificate-${getTodayISO()}.pdf`;
   try{
     const ok = await ensurePdfLib();
     if(!ok){
@@ -2777,12 +2780,8 @@ if(btnCertSavePdf){
 }
 
 const btnCertShare = document.getElementById("btnCertShare");
-const btnCertWhatsApp = document.getElementById("btnCertWhatsApp");
 if(btnCertShare){
   btnCertShare.onclick = ()=>{ buildCertificate(); shareCertificate(); };
-}
-if(btnCertWhatsApp){
-  btnCertWhatsApp.onclick = ()=>{ shareCertificateWhatsApp(); };
 }
 
 // Open certificate (only if unlocked)

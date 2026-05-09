@@ -1863,57 +1863,7 @@ html.theme--dark .toast{
       display:none;
     }
 
-    /* Certificate sheet - preview image (matches exported PNG/PDF) */
-    .certWrap{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .certMetaLine{
-      font-size:12px;
-      font-weight:900;
-      color:#64748B;
-    }
-    .certPreviewWrap{
-      width:100%;
-      background:#ffffff;
-      border-radius: 18px;
-      overflow:hidden;
-      border: 2px solid #FFE0B2;
-      box-shadow: 0 14px 36px rgba(0,0,0,.12);
-    }
-    #certPreviewImg{
-      display:block;
-      width:100%;
-      height:auto;
-      background:#ffffff;
-    }
-
-    .certControls{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .certShareBtn{
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color:#fff;
-      border:none;
-      font-weight:700;
-      font-size:13px;
-      padding:8px 14px;
-      border-radius:999px;
-    }
-    .certShareBtn:active{ opacity:0.85; }
-    .certWhatsAppBtn{
-      background:#25D366;
-      color:#fff;
-      border:none;
-      font-weight:700;
-      font-size:13px;
-      padding:8px 14px;
-      border-radius:999px;
-    }
-    .certWhatsAppBtn:active{ opacity:0.85; }
+    /* Certificate sheet — base styles (full overrides live in CERTIFICATE MODAL section ~line 3290) */
     .field{
       display:flex;
       gap:10px;
@@ -3291,35 +3241,18 @@ button, a, input, textarea, select, label {
    CERTIFICATE MODAL — 10/10 REDESIGN
    ============================================================ */
 
-/* ── Header ──────────────────────────────────────────────── */
+/* ── Header (single-line, no emoji/sub — preview already shows trophy) ── */
 .certSheetTop {
-  align-items: flex-start !important;
-}
-.certHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.certHeaderEmoji {
-  font-size: 36px;
-  line-height: 1;
-  flex-shrink: 0;
+  align-items: center !important;
 }
 .certSheetTitle {
-  font-size: 22px !important;
+  font-size: 19px !important;
   font-weight: 900 !important;
   letter-spacing: -0.02em !important;
   line-height: 1.1 !important;
 }
-.certHeaderSub {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 600;
-  margin-top: 2px;
-}
 .certCloseBtn {
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
 /* ── Wrap ────────────────────────────────────────────────── */
@@ -3329,18 +3262,10 @@ button, a, input, textarea, select, label {
   gap: 12px !important;
 }
 
-/* ── Name input ──────────────────────────────────────────── */
+/* ── Name input (label-less; placeholder is self-explanatory) ── */
 .certNameRow {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-}
-.certNameLabel {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--muted);
 }
 .certNameInput {
   width: 100%;
@@ -3377,21 +3302,6 @@ button, a, input, textarea, select, label {
   background: #ffffff;
 }
 
-/* ── ID badge ────────────────────────────────────────────── */
-.certIdBadge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--muted);
-  background: rgba(0,0,0,0.04);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 999px;
-  padding: 7px 16px;
-  letter-spacing: 0.01em;
-}
-
 /* ── Primary CTA ─────────────────────────────────────────── */
 .btnCertPrimary {
   width: 100%;
@@ -3411,34 +3321,21 @@ button, a, input, textarea, select, label {
   box-shadow: 0 4px 12px rgba(22,163,74,0.35) !important;
 }
 
-/* ── Secondary row ───────────────────────────────────────── */
-.certSecondaryRow {
-  display: flex;
-  gap: 10px;
-}
-.certSecondaryRow .certShareBtn,
-.certSecondaryRow .certWhatsAppBtn {
-  flex: 1;
-  min-height: 46px !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  border-radius: 14px !important;
-}
+/* ── Secondary CTA — Share (full-width; OS sheet covers WhatsApp+others) ── */
 .certShareBtn {
+  width: 100%;
+  min-height: 50px !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  border-radius: 14px !important;
   background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
   color: #fff !important;
   border: none !important;
   box-shadow: 0 4px 14px rgba(99,102,241,0.30) !important;
+  letter-spacing: -0.01em;
+  transition: transform 0.1s;
 }
 .certShareBtn:active { transform: scale(0.97) !important; }
-
-.certWhatsAppBtn {
-  background: #25D366 !important;
-  color: #fff !important;
-  border: none !important;
-  box-shadow: 0 4px 14px rgba(37,211,102,0.30) !important;
-}
-.certWhatsAppBtn:active { transform: scale(0.97) !important; }
 
 /* ── Tertiary: PDF ───────────────────────────────────────── */
 .certPdfBtn {
@@ -3457,21 +3354,10 @@ button, a, input, textarea, select, label {
 .certPdfBtn:active { opacity: 0.6 !important; }
 
 /* ── Dark mode overrides ─────────────────────────────────── */
-html.theme--dark .certHeaderSub {
-  color: #94a3b8;
-}
-html.theme--dark .certNameLabel {
-  color: #64748b;
-}
 html.theme--dark .certNameInput {
   background: #ffffff !important;
   color: #111827 !important;
   border-color: rgba(255,255,255,0.18) !important;
-}
-html.theme--dark .certIdBadge {
-  background: rgba(255,255,255,0.06) !important;
-  border-color: rgba(255,255,255,0.12) !important;
-  color: #94a3b8 !important;
 }
 html.theme--dark .certPdfBtn {
   color: #64748b !important;
