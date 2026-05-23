@@ -2289,6 +2289,16 @@ function openMission(id){
     storyBanner.style.display = "none";
   }
 
+  // Motion-diagram icon — pre-rendered SVG/HTML markup per mission ID (1..36)
+  // Lives at top of #sheetBody. Markup comes from jumvi-mission-icons.js (window.MISSION_ICONS).
+  // .jmv wrapper provides color tokens (light/dark auto). Hidden if markup missing.
+  const iconWrap = document.getElementById("missionIconWrap");
+  if(iconWrap){
+    const markup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || "";
+    iconWrap.innerHTML = markup;
+    iconWrap.style.display = markup ? "" : "none";
+  }
+
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>

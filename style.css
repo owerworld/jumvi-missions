@@ -3683,6 +3683,29 @@ html.theme--dark .sheetMeta .tag{
 
 
 /* ============================================
+ * Mission Motion-Diagram Icon (per-mission visual at top of modal body)
+ * NOTE: ONLY layout/spacing — colors come from jumvi-icons.css
+ * ============================================ */
+.missionIconWrap{
+  margin: 4px 0 14px;
+  padding: 14px 10px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.025);
+  border: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+}
+.missionIconWrap > svg{ width: 100%; max-width: 380px; }
+html.theme--dark .missionIconWrap{
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+/* Panel-style missions (13,19,20,22,23,27,28) ship multi-block HTML — ensure they breathe */
+.missionIconWrap > div:not(.sr-only){ width: 100%; }
+
+/* ============================================
  * Story Banner (hikaye katmanı — opsiyonel hayal katmanı)
  * Görevi BOZMAZ, sadece sahneyi kurar
  * ============================================ */
