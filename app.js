@@ -2256,6 +2256,10 @@ function disarmHoldToReset(){
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
+  // If the Red Light / Green Light caller is running (mission 2) and the user
+  // taps Next/Random/another mission, tear it down so the new mission isn't
+  // hidden behind the green/red overlay.
+  try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
   lastOpenedId = setState("lastOpenedId", id);
   missionOpenedAt = Date.now();
   // "Continue where you left off" için kaydet
@@ -2356,11 +2360,34 @@ function openMission(id){
   // Timer Setup
   let seconds = 60; // default
   if(ms.time.includes("s")) seconds = parseInt(ms.time) || 60;
-  
-  btnStartTimer.onclick = () => {
-    if(timerHoldResetArmed) return; // ignore click right after a hold-reset
-    toggleTimer(seconds); // tap: start / pause / resume
-};
+
+  // Mission 2 (Red Light, Green Light) — phone acts as the caller via the
+  // JumviRedLight overlay module. Hijack the Start button for this mission
+  // only: random GREEN/RED switches + speech + countdown replace the plain
+  // timer (which doesn't fit RL/GL gameplay).
+  const isRedLightMission = (ms.id === 2 && typeof window.JumviRedLight !== "undefined");
+  if(isRedLightMission){
+    btnStartTimer.textContent = "▶ Start Caller";
+    btnStartTimer.setAttribute("aria-label", "Start Red Light Green Light caller");
+    btnStartTimer.onclick = () => {
+      if(timerHoldResetArmed) return;
+      try{ clickSound("click"); }catch(_){}
+      trackEvent("RedLight Caller Started", { mission: ms.id, duration: seconds });
+      window.JumviRedLight.start({
+        duration: seconds,
+        speed: "normal",
+        sound: true,
+        onEnd: ()=>{ trackEvent("RedLight Caller Ended", { mission: ms.id }); }
+      });
+    };
+  } else {
+    btnStartTimer.textContent = "▶ Start";
+    btnStartTimer.setAttribute("aria-label", "Start timer");
+    btnStartTimer.onclick = () => {
+      if(timerHoldResetArmed) return; // ignore click right after a hold-reset
+      toggleTimer(seconds); // tap: start / pause / resume
+    };
+  }
 
 // Tip: hold the timer button to reset (kid-friendly, no extra buttons)
 if(!btnStartTimer.dataset.holdBound){
@@ -2441,6 +2468,8 @@ function closeMission(){
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   // Score tracker temizle
   toggleScoreTracker(false);
+  // Tear down Red Light / Green Light caller overlay if it was running (mission 2)
+  try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
   backdrop.classList.remove("show");
   document.body.classList.remove("modalOpen");
   // Restore background scroll
