@@ -57,23 +57,40 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     injected = true;
   }
 
-  // ---- speed presets: WIDE green ranges = unpredictability without breaking play
-  // [greenShortMin, greenShortMax, greenLongMin, greenLongMax, redMin, redMax]
-  // We pick green from EITHER a short or long range randomly (60% normal, 25% long
-  // pause that lulls the player, 15% short snap). Red always >= 1.2s so kids can freeze.
+  // ── TIMING CALIBRATION ─────────────────────────────────────────────
+  // One JUMVI "round" = unstick paddle velcro → throw → fly → re-stick
+  // to other paddle. Field-measured estimate (kid, close range, soft
+  // velcro): T ≈ 2.3 s. The "snap" range = one full round (no slack);
+  // "normal" = 1 relaxed round or 2 quick rounds; "long lull" = 2+ rounds
+  // → player gets sleepy → SURPRISE red.
+  //
+  // RED ranges DON'T scale with T — once the ball is caught it stays
+  // stuck to the paddle (velcro), so freezing is naturally easy and
+  // 1.6–2.6 s is plenty.
+  //
+  // To recalibrate for your actual paddles:
+  //   1. Time 5 rounds at kid speed, divide → newT seconds.
+  //   2. Scale each GREEN range by (newT / 2.3). Leave RED ranges alone.
+  //
+  // SPEEDS schema (8 numbers):
+  //   [snapMin, snapMax, normMin, normMax, longMin, longMax, redMin, redMax]
+  // Picker weights: 15% snap, 60% normal, 25% long lull (set in
+  // pickGreenDuration below).
   var SPEEDS = {
-    easy:   [3.0, 5.0, 5.0, 8.0, 1.5, 2.5],
-    normal: [1.8, 3.5, 4.0, 6.5, 1.4, 2.3],
-    hard:   [1.2, 2.4, 2.5, 4.5, 1.2, 2.0]
+    easy:   [2.6, 3.4, 3.4, 5.0, 5.5, 7.0, 1.8, 3.0],  // ages 3–5, learners
+    normal: [2.3, 3.0, 3.0, 4.5, 4.8, 6.0, 1.6, 2.6],  // ⬅ default — T=2.3s
+    hard:   [2.0, 2.6, 2.6, 3.8, 4.0, 5.0, 1.4, 2.2]   // ages 7+, faster
   };
   // After this many switches, allow trickier patterns (double-red, false-restart)
   var TRICK_AFTER_SWITCHES = 3;
+  var DOUBLE_RED_CHANCE = 0.15;   // % of reds that turn into "false reset" gotcha
+  var DOUBLE_RED_COOLDOWN_S = 6;  // min seconds between two gotchas
 
   var state = {
     active: false, overlay: null, dots: [], bigEl: null, subEl: null, timerEl: null,
     timers: [], endAt: 0, tickId: 0, opts: null, audioCtx: null,
     switchCount: 0,           // total light changes — gates trickery
-    lastDoubleRedAt: -999,    // throttle: no double-red within 6s of previous one
+    lastDoubleRedAt: -999,    // throttle: see DOUBLE_RED_COOLDOWN_S above
     voicesReady: false, speechPrimed: false, voice: null
   };
 
@@ -267,16 +284,17 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
   //           "double red" — a second red follows the green quickly, giving
   //           the false impression of returning to safety. Throttled so it
   //           can't fire twice in a row.
+  // SPEEDS indices: 0=snapMin 1=snapMax 2=normMin 3=normMax 4=longMin 5=longMax 6=redMin 7=redMax
   function pickGreenDuration() {
     var p = SPEEDS[state.opts.speed] || SPEEDS.normal;
     var roll = Math.random();
-    if (roll < 0.60) return rand(p[0], p[1]);           // normal — short range
-    if (roll < 0.85) return rand(p[2], p[3]);           // long lull
-    return rand(Math.max(0.8, p[0] * 0.6), p[0]);        // snap — very short
+    if (roll < 0.15) return rand(p[0], p[1]);  // 15% snap  — one full round, no slack
+    if (roll < 0.75) return rand(p[2], p[3]);  // 60% normal — 1 relaxed + 1 quick, or 2 sıkı
+    return rand(p[4], p[5]);                    // 25% long  — 2+ rounds, then SURPRISE red
   }
   function pickRedDuration() {
     var p = SPEEDS[state.opts.speed] || SPEEDS.normal;
-    return rand(p[4], p[5]);
+    return rand(p[6], p[7]);
   }
 
   function scheduleNext(current) {
@@ -292,8 +310,8 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
       // RED → normally GREEN, but occasionally chain a "double red" (false reset)
       var nowSec = (Date.now() - (state.endAt - state.opts.duration * 1000)) / 1000;
       var canTrick = state.switchCount >= TRICK_AFTER_SWITCHES
-                  && (nowSec - state.lastDoubleRedAt) > 6;
-      if (canTrick && chance(0.10)) {
+                  && (nowSec - state.lastDoubleRedAt) > DOUBLE_RED_COOLDOWN_S;
+      if (canTrick && chance(DOUBLE_RED_CHANCE)) {
         // Brief "going-back-to-green" hint via a 350ms idle flash, then red again
         state.lastDoubleRedAt = nowSec;
         dur = pickRedDuration();
