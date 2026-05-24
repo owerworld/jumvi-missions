@@ -90,9 +90,16 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     try {
       var voices = window.speechSynthesis.getVoices() || [];
       if (voices.length) {
-        // Prefer a local English voice; fall back to first English; else first available
+        // Prefer "Enhanced/Premium" voices for clarity (the compact ones sound
+        // muffled, especially on iOS). These names cover iOS (Samantha, Karen,
+        // Daniel, Moira, Aaron, Nicky), Android (Google US English), and
+        // desktop browsers (Microsoft Aria/Jenny, Alex).
+        var preferred = /Samantha|Karen|Daniel|Moira|Aaron|Nicky|Alex|Google US English|Microsoft Aria|Microsoft Jenny|Microsoft Guy/i;
         state.voice =
+          voices.find(function (v) { return /^en/i.test(v.lang) && preferred.test(v.name); }) ||
+          voices.find(function (v) { return v.localService && /^en-US/i.test(v.lang); }) ||
           voices.find(function (v) { return v.localService && /^en/i.test(v.lang); }) ||
+          voices.find(function (v) { return /^en-US/i.test(v.lang); }) ||
           voices.find(function (v) { return /^en/i.test(v.lang); }) ||
           voices[0] || null;
         state.voicesReady = true;
@@ -126,18 +133,21 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
       if (!state.speechPrimed) primeSpeech();
 
       window.speechSynthesis.cancel();
-      // ~80ms gap between cancel() and speak() — iOS quirk; without this the
+      // ~120ms gap between cancel() and speak() — iOS quirk; without this the
       // first utterance after a cancel is often dropped silently on iOS 15+.
+      // 120ms also lets the pre-chime breathe so voice doesn't clash with it.
       state.timers.push(setTimeout(function () {
         if (!state.active) return;
         var u = new SpeechSynthesisUtterance(text);
         u.lang = 'en-US';
-        // Slightly above default rate — some iOS builds drop the very first
-        // default-rate utterance; varying it nudges the engine to actually fire.
-        u.rate = 1.05; u.pitch = 1; u.volume = 1;
+        // Slower rate (0.88) reads as MUCH clearer for short phrases on iOS
+        // and Android compact voices. Above-default rate (was 1.05) was
+        // chosen to dodge iOS skipping, but the prime utterance handles that
+        // now — clarity wins.
+        u.rate = 0.88; u.pitch = 1; u.volume = 1;
         if (state.voice) u.voice = state.voice;
         try { window.speechSynthesis.speak(u); } catch (_) {}
-      }, 80));
+      }, 120));
     } catch (e) {}
   }
 
@@ -146,25 +156,63 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
   }
 
-  function beep(freq, dur, on) {
-    if (!on) return;
+  // Ensure AudioContext exists (re-used for all tones)
+  function ensureCtx() {
     try {
       if (!state.audioCtx) {
         var AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return;
+        if (!AC) return null;
         state.audioCtx = new AC();
       }
-      var ctx = state.audioCtx;
-      if (ctx.state === 'suspended') ctx.resume();
-      var o = ctx.createOscillator(), g = ctx.createGain();
-      o.type = 'sine'; o.frequency.value = freq;
+      if (state.audioCtx.state === 'suspended') state.audioCtx.resume();
+      return state.audioCtx;
+    } catch (e) { return null; }
+  }
+
+  // Single tone with attack/decay envelope — sounds cleaner than raw on/off
+  function playTone(freq, dur, startOffset, type, peakGain) {
+    if (!state.opts || !state.opts.sound) return;
+    var ctx = ensureCtx(); if (!ctx) return;
+    try {
+      var t = ctx.currentTime + (startOffset || 0);
+      var o = ctx.createOscillator();
+      var g = ctx.createGain();
+      o.type = type || 'sine';
+      o.frequency.value = freq;
       o.connect(g); g.connect(ctx.destination);
-      var t = ctx.currentTime;
+      var peak = peakGain == null ? 0.35 : peakGain;
+      // attack-sustain-release envelope (clearer, no click)
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.3, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(peak, t + 0.018);
+      g.gain.setValueAtTime(peak, t + dur * 0.55);
       g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       o.start(t); o.stop(t + dur + 0.02);
     } catch (e) {}
+  }
+
+  // GREEN cue — happy ascending major triad (C5 → E5 → G5), like a doorbell
+  function chimeGreen() {
+    playTone(523.25, 0.13, 0.00, 'sine', 0.42); // C5
+    playTone(659.25, 0.13, 0.11, 'sine', 0.42); // E5
+    playTone(783.99, 0.22, 0.22, 'sine', 0.48); // G5 — held longer = "GO!"
+  }
+
+  // RED cue — urgent low pulse, descending (G3 → C3), like a buzzer
+  function chimeRed() {
+    playTone(196.00, 0.13, 0.00, 'triangle', 0.45); // G3
+    playTone(196.00, 0.13, 0.16, 'triangle', 0.45); // G3 again — double pulse
+    playTone(130.81, 0.32, 0.32, 'triangle', 0.55); // C3 — low, urgent STOP
+  }
+
+  // Small countdown blip (3-2-1)
+  function blip() {
+    playTone(700, 0.08, 0, 'sine', 0.35);
+  }
+
+  // Final whistle when time's up
+  function chimeEnd() {
+    playTone(880, 0.10, 0.00, 'sine', 0.40);
+    playTone(1175, 0.18, 0.10, 'sine', 0.45);
   }
 
   function setLight(mode) { // 'green' | 'red' | 'off'
@@ -191,8 +239,8 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     state.bigEl.textContent = 'GREEN LIGHT';
     state.subEl.textContent = 'Play!';
     setLight('green');
-    beep(880, 0.16, state.opts.sound);
-    buzz(30); // short, soft go-signal
+    chimeGreen();  // C5–E5–G5 ascending triad (cleaner than single beep)
+    buzz(30);      // short, soft go-signal
     speak('Green light!', state.opts.sound);
     state.switchCount++;
     scheduleNext('green');
@@ -204,9 +252,9 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     state.bigEl.textContent = 'RED LIGHT';
     state.subEl.textContent = 'FREEZE!';
     setLight('red');
-    beep(320, 0.28, state.opts.sound);
-    buzz([45, 35, 60]); // distinct stop pattern — feels more urgent
-    speak('Red light!', state.opts.sound);
+    chimeRed();              // G3-G3-C3 urgent low pulse (alarm-like)
+    buzz([45, 35, 60]);      // distinct stop haptic pattern
+    speak('Red light! Freeze!', state.opts.sound);  // richer phrase reads clearer
     state.switchCount++;
     scheduleNext('red');
   }
@@ -275,7 +323,8 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     setLight('off');
     state.timerEl.textContent = '0:00';
     try { window.speechSynthesis.cancel(); } catch (e) {}
-    speak("Time's up!", state.opts.sound);
+    chimeEnd();
+    speak("Time is up! Great freezing!", state.opts.sound);
     state.timers.push(setTimeout(function () { teardown(true); }, 2600));
   }
 
@@ -354,10 +403,10 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     // 3-2-1 ready countdown, then go
     var n = 3;
     state.bigEl.textContent = '3'; state.subEl.textContent = 'Get ready…';
-    beep(500, 0.12, state.opts.sound);
+    blip();
     var ready = setInterval(function () {
       n--;
-      if (n > 0) { state.bigEl.textContent = String(n); beep(500, 0.12, state.opts.sound); }
+      if (n > 0) { state.bigEl.textContent = String(n); blip(); }
       else {
         clearInterval(ready);
         state.endAt = Date.now() + state.opts.duration * 1000;
