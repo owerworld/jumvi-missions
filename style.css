@@ -3683,6 +3683,47 @@ html.theme--dark .sheetMeta .tag{
 
 
 /* ============================================
+ * Caller Hint (only shown for missions with phone-driven mode, e.g. mission 2)
+ * Tiny traffic-light + 2-line text — sits right above the Start button so user
+ * understands the phone will run the show.
+ * ============================================ */
+.callerHint{
+  display: flex; align-items: center; gap: 12px;
+  margin: 8px 0 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(34,197,94,0.10), rgba(220,38,38,0.10));
+  border: 1px solid rgba(220,38,38,0.18);
+}
+.callerHintLight{
+  display: inline-flex; flex-direction: column; gap: 3px;
+  padding: 5px;
+  background: rgba(15,23,42,0.75);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.callerHintDot{
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+}
+.callerHintDot-r{ background:#dc2626; box-shadow: 0 0 6px rgba(220,38,38,0.55); }
+.callerHintDot-y{ background: rgba(255,255,255,0.22); }
+.callerHintDot-g{ background:#16a34a; box-shadow: 0 0 6px rgba(22,163,74,0.55); }
+.callerHintText{ display:flex; flex-direction:column; gap:2px; flex:1; min-width:0; }
+.callerHintText b{ font-size: 14px; font-weight: 800; color: var(--text); }
+.callerHintText span{ font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+html.theme--dark .callerHint{
+  background: linear-gradient(135deg, rgba(34,197,94,0.16), rgba(220,38,38,0.16));
+  border-color: rgba(220,38,38,0.30);
+}
+
+/* Make the Start button visually distinct when it becomes "Start Caller" */
+.btnPrimary.btnStartCaller{
+  background: linear-gradient(135deg, #16a34a 0%, #fbbf24 50%, #dc2626 100%) !important;
+  box-shadow: 0 6px 18px rgba(220,38,38,0.30) !important;
+}
+
+/* ============================================
  * Mission Motion-Diagram Icon (per-mission visual at top of modal body)
  * NOTE: ONLY layout/spacing — colors come from jumvi-icons.css
  * ============================================ */

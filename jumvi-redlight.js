@@ -57,29 +57,93 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     injected = true;
   }
 
-  // ---- speed presets: [greenMin, greenMax, redMin, redMax] in seconds ----
+  // ---- speed presets: WIDE green ranges = unpredictability without breaking play
+  // [greenShortMin, greenShortMax, greenLongMin, greenLongMax, redMin, redMax]
+  // We pick green from EITHER a short or long range randomly (60% normal, 25% long
+  // pause that lulls the player, 15% short snap). Red always >= 1.2s so kids can freeze.
   var SPEEDS = {
-    easy:   [3.5, 6.5, 1.5, 2.5],
-    normal: [2.5, 5.0, 1.5, 3.5],
-    hard:   [1.4, 3.2, 1.5, 3.0]
+    easy:   [3.0, 5.0, 5.0, 8.0, 1.5, 2.5],
+    normal: [1.8, 3.5, 4.0, 6.5, 1.4, 2.3],
+    hard:   [1.2, 2.4, 2.5, 4.5, 1.2, 2.0]
   };
+  // After this many switches, allow trickier patterns (double-red, false-restart)
+  var TRICK_AFTER_SWITCHES = 3;
 
   var state = {
     active: false, overlay: null, dots: [], bigEl: null, subEl: null, timerEl: null,
-    timers: [], endAt: 0, tickId: 0, opts: null, audioCtx: null
+    timers: [], endAt: 0, tickId: 0, opts: null, audioCtx: null,
+    switchCount: 0,           // total light changes — gates trickery
+    lastDoubleRedAt: -999,    // throttle: no double-red within 6s of previous one
+    voicesReady: false, speechPrimed: false, voice: null
   };
 
   function rand(min, max) { return min + Math.random() * (max - min); }
+  function chance(p)      { return Math.random() < p; }
+
+  // ── iOS-safe speech ──────────────────────────────────────────────
+  // iPhone (esp. Safari/PWA): speechSynthesis needs (1) a user gesture, (2) voices
+  // pre-loaded via voiceschanged, (3) a silent "prime" utterance before the real
+  // one, and (4) a tiny delay between cancel() and the next speak() or iOS drops
+  // the utterance silently.
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      var voices = window.speechSynthesis.getVoices() || [];
+      if (voices.length) {
+        // Prefer a local English voice; fall back to first English; else first available
+        state.voice =
+          voices.find(function (v) { return v.localService && /^en/i.test(v.lang); }) ||
+          voices.find(function (v) { return /^en/i.test(v.lang); }) ||
+          voices[0] || null;
+        state.voicesReady = true;
+      }
+    } catch (e) {}
+  }
+  if ('speechSynthesis' in window) {
+    loadVoices();
+    try { window.speechSynthesis.addEventListener('voiceschanged', loadVoices); } catch (_) {}
+  }
+
+  function primeSpeech() {
+    if (state.speechPrimed) return;
+    try {
+      if (!('speechSynthesis' in window)) return;
+      // iOS needs a silent priming utterance on the user gesture before any
+      // real speak() will actually play out loud.
+      var prime = new SpeechSynthesisUtterance(' ');
+      prime.volume = 0.01; prime.rate = 1; prime.pitch = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(prime);
+      loadVoices();
+      state.speechPrimed = true;
+    } catch (e) {}
+  }
 
   function speak(text, on) {
     if (!on) return;
     try {
       if (!('speechSynthesis' in window)) return;
-      var u = new SpeechSynthesisUtterance(text);
-      u.lang = 'en-US'; u.rate = 1; u.pitch = 1; u.volume = 1;
+      if (!state.speechPrimed) primeSpeech();
+
       window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
+      // ~80ms gap between cancel() and speak() — iOS quirk; without this the
+      // first utterance after a cancel is often dropped silently on iOS 15+.
+      state.timers.push(setTimeout(function () {
+        if (!state.active) return;
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        // Slightly above default rate — some iOS builds drop the very first
+        // default-rate utterance; varying it nudges the engine to actually fire.
+        u.rate = 1.05; u.pitch = 1; u.volume = 1;
+        if (state.voice) u.voice = state.voice;
+        try { window.speechSynthesis.speak(u); } catch (_) {}
+      }, 80));
     } catch (e) {}
+  }
+
+  // Subtle haptic — works on Android & iOS PWA (silent on desktop, harmless)
+  function buzz(pattern) {
+    try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
   }
 
   function beep(freq, dur, on) {
@@ -128,7 +192,9 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     state.subEl.textContent = 'Play!';
     setLight('green');
     beep(880, 0.16, state.opts.sound);
+    buzz(30); // short, soft go-signal
     speak('Green light!', state.opts.sound);
+    state.switchCount++;
     scheduleNext('green');
   }
 
@@ -139,18 +205,64 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     state.subEl.textContent = 'FREEZE!';
     setLight('red');
     beep(320, 0.28, state.opts.sound);
+    buzz([45, 35, 60]); // distinct stop pattern — feels more urgent
     speak('Red light!', state.opts.sound);
+    state.switchCount++;
     scheduleNext('red');
   }
 
-  function scheduleNext(current) {
+  // ── Randomized scheduler ────────────────────────────────────────────────
+  // Instead of strict green→red→green→red with narrow time windows, we mix:
+  //  • Green: 60% normal range, 25% long lull (sleepy player → SURPRISE red),
+  //           15% short snap (just enough to react, then red again)
+  //  • Red:   normal range, BUT after a green we sometimes (~10%) trigger a
+  //           "double red" — a second red follows the green quickly, giving
+  //           the false impression of returning to safety. Throttled so it
+  //           can't fire twice in a row.
+  function pickGreenDuration() {
     var p = SPEEDS[state.opts.speed] || SPEEDS.normal;
-    var dur = current === 'green' ? rand(p[0], p[1]) : rand(p[2], p[3]);
-    // don't overrun the clock
+    var roll = Math.random();
+    if (roll < 0.60) return rand(p[0], p[1]);           // normal — short range
+    if (roll < 0.85) return rand(p[2], p[3]);           // long lull
+    return rand(Math.max(0.8, p[0] * 0.6), p[0]);        // snap — very short
+  }
+  function pickRedDuration() {
+    var p = SPEEDS[state.opts.speed] || SPEEDS.normal;
+    return rand(p[4], p[5]);
+  }
+
+  function scheduleNext(current) {
     var remaining = (state.endAt - Date.now()) / 1000;
     if (remaining <= 0.3) return; // tick loop will call finish()
-    var next = current === 'green' ? showRed : showGreen;
-    state.timers.push(setTimeout(next, dur * 1000));
+
+    var dur;
+    var nextFn;
+    if (current === 'green') {
+      dur = pickGreenDuration();
+      nextFn = showRed;
+    } else {
+      // RED → normally GREEN, but occasionally chain a "double red" (false reset)
+      var nowSec = (Date.now() - (state.endAt - state.opts.duration * 1000)) / 1000;
+      var canTrick = state.switchCount >= TRICK_AFTER_SWITCHES
+                  && (nowSec - state.lastDoubleRedAt) > 6;
+      if (canTrick && chance(0.10)) {
+        // Brief "going-back-to-green" hint via a 350ms idle flash, then red again
+        state.lastDoubleRedAt = nowSec;
+        dur = pickRedDuration();
+        nextFn = function () {
+          if (!state.active) return;
+          state.overlay.className = 'jrl-overlay jrl-idle';
+          state.bigEl.textContent = '…';
+          state.subEl.textContent = '';
+          setLight('off');
+          state.timers.push(setTimeout(showRed, 350)); // gotcha — back to red
+        };
+      } else {
+        dur = pickRedDuration();
+        nextFn = showGreen;
+      }
+    }
+    state.timers.push(setTimeout(nextFn, dur * 1000));
   }
 
   function finish() {
@@ -219,10 +331,25 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
       onEnd: opts && opts.onEnd
     };
     state.active = true;
+    state.switchCount = 0;
+    state.lastDoubleRedAt = -999;
     build();
 
-    // warm up speech engine on the user gesture (esp. iOS)
-    try { window.speechSynthesis.cancel(); window.speechSynthesis.getVoices(); } catch (e) {}
+    // Audio + speech warm-up on the user gesture (especially iOS):
+    //  - Make sure AudioContext is resumed (some iOS versions require this
+    //    before any beep, even though the gesture should already allow it).
+    //  - Prime speechSynthesis with a silent utterance so subsequent speak()
+    //    calls actually play. iOS Safari drops the first utterance otherwise.
+    try {
+      if (!state.audioCtx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) state.audioCtx = new AC();
+      }
+      if (state.audioCtx && state.audioCtx.state === 'suspended') {
+        state.audioCtx.resume();
+      }
+    } catch (e) {}
+    if (state.opts.sound) primeSpeech();
 
     // 3-2-1 ready countdown, then go
     var n = 3;
@@ -240,7 +367,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
           state.timerEl.textContent = fmt(rem);
           if (rem <= 0) finish();
         }, 200);
-        showGreen(); // always begin on green
+        showGreen(); // always begin on green (predictable START is fine; surprises come during play)
       }
     }, 1000);
 

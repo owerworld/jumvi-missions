@@ -2366,9 +2366,15 @@ function openMission(id){
   // only: random GREEN/RED switches + speech + countdown replace the plain
   // timer (which doesn't fit RL/GL gameplay).
   const isRedLightMission = (ms.id === 2 && typeof window.JumviRedLight !== "undefined");
+  const callerHintEl = document.getElementById("callerHint");
   if(isRedLightMission){
     btnStartTimer.textContent = "▶ Start Caller";
     btnStartTimer.setAttribute("aria-label", "Start Red Light Green Light caller");
+    btnStartTimer.classList.add("btnStartCaller");
+    if(callerHintEl){
+      callerHintEl.style.display = "";
+      callerHintEl.setAttribute("aria-hidden", "false");
+    }
     btnStartTimer.onclick = () => {
       if(timerHoldResetArmed) return;
       try{ clickSound("click"); }catch(_){}
@@ -2383,6 +2389,11 @@ function openMission(id){
   } else {
     btnStartTimer.textContent = "▶ Start";
     btnStartTimer.setAttribute("aria-label", "Start timer");
+    btnStartTimer.classList.remove("btnStartCaller");
+    if(callerHintEl){
+      callerHintEl.style.display = "none";
+      callerHintEl.setAttribute("aria-hidden", "true");
+    }
     btnStartTimer.onclick = () => {
       if(timerHoldResetArmed) return; // ignore click right after a hold-reset
       toggleTimer(seconds); // tap: start / pause / resume
