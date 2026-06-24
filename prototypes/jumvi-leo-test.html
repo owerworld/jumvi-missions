@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Coach Leo — Module Test Harness</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; background: #BEE3F5; }
+  canvas { display: block; }
+  #hint {
+    position: absolute; bottom: 14px; right: 14px;
+    background: rgba(255,255,255,0.85); padding: 7px 13px; border-radius: 11px;
+    font-size: 12px; color: #444; font-family: -apple-system, sans-serif;
+  }
+</style>
+</head>
+<body>
+<div id="hint">WASD ile hareket et — jumvi-leo.js modül testi</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script type="module">
+  import { createCoachLeo } from './jumvi-leo.js';
+
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xBEE3F5);
+  scene.fog = new THREE.Fog(0xBEE3F5, 14, 30);
+
+  var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 6, 9);
+
+  var renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  document.body.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xBEE3F5, 0x4A9F4A, 1.1));
+  var sun = new THREE.DirectionalLight(0xffffff, 1.5);
+  sun.position.set(8, 14, 6);
+  sun.castShadow = true;
+  scene.add(sun);
+
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 20),
+    new THREE.MeshStandardMaterial({ color: 0x6DBE45, flatShading: true })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // module under test — only geometry/material/animation, no world movement logic
+  var leo = createCoachLeo(THREE);
+  scene.add(leo.group);
+
+  // minimal test-harness physics (NOT part of the module — caller's responsibility)
+  var keys = { f: false, b: false, l: false, r: false };
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
+    if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
+    if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
+    if (e.key === 'd' || e.key === 'ArrowRight') keys.r = true;
+  });
+  window.addEventListener('keyup', function (e) {
+    if (e.key === 'w' || e.key === 'ArrowUp') keys.f = false;
+    if (e.key === 's' || e.key === 'ArrowDown') keys.b = false;
+    if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = false;
+    if (e.key === 'd' || e.key === 'ArrowRight') keys.r = false;
+  });
+
+  var velocity = new THREE.Vector3();
+  var maxSpeed = 6, accel = 22, friction = 14;
+
+  function updateWorldPosition(delta) {
+    var ix = 0, iz = 0;
+    if (keys.f) iz -= 1;
+    if (keys.b) iz += 1;
+    if (keys.l) ix -= 1;
+    if (keys.r) ix += 1;
+    var len = Math.sqrt(ix * ix + iz * iz);
+    var moving = len > 0.05;
+    var targetFacing = leo.getFacing();
+
+    if (moving) {
+      ix /= len; iz /= len;
+      velocity.x += ix * accel * delta;
+      velocity.z += iz * accel * delta;
+      var speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+      if (speed > maxSpeed) {
+        velocity.x = (velocity.x / speed) * maxSpeed;
+        velocity.z = (velocity.z / speed) * maxSpeed;
+      }
+      targetFacing = Math.atan2(ix, iz);
+    } else {
+      var decay = Math.max(0, 1 - friction * delta);
+      velocity.x *= decay; velocity.z *= decay;
+    }
+
+    leo.group.position.x += velocity.x * delta;
+    leo.group.position.z += velocity.z * delta;
+    leo.group.position.x = THREE.MathUtils.clamp(leo.group.position.x, -9, 9);
+    leo.group.position.z = THREE.MathUtils.clamp(leo.group.position.z, -9, 9);
+
+    var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+    leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
+
+    camera.position.x += (leo.group.position.x - camera.position.x) * Math.min(delta * 2.6, 1);
+    camera.position.z += (leo.group.position.z + 8 - camera.position.z) * Math.min(delta * 2.6, 1);
+    camera.position.y = 6;
+    camera.lookAt(leo.group.position.x, 0.5, leo.group.position.z - 1.5);
+  }
+
+  var clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+    var delta = Math.min(clock.getDelta(), 0.1);
+    updateWorldPosition(delta);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+</body>
+</html>
