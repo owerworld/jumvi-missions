@@ -1,12 +1,39 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Jumvi 3D Hub — Skeleton Test</title>
+<title>Jumvi 3D Hub — wired to real mission panel (prototype)</title>
+
+<!--
+  This page reuses the REAL app's DOM, CSS and JS (style.css, data.js, app.js, etc.)
+  so that openMission()/markMissionDone() run unmodified — no app logic is duplicated
+  here. The full markup below is copied from ../index.html because app.js looks up ~90
+  DOM ids at load time; the 3D hub UI is just an overlay on top of it. Tabs/nav/topbar
+  from the real app are hidden via CSS since this page is hub-only — only the mission
+  bottom-sheet (#backdrop/#sheet) is meant to be visible when a gate is triggered.
+-->
+<script>
+  // Skip the real app's first-run onboarding/welcome overlay — this is always a
+  // "returning user" for the purposes of this prototype, so it lands straight on
+  // the hub instead of the age-gate screen.
+  try {
+    localStorage.setItem('jumvi_onboarded_v2', '1');
+    localStorage.setItem('jumvi_tutorial_done_v1', '1');
+  } catch (_) {}
+</script>
+
+<link rel="manifest" href="../manifest.json" />
+<link rel="stylesheet" href="../style.css?v=20260524-5">
+<link rel="stylesheet" href="../jumvi-icons.css?v=20260524-5">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+
 <style>
-  html, body { margin: 0; padding: 0; overflow: hidden; width: 100%; height: 100%; background: #BEE3F5; touch-action: none; }
-  canvas { display: block; touch-action: none; }
+  /* Hide the real app's page chrome — this prototype only needs the mission
+     bottom-sheet modal, not the tabs/topbar/bottom-nav around it. */
+  .app-shell, #bottomNav, #splashOverlay, #welcomeOverlay, .bgLayer { display: none !important; }
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #BEE3F5 !important; touch-action: none; }
+  canvas#hubCanvas { display: block; touch-action: none; }
 
   #hud-top {
     position: absolute; top: 0; left: 0; right: 0;
@@ -40,342 +67,941 @@
     font-size: 11px; color: #555; z-index: 10; max-width: 220px; text-align: right;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
-  #gate-log {
-    position: absolute; top: 70px; left: 14px;
-    background: rgba(0,0,0,0.55); color: #C8F7C5; padding: 8px 12px;
-    border-radius: 8px; font-size: 12px; font-family: monospace; z-index: 10;
-    max-width: 280px; pointer-events: none;
-  }
 
   @media (min-width: 768px) { #joystick-zone { display: none; } }
 </style>
 </head>
-<body>
+<body class="tab-today">
+  <div class="bgLayer" aria-hidden="true"></div>
 
-<div id="hud-top">
-  <div id="badges"></div>
-</div>
+  <!-- Splash transition overlay (real app markup — hidden by CSS above, kept so app.js's id lookups don't fail) -->
+  <div id="splashOverlay" class="splashOverlay" aria-hidden="true">
+    <div class="splashContent">
+      <div class="splashEmoji">🎉</div>
+      <div class="splashTitle">Let's Play!</div>
+      <div class="splashSub">Grab your paddles!</div>
+    </div>
+  </div>
 
-<div id="gate-log">Gate log: konsolu da aç (gate X tetiklendi)</div>
-<div id="hint">WASD ile hareket et — bu sadece iskelet, gate'ler henüz mission paneline bağlı değil</div>
+  <!-- Welcome Overlay (hidden by CSS + onboarded flag above; kept for app.js's id lookups) -->
+  <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
+    <div class="welcomePanel">
+      <img class="welcomeLogo logoLight" src="../jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" />
+      <img class="welcomeLogo logoDark" src="../jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
+      <div class="welcomeTagline">Hey, paddle pro! 🦁</div>
+      <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.<br>How old's your kid?</div>
+      <div class="welcomeAges" id="welcomeAges">
+        <button class="ageBtn" data-diff="Easy" type="button">🐣<span>3–5 years</span></button>
+        <button class="ageBtn" data-diff="all" type="button">🚀<span>6–8 years</span></button>
+        <button class="ageBtn" data-diff="Medium" type="button">⚡<span>8+ years</span></button>
+      </div>
+      <div class="welcomeMissionCount" id="welcomeMissionCount">18 missions ready for this age</div>
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Let's Play!</button>
+      <div class="welcomeNote">✅ No sign-up · 🔒 Stays on your phone · 💝 Free forever</div>
+    </div>
+  </div>
 
-<div id="joystick-zone">
-  <div id="joystick-base"><div id="joystick-stick"></div></div>
-</div>
+  <!-- Real app shell (tabs/topbar/list/footer) — hidden by CSS above. Kept in full so
+       app.js's ~90 getElementById() calls at load time resolve instead of throwing. -->
+  <div class="app-shell" id="app-wrapper">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
-<script src="../data.js"></script>
-<script type="module">
-import { createCoachLeo } from './jumvi-leo.js';
+  <div class="sticky">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logoWrap" title="JUMVI">
+          <img class="logoImg logoLight" src="../jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" fetchpriority="high" />
+          <img class="logoImg logoDark" src="../jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
+        </div>
+        <div class="brandText">
+          <div class="brandTitle">JUMVI</div>
+          <div class="brandSub">Missions</div>
+        </div>
+      </div>
+      <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
+        <span class="profilePillAvatar" id="profilePillAvatar">🦁</span>
+        <span class="profilePillName" id="profilePillName">Player</span>
+        <span class="profilePillChevron">▾</span>
+      </button>
+    </div>
+  </div>
 
-(function () {
-  'use strict';
+  <div class="wrap">
+    <section class="hero">
+      <div class="a2hs" id="a2hsBanner" style="display:none;">
+        <div class="a2hsText">
+          <b>📲 Add to Home Screen</b>
+          <div id="a2hsHint">Use JUMVI like an app — no download needed.</div>
+          <div id="a2hsSteps">Share → Add to Home Screen</div>
+        </div>
+        <button class="btn btnPrimary" id="btnA2hsInstall" type="button" style="min-height:36px; padding:8px 12px;">Install</button>
+        <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button">✕</button>
+      </div>
 
-  // ---------- GATE CONFIG (derived from real PACKS in ../data.js, not hardcoded) ----------
-  // PACKS[0] is "all" (a filter option, not a real pack) — skip it.
-  var realPacks = PACKS.filter(function (p) { return p.key !== 'all'; });
+      <div class="tabPanel" id="tabToday" data-tab="today">
+        <h1 class="h1">Hey, Paddle Pro! 🦁</h1>
+        <p class="sub">Today's mission is ready — let's play!</p>
+        <div class="continueHint" id="continueHint" style="display:none">
+          <span class="continueHintIcon">↩️</span>
+          <span class="continueHintText">Continue where you left off: <b id="continueHintName">—</b></span>
+          <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
+        </div>
+        <div class="dailyBox dailyBoxPromoted" id="dailyBox" aria-label="daily mission" role="button" tabindex="0">
+          <div class="dailyEyebrow">📅 TODAY'S MISSION</div>
+          <div class="dailyContent">
+            <div class="dailyIconBig" id="dailyIcon">⚡</div>
+            <div class="dailyText">
+              <div class="dailyName" id="dailyName">—</div>
+              <div class="dailyMeta" id="dailyMeta">—</div>
+            </div>
+          </div>
+          <div class="dailyActionsBig">
+            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Play today's mission" type="button">▶ Play This Mission</button>
+            <button class="dailyNewSmall" id="btnDailyNew" aria-label="Pick another mission" type="button">🔁 Pick another</button>
+          </div>
+          <div class="dailyAltSuggestion" id="dailyAltSuggestion" style="display:none">
+            <span class="altLabel">🦁 Or try:</span>
+            <span class="altName" id="dailyAltName">—</span>
+            <span class="altArrow">→</span>
+          </div>
+          <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
+          <div class="dailyTitle" style="display:none">Today's Mission</div>
+        </div>
 
-  function splitIconAndLabel(name) {
-    var parts = name.split(' ');
-    return { icon: parts[0], label: parts.slice(1).join(' ') };
-  }
+        <div class="coachPick" id="coachPick" style="display:none">
+          <div class="coachPickHeader">
+            <span class="coachPickAvatar">🦁</span>
+            <div class="coachPickInfo">
+              <div class="coachPickEyebrow">Coach Leo's pick</div>
+              <div class="coachPickReason" id="coachPickReason">Try something new!</div>
+            </div>
+          </div>
+          <button class="coachPickCard" id="coachPickCard" type="button">
+            <span class="coachPickIcon" id="coachPickIcon">⚡</span>
+            <span class="coachPickBody">
+              <span class="coachPickName" id="coachPickName">—</span>
+              <span class="coachPickMeta" id="coachPickMeta">—</span>
+            </span>
+            <span class="coachPickArrow">▶</span>
+          </button>
+        </div>
 
-  var islandRadius = 13;
-  var gateRadius = 9;
-  var gateConfig = realPacks.map(function (pack, i) {
-    var parsed = splitIconAndLabel(pack.name);
-    var angle = (i / realPacks.length) * Math.PI * 2;
-    return {
-      id: i + 1,
-      packKey: pack.key,
-      name: parsed.label,
-      icon: parsed.icon,
-      x: Math.sin(angle) * gateRadius,
-      z: Math.cos(angle) * gateRadius
-    };
-  });
+        <div class="dailyChallenge" id="dailyChallenge">
+          <div class="dailyChallengeHeader">
+            <span class="dailyChallengeIcon">🌟</span>
+            <span class="dailyChallengeTitle">Today's Goal</span>
+            <span class="dailyChallengeStatus" id="dailyChallengeStatus">0 / 1</span>
+          </div>
+          <div class="dailyChallengeBar">
+            <div class="dailyChallengeFill" id="dailyChallengeFill"></div>
+          </div>
+          <div class="dailyChallengeReward" id="dailyChallengeReward">Play 1 mission → earn the Daily Champion star ⭐</div>
+        </div>
 
-  // ---------- HUD: badges reflect real pack icons ----------
-  var badgesEl = document.getElementById('badges');
-  gateConfig.forEach(function (cfg) {
-    var slot = document.createElement('div');
-    slot.className = 'badge-slot';
-    slot.dataset.gate = cfg.id;
-    slot.textContent = cfg.icon;
-    slot.title = cfg.name;
-    badgesEl.appendChild(slot);
-  });
+        <div class="statsCompact" aria-label="progress">
+          <div class="statsCompactLeft">
+            <div class="statsCompactRow">
+              <span class="statsCompactText" id="progressText">0 / 36 missions</span>
+              <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal">⭐ 0/1 today</span>
+            </div>
+            <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="36">
+              <div id="progressBarFill"></div>
+            </div>
+          </div>
+          <div class="streakBox" aria-label="streak">
+            <div class="streakPill" id="streakPill">🔥 0</div>
+          </div>
+        </div>
+        <div class="pSubBox" style="display:none">
+          <div class="pSub" id="progressSub"></div>
+          <div class="pExtra" id="progressExtra"></div>
+        </div>
 
-  // ---------- SCENE ----------
-  var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xBEE3F5);
-  scene.fog = new THREE.Fog(0xBEE3F5, 18, 38);
+        <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
+          <span class="todayQuickIcon">🎲</span>
+          <span class="todayQuickText">Surprise me — pick a random mission</span>
+        </button>
+      </div>
 
-  var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 9, 11);
+      <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
+        <h2 class="tabHeading">🗺️ Mission Path</h2>
+        <div class="missionPath" id="missionPath"></div>
+        <div id="searchToggleBtn" style="display:none" aria-hidden="true"></div>
+        <div id="searchBox" style="display:none">
+          <input id="searchInput" type="text" style="display:none" />
+        </div>
+        <button id="btnOnlyUnfinished" type="button" style="display:none" aria-hidden="true"></button>
+        <button id="btnToggleFilters" type="button" style="display:none" aria-hidden="true"></button>
+        <div id="filters" style="display:none"></div>
+        <div id="filterGroups" style="display:none">
+          <div id="filterPlayers" style="display:none"></div>
+          <div id="filterDifficulty" style="display:none"></div>
+        </div>
+      </div>
 
-  var renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  document.body.appendChild(renderer.domElement);
+      <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
+        <h2 class="tabHeading">📊 Your Progress</h2>
+        <div class="familyInsights" id="familyInsights" style="display:none">
+          <div class="familyInsightsHeader">
+            <span class="familyInsightsIcon">👨‍👩‍👧‍👦</span>
+            <span class="familyInsightsTitle">Family Stats</span>
+          </div>
+          <div class="familyInsightsGrid" id="familyInsightsGrid"></div>
+          <div class="familyStreak" id="familyStreak">🔥 Family streak: 0 days</div>
+        </div>
+        <div class="emptyState" id="statsEmptyState" style="display:none">
+          <div class="emptyStateIcon">📊</div>
+          <div class="emptyStateTitle">Your stats will appear here</div>
+          <div class="emptyStateDesc">Complete your first mission to unlock the dashboard, badges, and Champion Certificate!</div>
+          <button class="btn btnPrimary emptyStateBtn" data-go-tab="today" type="button">▶ Go to Today</button>
+        </div>
+        <div class="dashCard" id="parentDashboard" aria-label="This Week's Progress">
+          <div class="dashHeader">
+            <div class="dashTitle">📊 This Week's Progress</div>
+            <div class="dashSub" id="dashDynSub">Keep playing to see your child's skills grow!</div>
+          </div>
+          <div class="dashReport" id="dashReport"></div>
+          <div class="dashStats" id="dashStats"></div>
+          <div class="dashBars" id="dashBars"></div>
+          <div class="dashFooter">
+            <div class="dashShareWrap">
+              <div class="dashShareTitle">Share progress with family 🎉</div>
+              <div class="dashShareBtns">
+                <button class="dashShareBtn dashShareWA" id="btnDashShareWA" type="button">💬 WhatsApp</button>
+                <button class="dashShareBtn dashShareCopy" id="btnDashShareCopy" type="button">🔗 Copy</button>
+              </div>
+            </div>
+            <button id="btnDashPrint" type="button" style="display:none" aria-hidden="true"></button>
+          </div>
+        </div>
+        <div class="statsBadgesSection">
+          <h3 class="statsSectionTitle">🏅 Your Badges</h3>
+          <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+          <div class="badgesHint" id="badgesHint">Swipe to see all badges →</div>
+        </div>
+        <div class="certBox" id="certBox">
+          <div class="certLeft">
+            <div class="certIcon">🏆</div>
+            <div class="certText">
+              <b>Mission Champion Certificate</b>
+              <div class="certProgressWrap">
+                <div class="certProgressBar"><div class="certProgressFill" id="certProgressFill"></div></div>
+                <div class="certProgressText" id="certSub">Complete all missions to unlock.</div>
+              </div>
+            </div>
+          </div>
+          <button class="certBtn locked" id="certBtn" type="button" aria-disabled="true">Locked</button>
+        </div>
+        <div class="shareScoreCard" id="shareScoreCard" style="display:none" aria-label="Share your score">
+          <div class="shareScoreLeft">
+            <div class="shareScoreNum" id="shareScoreNum">0</div>
+            <div class="shareScoreMeta">/ 36 missions</div>
+            <div class="shareScoreBadge" id="shareScoreBadge"></div>
+          </div>
+          <div class="shareScoreRight">
+            <div class="shareScoreTitle">Share with family! 🎉</div>
+            <div class="shareScoreBtns">
+              <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button">💬 WhatsApp</button>
+              <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button">🔗 Copy Link</button>
+            </div>
+          </div>
+        </div>
+        <div class="seasonalCard" id="seasonalCard" style="display:none" aria-label="Where to Play">
+          <div class="seasonalHeader">
+            <div class="seasonalTitle">Where to Play</div>
+            <div class="seasonalRow">
+              <button id="btnSeasonalIndoor" type="button" style="display:none" aria-hidden="true"></button>
+              <button id="btnSeasonalOutdoor" type="button" style="display:none" aria-hidden="true"></button>
+            </div>
+          </div>
+        </div>
+        <button id="btnBadges" type="button" style="display:none" aria-hidden="true"></button>
+      </div>
 
-  scene.add(new THREE.HemisphereLight(0xBEE3F5, 0x6DBE45, 1.1));
-  var sun = new THREE.DirectionalLight(0xffffff, 1.6);
-  sun.position.set(10, 16, 8);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
-  sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
-  sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
-  sun.shadow.camera.near = 1; sun.shadow.camera.far = 50;
-  scene.add(sun);
+      <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
+        <h2 class="tabHeading">🦁 Profile</h2>
+        <div class="profileCard" id="profileCard">
+          <div class="profileCardAvatar" id="profileCardAvatar">🦁</div>
+          <div class="profileCardBody">
+            <div class="profileCardName" id="profileCardName">Player</div>
+            <div class="profileCardStats" id="profileCardStats">0 missions · 0 day streak</div>
+          </div>
+        </div>
+        <button class="profileTabOpenBtn btn btnPrimary" id="btnOpenProfileFromTab" type="button">
+          👤 Switch Player or Add Child
+        </button>
+        <div class="profileQuickLinks">
+          <button class="profileQuickLink" data-go-tab="stats" type="button">
+            <span class="profileQuickIcon">📊</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">View Progress</div>
+              <div class="profileQuickSub">Dashboard, badges & certificate</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+          <a class="profileQuickLink" id="btnMissionBook" href="../mission-book.pdf" target="_blank" rel="noopener">
+            <span class="profileQuickIcon">📘</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Mission Book PDF</div>
+              <div class="profileQuickSub">Printable list for parents</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </a>
+          <button class="profileQuickLink" id="btnReset" type="button">
+            <span class="profileQuickIcon">🗑️</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Reset Progress</div>
+              <div class="profileQuickSub">Clear all data on this device</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+        </div>
+        <div class="profileFooterInfo">
+          <div class="trustBadges">
+            <span>✅ No sign-up</span>
+            <span>🔒 Stays on phone</span>
+            <span>💝 Free forever</span>
+          </div>
+          <div class="profileSupport">
+            Need help? <a href="mailto:support@jumvi.co">support@jumvi.co</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  // ---------- ISLAND GROUND ----------
-  var groundGeo = new THREE.CircleGeometry(islandRadius, 48);
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0x6DBE45, flatShading: true });
-  var ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.rotation.x = -Math.PI / 2;
-  ground.receiveShadow = true;
-  scene.add(ground);
+    <section class="list" id="list" aria-label="missions"></section>
 
-  var sandGeo = new THREE.RingGeometry(islandRadius - 0.6, islandRadius + 1.2, 48);
-  var sandMat = new THREE.MeshStandardMaterial({ color: 0xF0DDA0, flatShading: true });
-  var sand = new THREE.Mesh(sandGeo, sandMat);
-  sand.rotation.x = -Math.PI / 2;
-  sand.position.y = -0.05;
-  scene.add(sand);
+    <section class="footer">
+      <b>Extras</b><br/>
+      <div class="links">
+        <div class="linkGroup">
+          <a class="linkBtn" data-optional-file="mission-book.pdf" href="../mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
+          <div class="linkDesc">Printable mission list for parents.</div>
+        </div>
+        <button class="linkBtn" id="btnShare" aria-label="Share progress">📤 Share</button>
+      </div>
+      <div class="small">Progress is saved on this device.</div>
+      <div class="small">Adult supervision required.</div>
+      <div class="small">
+        Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
+      </div>
+      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btnResetFooter" id="btnReset" aria-label="Reset progress">🗑️ Reset Progress</button>
+        <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button">🧒 Kids Mode</button>
+      </div>
+    </section>
+  </div>
 
-  var waterGeo = new THREE.CircleGeometry(40, 32);
-  var waterMat = new THREE.MeshStandardMaterial({ color: 0x4A9FD4, flatShading: true, transparent: true, opacity: 0.85 });
-  var water = new THREE.Mesh(waterGeo, waterMat);
-  water.rotation.x = -Math.PI / 2;
-  water.position.y = -0.6;
-  scene.add(water);
+  <!-- Mission Modal — the real bottom-sheet panel; THIS is what the 3D hub opens -->
+  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-label="Mission details">
+    <div class="sheet" id="sheet">
+      <div class="sheetHandle" aria-hidden="true"></div>
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle" id="mTitle">Mission</div>
+          <div class="sheetMeta" id="mMeta"></div>
+        </div>
+        <button class="close" id="btnClose" aria-label="Close mission">✕</button>
+      </div>
+      <div class="sheetBody" id="sheetBody">
+      <div class="jmv missionIconWrap" id="missionIconWrap" aria-hidden="true"></div>
+      <div id="timerUI">
+        <div id="timerDisplay">60s</div>
+        <div id="timerBar"><div id="timerFill"></div></div>
+      </div>
+      <div class="storyBanner" id="storyBanner" style="display:none">
+        <div class="storyBannerInner">
+          <div class="storyEmoji" id="storyEmoji">⚡</div>
+          <div class="storyText">
+            <div class="storyTitle" id="storyTitle">Lightning Strike</div>
+            <div class="storyTagline" id="storyTagline">Catch the lightning!</div>
+          </div>
+          <button class="storyToggle" id="storyToggle" aria-label="Hide story" title="Hide story">×</button>
+        </div>
+      </div>
+      <div class="kv" id="mSteps"></div>
+      <div class="kv kvWin" id="mWin"></div>
+      <div class="callerHint" id="callerHint" style="display:none" aria-hidden="true">
+        <span class="callerHintLight" aria-hidden="true">
+          <span class="callerHintDot callerHintDot-r"></span>
+          <span class="callerHintDot callerHintDot-y"></span>
+          <span class="callerHintDot callerHintDot-g"></span>
+        </span>
+        <div class="callerHintText">
+          <b id="callerHintTitle">📱 Phone calls the lights</b>
+          <span id="callerHintSub">Random Green/Red with voice + screen — tap Start, then play!</span>
+        </div>
+      </div>
+      <div class="missionPrimary">
+        <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer">▶ Start</button>
+        <button class="missionIconBtn" id="btnSpeak" aria-label="Read mission aloud" title="Read aloud">🗣️</button>
+        <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track score" title="Track score">📊</button>
+      </div>
+      <div class="scoreTracker" id="scoreTracker" style="display:none">
+        <div class="scoreTrackerHeader">
+          <div class="scoreTrackerLabel">Your catches</div>
+          <div class="scoreTrackerBest" id="scoreTrackerBest">Best: 0</div>
+        </div>
+        <div class="scoreTrackerNumber" id="scoreTrackerNumber">0</div>
+        <button class="scoreTrackerTap" id="scoreTrackerTap" type="button" aria-label="Add one to score">
+          <span class="scoreTrackerTapIcon">+1</span>
+          <span class="scoreTrackerTapHint">Tap on every catch</span>
+        </button>
+        <div class="scoreTrackerActions">
+          <button class="scoreTrackerReset" id="scoreTrackerReset" type="button">↺ Reset</button>
+          <button id="scoreTrackerAuto" type="button" style="display:none" aria-hidden="true"></button>
+        </div>
+        <div class="scoreTrackerSummary" id="scoreTrackerSummary" style="display:none"></div>
+      </div>
+      <div class="kv hintBox" id="mHint" style="display:none"></div>
+      <details class="moreInfoDetails">
+        <summary>
+          <span class="moreInfoSummaryText">📚 More tips &amp; safety</span>
+          <span class="moreInfoSummaryArrow">▾</span>
+        </summary>
+        <div class="moreInfoContent">
+          <div class="kv" id="mTip"></div>
+          <div class="kv" id="mKidsTip"></div>
+          <div class="kv" id="mSafety"></div>
+          <details class="safetyDetails modalSafetyDetails">
+            <summary>⚠️ General safe play tips</summary>
+            Throw below face level · keep 1–3 m distance · adult supervision required.
+          </details>
+        </div>
+      </details>
+      <div class="small" id="mSmall"></div>
+      </div>
+      <div class="sheetActions">
+        <button class="btn btnPrimary holdBtn" id="btnToggleDone" aria-label="Mark mission done">✅ Mark as Done</button>
+        <button class="btn btnGhost" id="btnNext" aria-label="Next mission">➡️ Next Mission</button>
+        <button id="btnRandomPack" type="button" style="display:none" aria-hidden="true"></button>
+      </div>
+      <div class="small holdHint" id="holdHint" style="display:none">Hold "Mark as Done" to finish.</div>
+    </div>
+  </div>
 
-  // decorative trees scattered near the shore, away from gates
-  function makeTree(x, z, scale) {
-    var group = new THREE.Group();
-    var trunk = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.15, 0.2, 1.2, 6),
-      new THREE.MeshStandardMaterial({ color: 0x8B5E34, flatShading: true })
-    );
-    trunk.position.y = 0.6;
-    trunk.castShadow = true;
-    group.add(trunk);
-    var leaf = new THREE.Mesh(
-      new THREE.ConeGeometry(0.9, 1.6, 7),
-      new THREE.MeshStandardMaterial({ color: 0x4A9F4A, flatShading: true })
-    );
-    leaf.position.y = 1.7;
-    leaf.castShadow = true;
-    group.add(leaf);
-    group.position.set(x, 0, z);
-    group.scale.setScalar(scale || 1);
-    return group;
-  }
-  [[-10, -10, 1.1], [10, -10, 0.9], [-11, 8, 1.2], [11, 9, 1.0], [0, -11, 0.8], [0, 11, 0.9]]
-    .forEach(function (p) { scene.add(makeTree(p[0], p[1], p[2])); });
+  <div class="backdrop" id="badgesBackdrop" role="dialog" aria-modal="true" aria-label="Badges">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">🏅 Badges</div>
+          <div class="small">Unlock badges by completing missions.</div>
+        </div>
+        <button class="close" id="btnBadgesClose" aria-label="Close badges">✕</button>
+      </div>
+      <div class="kv" id="badgesList"></div>
+      <div class="small">Badges update automatically on this phone.</div>
+    </div>
+  </div>
 
-  // ---------- GATE MARKERS (one per real mission pack) ----------
-  var gateMeshes = {};
-  function createGateMesh(cfg) {
-    var group = new THREE.Group();
+  <div class="backdrop" id="seasonalBackdrop" role="dialog" aria-modal="true" aria-label="Where to Play">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">Where to Play</div>
+          <div class="small" id="seasonalSub">Fresh ways to play all year.</div>
+        </div>
+        <button class="close" id="btnSeasonalClose" aria-label="Close seasonal packs">✕</button>
+      </div>
+      <div class="kv" id="seasonalList"></div>
+      <div class="small">Tap a mission to open it.</div>
+    </div>
+  </div>
 
-    var ringGeo = new THREE.TorusGeometry(0.9, 0.12, 8, 24);
-    var ringMat = new THREE.MeshStandardMaterial({ color: 0xBA7517, flatShading: true });
-    var ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.position.y = 1.1;
-    ring.castShadow = true;
-    group.add(ring);
+  <div class="backdrop" id="certBackdrop" role="dialog" aria-modal="true" aria-label="Certificate">
+    <div class="sheet" id="certSheet">
+      <div class="sheetTop certSheetTop">
+        <div class="sheetTitle certSheetTitle">🏆 Champion Certificate</div>
+        <button class="close certCloseBtn" id="btnCertClose" aria-label="Close certificate">✕</button>
+      </div>
+      <div class="certWrap">
+        <div class="certNameRow">
+          <input id="certNameInput" class="certNameInput" type="text" placeholder="Type child’s name (optional)" autocomplete="off" aria-label="Child’s name" />
+        </div>
+        <div class="certPreviewWrap">
+          <img id="certPreviewImg" alt="Certificate preview" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+        </div>
+        <button class="btn btnCertPrimary" id="btnCertSavePng" aria-label="Save certificate as image">💾 Save to Photos</button>
+        <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share with family</button>
+        <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">Or save as PDF</button>
+      </div>
+    </div>
+  </div>
 
-    var poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.1, 8);
-    var poleMat = new THREE.MeshStandardMaterial({ color: 0x888780, flatShading: true });
-    var poleL = new THREE.Mesh(poleGeo, poleMat);
-    poleL.position.set(-0.9, 0.55, 0);
-    group.add(poleL);
-    var poleR = poleL.clone();
-    poleR.position.x = 0.9;
-    group.add(poleR);
+  <div class="backdrop" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Choose player">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">👤 Choose Player</div>
+          <div class="small">Each child has their own progress, streak & badges.</div>
+        </div>
+        <button class="close" id="btnProfileClose" aria-label="Close player picker">✕</button>
+      </div>
+      <div class="profileList" id="profileList"></div>
+      <div class="profileEditSection" id="profileEditSection" style="display:none">
+        <div class="profileSectionTitle" id="profileEditTitle">✏️ Edit profile</div>
+        <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20" autocomplete="off" />
+        <div class="profileAvatarPicker" id="profileEditAvatarPicker"></div>
+        <div class="profileEditActions">
+          <button class="btn btnGhost profileEditCancelBtn" id="btnProfileEditCancel" type="button">Cancel</button>
+          <button class="btn btnPrimary profileEditSaveBtn" id="btnProfileEditSave" type="button">Save</button>
+        </div>
+        <button class="profileDeleteBtn" id="btnProfileDelete" type="button">🗑️ Delete this profile</button>
+      </div>
+      <div class="profileAddSection" id="profileAddSection">
+        <div class="profileSectionTitle">➕ Add a new child</div>
+        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20" autocomplete="off" />
+        <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
+        <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
+      </div>
+      <div class="profileSettingsSection">
+        <div class="profileSectionTitle">⚙️ Settings</div>
+        <button class="profileSettingRow" id="profileThemeBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon" id="profileThemeIcon">🌓</span>
+            <span class="profileSettingText">Theme</span>
+          </span>
+          <span class="profileSettingValue" id="profileThemeValue">System</span>
+        </button>
+        <button class="profileSettingRow" id="profileSoundBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon" id="profileSoundIcon">🔊</span>
+            <span class="profileSettingText">Sound</span>
+          </span>
+          <span class="profileSettingValue" id="profileSoundValue">On</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
-    var baseGeo = new THREE.CylinderGeometry(1.3, 1.3, 0.15, 16);
-    var baseMat = new THREE.MeshStandardMaterial({ color: 0xE8E4D8, flatShading: true });
-    var base = new THREE.Mesh(baseGeo, baseMat);
-    base.position.y = 0.075;
-    base.receiveShadow = true;
-    group.add(base);
+  <div id="tutorialOverlay" class="tutorialOverlay" aria-hidden="true">
+    <div class="tutorialSpotlight" id="tutorialSpotlight"></div>
+    <div class="tutorialCard" id="tutorialCard">
+      <div class="tutorialStep" id="tutorialStep">1 / 3</div>
+      <div class="tutorialTitle" id="tutorialTitle"></div>
+      <div class="tutorialDesc" id="tutorialDesc"></div>
+      <div class="tutorialBtns">
+        <button class="tutorialSkip" id="tutorialSkip" type="button">Skip</button>
+        <button class="tutorialNext" id="tutorialNext" type="button">Next →</button>
+      </div>
+    </div>
+  </div>
 
-    group.position.set(cfg.x, 0, cfg.z);
-    group.lookAt(0, 0, 0);
-    group.userData.ring = ring;
-    return group;
-  }
-  gateConfig.forEach(function (cfg) {
-    var mesh = createGateMesh(cfg);
-    scene.add(mesh);
-    gateMeshes[cfg.id] = mesh;
-  });
+  <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-label="Badge unlocked">
+    <div class="badgeUnlockPanel">
+      <div class="badgeUnlockEmoji" id="badgeUnlockEmoji">🏅</div>
+      <div class="badgeUnlockTitle">Badge Unlocked!</div>
+      <div class="badgeUnlockName" id="badgeUnlockName"></div>
+      <div class="badgeUnlockReq" id="badgeUnlockReq"></div>
+      <button class="badgeUnlockBtn" id="badgeUnlockClose" type="button">Awesome! 🎉</button>
+    </div>
+  </div>
 
-  // ---------- COACH LEO (from shared module — no character code duplicated here) ----------
-  var leo = createCoachLeo(THREE);
-  scene.add(leo.group);
+  <div id="timerCountdown" class="timerCountdown" aria-hidden="true">
+    <div class="timerCountdownNum">3</div>
+    <div class="timerCountdownLabel">Get ready!</div>
+  </div>
 
-  // ---------- INPUT: KEYBOARD ----------
-  var keys = { f: false, b: false, l: false, r: false };
-  window.addEventListener('keydown', function (e) {
-    if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
-    if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
-    if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
-    if (e.key === 'd' || e.key === 'ArrowRight') keys.r = true;
-  });
-  window.addEventListener('keyup', function (e) {
-    if (e.key === 'w' || e.key === 'ArrowUp') keys.f = false;
-    if (e.key === 's' || e.key === 'ArrowDown') keys.b = false;
-    if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = false;
-    if (e.key === 'd' || e.key === 'ArrowRight') keys.r = false;
-  });
+  <nav class="bottomNav" id="bottomNav" aria-label="Main navigation">
+    <button class="navTab active" data-tab="today" type="button">
+      <span class="navTabIcon">📅</span>
+      <span class="navTabLabel">Today</span>
+    </button>
+    <button class="navTab" data-tab="browse" type="button">
+      <span class="navTabIcon">🎯</span>
+      <span class="navTabLabel">Browse</span>
+    </button>
+    <button class="navTab" data-tab="stats" type="button">
+      <span class="navTabIcon">📊</span>
+      <span class="navTabLabel">Stats</span>
+    </button>
+    <button class="navTab" data-tab="profile" type="button">
+      <span class="navTabIcon">🦁</span>
+      <span class="navTabLabel">Profile</span>
+    </button>
+  </nav>
 
-  // ---------- INPUT: MOBILE JOYSTICK ----------
-  var joystickZone = document.getElementById('joystick-zone');
-  var joystickBase = document.getElementById('joystick-base');
-  var joystickStick = document.getElementById('joystick-stick');
-  var joyActive = false, joyOrigin = { x: 0, y: 0 }, joyVector = { x: 0, y: 0 };
-  var MAX_JOY_DIST = 45;
+  <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound" style="display:none" aria-hidden="true">🔊</button>
+  <div id="statusLive" class="sr-only" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" role="status" aria-live="assertive" aria-atomic="true"></div>
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 
-  function joyStart(cx, cy) {
-    joyActive = true; joyOrigin.x = cx; joyOrigin.y = cy;
-    joystickBase.style.left = (cx - 50) + 'px';
-    joystickBase.style.top = (cy - 50) + 'px';
-    joystickBase.style.display = 'block';
-  }
-  function joyMove(cx, cy) {
-    if (!joyActive) return;
-    var dx = cx - joyOrigin.x, dy = cy - joyOrigin.y;
-    var dist = Math.min(Math.sqrt(dx * dx + dy * dy), MAX_JOY_DIST);
-    var angle = Math.atan2(dy, dx);
-    var sx = Math.cos(angle) * dist, sy = Math.sin(angle) * dist;
-    joystickStick.style.left = (28 + sx) + 'px';
-    joystickStick.style.top = (28 + sy) + 'px';
-    joyVector.x = sx / MAX_JOY_DIST; joyVector.y = sy / MAX_JOY_DIST;
-  }
-  function joyEnd() {
-    joyActive = false; joystickBase.style.display = 'none';
-    joystickStick.style.left = '28px'; joystickStick.style.top = '28px';
-    joyVector.x = 0; joyVector.y = 0;
-  }
-  joystickZone.addEventListener('touchstart', function (e) { var t = e.changedTouches[0]; joyStart(t.clientX, t.clientY); }, { passive: true });
-  joystickZone.addEventListener('touchmove', function (e) { var t = e.changedTouches[0]; joyMove(t.clientX, t.clientY); }, { passive: true });
-  joystickZone.addEventListener('touchend', joyEnd, { passive: true });
-  joystickZone.addEventListener('touchcancel', joyEnd, { passive: true });
+  <div class="saveOverlay" id="saveOverlay" aria-hidden="true">
+    <div class="savePanel">
+      <div class="saveRow">
+        <div>
+          <div class="saveHint">Save to Photos</div>
+          <div class="saveSub" id="saveSub">Tap and hold the image → Save Image</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="saveOpenBtn" id="saveOpenBtn" aria-label="Open image" type="button">Open Image</button>
+          <button class="saveCloseBtn" id="saveOverlayClose" aria-label="Close save overlay" type="button">✕</button>
+        </div>
+      </div>
+      <img id="saveImg" alt="Certificate image" loading="lazy" decoding="async" />
+    </div>
+  </div>
 
-  // ---------- MOVEMENT (momentum-based; world position only — visuals owned by leo module) ----------
-  var velocity = new THREE.Vector3();
-  var facing = 0;
-  var maxSpeed = 6.5, accel = 22, friction = 14;
+  <div class="backdrop fallbackBackdrop" id="fallbackBackdrop" role="dialog" aria-modal="true" aria-label="Image generation failed">
+    <div class="sheet fallbackSheet">
+      <div class="fallbackIcon">🖼️</div>
+      <div class="fallbackTitle">Image couldn’t be created</div>
+      <div class="fallbackMsg"></div>
+      <div class="fallbackActions">
+        <button class="btn btnPrimary" id="fallbackCloseBtn" type="button">Got it</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- /app-shell -->
 
-  function updateMovement(delta) {
-    var ix = 0, iz = 0;
-    if (keys.f) iz -= 1;
-    if (keys.b) iz += 1;
-    if (keys.l) ix -= 1;
-    if (keys.r) ix += 1;
-    if (joyVector.x !== 0 || joyVector.y !== 0) { ix = joyVector.x; iz = joyVector.y; }
+  <!-- ================= 3D HUB OVERLAY ================= -->
+  <div id="hud-top">
+    <div id="badges"></div>
+  </div>
+  <div id="hint">WASD ile hareket et — gate'e yaklaş, gerçek mission paneli açılır</div>
+  <div id="joystick-zone">
+    <div id="joystick-base"><div id="joystick-stick"></div></div>
+  </div>
 
-    var len = Math.sqrt(ix * ix + iz * iz);
-    var moving = len > 0.05;
-    var targetFacing = facing;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 
-    if (moving) {
-      ix /= len; iz /= len;
-      velocity.x += ix * accel * delta;
-      velocity.z += iz * accel * delta;
-      var speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-      if (speed > maxSpeed) {
-        velocity.x = (velocity.x / speed) * maxSpeed;
-        velocity.z = (velocity.z / speed) * maxSpeed;
-      }
-      targetFacing = Math.atan2(ix, iz);
-    } else {
-      var decay = Math.max(0, 1 - friction * delta);
-      velocity.x *= decay; velocity.z *= decay;
+  <!-- Real app scripts, unmodified, loaded exactly like ../index.html does -->
+  <script src="../confetti.min.js?v=20260524-5" defer></script>
+  <script src="../data.js?v=20260524-5" defer></script>
+  <script src="../jumvi-mission-icons.js?v=20260524-5" defer></script>
+  <script src="../jumvi-redlight.js?v=20260524-5" defer></script>
+  <script src="../app.js?v=20260524-5" defer></script>
+
+  <!-- Bridge: exposes PACKS/missions/done/openMission onto window for the module
+       script below. Must be an external file — `defer` has no effect on inline
+       scripts, so this has to load via src to execute after data.js/app.js. -->
+  <script src="./jumvi-hub-bridge.js" defer></script>
+
+  <script type="module">
+  import { createCoachLeo } from './jumvi-leo.js';
+
+  (function () {
+    'use strict';
+
+    var realApp = window.__jumviExports;
+    var PACKS = realApp.PACKS;
+    var missions = realApp.missions;
+    var done = realApp.done;
+    var openMission = realApp.openMission;
+
+    // ---------- GATE CONFIG (derived from real PACKS in ../data.js) ----------
+    var realPacks = PACKS.filter(function (p) { return p.key !== 'all'; });
+
+    function splitIconAndLabel(name) {
+      var parts = name.split(' ');
+      return { icon: parts[0], label: parts.slice(1).join(' ') };
     }
 
-    var nextX = leo.group.position.x + velocity.x * delta;
-    var nextZ = leo.group.position.z + velocity.z * delta;
-
-    var distFromCenter = Math.sqrt(nextX * nextX + nextZ * nextZ);
-    var maxDist = islandRadius - 0.8;
-    if (distFromCenter > maxDist) {
-      var scale = maxDist / distFromCenter;
-      nextX *= scale; nextZ *= scale;
-      velocity.x *= 0.3; velocity.z *= 0.3;
-    }
-
-    leo.group.position.x = nextX;
-    leo.group.position.z = nextZ;
-    facing = leo.getFacing();
-
-    var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-    leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
-
-    var camDistance = 11, camHeight = 9;
-    var camLagFactor = moving ? 2.2 : 3.5;
-    camera.position.x += (leo.group.position.x - camera.position.x) * Math.min(delta * camLagFactor, 1);
-    camera.position.z += (leo.group.position.z + camDistance - camera.position.z) * Math.min(delta * camLagFactor, 1);
-    camera.position.y = camHeight;
-    var lookAheadX = leo.group.position.x + velocity.x * 0.15;
-    var lookAheadZ = leo.group.position.z + velocity.z * 0.15;
-    camera.lookAt(lookAheadX, 0.6, lookAheadZ);
-  }
-
-  // ---------- GATE PROXIMITY: console-only trigger for now ----------
-  // No mission panel wiring yet — next step connects this to the real app's
-  // openMission()/bottom sheet UI and to real per-profile completion state.
-  var TRIGGER_RADIUS = 1.8;
-  var lastTriggeredGate = null;
-  var gateLogEl = document.getElementById('gate-log');
-
-  function checkGateProximity() {
-    var nearestGate = null, nearestDist = Infinity;
-    gateConfig.forEach(function (cfg) {
-      var dx = leo.group.position.x - cfg.x;
-      var dz = leo.group.position.z - cfg.z;
-      var dist = Math.sqrt(dx * dx + dz * dz);
-      if (dist < TRIGGER_RADIUS && dist < nearestDist) { nearestDist = dist; nearestGate = cfg; }
+    var islandRadius = 13;
+    var gateRadius = 9;
+    var gateConfig = realPacks.map(function (pack, i) {
+      var parsed = splitIconAndLabel(pack.name);
+      var angle = (i / realPacks.length) * Math.PI * 2;
+      return {
+        id: i + 1,
+        packKey: pack.key,
+        name: parsed.label,
+        icon: parsed.icon,
+        x: Math.sin(angle) * gateRadius,
+        z: Math.cos(angle) * gateRadius
+      };
     });
 
-    if (nearestGate) {
-      if (lastTriggeredGate !== nearestGate.id) {
-        console.log('gate ' + nearestGate.id + ' tetiklendi (' + nearestGate.icon + ' ' + nearestGate.name + ' / pack: ' + nearestGate.packKey + ')');
-        gateLogEl.textContent = 'Gate log: gate ' + nearestGate.id + ' tetiklendi — ' + nearestGate.icon + ' ' + nearestGate.name;
-        lastTriggeredGate = nearestGate.id;
-      }
-    } else {
-      lastTriggeredGate = null;
+    // Pack's first not-yet-completed mission; if the whole pack is done, reopen
+    // its first mission (openMission already renders the "completed" state).
+    function getNextMissionIdForPack(packKey) {
+      var packMissions = missions.filter(function (m) { return m.pack === packKey; });
+      var next = packMissions.find(function (m) { return !done.has(m.id); });
+      return next ? next.id : (packMissions[0] && packMissions[0].id);
     }
-  }
 
-  // ---------- LOOP ----------
-  var clock = new THREE.Clock();
-  function animate() {
-    requestAnimationFrame(animate);
-    var delta = Math.min(clock.getDelta(), 0.1);
-    updateMovement(delta);
-    checkGateProximity();
+    // ---------- HUD: badges reflect real pack icons ----------
+    var badgesEl = document.getElementById('badges');
     gateConfig.forEach(function (cfg) {
-      gateMeshes[cfg.id].userData.ring.rotation.z += delta * 0.6;
+      var slot = document.createElement('div');
+      slot.className = 'badge-slot';
+      slot.dataset.gate = cfg.id;
+      slot.textContent = cfg.icon;
+      slot.title = cfg.name;
+      badgesEl.appendChild(slot);
     });
-    renderer.render(scene, camera);
-  }
-  animate();
 
-  window.addEventListener('resize', function () {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+    // ---------- SCENE ----------
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xBEE3F5);
+    scene.fog = new THREE.Fog(0xBEE3F5, 18, 38);
+
+    var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 9, 11);
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.domElement.id = 'hubCanvas';
+    document.body.appendChild(renderer.domElement);
 
-})();
-</script>
+    scene.add(new THREE.HemisphereLight(0xBEE3F5, 0x6DBE45, 1.1));
+    var sun = new THREE.DirectionalLight(0xffffff, 1.6);
+    sun.position.set(10, 16, 8);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
+    sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
+    sun.shadow.camera.near = 1; sun.shadow.camera.far = 50;
+    scene.add(sun);
+
+    // ---------- ISLAND GROUND ----------
+    var groundGeo = new THREE.CircleGeometry(islandRadius, 48);
+    var groundMat = new THREE.MeshStandardMaterial({ color: 0x6DBE45, flatShading: true });
+    var ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    var sandGeo = new THREE.RingGeometry(islandRadius - 0.6, islandRadius + 1.2, 48);
+    var sandMat = new THREE.MeshStandardMaterial({ color: 0xF0DDA0, flatShading: true });
+    var sand = new THREE.Mesh(sandGeo, sandMat);
+    sand.rotation.x = -Math.PI / 2;
+    sand.position.y = -0.05;
+    scene.add(sand);
+
+    var waterGeo = new THREE.CircleGeometry(40, 32);
+    var waterMat = new THREE.MeshStandardMaterial({ color: 0x4A9FD4, flatShading: true, transparent: true, opacity: 0.85 });
+    var water = new THREE.Mesh(waterGeo, waterMat);
+    water.rotation.x = -Math.PI / 2;
+    water.position.y = -0.6;
+    scene.add(water);
+
+    function makeTree(x, z, scale) {
+      var group = new THREE.Group();
+      var trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.15, 0.2, 1.2, 6),
+        new THREE.MeshStandardMaterial({ color: 0x8B5E34, flatShading: true })
+      );
+      trunk.position.y = 0.6;
+      trunk.castShadow = true;
+      group.add(trunk);
+      var leaf = new THREE.Mesh(
+        new THREE.ConeGeometry(0.9, 1.6, 7),
+        new THREE.MeshStandardMaterial({ color: 0x4A9F4A, flatShading: true })
+      );
+      leaf.position.y = 1.7;
+      leaf.castShadow = true;
+      group.add(leaf);
+      group.position.set(x, 0, z);
+      group.scale.setScalar(scale || 1);
+      return group;
+    }
+    [[-10, -10, 1.1], [10, -10, 0.9], [-11, 8, 1.2], [11, 9, 1.0], [0, -11, 0.8], [0, 11, 0.9]]
+      .forEach(function (p) { scene.add(makeTree(p[0], p[1], p[2])); });
+
+    // ---------- GATE MARKERS (one per real mission pack) ----------
+    var gateMeshes = {};
+    function createGateMesh(cfg) {
+      var group = new THREE.Group();
+
+      var ringGeo = new THREE.TorusGeometry(0.9, 0.12, 8, 24);
+      var ringMat = new THREE.MeshStandardMaterial({ color: 0xBA7517, flatShading: true });
+      var ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.position.y = 1.1;
+      ring.castShadow = true;
+      group.add(ring);
+
+      var poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.1, 8);
+      var poleMat = new THREE.MeshStandardMaterial({ color: 0x888780, flatShading: true });
+      var poleL = new THREE.Mesh(poleGeo, poleMat);
+      poleL.position.set(-0.9, 0.55, 0);
+      group.add(poleL);
+      var poleR = poleL.clone();
+      poleR.position.x = 0.9;
+      group.add(poleR);
+
+      var baseGeo = new THREE.CylinderGeometry(1.3, 1.3, 0.15, 16);
+      var baseMat = new THREE.MeshStandardMaterial({ color: 0xE8E4D8, flatShading: true });
+      var base = new THREE.Mesh(baseGeo, baseMat);
+      base.position.y = 0.075;
+      base.receiveShadow = true;
+      group.add(base);
+
+      group.position.set(cfg.x, 0, cfg.z);
+      group.lookAt(0, 0, 0);
+      group.userData.ring = ring;
+      return group;
+    }
+    gateConfig.forEach(function (cfg) {
+      var mesh = createGateMesh(cfg);
+      scene.add(mesh);
+      gateMeshes[cfg.id] = mesh;
+    });
+
+    // ---------- COACH LEO (from shared module — no character code duplicated here) ----------
+    var leo = createCoachLeo(THREE);
+    scene.add(leo.group);
+
+    // ---------- INPUT: KEYBOARD ----------
+    var keys = { f: false, b: false, l: false, r: false };
+    window.addEventListener('keydown', function (e) {
+      if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
+      if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
+      if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
+      if (e.key === 'd' || e.key === 'ArrowRight') keys.r = true;
+    });
+    window.addEventListener('keyup', function (e) {
+      if (e.key === 'w' || e.key === 'ArrowUp') keys.f = false;
+      if (e.key === 's' || e.key === 'ArrowDown') keys.b = false;
+      if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = false;
+      if (e.key === 'd' || e.key === 'ArrowRight') keys.r = false;
+    });
+
+    // ---------- INPUT: MOBILE JOYSTICK ----------
+    var joystickZone = document.getElementById('joystick-zone');
+    var joystickBase = document.getElementById('joystick-base');
+    var joystickStick = document.getElementById('joystick-stick');
+    var joyActive = false, joyOrigin = { x: 0, y: 0 }, joyVector = { x: 0, y: 0 };
+    var MAX_JOY_DIST = 45;
+
+    function joyStart(cx, cy) {
+      joyActive = true; joyOrigin.x = cx; joyOrigin.y = cy;
+      joystickBase.style.left = (cx - 50) + 'px';
+      joystickBase.style.top = (cy - 50) + 'px';
+      joystickBase.style.display = 'block';
+    }
+    function joyMove(cx, cy) {
+      if (!joyActive) return;
+      var dx = cx - joyOrigin.x, dy = cy - joyOrigin.y;
+      var dist = Math.min(Math.sqrt(dx * dx + dy * dy), MAX_JOY_DIST);
+      var angle = Math.atan2(dy, dx);
+      var sx = Math.cos(angle) * dist, sy = Math.sin(angle) * dist;
+      joystickStick.style.left = (28 + sx) + 'px';
+      joystickStick.style.top = (28 + sy) + 'px';
+      joyVector.x = sx / MAX_JOY_DIST; joyVector.y = sy / MAX_JOY_DIST;
+    }
+    function joyEnd() {
+      joyActive = false; joystickBase.style.display = 'none';
+      joystickStick.style.left = '28px'; joystickStick.style.top = '28px';
+      joyVector.x = 0; joyVector.y = 0;
+    }
+    joystickZone.addEventListener('touchstart', function (e) { var t = e.changedTouches[0]; joyStart(t.clientX, t.clientY); }, { passive: true });
+    joystickZone.addEventListener('touchmove', function (e) { var t = e.changedTouches[0]; joyMove(t.clientX, t.clientY); }, { passive: true });
+    joystickZone.addEventListener('touchend', joyEnd, { passive: true });
+    joystickZone.addEventListener('touchcancel', joyEnd, { passive: true });
+
+    // ---------- MOVEMENT (momentum-based; world position only — visuals owned by leo module) ----------
+    var velocity = new THREE.Vector3();
+    var facing = 0;
+    var maxSpeed = 6.5, accel = 22, friction = 14;
+
+    function updateMovement(delta) {
+      var ix = 0, iz = 0;
+      if (keys.f) iz -= 1;
+      if (keys.b) iz += 1;
+      if (keys.l) ix -= 1;
+      if (keys.r) ix += 1;
+      if (joyVector.x !== 0 || joyVector.y !== 0) { ix = joyVector.x; iz = joyVector.y; }
+
+      var len = Math.sqrt(ix * ix + iz * iz);
+      var moving = len > 0.05;
+      var targetFacing = facing;
+
+      if (moving) {
+        ix /= len; iz /= len;
+        velocity.x += ix * accel * delta;
+        velocity.z += iz * accel * delta;
+        var speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+        if (speed > maxSpeed) {
+          velocity.x = (velocity.x / speed) * maxSpeed;
+          velocity.z = (velocity.z / speed) * maxSpeed;
+        }
+        targetFacing = Math.atan2(ix, iz);
+      } else {
+        var decay = Math.max(0, 1 - friction * delta);
+        velocity.x *= decay; velocity.z *= decay;
+      }
+
+      var nextX = leo.group.position.x + velocity.x * delta;
+      var nextZ = leo.group.position.z + velocity.z * delta;
+
+      var distFromCenter = Math.sqrt(nextX * nextX + nextZ * nextZ);
+      var maxDist = islandRadius - 0.8;
+      if (distFromCenter > maxDist) {
+        var scale = maxDist / distFromCenter;
+        nextX *= scale; nextZ *= scale;
+        velocity.x *= 0.3; velocity.z *= 0.3;
+      }
+
+      leo.group.position.x = nextX;
+      leo.group.position.z = nextZ;
+      facing = leo.getFacing();
+
+      var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+      leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
+
+      var camDistance = 11, camHeight = 9;
+      var camLagFactor = moving ? 2.2 : 3.5;
+      camera.position.x += (leo.group.position.x - camera.position.x) * Math.min(delta * camLagFactor, 1);
+      camera.position.z += (leo.group.position.z + camDistance - camera.position.z) * Math.min(delta * camLagFactor, 1);
+      camera.position.y = camHeight;
+      var lookAheadX = leo.group.position.x + velocity.x * 0.15;
+      var lookAheadZ = leo.group.position.z + velocity.z * 0.15;
+      camera.lookAt(lookAheadX, 0.6, lookAheadZ);
+    }
+
+    // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
+    var TRIGGER_RADIUS = 1.8;
+    var lastTriggeredGate = null;
+
+    function checkGateProximity() {
+      var nearestGate = null, nearestDist = Infinity;
+      gateConfig.forEach(function (cfg) {
+        var dx = leo.group.position.x - cfg.x;
+        var dz = leo.group.position.z - cfg.z;
+        var dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist < TRIGGER_RADIUS && dist < nearestDist) { nearestDist = dist; nearestGate = cfg; }
+      });
+
+      if (nearestGate) {
+        if (lastTriggeredGate !== nearestGate.id) {
+          var missionId = getNextMissionIdForPack(nearestGate.packKey);
+          if (missionId != null) openMission(missionId);
+          lastTriggeredGate = nearestGate.id;
+        }
+      } else {
+        lastTriggeredGate = null;
+      }
+    }
+
+    function tick(delta) {
+      updateMovement(delta);
+      checkGateProximity();
+      gateConfig.forEach(function (cfg) {
+        gateMeshes[cfg.id].userData.ring.rotation.z += delta * 0.6;
+      });
+      renderer.render(scene, camera);
+    }
+
+    // ---------- LOOP ----------
+    var clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      var delta = Math.min(clock.getDelta(), 0.1);
+      tick(delta);
+    }
+    animate();
+
+    window.addEventListener('resize', function () {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+  })();
+  </script>
 </body>
 </html>
