@@ -68,9 +68,9 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260524-5">
+  <link rel="stylesheet" href="style.css?v=20260524-7">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
-  <link rel="stylesheet" href="jumvi-icons.css?v=20260524-5">
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260524-7">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
   <script>
     (function(){
@@ -737,6 +737,11 @@
       <span class="navTabIcon">🦁</span>
       <span class="navTabLabel">Profile</span>
     </button>
+    <!-- 3D Hub — opt-in experimental view, hidden unless jumvi_3d_hub_enabled=1 in localStorage -->
+    <button class="navTab" data-tab="hub3d" id="navTabHub3D" type="button" style="display:none">
+      <span class="navTabIcon">🏝️</span>
+      <span class="navTabLabel">3D Hub</span>
+    </button>
   </nav>
 
   <!-- Floating sound toggle -->
@@ -774,17 +779,29 @@
       </div>
     </div>
   </div>
+
+  <!-- 3D Hub view — empty until showHub3D() lazy-loads Three.js + jumvi-hub-app.js into it.
+       Must stay INSIDE #app-wrapper: #app-wrapper is `position:fixed`, which (per spec)
+       always creates its own stacking context regardless of z-index — so a sibling of
+       #app-wrapper can never out-stack bottomNav/#backdrop no matter how high its z-index
+       is, since the whole #app-wrapper subtree paints as one z-index:auto unit. Being a
+       child instead lets this compete directly against bottomNav (9500) and the mission
+       modal (80) on equal footing. -->
+  <div id="hub3dOverlay" style="display:none"></div>
+  <style>
+    #hub3dOverlay { position: fixed; inset: 0; z-index: 40; background: #BEE3F5; }
+  </style>
 </div>
 
-<script src="confetti.min.js?v=20260524-5" defer></script>
-<script src="data.js?v=20260524-5" defer></script>
-<script src="jumvi-mission-icons.js?v=20260524-5" defer></script>
-<script src="jumvi-redlight.js?v=20260524-5" defer></script>
-<script src="app.js?v=20260524-5" defer></script>
+<script src="confetti.min.js?v=20260524-7" defer></script>
+<script src="data.js?v=20260524-7" defer></script>
+<script src="jumvi-mission-icons.js?v=20260524-7" defer></script>
+<script src="jumvi-redlight.js?v=20260524-7" defer></script>
+<script src="app.js?v=20260524-7" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260524-5").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260524-7").catch(()=>{});
     });
   }
 </script>

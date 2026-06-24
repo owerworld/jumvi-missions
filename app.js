@@ -441,6 +441,14 @@ async function renderSimpleCertificateBlob(){
  * ======================= */
 const PROFILES_KEY        = "jumvi_profiles_v1";
 const ACTIVE_PROFILE_KEY  = "jumvi_active_profile_v1";
+
+/** =======================
+ * 3D Hub — opt-in experimental view (off by default for everyone)
+ * ======================= */
+const HUB3D_FLAG_KEY = "jumvi_3d_hub_enabled";
+function isHub3DEnabled(){
+  return lsGet(HUB3D_FLAG_KEY, "0") === "1";
+}
 const PROFILE_AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼","🐯","🐨","🐸","🦋"];
 
 function getProfiles(){
@@ -3827,9 +3835,65 @@ function showWelcomeOverlay(){
  * ======================= */
 const NAV_TAB_KEY = "jumvi_active_tab_v1";
 
+/* 3D Hub — lazy loader. Three.js + jumvi-hub-app.js are only fetched the
+ * first time the user actually opens the hub3d tab; nothing here runs on
+ * normal page load. */
+let _hub3dInstance = null;
+let _hub3dLoadPromise = null;
+
+function loadScriptOnce(src){
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if(existing){ resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("Failed to load " + src));
+    document.head.appendChild(s);
+  });
+}
+
+function ensureHub3DLoaded(){
+  if(_hub3dLoadPromise) return _hub3dLoadPromise;
+  _hub3dLoadPromise = (async () => {
+    if(typeof THREE === "undefined"){
+      await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js");
+    }
+    const mod = await import("./jumvi-hub-app.js");
+    const container = document.getElementById("hub3dOverlay");
+    _hub3dInstance = mod.initHub3D({ PACKS, missions, done, openMission, container });
+  })();
+  return _hub3dLoadPromise;
+}
+
+function showHub3D(){
+  const overlay = document.getElementById("hub3dOverlay");
+  if(overlay) overlay.style.display = "";
+  // The hub's own HUD occupies the top of the screen — hide the normal app
+  // topbar underneath it instead of letting them overlap.
+  const sticky = document.querySelector(".sticky");
+  if(sticky) sticky.style.display = "none";
+  ensureHub3DLoaded().then(() => {
+    // Loading is async — the user may have switched to another tab before it
+    // finished. Only start rendering if hub3d is still the active/visible tab.
+    if(_hub3dInstance && overlay && overlay.style.display !== "none"){
+      _hub3dInstance.resume();
+    }
+  }).catch(e => console.warn("3D Hub failed to load:", e));
+}
+
+function hideHub3D(){
+  const overlay = document.getElementById("hub3dOverlay");
+  if(overlay) overlay.style.display = "none";
+  const sticky = document.querySelector(".sticky");
+  if(sticky) sticky.style.display = "";
+  if(_hub3dInstance) _hub3dInstance.pause();
+}
+
 function switchTab(tabName){
   if(!tabName) tabName = "today";
   const validTabs = ["today","browse","stats","profile"];
+  if(isHub3DEnabled()) validTabs.push("hub3d");
   if(!validTabs.includes(tabName)) tabName = "today";
 
   // Tab panel görünürlüğü
@@ -3842,8 +3906,11 @@ function switchTab(tabName){
     b.classList.toggle("active", b.dataset.tab === tabName);
   });
 
+  // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez
+  if(tabName === "hub3d") showHub3D(); else hideHub3D();
+
   // Body class — mission list ve footer görünürlüğü için
-  document.body.classList.remove("tab-today","tab-browse","tab-stats","tab-profile");
+  document.body.classList.remove("tab-today","tab-browse","tab-stats","tab-profile","tab-hub3d");
   document.body.classList.add("tab-" + tabName);
 
   // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
@@ -3985,6 +4052,13 @@ function renderFamilyInsights(){
 }
 
 function initBottomNav(){
+  // 3D Hub nav button stays hidden unless the user has the opt-in flag set —
+  // default state of the bottom nav is unchanged for everyone else.
+  if(isHub3DEnabled()){
+    const hub3dBtn = document.getElementById("navTabHub3D");
+    if(hub3dBtn) hub3dBtn.style.display = "";
+  }
+
   const navBtns = document.querySelectorAll(".navTab");
   navBtns.forEach(btn => {
     btn.addEventListener("click", ()=>{
