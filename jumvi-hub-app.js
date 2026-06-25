@@ -146,6 +146,54 @@ export function initHub3D(opts) {
 
   // ---------- GATE MARKERS (one per real mission pack) ----------
   var gateMeshes = {};
+
+  // Floating name label above each gate — a canvas-texture Sprite, not CSS3D/DOM:
+  // Sprites always billboard toward the camera and scale with perspective for
+  // free, so it stays readable from a distance with zero added per-frame cost.
+  function createLabelSprite(text) {
+    var fontSize = 30;
+    var paddingX = 24, paddingY = 16;
+    var font = '600 ' + fontSize + 'px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+    var measureCtx = document.createElement('canvas').getContext('2d');
+    measureCtx.font = font;
+    var textWidth = measureCtx.measureText(text).width;
+
+    var w = Math.ceil(textWidth + paddingX * 2);
+    var h = fontSize + paddingY * 2;
+    var supersample = 2;
+    var canvas = document.createElement('canvas');
+    canvas.width = w * supersample;
+    canvas.height = h * supersample;
+    var ctx = canvas.getContext('2d');
+    ctx.scale(supersample, supersample);
+    ctx.font = font;
+
+    var r = h / 2;
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.arcTo(w, 0, w, h, r);
+    ctx.arcTo(w, h, 0, h, r);
+    ctx.arcTo(0, h, 0, 0, r);
+    ctx.arcTo(0, 0, w, 0, r);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#3a2a1a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, w / 2, h / 2 + 1);
+
+    var texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    var material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    var sprite = new THREE.Sprite(material);
+    var worldHeight = 0.85;
+    sprite.scale.set(worldHeight * (w / h), worldHeight, 1);
+    return sprite;
+  }
+
   function createGateMesh(cfg) {
     var group = new THREE.Group();
 
@@ -161,6 +209,12 @@ export function initHub3D(opts) {
     // each gate bobs/breathes slightly out of phase so they don't all move in lockstep
     ring.userData.phase = cfg.id * 1.7;
     group.add(ring);
+
+    // Fixed-height name label — intentionally does NOT bob with the ring, so the
+    // text stays steady/readable even while the ring is bobbing/breathing.
+    var label = createLabelSprite(cfg.icon + ' ' + cfg.name);
+    label.position.set(0, ring.userData.baseY + 1.25, 0);
+    group.add(label);
 
     var poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.1, 8);
     var poleMat = new THREE.MeshStandardMaterial({ color: 0x888780, flatShading: true });
