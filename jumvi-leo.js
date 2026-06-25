@@ -16,6 +16,7 @@ export function createCoachLeo(THREE, options) {
   var skinColor = options.skinColor != null ? options.skinColor : 0xCFA06B;
   var bellyColor = options.bellyColor != null ? options.bellyColor : 0xF5E7CC;
   var bandanaColor = options.bandanaColor != null ? options.bandanaColor : 0x2FB6E8;
+  var pawColor = options.pawColor != null ? options.pawColor : 0x6B4423;
 
   // ---------- TOON MATERIAL HELPER ----------
   // Three-tone gradient map for cel-shaded look.
@@ -50,107 +51,195 @@ export function createCoachLeo(THREE, options) {
   // ---------- BUILD RIG ----------
   var group = new THREE.Group();
   var bodyMesh, legPivotL, legPivotR, armPivotL, armPivotR;
-  var bodyScaleBase = new THREE.Vector3(1, 1.1, 0.95);
+  var bodyScaleBase = new THREE.Vector3(1, 1.05, 0.95);
 
   (function buildLeo() {
-    bodyMesh = new THREE.Mesh(new THREE.SphereGeometry(0.42, 16, 16), toonMat(skinColor));
+    // Body — deliberately smaller than the head: big-head cartoon-mascot
+    // proportions (per reference), not a 1:1 realistic ratio.
+    bodyMesh = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 16), toonMat(skinColor));
     bodyMesh.scale.copy(bodyScaleBase);
-    bodyMesh.position.y = 0.58;
+    bodyMesh.position.y = 0.44;
     bodyMesh.castShadow = true;
     addOutline(bodyMesh, 0.05);
     group.add(bodyMesh);
 
-    var belly = new THREE.Mesh(new THREE.SphereGeometry(0.27, 14, 14), toonMat(bellyColor));
-    belly.position.set(0, 0.48, 0.3);
+    var belly = new THREE.Mesh(new THREE.SphereGeometry(0.20, 14, 14), toonMat(bellyColor));
+    belly.position.set(0, 0.38, 0.22);
     belly.scale.set(1, 1.1, 0.7);
     group.add(belly);
 
-    var headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.33, 18, 18), toonMat(skinColor));
-    headMesh.position.set(0, 1.08, 0.06);
+    // Head — large, dominant proportion vs. body (the single biggest change
+    // from the old rig, where head and body were nearly the same size).
+    var headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.42, 20, 20), toonMat(skinColor));
+    headMesh.position.set(0, 0.90, 0.04);
     headMesh.castShadow = true;
     addOutline(headMesh, 0.05);
     group.add(headMesh);
+    var headY = headMesh.position.y;
 
-    var snout = new THREE.Mesh(new THREE.SphereGeometry(0.15, 12, 12), toonMat(bellyColor));
-    snout.position.set(0, 0.98, 0.32);
-    snout.scale.set(1, 0.85, 0.9);
+    // Snout/muzzle
+    var snout = new THREE.Mesh(new THREE.SphereGeometry(0.20, 14, 14), toonMat(bellyColor));
+    snout.position.set(0, headY - 0.10, 0.34);
+    snout.scale.set(1, 0.8, 0.85);
     group.add(snout);
 
-    var nose = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), new THREE.MeshBasicMaterial({ color: 0x3A2A1A }));
-    nose.position.set(0, 1.0, 0.46);
+    // Nose — small, dark brown, slightly heart/triangle-shaped (flattened +
+    // tapered sphere rather than a plain round dot).
+    var nose = new THREE.Mesh(new THREE.SphereGeometry(0.052, 10, 8), new THREE.MeshBasicMaterial({ color: 0x3A2A1A }));
+    nose.position.set(0, headY - 0.06, 0.535);
+    nose.scale.set(1.2, 0.9, 0.75);
     group.add(nose);
 
-    // eyes - brown (spec critical: not blue)
+    // Cheek puffs — round, lighter patches either side of the snout, giving
+    // the wide-grin "chubby cheeks" look from the reference image.
+    function makeCheek(xPos) {
+      var cheek = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), toonMat(bellyColor));
+      cheek.position.set(xPos, headY - 0.13, 0.40);
+      cheek.scale.set(1, 0.85, 0.6);
+      group.add(cheek);
+    }
+    makeCheek(-0.21);
+    makeCheek(0.21);
+
+    // Mouth — wide open smile (half-ring arc) with a big pink tongue filling
+    // it, instead of no mouth at all.
+    var mouth = new THREE.Mesh(
+      new THREE.TorusGeometry(0.135, 0.045, 8, 12, Math.PI),
+      new THREE.MeshBasicMaterial({ color: 0x2A1A12 })
+    );
+    mouth.position.set(0, headY - 0.18, 0.50);
+    mouth.rotation.x = Math.PI / 2;
+    mouth.rotation.z = Math.PI;
+    group.add(mouth);
+
+    var tongue = new THREE.Mesh(
+      new THREE.SphereGeometry(0.085, 10, 8),
+      new THREE.MeshBasicMaterial({ color: 0xE8849A })
+    );
+    tongue.position.set(0, headY - 0.225, 0.495);
+    tongue.scale.set(1, 0.55, 0.85);
+    group.add(tongue);
+
+    // eyes — large, glossy, brown, with a white specular highlight dot and a
+    // thick brow above each one (spec critical: big expressive eyes, not blue)
     var eyeMat = new THREE.MeshBasicMaterial({ color: 0x3A2A1A });
     var eyeWhiteMat = toonMat(0xffffff);
+    var browMat = new THREE.MeshBasicMaterial({ color: 0x3A2A1A });
+    // eyeZ is chosen so the eye spheres clearly protrude past the head's own
+    // curved surface at this latitude (head radius 0.42, eyes offset ±0.155
+    // in x and +0.05 in y from head center) — otherwise they render embedded
+    ///occluded by the head mesh itself instead of reading as eyes.
+    var eyeY = headY + 0.05;
+    var eyeZ = 0.40;
     function makeEye(xPos) {
-      var white = new THREE.Mesh(new THREE.SphereGeometry(0.075, 10, 10), eyeWhiteMat);
-      white.position.set(xPos, 1.13, 0.27);
+      var white = new THREE.Mesh(new THREE.SphereGeometry(0.115, 12, 12), eyeWhiteMat);
+      white.position.set(xPos, eyeY, eyeZ);
       group.add(white);
-      var pupil = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 8), eyeMat);
-      pupil.position.set(xPos, 1.13, 0.33);
+
+      var pupil = new THREE.Mesh(new THREE.SphereGeometry(0.075, 10, 10), eyeMat);
+      pupil.position.set(xPos, eyeY, eyeZ + 0.07);
       group.add(pupil);
+
+      // The -0.035 offset is constant (not mirrored per eye) — a single
+      // light source puts the specular highlight on the same side of both
+      // pupils, not symmetrically outward on each.
+      var highlight = new THREE.Mesh(new THREE.SphereGeometry(0.038, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+      highlight.position.set(xPos - 0.035, eyeY + 0.045, eyeZ + 0.11);
+      group.add(highlight);
+
+      // Arched brow — a partial torus ring lying in the XY plane (facing the
+      // camera, like the eyes), not a straight bar, to match the curved
+      // "comma" eyebrow shape in the reference art.
+      var browArc = Math.PI * 0.55;
+      var brow = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.026, 8, 12, browArc), browMat);
+      brow.position.set(xPos, eyeY + 0.165, eyeZ + 0.05);
+      brow.rotation.z = Math.PI / 2 - browArc / 2 + (xPos < 0 ? 0.15 : -0.15);
+      group.add(brow);
     }
-    makeEye(-0.13);
-    makeEye(0.13);
+    makeEye(-0.155);
+    makeEye(0.155);
 
     function makeEar(xPos) {
-      var ear = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), toonMat(skinColor));
-      ear.position.set(xPos, 1.32, -0.02);
+      var ear = new THREE.Mesh(new THREE.SphereGeometry(0.135, 10, 10), toonMat(skinColor));
+      ear.position.set(xPos, headY + 0.30, -0.03);
       ear.scale.set(0.8, 1, 0.5);
       ear.castShadow = true;
       addOutline(ear, 0.05);
       group.add(ear);
-      var earInner = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), toonMat(bellyColor));
-      earInner.position.set(xPos, 1.31, 0.04);
+      // ear inner — cream, distinct from the skin tone
+      var earInner = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), toonMat(bellyColor));
+      earInner.position.set(xPos, headY + 0.29, 0.04);
       earInner.scale.set(0.7, 0.9, 0.4);
       group.add(earInner);
     }
-    makeEar(-0.24);
-    makeEar(0.24);
+    makeEar(-0.27);
+    makeEar(0.27);
 
-    var bandana = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.06, 8, 16, Math.PI * 1.3), toonMat(bandanaColor));
-    bandana.position.set(0, 0.96, -0.02);
+    var bandana = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.06, 8, 16, Math.PI * 1.3), toonMat(bandanaColor));
+    bandana.position.set(0, headY - 0.04, -0.02);
     bandana.rotation.x = Math.PI / 2.1;
     bandana.rotation.z = 0.3;
     addOutline(bandana, 0.05);
     group.add(bandana);
     var bandanaTailL = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.22, 4), toonMat(bandanaColor));
-    bandanaTailL.position.set(-0.18, 0.78, -0.18);
+    bandanaTailL.position.set(-0.2, headY - 0.24, -0.2);
     bandanaTailL.rotation.x = 0.6;
     group.add(bandanaTailL);
 
+    // Hands/feet — a distinct darker-brown tone from the skin, not a bare
+    // capsule tip.
     function makeLimb(isArm) {
       var pivot = new THREE.Group();
-      var length = isArm ? 0.32 : 0.34;
-      var radius = isArm ? 0.09 : 0.12;
+      var length = isArm ? 0.28 : 0.30;
+      var radius = isArm ? 0.08 : 0.105;
       var limb = new THREE.Mesh(new THREE.CapsuleGeometry(radius, length, 4, 8), toonMat(skinColor));
       limb.position.y = -length / 2 - radius;
       limb.castShadow = true;
       addOutline(limb, 0.05);
       pivot.add(limb);
+
+      var paw = new THREE.Mesh(new THREE.SphereGeometry(radius * 1.05, 8, 8), toonMat(pawColor));
+      paw.position.y = -length - radius * 1.25;
+      paw.scale.set(1, 0.6, 1.15);
+      pivot.add(paw);
+
       return pivot;
     }
 
     armPivotL = makeLimb(true);
-    armPivotL.position.set(-0.38, 0.7, 0.05);
+    armPivotL.position.set(-0.34, 0.56, 0.04);
     group.add(armPivotL);
     armPivotR = makeLimb(true);
-    armPivotR.position.set(0.38, 0.7, 0.05);
+    armPivotR.position.set(0.34, 0.56, 0.04);
     group.add(armPivotR);
 
     legPivotL = makeLimb(false);
-    legPivotL.position.set(-0.18, 0.32, 0);
+    legPivotL.position.set(-0.16, 0.30, 0);
     group.add(legPivotL);
     legPivotR = makeLimb(false);
-    legPivotR.position.set(0.18, 0.32, 0);
+    legPivotR.position.set(0.16, 0.30, 0);
     group.add(legPivotR);
 
-    var tail = new THREE.Mesh(new THREE.SphereGeometry(0.13, 10, 10), toonMat(skinColor));
-    tail.position.set(0, 0.55, -0.4);
-    tail.castShadow = true;
-    addOutline(tail, 0.05);
-    group.add(tail);
+    // Tail — two graduated spheres curving up and out to one side, clearly
+    // separated from the body silhouette rather than a single blob tucked
+    // directly behind it.
+    // Tail — three graduated, slightly flattened spheres curving up and out
+    // to one side, sized closer to the reference's big comma-shaped tail
+    // rather than a small blob tucked behind the body.
+    var tailMat = toonMat(skinColor);
+    var tailSegments = [
+      { pos: [0.20, 0.40, -0.34], radius: 0.135 },
+      { pos: [0.38, 0.50, -0.32], radius: 0.115 },
+      { pos: [0.53, 0.64, -0.24], radius: 0.085 }
+    ];
+    tailSegments.forEach(function (seg) {
+      var part = new THREE.Mesh(new THREE.SphereGeometry(seg.radius, 10, 10), tailMat);
+      part.position.set(seg.pos[0], seg.pos[1], seg.pos[2]);
+      part.scale.set(1, 1, 0.75);
+      part.castShadow = true;
+      addOutline(part, 0.05);
+      group.add(part);
+    });
   })();
 
   // ---------- ANIMATION STATE ----------
