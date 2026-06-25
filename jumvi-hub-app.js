@@ -294,9 +294,28 @@ export function initHub3D(opts) {
     camera.lookAt(lookAheadX, 0.6, lookAheadZ);
   }
 
+  // ---------- ENTRANCE ANIMATION (scoped to hub3d only — see resume()/pause()) ----------
+  // The real mission panel (#backdrop/#sheet) has no CSS transition anywhere in the
+  // app — it's a hard display:none/flex toggle, same in the Missions tab. We don't
+  // touch that shared CSS or openMission() itself; instead we inject a one-off
+  // <style> that only applies while body has "hub3dEntrance" (toggled below), using
+  // @keyframes (not `transition`) since a transition can't animate from display:none.
+  if (!document.getElementById('hub3dEntranceStyle')) {
+    var entranceStyle = document.createElement('style');
+    entranceStyle.id = 'hub3dEntranceStyle';
+    entranceStyle.textContent =
+      '@keyframes hub3dBackdropIn{from{opacity:0}to{opacity:1}}' +
+      '@keyframes hub3dSheetIn{from{transform:translateY(36px);opacity:0}to{transform:translateY(0);opacity:1}}' +
+      'body.hub3dEntrance #backdrop.show{animation:hub3dBackdropIn 220ms ease}' +
+      'body.hub3dEntrance #backdrop.show #sheet{animation:hub3dSheetIn 280ms cubic-bezier(.22,1,.36,1)}';
+    document.head.appendChild(entranceStyle);
+  }
+
   // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
   var TRIGGER_RADIUS = 1.8;
+  var GATE_REACT_MS = 150;
   var lastTriggeredGate = null;
+  var pendingGate = null; // { cfg, ring, startTime } — brief "arrived" reaction before the panel opens
 
   function checkGateProximity() {
     var nearestGate = null, nearestDist = Infinity;
@@ -308,19 +327,41 @@ export function initHub3D(opts) {
     });
 
     if (nearestGate) {
-      if (lastTriggeredGate !== nearestGate.id) {
-        var missionId = getNextMissionIdForPack(nearestGate.packKey);
-        if (missionId != null) openMission(missionId);
+      if (lastTriggeredGate !== nearestGate.id && !pendingGate) {
         lastTriggeredGate = nearestGate.id;
+        pendingGate = { cfg: nearestGate, ring: gateMeshes[nearestGate.id].userData.ring, startTime: performance.now() };
       }
-    } else {
+    } else if (!pendingGate) {
       lastTriggeredGate = null;
+    }
+  }
+
+  // Plays the gate-reached reaction (ring pulse + Leo hop) for GATE_REACT_MS, then
+  // opens the real mission panel — same openMission() call as before, just delayed
+  // by one short beat instead of firing the instant the trigger radius is entered.
+  function updateGateReaction() {
+    if (!pendingGate) return;
+    var elapsed = performance.now() - pendingGate.startTime;
+    var t = Math.min(elapsed / GATE_REACT_MS, 1);
+    var pulse = 1 + 0.25 * Math.sin(t * Math.PI);
+    pendingGate.ring.scale.setScalar(pulse);
+    leo.group.position.y = Math.sin(t * Math.PI) * 0.18;
+
+    if (elapsed >= GATE_REACT_MS) {
+      pendingGate.ring.scale.setScalar(1);
+      var missionId = getNextMissionIdForPack(pendingGate.cfg.packKey);
+      pendingGate = null;
+      if (missionId != null) {
+        document.body.classList.add('hub3dEntrance');
+        openMission(missionId);
+      }
     }
   }
 
   function tick(delta) {
     updateMovement(delta);
     checkGateProximity();
+    updateGateReaction();
     gateConfig.forEach(function (cfg) {
       gateMeshes[cfg.id].userData.ring.rotation.z += delta * 0.6;
     });
@@ -348,12 +389,14 @@ export function initHub3D(opts) {
   function resume() {
     if (running) return;
     running = true;
+    document.body.classList.add('hub3dEntrance');
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     animate();
   }
   function pause() {
     if (!running) return;
     running = false;
+    document.body.classList.remove('hub3dEntrance');
     if (rafId != null) cancelAnimationFrame(rafId);
     rafId = null;
   }

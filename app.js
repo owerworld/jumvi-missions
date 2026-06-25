@@ -449,6 +449,14 @@ const HUB3D_FLAG_KEY = "jumvi_3d_hub_enabled";
 function isHub3DEnabled(){
   return lsGet(HUB3D_FLAG_KEY, "0") === "1";
 }
+// Dev/test convenience only — ?hub3d=1 in the URL flips the opt-in flag on so
+// it can be shared as a direct link instead of setting localStorage by hand.
+// Not a real feature; the flag itself still defaults to off for everyone else.
+try {
+  if(new URLSearchParams(window.location.search).get("hub3d") === "1"){
+    lsSet(HUB3D_FLAG_KEY, "1");
+  }
+}catch(_){}
 const PROFILE_AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼","🐯","🐨","🐸","🦋"];
 
 function getProfiles(){
@@ -3859,7 +3867,7 @@ function ensureHub3DLoaded(){
     if(typeof THREE === "undefined"){
       await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js");
     }
-    const mod = await import("./jumvi-hub-app.js");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-11");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({ PACKS, missions, done, openMission, container });
   })();
