@@ -144,8 +144,83 @@ export function initHub3D(opts) {
   [[-10, -10, 1.1], [10, -10, 0.9], [-11, 8, 1.2], [11, 9, 1.0], [0, -11, 0.8], [0, 11, 0.9]]
     .forEach(function (p) { scene.add(makeTree(p[0], p[1], p[2])); });
 
+  function makeBush(x, z) {
+    var bush = new THREE.Mesh(
+      new THREE.SphereGeometry(0.4, 8, 8),
+      new THREE.MeshStandardMaterial({ color: 0x5BB85B, flatShading: true })
+    );
+    bush.position.set(x, 0.3, z);
+    bush.scale.set(1.2, 0.8, 1.1);
+    bush.castShadow = true;
+    return bush;
+  }
+
+  function makeFlowerCluster(x, z) {
+    var group = new THREE.Group();
+    var colors = [0xFF6B9D, 0xFFD23F, 0xFF8C42];
+    for (var i = 0; i < 3; i++) {
+      var petal = new THREE.Mesh(
+        new THREE.SphereGeometry(0.12, 6, 6),
+        new THREE.MeshStandardMaterial({ color: colors[i % colors.length], flatShading: true })
+      );
+      var angle = (i / 3) * Math.PI * 2;
+      petal.position.set(Math.cos(angle) * 0.18, 0.15, Math.sin(angle) * 0.18);
+      group.add(petal);
+    }
+    group.position.set(x, 0, z);
+    return group;
+  }
+
+  // Slowly-rotating gold sparkle ring shown only once a pack is 100% complete.
+  function makeChampionSparkle() {
+    var count = 8;
+    var radius = 1.3;
+    var positions = new Float32Array(count * 3);
+    for (var i = 0; i < count; i++) {
+      var a = (i / count) * Math.PI * 2;
+      positions[i * 3] = Math.cos(a) * radius;
+      positions[i * 3 + 1] = 1.8 + Math.sin(a * 2) * 0.15;
+      positions[i * 3 + 2] = Math.sin(a) * radius;
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    var mat = new THREE.PointsMaterial({ color: 0xFFD700, size: 0.18, transparent: true, opacity: 0.9, depthWrite: false });
+    return new THREE.Points(geo, mat);
+  }
+
   // ---------- GATE MARKERS (one per real mission pack) ----------
   var gateMeshes = {};
+
+  // Growth decor placed in a ring around each gate, outside the base/poles (radius
+  // ~1.3) and the trigger radius (1.8) so it never overlaps gameplay geometry.
+  // Slots are created once (hidden) and revealed cumulatively as the pack's real
+  // completion % crosses each threshold — see updateGateDecor().
+  var DECOR_RADIUS = 2.0;
+  var DECOR_SLOT_DEFS = [
+    { angleDeg: 30, type: 'bush' },
+    { angleDeg: 90, type: 'bush' },
+    { angleDeg: 150, type: 'tree' },
+    { angleDeg: 210, type: 'tree' },
+    { angleDeg: 270, type: 'flower' },
+    { angleDeg: 330, type: 'flower' }
+  ];
+  // index = tier (0..4) → how many of the 6 decor slots above are visible at that tier
+  var SLOTS_VISIBLE_AT_TIER = [0, 2, 4, 6, 6];
+
+  function getPackCompletion(packKey) {
+    var packMissions = missions.filter(function (m) { return m.pack === packKey; });
+    if (packMissions.length === 0) return 0;
+    var doneCount = packMissions.filter(function (m) { return done.has(m.id); }).length;
+    return doneCount / packMissions.length;
+  }
+
+  function tierForCompletion(frac) {
+    if (frac >= 1) return 4;
+    if (frac >= 0.75) return 3;
+    if (frac >= 0.5) return 2;
+    if (frac >= 0.25) return 1;
+    return 0;
+  }
 
   // Floating name label above each gate — a canvas-texture Sprite, not CSS3D/DOM:
   // Sprites always billboard toward the camera and scale with perspective for
@@ -232,9 +307,30 @@ export function initHub3D(opts) {
     base.receiveShadow = true;
     group.add(base);
 
+    // Growth decor — created hidden; updateGateDecor() reveals these cumulatively
+    // as the pack's real completion % rises (see getPackCompletion/tierForCompletion).
+    var decorSlots = DECOR_SLOT_DEFS.map(function (def) {
+      var rad = def.angleDeg * Math.PI / 180;
+      var dx = Math.cos(rad) * DECOR_RADIUS;
+      var dz = Math.sin(rad) * DECOR_RADIUS;
+      var obj;
+      if (def.type === 'bush') obj = makeBush(dx, dz);
+      else if (def.type === 'tree') obj = makeTree(dx, dz, 0.55);
+      else obj = makeFlowerCluster(dx, dz);
+      obj.visible = false;
+      group.add(obj);
+      return obj;
+    });
+    var champion = makeChampionSparkle();
+    champion.visible = false;
+    group.add(champion);
+
     group.position.set(cfg.x, 0, cfg.z);
     group.lookAt(0, 0, 0);
     group.userData.ring = ring;
+    group.userData.decorSlots = decorSlots;
+    group.userData.champion = champion;
+    group.userData.decorTier = -1; // force the first updateGateDecor() call to apply
     return group;
   }
   gateConfig.forEach(function (cfg) {
@@ -433,6 +529,27 @@ export function initHub3D(opts) {
     }
   }
 
+  // Reveals/hides decor slots when a gate's pack crosses a completion tier.
+  // Cheap (6 gates × a tiny array filter) and guarded so meshes are only
+  // touched on an actual tier change, not every frame.
+  function updateGateDecor() {
+    gateConfig.forEach(function (cfg) {
+      var group = gateMeshes[cfg.id];
+      var tier = tierForCompletion(getPackCompletion(cfg.packKey));
+      if (group.userData.decorTier === tier) return;
+      group.userData.decorTier = tier;
+
+      var visibleCount = SLOTS_VISIBLE_AT_TIER[tier];
+      group.userData.decorSlots.forEach(function (slot, i) {
+        slot.visible = i < visibleCount;
+      });
+
+      var isChampion = tier === 4;
+      group.userData.champion.visible = isChampion;
+      group.userData.ring.userData.champion = isChampion;
+    });
+  }
+
   var elapsedTime = 0;
 
   function tick(delta) {
@@ -440,24 +557,31 @@ export function initHub3D(opts) {
     checkGateProximity();
     updateGateAwareness();
     updateGateReaction();
+    updateGateDecor();
     elapsedTime += delta;
 
     gateConfig.forEach(function (cfg) {
-      var ring = gateMeshes[cfg.id].userData.ring;
+      var meshGroup = gateMeshes[cfg.id];
+      var ring = meshGroup.userData.ring;
       ring.rotation.z += delta * 0.6;
 
       // gentle up/down bob, out of phase per gate so they don't move in lockstep
       var bob = Math.sin(elapsedTime * 1.6 + ring.userData.phase) * 0.08;
       ring.position.y = ring.userData.baseY + bob;
 
-      // slow breathing glow
-      ring.material.emissiveIntensity = 0.3 + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
+      // slow breathing glow — a fully-completed pack's gate glows a bit brighter
+      var champBoost = ring.userData.champion ? 0.25 : 0;
+      ring.material.emissiveIntensity = 0.3 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
 
       // "getting close" scale boost — skipped for the gate currently mid-reaction,
       // whose own pulse (updateGateReaction) owns the scale for that brief window
       var isPending = pendingGate && pendingGate.cfg.id === cfg.id;
       if (!isPending) {
         ring.scale.setScalar(1 + (ring.userData.awareness || 0) * 0.12);
+      }
+
+      if (meshGroup.userData.champion.visible) {
+        meshGroup.userData.champion.rotation.y += delta * 0.5;
       }
     });
 
