@@ -35,6 +35,33 @@ export function initHub3D(opts) {
   joystickZone.appendChild(joystickBase);
   container.appendChild(joystickZone);
 
+  // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
+  // Each zone is one mission pack, ZONE_LENGTH apart along -Z. The corridor's
+  // centerline snakes left/right (ZIGZAG_AMPLITUDE) so consecutive zones sit on
+  // alternating sides, and the walkable width itself wobbles a bit
+  // (CORRIDOR_WOBBLE_*) so the path edges read as organic, not ruler-straight.
+  var ZONE_LENGTH = 16;
+  var ZIGZAG_AMPLITUDE = 4;
+  var CORRIDOR_HALF_WIDTH = 3.5; // ~7 units of walkable width (spec: 6-8)
+  var CORRIDOR_WOBBLE_AMPLITUDE = 1.0;
+  var CORRIDOR_WOBBLE_FREQ = 0.05;
+  var START_BOUNDARY_Z = 4; // can't wander back past spawn
+
+  function zoneCenterZ(i) {
+    return -(i + 0.5) * ZONE_LENGTH;
+  }
+  function pathCenterX(z) {
+    return Math.sin((z / ZONE_LENGTH) * Math.PI) * ZIGZAG_AMPLITUDE;
+  }
+  function corridorHalfWidthAt(z) {
+    return CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE * Math.sin(z * CORRIDOR_WOBBLE_FREQ + 1.7);
+  }
+  // z of the fog wall guarding the entrance to zone i (i = 1..N-1) — the
+  // midpoint between zone i-1's and zone i's gates.
+  function zoneBoundaryZ(i) {
+    return -i * ZONE_LENGTH;
+  }
+
   // ---------- GATE CONFIG (derived from real PACKS) ----------
   var realPacks = PACKS.filter(function (p) { return p.key !== 'all'; });
 
@@ -43,18 +70,17 @@ export function initHub3D(opts) {
     return { icon: parts[0], label: parts.slice(1).join(' ') };
   }
 
-  var islandRadius = 13;
-  var gateRadius = 9;
   var gateConfig = realPacks.map(function (pack, i) {
     var parsed = splitIconAndLabel(pack.name);
-    var angle = (i / realPacks.length) * Math.PI * 2;
+    var z = zoneCenterZ(i);
     return {
       id: i + 1,
       packKey: pack.key,
       name: parsed.label,
       icon: parsed.icon,
-      x: Math.sin(angle) * gateRadius,
-      z: Math.cos(angle) * gateRadius
+      x: pathCenterX(z),
+      z: z,
+      zoneIndex: i
     };
   });
 
@@ -66,12 +92,15 @@ export function initHub3D(opts) {
     return next ? next.id : (packMissions[0] && packMissions[0].id);
   }
 
+  var badgeSlots = {};
   gateConfig.forEach(function (cfg) {
     var slot = document.createElement('div');
-    slot.style.cssText = 'width:30px;height:30px;border-radius:50%;background:#E5E2D8;border:2px solid #C5C1B0;display:flex;align-items:center;justify-content:center;font-size:15px;';
+    slot.style.cssText = 'width:30px;height:30px;border-radius:50%;background:#E5E2D8;border:2px solid #C5C1B0;display:flex;align-items:center;justify-content:center;font-size:15px;transition:opacity 240ms ease;';
     slot.textContent = cfg.icon;
     slot.title = cfg.name;
+    slot.style.opacity = isZoneUnlocked(cfg.zoneIndex) ? '1' : '0.35';
     badgesEl.appendChild(slot);
+    badgeSlots[cfg.id] = slot;
   });
 
   // ---------- SCENE ----------
@@ -99,27 +128,16 @@ export function initHub3D(opts) {
   sun.shadow.camera.near = 1; sun.shadow.camera.far = 50;
   scene.add(sun);
 
-  // ---------- ISLAND GROUND ----------
-  var groundGeo = new THREE.CircleGeometry(islandRadius, 48);
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0x6DBE45, flatShading: true });
+  // ---------- FOREST GROUND (long strip covering all zones — replaces the island) ----------
+  var pathTotalLength = ZONE_LENGTH * realPacks.length + START_BOUNDARY_Z + 10;
+  var groundWidth = (CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 10; // walkable width + treeline margin
+  var groundGeo = new THREE.PlaneGeometry(groundWidth, pathTotalLength, 1, 1);
+  var groundMat = new THREE.MeshStandardMaterial({ color: 0x5FAF3F, flatShading: true });
   var ground = new THREE.Mesh(groundGeo, groundMat);
   ground.rotation.x = -Math.PI / 2;
+  ground.position.z = -(pathTotalLength / 2) + START_BOUNDARY_Z;
   ground.receiveShadow = true;
   scene.add(ground);
-
-  var sandGeo = new THREE.RingGeometry(islandRadius - 0.6, islandRadius + 1.2, 48);
-  var sandMat = new THREE.MeshStandardMaterial({ color: 0xF0DDA0, flatShading: true });
-  var sand = new THREE.Mesh(sandGeo, sandMat);
-  sand.rotation.x = -Math.PI / 2;
-  sand.position.y = -0.05;
-  scene.add(sand);
-
-  var waterGeo = new THREE.CircleGeometry(40, 32);
-  var waterMat = new THREE.MeshStandardMaterial({ color: 0x4A9FD4, flatShading: true, transparent: true, opacity: 0.85 });
-  var water = new THREE.Mesh(waterGeo, waterMat);
-  water.rotation.x = -Math.PI / 2;
-  water.position.y = -0.6;
-  scene.add(water);
 
   function makeTree(x, z, scale) {
     var group = new THREE.Group();
@@ -141,8 +159,15 @@ export function initHub3D(opts) {
     group.scale.setScalar(scale || 1);
     return group;
   }
-  [[-10, -10, 1.1], [10, -10, 0.9], [-11, 8, 1.2], [11, 9, 1.0], [0, -11, 0.8], [0, 11, 0.9]]
-    .forEach(function (p) { scene.add(makeTree(p[0], p[1], p[2])); });
+  // Treeline hugging both sides of the corridor — the ground itself is a plain
+  // rectangle; this foliage boundary (following the zigzag + wobble) is what
+  // makes the path read as organic/curvy instead of a straight lane.
+  for (var tz = START_BOUNDARY_Z - 2; tz > -pathTotalLength + START_BOUNDARY_Z; tz -= 4.5) {
+    var edgeHalfWidth = corridorHalfWidthAt(tz) + 0.8 + Math.random() * 1.2;
+    var centerXAtZ = pathCenterX(tz);
+    scene.add(makeTree(centerXAtZ - edgeHalfWidth, tz + (Math.random() - 0.5) * 2, 0.8 + Math.random() * 0.5));
+    scene.add(makeTree(centerXAtZ + edgeHalfWidth, tz + (Math.random() - 0.5) * 2, 0.8 + Math.random() * 0.5));
+  }
 
   function makeBush(x, z) {
     var bush = new THREE.Mesh(
@@ -339,6 +364,42 @@ export function initHub3D(opts) {
     gateMeshes[cfg.id] = mesh;
   });
 
+  // ---------- FOG WALLS (one per locked zone entrance — dissolves on unlock) ----------
+  // Same fade + retreat + reveal-trees technique as the fog wall in
+  // prototypes/jumvi-forest-mini-example.html's growForest()/animateFog() —
+  // ported to run off the shared tick() clock instead of its own
+  // requestAnimationFrame loop (see updateFogDissolves() below).
+  function createFogWall(zoneIndex) {
+    var z = zoneBoundaryZ(zoneIndex);
+    var x = pathCenterX(z);
+    var width = corridorHalfWidthAt(z) * 2 + 6;
+
+    var wall = new THREE.Mesh(
+      new THREE.PlaneGeometry(width, 7),
+      new THREE.MeshBasicMaterial({ color: 0xBEE3F5, transparent: true, opacity: 0.92, side: THREE.DoubleSide })
+    );
+    wall.position.set(x, 3, z);
+    scene.add(wall);
+
+    var particles = new THREE.Group();
+    for (var i = 0; i < 18; i++) {
+      var dot = new THREE.Mesh(
+        new THREE.CircleGeometry(0.25 + Math.random() * 0.3, 8),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 })
+      );
+      dot.position.set(x + (Math.random() - 0.5) * width * 0.9, 1 + Math.random() * 5, z + (Math.random() - 0.5) * 0.2);
+      particles.add(dot);
+    }
+    scene.add(particles);
+
+    return { zoneIndex: zoneIndex, wall: wall, particles: particles, baseZ: z, baseX: x, dissolving: null, dissolved: false };
+  }
+
+  var fogWalls = [];
+  for (var fwIdx = 1; fwIdx < gateConfig.length; fwIdx++) {
+    fogWalls.push(createFogWall(fwIdx));
+  }
+
   // ---------- COACH LEO (from shared module — no character code duplicated here) ----------
   var leo = createCoachLeo(THREE);
   scene.add(leo.group);
@@ -425,12 +486,27 @@ export function initHub3D(opts) {
     var nextX = leo.group.position.x + velocity.x * delta;
     var nextZ = leo.group.position.z + velocity.z * delta;
 
-    var distFromCenter = Math.sqrt(nextX * nextX + nextZ * nextZ);
-    var maxDist = islandRadius - 0.8;
-    if (distFromCenter > maxDist) {
-      var scale = maxDist / distFromCenter;
-      nextX *= scale; nextZ *= scale;
-      velocity.x *= 0.3; velocity.z *= 0.3;
+    // Corridor clamp (replaces the old circular island clamp). The walkable
+    // width follows the zigzag centerline + organic wobble; the far edge is
+    // hard-capped at the next LOCKED zone's fog wall — this is the lock
+    // mechanic's actual physical enforcement. checkGateProximity() never
+    // needs to know about lock state because a locked gate is simply
+    // unreachable: Leo physically cannot walk past its fog wall.
+    var farLimit = null;
+    for (var fwi = 0; fwi < fogWalls.length; fwi++) {
+      if (!fogWalls[fwi].dissolved) { farLimit = fogWalls[fwi].baseZ + 1.5; break; }
+    }
+    if (farLimit === null) farLimit = zoneCenterZ(gateConfig.length - 1) - 6; // all zones unlocked — roam to the end
+
+    nextZ = THREE.MathUtils.clamp(nextZ, farLimit, START_BOUNDARY_Z);
+    var corridorCenterX = pathCenterX(nextZ);
+    var corridorHalf = corridorHalfWidthAt(nextZ);
+    if (nextX < corridorCenterX - corridorHalf || nextX > corridorCenterX + corridorHalf) {
+      velocity.x *= 0.3;
+    }
+    nextX = THREE.MathUtils.clamp(nextX, corridorCenterX - corridorHalf, corridorCenterX + corridorHalf);
+    if (nextZ === farLimit || nextZ === START_BOUNDARY_Z) {
+      velocity.z *= 0.3;
     }
 
     leo.group.position.x = nextX;
@@ -550,6 +626,74 @@ export function initHub3D(opts) {
     });
   }
 
+  // ---------- ZONE LOCKS (computed live from the real `done` Set — no separate state) ----------
+  // This lock is purely a 3D-hub concept: it never touches `done`, never adds
+  // any other state, and the Browse/Today tabs are completely unaware of it —
+  // they keep reading `done` exactly as before.
+  function isZoneUnlocked(zoneIndex) {
+    if (zoneIndex === 0) return true;
+    return getPackCompletion(gateConfig[zoneIndex - 1].packKey) >= 1;
+  }
+
+  var celebratingRing = null; // { ring, startTime } — brief pulse when a zone unlocks
+  var CELEBRATION_MS = 700;
+
+  // Detects locked→unlocked transitions and kicks off the fog dissolve +
+  // reward trees + a short celebration pulse on the newly-opened zone's ring.
+  function updateZoneLocks() {
+    fogWalls.forEach(function (fw) {
+      if (fw.dissolved || fw.dissolving) return;
+      if (!isZoneUnlocked(fw.zoneIndex)) return;
+
+      fw.dissolving = { startTime: performance.now(), startOpacity: fw.wall.material.opacity };
+
+      // Reward trees just inside the newly opened entrance — same idea as
+      // growForest()'s reward trees in the mini-example prototype.
+      var rewardZ = fw.baseZ - 3;
+      scene.add(makeTree(fw.baseX - corridorHalfWidthAt(rewardZ) - 0.5, rewardZ, 1.0));
+      scene.add(makeTree(fw.baseX + corridorHalfWidthAt(rewardZ) + 0.5, rewardZ - 2, 0.95));
+
+      celebratingRing = { ring: gateMeshes[fw.zoneIndex + 1].userData.ring, startTime: performance.now() };
+
+      var badge = badgeSlots[fw.zoneIndex + 1];
+      if (badge) badge.style.opacity = '1';
+    });
+  }
+
+  // Fades + retreats the fog wall over 1400ms — the exact technique from
+  // growForest()/animateFog() in jumvi-forest-mini-example.html, just driven
+  // by tick()'s elapsed time instead of its own requestAnimationFrame loop.
+  function updateFogDissolves() {
+    fogWalls.forEach(function (fw) {
+      if (!fw.dissolving) return;
+      var elapsed = performance.now() - fw.dissolving.startTime;
+      var t = Math.min(elapsed / 1400, 1);
+      fw.wall.material.opacity = fw.dissolving.startOpacity * (1 - t);
+      fw.particles.children.forEach(function (p, i) {
+        p.material.opacity = 0.5 * (1 - t);
+        p.position.y += 0.01 * (1 + (i % 3));
+      });
+      fw.wall.position.z = fw.baseZ - t * 4;
+      if (t >= 1) {
+        fw.wall.visible = false;
+        fw.particles.visible = false;
+        fw.dissolving = null;
+        fw.dissolved = true;
+      }
+    });
+  }
+
+  function updateCelebration() {
+    if (!celebratingRing) return;
+    var elapsed = performance.now() - celebratingRing.startTime;
+    var t = Math.min(elapsed / CELEBRATION_MS, 1);
+    celebratingRing.ring.scale.setScalar(1 + 0.5 * Math.sin(t * Math.PI));
+    if (t >= 1) {
+      celebratingRing.ring.scale.setScalar(1);
+      celebratingRing = null;
+    }
+  }
+
   var elapsedTime = 0;
 
   function tick(delta) {
@@ -558,6 +702,9 @@ export function initHub3D(opts) {
     updateGateAwareness();
     updateGateReaction();
     updateGateDecor();
+    updateZoneLocks();
+    updateFogDissolves();
+    updateCelebration();
     elapsedTime += delta;
 
     gateConfig.forEach(function (cfg) {
@@ -573,10 +720,11 @@ export function initHub3D(opts) {
       var champBoost = ring.userData.champion ? 0.25 : 0;
       ring.material.emissiveIntensity = 0.3 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
 
-      // "getting close" scale boost — skipped for the gate currently mid-reaction,
-      // whose own pulse (updateGateReaction) owns the scale for that brief window
+      // "getting close" scale boost — skipped for the gate currently mid-reaction
+      // or mid-celebration, each of which owns ring scale for its own brief window
       var isPending = pendingGate && pendingGate.cfg.id === cfg.id;
-      if (!isPending) {
+      var isCelebrating = celebratingRing && celebratingRing.ring === ring;
+      if (!isPending && !isCelebrating) {
         ring.scale.setScalar(1 + (ring.userData.awareness || 0) * 0.12);
       }
 
