@@ -150,10 +150,16 @@ export function initHub3D(opts) {
     var group = new THREE.Group();
 
     var ringGeo = new THREE.TorusGeometry(0.9, 0.12, 8, 24);
-    var ringMat = new THREE.MeshStandardMaterial({ color: 0xBA7517, flatShading: true });
+    var ringMat = new THREE.MeshStandardMaterial({
+      color: 0xBA7517, flatShading: true,
+      emissive: 0xBA7517, emissiveIntensity: 0.3
+    });
     var ring = new THREE.Mesh(ringGeo, ringMat);
     ring.position.y = 1.1;
     ring.castShadow = true;
+    ring.userData.baseY = 1.1;
+    // each gate bobs/breathes slightly out of phase so they don't all move in lockstep
+    ring.userData.phase = cfg.id * 1.7;
     group.add(ring);
 
     var poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.1, 8);
@@ -313,9 +319,24 @@ export function initHub3D(opts) {
 
   // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
   var TRIGGER_RADIUS = 1.8;
+  var AWARENESS_RADIUS = 3.2; // bigger than TRIGGER_RADIUS — "getting close" glow before the gate actually fires
   var GATE_REACT_MS = 150;
   var lastTriggeredGate = null;
   var pendingGate = null; // { cfg, ring, startTime } — brief "arrived" reaction before the panel opens
+
+  // Distance-based "getting close" boost applied to every gate each frame, except
+  // the one currently mid-reaction (that one's pulse takes over in updateGateReaction).
+  function updateGateAwareness() {
+    gateConfig.forEach(function (cfg) {
+      if (pendingGate && pendingGate.cfg.id === cfg.id) return;
+      var ring = gateMeshes[cfg.id].userData.ring;
+      var dx = leo.group.position.x - cfg.x;
+      var dz = leo.group.position.z - cfg.z;
+      var dist = Math.sqrt(dx * dx + dz * dz);
+      var closeness = THREE.MathUtils.clamp(1 - (dist - TRIGGER_RADIUS) / (AWARENESS_RADIUS - TRIGGER_RADIUS), 0, 1);
+      ring.userData.awareness = closeness;
+    });
+  }
 
   function checkGateProximity() {
     var nearestGate = null, nearestDist = Infinity;
@@ -358,13 +379,34 @@ export function initHub3D(opts) {
     }
   }
 
+  var elapsedTime = 0;
+
   function tick(delta) {
     updateMovement(delta);
     checkGateProximity();
+    updateGateAwareness();
     updateGateReaction();
+    elapsedTime += delta;
+
     gateConfig.forEach(function (cfg) {
-      gateMeshes[cfg.id].userData.ring.rotation.z += delta * 0.6;
+      var ring = gateMeshes[cfg.id].userData.ring;
+      ring.rotation.z += delta * 0.6;
+
+      // gentle up/down bob, out of phase per gate so they don't move in lockstep
+      var bob = Math.sin(elapsedTime * 1.6 + ring.userData.phase) * 0.08;
+      ring.position.y = ring.userData.baseY + bob;
+
+      // slow breathing glow
+      ring.material.emissiveIntensity = 0.3 + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
+
+      // "getting close" scale boost — skipped for the gate currently mid-reaction,
+      // whose own pulse (updateGateReaction) owns the scale for that brief window
+      var isPending = pendingGate && pendingGate.cfg.id === cfg.id;
+      if (!isPending) {
+        ring.scale.setScalar(1 + (ring.userData.awareness || 0) * 0.12);
+      }
     });
+
     renderer.render(scene, camera);
   }
 
