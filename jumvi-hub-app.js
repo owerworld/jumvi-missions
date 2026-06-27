@@ -105,8 +105,9 @@ export function initHub3D(opts) {
 
   // ---------- SCENE ----------
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xBEE3F5);
-  scene.fog = new THREE.Fog(0xBEE3F5, 18, 38);
+  // Cozy storybook sunset palette — warm cream sky/fog instead of cool blue.
+  scene.background = new THREE.Color(0xFFE8C4);
+  scene.fog = new THREE.Fog(0xFFE8C4, 18, 38);
 
   var camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
   camera.position.set(0, 9, 11);
@@ -118,8 +119,8 @@ export function initHub3D(opts) {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
-  scene.add(new THREE.HemisphereLight(0xBEE3F5, 0x6DBE45, 1.1));
-  var sun = new THREE.DirectionalLight(0xffffff, 1.6);
+  scene.add(new THREE.HemisphereLight(0xFFD9A0, 0x8FBF5A, 1.1));
+  var sun = new THREE.DirectionalLight(0xFFD9A0, 1.6);
   sun.position.set(10, 16, 8);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -132,7 +133,7 @@ export function initHub3D(opts) {
   var pathTotalLength = ZONE_LENGTH * realPacks.length + START_BOUNDARY_Z + 10;
   var groundWidth = (CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 10; // walkable width + treeline margin
   var groundGeo = new THREE.PlaneGeometry(groundWidth, pathTotalLength, 1, 1);
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0x5FAF3F, flatShading: true });
+  var groundMat = new THREE.MeshStandardMaterial({ color: 0x8FBF5A, flatShading: true });
   var ground = new THREE.Mesh(groundGeo, groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.position.z = -(pathTotalLength / 2) + START_BOUNDARY_Z;
@@ -148,13 +149,22 @@ export function initHub3D(opts) {
     trunk.position.y = 0.6;
     trunk.castShadow = true;
     group.add(trunk);
-    var leaf = new THREE.Mesh(
-      new THREE.ConeGeometry(0.9, 1.6, 7),
-      new THREE.MeshStandardMaterial({ color: 0x4A9F4A, flatShading: true })
-    );
-    leaf.position.y = 1.7;
-    leaf.castShadow = true;
-    group.add(leaf);
+
+    // Fluffy, rounded canopy — a cluster of overlapping spheres instead of a
+    // single sharp cone, for a softer storybook silhouette.
+    var canopyMat = new THREE.MeshStandardMaterial({ color: 0x6FA84A, flatShading: true });
+    var puffs = [
+      { x: 0, y: 1.55, z: 0, r: 0.75 },
+      { x: 0.28, y: 2.05, z: 0.12, r: 0.55 },
+      { x: -0.3, y: 1.95, z: -0.08, r: 0.52 }
+    ];
+    puffs.forEach(function (p) {
+      var puff = new THREE.Mesh(new THREE.SphereGeometry(p.r, 8, 8), canopyMat);
+      puff.position.set(p.x, p.y, p.z);
+      puff.castShadow = true;
+      group.add(puff);
+    });
+
     group.position.set(x, 0, z);
     group.scale.setScalar(scale || 1);
     return group;
@@ -299,8 +309,8 @@ export function initHub3D(opts) {
 
     var ringGeo = new THREE.TorusGeometry(0.9, 0.12, 8, 24);
     var ringMat = new THREE.MeshStandardMaterial({
-      color: 0xBA7517, flatShading: true,
-      emissive: 0xBA7517, emissiveIntensity: 0.3
+      color: 0xE8A23A, flatShading: true,
+      emissive: 0xE8A23A, emissiveIntensity: 0.35
     });
     var ring = new THREE.Mesh(ringGeo, ringMat);
     ring.position.y = 1.1;
@@ -376,7 +386,7 @@ export function initHub3D(opts) {
 
     var wall = new THREE.Mesh(
       new THREE.PlaneGeometry(width, 7),
-      new THREE.MeshBasicMaterial({ color: 0xBEE3F5, transparent: true, opacity: 0.92, side: THREE.DoubleSide })
+      new THREE.MeshBasicMaterial({ color: 0xFFE8C4, transparent: true, opacity: 0.92, side: THREE.DoubleSide })
     );
     wall.position.set(x, 3, z);
     scene.add(wall);
@@ -718,7 +728,7 @@ export function initHub3D(opts) {
 
       // slow breathing glow — a fully-completed pack's gate glows a bit brighter
       var champBoost = ring.userData.champion ? 0.25 : 0;
-      ring.material.emissiveIntensity = 0.3 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
+      ring.material.emissiveIntensity = 0.35 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
 
       // "getting close" scale boost — skipped for the gate currently mid-reaction
       // or mid-celebration, each of which owns ring scale for its own brief window
