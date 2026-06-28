@@ -246,6 +246,173 @@ export function initHub3D(opts) {
     return new THREE.Points(geo, mat);
   }
 
+  // ---------- ENVIRONMENT DECOR (river + bridge + butterflies + birds) ----------
+  // Pure atmosphere — none of this touches the corridor clamp, lock state, or
+  // gate/panel logic. Placed in zone 0 (always unlocked) so every player sees
+  // it regardless of progress.
+  var RIVER_Z = -3;
+  var RIVER_DEPTH = 3; // how wide the river band is along Z
+  var riverHalfWidth = corridorHalfWidthAt(RIVER_Z) + 5; // runs out past the treeline on both sides
+
+  var riverSegX = 14, riverSegZ = 4;
+  var riverGeo = new THREE.PlaneGeometry(riverHalfWidth * 2, RIVER_DEPTH, riverSegX, riverSegZ);
+  var riverMat = new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true, transparent: true, opacity: 0.88 });
+  var river = new THREE.Mesh(riverGeo, riverMat);
+  river.rotation.x = -Math.PI / 2;
+  river.position.set(pathCenterX(RIVER_Z), 0.02, RIVER_Z);
+  scene.add(river);
+  // Baseline vertex positions (flat) — each frame's wave displacement is
+  // computed fresh from these, not accumulated, so it never drifts.
+  var riverBasePositions = riverGeo.attributes.position.array.slice();
+
+  function updateRiver(elapsedTime) {
+    var posAttr = riverGeo.attributes.position;
+    var arr = posAttr.array;
+    for (var i = 0; i < arr.length; i += 3) {
+      var lx = riverBasePositions[i];
+      var ly = riverBasePositions[i + 1];
+      arr[i + 2] = Math.sin(lx * 1.5 + elapsedTime * 2) * 0.05 + Math.sin(ly * 2 + elapsedTime * 1.3) * 0.03;
+    }
+    posAttr.needsUpdate = true;
+  }
+
+  // Bridge deck spans exactly the corridor's existing walkable width at
+  // RIVER_Z (corridorHalfWidthAt() — the same formula updateMovement() already
+  // clamps Leo's X to at every Z), so the unmodified movement clamp already
+  // guarantees Leo can't step off the deck into the river — no clamp changes
+  // needed anywhere.
+  function createBridge() {
+    var group = new THREE.Group();
+    var bridgeHalfWidth = corridorHalfWidthAt(RIVER_Z);
+    var plankMat = new THREE.MeshStandardMaterial({ color: 0x9C7144, flatShading: true });
+    var plankCount = 7;
+    var plankWidth = (bridgeHalfWidth * 2) / plankCount;
+    for (var i = 0; i < plankCount; i++) {
+      var plank = new THREE.Mesh(
+        new THREE.BoxGeometry(plankWidth * 0.92, 0.12, RIVER_DEPTH + 0.6),
+        plankMat
+      );
+      plank.position.set(-bridgeHalfWidth + plankWidth * (i + 0.5), 0.06, 0);
+      plank.castShadow = true;
+      plank.receiveShadow = true;
+      group.add(plank);
+    }
+    var postMat = new THREE.MeshStandardMaterial({ color: 0x6F4E2C, flatShading: true });
+    [-1, 1].forEach(function (side) {
+      var rail = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.05, 0.05, bridgeHalfWidth * 2 + 0.4, 6),
+        postMat
+      );
+      rail.rotation.z = Math.PI / 2;
+      rail.position.set(0, 0.55, side * (RIVER_DEPTH / 2 + 0.2));
+      group.add(rail);
+      [-1, 0, 1].forEach(function (p) {
+        var post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.55, 6), postMat);
+        post.position.set(p * bridgeHalfWidth * 0.9, 0.27, side * (RIVER_DEPTH / 2 + 0.2));
+        group.add(post);
+      });
+    });
+    group.position.set(pathCenterX(RIVER_Z), 0, RIVER_Z);
+    return group;
+  }
+  scene.add(createBridge());
+
+  // Butterflies — wandering loosely around a random anchor point spread
+  // across the whole corridor length, so they're visible no matter how far
+  // the player has progressed. Each wing's geometry is translated so its
+  // hinge edge sits at local x=0 — rotating the mesh on Y then opens/closes
+  // it like a book, which is the flap motion.
+  function makeWing(colorHex, mirrored) {
+    var geo = new THREE.PlaneGeometry(0.26, 0.18);
+    geo.translate(mirrored ? -0.13 : 0.13, 0, 0);
+    var mat = new THREE.MeshStandardMaterial({ color: colorHex, flatShading: true, side: THREE.DoubleSide });
+    return new THREE.Mesh(geo, mat);
+  }
+  function makeButterfly(colorHex) {
+    var group = new THREE.Group();
+    var wingL = makeWing(colorHex, true);
+    var wingR = makeWing(colorHex, false);
+    group.add(wingL, wingR);
+    group.userData.wingL = wingL;
+    group.userData.wingR = wingR;
+    return group;
+  }
+
+  var butterflies = [];
+  var BUTTERFLY_COLORS = [0xFF6B9D, 0xFFD23F, 0xFF8C42, 0xB686E0];
+  var BUTTERFLY_COUNT = 4;
+  for (var bi = 0; bi < BUTTERFLY_COUNT; bi++) {
+    var butterfly = makeButterfly(BUTTERFLY_COLORS[bi % BUTTERFLY_COLORS.length]);
+    var bAnchorZ = START_BOUNDARY_Z - 4 - Math.random() * (pathTotalLength - 14);
+    var bAnchorX = pathCenterX(bAnchorZ) + (Math.random() - 0.5) * (corridorHalfWidthAt(bAnchorZ) * 2 + 3);
+    butterfly.userData.anchorX = bAnchorX;
+    butterfly.userData.anchorZ = bAnchorZ;
+    butterfly.userData.anchorY = 1.1 + Math.random() * 0.6;
+    butterfly.userData.phase = Math.random() * Math.PI * 2;
+    butterfly.userData.speed = 0.6 + Math.random() * 0.4;
+    butterfly.userData.flapSpeed = 9 + Math.random() * 3;
+    scene.add(butterfly);
+    butterflies.push(butterfly);
+  }
+
+  function updateButterflies(elapsedTime) {
+    butterflies.forEach(function (b) {
+      var t = elapsedTime * b.userData.speed + b.userData.phase;
+      b.position.x = b.userData.anchorX + Math.sin(t) * 1.4;
+      b.position.z = b.userData.anchorZ + Math.cos(t * 0.7) * 1.4;
+      b.position.y = b.userData.anchorY + Math.sin(t * 1.8) * 0.25;
+      b.rotation.y = t;
+      var flap = 0.25 + Math.abs(Math.sin(elapsedTime * b.userData.flapSpeed)) * 0.85;
+      b.userData.wingL.rotation.y = flap;
+      b.userData.wingR.rotation.y = -flap;
+    });
+  }
+
+  // Birds — slow, high-altitude back-and-forth glide across the whole
+  // corridor length, with a baked-in "V" wing dihedral plus a small flap on
+  // top so they read instantly as birds even at a glance from the ground.
+  function makeBird() {
+    var group = new THREE.Group();
+    var mat = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, flatShading: true, side: THREE.DoubleSide });
+    var wingGeo = new THREE.PlaneGeometry(0.7, 0.22);
+    wingGeo.translate(0.35, 0, 0);
+    var wingL = new THREE.Mesh(wingGeo, mat);
+    var wingR = new THREE.Mesh(wingGeo, mat);
+    wingR.scale.x = -1;
+    group.add(wingL, wingR);
+    group.userData.wingL = wingL;
+    group.userData.wingR = wingR;
+    return group;
+  }
+
+  var birds = [];
+  var BIRD_COUNT = 3;
+  for (var bd = 0; bd < BIRD_COUNT; bd++) {
+    var bird = makeBird();
+    bird.userData.phase = Math.random() * Math.PI * 2;
+    bird.userData.speed = 0.08 + Math.random() * 0.04;
+    bird.userData.laneX = (Math.random() - 0.5) * 10;
+    bird.userData.altitude = 9 + Math.random() * 3;
+    bird.userData.flapSpeed = 1.6 + Math.random() * 0.6;
+    scene.add(bird);
+    birds.push(bird);
+  }
+
+  function updateBirds(elapsedTime) {
+    var loopLen = pathTotalLength + 20;
+    birds.forEach(function (bird) {
+      var t = (elapsedTime * bird.userData.speed + bird.userData.phase) % (Math.PI * 2);
+      var travel = Math.sin(t) * 0.5 + 0.5;
+      bird.position.z = START_BOUNDARY_Z + 6 - travel * loopLen;
+      bird.position.x = bird.userData.laneX + Math.sin(t * 2) * 2;
+      bird.position.y = bird.userData.altitude + Math.sin(t * 3) * 0.4;
+      bird.rotation.y = Math.cos(t) >= 0 ? 0 : Math.PI;
+      var flap = Math.sin(elapsedTime * bird.userData.flapSpeed) * 0.3;
+      bird.userData.wingL.rotation.z = 0.5 + flap;
+      bird.userData.wingR.rotation.z = -0.5 - flap;
+    });
+  }
+
   // ---------- GATE MARKERS (one per real mission pack) ----------
   var gateMeshes = {};
 
@@ -760,6 +927,10 @@ export function initHub3D(opts) {
     updateFogDissolves();
     updateCelebration();
     elapsedTime += delta;
+
+    updateRiver(elapsedTime);
+    updateButterflies(elapsedTime);
+    updateBirds(elapsedTime);
 
     gateConfig.forEach(function (cfg) {
       var meshGroup = gateMeshes[cfg.id];
