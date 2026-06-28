@@ -109,8 +109,24 @@ export function initHub3D(opts) {
   scene.background = new THREE.Color(0xFFE8C4);
   scene.fog = new THREE.Fog(0xFFE8C4, 18, 38);
 
+  // ---------- THIRD-PERSON CHASE CAMERA (Subway Surfers / Temple Run style) ----------
+  // Positioned behind + above Leo along his actual facing direction (not a
+  // fixed world-space offset like the old side/top-down view), so it swings
+  // around naturally as he turns instead of always looking down -Z.
+  var CAM_DISTANCE_BACK = 6;
+  var CAM_HEIGHT = 4;
+  var CAM_LOOKAHEAD_DIST = 2;
+  var CAM_LOOKAHEAD_HEIGHT = 0.8;
+  var CAM_LAG_MOVING = 4.5;
+  var CAM_LAG_IDLE = 3;
+
   var camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-  camera.position.set(0, 9, 11);
+  // Idle default assumes Leo is oriented toward -Z (the forest/gates) even
+  // though his rig's own internal facing only updates once he actually moves
+  // — this is purely the camera's own starting assumption, so the very first
+  // frame already looks into the path instead of back at the spawn point.
+  camera.position.set(0, CAM_HEIGHT, CAM_DISTANCE_BACK);
+  camera.lookAt(0, CAM_LOOKAHEAD_HEIGHT, -CAM_LOOKAHEAD_DIST);
 
   var renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
@@ -465,6 +481,9 @@ export function initHub3D(opts) {
   var velocity = new THREE.Vector3();
   var facing = 0;
   var maxSpeed = 6.5, accel = 22, friction = 14;
+  // Camera's own facing — separate from Leo's (see updateMovement()), starts
+  // at PI to match the idle camera setup above (looking toward -Z).
+  var cameraFacing = Math.PI;
 
   function updateMovement(delta) {
     var ix = 0, iz = 0;
@@ -526,14 +545,28 @@ export function initHub3D(opts) {
     var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
 
-    var camDistance = 11, camHeight = 9;
-    var camLagFactor = moving ? 2.2 : 3.5;
-    camera.position.x += (leo.group.position.x - camera.position.x) * Math.min(delta * camLagFactor, 1);
-    camera.position.z += (leo.group.position.z + camDistance - camera.position.z) * Math.min(delta * camLagFactor, 1);
-    camera.position.y = camHeight;
-    var lookAheadX = leo.group.position.x + velocity.x * 0.15;
-    var lookAheadZ = leo.group.position.z + velocity.z * 0.15;
-    camera.lookAt(lookAheadX, 0.6, lookAheadZ);
+    // ---------- THIRD-PERSON CHASE CAMERA ----------
+    // cameraFacing trails the real facing with its own (slower) lag, on top
+    // of the turn-smoothing already applied to `facing` itself inside
+    // leo.update() — two layers of smoothing is what keeps the camera from
+    // snapping or jittering when Leo changes direction quickly.
+    var camLagFactor = moving ? CAM_LAG_MOVING : CAM_LAG_IDLE;
+    var facingDiff = facing - cameraFacing;
+    while (facingDiff > Math.PI) facingDiff -= Math.PI * 2;
+    while (facingDiff < -Math.PI) facingDiff += Math.PI * 2;
+    cameraFacing += facingDiff * Math.min(delta * camLagFactor, 1);
+
+    var forwardX = Math.sin(cameraFacing), forwardZ = Math.cos(cameraFacing);
+    var targetCamX = leo.group.position.x - forwardX * CAM_DISTANCE_BACK;
+    var targetCamZ = leo.group.position.z - forwardZ * CAM_DISTANCE_BACK;
+
+    camera.position.x += (targetCamX - camera.position.x) * Math.min(delta * camLagFactor, 1);
+    camera.position.z += (targetCamZ - camera.position.z) * Math.min(delta * camLagFactor, 1);
+    camera.position.y += (CAM_HEIGHT - camera.position.y) * Math.min(delta * camLagFactor, 1);
+
+    var lookAtX = leo.group.position.x + forwardX * CAM_LOOKAHEAD_DIST;
+    var lookAtZ = leo.group.position.z + forwardZ * CAM_LOOKAHEAD_DIST;
+    camera.lookAt(lookAtX, CAM_LOOKAHEAD_HEIGHT, lookAtZ);
   }
 
   // ---------- ENTRANCE ANIMATION (scoped to hub3d only — see resume()/pause()) ----------
