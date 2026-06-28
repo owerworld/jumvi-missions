@@ -3849,25 +3849,14 @@ const NAV_TAB_KEY = "jumvi_active_tab_v1";
 let _hub3dInstance = null;
 let _hub3dLoadPromise = null;
 
-function loadScriptOnce(src){
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector(`script[src="${src}"]`);
-    if(existing){ resolve(); return; }
-    const s = document.createElement("script");
-    s.src = src;
-    s.onload = () => resolve();
-    s.onerror = () => reject(new Error("Failed to load " + src));
-    document.head.appendChild(s);
-  });
-}
-
 function ensureHub3DLoaded(){
   if(_hub3dLoadPromise) return _hub3dLoadPromise;
   _hub3dLoadPromise = (async () => {
-    if(typeof THREE === "undefined"){
-      await loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js");
-    }
-    const mod = await import("./jumvi-hub-app.js?v=20260524-23");
+    // jumvi-hub-app.js imports Three.js itself as an ES module (needed for the
+    // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
+    // import map — see index.html) — no classic <script src="three.min.js">
+    // preload needed here anymore.
+    const mod = await import("./jumvi-hub-app.js?v=20260524-30");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({ PACKS, missions, done, openMission, container });
   })();

@@ -68,9 +68,9 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260524-23">
+  <link rel="stylesheet" href="style.css?v=20260524-29">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
-  <link rel="stylesheet" href="jumvi-icons.css?v=20260524-23">
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260524-29">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
   <script>
     (function(){
@@ -89,7 +89,18 @@
     })();
   </script>
 
-
+  <!-- Import map for the 3D hub (jumvi-hub-app.js, lazy-loaded only when the
+       hub3d tab opens) and its optional GLTF Coach Leo model (jumvi-leo.js,
+       useModel:true) — GLTFLoader/the ES module Three.js build both need the
+       bare "three" specifier resolved. Inert for everyone else: nothing on
+       the normal page imports "three". -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
 </head>
 
 <body class="tab-today">
@@ -793,15 +804,15 @@
   </style>
 </div>
 
-<script src="confetti.min.js?v=20260524-23" defer></script>
-<script src="data.js?v=20260524-23" defer></script>
-<script src="jumvi-mission-icons.js?v=20260524-23" defer></script>
-<script src="jumvi-redlight.js?v=20260524-23" defer></script>
-<script src="app.js?v=20260524-23" defer></script>
+<script src="confetti.min.js?v=20260524-29" defer></script>
+<script src="data.js?v=20260524-29" defer></script>
+<script src="jumvi-mission-icons.js?v=20260524-29" defer></script>
+<script src="jumvi-redlight.js?v=20260524-29" defer></script>
+<script src="app.js?v=20260524-30" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260524-23").catch(()=>{});
+      navigator.serviceWorker.register("/service-worker.js?v=20260524-30").catch(()=>{});
     });
   }
 </script>

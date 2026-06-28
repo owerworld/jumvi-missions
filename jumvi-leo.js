@@ -17,6 +17,13 @@ export function createCoachLeo(THREE, options) {
   var bellyColor = options.bellyColor != null ? options.bellyColor : 0xF5E7CC;
   var bandanaColor = options.bandanaColor != null ? options.bandanaColor : 0x2FB6E8;
   var pawColor = options.pawColor != null ? options.pawColor : 0x6B4423;
+  // Opt-in real GLTF model (prototypes/textured_mesh_optimized.glb) instead of
+  // the procedural rig below. Defaults to false — the procedural rig is built
+  // unconditionally either way and stays as the visible fallback if the model
+  // option is off, or if it's on but the model fails to load (bad network,
+  // wrong path, etc.) — Leo is never just an empty invisible group.
+  var useModel = !!options.useModel;
+  var modelUrl = options.modelUrl || './prototypes/textured_mesh_optimized.glb';
 
   // ---------- TOON MATERIAL HELPER ----------
   // Three-tone gradient map for cel-shaded look.
@@ -49,9 +56,20 @@ export function createCoachLeo(THREE, options) {
   }
 
   // ---------- BUILD RIG ----------
+  // `group` is the root returned to the caller — it never moves between the
+  // procedural/model paths, so hop/lean/facing in update() (applied to
+  // `group` itself) animate whichever child is actually visible. Only one of
+  // proceduralGroup/modelGroup is visible at a time.
   var group = new THREE.Group();
+  var proceduralGroup = new THREE.Group();
+  var modelGroup = new THREE.Group();
+  modelGroup.visible = false;
+  group.add(proceduralGroup);
+  group.add(modelGroup);
+
   var bodyMesh, legPivotL, legPivotR, armPivotL, armPivotR;
   var bodyScaleBase = new THREE.Vector3(1, 1.05, 0.95);
+  var _unitScale = new THREE.Vector3(1, 1, 1);
 
   (function buildLeo() {
     // Body — deliberately smaller than the head: big-head cartoon-mascot
@@ -61,12 +79,12 @@ export function createCoachLeo(THREE, options) {
     bodyMesh.position.y = 0.44;
     bodyMesh.castShadow = true;
     addOutline(bodyMesh, 0.05);
-    group.add(bodyMesh);
+    proceduralGroup.add(bodyMesh);
 
     var belly = new THREE.Mesh(new THREE.SphereGeometry(0.20, 14, 14), toonMat(bellyColor));
     belly.position.set(0, 0.38, 0.22);
     belly.scale.set(1, 1.1, 0.7);
-    group.add(belly);
+    proceduralGroup.add(belly);
 
     // Head — large, dominant proportion vs. body (the single biggest change
     // from the old rig, where head and body were nearly the same size).
@@ -74,21 +92,21 @@ export function createCoachLeo(THREE, options) {
     headMesh.position.set(0, 0.90, 0.04);
     headMesh.castShadow = true;
     addOutline(headMesh, 0.05);
-    group.add(headMesh);
+    proceduralGroup.add(headMesh);
     var headY = headMesh.position.y;
 
     // Snout/muzzle
     var snout = new THREE.Mesh(new THREE.SphereGeometry(0.20, 14, 14), toonMat(bellyColor));
     snout.position.set(0, headY - 0.10, 0.34);
     snout.scale.set(1, 0.8, 0.85);
-    group.add(snout);
+    proceduralGroup.add(snout);
 
     // Nose — small, dark brown, slightly heart/triangle-shaped (flattened +
     // tapered sphere rather than a plain round dot).
     var nose = new THREE.Mesh(new THREE.SphereGeometry(0.052, 10, 8), new THREE.MeshBasicMaterial({ color: 0x3A2A1A }));
     nose.position.set(0, headY - 0.06, 0.535);
     nose.scale.set(1.2, 0.9, 0.75);
-    group.add(nose);
+    proceduralGroup.add(nose);
 
     // Cheek puffs — round, lighter patches either side of the snout, giving
     // the wide-grin "chubby cheeks" look from the reference image.
@@ -96,7 +114,7 @@ export function createCoachLeo(THREE, options) {
       var cheek = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), toonMat(bellyColor));
       cheek.position.set(xPos, headY - 0.13, 0.40);
       cheek.scale.set(1, 0.85, 0.6);
-      group.add(cheek);
+      proceduralGroup.add(cheek);
     }
     makeCheek(-0.21);
     makeCheek(0.21);
@@ -110,7 +128,7 @@ export function createCoachLeo(THREE, options) {
     mouth.position.set(0, headY - 0.18, 0.50);
     mouth.rotation.x = Math.PI / 2;
     mouth.rotation.z = Math.PI;
-    group.add(mouth);
+    proceduralGroup.add(mouth);
 
     var tongue = new THREE.Mesh(
       new THREE.SphereGeometry(0.085, 10, 8),
@@ -118,7 +136,7 @@ export function createCoachLeo(THREE, options) {
     );
     tongue.position.set(0, headY - 0.225, 0.495);
     tongue.scale.set(1, 0.55, 0.85);
-    group.add(tongue);
+    proceduralGroup.add(tongue);
 
     // eyes — large, glossy, brown, with a white specular highlight dot and a
     // thick brow above each one (spec critical: big expressive eyes, not blue)
@@ -134,18 +152,18 @@ export function createCoachLeo(THREE, options) {
     function makeEye(xPos) {
       var white = new THREE.Mesh(new THREE.SphereGeometry(0.115, 12, 12), eyeWhiteMat);
       white.position.set(xPos, eyeY, eyeZ);
-      group.add(white);
+      proceduralGroup.add(white);
 
       var pupil = new THREE.Mesh(new THREE.SphereGeometry(0.075, 10, 10), eyeMat);
       pupil.position.set(xPos, eyeY, eyeZ + 0.07);
-      group.add(pupil);
+      proceduralGroup.add(pupil);
 
       // The -0.035 offset is constant (not mirrored per eye) — a single
       // light source puts the specular highlight on the same side of both
       // pupils, not symmetrically outward on each.
       var highlight = new THREE.Mesh(new THREE.SphereGeometry(0.038, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
       highlight.position.set(xPos - 0.035, eyeY + 0.045, eyeZ + 0.11);
-      group.add(highlight);
+      proceduralGroup.add(highlight);
 
       // Arched brow — a partial torus ring lying in the XY plane (facing the
       // camera, like the eyes), not a straight bar, to match the curved
@@ -154,7 +172,7 @@ export function createCoachLeo(THREE, options) {
       var brow = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.026, 8, 12, browArc), browMat);
       brow.position.set(xPos, eyeY + 0.165, eyeZ + 0.05);
       brow.rotation.z = Math.PI / 2 - browArc / 2 + (xPos < 0 ? 0.15 : -0.15);
-      group.add(brow);
+      proceduralGroup.add(brow);
     }
     makeEye(-0.155);
     makeEye(0.155);
@@ -165,12 +183,12 @@ export function createCoachLeo(THREE, options) {
       ear.scale.set(0.8, 1, 0.5);
       ear.castShadow = true;
       addOutline(ear, 0.05);
-      group.add(ear);
+      proceduralGroup.add(ear);
       // ear inner — cream, distinct from the skin tone
       var earInner = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), toonMat(bellyColor));
       earInner.position.set(xPos, headY + 0.29, 0.04);
       earInner.scale.set(0.7, 0.9, 0.4);
-      group.add(earInner);
+      proceduralGroup.add(earInner);
     }
     makeEar(-0.27);
     makeEar(0.27);
@@ -180,11 +198,11 @@ export function createCoachLeo(THREE, options) {
     bandana.rotation.x = Math.PI / 2.1;
     bandana.rotation.z = 0.3;
     addOutline(bandana, 0.05);
-    group.add(bandana);
+    proceduralGroup.add(bandana);
     var bandanaTailL = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.22, 4), toonMat(bandanaColor));
     bandanaTailL.position.set(-0.2, headY - 0.24, -0.2);
     bandanaTailL.rotation.x = 0.6;
-    group.add(bandanaTailL);
+    proceduralGroup.add(bandanaTailL);
 
     // Hands/feet — a distinct darker-brown tone from the skin, not a bare
     // capsule tip.
@@ -208,17 +226,17 @@ export function createCoachLeo(THREE, options) {
 
     armPivotL = makeLimb(true);
     armPivotL.position.set(-0.34, 0.56, 0.04);
-    group.add(armPivotL);
+    proceduralGroup.add(armPivotL);
     armPivotR = makeLimb(true);
     armPivotR.position.set(0.34, 0.56, 0.04);
-    group.add(armPivotR);
+    proceduralGroup.add(armPivotR);
 
     legPivotL = makeLimb(false);
     legPivotL.position.set(-0.16, 0.30, 0);
-    group.add(legPivotL);
+    proceduralGroup.add(legPivotL);
     legPivotR = makeLimb(false);
     legPivotR.position.set(0.16, 0.30, 0);
-    group.add(legPivotR);
+    proceduralGroup.add(legPivotR);
 
     // Tail — two graduated spheres curving up and out to one side, clearly
     // separated from the body silhouette rather than a single blob tucked
@@ -238,9 +256,74 @@ export function createCoachLeo(THREE, options) {
       part.scale.set(1, 1, 0.75);
       part.castShadow = true;
       addOutline(part, 0.05);
-      group.add(part);
+      proceduralGroup.add(part);
     });
   })();
+
+  // ---------- OPTIONAL GLTF MODEL (replaces the procedural rig visually once
+  // loaded; the rig above is built unconditionally and stays as the visible
+  // fallback the whole time useModel is off, or if loading fails) ----------
+  if (useModel) {
+    loadModel();
+  }
+
+  function loadModel() {
+    // Dynamic + conditional: GLTFLoader is only ever fetched when useModel is
+    // actually on, so pages that never set it (every existing caller today)
+    // never touch the "three" import map at all.
+    import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js')
+      .then(function (mod) {
+        var loader = new mod.GLTFLoader();
+        loader.load(
+          modelUrl,
+          function (gltf) {
+            var model = gltf.scene;
+            model.traverse(function (node) {
+              if (node.isMesh) {
+                node.castShadow = true;
+                // The source asset's material omits metallicFactor, which
+                // defaults to 1 (fully metallic) per the glTF spec — wrong
+                // for a furry/skin character and renders almost black under
+                // this scene's flat lighting (no environment map for PBR
+                // metal reflections). Force it to a non-metal surface.
+                if (node.material) node.material.metalness = 0;
+              }
+            });
+
+            // Auto-fit: the source model's own scale/origin has no reason to
+            // match the procedural rig's hand-tuned ~1.3-unit height, so scale
+            // to match it and stand the model on y=0 (feet at the bottom of
+            // its bounding box, centered on x/z) — otherwise swapping
+            // useModel would change Leo's apparent size/footing in the scene.
+            var targetHeight = 1.3;
+            var box = new THREE.Box3().setFromObject(model);
+            var size = new THREE.Vector3();
+            box.getSize(size);
+            if (size.y > 0) model.scale.setScalar(targetHeight / size.y);
+
+            var fittedBox = new THREE.Box3().setFromObject(model);
+            var center = new THREE.Vector3();
+            fittedBox.getCenter(center);
+            model.position.x -= center.x;
+            model.position.z -= center.z;
+            model.position.y -= fittedBox.min.y;
+
+            modelGroup.add(model);
+            modelGroup.visible = true;
+            proceduralGroup.visible = false;
+          },
+          undefined,
+          function (err) {
+            // Graceful fallback — keep showing the procedural rig instead of
+            // leaving Leo invisible (bad path, flaky network, etc).
+            console.warn('Coach Leo model failed to load, keeping the procedural rig:', err);
+          }
+        );
+      })
+      .catch(function (err) {
+        console.warn('Failed to load GLTFLoader, keeping the procedural rig:', err);
+      });
+  }
 
   // ---------- ANIMATION STATE ----------
   var facing = 0;
@@ -271,6 +354,9 @@ export function createCoachLeo(THREE, options) {
       group.position.y = hop * 0.16;
       var stretch = 1 + hop * 0.1, squash = 1 - hop * 0.07;
       bodyMesh.scale.set(bodyScaleBase.x * squash, bodyScaleBase.y * stretch, bodyScaleBase.z * squash);
+      // Same squash/stretch idea applied to the whole model as a unit — it has
+      // no separate body part to scale independently like the procedural rig.
+      modelGroup.scale.set(squash, stretch, squash);
 
       var swing = Math.sin(walkPhase) * 0.6;
       legPivotL.rotation.x = swing;
@@ -282,6 +368,7 @@ export function createCoachLeo(THREE, options) {
       walkSpeedAnim = THREE.MathUtils.lerp(walkSpeedAnim, 0, Math.min(delta * 4, 1));
       group.position.y = THREE.MathUtils.lerp(group.position.y, 0, Math.min(delta * 10, 1));
       bodyMesh.scale.lerp(bodyScaleBase, Math.min(delta * 8, 1));
+      modelGroup.scale.lerp(_unitScale, Math.min(delta * 8, 1));
       legPivotL.rotation.x = THREE.MathUtils.lerp(legPivotL.rotation.x, 0, Math.min(delta * 8, 1));
       legPivotR.rotation.x = THREE.MathUtils.lerp(legPivotR.rotation.x, 0, Math.min(delta * 8, 1));
       armPivotL.rotation.x = THREE.MathUtils.lerp(armPivotL.rotation.x, 0, Math.min(delta * 8, 1));

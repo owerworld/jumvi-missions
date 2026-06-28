@@ -3,7 +3,14 @@
 // real mission pack; walking up to a gate opens the real mission panel via
 // the openMission() reference passed in from app.js. No mission/app logic is
 // reimplemented here — PACKS/missions/done/openMission are the real ones.
-import { createCoachLeo } from './jumvi-leo.js';
+//
+// Imports Three.js as an ES module (via the "three" import map in index.html)
+// instead of relying on a global from a classic <script> — this is what lets
+// jumvi-leo.js's optional GLTF model path use the real GLTFLoader, which only
+// ships as an ES module. Same version (0.160.0) as before, just a different
+// build/packaging — every existing THREE.Xxx call below is unaffected.
+import * as THREE from 'three';
+import { createCoachLeo } from './jumvi-leo.js?v=20260524-27';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -427,7 +434,11 @@ export function initHub3D(opts) {
   }
 
   // ---------- COACH LEO (from shared module — no character code duplicated here) ----------
-  var leo = createCoachLeo(THREE);
+  // Real GLTF model approved by user comparison — replaces the procedural
+  // rig as Leo's visible representation (rig is still built as the fallback
+  // inside createCoachLeo() if the model fails to load).
+  var USE_LEO_MODEL = true;
+  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './prototypes/textured_mesh_optimized.glb' });
   scene.add(leo.group);
 
   // ---------- INPUT: KEYBOARD ----------
