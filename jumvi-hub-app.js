@@ -747,20 +747,64 @@ export function initHub3D(opts) {
     camera.lookAt(lookAtX, CAM_LOOKAHEAD_HEIGHT, lookAtZ);
   }
 
-  // ---------- ENTRANCE ANIMATION (scoped to hub3d only — see resume()/pause()) ----------
-  // The real mission panel (#backdrop/#sheet) has no CSS transition anywhere in the
-  // app — it's a hard display:none/flex toggle, same in the Missions tab. We don't
-  // touch that shared CSS or openMission() itself; instead we inject a one-off
-  // <style> that only applies while body has "hub3dEntrance" (toggled below), using
-  // @keyframes (not `transition`) since a transition can't animate from display:none.
+  // ---------- ENTRANCE ANIMATION + WOODEN PANEL SHELL (scoped to hub3d only) ----------
+  // The real mission panel (#backdrop/#sheet) is SHARED with the Missions tab. We
+  // touch neither that shared CSS nor openMission()/the panel's inner content; we
+  // only inject a one-off <style> that applies exclusively while body has
+  // "hub3dEntrance" (added in resume()/before openMission, removed in pause()).
+  // Since this whole block lives inside initHub3D() — which only loads when the
+  // hub3d flag is on — the normal app never even sees these rules.
+  //
+  // The shell = a warm wooden frame (grain + plank seams + corner studs via
+  // layered CSS gradients, no image asset) drawn purely as the panel's
+  // background/border, plus a springy ease-out-back open. Wood tone is
+  // theme-aware so the panel's existing (untouched) text colour stays readable:
+  // dark walnut behind the dark theme's light text, honey pine behind light
+  // theme's dark text. Corner studs use the default background-attachment
+  // (scroll = pinned to the border box), so they stay put while content scrolls.
   if (!document.getElementById('hub3dEntranceStyle')) {
     var entranceStyle = document.createElement('style');
     entranceStyle.id = 'hub3dEntranceStyle';
-    entranceStyle.textContent =
-      '@keyframes hub3dBackdropIn{from{opacity:0}to{opacity:1}}' +
-      '@keyframes hub3dSheetIn{from{transform:translateY(36px);opacity:0}to{transform:translateY(0);opacity:1}}' +
-      'body.hub3dEntrance #backdrop.show{animation:hub3dBackdropIn 220ms ease}' +
-      'body.hub3dEntrance #backdrop.show #sheet{animation:hub3dSheetIn 280ms cubic-bezier(.22,1,.36,1)}';
+    entranceStyle.textContent = [
+      '@keyframes hub3dBackdropIn{from{opacity:0}to{opacity:1}}',
+      '@keyframes hub3dSheetIn{from{transform:translateY(48px) scale(.96);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}',
+
+      // dark theme (default) → rich walnut, complements the light panel text
+      'body.hub3dEntrance{',
+      '--hub3d-wood-1:#5b3f29;--hub3d-wood-2:#3f2817;--hub3d-wood-edge:#2c1c10;',
+      '--hub3d-wood-seam:rgba(0,0,0,.28);--hub3d-wood-grain:rgba(255,255,255,.05);',
+      '--hub3d-stud:#caa85a;--hub3d-stud-rim:rgba(0,0,0,.5);',
+      '--hub3d-backdrop:rgba(46,30,16,.42);',
+      '}',
+      // light theme → honey pine, keeps the light theme's dark panel text readable
+      'html.theme--light body.hub3dEntrance{',
+      '--hub3d-wood-1:#ecd6ab;--hub3d-wood-2:#d8b67e;--hub3d-wood-edge:#b18a52;',
+      '--hub3d-wood-seam:rgba(120,80,40,.22);--hub3d-wood-grain:rgba(120,80,40,.06);',
+      '--hub3d-stud:#9a743c;--hub3d-stud-rim:rgba(255,255,255,.55);',
+      '--hub3d-backdrop:rgba(120,86,46,.34);',
+      '}',
+
+      // warm dim instead of the shared blue backdrop
+      'body.hub3dEntrance #backdrop.show{',
+      'background:var(--hub3d-backdrop)!important;',
+      'animation:hub3dBackdropIn 260ms ease;',
+      '}',
+
+      // the wooden panel itself
+      'body.hub3dEntrance #backdrop.show #sheet{',
+      'background:',
+      'radial-gradient(circle at 17px 17px,var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
+      'radial-gradient(circle at calc(100% - 17px) 17px,var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
+      'radial-gradient(circle at 17px calc(100% - 17px),var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
+      'radial-gradient(circle at calc(100% - 17px) calc(100% - 17px),var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
+      'repeating-linear-gradient(90deg,transparent 0 5px,var(--hub3d-wood-grain) 5px 6px),',
+      'repeating-linear-gradient(180deg,transparent 0 64px,var(--hub3d-wood-seam) 64px 66px),',
+      'linear-gradient(168deg,var(--hub3d-wood-1),var(--hub3d-wood-2))!important;',
+      'border:5px solid var(--hub3d-wood-edge)!important;border-bottom:none!important;',
+      'box-shadow:0 -14px 30px rgba(0,0,0,.30),inset 0 2px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(0,0,0,.18)!important;',
+      'animation:hub3dSheetIn 440ms cubic-bezier(.34,1.56,.64,1);',
+      '}'
+    ].join('');
     document.head.appendChild(entranceStyle);
   }
 
