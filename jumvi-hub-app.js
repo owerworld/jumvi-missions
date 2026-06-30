@@ -87,6 +87,92 @@ export function initHub3D(opts) {
   joystickZone.appendChild(joystickBase);
   container.appendChild(joystickZone);
 
+  // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
+  // Every sound below is one or two oscillator+gain nodes with a short
+  // exponential-decay envelope; nothing is fetched/decoded, so there's no
+  // load time and no extra network/asset weight. Kept deliberately quiet
+  // (it's a kids' app) and fully silenceable via the mute button.
+  var AudioCtor = window.AudioContext || window.webkitAudioContext;
+  var audioCtx = null;
+  var masterGain = null;
+  if (AudioCtor) {
+    try {
+      audioCtx = new AudioCtor();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.32; // overall ceiling — individual sounds below stay well under this too
+      masterGain.connect(audioCtx.destination);
+    } catch (e) {
+      audioCtx = null; // synthesis unavailable in this browser — playTone() below becomes a no-op
+    }
+  }
+  var audioMuted = false;
+
+  // Autoplay policies block sound before a user gesture; the context starts
+  // "suspended" and every real interaction entry point (keydown, joystick
+  // touch, the mute button itself) calls this — cheap/safe to call
+  // repeatedly once it's already running.
+  function resumeAudio() {
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(function () {});
+    }
+  }
+
+  // type: 'sine'|'triangle'|'square'; freq in Hz; duration in seconds;
+  // peakGain is pre-master (actual loudness = peakGain * masterGain.gain).
+  function playTone(freq, duration, type, peakGain, delaySec) {
+    if (!audioCtx || audioMuted) return;
+    var t0 = audioCtx.currentTime + (delaySec || 0);
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(peakGain, t0 + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(t0);
+    osc.stop(t0 + duration + 0.02);
+  }
+
+  // Soft, low "pat" — short triangle thump, randomized a few Hz each time so
+  // a run of footsteps doesn't sound like a robotic loop. Triggered from
+  // updateMovement()'s own step cadence (see stepTimer below).
+  function playStep() {
+    playTone(150 + Math.random() * 40, 0.09, 'triangle', 0.05, 0);
+  }
+
+  // Two-note ascending chime — the "you've reached a gate" cue, played once
+  // per arrival (checkGateProximity already dedupes via lastTriggeredGate,
+  // so this fires exactly once per gate, not every frame in range).
+  function playChime() {
+    playTone(880, 0.18, 'sine', 0.07, 0);
+    playTone(1318.5, 0.22, 'sine', 0.06, 0.07);
+  }
+
+  // Three-note ascending arpeggio — the zone-complete "success" cue, fired
+  // the same frame as the celebration card (see updateZoneLocks()).
+  function playSuccess() {
+    playTone(523.25, 0.16, 'triangle', 0.09, 0);
+    playTone(659.25, 0.16, 'triangle', 0.09, 0.1);
+    playTone(783.99, 0.26, 'triangle', 0.1, 0.2);
+  }
+
+  // Top-right mute toggle — parent-facing, independent of every other HUD
+  // element above (own absolute position, not nested in hudTop's
+  // pointer-events:none column).
+  var muteBtn = document.createElement('button');
+  muteBtn.type = 'button';
+  muteBtn.setAttribute('aria-label', 'Sesi kapat/aç');
+  muteBtn.style.cssText = 'position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
+  muteBtn.textContent = '🔊';
+  muteBtn.addEventListener('click', function () {
+    audioMuted = !audioMuted;
+    muteBtn.textContent = audioMuted ? '🔇' : '🔊';
+    resumeAudio();
+  });
+  container.appendChild(muteBtn);
+
   // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
   // Each zone is one mission pack, ZONE_LENGTH apart along -Z. The corridor's
   // centerline snakes left/right (ZIGZAG_AMPLITUDE) so consecutive zones sit on
@@ -682,6 +768,7 @@ export function initHub3D(opts) {
   // ---------- INPUT: KEYBOARD ----------
   var keys = { f: false, b: false, l: false, r: false };
   function onKeyDown(e) {
+    resumeAudio(); // first real keypress is as good a "user gesture" as any
     if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
     if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
     if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
@@ -701,6 +788,7 @@ export function initHub3D(opts) {
   var MAX_JOY_DIST = 45;
 
   function joyStart(cx, cy) {
+    resumeAudio(); // first touch on the joystick is a real user gesture too
     joyActive = true; joyOrigin.x = cx; joyOrigin.y = cy;
     joystickBase.style.left = (cx - 50) + 'px';
     joystickBase.style.top = (cy - 50) + 'px';
@@ -730,6 +818,7 @@ export function initHub3D(opts) {
   var velocity = new THREE.Vector3();
   var facing = 0;
   var maxSpeed = 6.5, accel = 22, friction = 14;
+  var stepTimer = 0; // footstep sound cadence — see updateMovement()
   // Camera's own facing — separate from Leo's (see updateMovement()), starts
   // at PI to match the idle camera setup above (looking toward -Z).
   var cameraFacing = Math.PI;
@@ -793,6 +882,20 @@ export function initHub3D(opts) {
 
     var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
+
+    // Footstep cadence — faster steps at higher speed, silent the instant
+    // Leo stops (reset to 0 so the very next step after a pause starts
+    // clean instead of firing immediately from a stale leftover timer).
+    if (moving) {
+      var stepInterval = THREE.MathUtils.lerp(0.42, 0.2, speedNow / maxSpeed);
+      stepTimer += delta;
+      if (stepTimer >= stepInterval) {
+        stepTimer -= stepInterval;
+        playStep();
+      }
+    } else {
+      stepTimer = 0;
+    }
 
     // ---------- THIRD-PERSON CHASE CAMERA ----------
     // cameraFacing trails the real facing with its own (slower) lag, on top
@@ -913,6 +1016,7 @@ export function initHub3D(opts) {
       if (lastTriggeredGate !== nearestGate.id && !pendingGate) {
         lastTriggeredGate = nearestGate.id;
         pendingGate = { cfg: nearestGate, ring: gateMeshes[nearestGate.id].userData.ring, startTime: performance.now() };
+        playChime();
       }
     } else if (!pendingGate) {
       lastTriggeredGate = null;
@@ -999,6 +1103,7 @@ export function initHub3D(opts) {
       // so it's unambiguous which zone finished vs. which one just opened.
       var completedCfg = gateConfig[fw.zoneIndex - 1];
       showZoneCompleteCelebration(completedCfg);
+      playSuccess();
       leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
 
       var badge = badgeSlots[fw.zoneIndex + 1];
