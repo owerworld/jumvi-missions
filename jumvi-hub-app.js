@@ -21,11 +21,56 @@ export function initHub3D(opts) {
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
-  hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:16px;display:flex;justify-content:center;pointer-events:none;z-index:10;';
+  hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
   var badgesEl = document.createElement('div');
   badgesEl.style.cssText = 'display:flex;gap:8px;background:rgba(255,255,255,0.88);padding:8px 12px;border-radius:20px;';
   hudTop.appendChild(badgesEl);
+
+  // Small pill under the badges row showing how many missions are left in
+  // whichever zone Leo is currently standing in (real done Set, not a guess) —
+  // purely a read of existing state, no new progress concept.
+  var progressLabelEl = document.createElement('div');
+  progressLabelEl.style.cssText = 'background:rgba(255,255,255,0.85);padding:4px 14px;border-radius:14px;font-size:12px;font-weight:700;color:#3a2a1a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  hudTop.appendChild(progressLabelEl);
   container.appendChild(hudTop);
+
+  // Center-screen "zone complete" celebration card — pure DOM overlay (not a
+  // 3D object), hidden via opacity:0 until showZoneCompleteCelebration() plays
+  // its one-shot animation (see updateZoneLocks() below for the trigger).
+  var celebrationCardEl = document.createElement('div');
+  celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,0.94);padding:18px 30px;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  var celebrationTitleEl = document.createElement('div');
+  celebrationTitleEl.style.cssText = 'font-size:20px;font-weight:900;color:#3a2a1a;white-space:nowrap;';
+  celebrationTitleEl.textContent = 'Bölge Tamamlandı! 🎉';
+  var celebrationSubtitleEl = document.createElement('div');
+  celebrationSubtitleEl.style.cssText = 'font-size:15px;font-weight:700;color:#7a5a3a;white-space:nowrap;';
+  celebrationCardEl.appendChild(celebrationTitleEl);
+  celebrationCardEl.appendChild(celebrationSubtitleEl);
+  container.appendChild(celebrationCardEl);
+
+  if (!document.getElementById('hub3dCelebrationStyle')) {
+    var celebrationStyle = document.createElement('style');
+    celebrationStyle.id = 'hub3dCelebrationStyle';
+    celebrationStyle.textContent =
+      '@keyframes hub3dZoneCelebrate{' +
+      '0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}' +
+      '15%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}' +
+      '25%{transform:translate(-50%,-50%) scale(1)}' +
+      '80%{opacity:1;transform:translate(-50%,-50%) scale(1)}' +
+      '100%{opacity:0;transform:translate(-50%,-50%) scale(.92)}' +
+      '}';
+    document.head.appendChild(celebrationStyle);
+  }
+
+  // Resets+replays the animation from scratch every call (the style.animation
+  // reset + reflow trick) so back-to-back completions each get their own
+  // full play instead of being silently skipped by an already-running one.
+  function showZoneCompleteCelebration(packCfg) {
+    celebrationSubtitleEl.textContent = packCfg.icon + ' ' + packCfg.name;
+    celebrationCardEl.style.animation = 'none';
+    void celebrationCardEl.offsetWidth;
+    celebrationCardEl.style.animation = 'hub3dZoneCelebrate 1900ms ease-out forwards';
+  }
 
   var hintEl = document.createElement('div');
   hintEl.textContent = 'WASD ile hareket et — gate’e yaklaş, mission paneli açılır';
@@ -445,6 +490,32 @@ export function initHub3D(opts) {
     if (frac >= 0.5) return 2;
     if (frac >= 0.25) return 1;
     return 0;
+  }
+
+  // Which zone Leo is physically standing in right now, purely from his world
+  // Z (zone i spans roughly [-(i+1)*ZONE_LENGTH, -i*ZONE_LENGTH]) — used only
+  // for the progress label below, never for lock/clamp logic.
+  function currentZoneIndex() {
+    var idx = Math.floor(-leo.group.position.z / ZONE_LENGTH);
+    return THREE.MathUtils.clamp(idx, 0, gateConfig.length - 1);
+  }
+
+  // Updates the "N missions left in this zone" pill from the real done Set —
+  // guarded so the DOM text is only touched when the zone or count actually
+  // changes, not every frame.
+  var lastProgressCacheKey = null;
+  function updateProgressLabel() {
+    var idx = currentZoneIndex();
+    var cfg = gateConfig[idx];
+    var packMissions = missions.filter(function (m) { return m.pack === cfg.packKey; });
+    var doneCount = packMissions.filter(function (m) { return done.has(m.id); }).length;
+    var remaining = packMissions.length - doneCount;
+    var cacheKey = idx + ':' + remaining;
+    if (cacheKey === lastProgressCacheKey) return;
+    lastProgressCacheKey = cacheKey;
+    progressLabelEl.textContent = remaining > 0
+      ? (cfg.icon + ' ' + cfg.name + ' — ' + remaining + ' görev kaldı')
+      : (cfg.icon + ' ' + cfg.name + ' tamamlandı! 🏆');
   }
 
   // Floating name label above each gate — a canvas-texture Sprite, not CSS3D/DOM:
@@ -902,6 +973,8 @@ export function initHub3D(opts) {
 
   var celebratingRing = null; // { ring, startTime } — brief pulse when a zone unlocks
   var CELEBRATION_MS = 700;
+  var leoCelebrating = null; // { startTime, baseFacingY } — Leo's joy hop, see updateLeoCelebration()
+  var LEO_CELEBRATE_MS = 900;
 
   // Detects locked→unlocked transitions and kicks off the fog dissolve +
   // reward trees + a short celebration pulse on the newly-opened zone's ring.
@@ -920,9 +993,34 @@ export function initHub3D(opts) {
 
       celebratingRing = { ring: gateMeshes[fw.zoneIndex + 1].userData.ring, startTime: performance.now() };
 
+      // The pack that just got completed (NOT the newly-opened next zone the
+      // ring pulse above belongs to) — named explicitly in the card + tied to
+      // its own gate's already-existing champion sparkle (updateGateDecor),
+      // so it's unambiguous which zone finished vs. which one just opened.
+      var completedCfg = gateConfig[fw.zoneIndex - 1];
+      showZoneCompleteCelebration(completedCfg);
+      leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
+
       var badge = badgeSlots[fw.zoneIndex + 1];
       if (badge) badge.style.opacity = '1';
     });
+  }
+
+  // Leo's brief joy hop (two quick bounces + a small happy wag, decaying to
+  // nothing) when a zone completes — overrides leo.group.position.y/rotation.y
+  // for this short window only, same pattern as the existing gate-arrival
+  // reaction in updateGateReaction(); leo.update() resumes full control the
+  // instant the window ends.
+  function updateLeoCelebration() {
+    if (!leoCelebrating) return;
+    var elapsed = performance.now() - leoCelebrating.startTime;
+    var t = Math.min(elapsed / LEO_CELEBRATE_MS, 1);
+    var bounce = Math.abs(Math.sin(t * Math.PI * 2)) * (1 - t * 0.4);
+    leo.group.position.y = bounce * 0.32;
+    leo.group.rotation.y = leoCelebrating.baseFacingY + Math.sin(t * Math.PI * 4) * 0.28 * (1 - t);
+    if (elapsed >= LEO_CELEBRATE_MS) {
+      leoCelebrating = null;
+    }
   }
 
   // Fades + retreats the fog wall over 1400ms — the exact technique from
@@ -970,6 +1068,8 @@ export function initHub3D(opts) {
     updateZoneLocks();
     updateFogDissolves();
     updateCelebration();
+    updateLeoCelebration();
+    updateProgressLabel();
     elapsedTime += delta;
 
     updateRiver(elapsedTime);
