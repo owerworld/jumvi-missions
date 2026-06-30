@@ -185,14 +185,41 @@ export function initHub3D(opts) {
   var CORRIDOR_WOBBLE_FREQ = 0.05;
   var START_BOUNDARY_Z = 4; // can't wander back past spawn
 
+  // River/bridge footprint — declared up here (not down in ENVIRONMENT DECOR
+  // where the river mesh itself is built) because pathCenterX/
+  // corridorHalfWidthAt below need them: the bridge deck is a single flat,
+  // non-curving object, but the zigzag curve's slope is nonzero at RIVER_Z,
+  // so without this, the curve would shift up to ~1.3 units sideways across
+  // the deck's own depth — Leo's movement clamp would then drag him off the
+  // physical deck (built from one frozen pathCenterX(RIVER_Z) snapshot) and
+  // around it instead of straight across. See createBridge()/river mesh in
+  // ENVIRONMENT DECOR for the geometry that this has to stay consistent with.
+  var RIVER_Z = -3;
+  var RIVER_DEPTH = 3;
+  var RIVER_HALF_SPAN = RIVER_DEPTH / 2 + 0.3; // deck's z half-extent + a hair of margin
+
   function zoneCenterZ(i) {
     return -(i + 0.5) * ZONE_LENGTH;
   }
-  function pathCenterX(z) {
+  function pathCenterXCurve(z) {
     return Math.sin((z / ZONE_LENGTH) * Math.PI) * ZIGZAG_AMPLITUDE;
   }
-  function corridorHalfWidthAt(z) {
+  function corridorHalfWidthAtCurve(z) {
     return CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE * Math.sin(z * CORRIDOR_WOBBLE_FREQ + 1.7);
+  }
+  // Flat (non-curving) across the bridge's exact footprint, curved everywhere
+  // else — these two wrappers are what both the movement clamp AND every
+  // piece of decor (ground/treeline/gates/fog walls) read, so freezing the
+  // curve here keeps the corridor's visual centerline and Leo's actual
+  // walkable region in agreement at the one spot where the geometry can't
+  // bend to follow it.
+  function pathCenterX(z) {
+    if (Math.abs(z - RIVER_Z) <= RIVER_HALF_SPAN) return pathCenterXCurve(RIVER_Z);
+    return pathCenterXCurve(z);
+  }
+  function corridorHalfWidthAt(z) {
+    if (Math.abs(z - RIVER_Z) <= RIVER_HALF_SPAN) return corridorHalfWidthAtCurve(RIVER_Z);
+    return corridorHalfWidthAtCurve(z);
   }
   // z of the fog wall guarding the entrance to zone i (i = 1..N-1) — the
   // midpoint between zone i-1's and zone i's gates.
@@ -285,7 +312,14 @@ export function initHub3D(opts) {
 
   // ---------- FOREST GROUND (long strip covering all zones — replaces the island) ----------
   var pathTotalLength = ZONE_LENGTH * realPacks.length + START_BOUNDARY_Z + 10;
-  var groundWidth = (CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 10; // walkable width + treeline margin
+  // Must cover the corridor's full lateral travel, not just its width: the
+  // centerline itself swings ±ZIGZAG_AMPLITUDE, and treeline trees sit up to
+  // (corridorHalfWidthAt + 0.8 + 1.2 random jitter) past THAT — leaving
+  // ZIGZAG_AMPLITUDE out of this formula let worst-case treeline trees land
+  // past the ground plane's edge (floating with no visible terrain under
+  // them). +12 is a margin on top of the true worst case (~21), not the
+  // worst case itself.
+  var groundWidth = (ZIGZAG_AMPLITUDE + CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 12;
   var groundGeo = new THREE.PlaneGeometry(groundWidth, pathTotalLength, 1, 1);
   var groundMat = new THREE.MeshStandardMaterial({ color: 0x8FBF5A, flatShading: true });
   var ground = new THREE.Mesh(groundGeo, groundMat);
@@ -380,10 +414,10 @@ export function initHub3D(opts) {
   // ---------- ENVIRONMENT DECOR (river + bridge + butterflies + birds) ----------
   // Pure atmosphere — none of this touches the corridor clamp, lock state, or
   // gate/panel logic. Placed in zone 0 (always unlocked) so every player sees
-  // it regardless of progress.
-  var RIVER_Z = -3;
-  var RIVER_DEPTH = 3; // how wide the river band is along Z
-  var riverHalfWidth = corridorHalfWidthAt(RIVER_Z) + 5; // runs out past the treeline on both sides
+  // it regardless of progress. RIVER_Z/RIVER_DEPTH live up in PATH/CORRIDOR
+  // now (pathCenterX/corridorHalfWidthAt need them) — kept here only as the
+  // mesh-building code that has to stay geometrically consistent with them.
+  var riverHalfWidth = corridorHalfWidthAtCurve(RIVER_Z) + 5; // runs out past the treeline on both sides
 
   var riverSegX = 14, riverSegZ = 4;
   var riverGeo = new THREE.PlaneGeometry(riverHalfWidth * 2, RIVER_DEPTH, riverSegX, riverSegZ);
