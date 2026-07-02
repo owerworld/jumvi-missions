@@ -10,7 +10,7 @@
 // ships as an ES module. Same version (0.160.0) as before, just a different
 // build/packaging — every existing THREE.Xxx call below is unaffected.
 import * as THREE from 'three';
-import { createCoachLeo } from './jumvi-leo.js?v=20260524-27';
+import { createCoachLeo } from './jumvi-leo.js?v=20260524-56';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -72,20 +72,36 @@ export function initHub3D(opts) {
     celebrationCardEl.style.animation = 'hub3dZoneCelebrate 1900ms ease-out forwards';
   }
 
+  // Zone-entry name card — same reset-and-replay pattern as the celebration
+  // card above, but shorter (1.5s) and higher up so the two never collide
+  // visually if a completion and a zone entry happen back to back.
+  var zoneCardEl = document.createElement('div');
+  zoneCardEl.style.cssText = 'position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);z-index:14;pointer-events:none;background:rgba(255,255,255,0.92);padding:12px 26px;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,0.22);opacity:0;font-size:18px;font-weight:900;color:#3a2a1a;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  container.appendChild(zoneCardEl);
+  if (!document.getElementById('hub3dZoneCardStyle')) {
+    var zoneCardStyle = document.createElement('style');
+    zoneCardStyle.id = 'hub3dZoneCardStyle';
+    zoneCardStyle.textContent =
+      '@keyframes hub3dZoneCardIn{' +
+      '0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}' +
+      '18%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}' +
+      '28%{transform:translate(-50%,-50%) scale(1)}' +
+      '78%{opacity:1;transform:translate(-50%,-50%) scale(1)}' +
+      '100%{opacity:0;transform:translate(-50%,-50%) scale(.94)}' +
+      '}';
+    document.head.appendChild(zoneCardStyle);
+  }
+  function showZoneCard(theme) {
+    zoneCardEl.textContent = theme.cardTitle;
+    zoneCardEl.style.animation = 'none';
+    void zoneCardEl.offsetWidth;
+    zoneCardEl.style.animation = 'hub3dZoneCardIn 1500ms ease-out forwards';
+  }
+
   var hintEl = document.createElement('div');
-  hintEl.textContent = 'WASD ile hareket et — gate’e yaklaş, mission paneli açılır';
+  hintEl.textContent = 'Ekrana dokun ve yürü (masaüstünde WASD) — gate’e yaklaş, mission paneli açılır';
   hintEl.style.cssText = 'position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.85);padding:7px 13px;border-radius:11px;font-size:11px;color:#555;z-index:10;max-width:220px;text-align:right;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(hintEl);
-
-  var joystickZone = document.createElement('div');
-  joystickZone.style.cssText = 'position:absolute;bottom:0;left:0;width:50%;height:45%;z-index:5;';
-  var joystickBase = document.createElement('div');
-  joystickBase.style.cssText = 'position:absolute;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.32);border:2px solid rgba(255,255,255,0.6);display:none;';
-  var joystickStick = document.createElement('div');
-  joystickStick.style.cssText = 'position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.88);left:28px;top:28px;';
-  joystickBase.appendChild(joystickStick);
-  joystickZone.appendChild(joystickBase);
-  container.appendChild(joystickZone);
 
   // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
   // Every sound below is one or two oscillator+gain nodes with a short
@@ -108,7 +124,7 @@ export function initHub3D(opts) {
   var audioMuted = false;
 
   // Autoplay policies block sound before a user gesture; the context starts
-  // "suspended" and every real interaction entry point (keydown, joystick
+  // "suspended" and every real interaction entry point (keydown, tap-to-move
   // touch, the mute button itself) calls this — cheap/safe to call
   // repeatedly once it's already running.
   function resumeAudio() {
@@ -249,10 +265,23 @@ export function initHub3D(opts) {
     };
   });
 
+  // Per-pack mission lists, computed ONCE. Several per-frame functions
+  // (getPackCompletion / visibleSlotsForPack / updateProgressLabel) used to
+  // rescan the whole missions array via filter() every frame per gate —
+  // pointless work, since the mission→pack mapping never changes at runtime
+  // (only the done Set does, and that's checked per item anyway).
+  var missionsByPack = {};
+  missions.forEach(function (m) {
+    (missionsByPack[m.pack] = missionsByPack[m.pack] || []).push(m);
+  });
+  function packMissionList(packKey) {
+    return missionsByPack[packKey] || [];
+  }
+
   // Pack's first not-yet-completed mission; if the whole pack is done, reopen
-  // its first mission (openMission already renders the "completed" state).
+  // its first mission (the panel renders the "completed" state).
   function getNextMissionIdForPack(packKey) {
-    var packMissions = missions.filter(function (m) { return m.pack === packKey; });
+    var packMissions = packMissionList(packKey);
     var next = packMissions.find(function (m) { return !done.has(m.id); });
     return next ? next.id : (packMissions[0] && packMissions[0].id);
   }
@@ -268,11 +297,31 @@ export function initHub3D(opts) {
     badgeSlots[cfg.id] = slot;
   });
 
+  // ---------- ZONE THEMES (one per pack — sky/fog/ground/light/decor identity) ----------
+  // Order matches gateConfig/realPacks order (zone 0 = first pack). Every
+  // color-ish scene property (background, fog, hemisphere+sun light, badge
+  // tint) lerps toward the current zone's palette each frame (~2s blend, see
+  // updateZoneTheme in tick), so crossing a boundary is a soft wash, not a
+  // hard cut. `makers` are the decor builders scattered along that zone's
+  // corridor edges (function declarations below — hoisted, so forward
+  // references from this table are safe).
+  var ZONE_THEMES = [
+    { key: 'energy', cardTitle: '⚡ Enerji Bölgesi', sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'elektrik direği' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeLightningBolt, name: 'şimşek' }]; }, championName: 'enerji topu' },
+    { key: 'target', cardTitle: '🎯 Hedef Sahası', sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'hedef tahtası' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }]; }, championName: 'altın hedef' },
+    { key: 'zen', cardTitle: '🍃 Zen Bahçesi', sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }, { make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }]; }, championName: 'altın fener' },
+    { key: 'play', cardTitle: '👥 Oyun Alanı', sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makeSlide, name: 'kaydırak' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makePlayFlag, name: 'bayrak' }]; }, championName: 'şampiyon bayrağı' },
+    { key: 'home', cardTitle: '🏠 Ev Bahçesi', sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'çit' }, { make: makeFlowerBed, name: 'çiçek tarhı' }, { make: makeGardenSwing, name: 'salıncak' }, { make: makeFencePanel, name: 'çit' }, { make: makeMailbox, name: 'posta kutusu' }, { make: makeFlowerBed, name: 'çiçek tarhı' }]; }, championName: 'çiçek tacı' },
+    { key: 'beach', cardTitle: '🏖️ Plaj', sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palmiye' }, { make: makeBeachUmbrella, name: 'güneş şemsiyesi' }, { make: makeSandcastle, name: 'kumdan kale' }, { make: makeSeashell, name: 'deniz kabuğu' }, { make: makePalmTree, name: 'palmiye' }, { make: makeSeashell, name: 'deniz kabuğu' }]; }, championName: 'altın güneş' }
+  ];
+  function themeForZone(i) {
+    return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
+  }
+
   // ---------- SCENE ----------
   var scene = new THREE.Scene();
-  // Cozy storybook sunset palette — warm cream sky/fog instead of cool blue.
-  scene.background = new THREE.Color(0xFFE8C4);
-  scene.fog = new THREE.Fog(0xFFE8C4, 18, 38);
+  // Starts on zone 0's palette; updateZoneTheme() lerps everything from here.
+  scene.background = new THREE.Color(ZONE_THEMES[0].sky);
+  scene.fog = new THREE.Fog(ZONE_THEMES[0].sky, 18, 38);
 
   // ---------- THIRD-PERSON CHASE CAMERA (Subway Surfers / Temple Run style) ----------
   // Positioned behind + above Leo along his actual facing direction (not a
@@ -300,8 +349,9 @@ export function initHub3D(opts) {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
-  scene.add(new THREE.HemisphereLight(0xFFD9A0, 0x8FBF5A, 1.1));
-  var sun = new THREE.DirectionalLight(0xFFD9A0, 1.6);
+  var hemiLight = new THREE.HemisphereLight(ZONE_THEMES[0].hemiSky, ZONE_THEMES[0].hemiGround, 1.1);
+  scene.add(hemiLight);
+  var sun = new THREE.DirectionalLight(ZONE_THEMES[0].sun, ZONE_THEMES[0].sunIntensity);
   sun.position.set(10, 16, 8);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -320,12 +370,28 @@ export function initHub3D(opts) {
   // them). +12 is a margin on top of the true worst case (~21), not the
   // worst case itself.
   var groundWidth = (ZIGZAG_AMPLITUDE + CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 12;
-  var groundGeo = new THREE.PlaneGeometry(groundWidth, pathTotalLength, 1, 1);
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0x8FBF5A, flatShading: true });
-  var ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.z = -(pathTotalLength / 2) + START_BOUNDARY_Z;
-  ground.receiveShadow = true;
+  // One strip per zone (plus a spawn apron in front and a tail behind the
+  // last zone), each in its zone's theme ground color — this is what makes
+  // each zone read as its own place even before the decor registers. Still
+  // `ground` as a single Group so the tap-to-move raycast has one target.
+  // 6 shared materials for 8 strips; strips butt exactly at zone boundaries.
+  var ground = new THREE.Group();
+  var groundMats = ZONE_THEMES.map(function (t) {
+    return new THREE.MeshStandardMaterial({ color: t.ground, flatShading: true });
+  });
+  function addGroundStrip(zFront, zBack, themeIdx) {
+    var depth = zFront - zBack;
+    var strip = new THREE.Mesh(new THREE.PlaneGeometry(groundWidth, depth, 1, 1), groundMats[themeIdx]);
+    strip.rotation.x = -Math.PI / 2;
+    strip.position.z = (zFront + zBack) / 2;
+    strip.receiveShadow = true;
+    ground.add(strip);
+  }
+  addGroundStrip(START_BOUNDARY_Z + 6, 0, 0); // spawn apron, zone 0's color
+  for (var gsi = 0; gsi < realPacks.length; gsi++) {
+    addGroundStrip(-gsi * ZONE_LENGTH, -(gsi + 1) * ZONE_LENGTH, THREE.MathUtils.clamp(gsi, 0, ZONE_THEMES.length - 1));
+  }
+  addGroundStrip(-realPacks.length * ZONE_LENGTH, -pathTotalLength + START_BOUNDARY_Z, ZONE_THEMES.length - 1); // tail
   scene.add(ground);
 
   function makeTree(x, z, scale) {
@@ -357,14 +423,382 @@ export function initHub3D(opts) {
     group.scale.setScalar(scale || 1);
     return group;
   }
-  // Treeline hugging both sides of the corridor — the ground itself is a plain
-  // rectangle; this foliage boundary (following the zigzag + wobble) is what
-  // makes the path read as organic/curvy instead of a straight lane.
+
+  // ---------- THEME DECOR BUILDERS ----------
+  // One builder per prop; all share module-level materials (declared here,
+  // reused across every instance) so 6 zones of decor stay draw-call-cheap.
+  // Signature is uniformly (x, z) → Object3D positioned at ground level.
+  var woodMat = new THREE.MeshStandardMaterial({ color: 0x8B5E34, flatShading: true });
+  var darkPoleMat = new THREE.MeshStandardMaterial({ color: 0x3a3d66, flatShading: true });
+  var energyOrbMat = new THREE.MeshStandardMaterial({ color: 0xFFE23F, flatShading: true, emissive: 0xFFD700, emissiveIntensity: 0.9 });
+  var boltMat = new THREE.MeshStandardMaterial({ color: 0xFFE23F, flatShading: true, emissive: 0xFFD700, emissiveIntensity: 0.7 });
+  var targetRedMat = new THREE.MeshStandardMaterial({ color: 0xE23B3B, flatShading: true, side: THREE.DoubleSide });
+  var targetWhiteMat = new THREE.MeshStandardMaterial({ color: 0xF5F1E6, flatShading: true, side: THREE.DoubleSide });
+  var bambooMat = new THREE.MeshStandardMaterial({ color: 0x7FA84E, flatShading: true });
+  var stoneMat = new THREE.MeshStandardMaterial({ color: 0x9a9a92, flatShading: true });
+  var lanternGlowMat = new THREE.MeshStandardMaterial({ color: 0xFFE8B0, flatShading: true, emissive: 0xFFC860, emissiveIntensity: 0.5 });
+  var poolMat = new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true, transparent: true, opacity: 0.85 });
+  var lotusMat = new THREE.MeshStandardMaterial({ color: 0xF08CB4, flatShading: true });
+  var benchMat = new THREE.MeshStandardMaterial({ color: 0xE85D3A, flatShading: true });
+  var slideMat = new THREE.MeshStandardMaterial({ color: 0x4FA3E0, flatShading: true });
+  var flagPoleMat = new THREE.MeshStandardMaterial({ color: 0xB0B0A8, flatShading: true });
+  var flagMats = [
+    new THREE.MeshStandardMaterial({ color: 0xE84040, flatShading: true, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ color: 0x40B0E8, flatShading: true, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ color: 0xFFD23F, flatShading: true, side: THREE.DoubleSide })
+  ];
+  var fenceMat = new THREE.MeshStandardMaterial({ color: 0xC49A6C, flatShading: true });
+  var mailboxMat = new THREE.MeshStandardMaterial({ color: 0xD05050, flatShading: true });
+  var palmTrunkMat = new THREE.MeshStandardMaterial({ color: 0xA07850, flatShading: true });
+  var palmLeafMat = new THREE.MeshStandardMaterial({ color: 0x4FA84E, flatShading: true, side: THREE.DoubleSide });
+  var umbrellaMat = new THREE.MeshStandardMaterial({ color: 0xFF6B6B, flatShading: true, side: THREE.DoubleSide });
+  var shellMat = new THREE.MeshStandardMaterial({ color: 0xFFF0DC, flatShading: true });
+
+  function makeElectricPole(x, z) {
+    var g = new THREE.Group();
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 2.4, 6), darkPoleMat);
+    pole.position.y = 1.2;
+    pole.castShadow = true;
+    g.add(pole);
+    var arm = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.08, 0.08), darkPoleMat);
+    arm.position.y = 2.25;
+    g.add(arm);
+    var orb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 8), energyOrbMat);
+    orb.position.y = 2.52;
+    g.add(orb);
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeLightningBolt(x, z) {
+    // Three thin angled boxes forming a Z — reads as a bolt from any side.
+    var g = new THREE.Group();
+    var segs = [
+      { y: 1.7, rz: -0.5 }, { y: 1.25, rz: 0.55 }, { y: 0.8, rz: -0.5 }
+    ];
+    segs.forEach(function (s) {
+      var seg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.62, 0.12), boltMat);
+      seg.position.y = s.y;
+      seg.rotation.z = s.rz;
+      g.add(seg);
+    });
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeTargetBoard(x, z) {
+    var g = new THREE.Group();
+    [-0.22, 0.22].forEach(function (lx) {
+      var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.0, 6), woodMat);
+      leg.position.set(lx, 0.5, 0);
+      leg.rotation.x = lx < 0 ? 0.16 : -0.16;
+      g.add(leg);
+    });
+    var rings = [
+      { r: 0.55, mat: targetRedMat, zOff: 0 },
+      { r: 0.38, mat: targetWhiteMat, zOff: 0.012 },
+      { r: 0.2, mat: targetRedMat, zOff: 0.024 }
+    ];
+    rings.forEach(function (rDef) {
+      var disc = new THREE.Mesh(new THREE.CircleGeometry(rDef.r, 20), rDef.mat);
+      disc.position.set(0, 1.35, rDef.zOff);
+      g.add(disc);
+    });
+    g.position.set(x, 0, z);
+    // Face the corridor: boards on the left edge look right, and vice versa.
+    g.rotation.y = x < pathCenterX(z) ? Math.PI / 2 : -Math.PI / 2;
+    return g;
+  }
+  function makeBamboo(x, z) {
+    var g = new THREE.Group();
+    for (var i = 0; i < 3; i++) {
+      var h = 1.8 + Math.random() * 0.9;
+      var cane = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, h, 5), bambooMat);
+      cane.position.set((Math.random() - 0.5) * 0.5, h / 2, (Math.random() - 0.5) * 0.5);
+      cane.rotation.z = (Math.random() - 0.5) * 0.12;
+      cane.castShadow = true;
+      g.add(cane);
+    }
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeStoneLantern(x, z) {
+    var g = new THREE.Group();
+    var base = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.22, 0.5), stoneMat);
+    base.position.y = 0.11;
+    g.add(base);
+    var column = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.13, 0.55, 6), stoneMat);
+    column.position.y = 0.5;
+    g.add(column);
+    var glow = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.26, 0.34), lanternGlowMat);
+    glow.position.y = 0.9;
+    g.add(glow);
+    var cap = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.24, 4), stoneMat);
+    cap.position.y = 1.15;
+    cap.rotation.y = Math.PI / 4;
+    cap.castShadow = true;
+    g.add(cap);
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeLotusPool(x, z) {
+    var g = new THREE.Group();
+    var pool = new THREE.Mesh(new THREE.CircleGeometry(0.7, 14), poolMat);
+    pool.rotation.x = -Math.PI / 2;
+    pool.position.y = 0.02;
+    g.add(pool);
+    var lotus = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 6), lotusMat);
+    lotus.position.set(0.2, 0.08, -0.15);
+    lotus.scale.y = 0.6;
+    g.add(lotus);
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeBench(x, z) {
+    var g = new THREE.Group();
+    var seat = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.09, 0.4), benchMat);
+    seat.position.y = 0.42;
+    seat.castShadow = true;
+    g.add(seat);
+    var back = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.34, 0.07), benchMat);
+    back.position.set(0, 0.68, -0.17);
+    g.add(back);
+    [-0.45, 0.45].forEach(function (lx) {
+      var leg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.42, 0.34), woodMat);
+      leg.position.set(lx, 0.21, 0);
+      g.add(leg);
+    });
+    g.position.set(x, 0, z);
+    g.rotation.y = x < pathCenterX(z) ? Math.PI / 2 : -Math.PI / 2;
+    return g;
+  }
+  function makeSlide(x, z) {
+    var g = new THREE.Group();
+    var ramp = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 1.7), slideMat);
+    ramp.position.set(0, 0.62, 0);
+    ramp.rotation.x = 0.62;
+    ramp.castShadow = true;
+    g.add(ramp);
+    [-0.2, 0.2].forEach(function (lx) {
+      var post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.15, 6), flagPoleMat);
+      post.position.set(lx, 0.575, -0.72);
+      g.add(post);
+    });
+    var platform = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.07, 0.45), slideMat);
+    platform.position.set(0, 1.12, -0.72);
+    g.add(platform);
+    g.position.set(x, 0, z);
+    g.rotation.y = Math.random() * Math.PI * 2;
+    return g;
+  }
+  function makePlayFlag(x, z) {
+    var g = new THREE.Group();
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.045, 1.7, 5), flagPoleMat);
+    pole.position.y = 0.85;
+    g.add(pole);
+    var flag = new THREE.Mesh(new THREE.PlaneGeometry(0.55, 0.32), flagMats[Math.floor(Math.random() * flagMats.length)]);
+    flag.position.set(0.3, 1.5, 0);
+    g.add(flag);
+    g.position.set(x, 0, z);
+    g.rotation.y = Math.random() * Math.PI * 2;
+    return g;
+  }
+  function makeFencePanel(x, z) {
+    var g = new THREE.Group();
+    for (var i = -1; i <= 1; i++) {
+      var slat = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.85, 0.05), fenceMat);
+      slat.position.set(i * 0.32, 0.43, 0);
+      slat.castShadow = true;
+      g.add(slat);
+    }
+    [0.28, 0.6].forEach(function (ry) {
+      var rail = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.07, 0.04), fenceMat);
+      rail.position.set(0, ry, 0.045);
+      g.add(rail);
+    });
+    g.position.set(x, 0, z);
+    g.rotation.y = x < pathCenterX(z) ? Math.PI / 2 : -Math.PI / 2;
+    return g;
+  }
+  function makeGardenSwing(x, z) {
+    var g = new THREE.Group();
+    [-0.5, 0.5].forEach(function (lx) {
+      var post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 1.5, 6), woodMat);
+      post.position.set(lx, 0.75, 0);
+      post.castShadow = true;
+      g.add(post);
+    });
+    var bar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.2, 6), woodMat);
+    bar.rotation.z = Math.PI / 2;
+    bar.position.y = 1.5;
+    g.add(bar);
+    [-0.18, 0.18].forEach(function (lx) {
+      var rope = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.95, 4), fenceMat);
+      rope.position.set(lx, 1.0, 0);
+      g.add(rope);
+    });
+    var seat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.22), fenceMat);
+    seat.position.y = 0.52;
+    g.add(seat);
+    g.position.set(x, 0, z);
+    g.rotation.y = x < pathCenterX(z) ? Math.PI / 2 : -Math.PI / 2;
+    return g;
+  }
+  function makeFlowerBed(x, z) {
+    var g = new THREE.Group();
+    var border = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.14, 0.6), woodMat);
+    border.position.y = 0.07;
+    g.add(border);
+    var cluster = makeFlowerCluster(0, 0);
+    cluster.position.y = 0.14;
+    g.add(cluster);
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeMailbox(x, z) {
+    var g = new THREE.Group();
+    var post = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.055, 0.95, 5), woodMat);
+    post.position.y = 0.475;
+    g.add(post);
+    var box = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.26, 0.24), mailboxMat);
+    box.position.y = 1.05;
+    box.castShadow = true;
+    g.add(box);
+    g.position.set(x, 0, z);
+    g.rotation.y = x < pathCenterX(z) ? Math.PI / 2 : -Math.PI / 2;
+    return g;
+  }
+  function makePalmTree(x, z) {
+    var g = new THREE.Group();
+    var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.16, 2.1, 6), palmTrunkMat);
+    trunk.position.set(0.18, 1.0, 0);
+    trunk.rotation.z = -0.18;
+    trunk.castShadow = true;
+    g.add(trunk);
+    // Each leaf hinges at the trunk top: geometry translated so its inner
+    // edge sits at the pivot, pivot yaws around the crown, leaf droops in
+    // its own local frame — reads as a proper palm crown instead of loose
+    // planes floating across the trunk.
+    var topX = 0.42, topY = 2.05;
+    var leafGeo = new THREE.PlaneGeometry(0.85, 0.24);
+    leafGeo.translate(0.425, 0, 0);
+    for (var i = 0; i < 5; i++) {
+      var pivot = new THREE.Group();
+      pivot.position.set(topX, topY, 0);
+      pivot.rotation.y = -(i / 5) * Math.PI * 2;
+      var leaf = new THREE.Mesh(leafGeo, palmLeafMat);
+      leaf.rotation.z = -0.5;
+      pivot.add(leaf);
+      g.add(pivot);
+    }
+    g.position.set(x, 0, z);
+    g.rotation.y = Math.random() * Math.PI * 2;
+    return g;
+  }
+  function makeBeachUmbrella(x, z) {
+    var g = new THREE.Group();
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 1.6, 5), flagPoleMat);
+    pole.position.y = 0.8;
+    pole.rotation.z = 0.12;
+    g.add(pole);
+    var canopy = new THREE.Mesh(new THREE.ConeGeometry(0.85, 0.4, 8), umbrellaMat);
+    canopy.position.set(0.18, 1.65, 0);
+    canopy.castShadow = true;
+    g.add(canopy);
+    g.position.set(x, 0, z);
+    return g;
+  }
+  function makeSeashell(x, z) {
+    var shell = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 6), shellMat);
+    shell.position.set(x, 0.06, z);
+    shell.scale.set(1.3, 0.5, 1.1);
+    return shell;
+  }
+  var sandMat = new THREE.MeshStandardMaterial({ color: 0xE8CC8A, flatShading: true });
+  function makeSandcastle(x, z) {
+    var g = new THREE.Group();
+    var base = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.4, 0.7), sandMat);
+    base.position.y = 0.2;
+    base.castShadow = true;
+    g.add(base);
+    [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]].forEach(function (c) {
+      var tower = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 0.35, 6), sandMat);
+      tower.position.set(c[0], 0.55, c[1]);
+      g.add(tower);
+      var roof = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.16, 6), sandMat);
+      roof.position.set(c[0], 0.8, c[1]);
+      g.add(roof);
+    });
+    g.position.set(x, 0, z);
+    return g;
+  }
+
+  // Champion prop — the "%100 complete" trophy floating above a zone's gate,
+  // one theme-specific shape each, all sharing the gold emissive material so
+  // they read as the same reward tier across zones. Slowly spun in tick()
+  // alongside the existing sparkle ring.
+  var championGoldMat = new THREE.MeshStandardMaterial({ color: 0xFFD700, flatShading: true, emissive: 0xFFB300, emissiveIntensity: 0.75 });
+  function makeChampionProp(themeKey) {
+    var g = new THREE.Group();
+    if (themeKey === 'energy') {
+      var ball = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 0), championGoldMat);
+      g.add(ball);
+    } else if (themeKey === 'target') {
+      var disc = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.1, 8, 18), championGoldMat);
+      g.add(disc);
+    } else if (themeKey === 'zen') {
+      var lantern = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.34, 0.42), championGoldMat);
+      g.add(lantern);
+      var cap = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.26, 4), championGoldMat);
+      cap.position.y = 0.32;
+      cap.rotation.y = Math.PI / 4;
+      g.add(cap);
+    } else if (themeKey === 'play') {
+      for (var i = 0; i < 3; i++) {
+        var flag = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.4, 4), championGoldMat);
+        var a = (i / 3) * Math.PI * 2;
+        flag.position.set(Math.cos(a) * 0.3, 0, Math.sin(a) * 0.3);
+        flag.rotation.z = Math.PI;
+        g.add(flag);
+      }
+    } else if (themeKey === 'home') {
+      var wreath = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.09, 8, 16), championGoldMat);
+      g.add(wreath);
+      for (var fi = 0; fi < 4; fi++) {
+        var bud = new THREE.Mesh(new THREE.SphereGeometry(0.09, 6, 6), lotusMat);
+        var fa = (fi / 4) * Math.PI * 2;
+        bud.position.set(Math.cos(fa) * 0.34, Math.sin(fa) * 0.34, 0);
+        g.add(bud);
+      }
+    } else {
+      var sunBall = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 12), championGoldMat);
+      g.add(sunBall);
+    }
+    return g;
+  }
+  // Edge decor lining both sides of the corridor — the ground itself is a
+  // plain rectangle; this boundary (following the zigzag + wobble) is what
+  // makes the path read as organic/curvy instead of a straight lane. Each
+  // zone draws from its own theme's prop builders (ZONE_THEMES.makers), so
+  // walking into a new zone visibly changes the scenery, not just the colors.
+  //
+  // DECOR_CLEARANCE is the guaranteed gap between any decor object and the
+  // corridor's walkable edge. Critically, the corridor edge must be evaluated
+  // at the object's FINAL z — the old code computed the edge at the loop's tz
+  // but then jittered the placed z by ±1, and near the bridge's frozen-curve
+  // band that mismatch let trees land inside the walkable area (Leo visibly
+  // walked into a bush at the bridge entrance in device testing).
+  var DECOR_CLEARANCE = 0.8;
+  var edgeDecorCounter = 0;
   for (var tz = START_BOUNDARY_Z - 2; tz > -pathTotalLength + START_BOUNDARY_Z; tz -= 4.5) {
-    var edgeHalfWidth = corridorHalfWidthAt(tz) + 0.8 + Math.random() * 1.2;
-    var centerXAtZ = pathCenterX(tz);
-    scene.add(makeTree(centerXAtZ - edgeHalfWidth, tz + (Math.random() - 0.5) * 2, 0.8 + Math.random() * 0.5));
-    scene.add(makeTree(centerXAtZ + edgeHalfWidth, tz + (Math.random() - 0.5) * 2, 0.8 + Math.random() * 0.5));
+    for (var side = -1; side <= 1; side += 2) {
+      var propZ = tz + (Math.random() - 0.5) * 2;
+      var zoneIdx = THREE.MathUtils.clamp(Math.floor(-propZ / ZONE_LENGTH), 0, ZONE_THEMES.length - 1);
+      var zoneMakers = themeForZone(zoneIdx).makers();
+      var maker = zoneMakers[edgeDecorCounter++ % zoneMakers.length];
+      var propEdge = corridorHalfWidthAt(propZ) + DECOR_CLEARANCE + Math.random() * 1.2;
+      var propX = pathCenterX(propZ) + side * propEdge;
+      // makeTree keeps its (x, z, scale) signature; every themed builder is (x, z).
+      scene.add(maker === makeTree ? makeTree(propX, propZ, 0.8 + Math.random() * 0.5) : maker(propX, propZ));
+    }
   }
 
   function makeBush(x, z) {
@@ -581,35 +1015,42 @@ export function initHub3D(opts) {
   // ---------- GATE MARKERS (one per real mission pack) ----------
   var gateMeshes = {};
 
-  // Growth decor placed in a ring around each gate, outside the base/poles (radius
-  // ~1.3) and the trigger radius (1.8) so it never overlaps gameplay geometry.
-  // Slots are created once (hidden) and revealed cumulatively as the pack's real
+  // Growth decor flanking each gate along BOTH sides of the corridor, always
+  // outside the walkable width (pathCenterX ± corridorHalfWidthAt, plus
+  // DECOR_CLEARANCE) — the old circular ring (radius 2.0 around the gate,
+  // which itself sits ON the corridor centerline) put bushes/trees inside
+  // Leo's walk area, so he visibly clipped through them on device. Slots are
+  // created once (hidden) and revealed cumulatively as the pack's real
   // completion % crosses each threshold — see updateGateDecor().
-  var DECOR_RADIUS = 2.0;
+  // side: which corridor edge; dz: z offset from the gate; push: extra
+  // outward offset past the clearance so the six don't form a straight line.
+  // Slot i holds the zone theme's growth item i (ZONE_THEMES[].growth) — one
+  // slot is revealed per completed mission, so with the standard 6-mission
+  // packs the zone fills up exactly in step with real progress (2 items ≈
+  // 33%, 4 ≈ 66%, all 6 + champion prop at 100%).
   var DECOR_SLOT_DEFS = [
-    { angleDeg: 30, type: 'bush' },
-    { angleDeg: 90, type: 'bush' },
-    { angleDeg: 150, type: 'tree' },
-    { angleDeg: 210, type: 'tree' },
-    { angleDeg: 270, type: 'flower' },
-    { angleDeg: 330, type: 'flower' }
+    { side: -1, dz: -2.2, push: 0.2 },
+    { side: 1, dz: -2.2, push: 0.5 },
+    { side: -1, dz: 0, push: 0.4 },
+    { side: 1, dz: 0, push: 0.2 },
+    { side: -1, dz: 2.2, push: 0.5 },
+    { side: 1, dz: 2.2, push: 0.3 }
   ];
-  // index = tier (0..4) → how many of the 6 decor slots above are visible at that tier
-  var SLOTS_VISIBLE_AT_TIER = [0, 2, 4, 6, 6];
 
   function getPackCompletion(packKey) {
-    var packMissions = missions.filter(function (m) { return m.pack === packKey; });
+    var packMissions = packMissionList(packKey);
     if (packMissions.length === 0) return 0;
     var doneCount = packMissions.filter(function (m) { return done.has(m.id); }).length;
     return doneCount / packMissions.length;
   }
 
-  function tierForCompletion(frac) {
-    if (frac >= 1) return 4;
-    if (frac >= 0.75) return 3;
-    if (frac >= 0.5) return 2;
-    if (frac >= 0.25) return 1;
-    return 0;
+  // How many of a gate's 6 growth slots should be visible — one per done
+  // mission, scaled if a pack ever has ≠6 missions, and never "full" before
+  // the pack really is 100% (the champion moment stays exclusive to done).
+  function visibleSlotsForPack(packKey) {
+    var frac = getPackCompletion(packKey);
+    if (frac >= 1) return DECOR_SLOT_DEFS.length;
+    return Math.min(DECOR_SLOT_DEFS.length - 1, Math.floor(frac * DECOR_SLOT_DEFS.length + 1e-6));
   }
 
   // Which zone Leo is physically standing in right now, purely from his world
@@ -627,7 +1068,7 @@ export function initHub3D(opts) {
   function updateProgressLabel() {
     var idx = currentZoneIndex();
     var cfg = gateConfig[idx];
-    var packMissions = missions.filter(function (m) { return m.pack === cfg.packKey; });
+    var packMissions = packMissionList(cfg.packKey);
     var doneCount = packMissions.filter(function (m) { return done.has(m.id); }).length;
     var remaining = packMissions.length - doneCount;
     var cacheKey = idx + ':' + remaining;
@@ -636,6 +1077,57 @@ export function initHub3D(opts) {
     progressLabelEl.textContent = remaining > 0
       ? (cfg.icon + ' ' + cfg.name + ' — ' + remaining + ' görev kaldı')
       : (cfg.icon + ' ' + cfg.name + ' tamamlandı! 🏆');
+  }
+
+  // ---------- ZONE THEME TRANSITIONS ----------
+  // Watches which zone Leo is standing in; on a change it (a) shows the zone
+  // name card, (b) tints the active badge slot, and (c) retargets the color
+  // set below — the actual scene colors then chase those targets with an
+  // exponential lerp (~2s to visually settle), so crossing a boundary reads
+  // as the light changing around you rather than a scene swap.
+  var themeTargets = {
+    sky: new THREE.Color(ZONE_THEMES[0].sky),
+    hemiSky: new THREE.Color(ZONE_THEMES[0].hemiSky),
+    hemiGround: new THREE.Color(ZONE_THEMES[0].hemiGround),
+    sun: new THREE.Color(ZONE_THEMES[0].sun),
+    sunIntensity: ZONE_THEMES[0].sunIntensity
+  };
+  var themedZoneIdx = -1;
+  function updateZoneTheme(delta) {
+    var idx = currentZoneIndex();
+    if (idx !== themedZoneIdx) {
+      var isFirstApply = themedZoneIdx === -1;
+      themedZoneIdx = idx;
+      var th = themeForZone(idx);
+      // Soft two-note "you've arrived somewhere new" cue — skipped on the
+      // initial theme apply at load, which isn't an arrival.
+      if (!isFirstApply) {
+        playTone(659.25, 0.14, 'sine', 0.05, 0);
+        playTone(987.77, 0.18, 'sine', 0.04, 0.09);
+      }
+      themeTargets.sky.setHex(th.sky);
+      themeTargets.hemiSky.setHex(th.hemiSky);
+      themeTargets.hemiGround.setHex(th.hemiGround);
+      themeTargets.sun.setHex(th.sun);
+      themeTargets.sunIntensity = th.sunIntensity;
+      showZoneCard(th);
+      gateConfig.forEach(function (cfg) {
+        badgeSlots[cfg.id].style.background = cfg.zoneIndex === idx ? th.badgeBg : '#E5E2D8';
+      });
+    }
+    // time-constant 0.55s → ~97% settled after 2s, frame-rate independent
+    var k = 1 - Math.exp(-delta / 0.55);
+    scene.background.lerp(themeTargets.sky, k);
+    scene.fog.color.copy(scene.background);
+    hemiLight.color.lerp(themeTargets.hemiSky, k);
+    hemiLight.groundColor.lerp(themeTargets.hemiGround, k);
+    sun.color.lerp(themeTargets.sun, k);
+    sun.intensity += (themeTargets.sunIntensity - sun.intensity) * k;
+    // Undissolved fog walls keep matching the sky so they still read as mist
+    // (they were hard-coded to the old single cream palette).
+    for (var fwi = 0; fwi < fogWalls.length; fwi++) {
+      if (!fogWalls[fwi].dissolved) fogWalls[fwi].wall.material.color.copy(scene.background);
+    }
   }
 
   // Floating name label above each gate — a canvas-texture Sprite, not CSS3D/DOM:
@@ -723,30 +1215,41 @@ export function initHub3D(opts) {
     base.receiveShadow = true;
     group.add(base);
 
-    // Growth decor — created hidden; updateGateDecor() reveals these cumulatively
-    // as the pack's real completion % rises (see getPackCompletion/tierForCompletion).
-    var decorSlots = DECOR_SLOT_DEFS.map(function (def) {
-      var rad = def.angleDeg * Math.PI / 180;
-      var dx = Math.cos(rad) * DECOR_RADIUS;
-      var dz = Math.sin(rad) * DECOR_RADIUS;
-      var obj;
-      if (def.type === 'bush') obj = makeBush(dx, dz);
-      else if (def.type === 'tree') obj = makeTree(dx, dz, 0.55);
-      else obj = makeFlowerCluster(dx, dz);
+    // Growth decor — created hidden; updateGateDecor() reveals these one per
+    // completed mission (see visibleSlotsForPack). Items come from the zone
+    // theme's growth list, so an energy zone grows poles/bolts while the
+    // beach grows palms/sandcastles. World-positioned (added to the scene,
+    // not this group): the group below is rotated by lookAt(), so
+    // corridor-relative offsets computed here would get skewed if parented
+    // to it — and these positions MUST track the corridor math exactly to
+    // guarantee the walkable-area clearance.
+    var growthItems = themeForZone(cfg.zoneIndex).growth();
+    var decorSlots = DECOR_SLOT_DEFS.map(function (def, i) {
+      var slotZ = cfg.z + def.dz;
+      var slotX = pathCenterX(slotZ) + def.side * (corridorHalfWidthAt(slotZ) + DECOR_CLEARANCE + def.push);
+      var item = growthItems[i % growthItems.length];
+      var obj = item.make(slotX, slotZ);
       obj.visible = false;
-      group.add(obj);
+      obj.userData.rewardName = item.name;
+      scene.add(obj);
       return obj;
     });
     var champion = makeChampionSparkle();
     champion.visible = false;
     group.add(champion);
+    // Theme trophy floating above the ring — only shown at 100% (champion).
+    var championProp = makeChampionProp(themeForZone(cfg.zoneIndex).key);
+    championProp.position.y = 2.9;
+    championProp.visible = false;
+    group.add(championProp);
 
     group.position.set(cfg.x, 0, cfg.z);
     group.lookAt(0, 0, 0);
     group.userData.ring = ring;
     group.userData.decorSlots = decorSlots;
     group.userData.champion = champion;
-    group.userData.decorTier = -1; // force the first updateGateDecor() call to apply
+    group.userData.championProp = championProp;
+    group.userData.visibleSlots = -1; // force the first updateGateDecor() call to apply
     return group;
   }
   gateConfig.forEach(function (cfg) {
@@ -817,41 +1320,125 @@ export function initHub3D(opts) {
   window.addEventListener('keydown', onKeyDown);
   window.addEventListener('keyup', onKeyUp);
 
-  // ---------- INPUT: MOBILE JOYSTICK ----------
-  var joyActive = false, joyOrigin = { x: 0, y: 0 }, joyVector = { x: 0, y: 0 };
-  var MAX_JOY_DIST = 45;
+  // ---------- INPUT: MOBILE TAP-TO-MOVE ----------
+  // Replaces the joystick as the primary mobile control — testers found
+  // holding/rotating a stick overly twitchy and unnatural. Tapping anywhere
+  // on the 3D view raycasts against the ground plane; Leo then walks toward
+  // that world point on its own, even after the finger lifts, until it
+  // arrives or a new tap retargets it. Taps on other HUD elements (badges,
+  // hint text, mute button, mission panel) never reach this listener since
+  // those are separate DOM nodes stacked above the canvas — only touches
+  // that land on the canvas itself trigger a retarget.
+  var raycaster = new THREE.Raycaster();
+  var moveTargetActive = false;
+  var moveTarget = { x: 0, z: 0 };
+  var MOVE_ARRIVE_DIST = 0.45; // close enough to the target to stop walking
+  // Tightened from 2.2: with the old radius every tap shorter than ~2 units
+  // spent its WHOLE trip inside the slow-down zone, so short hops crawled —
+  // a big part of why the control read as "heavy". 1.2 keeps the gentle stop
+  // but lets Leo actually hit stride on medium taps.
+  var MOVE_SLOW_RADIUS = 1.2;
 
-  function joyStart(cx, cy) {
-    resumeAudio(); // first touch on the joystick is a real user gesture too
-    joyActive = true; joyOrigin.x = cx; joyOrigin.y = cy;
-    joystickBase.style.left = (cx - 50) + 'px';
-    joystickBase.style.top = (cy - 50) + 'px';
-    joystickBase.style.display = 'block';
+  // Target ring — a small flat ring lying on the ground where the player
+  // tapped. Scales in on each new tap, fades out once Leo arrives (or the
+  // target is cancelled by WASD). One reusable mesh, never re-created.
+  var targetRing = new THREE.Mesh(
+    new THREE.RingGeometry(0.28, 0.4, 24),
+    new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })
+  );
+  targetRing.rotation.x = -Math.PI / 2;
+  targetRing.position.y = 0.03; // just above the ground plane, below Leo
+  targetRing.visible = false;
+  scene.add(targetRing);
+  var targetRingAnim = null; // { mode: 'in' | 'out', startTime }
+
+  function showTargetRing(x, z) {
+    targetRing.position.x = x;
+    targetRing.position.z = z;
+    targetRing.visible = true;
+    targetRingAnim = { mode: 'in', startTime: performance.now() };
   }
-  function joyMove(cx, cy) {
-    if (!joyActive) return;
-    var dx = cx - joyOrigin.x, dy = cy - joyOrigin.y;
-    var dist = Math.min(Math.sqrt(dx * dx + dy * dy), MAX_JOY_DIST);
-    var angle = Math.atan2(dy, dx);
-    var sx = Math.cos(angle) * dist, sy = Math.sin(angle) * dist;
-    joystickStick.style.left = (28 + sx) + 'px';
-    joystickStick.style.top = (28 + sy) + 'px';
-    joyVector.x = sx / MAX_JOY_DIST; joyVector.y = sy / MAX_JOY_DIST;
+  function fadeOutTargetRing() {
+    if (targetRing.visible && (!targetRingAnim || targetRingAnim.mode !== 'out')) {
+      targetRingAnim = { mode: 'out', startTime: performance.now() };
+    }
   }
-  function joyEnd() {
-    joyActive = false; joystickBase.style.display = 'none';
-    joystickStick.style.left = '28px'; joystickStick.style.top = '28px';
-    joyVector.x = 0; joyVector.y = 0;
+  function updateTargetRing() {
+    if (!targetRingAnim) return;
+    var elapsed = performance.now() - targetRingAnim.startTime;
+    if (targetRingAnim.mode === 'in') {
+      var t = Math.min(elapsed / 220, 1);
+      targetRing.material.opacity = 0.85 * t;
+      var s = 1.5 - 0.5 * t; // shrinks from wide to snug — reads as "locking on"
+      targetRing.scale.set(s, s, 1);
+      if (t >= 1) targetRingAnim = null;
+    } else {
+      var t2 = Math.min(elapsed / 260, 1);
+      targetRing.material.opacity = 0.85 * (1 - t2);
+      if (t2 >= 1) { targetRing.visible = false; targetRingAnim = null; }
+    }
   }
-  joystickZone.addEventListener('touchstart', function (e) { var t = e.changedTouches[0]; joyStart(t.clientX, t.clientY); }, { passive: true });
-  joystickZone.addEventListener('touchmove', function (e) { var t = e.changedTouches[0]; joyMove(t.clientX, t.clientY); }, { passive: true });
-  joystickZone.addEventListener('touchend', joyEnd, { passive: true });
-  joystickZone.addEventListener('touchcancel', joyEnd, { passive: true });
+
+  // isDrag: touchmove retarget while the finger is held down — updates the
+  // destination (and slides the ring along) without replaying the ring's
+  // lock-on animation every frame.
+  function setMoveTargetFromClient(clientX, clientY, isDrag) {
+    if (panelOpen) return; // controls off while the mission sheet is up
+    var rect = renderer.domElement.getBoundingClientRect();
+    var ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
+    var ndcY = -((clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera({ x: ndcX, y: ndcY }, camera);
+    var hit = raycaster.intersectObject(ground, true)[0];
+    if (!hit) return;
+    resumeAudio(); // a tap is a real user gesture too
+    // Clamp the target into the actually-walkable corridor (same clamp
+    // updateMovement applies to Leo himself) — otherwise a tap on the trees
+    // or past a fog wall would leave Leo marching against the boundary
+    // forever, never getting within MOVE_ARRIVE_DIST.
+    var farLimit = null;
+    for (var fwi = 0; fwi < fogWalls.length; fwi++) {
+      if (!fogWalls[fwi].dissolved) { farLimit = fogWalls[fwi].baseZ + 1.5; break; }
+    }
+    if (farLimit === null) farLimit = zoneCenterZ(gateConfig.length - 1) - 6;
+    var tz = THREE.MathUtils.clamp(hit.point.z, farLimit, START_BOUNDARY_Z);
+    var tCenter = pathCenterX(tz);
+    var tHalf = corridorHalfWidthAt(tz);
+    moveTarget.x = THREE.MathUtils.clamp(hit.point.x, tCenter - tHalf, tCenter + tHalf);
+    moveTarget.z = tz;
+    moveTargetActive = true;
+    if (isDrag) {
+      targetRing.position.x = moveTarget.x;
+      targetRing.position.z = moveTarget.z;
+    } else {
+      showTargetRing(moveTarget.x, moveTarget.z);
+    }
+  }
+  // Touch-follow steering: touchstart picks the destination, and holding the
+  // finger down keeps re-picking it every touchmove — so dragging steers Leo
+  // continuously (the "follow my finger" scheme every mobile ARPG uses)
+  // while a plain tap still behaves as before. touchFollowing gates the move
+  // handler so stray touchmoves that didn't start on the canvas are ignored.
+  var touchFollowing = false;
+  renderer.domElement.addEventListener('touchstart', function (e) {
+    touchFollowing = true;
+    var t = e.changedTouches[0];
+    setMoveTargetFromClient(t.clientX, t.clientY, false);
+  }, { passive: true });
+  renderer.domElement.addEventListener('touchmove', function (e) {
+    if (!touchFollowing) return;
+    var t = e.changedTouches[0];
+    setMoveTargetFromClient(t.clientX, t.clientY, true);
+  }, { passive: true });
+  renderer.domElement.addEventListener('touchend', function () { touchFollowing = false; }, { passive: true });
+  renderer.domElement.addEventListener('touchcancel', function () { touchFollowing = false; }, { passive: true });
 
   // ---------- MOVEMENT (momentum-based; world position only — visuals owned by leo module) ----------
   var velocity = new THREE.Vector3();
   var facing = 0;
-  var maxSpeed = 6.5, accel = 22, friction = 14;
+  // maxSpeed stays at the "slow enough to notice the scenery" 4.2 from
+  // device testing; accel back up to 22 so reaching that speed feels snappy
+  // instead of mushy — top speed and stopping behavior are unchanged.
+  var maxSpeed = 4.2, accel = 22, friction = 14;
   var stepTimer = 0; // footstep sound cadence — see updateMovement()
   // Camera's own facing — separate from Leo's (see updateMovement()), starts
   // at PI to match the idle camera setup above (looking toward -Z).
@@ -859,11 +1446,35 @@ export function initHub3D(opts) {
 
   function updateMovement(delta) {
     var ix = 0, iz = 0;
-    if (keys.f) iz -= 1;
-    if (keys.b) iz += 1;
-    if (keys.l) ix -= 1;
-    if (keys.r) ix += 1;
-    if (joyVector.x !== 0 || joyVector.y !== 0) { ix = joyVector.x; iz = joyVector.y; }
+    if (!panelOpen) {
+      if (keys.f) iz -= 1;
+      if (keys.b) iz += 1;
+      if (keys.l) ix -= 1;
+      if (keys.r) ix += 1;
+    }
+    if (keys.f || keys.b || keys.l || keys.r) {
+      if (moveTargetActive) fadeOutTargetRing();
+      moveTargetActive = false; // WASD takes over from an in-progress tap-to-move walk
+    }
+
+    // Tap-to-move steering: world-space direction straight toward the tapped
+    // ground point (not camera-relative — there's no "stick angle" to
+    // reinterpret here, just a destination). Only kicks in when WASD isn't
+    // already driving ix/iz above.
+    var tapSlowFactor = 1;
+    if (ix === 0 && iz === 0 && moveTargetActive) {
+      var dxT = moveTarget.x - leo.group.position.x;
+      var dzT = moveTarget.z - leo.group.position.z;
+      var distT = Math.sqrt(dxT * dxT + dzT * dzT);
+      if (distT < MOVE_ARRIVE_DIST) {
+        moveTargetActive = false;
+        fadeOutTargetRing();
+      } else {
+        ix = dxT / distT;
+        iz = dzT / distT;
+        tapSlowFactor = Math.min(1, distT / MOVE_SLOW_RADIUS);
+      }
+    }
 
     var len = Math.sqrt(ix * ix + iz * iz);
     var moving = len > 0.05;
@@ -874,9 +1485,10 @@ export function initHub3D(opts) {
       velocity.x += ix * accel * delta;
       velocity.z += iz * accel * delta;
       var speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-      if (speed > maxSpeed) {
-        velocity.x = (velocity.x / speed) * maxSpeed;
-        velocity.z = (velocity.z / speed) * maxSpeed;
+      var speedCap = maxSpeed * tapSlowFactor; // eases toward 0 as Leo nears a tap target; always 1 for WASD
+      if (speed > speedCap) {
+        velocity.x = (velocity.x / speed) * speedCap;
+        velocity.z = (velocity.z / speed) * speedCap;
       }
       targetFacing = Math.atan2(ix, iz);
     } else {
@@ -955,66 +1567,248 @@ export function initHub3D(opts) {
     camera.lookAt(lookAtX, CAM_LOOKAHEAD_HEIGHT, lookAtZ);
   }
 
-  // ---------- ENTRANCE ANIMATION + WOODEN PANEL SHELL (scoped to hub3d only) ----------
-  // The real mission panel (#backdrop/#sheet) is SHARED with the Missions tab. We
-  // touch neither that shared CSS nor openMission()/the panel's inner content; we
-  // only inject a one-off <style> that applies exclusively while body has
-  // "hub3dEntrance" (added in resume()/before openMission, removed in pause()).
-  // Since this whole block lives inside initHub3D() — which only loads when the
-  // hub3d flag is on — the normal app never even sees these rules.
-  //
-  // The shell = a warm wooden frame (grain + plank seams + corner studs via
-  // layered CSS gradients, no image asset) drawn purely as the panel's
-  // background/border, plus a springy ease-out-back open. Wood tone is
-  // theme-aware so the panel's existing (untouched) text colour stays readable:
-  // dark walnut behind the dark theme's light text, honey pine behind light
-  // theme's dark text. Corner studs use the default background-attachment
-  // (scroll = pinned to the border box), so they stay put while content scrolls.
-  if (!document.getElementById('hub3dEntranceStyle')) {
-    var entranceStyle = document.createElement('style');
-    entranceStyle.id = 'hub3dEntranceStyle';
-    entranceStyle.textContent = [
-      '@keyframes hub3dBackdropIn{from{opacity:0}to{opacity:1}}',
-      '@keyframes hub3dSheetIn{from{transform:translateY(48px) scale(.96);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}',
+  // ---------- HUB MISSION PANEL (hub-native bottom sheet) ----------
+  // Replaces the shared #backdrop/#sheet flow entirely FOR THE HUB: the app's
+  // own mission panel + its Next/smart-pick logic are never invoked from here
+  // anymore (that logic deliberately hops across packs for variety, which is
+  // exactly wrong inside a themed zone). This panel renders the SAME mission
+  // data (missions/done/MISSION_ICONS — nothing re-authored) in a cozy
+  // storybook bottom sheet, themed per zone, and its navigation is locked to
+  // the current pack. Done/undo route through the real app flow via
+  // opts.markMissionDone / opts.undoMissionDone, so badges/streak/persist all
+  // behave exactly as if the tap happened in the Missions tab.
+  var markMissionDoneFn = opts.markMissionDone;
+  var undoMissionDoneFn = opts.undoMissionDone;
 
-      // dark theme (default) → rich walnut, complements the light panel text
-      'body.hub3dEntrance{',
-      '--hub3d-wood-1:#5b3f29;--hub3d-wood-2:#3f2817;--hub3d-wood-edge:#2c1c10;',
-      '--hub3d-wood-seam:rgba(0,0,0,.28);--hub3d-wood-grain:rgba(255,255,255,.05);',
-      '--hub3d-stud:#caa85a;--hub3d-stud-rim:rgba(0,0,0,.5);',
-      '--hub3d-backdrop:rgba(46,30,16,.42);',
-      '}',
-      // light theme → honey pine, keeps the light theme's dark panel text readable
-      'html.theme--light body.hub3dEntrance{',
-      '--hub3d-wood-1:#ecd6ab;--hub3d-wood-2:#d8b67e;--hub3d-wood-edge:#b18a52;',
-      '--hub3d-wood-seam:rgba(120,80,40,.22);--hub3d-wood-grain:rgba(120,80,40,.06);',
-      '--hub3d-stud:#9a743c;--hub3d-stud-rim:rgba(255,255,255,.55);',
-      '--hub3d-backdrop:rgba(120,86,46,.34);',
-      '}',
+  // Per-zone panel palette (spec'd): bg gradient + accent + readable text.
+  var PANEL_THEMES = {
+    energy: { bg1: '#3b3066', bg2: '#282250', accent: '#FFD23F', text: '#FFF4DC', boxBg: 'rgba(255,255,255,0.10)', onAccent: '#3a2a00' },
+    target: { bg1: '#3f7fc4', bg2: '#2c5f9e', accent: '#FF5A5A', text: '#FFFFFF', boxBg: 'rgba(255,255,255,0.14)', onAccent: '#FFFFFF' },
+    zen: { bg1: '#f7ecd9', bg2: '#efdfc2', accent: '#4a8c5f', text: '#3a2a1a', boxBg: 'rgba(74,124,106,0.12)', onAccent: '#FFFFFF' },
+    play: { bg1: '#ef8b33', bg2: '#d96f1e', accent: '#FFD23F', text: '#FFFFFF', boxBg: 'rgba(255,255,255,0.16)', onAccent: '#4a3000' },
+    home: { bg1: '#f5c07a', bg2: '#e29b52', accent: '#6F4E2C', text: '#3a2a1a', boxBg: 'rgba(255,255,255,0.28)', onAccent: '#FFF4DC' },
+    beach: { bg1: '#59bfd6', bg2: '#3da4bd', accent: '#F0DCA0', text: '#FFFFFF', boxBg: 'rgba(255,255,255,0.16)', onAccent: '#4a3a10' }
+  };
 
-      // warm dim instead of the shared blue backdrop
-      'body.hub3dEntrance #backdrop.show{',
-      'background:var(--hub3d-backdrop)!important;',
-      'animation:hub3dBackdropIn 260ms ease;',
-      '}',
-
-      // the wooden panel itself
-      'body.hub3dEntrance #backdrop.show #sheet{',
+  if (!document.getElementById('hub3dPanelStyle')) {
+    var panelStyle = document.createElement('style');
+    panelStyle.id = 'hub3dPanelStyle';
+    panelStyle.textContent = [
+      // Sheet shell: wooden frame (same layered-gradient technique as the old
+      // shared-sheet skin) wrapping a theme-coloured scrollable inner column.
+      '.hub3dSheet{position:absolute;left:0;right:0;bottom:0;max-height:64%;z-index:20;',
+      'transform:translateY(108%);transition:transform 460ms cubic-bezier(.34,1.56,.64,1);',
+      'border-radius:24px 24px 0 0;padding:9px 9px 0;box-sizing:border-box;',
       'background:',
-      'radial-gradient(circle at 17px 17px,var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
-      'radial-gradient(circle at calc(100% - 17px) 17px,var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
-      'radial-gradient(circle at 17px calc(100% - 17px),var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
-      'radial-gradient(circle at calc(100% - 17px) calc(100% - 17px),var(--hub3d-stud) 0 3.5px,var(--hub3d-stud-rim) 3.5px 4.5px,transparent 5px),',
-      'repeating-linear-gradient(90deg,transparent 0 5px,var(--hub3d-wood-grain) 5px 6px),',
-      'repeating-linear-gradient(180deg,transparent 0 64px,var(--hub3d-wood-seam) 64px 66px),',
-      'linear-gradient(168deg,var(--hub3d-wood-1),var(--hub3d-wood-2))!important;',
-      'border:5px solid var(--hub3d-wood-edge)!important;border-bottom:none!important;',
-      'box-shadow:0 -14px 30px rgba(0,0,0,.30),inset 0 2px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(0,0,0,.18)!important;',
-      'animation:hub3dSheetIn 440ms cubic-bezier(.34,1.56,.64,1);',
-      '}'
+      'repeating-linear-gradient(90deg,transparent 0 5px,rgba(255,255,255,.05) 5px 6px),',
+      'repeating-linear-gradient(180deg,transparent 0 64px,rgba(0,0,0,.28) 64px 66px),',
+      'linear-gradient(168deg,#5b3f29,#3f2817);',
+      'box-shadow:0 -14px 30px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.12);',
+      'display:flex;flex-direction:column;',
+      'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}',
+      '.hub3dSheet.open{transform:translateY(0);}',
+      '.hub3dSheetInner{background:linear-gradient(175deg,var(--hp-bg1),var(--hp-bg2));color:var(--hp-text);',
+      'border-radius:17px 17px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 16px 24px;flex:1;min-height:0;}',
+      '.hub3dSheetTopRow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}',
+      '.hub3dSheetBtnRound{width:38px;height:38px;border-radius:50%;border:none;font-size:17px;cursor:pointer;',
+      'background:var(--hp-box);color:var(--hp-text);display:flex;align-items:center;justify-content:center;padding:0;}',
+      '.hub3dBadgeChip{display:flex;align-items:center;gap:8px;margin-bottom:6px;}',
+      '.hub3dBadgeChip .chip{background:var(--hp-accent);color:var(--hp-on-accent);font-weight:900;font-size:13px;',
+      'padding:5px 12px;border-radius:12px;letter-spacing:.3px;}',
+      '.hub3dMissionTitle{font-size:22px;line-height:1.2;font-weight:900;margin:2px 0 8px;',
+      'animation:hub3dTitlePop 480ms cubic-bezier(.34,1.56,.64,1);}',
+      '@keyframes hub3dTitlePop{0%{opacity:0;transform:translateY(10px) scale(.94)}100%{opacity:1;transform:none}}',
+      '.hub3dMetaRow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
+      '.hub3dMetaRow span{background:var(--hp-box);border-radius:10px;padding:4px 10px;font-size:12px;font-weight:700;}',
+      '.hub3dIconWrap{background:var(--hp-box);border-radius:14px;padding:8px;margin-bottom:10px;display:flex;justify-content:center;}',
+      '.hub3dIconWrap:empty{display:none;}',
+      '.hub3dSection{background:var(--hp-box);border-radius:14px;padding:12px 14px;margin-bottom:10px;}',
+      '.hub3dSectionHead{font-size:13px;font-weight:900;letter-spacing:.5px;margin-bottom:8px;opacity:.95;}',
+      '.hub3dSteps{margin:0;padding:0;list-style:none;}',
+      '.hub3dSteps li{display:flex;gap:9px;align-items:flex-start;font-size:15px;font-weight:600;line-height:1.35;margin-bottom:8px;}',
+      '.hub3dSteps li:last-child{margin-bottom:0;}',
+      '.hub3dStepNum{flex:none;width:22px;height:22px;border-radius:50%;background:var(--hp-accent);color:var(--hp-on-accent);',
+      'font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:1px;}',
+      '.hub3dWinText{font-size:15px;font-weight:700;line-height:1.35;}',
+      '.hub3dStartBtn{display:block;width:100%;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);',
+      'color:#fff;font-size:19px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #27793a;',
+      'margin:2px 0 10px;animation:hub3dStartBounce 1.6s ease-in-out infinite;font-family:inherit;}',
+      '@keyframes hub3dStartBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}',
+      '.hub3dStartBtn.running{animation:none;background:linear-gradient(180deg,#3f92c4,#2d6f9e);box-shadow:0 4px 0 #1d4a6e;}',
+      '.hub3dDoneBtn{display:block;width:100%;border:2px solid var(--hp-accent);border-radius:14px;background:transparent;',
+      'color:var(--hp-text);font-size:15px;font-weight:800;padding:11px 0;cursor:pointer;margin-bottom:12px;font-family:inherit;}',
+      '.hub3dDoneBtn.isDone{background:var(--hp-accent);color:var(--hp-on-accent);}',
+      '.hub3dZoneDoneBtn{display:block;width:100%;border:none;border-radius:16px;background:linear-gradient(180deg,#FFD23F,#E8A23A);',
+      'color:#4a3000;font-size:18px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #b07716;margin:2px 0 12px;font-family:inherit;}',
+      '.hub3dNavRow{display:flex;gap:8px;margin-bottom:10px;}',
+      '.hub3dNavRow button{flex:1;border:none;border-radius:12px;background:var(--hp-box);color:var(--hp-text);',
+      'font-size:14px;font-weight:800;padding:10px 0;cursor:pointer;font-family:inherit;}',
+      '.hub3dNavRow button:disabled{opacity:.35;cursor:default;}',
+      '.hub3dProgressRow{text-align:center;font-size:13px;font-weight:800;opacity:.95;}',
+      '.hub3dProgressDots{letter-spacing:3px;font-size:15px;margin-top:2px;}',
+      // Mission motion-diagram markup (from jumvi-mission-icons.js) is styled
+      // for the app's .jmv token wrapper — keep it readable on themed bgs.
+      '.hub3dIconWrap .jmv{max-width:100%;}'
     ].join('');
-    document.head.appendChild(entranceStyle);
+    document.head.appendChild(panelStyle);
   }
+
+  var hubSheet = document.createElement('div');
+  hubSheet.className = 'hub3dSheet';
+  var hubSheetInner = document.createElement('div');
+  hubSheetInner.className = 'hub3dSheetInner';
+  hubSheet.appendChild(hubSheetInner);
+  container.appendChild(hubSheet);
+
+  var panelOpen = false;
+  var panelPackKey = null;
+  var panelMissionId = null;
+  var panelTimerId = null;
+
+  function stopPanelTimer() {
+    if (panelTimerId != null) { clearInterval(panelTimerId); panelTimerId = null; }
+  }
+
+  function closeHubPanel() {
+    panelOpen = false;
+    stopPanelTimer();
+    hubSheet.classList.remove('open');
+  }
+
+  function escapeText(s) {
+    var d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  // Renders one mission into the sheet. Everything shown is the REAL mission
+  // record (title/steps/win/meta/icon) — only the presentation is new.
+  function renderHubMission(ms) {
+    stopPanelTimer();
+    var cfg = gateConfig.filter(function (c) { return c.packKey === ms.pack; })[0];
+    var theme = themeForZone(cfg ? cfg.zoneIndex : 0);
+    var pt = PANEL_THEMES[theme.key] || PANEL_THEMES.zen;
+    hubSheetInner.style.setProperty('--hp-bg1', pt.bg1);
+    hubSheetInner.style.setProperty('--hp-bg2', pt.bg2);
+    hubSheetInner.style.setProperty('--hp-accent', pt.accent);
+    hubSheetInner.style.setProperty('--hp-text', pt.text);
+    hubSheetInner.style.setProperty('--hp-box', pt.boxBg);
+    hubSheetInner.style.setProperty('--hp-on-accent', pt.onAccent);
+
+    var list = packMissionList(ms.pack);
+    var idx = list.findIndex(function (m) { return m.id === ms.id; });
+    var doneInPack = list.filter(function (m) { return done.has(m.id); }).length;
+    var packDone = doneInPack === list.length && list.length > 0;
+    var isDone = done.has(ms.id);
+    var steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ['Steps are coming soon.'];
+    var iconMarkup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || '';
+    var dots = list.map(function (m, i) {
+      return done.has(m.id) ? '●' : (i === idx ? '◉' : '○');
+    }).join('');
+
+    hubSheetInner.innerHTML =
+      '<div class="hub3dSheetTopRow">' +
+        '<button class="hub3dSheetBtnRound" data-act="close" aria-label="Kapat">✕</button>' +
+        '<button class="hub3dSheetBtnRound" data-act="mute" aria-label="Sesi kapat/aç">' + (audioMuted ? '🔇' : '🔊') + '</button>' +
+      '</div>' +
+      '<div class="hub3dBadgeChip"><span style="font-size:26px">' + escapeText(ms.icon) + '</span>' +
+        '<span class="chip">' + escapeText(theme.cardTitle) + '</span></div>' +
+      '<div class="hub3dMissionTitle">' + escapeText(ms.title) + '</div>' +
+      '<div class="hub3dMetaRow"><span>⏱ ' + escapeText(ms.time) + '</span><span>👥 ' + escapeText(ms.players) + '</span><span>🎂 ' + escapeText(ms.age) + '</span></div>' +
+      '<div class="hub3dIconWrap">' + iconMarkup + '</div>' +
+      '<div class="hub3dSection"><div class="hub3dSectionHead">📋 ADIMLAR</div><ul class="hub3dSteps">' +
+        steps.map(function (s, i) {
+          return '<li><span class="hub3dStepNum">' + (i + 1) + '</span><span>' + escapeText(s) + '</span></li>';
+        }).join('') +
+      '</ul></div>' +
+      '<div class="hub3dSection"><div class="hub3dSectionHead">🏆 KAZANMAK İÇİN</div>' +
+        '<div class="hub3dWinText">' + escapeText(ms.win || 'Win condition is coming soon.') + '</div></div>' +
+      (packDone
+        ? '<button class="hub3dZoneDoneBtn" data-act="zonedone">Bölge Tamamlandı! 🏆</button>'
+        : '<button class="hub3dStartBtn" data-act="start">▶ BAŞLA!</button>') +
+      '<button class="hub3dDoneBtn' + (isDone ? ' isDone' : '') + '" data-act="toggledone">' +
+        (isDone ? '✔ Tamamlandı — geri almak için dokun' : '✅ Tamamladım') + '</button>' +
+      '<div class="hub3dNavRow">' +
+        '<button data-act="prev"' + (idx <= 0 ? ' disabled' : '') + '>← Önceki</button>' +
+        '<button data-act="next"' + (idx >= list.length - 1 ? ' disabled' : '') + '>Sonraki →</button>' +
+      '</div>' +
+      '<div class="hub3dProgressRow">Görev ' + (idx + 1) + '/' + list.length +
+        '<div class="hub3dProgressDots">' + dots + '</div></div>';
+
+    hubSheetInner.scrollTop = 0;
+  }
+
+  function openHubPanel(packKey, missionId) {
+    var ms = missions.filter(function (m) { return m.id === missionId; })[0];
+    if (!ms) return;
+    panelOpen = true;
+    panelPackKey = packKey;
+    panelMissionId = missionId;
+    moveTargetActive = false; // panel takes over — stop any in-progress walk
+    fadeOutTargetRing();
+    renderHubMission(ms);
+    // double rAF so the closed transform is committed before .open animates
+    requestAnimationFrame(function () { requestAnimationFrame(function () { hubSheet.classList.add('open'); }); });
+    playChime();
+  }
+
+  // One delegated click handler for the whole sheet — survives every rerender.
+  hubSheetInner.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-act]') : null;
+    if (!btn) return;
+    var act = btn.getAttribute('data-act');
+    var list = packMissionList(panelPackKey);
+    var idx = list.findIndex(function (m) { return m.id === panelMissionId; });
+    resumeAudio();
+
+    if (act === 'close' || act === 'zonedone') {
+      closeHubPanel();
+    } else if (act === 'mute') {
+      audioMuted = !audioMuted;
+      btn.textContent = audioMuted ? '🔇' : '🔊';
+      muteBtn.textContent = audioMuted ? '🔇' : '🔊';
+    } else if (act === 'prev' && idx > 0) {
+      playTone(660, 0.08, 'sine', 0.05, 0);
+      panelMissionId = list[idx - 1].id;
+      renderHubMission(list[idx - 1]);
+    } else if (act === 'next' && idx < list.length - 1) {
+      playTone(740, 0.08, 'sine', 0.05, 0);
+      panelMissionId = list[idx + 1].id;
+      renderHubMission(list[idx + 1]);
+    } else if (act === 'toggledone') {
+      var ms = list[idx];
+      if (!ms) return;
+      if (done.has(ms.id)) {
+        if (undoMissionDoneFn) undoMissionDoneFn(ms.id);
+      } else if (markMissionDoneFn) {
+        markMissionDoneFn(ms.id, 'hub3d');
+      }
+      renderHubMission(ms); // re-render: done state, dots, zone-done button
+    } else if (act === 'start') {
+      // Simple play countdown from the mission's own time — the kid puts the
+      // phone down and plays; the chime marks time-up, then they self-report.
+      var msNow = list[idx];
+      var seconds = 60;
+      if (msNow && msNow.time && String(msNow.time).indexOf('s') !== -1) seconds = parseInt(msNow.time, 10) || 60;
+      var remaining = seconds;
+      btn.classList.add('running');
+      btn.textContent = '⏱ ' + remaining + ' sn — Oyna!';
+      stopPanelTimer();
+      panelTimerId = setInterval(function () {
+        remaining--;
+        if (remaining <= 0) {
+          stopPanelTimer();
+          btn.classList.remove('running');
+          btn.textContent = '⏰ Süre doldu — Başardın mı?';
+          playSuccess();
+        } else {
+          btn.textContent = '⏱ ' + remaining + ' sn — Oyna!';
+          if (remaining <= 3) playTone(880, 0.07, 'sine', 0.04, 0);
+        }
+      }, 1000);
+      playTone(523.25, 0.1, 'triangle', 0.06, 0);
+    }
+  });
 
   // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
   var TRIGGER_RADIUS = 1.8;
@@ -1038,6 +1832,7 @@ export function initHub3D(opts) {
   }
 
   function checkGateProximity() {
+    if (panelOpen) return; // no re-trigger while the mission sheet is up
     var nearestGate = null, nearestDist = Infinity;
     gateConfig.forEach(function (cfg) {
       var dx = leo.group.position.x - cfg.x;
@@ -1070,33 +1865,90 @@ export function initHub3D(opts) {
 
     if (elapsed >= GATE_REACT_MS) {
       pendingGate.ring.scale.setScalar(1);
-      var missionId = getNextMissionIdForPack(pendingGate.cfg.packKey);
+      var gatePackKey = pendingGate.cfg.packKey;
+      var missionId = getNextMissionIdForPack(gatePackKey);
       pendingGate = null;
       if (missionId != null) {
-        document.body.classList.add('hub3dEntrance');
-        openMission(missionId);
+        openHubPanel(gatePackKey, missionId);
       }
     }
   }
 
-  // Reveals/hides decor slots when a gate's pack crosses a completion tier.
-  // Cheap (6 gates × a tiny array filter) and guarded so meshes are only
-  // touched on an actual tier change, not every frame.
+  // ---------- LIVING WORLD: per-mission growth + instant reward ----------
+  // Center-screen "Bravo!" card for the instant reward moment — own element
+  // (not the zone card) so a zone entry and a reward can't clobber each other.
+  var rewardCardEl = document.createElement('div');
+  rewardCardEl.style.cssText = 'position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);z-index:16;pointer-events:none;background:rgba(255,255,255,0.94);padding:12px 24px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,0.22);opacity:0;font-size:15px;font-weight:800;color:#3a2a1a;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  container.appendChild(rewardCardEl);
+  function showRewardCard(text) {
+    rewardCardEl.textContent = text;
+    rewardCardEl.style.animation = 'none';
+    void rewardCardEl.offsetWidth;
+    // zone-card keyframes, stretched to 2s — same pop in/out shape
+    rewardCardEl.style.animation = 'hub3dZoneCardIn 2000ms ease-out forwards';
+  }
+
+  // Newly revealed props pop in over ~0.5s (scale overshoot + settle) instead
+  // of just appearing — the "your mission grew the world" beat.
+  var growAnims = [];
+  function startGrowAnim(obj) {
+    obj.visible = true;
+    obj.scale.setScalar(0.01);
+    growAnims.push({ obj: obj, startTime: performance.now() });
+  }
+  function updateGrowAnims() {
+    for (var i = growAnims.length - 1; i >= 0; i--) {
+      var ga = growAnims[i];
+      var t = Math.min((performance.now() - ga.startTime) / 500, 1);
+      // ease-out-back: overshoots to ~1.1 around t=0.7, settles at 1
+      var s = 1 + 2.7 * Math.pow(t - 1, 3) + 1.7 * Math.pow(t - 1, 2);
+      ga.obj.scale.setScalar(Math.max(0.01, s));
+      if (t >= 1) {
+        ga.obj.scale.setScalar(1);
+        growAnims.splice(i, 1);
+      }
+    }
+  }
+
+  // Reveals decor slots one per completed mission, straight from the real
+  // done Set every frame (cheap: 6 gates × a tiny filter) and guarded so
+  // meshes/DOM are only touched when a count actually changes. The very
+  // first pass (visibleSlots === -1) applies state silently — reward
+  // fanfare is reserved for completions that happen while the hub is live.
   function updateGateDecor() {
     gateConfig.forEach(function (cfg) {
       var group = gateMeshes[cfg.id];
-      var tier = tierForCompletion(getPackCompletion(cfg.packKey));
-      if (group.userData.decorTier === tier) return;
-      group.userData.decorTier = tier;
+      var count = visibleSlotsForPack(cfg.packKey);
+      var prev = group.userData.visibleSlots;
+      if (prev === count) return;
+      group.userData.visibleSlots = count;
+      var isInitial = prev === -1;
 
-      var visibleCount = SLOTS_VISIBLE_AT_TIER[tier];
       group.userData.decorSlots.forEach(function (slot, i) {
-        slot.visible = i < visibleCount;
+        if (i < count) {
+          if (!slot.visible && !isInitial) {
+            startGrowAnim(slot);
+          } else {
+            slot.visible = true;
+          }
+        } else {
+          slot.visible = false;
+        }
       });
 
-      var isChampion = tier === 4;
+      var isChampion = getPackCompletion(cfg.packKey) >= 1;
       group.userData.champion.visible = isChampion;
+      group.userData.championProp.visible = isChampion;
       group.userData.ring.userData.champion = isChampion;
+
+      if (!isInitial && count > prev) {
+        var theme = themeForZone(cfg.zoneIndex);
+        var newest = group.userData.decorSlots[Math.min(count, group.userData.decorSlots.length) - 1];
+        var itemName = isChampion ? theme.championName : (newest && newest.userData.rewardName) || 'sürpriz';
+        showRewardCard('Bravo! ' + theme.cardTitle + ' yeni bir ' + itemName + ' kazandı 🎉');
+        playChime();
+        leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
+      }
     });
   }
 
@@ -1126,8 +1978,9 @@ export function initHub3D(opts) {
       // Reward trees just inside the newly opened entrance — same idea as
       // growForest()'s reward trees in the mini-example prototype.
       var rewardZ = fw.baseZ - 3;
-      scene.add(makeTree(fw.baseX - corridorHalfWidthAt(rewardZ) - 0.5, rewardZ, 1.0));
-      scene.add(makeTree(fw.baseX + corridorHalfWidthAt(rewardZ) + 0.5, rewardZ - 2, 0.95));
+      var rewardZ2 = rewardZ - 2;
+      scene.add(makeTree(pathCenterX(rewardZ) - corridorHalfWidthAt(rewardZ) - 0.9, rewardZ, 1.0));
+      scene.add(makeTree(pathCenterX(rewardZ2) + corridorHalfWidthAt(rewardZ2) + 0.9, rewardZ2, 0.95));
 
       celebratingRing = { ring: gateMeshes[fw.zoneIndex + 1].userData.ring, startTime: performance.now() };
 
@@ -1209,6 +2062,9 @@ export function initHub3D(opts) {
     updateCelebration();
     updateLeoCelebration();
     updateProgressLabel();
+    updateZoneTheme(delta);
+    updateTargetRing();
+    updateGrowAnims();
     elapsedTime += delta;
 
     updateRiver(elapsedTime);
@@ -1239,6 +2095,10 @@ export function initHub3D(opts) {
       if (meshGroup.userData.champion.visible) {
         meshGroup.userData.champion.rotation.y += delta * 0.5;
       }
+      if (meshGroup.userData.championProp.visible) {
+        meshGroup.userData.championProp.rotation.y += delta * 0.9;
+        meshGroup.userData.championProp.position.y = 2.9 + Math.sin(elapsedTime * 1.4 + ring.userData.phase) * 0.12;
+      }
     });
 
     renderer.render(scene, camera);
@@ -1265,14 +2125,13 @@ export function initHub3D(opts) {
   function resume() {
     if (running) return;
     running = true;
-    document.body.classList.add('hub3dEntrance');
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     animate();
   }
   function pause() {
     if (!running) return;
     running = false;
-    document.body.classList.remove('hub3dEntrance');
+    closeHubPanel(); // leaving the tab also dismisses the mission sheet
     if (rafId != null) cancelAnimationFrame(rafId);
     rafId = null;
   }

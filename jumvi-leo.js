@@ -329,6 +329,12 @@ export function createCoachLeo(THREE, options) {
   var facing = 0;
   var walkPhase = 0;
   var walkSpeedAnim = 0;
+  // Idle breathing — a slow ±1.5% vertical swell (with a tiny inverse on
+  // width, like a real inhale) so Leo never reads as a frozen statue while
+  // standing. Scratch vectors are reused every frame; no per-frame allocs.
+  var idlePhase = Math.random() * Math.PI * 2;
+  var _breathBody = new THREE.Vector3();
+  var _breathModel = new THREE.Vector3();
 
   // moveState: { moving: bool, speed: number, maxSpeed: number, targetFacing: number }
   function update(delta, moveState) {
@@ -367,8 +373,13 @@ export function createCoachLeo(THREE, options) {
       group.rotation.z = THREE.MathUtils.lerp(group.rotation.z, 0, Math.min(delta * 6, 1));
       walkSpeedAnim = THREE.MathUtils.lerp(walkSpeedAnim, 0, Math.min(delta * 4, 1));
       group.position.y = THREE.MathUtils.lerp(group.position.y, 0, Math.min(delta * 10, 1));
-      bodyMesh.scale.lerp(bodyScaleBase, Math.min(delta * 8, 1));
-      modelGroup.scale.lerp(_unitScale, Math.min(delta * 8, 1));
+      idlePhase += delta;
+      var inhale = Math.sin(idlePhase * 2.1);
+      var breathY = 1 + inhale * 0.015, breathXZ = 1 - inhale * 0.008;
+      _breathBody.set(bodyScaleBase.x * breathXZ, bodyScaleBase.y * breathY, bodyScaleBase.z * breathXZ);
+      _breathModel.set(breathXZ, breathY, breathXZ);
+      bodyMesh.scale.lerp(_breathBody, Math.min(delta * 8, 1));
+      modelGroup.scale.lerp(_breathModel, Math.min(delta * 8, 1));
       legPivotL.rotation.x = THREE.MathUtils.lerp(legPivotL.rotation.x, 0, Math.min(delta * 8, 1));
       legPivotR.rotation.x = THREE.MathUtils.lerp(legPivotR.rotation.x, 0, Math.min(delta * 8, 1));
       armPivotL.rotation.x = THREE.MathUtils.lerp(armPivotL.rotation.x, 0, Math.min(delta * 8, 1));

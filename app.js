@@ -2968,7 +2968,9 @@ function markMissionDone(id, source="manual"){
       }
     }
   }
-  openMission(id);
+  // Hub3d kendi panelini kendisi tazeler — app sheet'ini onun üstüne açma.
+  // Normal (Missions sekmesi) akışında davranış aynen eskisi gibi.
+  if(source !== "hub3d") openMission(id);
 }
 
 function renderSeasonalList(type){
@@ -3856,9 +3858,23 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-40-fixes");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-58");
     const container = document.getElementById("hub3dOverlay");
-    _hub3dInstance = mod.initHub3D({ PACKS, missions, done, openMission, container });
+    _hub3dInstance = mod.initHub3D({
+      PACKS, missions, done, openMission, container,
+      // Hub'ın kendi mission paneli gerçek done akışını kullanır — ayrı state
+      // icat etmez. markMissionDone tüm yan etkileriyle (badge, streak,
+      // persist, konfeti) aynen çalışır; undo da btnToggleDone'daki gerçek
+      // geri alma dizisinin birebir aynısıdır.
+      markMissionDone,
+      undoMissionDone(id){
+        if(!done.has(id)) return;
+        done.delete(id);
+        bumpDoneVersion();
+        persist();
+        renderList();
+      }
+    });
   })();
   return _hub3dLoadPromise;
 }
