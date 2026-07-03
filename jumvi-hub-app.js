@@ -41,7 +41,7 @@ export function initHub3D(opts) {
   celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,0.94);padding:18px 30px;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   var celebrationTitleEl = document.createElement('div');
   celebrationTitleEl.style.cssText = 'font-size:20px;font-weight:900;color:#3a2a1a;white-space:nowrap;';
-  celebrationTitleEl.textContent = 'Bölge Tamamlandı! 🎉';
+  celebrationTitleEl.textContent = 'Zone Complete! 🎉';
   var celebrationSubtitleEl = document.createElement('div');
   celebrationSubtitleEl.style.cssText = 'font-size:15px;font-weight:700;color:#7a5a3a;white-space:nowrap;';
   celebrationCardEl.appendChild(celebrationTitleEl);
@@ -99,9 +99,30 @@ export function initHub3D(opts) {
   }
 
   var hintEl = document.createElement('div');
-  hintEl.textContent = 'Ekrana dokun ve yürü (masaüstünde WASD) — gate’e yaklaş, mission paneli açılır';
+  hintEl.textContent = 'Tap the ground to walk — reach a glowing gate to get a mission!';
   hintEl.style.cssText = 'position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.85);padding:7px 13px;border-radius:11px;font-size:11px;color:#555;z-index:10;max-width:220px;text-align:right;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(hintEl);
+
+  // First-tap coach bubble — the small hint above is parent-facing; a 3-year-
+  // old pre-reader needs the 👆 itself. Bounces center-screen until the very
+  // first touch/keypress, then fades for the rest of the session.
+  var coachBubbleEl = document.createElement('div');
+  coachBubbleEl.textContent = '👆 Tap to walk!';
+  coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#3a2a1a;z-index:12;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,0.25);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
+  container.appendChild(coachBubbleEl);
+  if (!document.getElementById('hub3dCoachStyle')) {
+    var coachStyle = document.createElement('style');
+    coachStyle.id = 'hub3dCoachStyle';
+    coachStyle.textContent = '@keyframes hub3dCoachBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-9px)}}';
+    document.head.appendChild(coachStyle);
+  }
+  var coachBubbleDismissed = false;
+  function dismissCoachBubble() {
+    if (coachBubbleDismissed) return;
+    coachBubbleDismissed = true;
+    coachBubbleEl.style.opacity = '0';
+    setTimeout(function () { coachBubbleEl.remove(); }, 450);
+  }
 
   // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
   // Every sound below is one or two oscillator+gain nodes with a short
@@ -179,7 +200,7 @@ export function initHub3D(opts) {
   // pointer-events:none column).
   var muteBtn = document.createElement('button');
   muteBtn.type = 'button';
-  muteBtn.setAttribute('aria-label', 'Sesi kapat/aç');
+  muteBtn.setAttribute('aria-label', 'Sound on/off');
   muteBtn.style.cssText = 'position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
   muteBtn.textContent = '🔊';
   muteBtn.addEventListener('click', function () {
@@ -306,12 +327,12 @@ export function initHub3D(opts) {
   // corridor edges (function declarations below — hoisted, so forward
   // references from this table are safe).
   var ZONE_THEMES = [
-    { key: 'energy', cardTitle: '⚡ Enerji Bölgesi', sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'elektrik direği' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeLightningBolt, name: 'şimşek' }]; }, championName: 'enerji topu' },
-    { key: 'target', cardTitle: '🎯 Hedef Sahası', sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'hedef tahtası' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }]; }, championName: 'altın hedef' },
-    { key: 'zen', cardTitle: '🍃 Zen Bahçesi', sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }, { make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }]; }, championName: 'altın fener' },
-    { key: 'play', cardTitle: '👥 Oyun Alanı', sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makeSlide, name: 'kaydırak' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makePlayFlag, name: 'bayrak' }]; }, championName: 'şampiyon bayrağı' },
-    { key: 'home', cardTitle: '🏠 Ev Bahçesi', sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'çit' }, { make: makeFlowerBed, name: 'çiçek tarhı' }, { make: makeGardenSwing, name: 'salıncak' }, { make: makeFencePanel, name: 'çit' }, { make: makeMailbox, name: 'posta kutusu' }, { make: makeFlowerBed, name: 'çiçek tarhı' }]; }, championName: 'çiçek tacı' },
-    { key: 'beach', cardTitle: '🏖️ Plaj', sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palmiye' }, { make: makeBeachUmbrella, name: 'güneş şemsiyesi' }, { make: makeSandcastle, name: 'kumdan kale' }, { make: makeSeashell, name: 'deniz kabuğu' }, { make: makePalmTree, name: 'palmiye' }, { make: makeSeashell, name: 'deniz kabuğu' }]; }, championName: 'altın güneş' }
+    { key: 'energy', cardTitle: '⚡ Energy Zone', sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'power pole' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeLightningBolt, name: 'lightning bolt' }]; }, championName: 'energy orb' },
+    { key: 'target', cardTitle: '🎯 Target Range', sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'target board' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }]; }, championName: 'golden target' },
+    { key: 'zen', cardTitle: '🍃 Zen Garden', sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }, { make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }]; }, championName: 'golden lantern' },
+    { key: 'play', cardTitle: '👥 Playground', sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makeSlide, name: 'slide' }, { make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makePlayFlag, name: 'flag' }]; }, championName: 'champion flag' },
+    { key: 'home', cardTitle: '🏠 Backyard', sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'fence' }, { make: makeFlowerBed, name: 'flower bed' }, { make: makeGardenSwing, name: 'swing' }, { make: makeFencePanel, name: 'fence' }, { make: makeMailbox, name: 'mailbox' }, { make: makeFlowerBed, name: 'flower bed' }]; }, championName: 'flower crown' },
+    { key: 'beach', cardTitle: '🏖️ Beach', sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palm tree' }, { make: makeBeachUmbrella, name: 'beach umbrella' }, { make: makeSandcastle, name: 'sandcastle' }, { make: makeSeashell, name: 'seashell' }, { make: makePalmTree, name: 'palm tree' }, { make: makeSeashell, name: 'seashell' }]; }, championName: 'golden sun' }
   ];
   function themeForZone(i) {
     return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
@@ -1075,8 +1096,8 @@ export function initHub3D(opts) {
     if (cacheKey === lastProgressCacheKey) return;
     lastProgressCacheKey = cacheKey;
     progressLabelEl.textContent = remaining > 0
-      ? (cfg.icon + ' ' + cfg.name + ' — ' + remaining + ' görev kaldı')
-      : (cfg.icon + ' ' + cfg.name + ' tamamlandı! 🏆');
+      ? (cfg.icon + ' ' + cfg.name + ' — ' + remaining + (remaining === 1 ? ' mission to go!' : ' missions to go!'))
+      : (cfg.icon + ' ' + cfg.name + ' complete! 🏆');
   }
 
   // ---------- ZONE THEME TRANSITIONS ----------
@@ -1306,6 +1327,7 @@ export function initHub3D(opts) {
   var keys = { f: false, b: false, l: false, r: false };
   function onKeyDown(e) {
     resumeAudio(); // first real keypress is as good a "user gesture" as any
+    dismissCoachBubble();
     if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
     if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
     if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
@@ -1421,6 +1443,7 @@ export function initHub3D(opts) {
   var touchFollowing = false;
   renderer.domElement.addEventListener('touchstart', function (e) {
     touchFollowing = true;
+    dismissCoachBubble();
     var t = e.changedTouches[0];
     setMoveTargetFromClient(t.clientX, t.clientY, false);
   }, { passive: true });
@@ -1548,11 +1571,20 @@ export function initHub3D(opts) {
     // of the turn-smoothing already applied to `facing` itself inside
     // leo.update() — two layers of smoothing is what keeps the camera from
     // snapping or jittering when Leo changes direction quickly.
+    //
+    // Only chased WHILE MOVING: Leo's rig facing starts at 0 (looking back
+    // at the camera — a nice idle pose) and never updates until he walks,
+    // so an idle chase would slowly spin the opening camera 180° away from
+    // the forest toward the empty spawn area, and the kid's first "up" tap
+    // would then walk Leo toward the screen. Standing still now simply
+    // leaves the camera where it was.
     var camLagFactor = moving ? CAM_LAG_MOVING : CAM_LAG_IDLE;
-    var facingDiff = facing - cameraFacing;
-    while (facingDiff > Math.PI) facingDiff -= Math.PI * 2;
-    while (facingDiff < -Math.PI) facingDiff += Math.PI * 2;
-    cameraFacing += facingDiff * Math.min(delta * camLagFactor, 1);
+    if (moving) {
+      var facingDiff = facing - cameraFacing;
+      while (facingDiff > Math.PI) facingDiff -= Math.PI * 2;
+      while (facingDiff < -Math.PI) facingDiff += Math.PI * 2;
+      cameraFacing += facingDiff * Math.min(delta * camLagFactor, 1);
+    }
 
     var forwardX = Math.sin(cameraFacing), forwardZ = Math.cos(cameraFacing);
     var targetCamX = leo.group.position.x - forwardX * CAM_DISTANCE_BACK;
@@ -1708,31 +1740,31 @@ export function initHub3D(opts) {
 
     hubSheetInner.innerHTML =
       '<div class="hub3dSheetTopRow">' +
-        '<button class="hub3dSheetBtnRound" data-act="close" aria-label="Kapat">✕</button>' +
-        '<button class="hub3dSheetBtnRound" data-act="mute" aria-label="Sesi kapat/aç">' + (audioMuted ? '🔇' : '🔊') + '</button>' +
+        '<button class="hub3dSheetBtnRound" data-act="close" aria-label="Close">✕</button>' +
+        '<button class="hub3dSheetBtnRound" data-act="mute" aria-label="Sound on/off">' + (audioMuted ? '🔇' : '🔊') + '</button>' +
       '</div>' +
       '<div class="hub3dBadgeChip"><span style="font-size:26px">' + escapeText(ms.icon) + '</span>' +
         '<span class="chip">' + escapeText(theme.cardTitle) + '</span></div>' +
       '<div class="hub3dMissionTitle">' + escapeText(ms.title) + '</div>' +
       '<div class="hub3dMetaRow"><span>⏱ ' + escapeText(ms.time) + '</span><span>👥 ' + escapeText(ms.players) + '</span><span>🎂 ' + escapeText(ms.age) + '</span></div>' +
       '<div class="hub3dIconWrap">' + iconMarkup + '</div>' +
-      '<div class="hub3dSection"><div class="hub3dSectionHead">📋 ADIMLAR</div><ul class="hub3dSteps">' +
+      '<div class="hub3dSection"><div class="hub3dSectionHead">📋 STEPS</div><ul class="hub3dSteps">' +
         steps.map(function (s, i) {
           return '<li><span class="hub3dStepNum">' + (i + 1) + '</span><span>' + escapeText(s) + '</span></li>';
         }).join('') +
       '</ul></div>' +
-      '<div class="hub3dSection"><div class="hub3dSectionHead">🏆 KAZANMAK İÇİN</div>' +
+      '<div class="hub3dSection"><div class="hub3dSectionHead">🏆 HOW TO WIN</div>' +
         '<div class="hub3dWinText">' + escapeText(ms.win || 'Win condition is coming soon.') + '</div></div>' +
       (packDone
-        ? '<button class="hub3dZoneDoneBtn" data-act="zonedone">Bölge Tamamlandı! 🏆</button>'
-        : '<button class="hub3dStartBtn" data-act="start">▶ BAŞLA!</button>') +
+        ? '<button class="hub3dZoneDoneBtn" data-act="zonedone">Zone Complete! 🏆</button>'
+        : '<button class="hub3dStartBtn" data-act="start">▶ START!</button>') +
       '<button class="hub3dDoneBtn' + (isDone ? ' isDone' : '') + '" data-act="toggledone">' +
-        (isDone ? '✔ Tamamlandı — geri almak için dokun' : '✅ Tamamladım') + '</button>' +
+        (isDone ? '✔ Done — tap to undo' : '✅ I Did It!') + '</button>' +
       '<div class="hub3dNavRow">' +
-        '<button data-act="prev"' + (idx <= 0 ? ' disabled' : '') + '>← Önceki</button>' +
-        '<button data-act="next"' + (idx >= list.length - 1 ? ' disabled' : '') + '>Sonraki →</button>' +
+        '<button data-act="prev"' + (idx <= 0 ? ' disabled' : '') + '>← Back</button>' +
+        '<button data-act="next"' + (idx >= list.length - 1 ? ' disabled' : '') + '>Next →</button>' +
       '</div>' +
-      '<div class="hub3dProgressRow">Görev ' + (idx + 1) + '/' + list.length +
+      '<div class="hub3dProgressRow">Mission ' + (idx + 1) + '/' + list.length +
         '<div class="hub3dProgressDots">' + dots + '</div></div>';
 
     hubSheetInner.scrollTop = 0;
@@ -1792,17 +1824,17 @@ export function initHub3D(opts) {
       if (msNow && msNow.time && String(msNow.time).indexOf('s') !== -1) seconds = parseInt(msNow.time, 10) || 60;
       var remaining = seconds;
       btn.classList.add('running');
-      btn.textContent = '⏱ ' + remaining + ' sn — Oyna!';
+      btn.textContent = '⏱ ' + remaining + 's — Go play!';
       stopPanelTimer();
       panelTimerId = setInterval(function () {
         remaining--;
         if (remaining <= 0) {
           stopPanelTimer();
           btn.classList.remove('running');
-          btn.textContent = '⏰ Süre doldu — Başardın mı?';
+          btn.textContent = "⏰ Time's up — did you do it?";
           playSuccess();
         } else {
-          btn.textContent = '⏱ ' + remaining + ' sn — Oyna!';
+          btn.textContent = '⏱ ' + remaining + 's — Go play!';
           if (remaining <= 3) playTone(880, 0.07, 'sine', 0.04, 0);
         }
       }, 1000);
@@ -1944,8 +1976,8 @@ export function initHub3D(opts) {
       if (!isInitial && count > prev) {
         var theme = themeForZone(cfg.zoneIndex);
         var newest = group.userData.decorSlots[Math.min(count, group.userData.decorSlots.length) - 1];
-        var itemName = isChampion ? theme.championName : (newest && newest.userData.rewardName) || 'sürpriz';
-        showRewardCard('Bravo! ' + theme.cardTitle + ' yeni bir ' + itemName + ' kazandı 🎉');
+        var itemName = isChampion ? theme.championName : (newest && newest.userData.rewardName) || 'surprise';
+        showRewardCard('Woohoo! The ' + theme.cardTitle + ' just grew a new ' + itemName + ' 🎉');
         playChime();
         leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
       }
