@@ -173,6 +173,35 @@
         <h1 class="h1">Hey, Paddle Pro! 🦁</h1>
         <p class="sub">Today's mission is ready — let's play!</p>
 
+        <!-- Adventure Mode entry card — tapping it turns the hub3d flag on
+             (persisted) and jumps straight into the 3D Hub tab. Until then
+             the bottom-nav 3D Hub tab stays hidden; this card is the way in. -->
+        <style>
+          .advCard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+            background:linear-gradient(135deg,#2e7d4f,#5aa869 55%,#8fbf5a);color:#fff;
+            border:2px solid rgba(255,226,150,.85);border-radius:18px;padding:13px 16px;margin:0 0 14px;
+            cursor:pointer;font-family:inherit;position:relative;
+            animation:advGlow 2.6s ease-in-out infinite;}
+          @keyframes advGlow{
+            0%,100%{box-shadow:0 4px 14px rgba(46,125,79,.35),0 0 0 0 rgba(255,210,63,0)}
+            50%{box-shadow:0 4px 14px rgba(46,125,79,.35),0 0 16px 3px rgba(255,210,63,.45)}
+          }
+          .advCardEmoji{font-size:30px;line-height:1}
+          .advCardTitle{display:block;font-weight:900;font-size:16px;line-height:1.25}
+          .advCardNew{background:#FFD23F;color:#4a3000;font-size:10px;font-weight:900;
+            padding:2px 7px;border-radius:8px;margin-left:6px;vertical-align:middle;letter-spacing:.5px}
+          .advCardSub{display:block;font-size:12px;opacity:.92;margin-top:2px;font-weight:600}
+          .advCardArrow{margin-left:auto;font-size:18px;opacity:.9;flex:none}
+        </style>
+        <button class="advCard" id="advModeCard" type="button" aria-label="Explore Adventure Mode">
+          <span class="advCardEmoji">🌲</span>
+          <span class="advCardText">
+            <span class="advCardTitle">Explore Adventure Mode<span class="advCardNew">NEW!</span></span>
+            <span class="advCardSub">Walk the magic forest with Coach Leo &amp; unlock zones!</span>
+          </span>
+          <span class="advCardArrow">▶</span>
+        </button>
+
         <!-- Continue where you left off (rendered by JS when applicable) -->
         <div class="continueHint" id="continueHint" style="display:none">
           <span class="continueHintIcon">↩️</span>
@@ -808,7 +837,7 @@
 <script src="data.js?v=20260524-29" defer></script>
 <script src="jumvi-mission-icons.js?v=20260524-29" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260524-62" defer></script>
+<script src="app.js?v=20260524-63" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{

@@ -4072,6 +4072,21 @@ function initBottomNav(){
     if(hub3dBtn) hub3dBtn.style.display = "";
   }
 
+  // Adventure Mode entry card (top of Today) — the discovery path for the
+  // hub: one tap flips the opt-in flag on permanently, reveals the nav tab,
+  // and jumps straight into the 3D Hub. Until the card is tapped, the bottom
+  // nav stays exactly as it always was.
+  const advCard = document.getElementById("advModeCard");
+  if(advCard){
+    advCard.onclick = ()=>{
+      clickSound("click");
+      lsSet(HUB3D_FLAG_KEY, "1");
+      const hub3dBtn = document.getElementById("navTabHub3D");
+      if(hub3dBtn) hub3dBtn.style.display = "";
+      switchTab("hub3d");
+    };
+  }
+
   const navBtns = document.querySelectorAll(".navTab");
   navBtns.forEach(btn => {
     btn.addEventListener("click", ()=>{
