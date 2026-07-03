@@ -19,6 +19,36 @@ export function initHub3D(opts) {
   var openMission = opts.openMission;
   var container = opts.container;
 
+  // ---------- HUB UI TEXTS (hub'ın tek dil kaynağı) ----------
+  // Ana uygulamada i18n sistemi yok (tüm app metinleri hardcoded İngilizce);
+  // hub'ın KENDİ arayüz metinleri buradan gelir — çeviri/dil değişimi tek
+  // noktadan yapılır. Görev VERİSİ (başlık/adımlar/win) ana uygulamadan
+  // olduğu gibi gelir ve bilinçli olarak kendi dilinde bırakılır.
+  var HUB_TEXTS = {
+    zoneComplete: 'Bölge Tamamlandı! 🎉',
+    hint: 'Zemine dokun, Leo yürüsün — parlayan kapıya ulaşınca görev açılır!',
+    tapToWalk: '👆 Dokun ve yürü!',
+    sound: 'Sesi aç/kapat',
+    close: 'Kapat',
+    missionsLeft: function (n) { return n + ' görev kaldı'; },
+    zoneDoneLabel: 'tamamlandı! 🏆',
+    steps: 'ADIMLAR',
+    win: 'KAZANMAK İÇİN',
+    stepsSoon: 'Adımlar yakında eklenecek.',
+    winSoon: 'Kazanma koşulu yakında eklenecek.',
+    start: '▶ BAŞLA!',
+    running: function (s) { return '⏱ ' + s + ' sn — Oyna!'; },
+    timeUp: '⏰ Süre doldu — Başardın mı?',
+    didIt: '✅ Tamamladım',
+    doneUndo: '✔ Tamamlandı — geri almak için dokun',
+    prev: '← Önceki',
+    next: 'Sonraki →',
+    mission: 'Görev',
+    zoneDoneBtn: 'Bölge Tamamlandı! 🏆',
+    reward: function (zone, item) { return 'Bravo! ' + zone + ' yeni bir ' + item + ' kazandı 🎉'; },
+    surprise: 'sürpriz'
+  };
+
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
   hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
@@ -41,7 +71,7 @@ export function initHub3D(opts) {
   celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,0.94);padding:18px 30px;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   var celebrationTitleEl = document.createElement('div');
   celebrationTitleEl.style.cssText = 'font-size:20px;font-weight:900;color:#3a2a1a;white-space:nowrap;';
-  celebrationTitleEl.textContent = 'Zone Complete! 🎉';
+  celebrationTitleEl.textContent = HUB_TEXTS.zoneComplete;
   var celebrationSubtitleEl = document.createElement('div');
   celebrationSubtitleEl.style.cssText = 'font-size:15px;font-weight:700;color:#7a5a3a;white-space:nowrap;';
   celebrationCardEl.appendChild(celebrationTitleEl);
@@ -99,7 +129,7 @@ export function initHub3D(opts) {
   }
 
   var hintEl = document.createElement('div');
-  hintEl.textContent = 'Tap the ground to walk — reach a glowing gate to get a mission!';
+  hintEl.textContent = HUB_TEXTS.hint;
   hintEl.style.cssText = 'position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.85);padding:7px 13px;border-radius:11px;font-size:11px;color:#555;z-index:10;max-width:220px;text-align:right;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(hintEl);
 
@@ -107,7 +137,7 @@ export function initHub3D(opts) {
   // old pre-reader needs the 👆 itself. Bounces center-screen until the very
   // first touch/keypress, then fades for the rest of the session.
   var coachBubbleEl = document.createElement('div');
-  coachBubbleEl.textContent = '👆 Tap to walk!';
+  coachBubbleEl.textContent = HUB_TEXTS.tapToWalk;
   coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#3a2a1a;z-index:12;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,0.25);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
   container.appendChild(coachBubbleEl);
   if (!document.getElementById('hub3dCoachStyle')) {
@@ -200,7 +230,7 @@ export function initHub3D(opts) {
   // pointer-events:none column).
   var muteBtn = document.createElement('button');
   muteBtn.type = 'button';
-  muteBtn.setAttribute('aria-label', 'Sound on/off');
+  muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
   muteBtn.style.cssText = 'position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
   muteBtn.textContent = '🔊';
   muteBtn.addEventListener('click', function () {
@@ -327,12 +357,12 @@ export function initHub3D(opts) {
   // corridor edges (function declarations below — hoisted, so forward
   // references from this table are safe).
   var ZONE_THEMES = [
-    { key: 'energy', cardTitle: '⚡ Energy Zone', sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'power pole' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeLightningBolt, name: 'lightning bolt' }]; }, championName: 'energy orb' },
-    { key: 'target', cardTitle: '🎯 Target Range', sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'target board' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }]; }, championName: 'golden target' },
-    { key: 'zen', cardTitle: '🍃 Zen Garden', sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }, { make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }]; }, championName: 'golden lantern' },
-    { key: 'play', cardTitle: '👥 Playground', sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makeSlide, name: 'slide' }, { make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makePlayFlag, name: 'flag' }]; }, championName: 'champion flag' },
-    { key: 'home', cardTitle: '🏠 Backyard', sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'fence' }, { make: makeFlowerBed, name: 'flower bed' }, { make: makeGardenSwing, name: 'swing' }, { make: makeFencePanel, name: 'fence' }, { make: makeMailbox, name: 'mailbox' }, { make: makeFlowerBed, name: 'flower bed' }]; }, championName: 'flower crown' },
-    { key: 'beach', cardTitle: '🏖️ Beach', sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palm tree' }, { make: makeBeachUmbrella, name: 'beach umbrella' }, { make: makeSandcastle, name: 'sandcastle' }, { make: makeSeashell, name: 'seashell' }, { make: makePalmTree, name: 'palm tree' }, { make: makeSeashell, name: 'seashell' }]; }, championName: 'golden sun' }
+    { key: 'energy', cardTitle: '⚡ Enerji Bölgesi', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'elektrik direği' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeLightningBolt, name: 'şimşek' }]; }, championName: 'enerji topu' },
+    { key: 'target', cardTitle: '🎯 Hedef Sahası', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'hedef tahtası' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }]; }, championName: 'altın hedef' },
+    { key: 'zen', cardTitle: '🍃 Zen Bahçesi', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }, { make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }]; }, championName: 'altın fener' },
+    { key: 'play', cardTitle: '👥 Oyun Alanı', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makeSlide, name: 'kaydırak' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makePlayFlag, name: 'bayrak' }]; }, championName: 'şampiyon bayrağı' },
+    { key: 'home', cardTitle: '🏠 Ev Bahçesi', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'çit' }, { make: makeFlowerBed, name: 'çiçek tarhı' }, { make: makeGardenSwing, name: 'salıncak' }, { make: makeFencePanel, name: 'çit' }, { make: makeMailbox, name: 'posta kutusu' }, { make: makeFlowerBed, name: 'çiçek tarhı' }]; }, championName: 'çiçek tacı' },
+    { key: 'beach', cardTitle: '🏖️ Plaj', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palmiye' }, { make: makeBeachUmbrella, name: 'güneş şemsiyesi' }, { make: makeSandcastle, name: 'kumdan kale' }, { make: makeSeashell, name: 'deniz kabuğu' }, { make: makePalmTree, name: 'palmiye' }, { make: makeSeashell, name: 'deniz kabuğu' }]; }, championName: 'altın güneş' }
   ];
   function themeForZone(i) {
     return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
@@ -380,6 +410,12 @@ export function initHub3D(opts) {
   sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
   sun.shadow.camera.near = 1; sun.shadow.camera.far = 50;
   scene.add(sun);
+  // The shadow camera is a ±20-unit box around the light's TARGET — with the
+  // default target fixed at the origin, every shadow silently vanished once
+  // Leo walked past z≈-20 (zones run to -96). Light + target now ride along
+  // with Leo every frame (see updateMovement), so shadows keep the same
+  // quality in every zone.
+  scene.add(sun.target);
 
   // ---------- FOREST GROUND (long strip covering all zones — replaces the island) ----------
   var pathTotalLength = ZONE_LENGTH * realPacks.length + START_BOUNDARY_Z + 10;
@@ -1096,8 +1132,8 @@ export function initHub3D(opts) {
     if (cacheKey === lastProgressCacheKey) return;
     lastProgressCacheKey = cacheKey;
     progressLabelEl.textContent = remaining > 0
-      ? (cfg.icon + ' ' + cfg.name + ' — ' + remaining + (remaining === 1 ? ' mission to go!' : ' missions to go!'))
-      : (cfg.icon + ' ' + cfg.name + ' complete! 🏆');
+      ? (cfg.icon + ' ' + cfg.name + ' — ' + HUB_TEXTS.missionsLeft(remaining))
+      : (cfg.icon + ' ' + cfg.name + ' ' + HUB_TEXTS.zoneDoneLabel);
   }
 
   // ---------- ZONE THEME TRANSITIONS ----------
@@ -1201,10 +1237,13 @@ export function initHub3D(opts) {
   function createGateMesh(cfg) {
     var group = new THREE.Group();
 
+    // Ring tinted with the zone's own theme color so each gate visually
+    // belongs to its zone (they were all the same gold before).
+    var gateColor = themeForZone(cfg.zoneIndex).gateColor;
     var ringGeo = new THREE.TorusGeometry(0.9, 0.12, 8, 24);
     var ringMat = new THREE.MeshStandardMaterial({
-      color: 0xE8A23A, flatShading: true,
-      emissive: 0xE8A23A, emissiveIntensity: 0.35
+      color: gateColor, flatShading: true,
+      emissive: gateColor, emissiveIntensity: 0.35
     });
     var ring = new THREE.Mesh(ringGeo, ringMat);
     ring.position.y = 1.1;
@@ -1372,6 +1411,16 @@ export function initHub3D(opts) {
   targetRing.position.y = 0.03; // just above the ground plane, below Leo
   targetRing.visible = false;
   scene.add(targetRing);
+  // Dark rim just under/around the white ring — pure white alone disappears
+  // on the light beach-sand and backyard-grass grounds; the rim keeps the
+  // marker visible on every zone's ground color. Child of the ring so it
+  // inherits position/scale/visibility automatically.
+  var targetRingRim = new THREE.Mesh(
+    new THREE.RingGeometry(0.24, 0.46, 24),
+    new THREE.MeshBasicMaterial({ color: 0x33291c, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })
+  );
+  targetRingRim.position.z = -0.005; // hair *behind* the ring in its local plane (renders below)
+  targetRing.add(targetRingRim);
   var targetRingAnim = null; // { mode: 'in' | 'out', startTime }
 
   function showTargetRing(x, z) {
@@ -1391,12 +1440,14 @@ export function initHub3D(opts) {
     if (targetRingAnim.mode === 'in') {
       var t = Math.min(elapsed / 220, 1);
       targetRing.material.opacity = 0.85 * t;
+      targetRingRim.material.opacity = 0.45 * t;
       var s = 1.5 - 0.5 * t; // shrinks from wide to snug — reads as "locking on"
       targetRing.scale.set(s, s, 1);
       if (t >= 1) targetRingAnim = null;
     } else {
       var t2 = Math.min(elapsed / 260, 1);
       targetRing.material.opacity = 0.85 * (1 - t2);
+      targetRingRim.material.opacity = 0.45 * (1 - t2);
       if (t2 >= 1) { targetRing.visible = false; targetRingAnim = null; }
     }
   }
@@ -1549,6 +1600,11 @@ export function initHub3D(opts) {
     leo.group.position.z = nextZ;
     facing = leo.getFacing();
 
+    // Keep the sun (and its ±20-unit shadow box) centered on Leo — see the
+    // comment at the light's creation.
+    sun.position.set(nextX + 10, 16, nextZ + 8);
+    sun.target.position.set(nextX, 0, nextZ);
+
     var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
 
@@ -1628,7 +1684,17 @@ export function initHub3D(opts) {
     panelStyle.textContent = [
       // Sheet shell: wooden frame (same layered-gradient technique as the old
       // shared-sheet skin) wrapping a theme-coloured scrollable inner column.
-      '.hub3dSheet{position:absolute;left:0;right:0;bottom:0;max-height:64%;z-index:20;',
+      // Height is driven by the REAL dynamic viewport (dvh — iOS Safari's vh
+      // ignores the collapsing address bar and overflows), minus room for the
+      // top HUD; the plain-vh line right before it is the fallback for older
+      // browsers and gets overridden wherever dvh is supported.
+      // bottom offset clears the app's #bottomNav tab bar (61px + iOS home
+      // indicator inset) — without it the sheet's footer buttons slid in
+      // BEHIND the tab bar and were untappable on device.
+      '.hub3dSheet{position:absolute;left:0;right:0;z-index:20;',
+      'bottom:calc(61px + env(safe-area-inset-bottom, 0px));',
+      'max-height:calc(100vh - 200px);',
+      'max-height:calc(100dvh - 200px - env(safe-area-inset-top, 0px));',
       'transform:translateY(108%);transition:transform 460ms cubic-bezier(.34,1.56,.64,1);',
       'border-radius:24px 24px 0 0;padding:9px 9px 0;box-sizing:border-box;',
       'background:',
@@ -1639,8 +1705,16 @@ export function initHub3D(opts) {
       'display:flex;flex-direction:column;',
       'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}',
       '.hub3dSheet.open{transform:translateY(0);}',
+      // Inner column: scrollable body + always-visible footer. Only the BODY
+      // scrolls — START / prev-next / progress live in the footer and can
+      // never be pushed off-screen by long step lists.
       '.hub3dSheetInner{background:linear-gradient(175deg,var(--hp-bg1),var(--hp-bg2));color:var(--hp-text);',
-      'border-radius:17px 17px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 16px 24px;flex:1;min-height:0;}',
+      'border-radius:17px 17px 0 0;display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0;}',
+      '.hub3dSheetBody{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;',
+      'flex:1;min-height:0;padding:14px 16px 8px;}',
+      // (safe-area inset is already accounted for in .hub3dSheet's bottom offset)
+      '.hub3dSheetFooter{flex:none;padding:10px 16px 12px;',
+      'background:linear-gradient(0deg,var(--hp-bg2),var(--hp-bg2));box-shadow:0 -6px 14px rgba(0,0,0,.14);}',
       '.hub3dSheetTopRow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}',
       '.hub3dSheetBtnRound{width:38px;height:38px;border-radius:50%;border:none;font-size:17px;cursor:pointer;',
       'background:var(--hp-box);color:var(--hp-text);display:flex;align-items:center;justify-content:center;padding:0;}',
@@ -1652,8 +1726,20 @@ export function initHub3D(opts) {
       '@keyframes hub3dTitlePop{0%{opacity:0;transform:translateY(10px) scale(.94)}100%{opacity:1;transform:none}}',
       '.hub3dMetaRow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
       '.hub3dMetaRow span{background:var(--hp-box);border-radius:10px;padding:4px 10px;font-size:12px;font-weight:700;}',
-      '.hub3dIconWrap{background:var(--hp-box);border-radius:14px;padding:8px;margin-bottom:10px;display:flex;justify-content:center;}',
+      // Mission motion-diagram card. Always a LIGHT surface regardless of the
+      // zone theme: the .jmv icon system draws with CSS-variable strokes tuned
+      // for the app's light/dark surfaces, so a fixed white card + explicitly
+      // re-pinned light tokens (below) is the only way the diagrams stay
+      // readable on every themed background — including when the OS/app is in
+      // dark mode, whose .jmv token flip would otherwise wash them out.
+      '.hub3dIconWrap{background:#ffffff;border-radius:14px;padding:12px;margin-bottom:10px;display:flex;justify-content:center;min-height:100px;align-items:center;}',
       '.hub3dIconWrap:empty{display:none;}',
+      '.hub3dSheet .hub3dIconWrap.jmv, html.theme--dark .hub3dSheet .hub3dIconWrap.jmv{',
+      '--color-text-primary:#1f2430;--color-text-secondary:#5b6573;--color-text-tertiary:#9aa1ac;',
+      '--color-border-secondary:#cdd2d8;--color-border-tertiary:#e6e8ec;',
+      '--color-background-primary:#ffffff;--color-background-secondary:#f4f6f8;',
+      '--s:#5b6573;--b:#cdd2d8;--bg2:#f4f6f8;--p:#1f2430;--t:#9aa1ac;color:#5b6573;}',
+      '.hub3dIconWrap svg{max-width:100%;height:auto;min-width:200px;}',
       '.hub3dSection{background:var(--hp-box);border-radius:14px;padding:12px 14px;margin-bottom:10px;}',
       '.hub3dSectionHead{font-size:13px;font-weight:900;letter-spacing:.5px;margin-bottom:8px;opacity:.95;}',
       '.hub3dSteps{margin:0;padding:0;list-style:none;}',
@@ -1664,15 +1750,15 @@ export function initHub3D(opts) {
       '.hub3dWinText{font-size:15px;font-weight:700;line-height:1.35;}',
       '.hub3dStartBtn{display:block;width:100%;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);',
       'color:#fff;font-size:19px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #27793a;',
-      'margin:2px 0 10px;animation:hub3dStartBounce 1.6s ease-in-out infinite;font-family:inherit;}',
+      'margin:0 0 8px;animation:hub3dStartBounce 1.6s ease-in-out infinite;font-family:inherit;}',
       '@keyframes hub3dStartBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}',
       '.hub3dStartBtn.running{animation:none;background:linear-gradient(180deg,#3f92c4,#2d6f9e);box-shadow:0 4px 0 #1d4a6e;}',
       '.hub3dDoneBtn{display:block;width:100%;border:2px solid var(--hp-accent);border-radius:14px;background:transparent;',
-      'color:var(--hp-text);font-size:15px;font-weight:800;padding:11px 0;cursor:pointer;margin-bottom:12px;font-family:inherit;}',
+      'color:var(--hp-text);font-size:15px;font-weight:800;padding:11px 0;cursor:pointer;margin-bottom:8px;font-family:inherit;}',
       '.hub3dDoneBtn.isDone{background:var(--hp-accent);color:var(--hp-on-accent);}',
       '.hub3dZoneDoneBtn{display:block;width:100%;border:none;border-radius:16px;background:linear-gradient(180deg,#FFD23F,#E8A23A);',
-      'color:#4a3000;font-size:18px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #b07716;margin:2px 0 12px;font-family:inherit;}',
-      '.hub3dNavRow{display:flex;gap:8px;margin-bottom:10px;}',
+      'color:#4a3000;font-size:18px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #b07716;margin:0 0 8px;font-family:inherit;}',
+      '.hub3dNavRow{display:flex;gap:8px;margin-bottom:8px;}',
       '.hub3dNavRow button{flex:1;border:none;border-radius:12px;background:var(--hp-box);color:var(--hp-text);',
       'font-size:14px;font-weight:800;padding:10px 0;cursor:pointer;font-family:inherit;}',
       '.hub3dNavRow button:disabled{opacity:.35;cursor:default;}',
@@ -1689,6 +1775,12 @@ export function initHub3D(opts) {
   hubSheet.className = 'hub3dSheet';
   var hubSheetInner = document.createElement('div');
   hubSheetInner.className = 'hub3dSheetInner';
+  var hubSheetBody = document.createElement('div');
+  hubSheetBody.className = 'hub3dSheetBody';
+  var hubSheetFooter = document.createElement('div');
+  hubSheetFooter.className = 'hub3dSheetFooter';
+  hubSheetInner.appendChild(hubSheetBody);
+  hubSheetInner.appendChild(hubSheetFooter);
   hubSheet.appendChild(hubSheetInner);
   container.appendChild(hubSheet);
 
@@ -1714,7 +1806,10 @@ export function initHub3D(opts) {
   }
 
   // Renders one mission into the sheet. Everything shown is the REAL mission
-  // record (title/steps/win/meta/icon) — only the presentation is new.
+  // record (title/steps/win/meta/icon) — only the presentation is new. The
+  // scrollable body carries the content; START/nav/progress go into the
+  // fixed footer so they are ALWAYS on screen no matter how long the steps
+  // list is or how short the phone is.
   function renderHubMission(ms) {
     stopPanelTimer();
     var cfg = gateConfig.filter(function (c) { return c.packKey === ms.pack; })[0];
@@ -1732,42 +1827,47 @@ export function initHub3D(opts) {
     var doneInPack = list.filter(function (m) { return done.has(m.id); }).length;
     var packDone = doneInPack === list.length && list.length > 0;
     var isDone = done.has(ms.id);
-    var steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ['Steps are coming soon.'];
+    var steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : [HUB_TEXTS.stepsSoon];
     var iconMarkup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || '';
     var dots = list.map(function (m, i) {
       return done.has(m.id) ? '●' : (i === idx ? '◉' : '○');
     }).join('');
 
-    hubSheetInner.innerHTML =
+    hubSheetBody.innerHTML =
       '<div class="hub3dSheetTopRow">' +
-        '<button class="hub3dSheetBtnRound" data-act="close" aria-label="Close">✕</button>' +
-        '<button class="hub3dSheetBtnRound" data-act="mute" aria-label="Sound on/off">' + (audioMuted ? '🔇' : '🔊') + '</button>' +
+        '<button class="hub3dSheetBtnRound" data-act="close" aria-label="' + HUB_TEXTS.close + '">✕</button>' +
+        '<button class="hub3dSheetBtnRound" data-act="mute" aria-label="' + HUB_TEXTS.sound + '">' + (audioMuted ? '🔇' : '🔊') + '</button>' +
       '</div>' +
       '<div class="hub3dBadgeChip"><span style="font-size:26px">' + escapeText(ms.icon) + '</span>' +
         '<span class="chip">' + escapeText(theme.cardTitle) + '</span></div>' +
       '<div class="hub3dMissionTitle">' + escapeText(ms.title) + '</div>' +
       '<div class="hub3dMetaRow"><span>⏱ ' + escapeText(ms.time) + '</span><span>👥 ' + escapeText(ms.players) + '</span><span>🎂 ' + escapeText(ms.age) + '</span></div>' +
-      '<div class="hub3dIconWrap">' + iconMarkup + '</div>' +
-      '<div class="hub3dSection"><div class="hub3dSectionHead">📋 STEPS</div><ul class="hub3dSteps">' +
+      // "jmv" class is REQUIRED: every diagram draws with .jmv's CSS-variable
+      // strokes; without the class the vars are undefined and the drawings
+      // silently render blank (the exact bug seen on device).
+      '<div class="hub3dIconWrap jmv">' + iconMarkup + '</div>' +
+      '<div class="hub3dSection"><div class="hub3dSectionHead">📋 ' + HUB_TEXTS.steps + '</div><ul class="hub3dSteps">' +
         steps.map(function (s, i) {
           return '<li><span class="hub3dStepNum">' + (i + 1) + '</span><span>' + escapeText(s) + '</span></li>';
         }).join('') +
       '</ul></div>' +
-      '<div class="hub3dSection"><div class="hub3dSectionHead">🏆 HOW TO WIN</div>' +
-        '<div class="hub3dWinText">' + escapeText(ms.win || 'Win condition is coming soon.') + '</div></div>' +
+      '<div class="hub3dSection"><div class="hub3dSectionHead">🏆 ' + HUB_TEXTS.win + '</div>' +
+        '<div class="hub3dWinText">' + escapeText(ms.win || HUB_TEXTS.winSoon) + '</div></div>';
+
+    hubSheetFooter.innerHTML =
       (packDone
-        ? '<button class="hub3dZoneDoneBtn" data-act="zonedone">Zone Complete! 🏆</button>'
-        : '<button class="hub3dStartBtn" data-act="start">▶ START!</button>') +
+        ? '<button class="hub3dZoneDoneBtn" data-act="zonedone">' + HUB_TEXTS.zoneDoneBtn + '</button>'
+        : '<button class="hub3dStartBtn" data-act="start">' + HUB_TEXTS.start + '</button>') +
       '<button class="hub3dDoneBtn' + (isDone ? ' isDone' : '') + '" data-act="toggledone">' +
-        (isDone ? '✔ Done — tap to undo' : '✅ I Did It!') + '</button>' +
+        (isDone ? HUB_TEXTS.doneUndo : HUB_TEXTS.didIt) + '</button>' +
       '<div class="hub3dNavRow">' +
-        '<button data-act="prev"' + (idx <= 0 ? ' disabled' : '') + '>← Back</button>' +
-        '<button data-act="next"' + (idx >= list.length - 1 ? ' disabled' : '') + '>Next →</button>' +
+        '<button data-act="prev"' + (idx <= 0 ? ' disabled' : '') + '>' + HUB_TEXTS.prev + '</button>' +
+        '<button data-act="next"' + (idx >= list.length - 1 ? ' disabled' : '') + '>' + HUB_TEXTS.next + '</button>' +
       '</div>' +
-      '<div class="hub3dProgressRow">Mission ' + (idx + 1) + '/' + list.length +
+      '<div class="hub3dProgressRow">' + HUB_TEXTS.mission + ' ' + (idx + 1) + '/' + list.length +
         '<div class="hub3dProgressDots">' + dots + '</div></div>';
 
-    hubSheetInner.scrollTop = 0;
+    hubSheetBody.scrollTop = 0;
   }
 
   function openHubPanel(packKey, missionId) {
@@ -1824,17 +1924,17 @@ export function initHub3D(opts) {
       if (msNow && msNow.time && String(msNow.time).indexOf('s') !== -1) seconds = parseInt(msNow.time, 10) || 60;
       var remaining = seconds;
       btn.classList.add('running');
-      btn.textContent = '⏱ ' + remaining + 's — Go play!';
+      btn.textContent = HUB_TEXTS.running(remaining);
       stopPanelTimer();
       panelTimerId = setInterval(function () {
         remaining--;
         if (remaining <= 0) {
           stopPanelTimer();
           btn.classList.remove('running');
-          btn.textContent = "⏰ Time's up — did you do it?";
+          btn.textContent = HUB_TEXTS.timeUp;
           playSuccess();
         } else {
-          btn.textContent = '⏱ ' + remaining + 's — Go play!';
+          btn.textContent = HUB_TEXTS.running(remaining);
           if (remaining <= 3) playTone(880, 0.07, 'sine', 0.04, 0);
         }
       }, 1000);
@@ -1976,8 +2076,8 @@ export function initHub3D(opts) {
       if (!isInitial && count > prev) {
         var theme = themeForZone(cfg.zoneIndex);
         var newest = group.userData.decorSlots[Math.min(count, group.userData.decorSlots.length) - 1];
-        var itemName = isChampion ? theme.championName : (newest && newest.userData.rewardName) || 'surprise';
-        showRewardCard('Woohoo! The ' + theme.cardTitle + ' just grew a new ' + itemName + ' 🎉');
+        var itemName = isChampion ? theme.championName : (newest && newest.userData.rewardName) || HUB_TEXTS.surprise;
+        showRewardCard(HUB_TEXTS.reward(theme.cardTitle, itemName));
         playChime();
         leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
       }
