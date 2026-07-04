@@ -46,7 +46,10 @@ export function initHub3D(opts) {
     mission: 'Mission',
     zoneDoneBtn: 'Zone Complete! 🏆',
     reward: function (zone, item) { return 'Woohoo! The ' + zone + ' just grew a new ' + item + ' 🎉'; },
-    surprise: 'surprise'
+    surprise: 'surprise',
+    help: 'How to play',
+    helpLines: ['👆 Tap the ground — Leo walks there!', '🚪 Reach a glowing gate to open a mission', '🌱 Finish missions to grow each zone!'],
+    gotIt: 'Got it!'
   };
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
@@ -172,7 +175,16 @@ export function initHub3D(opts) {
       audioCtx = null; // synthesis unavailable in this browser — playTone() below becomes a no-op
     }
   }
+  // Mute preference persists across sessions (hub-only key — the app's own
+  // storage structures are untouched). A parent who muted it once shouldn't
+  // have to re-mute on every visit.
+  var HUB_MUTE_KEY = 'jumvi_3d_hub_muted';
   var audioMuted = false;
+  try { audioMuted = localStorage.getItem(HUB_MUTE_KEY) === '1'; } catch (e) {}
+  function setAudioMuted(m) {
+    audioMuted = m;
+    try { localStorage.setItem(HUB_MUTE_KEY, m ? '1' : '0'); } catch (e) {}
+  }
 
   // Autoplay policies block sound before a user gesture; the context starts
   // "suspended" and every real interaction entry point (keydown, tap-to-move
@@ -232,13 +244,41 @@ export function initHub3D(opts) {
   muteBtn.type = 'button';
   muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
   muteBtn.style.cssText = 'position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
-  muteBtn.textContent = '🔊';
+  muteBtn.textContent = audioMuted ? '🔇' : '🔊';
   muteBtn.addEventListener('click', function () {
-    audioMuted = !audioMuted;
+    setAudioMuted(!audioMuted);
     muteBtn.textContent = audioMuted ? '🔇' : '🔊';
     resumeAudio();
   });
   container.appendChild(muteBtn);
+
+  // "How to play" — a ❓ under the mute button reopening a tiny 3-line card.
+  // The one-time coach bubble covers the very first launch, but a pre-reader
+  // who missed it (or a parent joining later) needs a way back to the rules.
+  var helpBtn = document.createElement('button');
+  helpBtn.type = 'button';
+  helpBtn.setAttribute('aria-label', HUB_TEXTS.help);
+  helpBtn.style.cssText = 'position:absolute;top:58px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
+  helpBtn.textContent = '❓';
+  container.appendChild(helpBtn);
+
+  var helpCardEl = document.createElement('div');
+  helpCardEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:22;background:rgba(255,255,255,0.97);padding:20px 22px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.35);display:none;flex-direction:column;gap:10px;max-width:300px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  helpCardEl.innerHTML =
+    '<div style="font-size:17px;font-weight:900;color:#3a2a1a;text-align:center;">' + HUB_TEXTS.help + '</div>' +
+    HUB_TEXTS.helpLines.map(function (l) {
+      return '<div style="font-size:14px;font-weight:700;color:#5a4632;line-height:1.35;">' + l + '</div>';
+    }).join('') +
+    '<button type="button" style="border:none;border-radius:12px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:15px;font-weight:900;padding:10px 0;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">' + HUB_TEXTS.gotIt + '</button>';
+  container.appendChild(helpCardEl);
+  helpBtn.addEventListener('click', function () {
+    resumeAudio();
+    playChime();
+    helpCardEl.style.display = 'flex';
+  });
+  helpCardEl.querySelector('button').addEventListener('click', function () {
+    helpCardEl.style.display = 'none';
+  });
 
   // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
   // Each zone is one mission pack, ZONE_LENGTH apart along -Z. The corridor's
@@ -449,7 +489,45 @@ export function initHub3D(opts) {
     addGroundStrip(-gsi * ZONE_LENGTH, -(gsi + 1) * ZONE_LENGTH, THREE.MathUtils.clamp(gsi, 0, ZONE_THEMES.length - 1));
   }
   addGroundStrip(-realPacks.length * ZONE_LENGTH, -pathTotalLength + START_BOUNDARY_Z, ZONE_THEMES.length - 1); // tail
+  // Soft color blend across each zone boundary — a slim vertex-colored strip
+  // laid just above the seam, fading previous ground color into the next, so
+  // crossing zones reads as terrain transitioning instead of a hard cut line.
+  for (var gbi = 1; gbi < realPacks.length && gbi < ZONE_THEMES.length; gbi++) {
+    var blendGeo = new THREE.PlaneGeometry(groundWidth, 2.4, 1, 1);
+    var nearCol = new THREE.Color(ZONE_THEMES[gbi - 1].ground);
+    var farCol = new THREE.Color(ZONE_THEMES[gbi].ground);
+    var colArr = new Float32Array(4 * 3);
+    // plane verts: y>0 pair maps to -Z (far side) after the -90° X rotation
+    var posArr = blendGeo.attributes.position;
+    for (var vi = 0; vi < 4; vi++) {
+      var c = posArr.getY(vi) > 0 ? farCol : nearCol;
+      colArr[vi * 3] = c.r; colArr[vi * 3 + 1] = c.g; colArr[vi * 3 + 2] = c.b;
+    }
+    blendGeo.setAttribute('color', new THREE.BufferAttribute(colArr, 3));
+    var blendStrip = new THREE.Mesh(blendGeo, new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: false }));
+    blendStrip.rotation.x = -Math.PI / 2;
+    blendStrip.position.set(0, 0.006, -gbi * ZONE_LENGTH);
+    blendStrip.receiveShadow = true;
+    ground.add(blendStrip);
+  }
   scene.add(ground);
+
+  // Night stars over the energy zone — its dark navy sky read as flat/empty
+  // next to the daytime zones. A static Points cloud above the spawn + zone
+  // 0 stretch is a one-draw-call fix that sells "electric night".
+  (function () {
+    var STAR_COUNT = 70;
+    var starPos = new Float32Array(STAR_COUNT * 3);
+    for (var si = 0; si < STAR_COUNT; si++) {
+      starPos[si * 3] = (Math.random() - 0.5) * 60;
+      starPos[si * 3 + 1] = 9 + Math.random() * 14;
+      starPos[si * 3 + 2] = START_BOUNDARY_Z + 8 - Math.random() * (ZONE_LENGTH + 18);
+    }
+    var starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    var stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xFFF6D8, size: 0.16, transparent: true, opacity: 0.85, depthWrite: false }));
+    scene.add(stars);
+  })();
 
   function makeTree(x, z, scale) {
     var group = new THREE.Group();
@@ -1794,6 +1872,7 @@ export function initHub3D(opts) {
   }
 
   function closeHubPanel() {
+    if (panelOpen) playTone(587.33, 0.12, 'sine', 0.045, 0); // soft "whoosh down" — mirrors the open chime
     panelOpen = false;
     stopPanelTimer();
     hubSheet.classList.remove('open');
@@ -1896,7 +1975,7 @@ export function initHub3D(opts) {
     if (act === 'close' || act === 'zonedone') {
       closeHubPanel();
     } else if (act === 'mute') {
-      audioMuted = !audioMuted;
+      setAudioMuted(!audioMuted);
       btn.textContent = audioMuted ? '🔇' : '🔊';
       muteBtn.textContent = audioMuted ? '🔇' : '🔊';
     } else if (act === 'prev' && idx > 0) {
@@ -1922,6 +2001,15 @@ export function initHub3D(opts) {
       var msNow = list[idx];
       var seconds = 60;
       if (msNow && msNow.time && String(msNow.time).indexOf('s') !== -1) seconds = parseInt(msNow.time, 10) || 60;
+      // Mission 2 is Red Light, Green Light — the phone IS the game (the
+      // JumviRedLight caller yells GREEN/RED with a countdown). Same special
+      // case the app's own Start button has; a plain timer would gut the
+      // mission. Its overlay is position:fixed z-index 99999, so it plays
+      // fine on top of the hub and returns here when it ends.
+      if (msNow && msNow.id === 2 && window.JumviRedLight) {
+        window.JumviRedLight.start({ duration: seconds, speed: 'normal', sound: !audioMuted, onEnd: function () {} });
+        return;
+      }
       var remaining = seconds;
       btn.classList.add('running');
       btn.textContent = HUB_TEXTS.running(remaining);
