@@ -25,28 +25,28 @@ export function initHub3D(opts) {
   // noktadan yapılır. Görev VERİSİ (başlık/adımlar/win) ana uygulamadan
   // olduğu gibi gelir ve bilinçli olarak kendi dilinde bırakılır.
   var HUB_TEXTS = {
-    zoneComplete: 'Bölge Tamamlandı! 🎉',
-    hint: 'Zemine dokun, Leo yürüsün — parlayan kapıya ulaşınca görev açılır!',
-    tapToWalk: '👆 Dokun ve yürü!',
-    sound: 'Sesi aç/kapat',
-    close: 'Kapat',
-    missionsLeft: function (n) { return n + ' görev kaldı'; },
-    zoneDoneLabel: 'tamamlandı! 🏆',
-    steps: 'ADIMLAR',
-    win: 'KAZANMAK İÇİN',
-    stepsSoon: 'Adımlar yakında eklenecek.',
-    winSoon: 'Kazanma koşulu yakında eklenecek.',
-    start: '▶ BAŞLA!',
-    running: function (s) { return '⏱ ' + s + ' sn — Oyna!'; },
-    timeUp: '⏰ Süre doldu — Başardın mı?',
-    didIt: '✅ Tamamladım',
-    doneUndo: '✔ Tamamlandı — geri almak için dokun',
-    prev: '← Önceki',
-    next: 'Sonraki →',
-    mission: 'Görev',
-    zoneDoneBtn: 'Bölge Tamamlandı! 🏆',
-    reward: function (zone, item) { return 'Bravo! ' + zone + ' yeni bir ' + item + ' kazandı 🎉'; },
-    surprise: 'sürpriz'
+    zoneComplete: 'Zone Complete! 🎉',
+    hint: 'Tap the ground to walk — reach a glowing gate to get a mission!',
+    tapToWalk: '👆 Tap to walk!',
+    sound: 'Sound on/off',
+    close: 'Close',
+    missionsLeft: function (n) { return n + (n === 1 ? ' mission to go!' : ' missions to go!'); },
+    zoneDoneLabel: 'complete! 🏆',
+    steps: 'STEPS',
+    win: 'HOW TO WIN',
+    stepsSoon: 'Steps are coming soon.',
+    winSoon: 'Win condition is coming soon.',
+    start: '▶ START!',
+    running: function (s) { return '⏱ ' + s + 's — Go play!'; },
+    timeUp: "⏰ Time's up — did you do it?",
+    didIt: '✅ I Did It!',
+    doneUndo: '✔ Done — tap to undo',
+    prev: '← Back',
+    next: 'Next →',
+    mission: 'Mission',
+    zoneDoneBtn: 'Zone Complete! 🏆',
+    reward: function (zone, item) { return 'Woohoo! The ' + zone + ' just grew a new ' + item + ' 🎉'; },
+    surprise: 'surprise'
   };
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
@@ -357,12 +357,12 @@ export function initHub3D(opts) {
   // corridor edges (function declarations below — hoisted, so forward
   // references from this table are safe).
   var ZONE_THEMES = [
-    { key: 'energy', cardTitle: '⚡ Enerji Bölgesi', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'elektrik direği' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeElectricPole, name: 'elektrik direği' }, { make: makeLightningBolt, name: 'şimşek' }, { make: makeLightningBolt, name: 'şimşek' }]; }, championName: 'enerji topu' },
-    { key: 'target', cardTitle: '🎯 Hedef Sahası', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'hedef tahtası' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeTargetBoard, name: 'hedef tahtası' }]; }, championName: 'altın hedef' },
-    { key: 'zen', cardTitle: '🍃 Zen Bahçesi', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }, { make: makeBamboo, name: 'bambu' }, { make: makeStoneLantern, name: 'taş fener' }, { make: makeLotusPool, name: 'lotus havuzu' }]; }, championName: 'altın fener' },
-    { key: 'play', cardTitle: '👥 Oyun Alanı', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makeSlide, name: 'kaydırak' }, { make: makePlayFlag, name: 'bayrak' }, { make: makeBench, name: 'bank' }, { make: makePlayFlag, name: 'bayrak' }]; }, championName: 'şampiyon bayrağı' },
-    { key: 'home', cardTitle: '🏠 Ev Bahçesi', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'çit' }, { make: makeFlowerBed, name: 'çiçek tarhı' }, { make: makeGardenSwing, name: 'salıncak' }, { make: makeFencePanel, name: 'çit' }, { make: makeMailbox, name: 'posta kutusu' }, { make: makeFlowerBed, name: 'çiçek tarhı' }]; }, championName: 'çiçek tacı' },
-    { key: 'beach', cardTitle: '🏖️ Plaj', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palmiye' }, { make: makeBeachUmbrella, name: 'güneş şemsiyesi' }, { make: makeSandcastle, name: 'kumdan kale' }, { make: makeSeashell, name: 'deniz kabuğu' }, { make: makePalmTree, name: 'palmiye' }, { make: makeSeashell, name: 'deniz kabuğu' }]; }, championName: 'altın güneş' }
+    { key: 'energy', cardTitle: '⚡ Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'power pole' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeLightningBolt, name: 'lightning bolt' }]; }, championName: 'energy orb' },
+    { key: 'target', cardTitle: '🎯 Target Range', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'target board' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }]; }, championName: 'golden target' },
+    { key: 'zen', cardTitle: '🍃 Zen Garden', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }, { make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }]; }, championName: 'golden lantern' },
+    { key: 'play', cardTitle: '👥 Playground', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makeSlide, name: 'slide' }, { make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makePlayFlag, name: 'flag' }]; }, championName: 'champion flag' },
+    { key: 'home', cardTitle: '🏠 Backyard', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'fence' }, { make: makeFlowerBed, name: 'flower bed' }, { make: makeGardenSwing, name: 'swing' }, { make: makeFencePanel, name: 'fence' }, { make: makeMailbox, name: 'mailbox' }, { make: makeFlowerBed, name: 'flower bed' }]; }, championName: 'flower crown' },
+    { key: 'beach', cardTitle: '🏖️ Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palm tree' }, { make: makeBeachUmbrella, name: 'beach umbrella' }, { make: makeSandcastle, name: 'sandcastle' }, { make: makeSeashell, name: 'seashell' }, { make: makePalmTree, name: 'palm tree' }, { make: makeSeashell, name: 'seashell' }]; }, championName: 'golden sun' }
   ];
   function themeForZone(i) {
     return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
