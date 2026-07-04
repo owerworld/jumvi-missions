@@ -2009,6 +2009,20 @@ function renderShareCard(){
  * Modal
  * ======================= */
 let timerInterval = null;
+
+/* "Go play" screen wake lock — while a mission timer runs, the phone is on
+ * the floor coaching the kid; letting the screen sleep mid-mission kills the
+ * timer/caller. Acquired on timer start, released on end/reset/close. No-op
+ * on browsers without the API. */
+let _wakeLock = null;
+async function requestWakeLock(){
+  try{
+    if("wakeLock" in navigator){ _wakeLock = await navigator.wakeLock.request("screen"); }
+  }catch(_){ }
+}
+function releaseWakeLock(){
+  try{ if(_wakeLock){ _wakeLock.release(); _wakeLock = null; } }catch(_){ }
+}
 let timerState = "idle";   // "idle" | "running" | "paused"
 let timerTotal = 0;
 let timerLeft = 0;
@@ -2030,6 +2044,7 @@ function setTimerButtonLabel(){
 function resetTimerUI() {
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
+  releaseWakeLock();
   timerState = "idle";
   timerTotal = 0;
   timerLeft = 0;
@@ -2060,6 +2075,10 @@ function updateTimerTick(){
     timerDisplay.classList.remove("timerUrgent");
     if(timerFill) timerFill.classList.remove("timerUrgent");
     setTimerButtonLabel();
+    releaseWakeLock();
+    // Hub flow: soft "come back" whistle from the hub's toy-like sound
+    // palette (the hub registers this hook only while the 3D flag is on).
+    try{ if(window._hubMissionFlow && window._hub3dComeBack) window._hub3dComeBack(); }catch(_){ }
     // Coach: time's up announcement
     if(_currentScore > 0){
       coachSpeak(`Time's up! You got ${_currentScore}!`);
@@ -2191,6 +2210,7 @@ function startTimer(durationSeconds) {
   timerEndAt = Date.now() + (timerLeft * 1000);
 
   clickSound("click");
+  requestWakeLock(); // keep the screen on while the kid plays (released on end/reset/close)
 
   // Update text smoothly (and accurate if tab is throttled)
   timerInterval = setInterval(updateTimerTick, 200);
@@ -2485,6 +2505,10 @@ if(btnSpeak){
 }
 
 function closeMission(){
+  // Hub flow ends when the mission view closes — the hub tab is still the
+  // active tab underneath, so the user lands right back on the island.
+  window._hubMissionFlow = null;
+  releaseWakeLock();
   if(lastOpenedId != null && !done.has(lastOpenedId)){
     const openFor = Date.now() - (missionOpenedAt || 0);
     if(openFor >= 20000){
@@ -3054,6 +3078,32 @@ function pickSmartNextMission(currentId){
 btnNext.onclick = ()=>{
   if(lastOpenedId==null) return;
   clickSound("click");
+  // Hub flow: Next stays INSIDE the current zone's pack — the smart picker
+  // below deliberately hops across packs for variety, which is exactly wrong
+  // when the kid walked into a themed zone. Only ever active while the 3D
+  // hub opened this view (window._hubMissionFlow is set by the hub module);
+  // the normal Missions tab path below is untouched.
+  const hubFlow = window._hubMissionFlow;
+  if(hubFlow && hubFlow.packKey){
+    const packList = missions.filter(m=>m.pack===hubFlow.packKey);
+    if(packList.length && packList.every(m=>done.has(m.id))){
+      showToast("Zone Complete! 🏆");
+      trackEvent("Hub Zone Complete Close");
+      closeMission();
+      return;
+    }
+    const i = packList.findIndex(m=>m.id===lastOpenedId);
+    for(let k=1;k<=packList.length;k++){
+      const cand = packList[(i+k) % packList.length];
+      if(!done.has(cand.id)){
+        trackEvent("Mission Next Hub Pack");
+        openMission(cand.id);
+        return;
+      }
+    }
+    openMission(packList[(i+1) % packList.length].id);
+    return;
+  }
   // Akıllı öneri (mevcut mission tamamlandıysa)
   const smartId = pickSmartNextMission(lastOpenedId);
   if(smartId){
@@ -3858,21 +3908,19 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-65");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-68");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
-      // Hub'ın kendi mission paneli gerçek done akışını kullanır — ayrı state
-      // icat etmez. markMissionDone tüm yan etkileriyle (badge, streak,
-      // persist, konfeti) aynen çalışır; undo da btnToggleDone'daki gerçek
-      // geri alma dizisinin birebir aynısıdır.
-      markMissionDone,
-      undoMissionDone(id){
-        if(!done.has(id)) return;
-        done.delete(id);
-        bumpDoneVersion();
-        persist();
-        renderList();
+      // Bridges into EXISTING app flows — the hub triggers them, never
+      // reimplements them: the real certificate modal, the real daily pick,
+      // and the single app-wide sound setting (no second mute concept).
+      openCertificate,
+      getDailyMissionId(){ return dailyIdStored; },
+      isSoundOn(){ return soundOn; },
+      setSoundOn(v){
+        soundOn = !!v;
+        lsSet(SOUND_KEY, soundOn ? "1" : "0");
       }
     });
   })();

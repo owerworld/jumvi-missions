@@ -49,8 +49,20 @@ export function initHub3D(opts) {
     surprise: 'surprise',
     help: 'How to play',
     helpLines: ['👆 Tap the ground — Leo walks there!', '🚪 Reach a glowing gate to open a mission', '🌱 Finish missions to grow each zone!'],
-    gotIt: 'Got it!'
+    gotIt: 'Got it!',
+    todaysMission: "🎯 Today's Mission",
+    certTitle: 'CHAMPION! 🏆',
+    certBody: function (n) { return 'You did ALL ' + n + ' missions!'; },
+    certBtn: 'Get your Champion Certificate!',
+    photo: 'Island photo'
   };
+
+  // ---------- DEMO MODE (?demo=1 — Amazon listing video capture) ----------
+  // Visual-only override: every zone unlocked, every growth prop shown, no
+  // ceremonies/invites. NEVER writes to the done Set or any storage — a page
+  // reload without the param is a normal user session again.
+  var demoMode = false;
+  try { demoMode = new URLSearchParams(window.location.search).get('demo') === '1'; } catch (e) {}
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
@@ -175,16 +187,14 @@ export function initHub3D(opts) {
       audioCtx = null; // synthesis unavailable in this browser — playTone() below becomes a no-op
     }
   }
-  // Mute preference persists across sessions (hub-only key — the app's own
-  // storage structures are untouched). A parent who muted it once shouldn't
-  // have to re-mute on every visit.
-  var HUB_MUTE_KEY = 'jumvi_3d_hub_muted';
-  var audioMuted = false;
-  try { audioMuted = localStorage.getItem(HUB_MUTE_KEY) === '1'; } catch (e) {}
-  function setAudioMuted(m) {
-    audioMuted = m;
-    try { localStorage.setItem(HUB_MUTE_KEY, m ? '1' : '0'); } catch (e) {}
-  }
+  // ONE sound setting for the whole product: the hub mirrors the app's own
+  // "🔊 Sound On" toggle (Settings) instead of keeping a second mute concept
+  // that would confuse parents. Reads live through opts so a change in
+  // Settings applies to the very next hub sound; the hub's mute button
+  // writes back through the app's own setter.
+  var isSoundOnFn = opts.isSoundOn || function () { return true; };
+  var setSoundOnFn = opts.setSoundOn || function () {};
+  function isMuted() { return !isSoundOnFn(); }
 
   // Autoplay policies block sound before a user gesture; the context starts
   // "suspended" and every real interaction entry point (keydown, tap-to-move
@@ -196,10 +206,34 @@ export function initHub3D(opts) {
     }
   }
 
-  // type: 'sine'|'triangle'|'square'; freq in Hz; duration in seconds;
-  // peakGain is pre-master (actual loudness = peakGain * masterGain.gain).
+  // ---- Toy-like sound palette ----
+  // Everything below aims for "wooden xylophone in a picture book": pure
+  // sine partials, high pitch, VERY short, low gain. The old palette's low
+  // triangle thumps (especially the footstep drone) tested as unsettling
+  // for small kids — nothing here sits below ~500Hz anymore.
+  //
+  // playNote = tiny marimba hit: fundamental + a quiet 4x partial that decays
+  // twice as fast, which is what reads as "mallet on wood" instead of "beep".
+  function playNote(freq, duration, peakGain, delaySec) {
+    if (!audioCtx || isMuted()) return;
+    var t0 = audioCtx.currentTime + (delaySec || 0);
+    [[freq, peakGain, duration], [freq * 4, peakGain * 0.18, duration * 0.5]].forEach(function (p) {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(p[0], t0);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(p[1], t0 + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + p[2]);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(t0);
+      osc.stop(t0 + p[2] + 0.02);
+    });
+  }
+  // kept as the generic primitive for the few non-percussive cues
   function playTone(freq, duration, type, peakGain, delaySec) {
-    if (!audioCtx || audioMuted) return;
+    if (!audioCtx || isMuted()) return;
     var t0 = audioCtx.currentTime + (delaySec || 0);
     var osc = audioCtx.createOscillator();
     var gain = audioCtx.createGain();
@@ -214,28 +248,34 @@ export function initHub3D(opts) {
     osc.stop(t0 + duration + 0.02);
   }
 
-  // Soft, low "pat" — short triangle thump, randomized a few Hz each time so
-  // a run of footsteps doesn't sound like a robotic loop. Triggered from
-  // updateMovement()'s own step cadence (see stepTimer below).
+  // Footstep → barely-there "plip", high and quiet (the old low 150Hz thump
+  // repeating forever was the single scariest sound in the test).
   function playStep() {
-    playTone(150 + Math.random() * 40, 0.09, 'triangle', 0.05, 0);
+    playNote(1150 + Math.random() * 180, 0.05, 0.016, 0);
   }
 
-  // Two-note ascending chime — the "you've reached a gate" cue, played once
-  // per arrival (checkGateProximity already dedupes via lastTriggeredGate,
-  // so this fires exactly once per gate, not every frame in range).
+  // Gate arrival — two bright marimba taps, once per arrival (deduped by
+  // lastTriggeredGate in checkGateProximity).
   function playChime() {
-    playTone(880, 0.18, 'sine', 0.07, 0);
-    playTone(1318.5, 0.22, 'sine', 0.06, 0.07);
+    playNote(1046.5, 0.12, 0.05, 0);
+    playNote(1568, 0.16, 0.045, 0.09);
   }
 
-  // Three-note ascending arpeggio — the zone-complete "success" cue, fired
-  // the same frame as the celebration card (see updateZoneLocks()).
+  // Zone-complete — quick joyful mallet run up a major chord.
   function playSuccess() {
-    playTone(523.25, 0.16, 'triangle', 0.09, 0);
-    playTone(659.25, 0.16, 'triangle', 0.09, 0.1);
-    playTone(783.99, 0.26, 'triangle', 0.1, 0.2);
+    playNote(1046.5, 0.12, 0.055, 0);
+    playNote(1318.5, 0.12, 0.055, 0.09);
+    playNote(1568, 0.12, 0.055, 0.18);
+    playNote(2093, 0.22, 0.06, 0.27);
   }
+
+  // "Come back to the island" whistle — timer's up in the mission view; a
+  // gentle two-note up-slide, exposed for app.js's timer-end hook.
+  function playComeBack() {
+    playNote(1318.5, 0.2, 0.055, 0);
+    playNote(1760, 0.3, 0.05, 0.16);
+  }
+  window._hub3dComeBack = playComeBack;
 
   // Top-right mute toggle — parent-facing, independent of every other HUD
   // element above (own absolute position, not nested in hudTop's
@@ -244,10 +284,10 @@ export function initHub3D(opts) {
   muteBtn.type = 'button';
   muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
   muteBtn.style.cssText = 'position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
-  muteBtn.textContent = audioMuted ? '🔇' : '🔊';
+  muteBtn.textContent = isMuted() ? '🔇' : '🔊';
   muteBtn.addEventListener('click', function () {
-    setAudioMuted(!audioMuted);
-    muteBtn.textContent = audioMuted ? '🔇' : '🔊';
+    setSoundOnFn(isMuted()); // flip the app-wide setting
+    muteBtn.textContent = isMuted() ? '🔇' : '🔊';
     resumeAudio();
   });
   container.appendChild(muteBtn);
@@ -278,6 +318,127 @@ export function initHub3D(opts) {
   });
   helpCardEl.querySelector('button').addEventListener('click', function () {
     helpCardEl.style.display = 'none';
+  });
+
+  // ---------- "TODAY'S MISSION" AUTO-WALK (screen→play bridge) ----------
+  // One tap and Leo walks himself along the trail to the right gate — a
+  // 3-year-old needs zero navigation skill. Uses the app's real daily pick;
+  // if that zone is still fog-locked, falls back to the first not-done
+  // mission in an unlocked zone. Waypoints follow pathCenterX so he visibly
+  // walks THE TRAIL, with a line of glow dots showing where he's headed.
+  var dailyBtn = document.createElement('button');
+  dailyBtn.type = 'button';
+  dailyBtn.textContent = HUB_TEXTS.todaysMission;
+  dailyBtn.style.cssText = 'position:absolute;bottom:16px;left:14px;z-index:11;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:13px;font-weight:900;padding:10px 14px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  container.appendChild(dailyBtn);
+
+  var autoWalk = null; // { points: [{x,z}], i }
+  // Trail dots are created lazily on first use: this HUD block runs before
+  // the THREE scene exists, and the dots aren't needed until the first tap
+  // on the Today's Mission button anyway.
+  var trailDots = [];
+  function ensureTrailDots() {
+    if (trailDots.length) return;
+    var trailDotMat = new THREE.MeshBasicMaterial({ color: 0xFFE9A0, transparent: true, opacity: 0.9, depthWrite: false });
+    for (var tdi = 0; tdi < 10; tdi++) {
+      var dot = new THREE.Mesh(new THREE.CircleGeometry(0.14, 10), trailDotMat);
+      dot.rotation.x = -Math.PI / 2;
+      dot.position.y = 0.03;
+      dot.visible = false;
+      scene.add(dot);
+      trailDots.push(dot);
+    }
+  }
+  function showTrail(points) {
+    ensureTrailDots();
+    for (var i = 0; i < trailDots.length; i++) {
+      var pi = Math.floor((i / trailDots.length) * points.length);
+      var pt = points[Math.min(pi, points.length - 1)];
+      trailDots[i].position.x = pt.x;
+      trailDots[i].position.z = pt.z;
+      trailDots[i].visible = true;
+    }
+  }
+  function hideTrail() {
+    for (var i = 0; i < trailDots.length; i++) trailDots[i].visible = false;
+  }
+  function cancelAutoWalk() {
+    if (autoWalk) { autoWalk = null; hideTrail(); }
+  }
+  function startAutoWalkToMission() {
+    resumeAudio();
+    dismissCoachBubble();
+    var id = opts.getDailyMissionId ? opts.getDailyMissionId() : null;
+    var ms = id != null ? missions.filter(function (m) { return m.id === id; })[0] : null;
+    var cfg = ms ? gateConfig.filter(function (c) { return c.packKey === ms.pack; })[0] : null;
+    if (!cfg || !isZoneUnlocked(cfg.zoneIndex)) {
+      cfg = null;
+      for (var gi = 0; gi < gateConfig.length; gi++) {
+        if (!isZoneUnlocked(gateConfig[gi].zoneIndex)) break;
+        var undone = packMissionList(gateConfig[gi].packKey).filter(function (m) { return !done.has(m.id); })[0];
+        if (undone) { cfg = gateConfig[gi]; break; }
+      }
+      if (!cfg) cfg = gateConfig[0];
+    }
+    var pts = [];
+    var z0 = leo.group.position.z;
+    var z1 = cfg.z + 1.0; // just inside the gate's trigger radius
+    var step = z1 < z0 ? -3 : 3;
+    for (var z = z0 + step; (step < 0 ? z > z1 : z < z1); z += step) {
+      pts.push({ x: pathCenterX(z), z: z });
+    }
+    pts.push({ x: cfg.x, z: z1 });
+    autoWalk = { points: pts, i: 0 };
+    moveTargetActive = false; // next frame picks up the first waypoint
+    showTrail(pts);
+    playChime();
+  }
+  dailyBtn.addEventListener('click', startAutoWalkToMission);
+
+  // ---------- ISLAND PHOTO (share/download a snapshot) ----------
+  var photoBtn = document.createElement('button');
+  photoBtn.type = 'button';
+  photoBtn.setAttribute('aria-label', HUB_TEXTS.photo);
+  photoBtn.textContent = '📷';
+  photoBtn.style.cssText = 'position:absolute;top:102px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
+  container.appendChild(photoBtn);
+  photoBtn.addEventListener('click', function () {
+    resumeAudio();
+    playChime();
+    // fresh render in this same task so toDataURL sees pixels without
+    // needing preserveDrawingBuffer (which costs memory every frame)
+    renderer.render(scene, camera);
+    var src = renderer.domElement;
+    var out = document.createElement('canvas');
+    out.width = src.width; out.height = src.height;
+    var octx = out.getContext('2d');
+    octx.drawImage(src, 0, 0);
+    var bh = Math.max(40, Math.round(out.height * 0.065));
+    var pad = Math.round(bh * 0.4);
+    octx.fillStyle = 'rgba(255,255,255,0.92)';
+    octx.fillRect(0, out.height - bh, out.width, bh);
+    octx.fillStyle = '#3a2a1a';
+    octx.textBaseline = 'middle';
+    octx.font = '900 ' + Math.round(bh * 0.46) + 'px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    octx.fillText('JUMVI', pad, out.height - bh / 2);
+    octx.textAlign = 'right';
+    octx.font = '700 ' + Math.round(bh * 0.4) + 'px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    octx.fillText(themeForZone(currentZoneIndex()).cardTitle, out.width - pad, out.height - bh / 2);
+    octx.textAlign = 'left';
+    out.toBlob(function (blob) {
+      if (!blob) return;
+      var file = null;
+      try { file = new File([blob], 'jumvi-island.png', { type: 'image/png' }); } catch (e) {}
+      if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'JUMVI Island' }).catch(function () {});
+      } else {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'jumvi-island.png';
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
+      }
+    }, 'image/png');
   });
 
   // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
@@ -529,6 +690,109 @@ export function initHub3D(opts) {
     scene.add(stars);
   })();
 
+  // ---------- VISIBLE PATH (dirt trail gate-to-gate along the zigzag) ----------
+  // A ribbon of triangles following pathCenterX with an organically wobbling
+  // width — the "walk HERE" affordance the corridor never had. It runs the
+  // whole island (one draw call) and simply continues under the locked-zone
+  // fog walls, so the trail visibly disappears INTO the mist ("the road goes
+  // on — what's up there?").
+  (function buildTrail() {
+    var verts = [], idx = [], i = 0;
+    for (var z = START_BOUNDARY_Z + 1.5; z >= -pathTotalLength + START_BOUNDARY_Z + 6; z -= 1.5) {
+      var c = pathCenterX(z);
+      var w = 1.15 + Math.sin(z * 0.9) * 0.18 + Math.sin(z * 2.3) * 0.08;
+      verts.push(c - w, 0.015, z, c + w, 0.015, z);
+      if (i > 0) {
+        var a = (i - 1) * 2, b = a + 1, d = i * 2, e = d + 1;
+        idx.push(a, d, b, b, d, e);
+      }
+      i++;
+    }
+    var trailGeo = new THREE.BufferGeometry();
+    trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(verts), 3));
+    trailGeo.setIndex(idx);
+    trailGeo.computeVertexNormals();
+    var trail = new THREE.Mesh(trailGeo, new THREE.MeshStandardMaterial({ color: 0xC9A879, flatShading: true }));
+    trail.receiveShadow = true;
+    scene.add(trail);
+  })();
+
+  // ---------- ISLAND: SEA + SHORE + HORIZON ----------
+  // The world used to end in flat void past the ground strips. Now it reads
+  // as an actual island: a sand apron under the ground plane's edges, a huge
+  // slow-waving sea plane below that, two silhouette islands far out in the
+  // fog, and a few drifting clouds. All cheap: one 20x20-segment sea plane
+  // with the same reuse-base-positions wave trick as the river, and the rest
+  // is static or transform-only.
+  var seaGeo = new THREE.PlaneGeometry(320, 320, 20, 20);
+  var sea = new THREE.Mesh(seaGeo, new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true }));
+  sea.rotation.x = -Math.PI / 2;
+  sea.position.set(0, -0.24, -(pathTotalLength / 2) + START_BOUNDARY_Z);
+  scene.add(sea);
+  var seaBasePositions = seaGeo.attributes.position.array.slice();
+  function updateSea(elapsedTime) {
+    var arr = seaGeo.attributes.position.array;
+    for (var i = 0; i < arr.length; i += 3) {
+      arr[i + 2] = Math.sin(seaBasePositions[i] * 0.25 + elapsedTime * 1.1) * 0.09 +
+        Math.sin(seaBasePositions[i + 1] * 0.3 + elapsedTime * 0.8) * 0.07;
+    }
+    seaGeo.attributes.position.needsUpdate = true;
+  }
+
+  var shore = new THREE.Mesh(
+    new THREE.PlaneGeometry(groundWidth + 14, pathTotalLength + 16, 1, 1),
+    new THREE.MeshStandardMaterial({ color: 0xEFDCA6, flatShading: true })
+  );
+  shore.rotation.x = -Math.PI / 2;
+  shore.position.set(0, -0.12, -(pathTotalLength / 2) + START_BOUNDARY_Z);
+  scene.add(shore);
+
+  var farIslandMat = new THREE.MeshStandardMaterial({ color: 0x6f8f77, flatShading: true });
+  [[-62, -60, 7, 2.4], [58, -25, 5, 1.8]].forEach(function (isl) {
+    var mound = new THREE.Mesh(new THREE.ConeGeometry(isl[2], isl[3], 7), farIslandMat);
+    mound.position.set(isl[0], -0.2 + isl[3] / 2 - 0.4, isl[1]);
+    scene.add(mound);
+  });
+
+  var cloudMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, flatShading: true, transparent: true, opacity: 0.85 });
+  var clouds = [];
+  for (var ci = 0; ci < 4; ci++) {
+    var cloud = new THREE.Group();
+    [[0, 0, 0, 1.4], [1.2, 0.25, 0.3, 1.0], [-1.1, 0.15, -0.2, 0.9]].forEach(function (p) {
+      var puff = new THREE.Mesh(new THREE.SphereGeometry(p[3], 7, 6), cloudMat);
+      puff.position.set(p[0], p[1], p[2]);
+      puff.scale.y = 0.55;
+      cloud.add(puff);
+    });
+    cloud.position.set(-30 + Math.random() * 60, 13 + Math.random() * 5, START_BOUNDARY_Z - 10 - Math.random() * (pathTotalLength - 20));
+    cloud.userData.speed = 0.25 + Math.random() * 0.25;
+    scene.add(cloud);
+    clouds.push(cloud);
+  }
+  function updateClouds(delta) {
+    for (var i = 0; i < clouds.length; i++) {
+      var c = clouds[i];
+      c.position.x += c.userData.speed * delta;
+      if (c.position.x > 45) c.position.x = -45;
+    }
+  }
+
+  // ---------- LIVING WORLD: wind sway registry ----------
+  // Vegetal props (trees/bamboo/palms/flowers) register here at build time;
+  // updateSway() gives each a tiny phase-offset rotation wobble. Pure
+  // transform animation — no vertex work, no per-frame allocation.
+  var swayList = [];
+  function registerSway(obj, amp) {
+    swayList.push({ obj: obj, phase: Math.random() * Math.PI * 2, amp: amp, speed: 0.7 + Math.random() * 0.6 });
+    return obj;
+  }
+  function updateSway(elapsedTime) {
+    for (var i = 0; i < swayList.length; i++) {
+      var it = swayList[i];
+      it.obj.rotation.z = Math.sin(elapsedTime * it.speed + it.phase) * it.amp;
+    }
+  }
+
   function makeTree(x, z, scale) {
     var group = new THREE.Group();
     var trunk = new THREE.Mesh(
@@ -556,7 +820,7 @@ export function initHub3D(opts) {
 
     group.position.set(x, 0, z);
     group.scale.setScalar(scale || 1);
-    return group;
+    return registerSway(group, 0.022);
   }
 
   // ---------- THEME DECOR BUILDERS ----------
@@ -653,7 +917,7 @@ export function initHub3D(opts) {
       g.add(cane);
     }
     g.position.set(x, 0, z);
-    return g;
+    return registerSway(g, 0.03);
   }
   function makeStoneLantern(x, z) {
     var g = new THREE.Group();
@@ -826,7 +1090,7 @@ export function initHub3D(opts) {
     }
     g.position.set(x, 0, z);
     g.rotation.y = Math.random() * Math.PI * 2;
-    return g;
+    return registerSway(g, 0.028);
   }
   function makeBeachUmbrella(x, z) {
     var g = new THREE.Group();
@@ -960,7 +1224,7 @@ export function initHub3D(opts) {
       group.add(petal);
     }
     group.position.set(x, 0, z);
-    return group;
+    return registerSway(group, 0.06);
   }
 
   // Slowly-rotating gold sparkle ring shown only once a pack is 100% complete.
@@ -1183,6 +1447,7 @@ export function initHub3D(opts) {
   // mission, scaled if a pack ever has ≠6 missions, and never "full" before
   // the pack really is 100% (the champion moment stays exclusive to done).
   function visibleSlotsForPack(packKey) {
+    if (demoMode) return DECOR_SLOT_DEFS.length;
     var frac = getPackCompletion(packKey);
     if (frac >= 1) return DECOR_SLOT_DEFS.length;
     return Math.min(DECOR_SLOT_DEFS.length - 1, Math.floor(frac * DECOR_SLOT_DEFS.length + 1e-6));
@@ -1431,6 +1696,128 @@ export function initHub3D(opts) {
   for (var fwIdx = 1; fwIdx < gateConfig.length; fwIdx++) {
     fogWalls.push(createFogWall(fwIdx));
   }
+  if (demoMode) {
+    fogWalls.forEach(function (fw) { fw.dissolved = true; fw.wall.visible = false; fw.particles.visible = false; });
+  }
+
+  // ---------- ZONE LANDMARKS + ENTRANCE SIGNPOSTS ----------
+  // One BIG instantly-readable icon structure per zone (the small edge props
+  // set the texture, the landmark sets the identity: "this is the target
+  // range") plus a wooden signpost with the zone's name at each entrance.
+  var toriiMat = new THREE.MeshStandardMaterial({ color: 0xC6423B, flatShading: true });
+  var houseWallMat = new THREE.MeshStandardMaterial({ color: 0xF2E2C4, flatShading: true });
+  var lighthouseWhiteMat = new THREE.MeshStandardMaterial({ color: 0xF7F3E8, flatShading: true });
+  function makeLandmark(themeKey) {
+    var g = new THREE.Group();
+    if (themeKey === 'energy') {
+      var tower = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.42, 3.4, 6), darkPoleMat);
+      tower.position.y = 1.7; tower.castShadow = true; g.add(tower);
+      var coil = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.09, 8, 14), energyOrbMat);
+      coil.rotation.x = Math.PI / 2; coil.position.y = 3.0; g.add(coil);
+      var orb = new THREE.Mesh(new THREE.SphereGeometry(0.62, 10, 10), energyOrbMat);
+      orb.position.y = 3.9; g.add(orb);
+    } else if (themeKey === 'target') {
+      [-0.55, 0.55].forEach(function (lx) {
+        var leg = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.1, 2.4, 6), woodMat);
+        leg.position.set(lx, 1.2, 0); leg.rotation.x = lx < 0 ? 0.14 : -0.14; leg.castShadow = true; g.add(leg);
+      });
+      [[1.4, 0], [1.0, 0.02], [0.6, 0.04], [0.24, 0.06]].forEach(function (r, ri) {
+        var disc = new THREE.Mesh(new THREE.CircleGeometry(r[0], 24), ri % 2 ? targetWhiteMat : targetRedMat);
+        disc.position.set(0, 2.6, r[1]); g.add(disc);
+      });
+    } else if (themeKey === 'zen') {
+      [-1.1, 1.1].forEach(function (lx) {
+        var pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.17, 2.6, 7), toriiMat);
+        pillar.position.set(lx, 1.3, 0); pillar.castShadow = true; g.add(pillar);
+      });
+      var beamTop = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.24, 0.3), toriiMat);
+      beamTop.position.y = 2.72; beamTop.castShadow = true; g.add(beamTop);
+      var beamMid = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.18, 0.24), toriiMat);
+      beamMid.position.y = 2.2; g.add(beamMid);
+      var pond = new THREE.Mesh(new THREE.CircleGeometry(1.0, 16), poolMat);
+      pond.rotation.x = -Math.PI / 2; pond.position.set(1.9, 0.02, 0.6); g.add(pond);
+    } else if (themeKey === 'play') {
+      var ramp = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.12, 3.2), slideMat);
+      ramp.position.y = 1.15; ramp.rotation.x = 0.68; ramp.castShadow = true; g.add(ramp);
+      [-0.35, 0.35].forEach(function (lx) {
+        var post = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 2.2, 6), flagPoleMat);
+        post.position.set(lx, 1.1, -1.35); g.add(post);
+      });
+      var deck = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.12, 0.8), slideMat);
+      deck.position.set(0, 2.15, -1.35); g.add(deck);
+      var arch = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.1, 8, 12, Math.PI), benchMat);
+      arch.position.set(0, 2.3, -1.35); g.add(arch);
+    } else if (themeKey === 'home') {
+      var walls = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.7, 1.8), houseWallMat);
+      walls.position.y = 0.85; walls.castShadow = true; g.add(walls);
+      var roof = new THREE.Mesh(new THREE.ConeGeometry(1.85, 1.2, 4), toriiMat);
+      roof.position.y = 2.3; roof.rotation.y = Math.PI / 4; roof.castShadow = true; g.add(roof);
+      var door = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.9, 0.06), woodMat);
+      door.position.set(0, 0.45, 0.92); g.add(door);
+      var win = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.45, 0.06), poolMat);
+      win.position.set(0.65, 1.05, 0.92); g.add(win);
+    } else {
+      // beach lighthouse: striped stack + glowing lamp
+      for (var li = 0; li < 4; li++) {
+        var band = new THREE.Mesh(new THREE.CylinderGeometry(0.42 - li * 0.05, 0.46 - li * 0.05, 0.8, 8), li % 2 ? toriiMat : lighthouseWhiteMat);
+        band.position.y = 0.4 + li * 0.8; band.castShadow = true; g.add(band);
+      }
+      var lamp = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), energyOrbMat);
+      lamp.position.y = 3.5; g.add(lamp);
+      var cap = new THREE.Mesh(new THREE.ConeGeometry(0.36, 0.4, 8), toriiMat);
+      cap.position.y = 3.95; g.add(cap);
+    }
+    return g;
+  }
+  gateConfig.forEach(function (cfg, i) {
+    var lz = cfg.z + 2.6;
+    var side = (i % 2 === 0) ? 1 : -1;
+    var lx = pathCenterX(lz) + side * (corridorHalfWidthAt(lz) + 3.2);
+    var lm = makeLandmark(themeForZone(cfg.zoneIndex).key);
+    lm.position.set(lx, 0, lz);
+    lm.lookAt(pathCenterX(lz), 0, lz);
+    scene.add(lm);
+
+    // entrance signpost: wooden post + billboarded zone-name label
+    var sz = (cfg.zoneIndex === 0 ? START_BOUNDARY_Z - 2.5 : zoneBoundaryZ(cfg.zoneIndex) - 1.6);
+    var sx = pathCenterX(sz) + (corridorHalfWidthAt(sz) + 0.9) * (i % 2 === 0 ? -1 : 1);
+    var post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 1.2, 6), woodMat);
+    post.position.set(sx, 0.6, sz);
+    post.castShadow = true;
+    scene.add(post);
+    var signLabel = createLabelSprite(themeForZone(cfg.zoneIndex).cardTitle);
+    signLabel.position.set(sx, 1.55, sz);
+    scene.add(signLabel);
+  });
+
+  // ---------- DRIFTING LEAVES (occasional, forest feel) ----------
+  var leafMat = new THREE.MeshStandardMaterial({ color: 0xD9A44A, flatShading: true, side: THREE.DoubleSide });
+  var leaves = [];
+  for (var lfi = 0; lfi < 6; lfi++) {
+    var leaf = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.11), leafMat);
+    var anchorZ = -2 - Math.random() * 30;
+    leaf.userData = {
+      ax: pathCenterX(anchorZ) + (Math.random() - 0.5) * 8,
+      az: anchorZ,
+      phase: Math.random() * Math.PI * 2,
+      fall: 0.09 + Math.random() * 0.06,
+      y0: 4.5 + Math.random() * 2
+    };
+    scene.add(leaf);
+    leaves.push(leaf);
+  }
+  function updateLeaves(elapsedTime) {
+    for (var i = 0; i < leaves.length; i++) {
+      var lf = leaves[i], u = lf.userData;
+      var cycle = (elapsedTime * u.fall + u.phase) % 1.0;
+      lf.position.set(
+        u.ax + Math.sin(elapsedTime * 1.3 + u.phase) * 0.9,
+        u.y0 * (1 - cycle),
+        u.az + Math.cos(elapsedTime * 0.9 + u.phase) * 0.6
+      );
+      lf.rotation.set(elapsedTime * 1.7 + u.phase, elapsedTime * 1.1, 0);
+    }
+  }
 
   // ---------- COACH LEO (from shared module — no character code duplicated here) ----------
   // Real GLTF model approved by user comparison — replaces the procedural
@@ -1534,7 +1921,7 @@ export function initHub3D(opts) {
   // destination (and slides the ring along) without replaying the ring's
   // lock-on animation every frame.
   function setMoveTargetFromClient(clientX, clientY, isDrag) {
-    if (panelOpen) return; // controls off while the mission sheet is up
+    if (isMissionViewOpen()) return; // controls off while the mission view is up
     var rect = renderer.domElement.getBoundingClientRect();
     var ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
     var ndcY = -((clientY - rect.top) / rect.height) * 2 + 1;
@@ -1557,6 +1944,7 @@ export function initHub3D(opts) {
     moveTarget.x = THREE.MathUtils.clamp(hit.point.x, tCenter - tHalf, tCenter + tHalf);
     moveTarget.z = tz;
     moveTargetActive = true;
+    if (!isDrag) cancelAutoWalk(); // a fresh manual tap overrides the guided walk
     if (isDrag) {
       targetRing.position.x = moveTarget.x;
       targetRing.position.z = moveTarget.z;
@@ -1598,7 +1986,7 @@ export function initHub3D(opts) {
 
   function updateMovement(delta) {
     var ix = 0, iz = 0;
-    if (!panelOpen) {
+    if (!isMissionViewOpen()) {
       if (keys.f) iz -= 1;
       if (keys.b) iz += 1;
       if (keys.l) ix -= 1;
@@ -1607,6 +1995,24 @@ export function initHub3D(opts) {
     if (keys.f || keys.b || keys.l || keys.r) {
       if (moveTargetActive) fadeOutTargetRing();
       moveTargetActive = false; // WASD takes over from an in-progress tap-to-move walk
+      cancelAutoWalk();
+    }
+
+    // Auto-walk waypoint feed: when the current leg is finished, hand the
+    // movement system the next point on the trail. Intermediate waypoints
+    // are pass-through (no slow-down, generous arrive radius) so the walk
+    // reads as one continuous stroll, not stop-and-go.
+    if (autoWalk && !moveTargetActive && ix === 0 && iz === 0 && !isMissionViewOpen()) {
+      if (autoWalk.i < autoWalk.points.length) {
+        var wp = autoWalk.points[autoWalk.i++];
+        moveTarget.x = wp.x;
+        moveTarget.z = wp.z;
+        moveTargetActive = true;
+        if (autoWalk.i === autoWalk.points.length) showTargetRing(wp.x, wp.z);
+      } else {
+        autoWalk = null;
+        hideTrail();
+      }
     }
 
     // Tap-to-move steering: world-space direction straight toward the tapped
@@ -1615,16 +2021,18 @@ export function initHub3D(opts) {
     // already driving ix/iz above.
     var tapSlowFactor = 1;
     if (ix === 0 && iz === 0 && moveTargetActive) {
+      var isThroughPoint = autoWalk && autoWalk.i < autoWalk.points.length;
+      var arriveDist = isThroughPoint ? 1.1 : MOVE_ARRIVE_DIST;
       var dxT = moveTarget.x - leo.group.position.x;
       var dzT = moveTarget.z - leo.group.position.z;
       var distT = Math.sqrt(dxT * dxT + dzT * dzT);
-      if (distT < MOVE_ARRIVE_DIST) {
+      if (distT < arriveDist) {
         moveTargetActive = false;
         fadeOutTargetRing();
       } else {
         ix = dxT / distT;
         iz = dzT / distT;
-        tapSlowFactor = Math.min(1, distT / MOVE_SLOW_RADIUS);
+        if (!isThroughPoint) tapSlowFactor = Math.min(1, distT / MOVE_SLOW_RADIUS);
       }
     }
 
@@ -1723,312 +2131,49 @@ export function initHub3D(opts) {
     var forwardX = Math.sin(cameraFacing), forwardZ = Math.cos(cameraFacing);
     var targetCamX = leo.group.position.x - forwardX * CAM_DISTANCE_BACK;
     var targetCamZ = leo.group.position.z - forwardZ * CAM_DISTANCE_BACK;
+    var targetCamY = CAM_HEIGHT;
+    var lookAtX = leo.group.position.x + forwardX * CAM_LOOKAHEAD_DIST;
+    var lookAtY = CAM_LOOKAHEAD_HEIGHT;
+    var lookAtZ = leo.group.position.z + forwardZ * CAM_LOOKAHEAD_DIST;
+
+    // Medal ceremony: borrow the camera for a soft push-in on the completed
+    // gate, then hand it back — same lerp machinery, just different targets.
+    if (ceremonyFocus) {
+      var gc = ceremonyFocus.cfg;
+      targetCamX = gc.x;
+      targetCamZ = gc.z + 4.6;
+      targetCamY = 2.6;
+      lookAtX = gc.x; lookAtY = 1.3; lookAtZ = gc.z;
+      camLagFactor = 3.2;
+    }
 
     camera.position.x += (targetCamX - camera.position.x) * Math.min(delta * camLagFactor, 1);
     camera.position.z += (targetCamZ - camera.position.z) * Math.min(delta * camLagFactor, 1);
-    camera.position.y += (CAM_HEIGHT - camera.position.y) * Math.min(delta * camLagFactor, 1);
+    camera.position.y += (targetCamY - camera.position.y) * Math.min(delta * camLagFactor, 1);
 
-    var lookAtX = leo.group.position.x + forwardX * CAM_LOOKAHEAD_DIST;
-    var lookAtZ = leo.group.position.z + forwardZ * CAM_LOOKAHEAD_DIST;
-    camera.lookAt(lookAtX, CAM_LOOKAHEAD_HEIGHT, lookAtZ);
+    camera.lookAt(lookAtX, lookAtY, lookAtZ);
   }
 
-  // ---------- HUB MISSION PANEL (hub-native bottom sheet) ----------
-  // Replaces the shared #backdrop/#sheet flow entirely FOR THE HUB: the app's
-  // own mission panel + its Next/smart-pick logic are never invoked from here
-  // anymore (that logic deliberately hops across packs for variety, which is
-  // exactly wrong inside a themed zone). This panel renders the SAME mission
-  // data (missions/done/MISSION_ICONS — nothing re-authored) in a cozy
-  // storybook bottom sheet, themed per zone, and its navigation is locked to
-  // the current pack. Done/undo route through the real app flow via
-  // opts.markMissionDone / opts.undoMissionDone, so badges/streak/persist all
-  // behave exactly as if the tap happened in the Missions tab.
-  var markMissionDoneFn = opts.markMissionDone;
-  var undoMissionDoneFn = opts.undoMissionDone;
-
-  // Per-zone panel palette (spec'd): bg gradient + accent + readable text.
-  var PANEL_THEMES = {
-    energy: { bg1: '#3b3066', bg2: '#282250', accent: '#FFD23F', text: '#FFF4DC', boxBg: 'rgba(255,255,255,0.10)', onAccent: '#3a2a00' },
-    target: { bg1: '#3f7fc4', bg2: '#2c5f9e', accent: '#FF5A5A', text: '#FFFFFF', boxBg: 'rgba(255,255,255,0.14)', onAccent: '#FFFFFF' },
-    zen: { bg1: '#f7ecd9', bg2: '#efdfc2', accent: '#4a8c5f', text: '#3a2a1a', boxBg: 'rgba(74,124,106,0.12)', onAccent: '#FFFFFF' },
-    play: { bg1: '#ef8b33', bg2: '#d96f1e', accent: '#FFD23F', text: '#FFFFFF', boxBg: 'rgba(255,255,255,0.16)', onAccent: '#4a3000' },
-    home: { bg1: '#f5c07a', bg2: '#e29b52', accent: '#6F4E2C', text: '#3a2a1a', boxBg: 'rgba(255,255,255,0.28)', onAccent: '#FFF4DC' },
-    beach: { bg1: '#59bfd6', bg2: '#3da4bd', accent: '#F0DCA0', text: '#FFFFFF', boxBg: 'rgba(255,255,255,0.16)', onAccent: '#4a3a10' }
-  };
-
-  if (!document.getElementById('hub3dPanelStyle')) {
-    var panelStyle = document.createElement('style');
-    panelStyle.id = 'hub3dPanelStyle';
-    panelStyle.textContent = [
-      // Sheet shell: wooden frame (same layered-gradient technique as the old
-      // shared-sheet skin) wrapping a theme-coloured scrollable inner column.
-      // Height is driven by the REAL dynamic viewport (dvh — iOS Safari's vh
-      // ignores the collapsing address bar and overflows), minus room for the
-      // top HUD; the plain-vh line right before it is the fallback for older
-      // browsers and gets overridden wherever dvh is supported.
-      // bottom offset clears the app's #bottomNav tab bar (61px + iOS home
-      // indicator inset) — without it the sheet's footer buttons slid in
-      // BEHIND the tab bar and were untappable on device.
-      '.hub3dSheet{position:absolute;left:0;right:0;z-index:20;',
-      'bottom:calc(61px + env(safe-area-inset-bottom, 0px));',
-      'max-height:calc(100vh - 200px);',
-      'max-height:calc(100dvh - 200px - env(safe-area-inset-top, 0px));',
-      'transform:translateY(108%);transition:transform 460ms cubic-bezier(.34,1.56,.64,1);',
-      'border-radius:24px 24px 0 0;padding:9px 9px 0;box-sizing:border-box;',
-      'background:',
-      'repeating-linear-gradient(90deg,transparent 0 5px,rgba(255,255,255,.05) 5px 6px),',
-      'repeating-linear-gradient(180deg,transparent 0 64px,rgba(0,0,0,.28) 64px 66px),',
-      'linear-gradient(168deg,#5b3f29,#3f2817);',
-      'box-shadow:0 -14px 30px rgba(0,0,0,.35),inset 0 2px 0 rgba(255,255,255,.12);',
-      'display:flex;flex-direction:column;',
-      'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}',
-      '.hub3dSheet.open{transform:translateY(0);}',
-      // Inner column: scrollable body + always-visible footer. Only the BODY
-      // scrolls — START / prev-next / progress live in the footer and can
-      // never be pushed off-screen by long step lists.
-      '.hub3dSheetInner{background:linear-gradient(175deg,var(--hp-bg1),var(--hp-bg2));color:var(--hp-text);',
-      'border-radius:17px 17px 0 0;display:flex;flex-direction:column;overflow:hidden;flex:1;min-height:0;}',
-      '.hub3dSheetBody{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;',
-      'flex:1;min-height:0;padding:14px 16px 8px;}',
-      // (safe-area inset is already accounted for in .hub3dSheet's bottom offset)
-      '.hub3dSheetFooter{flex:none;padding:10px 16px 12px;',
-      'background:linear-gradient(0deg,var(--hp-bg2),var(--hp-bg2));box-shadow:0 -6px 14px rgba(0,0,0,.14);}',
-      '.hub3dSheetTopRow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}',
-      '.hub3dSheetBtnRound{width:38px;height:38px;border-radius:50%;border:none;font-size:17px;cursor:pointer;',
-      'background:var(--hp-box);color:var(--hp-text);display:flex;align-items:center;justify-content:center;padding:0;}',
-      '.hub3dBadgeChip{display:flex;align-items:center;gap:8px;margin-bottom:6px;}',
-      '.hub3dBadgeChip .chip{background:var(--hp-accent);color:var(--hp-on-accent);font-weight:900;font-size:13px;',
-      'padding:5px 12px;border-radius:12px;letter-spacing:.3px;}',
-      '.hub3dMissionTitle{font-size:22px;line-height:1.2;font-weight:900;margin:2px 0 8px;',
-      'animation:hub3dTitlePop 480ms cubic-bezier(.34,1.56,.64,1);}',
-      '@keyframes hub3dTitlePop{0%{opacity:0;transform:translateY(10px) scale(.94)}100%{opacity:1;transform:none}}',
-      '.hub3dMetaRow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}',
-      '.hub3dMetaRow span{background:var(--hp-box);border-radius:10px;padding:4px 10px;font-size:12px;font-weight:700;}',
-      // Mission motion-diagram card. Always a LIGHT surface regardless of the
-      // zone theme: the .jmv icon system draws with CSS-variable strokes tuned
-      // for the app's light/dark surfaces, so a fixed white card + explicitly
-      // re-pinned light tokens (below) is the only way the diagrams stay
-      // readable on every themed background — including when the OS/app is in
-      // dark mode, whose .jmv token flip would otherwise wash them out.
-      '.hub3dIconWrap{background:#ffffff;border-radius:14px;padding:12px;margin-bottom:10px;display:flex;justify-content:center;min-height:100px;align-items:center;}',
-      '.hub3dIconWrap:empty{display:none;}',
-      '.hub3dSheet .hub3dIconWrap.jmv, html.theme--dark .hub3dSheet .hub3dIconWrap.jmv{',
-      '--color-text-primary:#1f2430;--color-text-secondary:#5b6573;--color-text-tertiary:#9aa1ac;',
-      '--color-border-secondary:#cdd2d8;--color-border-tertiary:#e6e8ec;',
-      '--color-background-primary:#ffffff;--color-background-secondary:#f4f6f8;',
-      '--s:#5b6573;--b:#cdd2d8;--bg2:#f4f6f8;--p:#1f2430;--t:#9aa1ac;color:#5b6573;}',
-      '.hub3dIconWrap svg{max-width:100%;height:auto;min-width:200px;}',
-      '.hub3dSection{background:var(--hp-box);border-radius:14px;padding:12px 14px;margin-bottom:10px;}',
-      '.hub3dSectionHead{font-size:13px;font-weight:900;letter-spacing:.5px;margin-bottom:8px;opacity:.95;}',
-      '.hub3dSteps{margin:0;padding:0;list-style:none;}',
-      '.hub3dSteps li{display:flex;gap:9px;align-items:flex-start;font-size:15px;font-weight:600;line-height:1.35;margin-bottom:8px;}',
-      '.hub3dSteps li:last-child{margin-bottom:0;}',
-      '.hub3dStepNum{flex:none;width:22px;height:22px;border-radius:50%;background:var(--hp-accent);color:var(--hp-on-accent);',
-      'font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;margin-top:1px;}',
-      '.hub3dWinText{font-size:15px;font-weight:700;line-height:1.35;}',
-      '.hub3dStartBtn{display:block;width:100%;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);',
-      'color:#fff;font-size:19px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #27793a;',
-      'margin:0 0 8px;animation:hub3dStartBounce 1.6s ease-in-out infinite;font-family:inherit;}',
-      '@keyframes hub3dStartBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}',
-      '.hub3dStartBtn.running{animation:none;background:linear-gradient(180deg,#3f92c4,#2d6f9e);box-shadow:0 4px 0 #1d4a6e;}',
-      '.hub3dDoneBtn{display:block;width:100%;border:2px solid var(--hp-accent);border-radius:14px;background:transparent;',
-      'color:var(--hp-text);font-size:15px;font-weight:800;padding:11px 0;cursor:pointer;margin-bottom:8px;font-family:inherit;}',
-      '.hub3dDoneBtn.isDone{background:var(--hp-accent);color:var(--hp-on-accent);}',
-      '.hub3dZoneDoneBtn{display:block;width:100%;border:none;border-radius:16px;background:linear-gradient(180deg,#FFD23F,#E8A23A);',
-      'color:#4a3000;font-size:18px;font-weight:900;padding:15px 0;cursor:pointer;box-shadow:0 4px 0 #b07716;margin:0 0 8px;font-family:inherit;}',
-      '.hub3dNavRow{display:flex;gap:8px;margin-bottom:8px;}',
-      '.hub3dNavRow button{flex:1;border:none;border-radius:12px;background:var(--hp-box);color:var(--hp-text);',
-      'font-size:14px;font-weight:800;padding:10px 0;cursor:pointer;font-family:inherit;}',
-      '.hub3dNavRow button:disabled{opacity:.35;cursor:default;}',
-      '.hub3dProgressRow{text-align:center;font-size:13px;font-weight:800;opacity:.95;}',
-      '.hub3dProgressDots{letter-spacing:3px;font-size:15px;margin-top:2px;}',
-      // Mission motion-diagram markup (from jumvi-mission-icons.js) is styled
-      // for the app's .jmv token wrapper — keep it readable on themed bgs.
-      '.hub3dIconWrap .jmv{max-width:100%;}'
-    ].join('');
-    document.head.appendChild(panelStyle);
+  // ---------- MISSION VIEW BRIDGE (opens the app's FULL mission modal) ----------
+  // The hub's earlier custom bottom sheet is gone: gates now open the app's
+  // own full mission view (timer, caller, score, hold-to-done, tips&safety —
+  // everything, bit-identical to the Missions tab). The two historical bugs
+  // stay fixed by different means: cross-pack "smart next" is bypassed via
+  // window._hubMissionFlow (btnNext in app.js goes pack-scoped while it's
+  // set, and shows "Zone Complete!" when the pack is done), and
+  // markMissionDone's source guard is simply irrelevant now because the app
+  // view re-rendering itself on done is exactly what we want. Closing the
+  // modal lands back on the hub because the hub tab never stopped being the
+  // active tab underneath. window._hubMissionFlow is cleared by the app's
+  // closeMission().
+  var appBackdropEl = document.getElementById('backdrop');
+  function isMissionViewOpen() {
+    return !!(appBackdropEl && appBackdropEl.classList.contains('show'));
   }
-
-  var hubSheet = document.createElement('div');
-  hubSheet.className = 'hub3dSheet';
-  var hubSheetInner = document.createElement('div');
-  hubSheetInner.className = 'hub3dSheetInner';
-  var hubSheetBody = document.createElement('div');
-  hubSheetBody.className = 'hub3dSheetBody';
-  var hubSheetFooter = document.createElement('div');
-  hubSheetFooter.className = 'hub3dSheetFooter';
-  hubSheetInner.appendChild(hubSheetBody);
-  hubSheetInner.appendChild(hubSheetFooter);
-  hubSheet.appendChild(hubSheetInner);
-  container.appendChild(hubSheet);
-
-  var panelOpen = false;
-  var panelPackKey = null;
-  var panelMissionId = null;
-  var panelTimerId = null;
-
-  function stopPanelTimer() {
-    if (panelTimerId != null) { clearInterval(panelTimerId); panelTimerId = null; }
+  function openMissionFromHub(packKey, missionId) {
+    window._hubMissionFlow = { packKey: packKey };
+    openMission(missionId);
   }
-
-  function closeHubPanel() {
-    if (panelOpen) playTone(587.33, 0.12, 'sine', 0.045, 0); // soft "whoosh down" — mirrors the open chime
-    panelOpen = false;
-    stopPanelTimer();
-    hubSheet.classList.remove('open');
-  }
-
-  function escapeText(s) {
-    var d = document.createElement('div');
-    d.textContent = s == null ? '' : String(s);
-    return d.innerHTML;
-  }
-
-  // Renders one mission into the sheet. Everything shown is the REAL mission
-  // record (title/steps/win/meta/icon) — only the presentation is new. The
-  // scrollable body carries the content; START/nav/progress go into the
-  // fixed footer so they are ALWAYS on screen no matter how long the steps
-  // list is or how short the phone is.
-  function renderHubMission(ms) {
-    stopPanelTimer();
-    var cfg = gateConfig.filter(function (c) { return c.packKey === ms.pack; })[0];
-    var theme = themeForZone(cfg ? cfg.zoneIndex : 0);
-    var pt = PANEL_THEMES[theme.key] || PANEL_THEMES.zen;
-    hubSheetInner.style.setProperty('--hp-bg1', pt.bg1);
-    hubSheetInner.style.setProperty('--hp-bg2', pt.bg2);
-    hubSheetInner.style.setProperty('--hp-accent', pt.accent);
-    hubSheetInner.style.setProperty('--hp-text', pt.text);
-    hubSheetInner.style.setProperty('--hp-box', pt.boxBg);
-    hubSheetInner.style.setProperty('--hp-on-accent', pt.onAccent);
-
-    var list = packMissionList(ms.pack);
-    var idx = list.findIndex(function (m) { return m.id === ms.id; });
-    var doneInPack = list.filter(function (m) { return done.has(m.id); }).length;
-    var packDone = doneInPack === list.length && list.length > 0;
-    var isDone = done.has(ms.id);
-    var steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : [HUB_TEXTS.stepsSoon];
-    var iconMarkup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || '';
-    var dots = list.map(function (m, i) {
-      return done.has(m.id) ? '●' : (i === idx ? '◉' : '○');
-    }).join('');
-
-    hubSheetBody.innerHTML =
-      '<div class="hub3dSheetTopRow">' +
-        '<button class="hub3dSheetBtnRound" data-act="close" aria-label="' + HUB_TEXTS.close + '">✕</button>' +
-        '<button class="hub3dSheetBtnRound" data-act="mute" aria-label="' + HUB_TEXTS.sound + '">' + (audioMuted ? '🔇' : '🔊') + '</button>' +
-      '</div>' +
-      '<div class="hub3dBadgeChip"><span style="font-size:26px">' + escapeText(ms.icon) + '</span>' +
-        '<span class="chip">' + escapeText(theme.cardTitle) + '</span></div>' +
-      '<div class="hub3dMissionTitle">' + escapeText(ms.title) + '</div>' +
-      '<div class="hub3dMetaRow"><span>⏱ ' + escapeText(ms.time) + '</span><span>👥 ' + escapeText(ms.players) + '</span><span>🎂 ' + escapeText(ms.age) + '</span></div>' +
-      // "jmv" class is REQUIRED: every diagram draws with .jmv's CSS-variable
-      // strokes; without the class the vars are undefined and the drawings
-      // silently render blank (the exact bug seen on device).
-      '<div class="hub3dIconWrap jmv">' + iconMarkup + '</div>' +
-      '<div class="hub3dSection"><div class="hub3dSectionHead">📋 ' + HUB_TEXTS.steps + '</div><ul class="hub3dSteps">' +
-        steps.map(function (s, i) {
-          return '<li><span class="hub3dStepNum">' + (i + 1) + '</span><span>' + escapeText(s) + '</span></li>';
-        }).join('') +
-      '</ul></div>' +
-      '<div class="hub3dSection"><div class="hub3dSectionHead">🏆 ' + HUB_TEXTS.win + '</div>' +
-        '<div class="hub3dWinText">' + escapeText(ms.win || HUB_TEXTS.winSoon) + '</div></div>';
-
-    hubSheetFooter.innerHTML =
-      (packDone
-        ? '<button class="hub3dZoneDoneBtn" data-act="zonedone">' + HUB_TEXTS.zoneDoneBtn + '</button>'
-        : '<button class="hub3dStartBtn" data-act="start">' + HUB_TEXTS.start + '</button>') +
-      '<button class="hub3dDoneBtn' + (isDone ? ' isDone' : '') + '" data-act="toggledone">' +
-        (isDone ? HUB_TEXTS.doneUndo : HUB_TEXTS.didIt) + '</button>' +
-      '<div class="hub3dNavRow">' +
-        '<button data-act="prev"' + (idx <= 0 ? ' disabled' : '') + '>' + HUB_TEXTS.prev + '</button>' +
-        '<button data-act="next"' + (idx >= list.length - 1 ? ' disabled' : '') + '>' + HUB_TEXTS.next + '</button>' +
-      '</div>' +
-      '<div class="hub3dProgressRow">' + HUB_TEXTS.mission + ' ' + (idx + 1) + '/' + list.length +
-        '<div class="hub3dProgressDots">' + dots + '</div></div>';
-
-    hubSheetBody.scrollTop = 0;
-  }
-
-  function openHubPanel(packKey, missionId) {
-    var ms = missions.filter(function (m) { return m.id === missionId; })[0];
-    if (!ms) return;
-    panelOpen = true;
-    panelPackKey = packKey;
-    panelMissionId = missionId;
-    moveTargetActive = false; // panel takes over — stop any in-progress walk
-    fadeOutTargetRing();
-    renderHubMission(ms);
-    // double rAF so the closed transform is committed before .open animates
-    requestAnimationFrame(function () { requestAnimationFrame(function () { hubSheet.classList.add('open'); }); });
-    playChime();
-  }
-
-  // One delegated click handler for the whole sheet — survives every rerender.
-  hubSheetInner.addEventListener('click', function (e) {
-    var btn = e.target.closest ? e.target.closest('[data-act]') : null;
-    if (!btn) return;
-    var act = btn.getAttribute('data-act');
-    var list = packMissionList(panelPackKey);
-    var idx = list.findIndex(function (m) { return m.id === panelMissionId; });
-    resumeAudio();
-
-    if (act === 'close' || act === 'zonedone') {
-      closeHubPanel();
-    } else if (act === 'mute') {
-      setAudioMuted(!audioMuted);
-      btn.textContent = audioMuted ? '🔇' : '🔊';
-      muteBtn.textContent = audioMuted ? '🔇' : '🔊';
-    } else if (act === 'prev' && idx > 0) {
-      playTone(660, 0.08, 'sine', 0.05, 0);
-      panelMissionId = list[idx - 1].id;
-      renderHubMission(list[idx - 1]);
-    } else if (act === 'next' && idx < list.length - 1) {
-      playTone(740, 0.08, 'sine', 0.05, 0);
-      panelMissionId = list[idx + 1].id;
-      renderHubMission(list[idx + 1]);
-    } else if (act === 'toggledone') {
-      var ms = list[idx];
-      if (!ms) return;
-      if (done.has(ms.id)) {
-        if (undoMissionDoneFn) undoMissionDoneFn(ms.id);
-      } else if (markMissionDoneFn) {
-        markMissionDoneFn(ms.id, 'hub3d');
-      }
-      renderHubMission(ms); // re-render: done state, dots, zone-done button
-    } else if (act === 'start') {
-      // Simple play countdown from the mission's own time — the kid puts the
-      // phone down and plays; the chime marks time-up, then they self-report.
-      var msNow = list[idx];
-      var seconds = 60;
-      if (msNow && msNow.time && String(msNow.time).indexOf('s') !== -1) seconds = parseInt(msNow.time, 10) || 60;
-      // Mission 2 is Red Light, Green Light — the phone IS the game (the
-      // JumviRedLight caller yells GREEN/RED with a countdown). Same special
-      // case the app's own Start button has; a plain timer would gut the
-      // mission. Its overlay is position:fixed z-index 99999, so it plays
-      // fine on top of the hub and returns here when it ends.
-      if (msNow && msNow.id === 2 && window.JumviRedLight) {
-        window.JumviRedLight.start({ duration: seconds, speed: 'normal', sound: !audioMuted, onEnd: function () {} });
-        return;
-      }
-      var remaining = seconds;
-      btn.classList.add('running');
-      btn.textContent = HUB_TEXTS.running(remaining);
-      stopPanelTimer();
-      panelTimerId = setInterval(function () {
-        remaining--;
-        if (remaining <= 0) {
-          stopPanelTimer();
-          btn.classList.remove('running');
-          btn.textContent = HUB_TEXTS.timeUp;
-          playSuccess();
-        } else {
-          btn.textContent = HUB_TEXTS.running(remaining);
-          if (remaining <= 3) playTone(880, 0.07, 'sine', 0.04, 0);
-        }
-      }, 1000);
-      playTone(523.25, 0.1, 'triangle', 0.06, 0);
-    }
-  });
 
   // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
   var TRIGGER_RADIUS = 1.8;
@@ -2052,7 +2197,7 @@ export function initHub3D(opts) {
   }
 
   function checkGateProximity() {
-    if (panelOpen) return; // no re-trigger while the mission sheet is up
+    if (isMissionViewOpen()) return; // no re-trigger while the mission view is up
     var nearestGate = null, nearestDist = Infinity;
     gateConfig.forEach(function (cfg) {
       var dx = leo.group.position.x - cfg.x;
@@ -2089,7 +2234,7 @@ export function initHub3D(opts) {
       var missionId = getNextMissionIdForPack(gatePackKey);
       pendingGate = null;
       if (missionId != null) {
-        openHubPanel(gatePackKey, missionId);
+        openMissionFromHub(gatePackKey, missionId);
       }
     }
   }
@@ -2135,7 +2280,96 @@ export function initHub3D(opts) {
   // meshes/DOM are only touched when a count actually changes. The very
   // first pass (visibleSlots === -1) applies state silently — reward
   // fanfare is reserved for completions that happen while the hub is live.
+  // ---------- MEDAL CEREMONY (pack hits 100% while the hub is live) ----------
+  // Reward theater in four beats: soft camera zoom to the gate, a BIG gold
+  // medal with the pack's icon pops center-screen with confetti, the medal
+  // flies into its slot in the HUD badge bar (the "it joined my collection"
+  // link), and the badge slot pulses gold. Fog dissolve / next-zone opening
+  // then continues through the existing updateZoneLocks flow untouched.
+  var ceremonyFocus = null; // { cfg, start, dur } — camera override window
+  function startMedalCeremony(cfg) {
+    ceremonyFocus = { cfg: cfg, start: performance.now(), dur: 2600 };
+    playSuccess();
+    try {
+      if (window.confetti) {
+        window.confetti({ particleCount: 90, spread: 85, origin: { x: 0.5, y: 0.35 } });
+        setTimeout(function () { window.confetti({ particleCount: 60, spread: 70, origin: { x: 0.5, y: 0.3 } }); }, 400);
+      }
+    } catch (e) {}
+    var medal = document.createElement('div');
+    medal.style.cssText = 'position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.3);z-index:24;width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:52px;background:radial-gradient(circle at 35% 30%,#ffe9a8,#f3b93c 58%,#c98a1e);box-shadow:0 8px 26px rgba(0,0,0,.4),inset 0 3px 8px rgba(255,255,255,.6);border:4px solid #a8741a;transition:transform 480ms cubic-bezier(.34,1.56,.64,1),opacity 300ms ease;opacity:0;pointer-events:none;';
+    medal.textContent = cfg.icon;
+    container.appendChild(medal);
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      medal.style.opacity = '1';
+      medal.style.transform = 'translate(-50%,-50%) scale(1)';
+    }); });
+    setTimeout(function () {
+      var slot = badgeSlots[cfg.id];
+      if (!slot) { medal.remove(); return; }
+      var mRect = medal.getBoundingClientRect();
+      var sRect = slot.getBoundingClientRect();
+      var dx = (sRect.left + sRect.width / 2) - (mRect.left + mRect.width / 2);
+      var dy = (sRect.top + sRect.height / 2) - (mRect.top + mRect.height / 2);
+      medal.style.transition = 'transform 700ms cubic-bezier(.5,.05,.4,1),opacity 700ms ease';
+      medal.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px)) scale(0.27)';
+      medal.style.opacity = '0.92';
+      setTimeout(function () {
+        medal.remove();
+        playChime();
+        slot.style.transition = 'transform 260ms cubic-bezier(.34,1.56,.64,1)';
+        slot.style.transform = 'scale(1.45)';
+        slot.style.background = '#FFD23F';
+        setTimeout(function () { slot.style.transform = 'scale(1)'; }, 300);
+      }, 700);
+    }, 1500);
+  }
+  function updateMedalCeremony() {
+    if (ceremonyFocus && performance.now() - ceremonyFocus.start > ceremonyFocus.dur) ceremonyFocus = null;
+  }
+
+  // ---------- CHAMPION CERTIFICATE INVITE (all missions done) ----------
+  // The certificate modal itself already exists in the app (name, Save to
+  // Photos, PDF) — the hub only detects the 36/36 moment, throws the big
+  // finale, and hands off to the app's own openCertificate().
+  // (returning champions who were already 36/36 before this session don't
+  // get the finale replayed every visit — the invite is for the MOMENT)
+  var certInviteShown = missions.length > 0 && done.size >= missions.length;
+  var certInviteEl = document.createElement('div');
+  certInviteEl.style.cssText = 'position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:25;background:rgba(255,255,255,0.97);padding:22px 24px;border-radius:22px;box-shadow:0 12px 34px rgba(0,0,0,0.4);display:none;flex-direction:column;gap:10px;max-width:310px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  container.appendChild(certInviteEl);
+  function updateCertificateInvite() {
+    if (certInviteShown || demoMode) return;
+    if (!missions.length || done.size < missions.length) return;
+    certInviteShown = true;
+    certInviteEl.innerHTML =
+      '<div style="font-size:44px;line-height:1;">🏆</div>' +
+      '<div style="font-size:20px;font-weight:900;color:#3a2a1a;">' + HUB_TEXTS.certTitle + '</div>' +
+      '<div style="font-size:14px;font-weight:700;color:#5a4632;">' + HUB_TEXTS.certBody(missions.length) + '</div>' +
+      '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#FFD23F,#E8A23A);color:#4a3000;font-size:15px;font-weight:900;padding:12px 0;cursor:pointer;box-shadow:0 4px 0 #b07716;font-family:inherit;">' + HUB_TEXTS.certBtn + '</button>';
+    certInviteEl.style.display = 'flex';
+    certInviteEl.querySelector('button').addEventListener('click', function () {
+      certInviteEl.style.display = 'none';
+      if (opts.openCertificate) opts.openCertificate();
+    });
+    playSuccess();
+    leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
+    try {
+      if (window.confetti) {
+        [0, 300, 700, 1100].forEach(function (d) {
+          setTimeout(function () { window.confetti({ particleCount: 80, spread: 100, origin: { x: Math.random(), y: 0.3 } }); }, d);
+        });
+      }
+    } catch (e) {}
+  }
+
+  // Perf guard: everything below only depends on the done Set, so skip the
+  // whole pass unless its size actually changed since last frame (demoMode's
+  // full-visible override is constant, so it settles on the first pass too).
+  var lastDecorDoneSize = -1;
   function updateGateDecor() {
+    if (done.size === lastDecorDoneSize) return;
+    lastDecorDoneSize = done.size;
     gateConfig.forEach(function (cfg) {
       var group = gateMeshes[cfg.id];
       var count = visibleSlotsForPack(cfg.packKey);
@@ -2156,7 +2390,7 @@ export function initHub3D(opts) {
         }
       });
 
-      var isChampion = getPackCompletion(cfg.packKey) >= 1;
+      var isChampion = getPackCompletion(cfg.packKey) >= 1 || demoMode;
       group.userData.champion.visible = isChampion;
       group.userData.championProp.visible = isChampion;
       group.userData.ring.userData.champion = isChampion;
@@ -2168,6 +2402,9 @@ export function initHub3D(opts) {
         showRewardCard(HUB_TEXTS.reward(theme.cardTitle, itemName));
         playChime();
         leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
+        // Pack just hit 100% while the hub is live → full medal ceremony
+        // (covers the LAST zone too, which has no fog wall to unlock).
+        if (isChampion && !demoMode) startMedalCeremony(cfg);
       }
     });
   }
@@ -2177,6 +2414,7 @@ export function initHub3D(opts) {
   // any other state, and the Browse/Today tabs are completely unaware of it —
   // they keep reading `done` exactly as before.
   function isZoneUnlocked(zoneIndex) {
+    if (demoMode) return true;
     if (zoneIndex === 0) return true;
     return getPackCompletion(gateConfig[zoneIndex - 1].packKey) >= 1;
   }
@@ -2285,9 +2523,15 @@ export function initHub3D(opts) {
     updateZoneTheme(delta);
     updateTargetRing();
     updateGrowAnims();
+    updateMedalCeremony();
+    updateCertificateInvite();
     elapsedTime += delta;
 
     updateRiver(elapsedTime);
+    updateSea(elapsedTime);
+    updateClouds(delta);
+    updateSway(elapsedTime);
+    updateLeaves(elapsedTime);
     updateButterflies(elapsedTime);
     updateBirds(elapsedTime);
 
@@ -2345,13 +2589,14 @@ export function initHub3D(opts) {
   function resume() {
     if (running) return;
     running = true;
+    muteBtn.textContent = isMuted() ? '🔇' : '🔊'; // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     animate();
   }
   function pause() {
     if (!running) return;
     running = false;
-    closeHubPanel(); // leaving the tab also dismisses the mission sheet
+
     if (rafId != null) cancelAnimationFrame(rafId);
     rafId = null;
   }
