@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumvi-missions-v83";
+const CACHE_NAME = "jumvi-missions-v84";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -42,6 +42,13 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
 
   const url = new URL(req.url);
+
+  // Cross-origin (CDN: three.js, Tabler icons, Plausible) — don't proxy
+  // through the SW at all. A fetch() made INSIDE the SW is governed by the
+  // SW's own CSP (connect-src), which broke ES-module imports of three.js
+  // on production; left alone, the request is governed by the page's CSP
+  // (script-src, which allows these CDNs) and the browser's HTTP cache.
+  if (url.origin !== self.location.origin) return;
 
   // Network-first for HTML/navigation
   if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
