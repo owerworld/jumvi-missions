@@ -740,7 +740,7 @@ export function initHub3D(opts) {
   }
 
   var shore = new THREE.Mesh(
-    new THREE.PlaneGeometry(groundWidth + 14, pathTotalLength + 16, 1, 1),
+    new THREE.PlaneGeometry(groundWidth + 9, pathTotalLength + 12, 1, 1),
     new THREE.MeshStandardMaterial({ color: 0xEFDCA6, flatShading: true })
   );
   shore.rotation.x = -Math.PI / 2;
@@ -1252,68 +1252,11 @@ export function initHub3D(opts) {
   // mesh-building code that has to stay geometrically consistent with them.
   var riverHalfWidth = corridorHalfWidthAtCurve(RIVER_Z) + 5; // runs out past the treeline on both sides
 
-  var riverSegX = 14, riverSegZ = 4;
-  var riverGeo = new THREE.PlaneGeometry(riverHalfWidth * 2, RIVER_DEPTH, riverSegX, riverSegZ);
-  var riverMat = new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true, transparent: true, opacity: 0.88 });
-  var river = new THREE.Mesh(riverGeo, riverMat);
-  river.rotation.x = -Math.PI / 2;
-  river.position.set(pathCenterX(RIVER_Z), 0.02, RIVER_Z);
-  scene.add(river);
-  // Baseline vertex positions (flat) — each frame's wave displacement is
-  // computed fresh from these, not accumulated, so it never drifts.
-  var riverBasePositions = riverGeo.attributes.position.array.slice();
-
-  function updateRiver(elapsedTime) {
-    var posAttr = riverGeo.attributes.position;
-    var arr = posAttr.array;
-    for (var i = 0; i < arr.length; i += 3) {
-      var lx = riverBasePositions[i];
-      var ly = riverBasePositions[i + 1];
-      arr[i + 2] = Math.sin(lx * 1.5 + elapsedTime * 2) * 0.05 + Math.sin(ly * 2 + elapsedTime * 1.3) * 0.03;
-    }
-    posAttr.needsUpdate = true;
-  }
-
-  // Bridge deck spans exactly the corridor's existing walkable width at
-  // RIVER_Z (corridorHalfWidthAt() — the same formula updateMovement() already
-  // clamps Leo's X to at every Z), so the unmodified movement clamp already
-  // guarantees Leo can't step off the deck into the river — no clamp changes
-  // needed anywhere.
-  function createBridge() {
-    var group = new THREE.Group();
-    var bridgeHalfWidth = corridorHalfWidthAt(RIVER_Z);
-    var plankMat = new THREE.MeshStandardMaterial({ color: 0x9C7144, flatShading: true });
-    var plankCount = 7;
-    var plankWidth = (bridgeHalfWidth * 2) / plankCount;
-    for (var i = 0; i < plankCount; i++) {
-      var plank = new THREE.Mesh(
-        new THREE.BoxGeometry(plankWidth * 0.92, 0.12, RIVER_DEPTH + 0.6),
-        plankMat
-      );
-      plank.position.set(-bridgeHalfWidth + plankWidth * (i + 0.5), 0.06, 0);
-      plank.castShadow = true;
-      plank.receiveShadow = true;
-      group.add(plank);
-    }
-    var postMat = new THREE.MeshStandardMaterial({ color: 0x6F4E2C, flatShading: true });
-    [-1, 1].forEach(function (side) {
-      var rail = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.05, 0.05, bridgeHalfWidth * 2 + 0.4, 6),
-        postMat
-      );
-      rail.rotation.z = Math.PI / 2;
-      rail.position.set(0, 0.55, side * (RIVER_DEPTH / 2 + 0.2));
-      group.add(rail);
-      [-1, 0, 1].forEach(function (p) {
-        var post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.55, 6), postMat);
-        post.position.set(p * bridgeHalfWidth * 0.9, 0.27, side * (RIVER_DEPTH / 2 + 0.2));
-        group.add(post);
-      });
-    });
-    group.position.set(pathCenterX(RIVER_Z), 0, RIVER_Z);
-    return group;
-  }
-  scene.add(createBridge());
+  // (River + bridge removed by design decision: the bridge cluttered the
+  // Lightning Hands zone and the crossing added nothing to the toss-and-catch
+  // theme. The RIVER_Z path-flattening constants above are kept — the trail
+  // math still references them harmlessly.)
+  function updateRiver() {}
 
   // Butterflies — wandering loosely around a random anchor point spread
   // across the whole corridor length, so they're visible no matter how far
@@ -1580,36 +1523,57 @@ export function initHub3D(opts) {
   function createGateMesh(cfg) {
     var group = new THREE.Group();
 
-    // Ring tinted with the zone's own theme color so each gate visually
-    // belongs to its zone (they were all the same gold before).
+    // Gate = a giant 3D JUMVI paddle standing on its handle, rim tinted with
+    // the zone's theme color. The paddle FACE is the zone's progress meter:
+    // one pie slice per completed mission fills the face (wired in
+    // updateGateDecor), so a kid reads "how full is my paddle?" at a glance.
+    // No floating name label anymore — zone naming lives on the entrance
+    // signposts only (they doubled up before).
     var gateColor = themeForZone(cfg.zoneIndex).gateColor;
-    var ringGeo = new THREE.TorusGeometry(0.9, 0.12, 8, 24);
-    var ringMat = new THREE.MeshStandardMaterial({
+    var paddle = new THREE.Group();
+    var faceMat = new THREE.MeshStandardMaterial({ color: 0xF7EFD9, flatShading: true });
+    var face = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.12, 24), faceMat);
+    face.rotation.x = Math.PI / 2;
+    face.castShadow = true;
+    paddle.add(face);
+    var rimMat = new THREE.MeshStandardMaterial({
       color: gateColor, flatShading: true,
       emissive: gateColor, emissiveIntensity: 0.35
     });
-    var ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.position.y = 1.1;
-    ring.castShadow = true;
-    ring.userData.baseY = 1.1;
+    var rim = new THREE.Mesh(new THREE.TorusGeometry(1.02, 0.1, 8, 28), rimMat);
+    rim.castShadow = true;
+    paddle.add(rim);
+    var handleMat = new THREE.MeshStandardMaterial({ color: 0x9C7144, flatShading: true });
+    var handle = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.85, 0.15), handleMat);
+    handle.position.y = -1.35;
+    handle.castShadow = true;
+    paddle.add(handle);
+    var knob = new THREE.Mesh(new THREE.SphereGeometry(0.17, 8, 8), handleMat);
+    knob.position.y = -1.82;
+    paddle.add(knob);
+    // progress pie slices on the face — hidden until missions complete
+    var sliceMat = new THREE.MeshStandardMaterial({ color: gateColor, flatShading: true, emissive: gateColor, emissiveIntensity: 0.22, side: THREE.DoubleSide });
+    var fillSlices = [];
+    for (var si = 0; si < DECOR_SLOT_DEFS.length; si++) {
+      var slice = new THREE.Mesh(
+        new THREE.CircleGeometry(0.9, 10, Math.PI / 2 + si * (Math.PI * 2 / DECOR_SLOT_DEFS.length), Math.PI * 2 / DECOR_SLOT_DEFS.length),
+        sliceMat
+      );
+      slice.position.z = 0.08;
+      slice.visible = false;
+      paddle.add(slice);
+      fillSlices.push(slice);
+    }
+    // gold center star, revealed at 100% together with the champion trophy
+    var faceStar = new THREE.Mesh(new THREE.CircleGeometry(0.3, 5), championGoldMat);
+    faceStar.position.z = 0.1;
+    faceStar.visible = false;
+    paddle.add(faceStar);
+    paddle.position.y = 1.95;
+    paddle.userData.baseY = 1.95;
     // each gate bobs/breathes slightly out of phase so they don't all move in lockstep
-    ring.userData.phase = cfg.id * 1.7;
-    group.add(ring);
-
-    // Fixed-height name label — intentionally does NOT bob with the ring, so the
-    // text stays steady/readable even while the ring is bobbing/breathing.
-    var label = createLabelSprite(cfg.icon + ' ' + cfg.name);
-    label.position.set(0, ring.userData.baseY + 1.25, 0);
-    group.add(label);
-
-    var poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.1, 8);
-    var poleMat = new THREE.MeshStandardMaterial({ color: 0x888780, flatShading: true });
-    var poleL = new THREE.Mesh(poleGeo, poleMat);
-    poleL.position.set(-0.9, 0.55, 0);
-    group.add(poleL);
-    var poleR = poleL.clone();
-    poleR.position.x = 0.9;
-    group.add(poleR);
+    paddle.userData.phase = cfg.id * 1.7;
+    group.add(paddle);
 
     var baseGeo = new THREE.CylinderGeometry(1.3, 1.3, 0.15, 16);
     var baseMat = new THREE.MeshStandardMaterial({ color: 0xE8E4D8, flatShading: true });
@@ -1640,15 +1604,21 @@ export function initHub3D(opts) {
     var champion = makeChampionSparkle();
     champion.visible = false;
     group.add(champion);
-    // Theme trophy floating above the ring — only shown at 100% (champion).
+    // Theme trophy floating above the paddle — only shown at 100% (champion).
     var championProp = makeChampionProp(themeForZone(cfg.zoneIndex).key);
-    championProp.position.y = 2.9;
+    championProp.position.y = 3.7;
     championProp.visible = false;
     group.add(championProp);
 
     group.position.set(cfg.x, 0, cfg.z);
     group.lookAt(0, 0, 0);
-    group.userData.ring = ring;
+    // "ring" stays the animation handle's name everywhere (awareness, bob,
+    // scale pulses) but now points at the whole paddle; the rim's material
+    // is what glows, exposed separately for the tick's breathing-glow line.
+    group.userData.ring = paddle;
+    group.userData.glowMat = rimMat;
+    group.userData.fillSlices = fillSlices;
+    group.userData.faceStar = faceStar;
     group.userData.decorSlots = decorSlots;
     group.userData.champion = champion;
     group.userData.championProp = championProp;
@@ -1806,6 +1776,82 @@ export function initHub3D(opts) {
     scene.add(leaf);
     leaves.push(leaf);
   }
+  // ---------- THEMED TRAIL DECALS (the path itself tells the zone's story) ----------
+  // Flat decorative shapes ON the dirt trail, themed per zone: lightning
+  // bolts through the energy zone, target rings in the range, leaves in the
+  // zen garden, confetti dots in the playground, stepping stones in the
+  // backyard, starfish on the beach. Static meshes, y-offset above the
+  // trail, skipped near each gate so the paddle area stays clean.
+  (function buildTrailDecals() {
+    var decalY = 0.028;
+    var zenLeafMat = new THREE.MeshStandardMaterial({ color: 0x7FA96B, flatShading: true, side: THREE.DoubleSide });
+    var stoneMat = new THREE.MeshStandardMaterial({ color: 0xD8CBB4, flatShading: true });
+    var starMat = new THREE.MeshStandardMaterial({ color: 0xF2C14E, flatShading: true, side: THREE.DoubleSide });
+    var dotMats = [0xF2789F, 0x54A8E8, 0xF2A54A].map(function (c) {
+      return new THREE.MeshStandardMaterial({ color: c, flatShading: true });
+    });
+    function boltShape() {
+      var sh = new THREE.Shape();
+      sh.moveTo(0.02, 0.3); sh.lineTo(0.14, 0.3); sh.lineTo(0.05, 0.05);
+      sh.lineTo(0.13, 0.05); sh.lineTo(-0.06, -0.3); sh.lineTo(0.0, -0.02);
+      sh.lineTo(-0.08, -0.02); sh.closePath();
+      return sh;
+    }
+    function starShape() {
+      var sh = new THREE.Shape();
+      for (var k = 0; k < 10; k++) {
+        var r = (k % 2 === 0) ? 0.2 : 0.085;
+        var a = (k / 10) * Math.PI * 2 - Math.PI / 2;
+        if (k === 0) sh.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+        else sh.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      }
+      sh.closePath();
+      return sh;
+    }
+    function makeDecal(themeKey) {
+      var g = new THREE.Group();
+      if (themeKey === 'energy') {
+        g.add(new THREE.Mesh(new THREE.ShapeGeometry(boltShape()), boltMat));
+      } else if (themeKey === 'target') {
+        var ring1 = new THREE.Mesh(new THREE.RingGeometry(0.2, 0.3, 16), targetRedMat);
+        var ring2 = new THREE.Mesh(new THREE.CircleGeometry(0.2, 16), targetWhiteMat);
+        var dot = new THREE.Mesh(new THREE.CircleGeometry(0.07, 10), targetRedMat);
+        ring2.position.z = -0.001; dot.position.z = 0.001;
+        g.add(ring1); g.add(ring2); g.add(dot);
+      } else if (themeKey === 'zen') {
+        var leaf = new THREE.Mesh(new THREE.CircleGeometry(0.17, 8), zenLeafMat);
+        leaf.scale.y = 0.55;
+        g.add(leaf);
+      } else if (themeKey === 'play') {
+        dotMats.forEach(function (dm, di) {
+          var d = new THREE.Mesh(new THREE.CircleGeometry(0.09, 8), dm);
+          d.position.set((di - 1) * 0.24, (di % 2 ? -0.08 : 0.08), 0);
+          g.add(d);
+        });
+      } else if (themeKey === 'home') {
+        g.add(new THREE.Mesh(new THREE.CircleGeometry(0.2, 6), stoneMat));
+      } else {
+        g.add(new THREE.Mesh(new THREE.ShapeGeometry(starShape()), starMat));
+      }
+      return g;
+    }
+    gateConfig.forEach(function (cfg) {
+      var themeKey = themeForZone(cfg.zoneIndex).key;
+      var zTop = -cfg.zoneIndex * ZONE_LENGTH - 1.2;
+      var zBottom = -(cfg.zoneIndex + 1) * ZONE_LENGTH + 1.2;
+      var flip = 1;
+      for (var z = zTop; z > zBottom; z -= 2.1) {
+        if (Math.abs(z - cfg.z) < 1.8) continue; // keep the paddle-gate area clean
+        var decal = makeDecal(themeKey);
+        decal.rotation.x = -Math.PI / 2;
+        decal.rotation.z = (Math.random() - 0.5) * 0.8;
+        flip = -flip;
+        decal.position.set(pathCenterX(z) + flip * 0.42 + (Math.random() - 0.5) * 0.3, decalY, z);
+        scene.add(decal);
+      }
+    });
+  })();
+
   function updateLeaves(elapsedTime) {
     for (var i = 0; i < leaves.length; i++) {
       var lf = leaves[i], u = lf.userData;
@@ -2394,6 +2440,11 @@ export function initHub3D(opts) {
       group.userData.champion.visible = isChampion;
       group.userData.championProp.visible = isChampion;
       group.userData.ring.userData.champion = isChampion;
+      group.userData.faceStar.visible = isChampion;
+      // paddle face fills one pie slice per completed mission
+      group.userData.fillSlices.forEach(function (slice, si) {
+        slice.visible = si < count;
+      });
 
       if (!isInitial && count > prev) {
         var theme = themeForZone(cfg.zoneIndex);
@@ -2538,15 +2589,13 @@ export function initHub3D(opts) {
     gateConfig.forEach(function (cfg) {
       var meshGroup = gateMeshes[cfg.id];
       var ring = meshGroup.userData.ring;
-      ring.rotation.z += delta * 0.6;
-
       // gentle up/down bob, out of phase per gate so they don't move in lockstep
       var bob = Math.sin(elapsedTime * 1.6 + ring.userData.phase) * 0.08;
       ring.position.y = ring.userData.baseY + bob;
 
       // slow breathing glow — a fully-completed pack's gate glows a bit brighter
       var champBoost = ring.userData.champion ? 0.25 : 0;
-      ring.material.emissiveIntensity = 0.35 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
+      meshGroup.userData.glowMat.emissiveIntensity = 0.35 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
 
       // "getting close" scale boost — skipped for the gate currently mid-reaction
       // or mid-celebration, each of which owns ring scale for its own brief window
@@ -2561,7 +2610,7 @@ export function initHub3D(opts) {
       }
       if (meshGroup.userData.championProp.visible) {
         meshGroup.userData.championProp.rotation.y += delta * 0.9;
-        meshGroup.userData.championProp.position.y = 2.9 + Math.sin(elapsedTime * 1.4 + ring.userData.phase) * 0.12;
+        meshGroup.userData.championProp.position.y = 3.7 + Math.sin(elapsedTime * 1.4 + ring.userData.phase) * 0.12;
       }
     });
 
