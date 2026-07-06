@@ -588,10 +588,15 @@ export function initHub3D(opts) {
   // Positioned behind + above Leo along his actual facing direction (not a
   // fixed world-space offset like the old side/top-down view), so it swings
   // around naturally as he turns instead of always looking down -Z.
-  var CAM_DISTANCE_BACK = 6;
-  var CAM_HEIGHT = 4;
-  var CAM_LOOKAHEAD_DIST = 2;
-  var CAM_LOOKAHEAD_HEIGHT = 0.8;
+  // Lowered + pulled in from the old (6 back, 4 up) near-top-down rig to a
+  // proper behind-the-back third-person view: the camera now sits just over
+  // Leo's shoulder, looking slightly down at his body rather than at the
+  // ground far ahead. This reads as "following the mascot" and, as a
+  // side-effect, hides most of the wide empty ground the high angle exposed.
+  var CAM_DISTANCE_BACK = 5.2;
+  var CAM_HEIGHT = 2.7;
+  var CAM_LOOKAHEAD_DIST = 2.4;
+  var CAM_LOOKAHEAD_HEIGHT = 1.2;
   var CAM_LAG_MOVING = 4.5;
   var CAM_LAG_IDLE = 3;
 
@@ -636,7 +641,11 @@ export function initHub3D(opts) {
   // past the ground plane's edge (floating with no visible terrain under
   // them). +12 is a margin on top of the true worst case (~21), not the
   // worst case itself.
-  var groundWidth = (ZIGZAG_AMPLITUDE + CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 12;
+  // Margin trimmed from +12 to +5: the worst-case treeline tree lands about
+  // (ZIGZAG_AMPLITUDE + corridorHalfWidth-max + DECOR_CLEARANCE + jitter) ≈ 10.5
+  // from world center, so ~21 total width covers it; the old +12 left a wide
+  // ring of empty terrain past the last props that read as dead space.
+  var groundWidth = (ZIGZAG_AMPLITUDE + CORRIDOR_HALF_WIDTH + CORRIDOR_WOBBLE_AMPLITUDE) * 2 + 5;
   // One strip per zone (plus a spawn apron in front and a tail behind the
   // last zone), each in its zone's theme ground color — this is what makes
   // each zone read as its own place even before the decor registers. Still
@@ -1778,9 +1787,14 @@ export function initHub3D(opts) {
     var champion = makeChampionSparkle();
     champion.visible = false;
     group.add(champion);
-    // Theme trophy floating above the paddle — only shown at 100% (champion).
+    // Theme trophy — only shown at 100% (champion). Grounded on the paddle's
+    // base platform, off to one side of the handle, instead of the old
+    // floating-in-the-air placement: the real champion models read as dark
+    // objects floating with a gap above the paddle ("flying icon"), so
+    // resting the trophy on the pedestal reads far better and the paddle's
+    // own full-gold face + center star already carry the "complete" beat.
     var championProp = makeChampionProp(themeForZone(cfg.zoneIndex).key);
-    championProp.position.y = 3.7;
+    championProp.position.set(0.55, 0.15, 0);
     championProp.visible = false;
     group.add(championProp);
 
@@ -2203,6 +2217,10 @@ export function initHub3D(opts) {
   // Camera's own facing — separate from Leo's (see updateMovement()), starts
   // at PI to match the idle camera setup above (looking toward -Z).
   var cameraFacing = Math.PI;
+  // 0..1 blend between the chase camera and an active focus target, eased in
+  // when a growth reveal / medal ceremony starts and out when it ends (see
+  // the chase-camera block) so focus enter/exit glides instead of snapping.
+  var focusBlend = 0;
 
   function updateMovement(delta) {
     var ix = 0, iz = 0;
@@ -2349,34 +2367,52 @@ export function initHub3D(opts) {
     }
 
     var forwardX = Math.sin(cameraFacing), forwardZ = Math.cos(cameraFacing);
-    var targetCamX = leo.group.position.x - forwardX * CAM_DISTANCE_BACK;
-    var targetCamZ = leo.group.position.z - forwardZ * CAM_DISTANCE_BACK;
-    var targetCamY = CAM_HEIGHT;
-    var lookAtX = leo.group.position.x + forwardX * CAM_LOOKAHEAD_DIST;
-    var lookAtY = CAM_LOOKAHEAD_HEIGHT;
-    var lookAtZ = leo.group.position.z + forwardZ * CAM_LOOKAHEAD_DIST;
+    // The default (chase) camera + look-at target. A focus event (growth
+    // reveal / medal ceremony) computes its OWN target below, then we blend
+    // between the two by focusBlend so entering and leaving a focus is a
+    // smooth glide, not the hard snap the old instant-switch produced.
+    var chaseCamX = leo.group.position.x - forwardX * CAM_DISTANCE_BACK;
+    var chaseCamZ = leo.group.position.z - forwardZ * CAM_DISTANCE_BACK;
+    var chaseCamY = CAM_HEIGHT;
+    var chaseLookX = leo.group.position.x + forwardX * CAM_LOOKAHEAD_DIST;
+    var chaseLookY = CAM_LOOKAHEAD_HEIGHT;
+    var chaseLookZ = leo.group.position.z + forwardZ * CAM_LOOKAHEAD_DIST;
 
-    // Medal ceremony: borrow the camera for a soft push-in on the completed
-    // gate, then hand it back — same lerp machinery, just different targets.
+    // Whichever focus is active supplies the focus target; focusBlend eases
+    // toward 1 while a focus is active and back toward 0 when it clears.
+    var focusActive = !!(ceremonyFocus || growthFocus);
+    var focusCamX = chaseCamX, focusCamZ = chaseCamZ, focusCamY = chaseCamY;
+    var focusLookX = chaseLookX, focusLookY = chaseLookY, focusLookZ = chaseLookZ;
     if (ceremonyFocus) {
       var gc = ceremonyFocus.cfg;
-      targetCamX = gc.x;
-      targetCamZ = gc.z + 4.6;
-      targetCamY = 2.6;
-      lookAtX = gc.x; lookAtY = 1.3; lookAtZ = gc.z;
-      camLagFactor = 3.2;
+      focusCamX = gc.x; focusCamZ = gc.z + 4.6; focusCamY = 2.6;
+      focusLookX = gc.x; focusLookY = 1.3; focusLookZ = gc.z;
     } else if (growthFocus) {
       // Distance/height scale with the object's own size (radius) instead of
       // a fixed offset — a seashell gets pulled in close, the giraffe slide
       // gets backed off enough to see the whole thing.
       var gobj = growthFocus.obj;
       var gr = growthFocus.radius;
-      targetCamX = gobj.position.x - gr * 1.3;
-      targetCamZ = gobj.position.z + gr * 1.8 + 0.6;
-      targetCamY = gobj.position.y + gr * 0.9 + 0.5;
-      lookAtX = gobj.position.x; lookAtY = gobj.position.y + gr * 0.5; lookAtZ = gobj.position.z;
-      camLagFactor = 3.4;
+      focusCamX = gobj.position.x - gr * 1.3;
+      focusCamZ = gobj.position.z + gr * 1.8 + 0.6;
+      focusCamY = gobj.position.y + gr * 0.9 + 0.5;
+      focusLookX = gobj.position.x; focusLookY = gobj.position.y + gr * 0.5; focusLookZ = gobj.position.z;
     }
+    // Ease focusBlend in/out (~0.75s each way). smoothstep is applied at use
+    // so both ends are gentle; the raw blend just ramps linearly here. Longer
+    // than the object-reveal itself on purpose — spreads the camera travel out
+    // so re-acquiring the chase view is a slow glide, not a fast whip-back.
+    var blendRate = delta / 0.75;
+    focusBlend += (focusActive ? blendRate : -blendRate);
+    focusBlend = Math.max(0, Math.min(1, focusBlend));
+    var fb = focusBlend * focusBlend * (3 - 2 * focusBlend); // smoothstep
+
+    var targetCamX = chaseCamX + (focusCamX - chaseCamX) * fb;
+    var targetCamZ = chaseCamZ + (focusCamZ - chaseCamZ) * fb;
+    var targetCamY = chaseCamY + (focusCamY - chaseCamY) * fb;
+    var lookAtX = chaseLookX + (focusLookX - chaseLookX) * fb;
+    var lookAtY = chaseLookY + (focusLookY - chaseLookY) * fb;
+    var lookAtZ = chaseLookZ + (focusLookZ - chaseLookZ) * fb;
 
     camera.position.x += (targetCamX - camera.position.x) * Math.min(delta * camLagFactor, 1);
     camera.position.z += (targetCamZ - camera.position.z) * Math.min(delta * camLagFactor, 1);
@@ -2842,8 +2878,9 @@ export function initHub3D(opts) {
         meshGroup.userData.champion.rotation.y += delta * 0.5;
       }
       if (meshGroup.userData.championProp.visible) {
-        meshGroup.userData.championProp.rotation.y += delta * 0.9;
-        meshGroup.userData.championProp.position.y = 3.7 + Math.sin(elapsedTime * 1.4 + ring.userData.phase) * 0.12;
+        // Slow spin in place on the pedestal — no more vertical bob now that
+        // it's grounded on the platform rather than floating.
+        meshGroup.userData.championProp.rotation.y += delta * 0.6;
       }
     });
 
