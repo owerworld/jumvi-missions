@@ -2191,6 +2191,38 @@ export function initHub3D(opts) {
   }, { passive: true });
   renderer.domElement.addEventListener('touchend', function () { touchFollowing = false; }, { passive: true });
   renderer.domElement.addEventListener('touchcancel', function () { touchFollowing = false; }, { passive: true });
+  window.__hub3dDebug = {
+    inspect: function (zoneIdx, slotIdx) {
+      var cfg = gateConfig[zoneIdx];
+      var group = gateMeshes[cfg.id];
+      var slot = group.userData.decorSlots[slotIdx];
+      function describe(o, depth) {
+        var box = new THREE.Box3().setFromObject(o);
+        var size = new THREE.Vector3();
+        box.getSize(size);
+        return {
+          depth: depth,
+          type: o.type,
+          isMesh: !!o.isMesh,
+          scale: o.scale.clone(),
+          position: o.position.clone(),
+          visible: o.visible,
+          worldBoxSize: { x: +size.x.toFixed(3), y: +size.y.toFixed(3), z: +size.z.toFixed(3) },
+          childCount: o.children.length
+        };
+      }
+      var out = [describe(slot, 0)];
+      slot.children.forEach(function (c) {
+        out.push(describe(c, 1));
+        c.children.forEach(function (cc) {
+          out.push(describe(cc, 2));
+        });
+      });
+      return out;
+    },
+    modelSources: MODEL_SOURCES,
+    cache: modelTemplateCache
+  }; // TEMP debug — remove before final commit
 
   // ---------- MOVEMENT (momentum-based; world position only — visuals owned by leo module) ----------
   var velocity = new THREE.Vector3();
