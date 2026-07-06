@@ -45,7 +45,11 @@ export function initHub3D(opts) {
     next: 'Next →',
     mission: 'Mission',
     zoneDoneBtn: 'Zone Complete! 🏆',
-    reward: function (zone, item) { return 'Woohoo! The ' + zone + ' just grew a new ' + item + ' 🎉'; },
+    // Short on purpose — the camera is now zoomed in on the actual object
+    // (see growthFocus), so the caption's only job is to name it, not
+    // narrate it. The old full sentence ("Woohoo! The Energy Zone just grew
+    // a new power pole 🎉") ran off a narrow phone screen with nowrap CSS.
+    reward: function (zone, item) { return '🌱 New: ' + item + '!'; },
     surprise: 'surprise',
     help: 'How to play',
     helpLines: ['👆 Tap the ground — Leo walks there!', '🚪 Reach a glowing gate to open a mission', '🌱 Finish missions to grow each zone!'],
@@ -558,12 +562,17 @@ export function initHub3D(opts) {
   // corridor edges (function declarations below — hoisted, so forward
   // references from this table are safe).
   var ZONE_THEMES = [
-    { key: 'energy', cardTitle: '⚡ Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makeElectricPole, name: 'power pole' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeElectricPole, name: 'power pole' }, { make: makeLightningBolt, name: 'lightning bolt' }, { make: makeLightningBolt, name: 'lightning bolt' }]; }, championName: 'energy orb' },
-    { key: 'target', cardTitle: '🎯 Target Range', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoard, name: 'target board' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }, { make: makePlayFlag, name: 'flag' }, { make: makeTargetBoard, name: 'target board' }]; }, championName: 'golden target' },
-    { key: 'zen', cardTitle: '🍃 Zen Garden', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }, { make: makeBamboo, name: 'bamboo' }, { make: makeStoneLantern, name: 'stone lantern' }, { make: makeLotusPool, name: 'lotus pond' }]; }, championName: 'golden lantern' },
-    { key: 'play', cardTitle: '👥 Playground', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makeSlide, name: 'slide' }, { make: makePlayFlag, name: 'flag' }, { make: makeBench, name: 'bench' }, { make: makePlayFlag, name: 'flag' }]; }, championName: 'champion flag' },
-    { key: 'home', cardTitle: '🏠 Backyard', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFencePanel, name: 'fence' }, { make: makeFlowerBed, name: 'flower bed' }, { make: makeGardenSwing, name: 'swing' }, { make: makeFencePanel, name: 'fence' }, { make: makeMailbox, name: 'mailbox' }, { make: makeFlowerBed, name: 'flower bed' }]; }, championName: 'flower crown' },
-    { key: 'beach', cardTitle: '🏖️ Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTree, name: 'palm tree' }, { make: makeBeachUmbrella, name: 'beach umbrella' }, { make: makeSandcastle, name: 'sandcastle' }, { make: makeSeashell, name: 'seashell' }, { make: makePalmTree, name: 'palm tree' }, { make: makeSeashell, name: 'seashell' }]; }, championName: 'golden sun' }
+    // growth() now points at the real-model factories (makePowerPoleDecor
+    // etc., defined below near MODEL_SOURCES) instead of the procedural
+    // make* functions — makers() (scattered edge dressing along the whole
+    // corridor) is untouched and still procedural, that's a different,
+    // much-higher-instance-count use of these same function names.
+    { key: 'energy', cardTitle: '⚡ Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makePowerPoleDecor, name: 'power pole' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }]; }, championName: 'energy orb' },
+    { key: 'target', cardTitle: '🎯 Target Range', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoardDecor, name: 'target board' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }]; }, championName: 'golden target' },
+    { key: 'zen', cardTitle: '🍃 Zen Garden', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }, { make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }]; }, championName: 'golden lantern' },
+    { key: 'play', cardTitle: '👥 Playground', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeSlideDecor, name: 'slide' }, { make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeTeamFlagDecor, name: 'flag' }]; }, championName: 'champion flag' },
+    { key: 'home', cardTitle: '🏠 Backyard', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFenceDecor, name: 'fence' }, { make: makeFlowerBedDecor, name: 'flower bed' }, { make: makeSwingDecor, name: 'swing' }, { make: makeFenceDecor, name: 'fence' }, { make: makeMailboxDecor, name: 'mailbox' }, { make: makeFlowerBedDecor, name: 'flower bed' }]; }, championName: 'flower crown' },
+    { key: 'beach', cardTitle: '🏖️ Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTreeDecor, name: 'palm tree' }, { make: makeBeachUmbrellaDecor, name: 'beach umbrella' }, { make: makeSandcastleDecor, name: 'sandcastle' }, { make: makeSeashellDecor, name: 'seashell' }, { make: makePalmTreeDecor, name: 'palm tree' }, { make: makeSeashellDecor, name: 'seashell' }]; }, championName: 'golden sun' }
   ];
   function themeForZone(i) {
     return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
@@ -853,6 +862,198 @@ export function initHub3D(opts) {
   var umbrellaMat = new THREE.MeshStandardMaterial({ color: 0xFF6B6B, flatShading: true, side: THREE.DoubleSide });
   var shellMat = new THREE.MeshStandardMaterial({ color: 0xFFF0DC, flatShading: true });
 
+  // ---------- REAL 3D MODELS for growth decor + champion trophies ----------
+  // The scattered background dressing lining the corridor (ZONE_THEMES.makers,
+  // used a few lines below) stays procedural — dozens of instances, cheap
+  // primitives are the right call there. This is specifically for the 6
+  // grow-in decor slots per zone plus the 1 champion trophy: real (Draco +
+  // WebP compressed, ~9MB total for all 24) glTF models, one fetch per
+  // unique file no matter how many slots reuse it.
+  //
+  // Async by nature (network fetch), but every call site here already treats
+  // its return value as an opaque Object3D handle it can position/show/hide
+  // immediately — so makeDecorFromModel() returns a placeholder Group on the
+  // spot, and the real model quietly drops into it whenever the load
+  // finishes (in practice: within a second or two of the hub tab opening,
+  // long before a kid finishes enough missions to reveal any of these).
+  var MODEL_BASE = './assets/hub3d/';
+  // size = target world-space size (meters) for the model's LARGEST
+  // dimension after fitModel() uniformly rescales it — tuned by eye against
+  // the existing procedural props and Leo's ~1.3-unit height, not the
+  // asset's own arbitrary source scale.
+  var MODEL_SOURCES = {
+    power_pole: { path: 'energy/power_pole.glb', size: 2.6 },
+    lightning_bolt: { path: 'energy/lightning_bolt.glb', size: 1.3 },
+    energy_orb: { path: 'energy/energy_orb.glb', size: 0.7 },
+    target_board: { path: 'target/target_board.glb', size: 2.1 },
+    flag: { path: 'target/flag.glb', size: 1.7 },
+    golden_target: { path: 'target/golden_target.glb', size: 0.85 },
+    bamboo: { path: 'zen/bamboo.glb', size: 2.3 },
+    stone_lantern: { path: 'zen/stone_lantern.glb', size: 1.2 },
+    lotus_pond: { path: 'zen/lotus_pond.glb', size: 1.5 },
+    golden_lantern: { path: 'zen/golden_lantern.glb', size: 1.4 },
+    team_flag: { path: 'play/team_flag.glb', size: 1.7 },
+    bench: { path: 'play/bench.glb', size: 1.3 },
+    slide: { path: 'play/slide.glb', size: 2.4 },
+    champion_flag: { path: 'play/champion_flag.glb', size: 0.85 },
+    fence: { path: 'home/fence.glb', size: 1.4 },
+    flower_bed: { path: 'home/flower_bed.glb', size: 1.1 },
+    swing: { path: 'home/swing.glb', size: 2.2 },
+    mailbox: { path: 'home/mailbox.glb', size: 1.1 },
+    flower_crown: { path: 'home/flower_crown.glb', size: 0.65 },
+    palm_tree: { path: 'beach/palm_tree.glb', size: 2.6 },
+    beach_umbrella: { path: 'beach/beach_umbrella.glb', size: 1.8 },
+    sandcastle: { path: 'beach/sandcastle.glb', size: 1.2 },
+    seashell: { path: 'beach/seashell.glb', size: 0.5 },
+    golden_sun: { path: 'beach/golden_sun.glb', size: 0.75 }
+  };
+
+  var gltfLoaderPromise = null;
+  function getGLTFLoader() {
+    if (!gltfLoaderPromise) {
+      // The compression pass on every hub3d asset (115MB -> 9.2MB) used
+      // Draco geometry compression, so GLTFLoader needs a DRACOLoader
+      // wired in to decode it — without this every model fails to parse
+      // with "No DRACOLoader instance provided" and the slot just stays
+      // an empty holder forever.
+      gltfLoaderPromise = Promise.all([
+        import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'),
+        import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/DRACOLoader.js')
+      ]).then(function (mods) {
+        var dracoLoader = new mods[1].DRACOLoader();
+        dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+        var loader = new mods[0].GLTFLoader();
+        loader.setDRACOLoader(dracoLoader);
+        return loader;
+      });
+    }
+    return gltfLoaderPromise;
+  }
+  // SkeletonUtils.clone (not Object3D.clone) — a couple of these assets carry
+  // a skeleton/rig even though nothing here animates them (static decor), and
+  // plain .clone(true) does not correctly rebind a SkinnedMesh's skeleton.
+  var skeletonUtilsPromise = null;
+  function getSkeletonUtils() {
+    if (!skeletonUtilsPromise) {
+      skeletonUtilsPromise = import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/SkeletonUtils.js');
+    }
+    return skeletonUtilsPromise;
+  }
+
+  // Scales the model uniformly so its largest dimension equals targetSize,
+  // then re-centers it on X/Z and drops it so its base sits exactly on y=0 —
+  // every source file has its own arbitrary scale/pivot (phone scans, AI
+  // generations, marketplace downloads), so without this every decor slot
+  // would be a different, wrong size and possibly floating or sunk into the
+  // ground.
+  function fitModel(model, targetSize) {
+    var box = new THREE.Box3().setFromObject(model);
+    var size = new THREE.Vector3();
+    box.getSize(size);
+    var maxDim = Math.max(size.x, size.y, size.z) || 1;
+    model.scale.setScalar(targetSize / maxDim);
+    var fitted = new THREE.Box3().setFromObject(model);
+    var center = new THREE.Vector3();
+    fitted.getCenter(center);
+    model.position.x -= center.x;
+    model.position.z -= center.z;
+    model.position.y -= fitted.min.y;
+  }
+
+  // One shared "template" load per unique model key, cached — every slot
+  // that uses the same key (e.g. energy's growth list uses power_pole three
+  // times) triggers exactly one network fetch, then clones the fitted result.
+  var modelTemplateCache = {};
+  function loadDecorTemplate(key) {
+    if (modelTemplateCache[key]) return modelTemplateCache[key];
+    var def = MODEL_SOURCES[key];
+    modelTemplateCache[key] = Promise.all([getGLTFLoader(), getSkeletonUtils()]).then(function (res) {
+      var loader = res[0];
+      return new Promise(function (resolve, reject) {
+        loader.load(MODEL_BASE + def.path, function (gltf) {
+          var model = gltf.scene;
+          model.traverse(function (node) {
+            if (node.isMesh) {
+              node.castShadow = true;
+              node.receiveShadow = true;
+              // Flat cartoon lighting here has no environment map for PBR
+              // metal reflections — an unset metalnessFactor (defaults to 1
+              // per the glTF spec) renders almost black, same fix as Leo's
+              // optional model in jumvi-leo.js.
+              if (node.material) node.material.metalness = 0;
+            }
+          });
+          fitModel(model, def.size);
+          resolve(model);
+        }, undefined, reject);
+      });
+    });
+    return modelTemplateCache[key];
+  }
+
+  // Returns a (x, z) factory — drop-in replacement for the procedural
+  // make*(x, z) functions used in ZONE_THEMES.growth() below. The holder
+  // Group is real and positioned immediately; the actual mesh fades in
+  // (growAnim's scale pop-in already treats the holder's visibility/scale as
+  // the whole object, so this is invisible to every existing caller).
+  function makeDecorFromModel(key) {
+    return function (x, z) {
+      var holder = new THREE.Group();
+      holder.position.set(x || 0, 0, z || 0);
+      // Known up-front from MODEL_SOURCES, independent of load/animation
+      // timing — startGrowthFocus() reads this for camera framing instead of
+      // measuring a live bounding box, which would be wrong both while the
+      // model hasn't loaded yet (empty holder) and mid grow-in pop (holder's
+      // own scale is briefly ~0.01, see startGrowAnim).
+      holder.userData.decorSize = MODEL_SOURCES[key].size;
+      Promise.all([loadDecorTemplate(key), getSkeletonUtils()]).then(function (res) {
+        var template = res[0], SkeletonUtils = res[1];
+        var inst = SkeletonUtils.clone(template);
+        holder.add(inst);
+      }).catch(function (err) {
+        console.warn('Hub3D: decor model "' + key + '" failed to load:', err);
+      });
+      return holder;
+    };
+  }
+
+  var makePowerPoleDecor = makeDecorFromModel('power_pole');
+  var makeLightningBoltDecor = makeDecorFromModel('lightning_bolt');
+  var makeEnergyOrbDecor = makeDecorFromModel('energy_orb');
+  var makeTargetBoardDecor = makeDecorFromModel('target_board');
+  var makeFlagDecor = makeDecorFromModel('flag');
+  var makeGoldenTargetDecor = makeDecorFromModel('golden_target');
+  var makeBambooDecor = makeDecorFromModel('bamboo');
+  var makeStoneLanternDecor = makeDecorFromModel('stone_lantern');
+  var makeLotusPondDecor = makeDecorFromModel('lotus_pond');
+  var makeGoldenLanternDecor = makeDecorFromModel('golden_lantern');
+  var makeTeamFlagDecor = makeDecorFromModel('team_flag');
+  var makeBenchDecor = makeDecorFromModel('bench');
+  var makeSlideDecor = makeDecorFromModel('slide');
+  var makeChampionFlagDecor = makeDecorFromModel('champion_flag');
+  var makeFenceDecor = makeDecorFromModel('fence');
+  var makeFlowerBedDecor = makeDecorFromModel('flower_bed');
+  var makeSwingDecor = makeDecorFromModel('swing');
+  var makeMailboxDecor = makeDecorFromModel('mailbox');
+  var makeFlowerCrownDecor = makeDecorFromModel('flower_crown');
+  var makePalmTreeDecor = makeDecorFromModel('palm_tree');
+  var makeBeachUmbrellaDecor = makeDecorFromModel('beach_umbrella');
+  var makeSandcastleDecor = makeDecorFromModel('sandcastle');
+  var makeSeashellDecor = makeDecorFromModel('seashell');
+  var makeGoldenSunDecor = makeDecorFromModel('golden_sun');
+
+  // themeKey -> champion model factory, matching each ZONE_THEMES entry's
+  // championName 1:1 (energy orb, golden target, golden lantern, champion
+  // flag, flower crown, golden sun).
+  var CHAMPION_MODEL_BY_THEME = {
+    energy: makeEnergyOrbDecor,
+    target: makeGoldenTargetDecor,
+    zen: makeGoldenLanternDecor,
+    play: makeChampionFlagDecor,
+    home: makeFlowerCrownDecor,
+    beach: makeGoldenSunDecor
+  };
+
   function makeElectricPole(x, z) {
     var g = new THREE.Group();
     var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 2.4, 6), darkPoleMat);
@@ -1136,41 +1337,14 @@ export function initHub3D(opts) {
   // alongside the existing sparkle ring.
   var championGoldMat = new THREE.MeshStandardMaterial({ color: 0xFFD700, flatShading: true, emissive: 0xFFB300, emissiveIntensity: 0.75 });
   function makeChampionProp(themeKey) {
+    var modelFactory = CHAMPION_MODEL_BY_THEME[themeKey];
+    if (modelFactory) return modelFactory();
+    // Fallback only reached if a theme key doesn't match any real model
+    // (shouldn't happen — kept so a future new zone without art yet still
+    // gets a visible trophy instead of nothing).
     var g = new THREE.Group();
-    if (themeKey === 'energy') {
-      var ball = new THREE.Mesh(new THREE.IcosahedronGeometry(0.42, 0), championGoldMat);
-      g.add(ball);
-    } else if (themeKey === 'target') {
-      var disc = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.1, 8, 18), championGoldMat);
-      g.add(disc);
-    } else if (themeKey === 'zen') {
-      var lantern = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.34, 0.42), championGoldMat);
-      g.add(lantern);
-      var cap = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.26, 4), championGoldMat);
-      cap.position.y = 0.32;
-      cap.rotation.y = Math.PI / 4;
-      g.add(cap);
-    } else if (themeKey === 'play') {
-      for (var i = 0; i < 3; i++) {
-        var flag = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.4, 4), championGoldMat);
-        var a = (i / 3) * Math.PI * 2;
-        flag.position.set(Math.cos(a) * 0.3, 0, Math.sin(a) * 0.3);
-        flag.rotation.z = Math.PI;
-        g.add(flag);
-      }
-    } else if (themeKey === 'home') {
-      var wreath = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.09, 8, 16), championGoldMat);
-      g.add(wreath);
-      for (var fi = 0; fi < 4; fi++) {
-        var bud = new THREE.Mesh(new THREE.SphereGeometry(0.09, 6, 6), lotusMat);
-        var fa = (fi / 4) * Math.PI * 2;
-        bud.position.set(Math.cos(fa) * 0.34, Math.sin(fa) * 0.34, 0);
-        g.add(bud);
-      }
-    } else {
-      var sunBall = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 12), championGoldMat);
-      g.add(sunBall);
-    }
+    var sunBall = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 12), championGoldMat);
+    g.add(sunBall);
     return g;
   }
   // Edge decor lining both sides of the corridor — the ground itself is a
@@ -2192,11 +2366,15 @@ export function initHub3D(opts) {
       lookAtX = gc.x; lookAtY = 1.3; lookAtZ = gc.z;
       camLagFactor = 3.2;
     } else if (growthFocus) {
+      // Distance/height scale with the object's own size (radius) instead of
+      // a fixed offset — a seashell gets pulled in close, the giraffe slide
+      // gets backed off enough to see the whole thing.
       var gobj = growthFocus.obj;
-      targetCamX = gobj.position.x - 1.7;
-      targetCamZ = gobj.position.z + 2.3;
-      targetCamY = gobj.position.y + 1.4;
-      lookAtX = gobj.position.x; lookAtY = gobj.position.y + 0.4; lookAtZ = gobj.position.z;
+      var gr = growthFocus.radius;
+      targetCamX = gobj.position.x - gr * 1.3;
+      targetCamZ = gobj.position.z + gr * 1.8 + 0.6;
+      targetCamY = gobj.position.y + gr * 0.9 + 0.5;
+      lookAtX = gobj.position.x; lookAtY = gobj.position.y + gr * 0.5; lookAtZ = gobj.position.z;
       camLagFactor = 3.4;
     }
 
@@ -2312,7 +2490,10 @@ export function initHub3D(opts) {
   // Center-screen "Bravo!" card for the instant reward moment — own element
   // (not the zone card) so a zone entry and a reward can't clobber each other.
   var rewardCardEl = document.createElement('div');
-  rewardCardEl.style.cssText = 'position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);z-index:16;pointer-events:none;background:rgba(255,255,255,0.94);padding:12px 24px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,0.22);opacity:0;font-size:15px;font-weight:800;color:#3a2a1a;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  // max-width + text-align (no more white-space:nowrap) so a long item name
+  // wraps inside the card on a narrow phone instead of running off-screen —
+  // the previous nowrap forced a single line that could overflow the viewport.
+  rewardCardEl.style.cssText = 'position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);z-index:16;pointer-events:none;background:rgba(255,255,255,0.94);padding:12px 22px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,0.22);opacity:0;font-size:15px;font-weight:800;color:#3a2a1a;text-align:center;max-width:82vw;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(rewardCardEl);
   function showRewardCard(text) {
     rewardCardEl.textContent = text;
@@ -2362,9 +2543,14 @@ export function initHub3D(opts) {
   // just popped in — the "come see what you grew" beat between missions.
   // Smaller/shorter than the medal ceremony below (that one owns the finale).
   var GROWTH_FOCUS_MS = 1700;
-  var growthFocus = null; // { obj, start, dur } — camera override window
+  var growthFocus = null; // { obj, start, dur, radius } — camera override window
   function startGrowthFocus(obj) {
-    growthFocus = { obj: obj, start: performance.now(), dur: GROWTH_FOCUS_MS };
+    // Real models vary wildly in size (a seashell vs. the giraffe slide) —
+    // frame each one by its own known size (userData.decorSize, stamped in
+    // makeDecorFromModel) instead of a fixed camera offset, so small props
+    // aren't lost in the distance and big ones don't fill the whole screen.
+    var radius = (obj.userData.decorSize || 1.2) / 2;
+    growthFocus = { obj: obj, start: performance.now(), dur: GROWTH_FOCUS_MS, radius: radius };
   }
   function updateGrowthFocus() {
     if (growthFocus && performance.now() - growthFocus.start > growthFocus.dur) growthFocus = null;
