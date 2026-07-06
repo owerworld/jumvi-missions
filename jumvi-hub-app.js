@@ -2191,6 +2191,13 @@ export function initHub3D(opts) {
       targetCamY = 2.6;
       lookAtX = gc.x; lookAtY = 1.3; lookAtZ = gc.z;
       camLagFactor = 3.2;
+    } else if (growthFocus) {
+      var gobj = growthFocus.obj;
+      targetCamX = gobj.position.x - 1.7;
+      targetCamZ = gobj.position.z + 2.3;
+      targetCamY = gobj.position.y + 1.4;
+      lookAtX = gobj.position.x; lookAtY = gobj.position.y + 0.4; lookAtZ = gobj.position.z;
+      camLagFactor = 3.4;
     }
 
     camera.position.x += (targetCamX - camera.position.x) * Math.min(delta * camLagFactor, 1);
@@ -2220,6 +2227,22 @@ export function initHub3D(opts) {
     window._hubMissionFlow = { packKey: packKey };
     openMission(missionId);
   }
+
+  // Called by app.js's markMissionDone once it auto-closes the mission view
+  // (see the hub-flow branch there): decides what happens next now that the
+  // kid is looking at the hub again. If the pack still has an undone
+  // mission, wait for the growth reveal below to play out, then walk
+  // straight into it — same one-tap-per-mission rhythm as arriving fresh at
+  // the gate. If the pack just finished, do nothing here; the medal
+  // ceremony below (updateGateDecor's isChampion branch) is the payoff.
+  window._hub3dAdvance = function (packKey) {
+    var packMissions = packMissionList(packKey);
+    var nextUndone = packMissions.find(function (m) { return !done.has(m.id); });
+    if (!nextUndone) return;
+    setTimeout(function () {
+      openMissionFromHub(packKey, nextUndone.id);
+    }, GROWTH_FOCUS_MS + 250);
+  };
 
   // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
   var TRIGGER_RADIUS = 1.8;
@@ -2333,6 +2356,20 @@ export function initHub3D(opts) {
   // link), and the badge slot pulses gold. Fog dissolve / next-zone opening
   // then continues through the existing updateZoneLocks flow untouched.
   var ceremonyFocus = null; // { cfg, start, dur } — camera override window
+
+  // ---------- GROWTH REVEAL (single mission done, pack not yet finished) ----------
+  // The camera borrows itself for a moment to approach whatever decor piece
+  // just popped in — the "come see what you grew" beat between missions.
+  // Smaller/shorter than the medal ceremony below (that one owns the finale).
+  var GROWTH_FOCUS_MS = 1700;
+  var growthFocus = null; // { obj, start, dur } — camera override window
+  function startGrowthFocus(obj) {
+    growthFocus = { obj: obj, start: performance.now(), dur: GROWTH_FOCUS_MS };
+  }
+  function updateGrowthFocus() {
+    if (growthFocus && performance.now() - growthFocus.start > growthFocus.dur) growthFocus = null;
+  }
+
   function startMedalCeremony(cfg) {
     ceremonyFocus = { cfg: cfg, start: performance.now(), dur: 2600 };
     playSuccess();
@@ -2414,6 +2451,12 @@ export function initHub3D(opts) {
   // full-visible override is constant, so it settles on the first pass too).
   var lastDecorDoneSize = -1;
   function updateGateDecor() {
+    // Defer the whole reveal while the mission view covers the hub — the
+    // done Set already changed underneath it, but popping the decor in and
+    // panning the camera to it would be invisible (and wasted) behind the
+    // full-page modal. The instant it closes, this catches up on the very
+    // next frame, so the reveal is the first thing the kid sees back in 3D.
+    if (isMissionViewOpen()) return;
     if (done.size === lastDecorDoneSize) return;
     lastDecorDoneSize = done.size;
     gateConfig.forEach(function (cfg) {
@@ -2455,7 +2498,10 @@ export function initHub3D(opts) {
         leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
         // Pack just hit 100% while the hub is live → full medal ceremony
         // (covers the LAST zone too, which has no fog wall to unlock).
+        // Otherwise: an ordinary single-mission reveal gets the camera's
+        // attention on whatever just grew.
         if (isChampion && !demoMode) startMedalCeremony(cfg);
+        else if (!demoMode && newest) startGrowthFocus(newest);
       }
     });
   }
@@ -2574,6 +2620,7 @@ export function initHub3D(opts) {
     updateZoneTheme(delta);
     updateTargetRing();
     updateGrowAnims();
+    updateGrowthFocus();
     updateMedalCeremony();
     updateCertificateInvite();
     elapsedTime += delta;

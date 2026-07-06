@@ -2992,9 +2992,26 @@ function markMissionDone(id, source="manual"){
       }
     }
   }
-  // Hub3d kendi panelini kendisi tazeler — app sheet'ini onun üstüne açma.
-  // Normal (Missions sekmesi) akışında davranış aynen eskisi gibi.
-  if(source !== "hub3d") openMission(id);
+  // Hub flow: instead of staying on this mission (old behavior), let the kid
+  // see the done-confirmation beat (checkmark burst + score summary, both
+  // already fired above) for a moment, then auto-close so the 3D hub can
+  // show what just grew — camera pans to the new decor piece — and either
+  // auto-opens the next undone mission in this pack or (pack just finished)
+  // leaves the player in the hub for the medal ceremony. See
+  // window._hub3dAdvance in jumvi-hub-app.js. Normal (Missions tab) flow is
+  // untouched — it still just refreshes this same mission view.
+  const hubFlow = window._hubMissionFlow;
+  if(hubFlow && hubFlow.packKey){
+    const packKey = hubFlow.packKey;
+    setTimeout(()=>{
+      // bail if the kid already closed/navigated away manually in the meantime
+      if(!backdrop.classList.contains("show") || lastOpenedId !== id) return;
+      closeMission();
+      if(window._hub3dAdvance) window._hub3dAdvance(packKey);
+    }, 1100);
+  } else {
+    openMission(id);
+  }
 }
 
 function renderSeasonalList(type){
@@ -3908,7 +3925,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-69");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-73");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
