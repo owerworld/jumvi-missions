@@ -2289,6 +2289,31 @@ function disarmHoldToReset(){
   setTimeout(()=>{ timerHoldResetArmed = false; }, 80);
 }
 
+/* Tints the full-page mission view to the badge/zone the kid walked into,
+ * when it was opened from the 3D hub (window._hubMissionFlow.themeColor, a
+ * "#rrggbb" string handed over by the hub). A colored top accent bar + a
+ * matching title colour + soft glow — just enough to say "this belongs to
+ * the Energy Zone / Target Range / …". Normal Missions-tab opens pass no
+ * theme, so everything is reset to the default look. */
+function applyHubMissionTheme(){
+  const sheetEl = document.getElementById("sheet");
+  const titleEl = document.getElementById("mTitle");
+  if(!sheetEl) return;
+  const color = (window._hubMissionFlow && window._hubMissionFlow.themeColor) || null;
+  // The sheet's border-top and the title colour both carry `!important` in
+  // style.css, so plain inline styles get overridden — set them with the
+  // 'important' priority (and remove the same way) so the theme actually wins.
+  if(color){
+    sheetEl.style.setProperty("border-top", "5px solid " + color, "important");
+    sheetEl.style.setProperty("box-shadow", "0 -2px 26px " + color + "66", "important");
+    if(titleEl) titleEl.style.setProperty("color", color, "important");
+  } else {
+    sheetEl.style.removeProperty("border-top");
+    sheetEl.style.removeProperty("box-shadow");
+    if(titleEl) titleEl.style.removeProperty("color");
+  }
+}
+
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
@@ -2492,6 +2517,7 @@ if(btnSpeak){
 
   backdrop.classList.add("show");
   document.body.classList.add("modalOpen");
+  applyHubMissionTheme();
   sheet.scrollTop = 0;
   const _sb = document.getElementById("sheetBody");
   if(_sb) _sb.scrollTop = 0;
@@ -3925,7 +3951,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-94");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-98");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,

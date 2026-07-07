@@ -714,26 +714,33 @@ export function initHub3D(opts) {
   // whole island (one draw call) and simply continues under the locked-zone
   // fog walls, so the trail visibly disappears INTO the mist ("the road goes
   // on — what's up there?").
-  (function buildTrail() {
+  // Two stacked ribbons for a clearly-readable path: a wider darker "shoulder"
+  // underneath and a brighter sandy centre on top. The old single thin dirt
+  // strip barely registered against the zone ground colours; this reads as a
+  // real walkway with edges from any angle and pops on both the dark energy
+  // ground and the bright grass zones.
+  function buildRibbon(halfWidthBase, y, color) {
     var verts = [], idx = [], i = 0;
     for (var z = START_BOUNDARY_Z + 1.5; z >= -pathTotalLength + START_BOUNDARY_Z + 6; z -= 1.5) {
       var c = pathCenterX(z);
-      var w = 1.15 + Math.sin(z * 0.9) * 0.18 + Math.sin(z * 2.3) * 0.08;
-      verts.push(c - w, 0.015, z, c + w, 0.015, z);
+      var w = halfWidthBase + Math.sin(z * 0.9) * 0.18 + Math.sin(z * 2.3) * 0.08;
+      verts.push(c - w, y, z, c + w, y, z);
       if (i > 0) {
         var a = (i - 1) * 2, b = a + 1, d = i * 2, e = d + 1;
         idx.push(a, d, b, b, d, e);
       }
       i++;
     }
-    var trailGeo = new THREE.BufferGeometry();
-    trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(verts), 3));
-    trailGeo.setIndex(idx);
-    trailGeo.computeVertexNormals();
-    var trail = new THREE.Mesh(trailGeo, new THREE.MeshStandardMaterial({ color: 0xC9A879, flatShading: true }));
-    trail.receiveShadow = true;
-    scene.add(trail);
-  })();
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(verts), 3));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    var mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: color, flatShading: true }));
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+  }
+  buildRibbon(1.85, 0.014, 0x8f6f45); // darker shoulder / border
+  buildRibbon(1.45, 0.022, 0xE3CE9E); // bright sandy walkway on top
 
   // ---------- ISLAND: SEA + SHORE + HORIZON ----------
   // The world used to end in flat void past the ground strips. Now it reads
@@ -770,6 +777,32 @@ export function initHub3D(opts) {
     var mound = new THREE.Mesh(new THREE.ConeGeometry(isl[2], isl[3], 7), farIslandMat);
     mound.position.set(isl[0], -0.2 + isl[3] / 2 - 0.4, isl[1]);
     scene.add(mound);
+  });
+
+  // ---------- THEMED SIDE HORIZON (fills the flat empty sides per zone) ----------
+  // The wide ground sides used to read as dead flat colour out to the sea. For
+  // each zone we now line both sides with a low rolling ridge of mounds tinted
+  // a shade of THAT zone's own ground colour, sitting just past the ground
+  // edge — so a kid glancing left/right sees the zone's world continue into
+  // rolling hills instead of a blank plane. All flat-shaded low-poly cones,
+  // batched into one merged-ish group; cheap and static.
+  var sideBaseX = groundWidth / 2 + 1.5;
+  gateConfig.forEach(function (cfg) {
+    var theme = themeForZone(cfg.zoneIndex);
+    var hillCol = new THREE.Color(theme.ground).offsetHSL(0, -0.05, -0.08);
+    var hillMat = new THREE.MeshStandardMaterial({ color: hillCol, flatShading: true });
+    [-1, 1].forEach(function (side) {
+      for (var h = 0; h < 3; h++) {
+        var hz = cfg.z + (h - 1) * 5.2 + (Math.random() - 0.5) * 2;
+        var hx = side * (sideBaseX + Math.random() * 5);
+        var r = 4.5 + Math.random() * 3.5;
+        var ht = 2.2 + Math.random() * 2.6;
+        var hill = new THREE.Mesh(new THREE.ConeGeometry(r, ht, 6), hillMat);
+        hill.position.set(hx, -0.3 + ht / 2 - 0.5, hz);
+        hill.rotation.y = Math.random() * Math.PI;
+        scene.add(hill);
+      }
+    });
   });
 
   var cloudMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, flatShading: true, transparent: true, opacity: 0.85 });
@@ -1040,13 +1073,27 @@ export function initHub3D(opts) {
   var makeBenchDecor = makeDecorFromModel('bench');
   var makeSlideDecor = makeDecorFromModel('slide');
   var makeChampionFlagDecor = makeDecorFromModel('champion_flag');
-  var makeFenceDecor = makeDecorFromModel('fence');
+  // fence.glb is a zero-thickness flat plane (bbox X=0) — it renders as a
+  // paper-thin sliver that vanishes edge-on. The procedural picket fence reads
+  // as a proper 3D fence from every angle, so use it here too. (proceduralDecor
+  // is defined just below; hoisted function refs make the forward use fine.)
+  var makeFenceDecor = function (x, z) { return proceduralDecor(makeFencePanel, 1.2)(x, z); };
   var makeFlowerBedDecor = makeDecorFromModel('flower_bed');
   var makeSwingDecor = makeDecorFromModel('swing');
-  var makeMailboxDecor = makeDecorFromModel('mailbox');
+  // mailbox + beach umbrella are the ONLY two skinned/rigged source models —
+  // SkeletonUtils.clone of their broken bind pose threw giant stretched
+  // triangles across the scene (the "mailbox turns everything red" bug). They
+  // don't animate here anyway, so they use the clean procedural builders
+  // instead; a tiny decorSize stamp keeps the growth-reveal camera framing
+  // working the same as the model-backed slots. (No decor loads a skinned
+  // model anymore.)
+  function proceduralDecor(builder, size) {
+    return function (x, z) { var o = builder(x, z); o.userData.decorSize = size; return o; };
+  }
+  var makeMailboxDecor = proceduralDecor(makeMailbox, 1.1);
   var makeFlowerCrownDecor = makeDecorFromModel('flower_crown');
   var makePalmTreeDecor = makeDecorFromModel('palm_tree');
-  var makeBeachUmbrellaDecor = makeDecorFromModel('beach_umbrella');
+  var makeBeachUmbrellaDecor = proceduralDecor(makeBeachUmbrella, 1.8);
   var makeSandcastleDecor = makeDecorFromModel('sandcastle');
   var makeSeashellDecor = makeDecorFromModel('seashell');
   var makeGoldenSunDecor = makeDecorFromModel('golden_sun');
@@ -1368,15 +1415,27 @@ export function initHub3D(opts) {
   // but then jittered the placed z by ±1, and near the bridge's frozen-curve
   // band that mismatch let trees land inside the walkable area (Leo visibly
   // walked into a bush at the bridge entrance in device testing).
-  var DECOR_CLEARANCE = 0.8;
+  var DECOR_CLEARANCE = 1.0;
+  // Growth decor lives in a ~7-unit window around each gate (DECOR_SLOT_DEFS
+  // spans dz -3 .. +4.2); keep the procedural edge dressing OUT of that window
+  // so the two decor systems never pile into the same radial band around a
+  // gate. Pushed a bit further out too (+1.6 base vs +1.2) so background trees
+  // sit clearly behind the foreground growth props.
+  function nearAnyGate(z) {
+    for (var gi = 0; gi < gateConfig.length; gi++) {
+      if (Math.abs(z - gateConfig[gi].z) < 6) return true;
+    }
+    return false;
+  }
   var edgeDecorCounter = 0;
   for (var tz = START_BOUNDARY_Z - 2; tz > -pathTotalLength + START_BOUNDARY_Z; tz -= 4.5) {
     for (var side = -1; side <= 1; side += 2) {
       var propZ = tz + (Math.random() - 0.5) * 2;
+      if (nearAnyGate(propZ)) continue; // leave the gate's growth window clear
       var zoneIdx = THREE.MathUtils.clamp(Math.floor(-propZ / ZONE_LENGTH), 0, ZONE_THEMES.length - 1);
       var zoneMakers = themeForZone(zoneIdx).makers();
       var maker = zoneMakers[edgeDecorCounter++ % zoneMakers.length];
-      var propEdge = corridorHalfWidthAt(propZ) + DECOR_CLEARANCE + Math.random() * 1.2;
+      var propEdge = corridorHalfWidthAt(propZ) + DECOR_CLEARANCE + 1.6 + Math.random() * 1.2;
       var propX = pathCenterX(propZ) + side * propEdge;
       // makeTree keeps its (x, z, scale) signature; every themed builder is (x, z).
       scene.add(maker === makeTree ? makeTree(propX, propZ, 0.8 + Math.random() * 0.5) : maker(propX, propZ));
@@ -1553,13 +1612,20 @@ export function initHub3D(opts) {
   // slot is revealed per completed mission, so with the standard 6-mission
   // packs the zone fills up exactly in step with real progress (2 items ≈
   // 33%, 4 ≈ 66%, all 6 + champion prop at 100%).
+  // Spread wider along Z (±3.6 instead of ±2.2) with a staggered outward push
+  // so no two objects sit dip-dibe: the old ±2.2 spacing put same-side props
+  // only 2.2 apart, and a 2.4-2.6-deep model (slide, palm) then clipped its
+  // same-side neighbour. Now same-side props are 3.6 apart (≥1 unit gap even
+  // for the biggest), and the alternating push zig-zags them outward so they
+  // never line up in a flat row. Reveal order fans left/right outward from
+  // the gate, so each completed mission grows the zone a step further out.
   var DECOR_SLOT_DEFS = [
-    { side: -1, dz: -2.2, push: 0.2 },
-    { side: 1, dz: -2.2, push: 0.5 },
-    { side: -1, dz: 0, push: 0.4 },
-    { side: 1, dz: 0, push: 0.2 },
-    { side: -1, dz: 2.2, push: 0.5 },
-    { side: 1, dz: 2.2, push: 0.3 }
+    { side: -1, dz: 0.6, push: 0.3 },
+    { side: 1, dz: 0.6, push: 0.8 },
+    { side: -1, dz: -3.0, push: 0.9 },
+    { side: 1, dz: -3.0, push: 0.4 },
+    { side: -1, dz: 4.2, push: 0.6 },
+    { side: 1, dz: 4.2, push: 1.1 }
   ];
 
   function getPackCompletion(packKey) {
@@ -1936,15 +2002,20 @@ export function initHub3D(opts) {
     lm.lookAt(pathCenterX(lz), 0, lz);
     scene.add(lm);
 
-    // entrance signpost: wooden post + billboarded zone-name label
+    // entrance signpost: wooden post + a small billboarded zone-name plaque.
+    // Pushed further off the path (was +0.9) and the label shrunk to ~0.45×
+    // its default: at full size the long "⚡ Energy Zone" sprite filled the
+    // whole screen when you stood near it. It's a little world sign now, not a
+    // banner — the HUD chip up top is the primary zone read anyway.
     var sz = (cfg.zoneIndex === 0 ? START_BOUNDARY_Z - 2.5 : zoneBoundaryZ(cfg.zoneIndex) - 1.6);
-    var sx = pathCenterX(sz) + (corridorHalfWidthAt(sz) + 0.9) * (i % 2 === 0 ? -1 : 1);
+    var sx = pathCenterX(sz) + (corridorHalfWidthAt(sz) + 2.2) * (i % 2 === 0 ? -1 : 1);
     var post = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 1.2, 6), woodMat);
     post.position.set(sx, 0.6, sz);
     post.castShadow = true;
     scene.add(post);
     var signLabel = createLabelSprite(themeForZone(cfg.zoneIndex).cardTitle);
-    signLabel.position.set(sx, 1.55, sz);
+    signLabel.scale.multiplyScalar(0.46);
+    signLabel.position.set(sx, 1.42, sz);
     scene.add(signLabel);
   });
 
@@ -2438,7 +2509,12 @@ export function initHub3D(opts) {
     return !!(appBackdropEl && appBackdropEl.classList.contains('show'));
   }
   function openMissionFromHub(packKey, missionId) {
-    window._hubMissionFlow = { packKey: packKey };
+    // Hand the zone's theme colour to app.js so the full-page mission view can
+    // tint itself to the badge the kid walked into (see applyHubMissionTheme
+    // there). '#rrggbb' string so app.js needs no THREE dependency.
+    var cfg = gateConfig.filter(function (c) { return c.packKey === packKey; })[0];
+    var themeHex = cfg ? '#' + new THREE.Color(themeForZone(cfg.zoneIndex).gateColor).getHexString() : null;
+    window._hubMissionFlow = { packKey: packKey, themeColor: themeHex };
     openMission(missionId);
   }
 
