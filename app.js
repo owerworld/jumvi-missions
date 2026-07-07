@@ -3951,7 +3951,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-98");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-99");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
@@ -3964,7 +3964,12 @@ function ensureHub3DLoaded(){
       setSoundOn(v){
         soundOn = !!v;
         lsSet(SOUND_KEY, soundOn ? "1" : "0");
-      }
+      },
+      // In-hub menu bridges — the hub's ☰ menu opens the app's REAL panels
+      // (it never reimplements them). navigate() leaves the hub for a normal
+      // tab; openBadges() pops the existing badges modal on top of the hub.
+      navigate(tab){ switchTab(tab); },
+      openBadges(){ if(typeof updateBadges === "function") updateBadges(); badgesBackdrop.classList.add("show"); }
     });
   })();
   return _hub3dLoadPromise;

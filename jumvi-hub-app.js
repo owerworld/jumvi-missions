@@ -58,7 +58,17 @@ export function initHub3D(opts) {
     certTitle: 'CHAMPION! 🏆',
     certBody: function (n) { return 'You did ALL ' + n + ' missions!'; },
     certBtn: 'Get your Champion Certificate!',
-    photo: 'Island photo'
+    photo: 'Island photo',
+    menu: 'Menu',
+    menuTitle: 'JUMVI',
+    menuItems: [
+      { icon: '📅', label: 'Today', tab: 'today' },
+      { icon: '🎯', label: 'Browse Missions', tab: 'browse' },
+      { icon: '📊', label: 'Stats', tab: 'stats' },
+      { icon: '🦁', label: 'Profile', tab: 'profile' },
+      { icon: '🏅', label: 'Badges', action: 'badges' }
+    ],
+    menuClose: 'Close menu'
   };
 
   // ---------- DEMO MODE (?demo=1 — Amazon listing video capture) ----------
@@ -322,6 +332,65 @@ export function initHub3D(opts) {
   });
   helpCardEl.querySelector('button').addEventListener('click', function () {
     helpCardEl.style.display = 'none';
+  });
+
+  // ---------- IN-HUB MENU (☰) ----------
+  // The hub is heading toward being the whole site's front door, so it carries
+  // its own menu: a ☰ button top-left opens a slide-in panel that routes to
+  // the app's REAL Today/Browse/Stats/Profile tabs + the Badges modal (via the
+  // navigate()/openBadges() opts bridged from app.js). The bottom tab bar stays
+  // as-is underneath — this is additive, nothing is removed.
+  var navigateFn = opts.navigate || function () {};
+  var openBadgesFn = opts.openBadges || function () {};
+
+  var menuBtn = document.createElement('button');
+  menuBtn.type = 'button';
+  menuBtn.setAttribute('aria-label', HUB_TEXTS.menu);
+  menuBtn.textContent = '☰';
+  menuBtn.style.cssText = 'position:absolute;top:14px;left:14px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.88);border:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:13;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  container.appendChild(menuBtn);
+
+  var menuScrim = document.createElement('div');
+  menuScrim.style.cssText = 'position:absolute;inset:0;background:rgba(10,12,24,0.45);z-index:23;opacity:0;pointer-events:none;transition:opacity 220ms ease;';
+  container.appendChild(menuScrim);
+
+  var menuPanel = document.createElement('div');
+  menuPanel.style.cssText = 'position:absolute;top:0;left:0;bottom:0;width:74%;max-width:300px;background:linear-gradient(160deg,#20305a,#101830);z-index:24;transform:translateX(-102%);transition:transform 260ms cubic-bezier(.4,0,.2,1);box-shadow:6px 0 24px rgba(0,0,0,0.4);display:flex;flex-direction:column;padding:24px 0 16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  var menuHtml = '<div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;padding:6px 22px 4px;">' + HUB_TEXTS.menuTitle + '</div>' +
+    '<div style="font-size:12px;font-weight:700;color:#8fa0d0;padding:0 22px 18px;">Adventure Hub</div>';
+  HUB_TEXTS.menuItems.forEach(function (it, idx) {
+    menuHtml += '<button type="button" data-mi="' + idx + '" style="display:flex;align-items:center;gap:14px;background:none;border:none;color:#eaf0ff;font-size:16px;font-weight:700;padding:14px 22px;cursor:pointer;text-align:left;font-family:inherit;width:100%;">' +
+      '<span style="font-size:20px;width:26px;text-align:center;">' + it.icon + '</span>' + it.label + '</button>';
+  });
+  menuHtml += '<div style="flex:1;"></div>' +
+    '<button type="button" data-mi="close" style="display:flex;align-items:center;gap:14px;background:none;border:none;color:#8fa0d0;font-size:14px;font-weight:700;padding:14px 22px;cursor:pointer;text-align:left;font-family:inherit;width:100%;">' +
+    '<span style="font-size:18px;width:26px;text-align:center;">✕</span>' + HUB_TEXTS.menuClose + '</button>';
+  menuPanel.innerHTML = menuHtml;
+  container.appendChild(menuPanel);
+
+  function openMenu() {
+    resumeAudio(); playChime();
+    menuPanel.style.transform = 'translateX(0)';
+    menuScrim.style.opacity = '1';
+    menuScrim.style.pointerEvents = 'auto';
+  }
+  function closeMenu() {
+    menuPanel.style.transform = 'translateX(-102%)';
+    menuScrim.style.opacity = '0';
+    menuScrim.style.pointerEvents = 'none';
+  }
+  menuBtn.addEventListener('click', openMenu);
+  menuScrim.addEventListener('click', closeMenu);
+  menuPanel.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-mi]');
+    if (!btn) return;
+    var mi = btn.getAttribute('data-mi');
+    closeMenu();
+    if (mi === 'close') return;
+    var item = HUB_TEXTS.menuItems[+mi];
+    if (!item) return;
+    if (item.action === 'badges') { openBadgesFn(); return; }
+    if (item.tab) navigateFn(item.tab); // leaves the hub for that real tab
   });
 
   // ---------- "TODAY'S MISSION" AUTO-WALK (screen→play bridge) ----------
