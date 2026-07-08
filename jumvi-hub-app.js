@@ -2601,9 +2601,22 @@ export function initHub3D(opts) {
     var packMissions = packMissionList(packKey);
     var nextUndone = packMissions.find(function (m) { return !done.has(m.id); });
     if (!nextUndone) return;
-    setTimeout(function () {
+    var start = performance.now();
+    // Single-overlay rule (audit Bulgu #12): after the growth reveal plays,
+    // do NOT pop the next mission card on top of a reward overlay. If the
+    // badge-unlock modal (or a still-open mission view) is up, wait for it to
+    // be dismissed first — so the kid sees growth → badge → next, one at a
+    // time. Hard 20s cap so a left-open modal can never wedge the flow.
+    function tryOpen() {
+      var badge = document.getElementById('badgeUnlockModal');
+      var overlayUp = (badge && badge.classList.contains('show')) || isMissionViewOpen();
+      if (overlayUp && performance.now() - start < 20000) {
+        setTimeout(tryOpen, 300);
+        return;
+      }
       openMissionFromHub(packKey, nextUndone.id);
-    }, GROWTH_FOCUS_MS + 250);
+    }
+    setTimeout(tryOpen, GROWTH_FOCUS_MS + 250);
   };
 
   // ---------- GATE PROXIMITY: opens the REAL mission panel ----------
@@ -3040,9 +3053,20 @@ export function initHub3D(opts) {
   var running = false;
   var rafId = null;
 
+  // While the full-screen mission card is up, the 3D scene is completely
+  // covered and its movement/gate logic already no-ops — but the render call
+  // kept firing ~60fps, burning battery/heat for nothing (audit Bulgu #19).
+  // Throttle the loop to ~4fps in that state; full speed resumes the instant
+  // the card closes (the growth reveal / camera focus all run after that).
+  var _missionViewLastTick = 0;
   function animate() {
     rafId = requestAnimationFrame(animate);
     var delta = Math.min(clock.getDelta(), 0.1);
+    if (isMissionViewOpen()) {
+      var now = performance.now();
+      if (now - _missionViewLastTick < 240) return;
+      _missionViewLastTick = now;
+    }
     tick(delta);
   }
 

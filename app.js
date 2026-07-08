@@ -3905,14 +3905,13 @@ function showWelcomeOverlay(){
       } catch(e){ console.warn("Welcome filter:", e); }
       // Splash transition: "Let's Play!" for 1.5s
       const afterSplash = ()=>{
-        // Yeni kullanıcı: ilk easy mission'ı otomatik aç (deneyimi yaşat)
-        // Tutorial yerine — yeni today-first UI self-explanatory
-        // Tutorial bayrağını işaretle ki sonradan da çıkmasın
+        // First-visit auto-open of a mission card REMOVED (audit P0 / Bulgu #2):
+        // it popped a 2D mission card ~0.5s after "Let's Play" before the user
+        // chose anything, and in the QR→3D-hub flow that card completely covered
+        // the island's first reveal. The Today tab already surfaces today's
+        // mission with its own Play CTA, so 2D onboarding still guides the user;
+        // nothing here opens a modal on top of a fresh entry anymore.
         try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
-        const firstMissionId = pickFirstMissionForNewUser(selectedDiff);
-        if(firstMissionId){
-          setTimeout(()=> openMission(firstMissionId), 350);
-        }
       };
       if(!prefersReducedMotion){
         const splash = document.getElementById("splashOverlay");
@@ -3951,7 +3950,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-103");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-104");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
