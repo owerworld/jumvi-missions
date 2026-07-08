@@ -1116,25 +1116,34 @@ export function initHub3D(opts) {
   // Group is real and positioned immediately; the actual mesh fades in
   // (growAnim's scale pop-in already treats the holder's visibility/scale as
   // the whole object, so this is invisible to every existing caller).
+  // ZONE-LAZY: the factory now returns an EMPTY positioned holder and only
+  // records its model key — it does NOT fetch. All 24 decor GLBs used to be
+  // requested at hub open (~9.2 MB in one burst, audit Bulgu #3); now each
+  // zone's models are fetched on demand by loadDecorHolder(), triggered when
+  // that zone unlocks / the kid nears its gate (see loadZoneDecor below). The
+  // grow-in pop, camera framing (userData.decorSize), and every existing
+  // show/hide call site are unchanged — the mesh just arrives a beat later.
   function makeDecorFromModel(key) {
     return function (x, z) {
       var holder = new THREE.Group();
       holder.position.set(x || 0, 0, z || 0);
-      // Known up-front from MODEL_SOURCES, independent of load/animation
-      // timing — startGrowthFocus() reads this for camera framing instead of
-      // measuring a live bounding box, which would be wrong both while the
-      // model hasn't loaded yet (empty holder) and mid grow-in pop (holder's
-      // own scale is briefly ~0.01, see startGrowAnim).
       holder.userData.decorSize = MODEL_SOURCES[key].size;
-      Promise.all([loadDecorTemplate(key), getSkeletonUtils()]).then(function (res) {
-        var template = res[0], SkeletonUtils = res[1];
-        var inst = SkeletonUtils.clone(template);
-        holder.add(inst);
-      }).catch(function (err) {
-        console.warn('Hub3D: decor model "' + key + '" failed to load:', err);
-      });
+      holder.userData.modelKey = key; // fetched lazily by loadDecorHolder()
       return holder;
     };
+  }
+  // Fetches + injects a holder's model the first time it's needed. Idempotent.
+  function loadDecorHolder(holder) {
+    if (!holder || !holder.userData || !holder.userData.modelKey || holder.userData._decorLoaded) return;
+    holder.userData._decorLoaded = true;
+    var key = holder.userData.modelKey;
+    Promise.all([loadDecorTemplate(key), getSkeletonUtils()]).then(function (res) {
+      var template = res[0], SkeletonUtils = res[1];
+      holder.add(SkeletonUtils.clone(template));
+    }).catch(function (err) {
+      holder.userData._decorLoaded = false; // allow a later retry
+      console.warn('Hub3D: decor model "' + key + '" failed to load:', err);
+    });
   }
 
   var makePowerPoleDecor = makeDecorFromModel('power_pole');
@@ -1965,6 +1974,25 @@ export function initHub3D(opts) {
     gateMeshes[cfg.id] = mesh;
   });
 
+  // ZONE-LAZY loader: fetch a zone's decor + champion models on demand. Called
+  // for zone 0 immediately, for each zone as it unlocks, and pre-emptively when
+  // the kid nears a gate (see checkGateProximity). demoMode loads everything.
+  var _zoneDecorLoaded = {};
+  function loadZoneDecor(zoneIndex) {
+    if (_zoneDecorLoaded[zoneIndex]) return;
+    var cfg = gateConfig[zoneIndex];
+    if (!cfg) return;
+    _zoneDecorLoaded[zoneIndex] = true;
+    var group = gateMeshes[cfg.id];
+    if (!group) return;
+    (group.userData.decorSlots || []).forEach(loadDecorHolder);
+    loadDecorHolder(group.userData.championProp);
+  }
+  // Spawn zone is always visible/unlocked — load it now so the first zone's
+  // props are ready before the kid finishes a mission there.
+  loadZoneDecor(0);
+  if (demoMode) { for (var _dz = 1; _dz < gateConfig.length; _dz++) loadZoneDecor(_dz); }
+
   // ---------- FOG WALLS (one per locked zone entrance — dissolves on unlock) ----------
   // Same fade + retreat + reveal-trees technique as the fog wall in
   // prototypes/jumvi-forest-mini-example.html's growForest()/animateFog() —
@@ -2640,6 +2668,7 @@ export function initHub3D(opts) {
 
   // Distance-based "getting close" boost applied to every gate each frame, except
   // the one currently mid-reaction (that one's pulse takes over in updateGateReaction).
+  var DECOR_PRELOAD_RADIUS = 13; // start fetching a zone's models as Leo nears its gate
   function updateGateAwareness() {
     gateConfig.forEach(function (cfg) {
       if (pendingGate && pendingGate.cfg.id === cfg.id) return;
@@ -2647,6 +2676,10 @@ export function initHub3D(opts) {
       var dx = leo.group.position.x - cfg.x;
       var dz = leo.group.position.z - cfg.z;
       var dist = Math.sqrt(dx * dx + dz * dz);
+      // Zone-lazy preload: kick off this zone's decor fetch while the kid is
+      // still walking toward it, so models are in by the time a mission there
+      // completes. Idempotent + cheap (guarded in loadZoneDecor).
+      if (dist < DECOR_PRELOAD_RADIUS) loadZoneDecor(cfg.zoneIndex);
       var closeness = THREE.MathUtils.clamp(1 - (dist - TRIGGER_RADIUS) / (AWARENESS_RADIUS - TRIGGER_RADIUS), 0, 1);
       ring.userData.awareness = closeness;
     });
