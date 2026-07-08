@@ -18,6 +18,14 @@ export function initHub3D(opts) {
   var done = opts.done;
   var openMission = opts.openMission;
   var container = opts.container;
+  // Analytics (bridged from app.js trackEvent; no-op if absent). The hub fires
+  // its own events so the default-homepage A/B is measurable (audit Bulgu #20).
+  var track = opts.track || function () {};
+  var _firstHubMissionTracked = false;
+  var _loadMsTracked = false;
+  // Exposed so the FIX-5 fallback layer (and app.js) can report a bail-out with
+  // a reason ("no_webgl" | "low_memory" | "reduced_motion" | "low_fps" | "slow_load").
+  window._hub3dTrackFallback = function (reason) { track('3d_fallback_triggered', { reason: reason }); };
 
   // ---------- HUB UI TEXTS (hub'ın tek dil kaynağı) ----------
   // Ana uygulamada i18n sistemi yok (tüm app metinleri hardcoded İngilizce);
@@ -2587,6 +2595,10 @@ export function initHub3D(opts) {
     var cfg = gateConfig.filter(function (c) { return c.packKey === packKey; })[0];
     var themeHex = cfg ? '#' + new THREE.Color(themeForZone(cfg.zoneIndex).gateColor).getHexString() : null;
     window._hubMissionFlow = { packKey: packKey, themeColor: themeHex };
+    // 3d_first_mission_start — once per session, the first time a mission opens
+    // from inside the hub (kid reached a gate). The core "3D actually converted
+    // to play" A/B signal.
+    if (!_firstHubMissionTracked) { _firstHubMissionTracked = true; track('3d_first_mission_start', { pack: packKey }); }
     openMission(missionId);
   }
 
@@ -3046,6 +3058,18 @@ export function initHub3D(opts) {
     });
 
     renderer.render(scene, camera);
+
+    // 3d_load_ms — fired once, on the very first painted frame, bucketed from
+    // the tap that opened the hub (window.__hub3dLoadStart, set in app.js
+    // showHub3D). This is the "how long until the island appears" A/B metric.
+    if (!_loadMsTracked) {
+      _loadMsTracked = true;
+      if (window.__hub3dLoadStart) {
+        var ms = performance.now() - window.__hub3dLoadStart;
+        window.__hub3dLoadStart = null;
+        track('3d_load_ms', { bucket: ms < 2000 ? '<2s' : ms < 4000 ? '2-4s' : ms < 6000 ? '4-6s' : '6s+' });
+      }
+    }
   }
 
   // ---------- LOOP (pause/resume-able — see hideHub3D()/showHub3D() in app.js) ----------

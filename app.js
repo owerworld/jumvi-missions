@@ -2314,9 +2314,17 @@ function applyHubMissionTheme(){
   }
 }
 
+let _firstMissionStartTracked = false;
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
+  // first_mission_start — once per session, the moment any mission view opens,
+  // tagged with where it came from (hub vs 2D). Parity with the audit's A/B
+  // funnel (2D had it implicitly, 3D had nothing).
+  if(!_firstMissionStartTracked){
+    _firstMissionStartTracked = true;
+    trackEvent("first_mission_start", { source: window._hubMissionFlow ? "hub" : "2d" });
+  }
   // If the Red Light / Green Light caller is running (mission 2) and the user
   // taps Next/Random/another mission, tear it down so the new mission isn't
   // hidden behind the green/red overlay.
@@ -3736,6 +3744,18 @@ function addNewChildProfile(){
 }
 
 // Profile sheet event handlers
+// First-visit stamp for D1/D7 retention cohorting (audit): written once, the
+// first time the app ever loads on this device. Never overwritten, so later
+// sessions can compute "days since first visit" for the A/B retention read.
+document.addEventListener("DOMContentLoaded", ()=>{
+  try{
+    if(storageAvailable && !lsGet("jumvi_first_visit_v1", "")){
+      lsSet("jumvi_first_visit_v1", new Date().toISOString().slice(0,10));
+      trackEvent("first_visit");
+    }
+  }catch(_){}
+});
+
 document.addEventListener("DOMContentLoaded", ()=>{
   const closeBtn = document.getElementById("btnProfileClose");
   if(closeBtn) closeBtn.onclick = ()=>{ clickSound("click"); closeProfileSheet(); };
@@ -3950,7 +3970,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-104");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-105");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
@@ -3968,13 +3988,22 @@ function ensureHub3DLoaded(){
       // (it never reimplements them). navigate() leaves the hub for a normal
       // tab; openBadges() pops the existing badges modal on top of the hub.
       navigate(tab){ switchTab(tab); },
-      openBadges(){ if(typeof updateBadges === "function") updateBadges(); badgesBackdrop.classList.add("show"); }
+      openBadges(){ if(typeof updateBadges === "function") updateBadges(); badgesBackdrop.classList.add("show"); },
+      // Analytics bridge — the hub had ZERO Plausible events (audit Bulgu #20),
+      // so the default-homepage A/B couldn't be read. The hub fires its own
+      // events (3d_load_ms, 3d_first_mission_start, 3d_fallback_triggered)
+      // through this; app.js owns the actual trackEvent() call.
+      track: trackEvent
     });
   })();
   return _hub3dLoadPromise;
 }
 
 function showHub3D(){
+  // Stopwatches for analytics: tap→first-frame (3d_load_ms, bucketed by the
+  // hub) and total time in hub (3d_session_end, fired in hideHub3D).
+  window.__hub3dLoadStart = performance.now();
+  window.__hub3dSessionStart = performance.now();
   const overlay = document.getElementById("hub3dOverlay");
   if(overlay) overlay.style.display = "";
   // The hub's own HUD occupies the top of the screen — hide the normal app
@@ -4005,6 +4034,12 @@ function hideHub3D(){
   if(sticky) sticky.style.display = "";
   const bottomNav = document.getElementById("bottomNav");
   if(bottomNav) bottomNav.style.display = ""; // restore global nav on leaving the hub
+  // 3d_session_end — how long the kid actually spent in the hub this visit.
+  if(window.__hub3dSessionStart){
+    const secs = Math.round((performance.now() - window.__hub3dSessionStart) / 1000);
+    window.__hub3dSessionStart = null;
+    if(secs > 0) trackEvent("3d_session_end", { seconds_bucket: secs < 15 ? "<15s" : secs < 60 ? "15-60s" : secs < 180 ? "1-3m" : "3m+" });
+  }
   if(_hub3dInstance) _hub3dInstance.pause();
 }
 
