@@ -402,7 +402,9 @@ export function initHub3D(opts) {
   var dailyBtn = document.createElement('button');
   dailyBtn.type = 'button';
   dailyBtn.textContent = HUB_TEXTS.todaysMission;
-  dailyBtn.style.cssText = 'position:absolute;bottom:16px;left:14px;z-index:11;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:13px;font-weight:900;padding:10px 14px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  // bottom offset includes the notch/home-indicator safe area so it never sits
+  // under the iOS home bar now that the global nav is hidden beneath the hub.
+  dailyBtn.style.cssText = 'position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:14px;z-index:11;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:13px;font-weight:900;padding:11px 15px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(dailyBtn);
 
   var autoWalk = null; // { points: [{x,z}], i }

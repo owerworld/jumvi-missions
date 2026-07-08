@@ -3951,7 +3951,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-102");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-103");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
@@ -3982,6 +3982,14 @@ function showHub3D(){
   // topbar underneath it instead of letting them overlap.
   const sticky = document.querySelector(".sticky");
   if(sticky) sticky.style.display = "none";
+  // P0: hide the global bottom tab bar too. It used to stay visible UNDER the
+  // hub, so taps meant for the hub's own bottom controls (the "Today's
+  // Mission" button) landed on the nav and kicked the kid out of 3D. The hub
+  // carries its own navigation now (the ☰ menu routes to every real tab +
+  // Badges), so nothing is lost — and switchTab()/hideHub3D() restore the nav
+  // the moment we leave the hub.
+  const bottomNav = document.getElementById("bottomNav");
+  if(bottomNav) bottomNav.style.display = "none";
   ensureHub3DLoaded().then(() => {
     // Loading is async — the user may have switched to another tab before it
     // finished. Only start rendering if hub3d is still the active/visible tab.
@@ -3996,6 +4004,8 @@ function hideHub3D(){
   if(overlay) overlay.style.display = "none";
   const sticky = document.querySelector(".sticky");
   if(sticky) sticky.style.display = "";
+  const bottomNav = document.getElementById("bottomNav");
+  if(bottomNav) bottomNav.style.display = ""; // restore global nav on leaving the hub
   if(_hub3dInstance) _hub3dInstance.pause();
 }
 
