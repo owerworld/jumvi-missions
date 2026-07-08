@@ -10,7 +10,7 @@
 // ships as an ES module. Same version (0.160.0) as before, just a different
 // build/packaging — every existing THREE.Xxx call below is unaffected.
 import * as THREE from 'three';
-import { createCoachLeo } from './jumvi-leo.js?v=20260524-56';
+import { createCoachLeo } from './jumvi-leo.js?v=20260524-101';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -1003,7 +1003,6 @@ export function initHub3D(opts) {
     stone_lantern: { path: 'zen/stone_lantern.glb', size: 1.2 },
     lotus_pond: { path: 'zen/lotus_pond.glb', size: 1.5 },
     golden_lantern: { path: 'zen/golden_lantern.glb', size: 1.4 },
-    team_flag: { path: 'play/team_flag.glb', size: 1.7 },
     bench: { path: 'play/bench.glb', size: 1.3 },
     slide: { path: 'play/slide.glb', size: 2.4 },
     champion_flag: { path: 'play/champion_flag.glb', size: 0.85 },
@@ -1138,7 +1137,9 @@ export function initHub3D(opts) {
   var makeStoneLanternDecor = makeDecorFromModel('stone_lantern');
   var makeLotusPondDecor = makeDecorFromModel('lotus_pond');
   var makeGoldenLanternDecor = makeDecorFromModel('golden_lantern');
-  var makeTeamFlagDecor = makeDecorFromModel('team_flag');
+  // team_flag.glb was a byte-identical copy of target/flag.glb — deduped to
+  // the single 'flag' source so both zones share one fetch + one cache entry.
+  var makeTeamFlagDecor = makeDecorFromModel('flag');
   var makeBenchDecor = makeDecorFromModel('bench');
   var makeSlideDecor = makeDecorFromModel('slide');
   var makeChampionFlagDecor = makeDecorFromModel('champion_flag');

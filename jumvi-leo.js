@@ -139,9 +139,14 @@ export function createCoachLeo(THREE, options) {
     proceduralGroup.add(tongue);
 
     // eyes — large, glossy, brown, with a white specular highlight dot and a
-    // thick brow above each one (spec critical: big expressive eyes, not blue)
+    // thick brow above each one (spec critical: big expressive eyes, not blue).
+    // Both eye materials are UNLIT (MeshBasicMaterial): the sclera used to be a
+    // lit toon material, so under the energy zone's strong blue/purple lighting
+    // (where the fallback rig is first seen on a slow load) the whites tinted
+    // blue and the eyes read as "blue-eyed Leo" — a brand break. Unlit keeps
+    // them pure white + brown under any zone lighting.
     var eyeMat = new THREE.MeshBasicMaterial({ color: 0x3A2A1A });
-    var eyeWhiteMat = toonMat(0xffffff);
+    var eyeWhiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
     var browMat = new THREE.MeshBasicMaterial({ color: 0x3A2A1A });
     // eyeZ is chosen so the eye spheres clearly protrude past the head's own
     // curved surface at this latitude (head radius 0.42, eyes offset ±0.155
