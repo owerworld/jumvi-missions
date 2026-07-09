@@ -490,6 +490,9 @@
       <div class="small">
         Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
       </div>
+      <div class="small">
+        <a href="#" id="privacyLink" role="button">🔒 Privacy &amp; Safety</a>
+      </div>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn btnResetFooter" id="btnReset" aria-label="Reset progress">🗑️ Reset Progress</button>
         <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button">🧒 Kids Mode</button>
@@ -635,6 +638,52 @@
       </div>
       <div class="kv" id="seasonalList"></div>
       <div class="small">Tap a mission to open it.</div>
+    </div>
+  </div>
+
+  <!-- Privacy & Safety Modal (parent-facing; COPPA-conscious) -->
+  <div class="backdrop" id="privacyBackdrop" role="dialog" aria-modal="true" aria-label="Privacy and Safety">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">🔒 Privacy &amp; Safety</div>
+          <div class="small">Made for kids — built for parents' peace of mind.</div>
+        </div>
+        <button class="close" id="btnPrivacyClose" aria-label="Close privacy and safety">✕</button>
+      </div>
+      <div class="privacyBody" style="font-size:14px;line-height:1.5;color:#334155;display:flex;flex-direction:column;gap:12px;">
+        <div>
+          <b>🙅 No sign-up, no account.</b><br/>
+          No login, no password, no email required. Just open and play.
+        </div>
+        <div>
+          <b>🔐 No personal information collected.</b><br/>
+          We never ask for or collect your child's name, email, address, phone number, photos, or location.
+        </div>
+        <div>
+          <b>📱 Everything stays on your device.</b><br/>
+          Mission progress and badges are saved only in this browser, on this device. They are never uploaded to a server, and the optional certificate name you type is used only to draw the image on your device — it is not sent anywhere.
+        </div>
+        <div>
+          <b>📊 Anonymous usage counts only.</b><br/>
+          We use <a href="https://plausible.io/privacy-focused-web-analytics" target="_blank" rel="noopener">Plausible</a>, a privacy-first analytics tool, to count aggregate usage (for example, how often a mission is opened). It uses <b>no cookies</b>, collects <b>no personal information</b>, and <b>never tracks your child across other sites or apps</b>.
+        </div>
+        <div>
+          <b>🚫 No ads. No third-party trackers. No data selling — ever.</b>
+        </div>
+        <div>
+          <b>👶 COPPA &amp; children's privacy.</b><br/>
+          This app is designed to align with the U.S. Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13. If you believe we have, contact us and we will address it promptly.
+        </div>
+        <div>
+          <b>🧑‍🤝‍🧑 Play safely.</b><br/>
+          These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles.
+        </div>
+        <div class="small" style="border-top:1px solid #e5e7eb;padding-top:10px;">
+          JUMVI is a product of <b>SAY23 LLC</b>. Questions or requests: <a href="mailto:support@jumvi.co">support@jumvi.co</a>.<br/>
+          Effective July 2026 · qr.jumvi.co
+        </div>
+      </div>
     </div>
   </div>
 
@@ -837,7 +886,7 @@
 <script src="data.js?v=20260524-30" defer></script>
 <script src="jumvi-mission-icons.js?v=20260524-29" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260524-112" defer></script>
+<script src="app.js?v=20260524-113" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{

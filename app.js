@@ -3222,6 +3222,20 @@ if(btnSeasonalClose){
 if(seasonalBackdrop){
   seasonalBackdrop.addEventListener("click",(e)=>{ if(e.target===seasonalBackdrop){ clickSound("click"); seasonalBackdrop.classList.remove("show"); } });
 }
+
+// Privacy & Safety modal — parent-facing, opened from the footer link.
+const privacyBackdrop = document.getElementById("privacyBackdrop");
+const privacyLink = document.getElementById("privacyLink");
+const btnPrivacyClose = document.getElementById("btnPrivacyClose");
+if(privacyLink && privacyBackdrop){
+  privacyLink.addEventListener("click",(e)=>{ e.preventDefault(); clickSound("click"); privacyBackdrop.classList.add("show"); });
+}
+if(btnPrivacyClose){
+  btnPrivacyClose.onclick = ()=>{ clickSound("click"); privacyBackdrop.classList.remove("show"); };
+}
+if(privacyBackdrop){
+  privacyBackdrop.addEventListener("click",(e)=>{ if(e.target===privacyBackdrop){ clickSound("click"); privacyBackdrop.classList.remove("show"); } });
+}
 if(btnSeasonalIndoor){
   btnSeasonalIndoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("indoor"); };
 }
