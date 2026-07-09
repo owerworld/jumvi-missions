@@ -3970,7 +3970,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-106");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-107");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
@@ -3993,13 +3993,47 @@ function ensureHub3DLoaded(){
       // so the default-homepage A/B couldn't be read. The hub fires its own
       // events (3d_load_ms, 3d_first_mission_start, 3d_fallback_triggered)
       // through this; app.js owns the actual trackEvent() call.
-      track: trackEvent
+      track: trackEvent,
+      // Soft FPS fallback (audit Bulgu #5): the hub measured a struggling frame
+      // rate. We don't yank the kid out mid-play — just a one-time, dismissable
+      // nudge telling them the calm list is a tap away in the ☰ menu.
+      onLowFps: (fps) => {
+        if(window.__hub3dLowFpsNudged) return;
+        window.__hub3dLowFpsNudged = true;
+        showToast("Running a bit slow — tap ☰ for the quick list anytime 📋");
+      }
     });
   })();
   return _hub3dLoadPromise;
 }
 
+// Graceful-degradation gate (audit Bulgu #5/#6): decide up-front whether this
+// device/context can run the 3D hub at all. Returns a fallback reason string
+// or null. WebGL missing or a device too weak to render it (measured 14fps on
+// software GL) drops straight to the 2D list rather than a blank blue screen;
+// reduced-motion users get the calm list too. The hub is opt-in, so we always
+// have a safe 2D home to fall back to.
+function hub3dFallbackReason(){
+  try{
+    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "reduced_motion";
+    if(typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 2) return "low_memory";
+    const c = document.createElement("canvas");
+    const gl = c.getContext("webgl2") || c.getContext("webgl") || c.getContext("experimental-webgl");
+    if(!gl) return "no_webgl";
+  }catch(_){ return "no_webgl"; }
+  return null;
+}
+
 function showHub3D(){
+  // Fallback gate first — bail to the 2D list before touching the hub if the
+  // device/context can't handle it, and log why (3d_fallback_triggered).
+  const _fb = hub3dFallbackReason();
+  if(_fb){
+    trackEvent("3d_fallback_triggered", { reason: _fb });
+    showToast(_fb === "reduced_motion" ? "Showing the calm list view 🌿" : "Using the quick list view on this device 📋");
+    switchTab("today"); // safe 2D home (does not re-enter the hub)
+    return;
+  }
   // Stopwatches for analytics: tap→first-frame (3d_load_ms, bucketed by the
   // hub) and total time in hub (3d_session_end, fired in hideHub3D).
   window.__hub3dLoadStart = performance.now();
@@ -4018,6 +4052,18 @@ function showHub3D(){
   // the moment we leave the hub.
   const bottomNav = document.getElementById("bottomNav");
   if(bottomNav) bottomNav.style.display = "none";
+  // Load watchdog (audit Bulgu #5): if no first frame paints within 8s the kid
+  // is staring at a blank canvas. The hub nulls __hub3dLoadStart on its first
+  // painted frame, so if our token is still set (and we're still in the hub)
+  // the load stalled — fall back to the 2D list instead of leaving them stuck.
+  const _loadToken = window.__hub3dLoadStart;
+  setTimeout(() => {
+    if(window.__hub3dLoadStart === _loadToken && overlay && overlay.style.display !== "none"){
+      trackEvent("3d_fallback_triggered", { reason: "slow_load" });
+      showToast("This is taking a while — switching to quick view 📋");
+      switchTab("today");
+    }
+  }, 8000);
   ensureHub3DLoaded().then(() => {
     // Loading is async — the user may have switched to another tab before it
     // finished. Only start rendering if hub3d is still the active/visible tab.

@@ -23,6 +23,11 @@ export function initHub3D(opts) {
   var track = opts.track || function () {};
   var _firstHubMissionTracked = false;
   var _loadMsTracked = false;
+  // FPS watchdog state (audit Bulgu #5): sample the first ~3s of real rendering
+  // and, if it can't hold 20fps, offer the quick list without forcing it.
+  var _fpsChecked = false;
+  var _fpsFrames = 0;
+  var _fpsWindowStart = 0;
   // Exposed so the FIX-5 fallback layer (and app.js) can report a bail-out with
   // a reason ("no_webgl" | "low_memory" | "reduced_motion" | "low_fps" | "slow_load").
   window._hub3dTrackFallback = function (reason) { track('3d_fallback_triggered', { reason: reason }); };
@@ -3101,6 +3106,25 @@ export function initHub3D(opts) {
         var ms = performance.now() - window.__hub3dLoadStart;
         window.__hub3dLoadStart = null;
         track('3d_load_ms', { bucket: ms < 2000 ? '<2s' : ms < 4000 ? '2-4s' : ms < 6000 ? '4-6s' : '6s+' });
+      }
+    }
+
+    // FPS watchdog — count real (non-throttled) frames over the first ~3s of
+    // rendering. A sustained <20fps means this device is struggling; fire
+    // low_fps and let the app gently offer the quick list (onLowFps). We only
+    // reach here on full-render frames, so the sample is untainted by the
+    // mission-card throttle above.
+    if (_loadMsTracked && !_fpsChecked) {
+      if (_fpsWindowStart === 0) _fpsWindowStart = performance.now();
+      _fpsFrames++;
+      var _fpsEl = performance.now() - _fpsWindowStart;
+      if (_fpsEl >= 3000) {
+        _fpsChecked = true;
+        var _fps = _fpsFrames / (_fpsEl / 1000);
+        if (_fps < 20) {
+          track('3d_fallback_triggered', { reason: 'low_fps' });
+          if (typeof opts.onLowFps === 'function') opts.onLowFps(Math.round(_fps));
+        }
       }
     }
   }
