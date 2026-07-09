@@ -297,6 +297,47 @@ export function initHub3D(opts) {
     playNote(2093, 0.22, 0.06, 0.27);
   }
 
+  // ---------- GENTLE BACKGROUND MUSIC (soft picture-book lullaby loop) ----------
+  // A slow C-major-pentatonic bell motif at very low gain — "sweet and barely
+  // there". Same palette rules as the SFX above: pure sines, nothing below
+  // ~500Hz (low tones tested as unsettling for small kids). It runs only while
+  // the hub loop is active (started/stopped from resume()/pause()) and honours
+  // the ONE global sound toggle through isMuted(), so muting silences it with
+  // the next note — no separate music setting to confuse parents.
+  var BG_PATTERN = [523.25, 659.25, 783.99, 0, 880, 783.99, 659.25, 0,
+                    587.33, 783.99, 0, 1046.5, 880, 783.99, 659.25, 0];
+  var _bgStep = 0;
+  var _bgTimer = null;
+  function playBgNote(freq) {
+    if (!audioCtx || isMuted() || !freq) return;
+    var t0 = audioCtx.currentTime;
+    // soft bell: fundamental + a quiet octave partial, slow swell, long tail
+    [[freq, 0.019, 1.7], [freq * 2, 0.006, 1.1]].forEach(function (p) {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(p[0], t0);
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(p[1], t0 + 0.10);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + p[2]);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(t0);
+      osc.stop(t0 + p[2] + 0.05);
+    });
+  }
+  function startBgMusic() {
+    if (_bgTimer || !audioCtx) return;
+    _bgTimer = setInterval(function () {
+      if (audioCtx.state !== 'running') return; // still waiting for a user gesture
+      playBgNote(BG_PATTERN[_bgStep % BG_PATTERN.length]);
+      _bgStep++;
+    }, 640);
+  }
+  function stopBgMusic() {
+    if (_bgTimer) { clearInterval(_bgTimer); _bgTimer = null; }
+  }
+
   // "Come back to the island" whistle — timer's up in the mission view; a
   // gentle two-note up-slide, exposed for app.js's timer-end hook.
   function playComeBack() {
@@ -320,33 +361,8 @@ export function initHub3D(opts) {
   });
   container.appendChild(muteBtn);
 
-  // "How to play" — a ❓ under the mute button reopening a tiny 3-line card.
-  // The one-time coach bubble covers the very first launch, but a pre-reader
-  // who missed it (or a parent joining later) needs a way back to the rules.
-  var helpBtn = document.createElement('button');
-  helpBtn.type = 'button';
-  helpBtn.setAttribute('aria-label', HUB_TEXTS.help);
-  helpBtn.style.cssText = 'position:absolute;top:58px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
-  helpBtn.textContent = '❓';
-  container.appendChild(helpBtn);
-
-  var helpCardEl = document.createElement('div');
-  helpCardEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:22;background:rgba(255,255,255,0.97);padding:20px 22px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.35);display:none;flex-direction:column;gap:10px;max-width:300px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
-  helpCardEl.innerHTML =
-    '<div style="font-size:17px;font-weight:900;color:#3a2a1a;text-align:center;">' + HUB_TEXTS.help + '</div>' +
-    HUB_TEXTS.helpLines.map(function (l) {
-      return '<div style="font-size:14px;font-weight:700;color:#5a4632;line-height:1.35;">' + l + '</div>';
-    }).join('') +
-    '<button type="button" style="border:none;border-radius:12px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:15px;font-weight:900;padding:10px 0;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">' + HUB_TEXTS.gotIt + '</button>';
-  container.appendChild(helpCardEl);
-  helpBtn.addEventListener('click', function () {
-    resumeAudio();
-    playChime();
-    helpCardEl.style.display = 'flex';
-  });
-  helpCardEl.querySelector('button').addEventListener('click', function () {
-    helpCardEl.style.display = 'none';
-  });
+  // (The ❓ "How to play" button was removed — the how-to rules still live in
+  // the one-time coach bubble on first launch; the corner is kept clean.)
 
   // ---------- IN-HUB MENU (☰) ----------
   // The hub is heading toward being the whole site's front door, so it carries
@@ -484,51 +500,7 @@ export function initHub3D(opts) {
   }
   dailyBtn.addEventListener('click', startAutoWalkToMission);
 
-  // ---------- ISLAND PHOTO (share/download a snapshot) ----------
-  var photoBtn = document.createElement('button');
-  photoBtn.type = 'button';
-  photoBtn.setAttribute('aria-label', HUB_TEXTS.photo);
-  photoBtn.textContent = '📷';
-  photoBtn.style.cssText = 'position:absolute;top:102px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
-  container.appendChild(photoBtn);
-  photoBtn.addEventListener('click', function () {
-    resumeAudio();
-    playChime();
-    // fresh render in this same task so toDataURL sees pixels without
-    // needing preserveDrawingBuffer (which costs memory every frame)
-    renderer.render(scene, camera);
-    var src = renderer.domElement;
-    var out = document.createElement('canvas');
-    out.width = src.width; out.height = src.height;
-    var octx = out.getContext('2d');
-    octx.drawImage(src, 0, 0);
-    var bh = Math.max(40, Math.round(out.height * 0.065));
-    var pad = Math.round(bh * 0.4);
-    octx.fillStyle = 'rgba(255,255,255,0.92)';
-    octx.fillRect(0, out.height - bh, out.width, bh);
-    octx.fillStyle = '#3a2a1a';
-    octx.textBaseline = 'middle';
-    octx.font = '900 ' + Math.round(bh * 0.46) + 'px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    octx.fillText('JUMVI', pad, out.height - bh / 2);
-    octx.textAlign = 'right';
-    octx.font = '700 ' + Math.round(bh * 0.4) + 'px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    octx.fillText(themeForZone(currentZoneIndex()).cardTitle, out.width - pad, out.height - bh / 2);
-    octx.textAlign = 'left';
-    out.toBlob(function (blob) {
-      if (!blob) return;
-      var file = null;
-      try { file = new File([blob], 'jumvi-island.png', { type: 'image/png' }); } catch (e) {}
-      if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({ files: [file], title: 'JUMVI Island' }).catch(function () {});
-      } else {
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'jumvi-island.png';
-        a.click();
-        setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
-      }
-    }, 'image/png');
-  });
+  // (The 📷 island-photo/share button was removed to keep the corner clean.)
 
   // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
   // Each zone is one mission pack, ZONE_LENGTH apart along -Z. The corridor's
@@ -1138,11 +1110,22 @@ export function initHub3D(opts) {
       return holder;
     };
   }
+  // Some decor GLBs have a clear "front" (the target board's rings + the darts
+  // stuck in it). The holder is otherwise unrotated, so a copy on the RIGHT
+  // corridor edge showed its back/darts pointing OUTWARD, away from the path,
+  // while the left-edge copy faced in correctly. These models face +X in their
+  // own file, so a copy sitting right of the path centre needs a 180° flip to
+  // turn and face the walkway. (Rotationally-even props aren't listed here.)
+  var FACE_PATH_KEYS = { target_board: true };
+
   // Fetches + injects a holder's model the first time it's needed. Idempotent.
   function loadDecorHolder(holder) {
     if (!holder || !holder.userData || !holder.userData.modelKey || holder.userData._decorLoaded) return;
     holder.userData._decorLoaded = true;
     var key = holder.userData.modelKey;
+    if (FACE_PATH_KEYS[key]) {
+      holder.rotation.y = holder.position.x > pathCenterX(holder.position.z) ? Math.PI : 0;
+    }
     Promise.all([loadDecorTemplate(key), getSkeletonUtils()]).then(function (res) {
       var template = res[0], SkeletonUtils = res[1];
       holder.add(SkeletonUtils.clone(template));
@@ -3173,11 +3156,13 @@ export function initHub3D(opts) {
     running = true;
     muteBtn.textContent = isMuted() ? '🔇' : '🔊'; // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
+    startBgMusic(); // gentle background loop plays only while the hub is active
     animate();
   }
   function pause() {
     if (!running) return;
     running = false;
+    stopBgMusic();
 
     if (rafId != null) cancelAnimationFrame(rafId);
     rafId = null;
