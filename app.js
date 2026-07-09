@@ -1020,13 +1020,16 @@ function getMilestoneLine(counts){
 }
 
 /* Skill packs — yeni dile uygun, tam 6 kategori, pack-renk eşleşmeli */
+// Order MUST match PACKS (data.js) and ZONE_THEMES (jumvi-hub-app.js): drives
+// the 2D path view + "Pack N of 6" numbering. Reflex Rush is last so the walk
+// (and the list) starts on the bright 🎯 zone, not the dark ⚡ energy one.
 const SKILL_PACKS = [
-  { key:"Reflex Rush",    label:"Lightning Hands", icon:"⚡", color:"#FF6A00" },
   { key:"Aim Master",     label:"Bullseye!",       icon:"🎯", color:"#4FB3FF" },
   { key:"Focus Control",  label:"Zen Mode",        icon:"🧘", color:"#22c55e" },
   { key:"Team Duo",       label:"Team Up",         icon:"👥", color:"#A855F7" },
   { key:"Indoor Compact", label:"Indoor Fun",      icon:"🏠", color:"#06B6D4" },
-  { key:"Beach/Park",     label:"Outdoor",         icon:"🏖️", color:"#FFAB00" }
+  { key:"Beach/Park",     label:"Outdoor",         icon:"🏖️", color:"#FFAB00" },
+  { key:"Reflex Rush",    label:"Lightning Hands", icon:"⚡", color:"#FF6A00" }
 ];
 
 function renderParentDashboard(){
@@ -3111,7 +3114,9 @@ function pickSmartNextMission(currentId){
   const current = missions.find(x=>x.id===currentId);
   if(!current) return null;
   if(!done.has(currentId)) return null; // sadece tamamlanmışsa akıllı öneri
-  const packs = ["Reflex Rush","Aim Master","Focus Control","Team Duo","Indoor Compact","Beach/Park"];
+  // Same key order as PACKS/SKILL_PACKS so ties (e.g. a fresh user) resolve to
+  // the new first pack (Aim Master), matching the 3D spawn zone.
+  const packs = ["Aim Master","Focus Control","Team Duo","Indoor Compact","Beach/Park","Reflex Rush"];
   const packCounts = packs.map(p=>({
     pack:p,
     doneCount: missions.filter(m=>m.pack===p && done.has(m.id)).length,
@@ -3970,7 +3975,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-107");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-110");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
@@ -4052,13 +4057,14 @@ function showHub3D(){
   // the moment we leave the hub.
   const bottomNav = document.getElementById("bottomNav");
   if(bottomNav) bottomNav.style.display = "none";
-  // Load watchdog (audit Bulgu #5): if no first frame paints within 8s the kid
-  // is staring at a blank canvas. The hub nulls __hub3dLoadStart on its first
-  // painted frame, so if our token is still set (and we're still in the hub)
-  // the load stalled — fall back to the 2D list instead of leaving them stuck.
-  const _loadToken = window.__hub3dLoadStart;
+  // Load watchdog (audit Bulgu #5): if no frame paints within 8s of THIS open
+  // the kid is staring at a blank canvas. The hub stamps __hub3dLastFrameAt on
+  // every painted frame, so a frame newer than this open means it's alive —
+  // this stays correct on re-opens (unlike watching the one-shot load stamp).
+  const _openedAt = performance.now();
   setTimeout(() => {
-    if(window.__hub3dLoadStart === _loadToken && overlay && overlay.style.display !== "none"){
+    const painted = window.__hub3dLastFrameAt && window.__hub3dLastFrameAt >= _openedAt;
+    if(!painted && overlay && overlay.style.display !== "none"){
       trackEvent("3d_fallback_triggered", { reason: "slow_load" });
       showToast("This is taking a while — switching to quick view 📋");
       switchTab("today");
@@ -4678,7 +4684,7 @@ function getCoachPick(){
   const undone = missions.filter(m => !done.has(m.id));
   if(undone.length === 0) return null;
 
-  const packKeys = ["Reflex Rush","Aim Master","Focus Control","Team Duo","Indoor Compact","Beach/Park"];
+  const packKeys = ["Aim Master","Focus Control","Team Duo","Indoor Compact","Beach/Park","Reflex Rush"];
   const packStats = packKeys.map(p => ({
     key: p,
     doneCount: missions.filter(m => m.pack === p && done.has(m.id)).length,

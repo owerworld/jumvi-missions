@@ -1,12 +1,18 @@
 // Data: missions, badges, packs helpers
 const PACKS = [
   { key:"all",            name:"All Packs" },
-  { key:"Reflex Rush",    name:"⚡ Lightning Hands" },
+  // Walk/list order (2026-07 reorder): the dark ⚡ energy zone no longer greets
+  // the child at spawn — Reflex Rush moved to LAST so the island opens on the
+  // bright 🎯 zone and ends on the electric-night finale. Progress is stored by
+  // pack.key, so this array order is purely presentational + the unlock chain;
+  // no localStorage migration. SKILL_PACKS (app.js) and ZONE_THEMES
+  // (jumvi-hub-app.js) are kept in this exact same key order.
   { key:"Aim Master",     name:"🎯 Bullseye!" },
   { key:"Focus Control",  name:"🧘 Zen Mode" },
   { key:"Team Duo",       name:"👥 Team Up" },
   { key:"Indoor Compact", name:"🏠 Indoor Fun" },
   { key:"Beach/Park",     name:"🏖️ Outdoor" },
+  { key:"Reflex Rush",    name:"⚡ Lightning Hands" },
 ];
 
 // Pack display name helper (kullanıcıya gösterirken)

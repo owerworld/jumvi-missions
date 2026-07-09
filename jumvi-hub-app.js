@@ -28,6 +28,7 @@ export function initHub3D(opts) {
   var _fpsChecked = false;
   var _fpsFrames = 0;
   var _fpsWindowStart = 0;
+  var _fpsWarmupUntil = 0; // skip the first ~1.5s of load jank before sampling
   // Exposed so the FIX-5 fallback layer (and app.js) can report a bail-out with
   // a reason ("no_webgl" | "low_memory" | "reduced_motion" | "low_fps" | "slow_load").
   window._hub3dTrackFallback = function (reason) { track('3d_fallback_triggered', { reason: reason }); };
@@ -651,12 +652,12 @@ export function initHub3D(opts) {
     // make* functions — makers() (scattered edge dressing along the whole
     // corridor) is untouched and still procedural, that's a different,
     // much-higher-instance-count use of these same function names.
-    { key: 'energy', cardTitle: '⚡ Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makePowerPoleDecor, name: 'power pole' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }]; }, championName: 'energy orb' },
     { key: 'target', cardTitle: '🎯 Target Range', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoardDecor, name: 'target board' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }]; }, championName: 'golden target' },
     { key: 'zen', cardTitle: '🍃 Zen Garden', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }, { make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }]; }, championName: 'golden lantern' },
     { key: 'play', cardTitle: '👥 Playground', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeSlideDecor, name: 'slide' }, { make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeTeamFlagDecor, name: 'flag' }]; }, championName: 'champion flag' },
     { key: 'home', cardTitle: '🏠 Backyard', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFenceDecor, name: 'fence' }, { make: makeFlowerBedDecor, name: 'flower bed' }, { make: makeSwingDecor, name: 'swing' }, { make: makeFenceDecor, name: 'fence' }, { make: makeMailboxDecor, name: 'mailbox' }, { make: makeFlowerBedDecor, name: 'flower bed' }]; }, championName: 'flower crown' },
-    { key: 'beach', cardTitle: '🏖️ Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTreeDecor, name: 'palm tree' }, { make: makeBeachUmbrellaDecor, name: 'beach umbrella' }, { make: makeSandcastleDecor, name: 'sandcastle' }, { make: makeSeashellDecor, name: 'seashell' }, { make: makePalmTreeDecor, name: 'palm tree' }, { make: makeSeashellDecor, name: 'seashell' }]; }, championName: 'golden sun' }
+    { key: 'beach', cardTitle: '🏖️ Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTreeDecor, name: 'palm tree' }, { make: makeBeachUmbrellaDecor, name: 'beach umbrella' }, { make: makeSandcastleDecor, name: 'sandcastle' }, { make: makeSeashellDecor, name: 'seashell' }, { make: makePalmTreeDecor, name: 'palm tree' }, { make: makeSeashellDecor, name: 'seashell' }]; }, championName: 'golden sun' },
+    { key: 'energy', cardTitle: '⚡ Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makePowerPoleDecor, name: 'power pole' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }]; }, championName: 'energy orb' }
   ];
   function themeForZone(i) {
     return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
@@ -3096,6 +3097,10 @@ export function initHub3D(opts) {
     });
 
     renderer.render(scene, camera);
+    // Heartbeat for app.js's load watchdog — updated on EVERY painted frame
+    // (unlike the one-shot 3d_load_ms below), so re-opening the hub in the same
+    // session is correctly seen as "already rendering" instead of stalled.
+    window.__hub3dLastFrameAt = performance.now();
 
     // 3d_load_ms — fired once, on the very first painted frame, bucketed from
     // the tap that opened the hub (window.__hub3dLoadStart, set in app.js
@@ -3109,12 +3114,16 @@ export function initHub3D(opts) {
       }
     }
 
-    // FPS watchdog — count real (non-throttled) frames over the first ~3s of
-    // rendering. A sustained <20fps means this device is struggling; fire
-    // low_fps and let the app gently offer the quick list (onLowFps). We only
-    // reach here on full-render frames, so the sample is untainted by the
-    // mission-card throttle above.
+    // FPS watchdog — measure STEADY-STATE frame rate, not the first-second
+    // load jank (GLB decode + skeleton clones make the opening frames stutter
+    // even on good devices). We skip a 1.5s warm-up after the first painted
+    // frame, then sample ~3s: a sustained <20fps means the device is genuinely
+    // struggling, so we fire low_fps and gently offer the quick list (onLowFps).
+    // Only reached on full-render frames, so the mission-card throttle can't
+    // taint it.
     if (_loadMsTracked && !_fpsChecked) {
+      if (_fpsWarmupUntil === 0) _fpsWarmupUntil = performance.now() + 1500;
+      if (performance.now() >= _fpsWarmupUntil) {
       if (_fpsWindowStart === 0) _fpsWindowStart = performance.now();
       _fpsFrames++;
       var _fpsEl = performance.now() - _fpsWindowStart;
@@ -3125,6 +3134,7 @@ export function initHub3D(opts) {
           track('3d_fallback_triggered', { reason: 'low_fps' });
           if (typeof opts.onLowFps === 'function') opts.onLowFps(Math.round(_fps));
         }
+      }
       }
     }
   }
