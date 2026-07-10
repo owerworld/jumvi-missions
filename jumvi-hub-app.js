@@ -885,6 +885,139 @@ export function initHub3D(opts) {
     }
   }
 
+  // ---------- SKYDOME: stylized 360° backdrop (replaces the flat blue) ----------
+  // One camera-following group holds a vertical-gradient dome, a soft sun, a
+  // ring of low-poly mountains and a few floating islands. Everything is
+  // fog:false + depthWrite:false so it reads as a painted, hand-drawn backdrop
+  // that real scene geometry always draws over; every colour lerps per zone
+  // theme in updateSky(), so each badge gets its own matching sky.
+  var SKY_TOPS = { // richer "zenith" per theme; the horizon uses theme.sky
+    energy: 0x141636, target: 0x66aee4, zen: 0xf2c39a,
+    play: 0x3f9bd6, home: 0xffb367, beach: 0x3fa2d2
+  };
+  // A VISIBLE sun/moon disc colour per theme (theme.sun is the light colour,
+  // often near-white and invisible against a pale sky). Warm suns by day, a
+  // cool moon over the energy night zone.
+  var SUN_COLORS = {
+    energy: 0xd6dcff, target: 0xffe27a, zen: 0xffd98a,
+    play: 0xfff0a0, home: 0xffb85a, beach: 0xfff0b0
+  };
+  function skyTopFor(idx) {
+    var k = themeForZone(idx).key;
+    return SKY_TOPS.hasOwnProperty(k) ? SKY_TOPS[k] : themeForZone(idx).sky;
+  }
+  function sunColorFor(idx) {
+    var k = themeForZone(idx).key;
+    return SUN_COLORS.hasOwnProperty(k) ? SUN_COLORS[k] : 0xffe27a;
+  }
+  var HAZE = new THREE.Color(0x9fb0c4); // mountains lean toward this cool haze
+
+  var skyGroup = new THREE.Group();
+  scene.add(skyGroup);
+
+  // --- gradient dome (direction-based, so camera motion doesn't shift it) ---
+  var domeUniforms = {
+    topColor: { value: new THREE.Color(skyTopFor(0)) },
+    bottomColor: { value: new THREE.Color(ZONE_THEMES[0].sky) },
+    exponent: { value: 0.68 }
+  };
+  var domeMat = new THREE.ShaderMaterial({
+    uniforms: domeUniforms, side: THREE.BackSide, depthWrite: false, fog: false,
+    vertexShader:
+      'varying vec3 vPos;\n' +
+      'void main(){ vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+    fragmentShader:
+      'uniform vec3 topColor; uniform vec3 bottomColor; uniform float exponent;\n' +
+      'varying vec3 vPos;\n' +
+      'void main(){ float h = normalize(vPos).y; float t = pow(max(h,0.0), exponent); gl_FragColor = vec4(mix(bottomColor, topColor, t), 1.0); }'
+  });
+  var dome = new THREE.Mesh(new THREE.SphereGeometry(62, 24, 16), domeMat);
+  dome.renderOrder = -10;
+  dome.frustumCulled = false;
+  skyGroup.add(dome);
+
+  // --- soft sun (bright core + halo), billboarded toward the camera ---
+  var sunColor = new THREE.Color(sunColorFor(0));
+  var sunGroup = new THREE.Group();
+  var sunGlowMat = new THREE.MeshBasicMaterial({ color: sunColor, fog: false, transparent: true, opacity: 0.30, depthWrite: false });
+  var sunCoreMat = new THREE.MeshBasicMaterial({ color: sunColor, fog: false, transparent: true, opacity: 0.95, depthWrite: false });
+  var sunGlow = new THREE.Mesh(new THREE.CircleGeometry(13, 28), sunGlowMat); sunGlow.renderOrder = -9;
+  var sunCore = new THREE.Mesh(new THREE.CircleGeometry(5, 28), sunCoreMat); sunCore.renderOrder = -8;
+  sunGroup.add(sunGlow); sunGroup.add(sunCore);
+  sunGroup.position.set(-9, 9, -38); // within the narrow portrait FOV, low-left horizon
+  skyGroup.add(sunGroup);
+
+  // --- low-poly mountain ring near the horizon (shared tinted material) ---
+  var mountainMat = new THREE.MeshStandardMaterial({ color: HAZE.clone(), flatShading: true, fog: false });
+  var mountainRing = new THREE.Group();
+  var MPEAKS = 26; // dense enough that the cones overlap into a continuous range
+  for (var mi = 0; mi < MPEAKS; mi++) {
+    var ang = (mi / MPEAKS) * Math.PI * 2;
+    var h = 11 + ((mi * 37) % 13) * 1.1;           // deterministic varied heights
+    var rad = 5.0 + ((mi * 53) % 7) * 0.6;
+    var peak = new THREE.Mesh(new THREE.ConeGeometry(rad, h, 5), mountainMat);
+    // Bases sunk well below eye level so the peaks rise from the horizon line
+    // rather than floating; radius 46 keeps them beyond the fog + treeline.
+    peak.position.set(Math.cos(ang) * 46, h / 2 - 7, Math.sin(ang) * 46);
+    peak.rotation.y = (mi * 1.1);                  // vary facets so they don't twin
+    peak.renderOrder = -9;
+    peak.frustumCulled = false;
+    mountainRing.add(peak);
+  }
+  skyGroup.add(mountainRing);
+
+  // --- a few floating islands drifting in the sky ---
+  function makeFloatingIsland(scale) {
+    var g = new THREE.Group();
+    // Emissive-tinted grass top so it stays clearly GREEN (and not another
+    // white cloud) even when strongly backlit by a bright daytime sky.
+    var top = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 2.5, 0.9, 8),
+      new THREE.MeshStandardMaterial({ color: 0x5fbf4a, emissive: 0x3f9a30, emissiveIntensity: 0.9, flatShading: true, fog: false }));
+    var rock = new THREE.Mesh(new THREE.ConeGeometry(2.4, 3.6, 8),
+      new THREE.MeshStandardMaterial({ color: 0x9a7a5c, emissive: 0x5a4433, emissiveIntensity: 0.8, flatShading: true, fog: false }));
+    rock.position.y = -2.2; rock.rotation.x = Math.PI; // apex hangs down
+    var tuft = new THREE.Mesh(new THREE.ConeGeometry(1.0, 1.9, 7),
+      new THREE.MeshStandardMaterial({ color: 0x4fa83c, emissive: 0x2f7d24, emissiveIntensity: 0.9, flatShading: true, fog: false }));
+    tuft.position.set(0.8, 1.3, -0.4);
+    g.add(top); g.add(rock); g.add(tuft);
+    g.scale.setScalar(scale);
+    g.traverse(function (o) { if (o.isMesh) { o.renderOrder = -8; o.frustumCulled = false; } });
+    return g;
+  }
+  var islands = [];
+  // Kept within the narrow portrait horizontal FOV (small x relative to z) and
+  // near eye level so the grassy top + rocky underside both read.
+  var ISLAND_DEFS = [[-11, 11, -42, 1.7], [12, 13, -47, 1.3], [2, 17, -54, 1.05]];
+  ISLAND_DEFS.forEach(function (d, i) {
+    var isl = makeFloatingIsland(d[3]);
+    isl.position.set(d[0], d[1], d[2]);
+    isl.userData.bob = Math.random() * Math.PI * 2;
+    isl.userData.spin = (i % 2 ? 1 : -1) * 0.04;
+    skyGroup.add(isl);
+    islands.push(isl);
+  });
+
+  var _mountainTarget = new THREE.Color();
+  function updateSky(delta, elapsed) {
+    // Follow the camera so the whole backdrop stays "infinitely" far.
+    skyGroup.position.set(camera.position.x, 0, camera.position.z);
+    // Lerp colours toward the current theme (same soft time-constant as themes).
+    var k = 1 - Math.exp(-delta / 0.55);
+    domeUniforms.topColor.value.lerp(themeTargets.skyTop, k);
+    domeUniforms.bottomColor.value.copy(scene.background); // horizon = theme sky
+    sunGlowMat.color.lerp(themeTargets.sunDisc, k);
+    sunCoreMat.color.lerp(themeTargets.sunDisc, k);
+    _mountainTarget.copy(themeTargets.skyTop).lerp(HAZE, 0.55);
+    mountainMat.color.lerp(_mountainTarget, k);
+    // Keep the sun facing the camera; gently bob + spin the islands.
+    sunGroup.lookAt(camera.position.x, camera.position.y, camera.position.z);
+    for (var i = 0; i < islands.length; i++) {
+      var isl = islands[i];
+      isl.position.y += Math.sin(elapsed * 0.5 + isl.userData.bob) * delta * 0.35;
+      isl.rotation.y += isl.userData.spin * delta;
+    }
+  }
+
   // ---------- LIVING WORLD: wind sway registry ----------
   // Vegetal props (trees/bamboo/palms/flowers) register here at build time;
   // updateSway() gives each a tiny phase-offset rotation wobble. Pure
@@ -1757,6 +1890,8 @@ export function initHub3D(opts) {
   // as the light changing around you rather than a scene swap.
   var themeTargets = {
     sky: new THREE.Color(ZONE_THEMES[0].sky),
+    skyTop: new THREE.Color(skyTopFor(0)), // skydome zenith (see buildSky above)
+    sunDisc: new THREE.Color(sunColorFor(0)), // visible sun/moon disc colour
     hemiSky: new THREE.Color(ZONE_THEMES[0].hemiSky),
     hemiGround: new THREE.Color(ZONE_THEMES[0].hemiGround),
     sun: new THREE.Color(ZONE_THEMES[0].sun),
@@ -1776,6 +1911,8 @@ export function initHub3D(opts) {
         playTone(987.77, 0.18, 'sine', 0.04, 0.09);
       }
       themeTargets.sky.setHex(th.sky);
+      themeTargets.skyTop.setHex(skyTopFor(idx));
+      themeTargets.sunDisc.setHex(sunColorFor(idx));
       themeTargets.hemiSky.setHex(th.hemiSky);
       themeTargets.hemiGround.setHex(th.hemiGround);
       themeTargets.sun.setHex(th.sun);
@@ -1793,11 +1930,8 @@ export function initHub3D(opts) {
     hemiLight.groundColor.lerp(themeTargets.hemiGround, k);
     sun.color.lerp(themeTargets.sun, k);
     sun.intensity += (themeTargets.sunIntensity - sun.intensity) * k;
-    // Undissolved fog walls keep matching the sky so they still read as mist
-    // (they were hard-coded to the old single cream palette).
-    for (var fwi = 0; fwi < fogWalls.length; fwi++) {
-      if (!fogWalls[fwi].dissolved) fogWalls[fwi].wall.material.color.copy(scene.background);
-    }
+    // (The cloud-bank entrances keep their own soft white — no per-frame sky
+    // tint any more; that flat sky-matched plane was the "artificial mist".)
   }
 
   // Floating name label above each gate — a canvas-texture Sprite, not CSS3D/DOM:
@@ -1987,30 +2121,42 @@ export function initHub3D(opts) {
   // prototypes/jumvi-forest-mini-example.html's growForest()/animateFog() —
   // ported to run off the shared tick() clock instead of its own
   // requestAnimationFrame loop (see updateFogDissolves() below).
+  // The old flat, sky-tinted plane read as cheap artificial mist. Instead each
+  // locked entrance is now a dense, OPAQUE low-poly cloud bank the path vanishes
+  // into — it fully hides the next zone (writes depth) and, on unlock, its two
+  // halves part left/right and rise as they fade. One shared geometry + material
+  // per wall keeps it cheap.
+  var _fogPuffGeo = new THREE.SphereGeometry(1, 8, 6);
   function createFogWall(zoneIndex) {
     var z = zoneBoundaryZ(zoneIndex);
     var x = pathCenterX(z);
-    var width = corridorHalfWidthAt(z) * 2 + 6;
+    var width = corridorHalfWidthAt(z) * 2 + 9;
 
-    var wall = new THREE.Mesh(
-      new THREE.PlaneGeometry(width, 7),
-      new THREE.MeshBasicMaterial({ color: 0xFFE8C4, transparent: true, opacity: 0.92, side: THREE.DoubleSide })
-    );
-    wall.position.set(x, 3, z);
+    var mat = new THREE.MeshStandardMaterial({
+      color: 0xf4f8ff, emissive: 0xc4d2ea, emissiveIntensity: 0.4,
+      flatShading: true, transparent: false, opacity: 1
+    });
+    var wall = new THREE.Group();
+    wall.position.set(x, 0, z);
+    var halfW = width / 2;
+    for (var layer = 0; layer < 2; layer++) {           // two shallow z-layers → nothing shows through
+      var zoff = layer * -1.5;
+      for (var cx = -halfW; cx <= halfW; cx += 1.6) {
+        var stack = 3 + Math.floor(Math.random() * 2);   // puffs stacked up to ~7 units tall
+        for (var s = 0; s < stack; s++) {
+          var r = 1.35 + Math.random() * 1.15;
+          var puff = new THREE.Mesh(_fogPuffGeo, mat);
+          puff.scale.set(r, r * 0.82, r);
+          puff.position.set(cx + (Math.random() - 0.5) * 1.3, 0.5 + s * 1.7 + Math.random() * 0.7, zoff + (Math.random() - 0.5) * 0.9);
+          puff.userData.side = cx < 0 ? -1 : 1;          // which way it parts on unlock
+          puff.userData.drift = 0.6 + Math.random() * 0.8;
+          wall.add(puff);
+        }
+      }
+    }
     scene.add(wall);
 
-    var particles = new THREE.Group();
-    for (var i = 0; i < 18; i++) {
-      var dot = new THREE.Mesh(
-        new THREE.CircleGeometry(0.25 + Math.random() * 0.3, 8),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 })
-      );
-      dot.position.set(x + (Math.random() - 0.5) * width * 0.9, 1 + Math.random() * 5, z + (Math.random() - 0.5) * 0.2);
-      particles.add(dot);
-    }
-    scene.add(particles);
-
-    return { zoneIndex: zoneIndex, wall: wall, particles: particles, baseZ: z, baseX: x, dissolving: null, dissolved: false };
+    return { zoneIndex: zoneIndex, wall: wall, mat: mat, baseZ: z, baseX: x, dissolving: null, dissolved: false };
   }
 
   var fogWalls = [];
@@ -2018,7 +2164,7 @@ export function initHub3D(opts) {
     fogWalls.push(createFogWall(fwIdx));
   }
   if (demoMode) {
-    fogWalls.forEach(function (fw) { fw.dissolved = true; fw.wall.visible = false; fw.particles.visible = false; });
+    fogWalls.forEach(function (fw) { fw.dissolved = true; fw.wall.visible = false; });
   }
 
   // ---------- ZONE LANDMARKS + ENTRANCE SIGNPOSTS ----------
@@ -2945,7 +3091,9 @@ export function initHub3D(opts) {
       if (fw.dissolved || fw.dissolving) return;
       if (!isZoneUnlocked(fw.zoneIndex)) return;
 
-      fw.dissolving = { startTime: performance.now(), startOpacity: fw.wall.material.opacity };
+      fw.dissolving = { startTime: performance.now() };
+      fw.mat.transparent = true; // opaque until now (so it fully hid the zone); now it can fade
+      fw.mat.needsUpdate = true;
 
       // Reward trees just inside the newly opened entrance — same idea as
       // growForest()'s reward trees in the mini-example prototype.
@@ -2994,16 +3142,16 @@ export function initHub3D(opts) {
     fogWalls.forEach(function (fw) {
       if (!fw.dissolving) return;
       var elapsed = performance.now() - fw.dissolving.startTime;
-      var t = Math.min(elapsed / 1400, 1);
-      fw.wall.material.opacity = fw.dissolving.startOpacity * (1 - t);
-      fw.particles.children.forEach(function (p, i) {
-        p.material.opacity = 0.5 * (1 - t);
-        p.position.y += 0.01 * (1 + (i % 3));
+      var t = Math.min(elapsed / 1600, 1);
+      var e = t * t * (3 - 2 * t); // smoothstep
+      fw.mat.opacity = 1 - e;
+      // The two halves part left/right and drift up as the bank thins out.
+      fw.wall.children.forEach(function (p) {
+        p.position.x += p.userData.side * p.userData.drift * 0.06;
+        p.position.y += 0.035;
       });
-      fw.wall.position.z = fw.baseZ - t * 4;
       if (t >= 1) {
         fw.wall.visible = false;
-        fw.particles.visible = false;
         fw.dissolving = null;
         fw.dissolved = true;
       }
@@ -3045,6 +3193,7 @@ export function initHub3D(opts) {
     updateRiver(elapsedTime);
     updateSea(elapsedTime);
     updateClouds(delta);
+    updateSky(delta, elapsedTime);
     updateSway(elapsedTime);
     updateLeaves(elapsedTime);
     updateButterflies(elapsedTime);
