@@ -966,6 +966,31 @@ export function initHub3D(opts) {
   }
   skyGroup.add(mountainRing);
 
+  // --- per-theme hand-drawn panorama backdrop (wraps the horizon) ---
+  // Replaces the cone ring for any zone that ships an artwork strip; zones
+  // without one keep the cone mountains as the fallback. The strip is a
+  // camera-following open cylinder (fog off) so it reads as a painted 360°
+  // horizon; it's lazy-loaded the first time its theme is active.
+  var PANORAMAS = { target: 'assets/hub3d/panorama/target.png?v=20260710-1' };
+  var _panoTexCache = {};
+  function loadPanoTex(url) {
+    if (_panoTexCache[url]) return _panoTexCache[url];
+    var t = new THREE.TextureLoader().load(url);
+    if ('colorSpace' in t) t.colorSpace = THREE.SRGBColorSpace;
+    t.wrapS = THREE.RepeatWrapping;
+    t.wrapT = THREE.ClampToEdgeWrapping;
+    t.repeat.set(3, 1); // 3 copies around the horizon (image is seamless)
+    _panoTexCache[url] = t;
+    return t;
+  }
+  var panoMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, fog: false, side: THREE.BackSide, depthWrite: false });
+  var panoMesh = new THREE.Mesh(new THREE.CylinderGeometry(45, 45, 24, 48, 1, true), panoMat);
+  panoMesh.position.y = 8;    // image ground-line sits near the scene horizon
+  panoMesh.renderOrder = -8.7; // over the dome + cone mountains, under sun/islands
+  panoMesh.frustumCulled = false;
+  skyGroup.add(panoMesh);
+  var _panoKey = null;
+
   // --- a few floating islands drifting in the sky ---
   function makeFloatingIsland(scale) {
     var g = new THREE.Group();
@@ -1009,6 +1034,19 @@ export function initHub3D(opts) {
     sunCoreMat.color.lerp(themeTargets.sunDisc, k);
     _mountainTarget.copy(themeTargets.skyTop).lerp(HAZE, 0.55);
     mountainMat.color.lerp(_mountainTarget, k);
+    // Panorama backdrop: fade the current theme's artwork in (and the cone
+    // mountains out) when one exists; otherwise fall back to the cones.
+    var _pk = themeForZone(currentZoneIndex()).key;
+    var _purl = PANORAMAS[_pk];
+    if (_purl) {
+      if (_panoKey !== _pk) { _panoKey = _pk; panoMat.map = loadPanoTex(_purl); panoMat.needsUpdate = true; }
+      panoMat.opacity += (1 - panoMat.opacity) * k;
+      mountainRing.visible = panoMat.opacity < 0.9;
+    } else {
+      panoMat.opacity += (0 - panoMat.opacity) * k;
+      if (panoMat.opacity < 0.02) _panoKey = null;
+      mountainRing.visible = true;
+    }
     // Keep the sun facing the camera; gently bob + spin the islands.
     sunGroup.lookAt(camera.position.x, camera.position.y, camera.position.z);
     for (var i = 0; i < islands.length; i++) {

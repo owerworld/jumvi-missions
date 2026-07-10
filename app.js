@@ -3989,7 +3989,7 @@ function ensureHub3DLoaded(){
     // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
     // import map — see index.html) — no classic <script src="three.min.js">
     // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-113h");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-113i");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       PACKS, missions, done, openMission, container,
