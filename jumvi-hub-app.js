@@ -40,7 +40,7 @@ export function initHub3D(opts) {
   // olduğu gibi gelir ve bilinçli olarak kendi dilinde bırakılır.
   var HUB_TEXTS = {
     zoneComplete: 'Zone Complete! 🎉',
-    hint: 'Tap the ground to walk — reach a glowing gate to get a mission!',
+    hint: '👆 Tap the ground to walk',
     tapToWalk: '👆 Tap to walk!',
     sound: 'Sound on/off',
     close: 'Close',
@@ -173,7 +173,7 @@ export function initHub3D(opts) {
 
   var hintEl = document.createElement('div');
   hintEl.textContent = HUB_TEXTS.hint;
-  hintEl.style.cssText = 'position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.85);padding:7px 13px;border-radius:11px;font-size:11px;color:#555;z-index:10;max-width:220px;text-align:right;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  hintEl.style.cssText = 'position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.8);padding:6px 11px;border-radius:11px;font-size:11px;color:#555;z-index:10;text-align:right;pointer-events:none;transition:opacity 400ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(hintEl);
 
   // First-tap coach bubble — the small hint above is parent-facing; a 3-year-
@@ -195,6 +195,9 @@ export function initHub3D(opts) {
     coachBubbleDismissed = true;
     coachBubbleEl.style.opacity = '0';
     setTimeout(function () { coachBubbleEl.remove(); }, 450);
+    // The parent-facing "tap to walk" hint is only needed until the first walk;
+    // fade it out too so it stops competing with the top HUD / the scene.
+    if (hintEl) { hintEl.style.opacity = '0'; setTimeout(function () { hintEl.remove(); }, 450); }
   }
 
   // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
@@ -473,18 +476,18 @@ export function initHub3D(opts) {
   function startAutoWalkToMission() {
     resumeAudio();
     dismissCoachBubble();
-    var id = opts.getDailyMissionId ? opts.getDailyMissionId() : null;
-    var ms = id != null ? missions.filter(function (m) { return m.id === id; })[0] : null;
-    var cfg = ms ? gateConfig.filter(function (c) { return c.packKey === ms.pack; })[0] : null;
-    if (!cfg || !isZoneUnlocked(cfg.zoneIndex)) {
-      cfg = null;
-      for (var gi = 0; gi < gateConfig.length; gi++) {
-        if (!isZoneUnlocked(gateConfig[gi].zoneIndex)) break;
-        var undone = packMissionList(gateConfig[gi].packKey).filter(function (m) { return !done.has(m.id); })[0];
-        if (undone) { cfg = gateConfig[gi]; break; }
-      }
-      if (!cfg) cfg = gateConfig[0];
+    // Always head to the CURRENT frontier — the first unlocked gate that still
+    // has an undone mission — so the button takes the kid forward to what they
+    // should play next, never backward to an already-finished zone (which is
+    // what targeting the daily mission's own pack used to do, and read as
+    // pointless when that pack was behind them).
+    var cfg = null;
+    for (var gi = 0; gi < gateConfig.length; gi++) {
+      if (!isZoneUnlocked(gateConfig[gi].zoneIndex)) break;
+      var undone = packMissionList(gateConfig[gi].packKey).filter(function (m) { return !done.has(m.id); })[0];
+      if (undone) { cfg = gateConfig[gi]; break; }
     }
+    if (!cfg) cfg = gateConfig[gateConfig.length - 1]; // everything done → the last gate
     var pts = [];
     var z0 = leo.group.position.z;
     var z1 = cfg.z + 1.0; // just inside the gate's trigger radius
