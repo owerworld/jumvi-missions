@@ -709,8 +709,11 @@ export function initHub3D(opts) {
   // `ground` as a single Group so the tap-to-move raycast has one target.
   // 6 shared materials for 8 strips; strips butt exactly at zone boundaries.
   var ground = new THREE.Group();
+  // fog:false — the ground keeps its true colour all the way to the horizon and
+  // meets the panorama's hills directly, instead of fading to a flat sky-blue
+  // band in the gap between the fog distance and the panorama backdrop.
   var groundMats = ZONE_THEMES.map(function (t) {
-    return new THREE.MeshStandardMaterial({ color: t.ground, flatShading: true });
+    return new THREE.MeshStandardMaterial({ color: t.ground, flatShading: true, fog: false });
   });
   function addGroundStrip(zFront, zBack, themeIdx) {
     var depth = zFront - zBack;
@@ -807,7 +810,7 @@ export function initHub3D(opts) {
   // with the same reuse-base-positions wave trick as the river, and the rest
   // is static or transform-only.
   var seaGeo = new THREE.PlaneGeometry(320, 320, 20, 20);
-  var sea = new THREE.Mesh(seaGeo, new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true }));
+  var sea = new THREE.Mesh(seaGeo, new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true, fog: false }));
   sea.rotation.x = -Math.PI / 2;
   sea.position.set(0, -0.24, -(pathTotalLength / 2) + START_BOUNDARY_Z);
   scene.add(sea);
@@ -823,7 +826,7 @@ export function initHub3D(opts) {
 
   var shore = new THREE.Mesh(
     new THREE.PlaneGeometry(groundWidth + 9, pathTotalLength + 12, 1, 1),
-    new THREE.MeshStandardMaterial({ color: 0xEFDCA6, flatShading: true })
+    new THREE.MeshStandardMaterial({ color: 0xEFDCA6, flatShading: true, fog: false })
   );
   shore.rotation.x = -Math.PI / 2;
   shore.position.set(0, -0.12, -(pathTotalLength / 2) + START_BOUNDARY_Z);
