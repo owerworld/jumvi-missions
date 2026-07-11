@@ -1303,15 +1303,41 @@ export function initHub3D(opts) {
   var makeLightningBoltDecor = makeDecorFromModel('lightning_bolt');
   var makeEnergyOrbDecor = makeDecorFromModel('energy_orb');
   var makeTargetBoardDecor = makeDecorFromModel('target_board');
-  var makeFlagDecor = makeDecorFromModel('flag');
+  // flag.glb is the ONLY decor with MORPH TARGETS (a baked waving animation).
+  // Morph targets eat extra vertex attributes, and many Android/tablet GPUs hit
+  // their attribute limit compiling that shader — so it silently fails and the
+  // flag renders as NOTHING there (works on desktop/iOS with higher limits).
+  // A procedural pennant has no morph targets and shows on every device — same
+  // reasoning as the earlier skinned mailbox/umbrella → procedural fix.
+  function makeFlagDecorProc(x, z) {
+    var g = new THREE.Group();
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 2.4, 6), flagPoleMat);
+    pole.position.y = 1.2; pole.castShadow = true;
+    g.add(pole);
+    var ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), flagPoleMat);
+    ball.position.y = 2.44;
+    g.add(ball);
+    // Triangular pennant cloth, double-sided so it reads from both faces.
+    var s = new THREE.Shape();
+    s.moveTo(0, 0); s.lineTo(1.0, -0.14); s.lineTo(0, -0.52); s.lineTo(0, 0);
+    var pennant = new THREE.Mesh(new THREE.ShapeGeometry(s), flagMats[Math.floor(Math.random() * flagMats.length)]);
+    pennant.position.set(0.05, 2.25, 0);
+    g.add(pennant);
+    g.position.set(x || 0, 0, z || 0);
+    g.rotation.y = Math.random() * Math.PI * 2;
+    g.userData.decorSize = 1.9;
+    return g;
+  }
+  var makeFlagDecor = makeFlagDecorProc;
   var makeGoldenTargetDecor = makeDecorFromModel('golden_target');
   var makeBambooDecor = makeDecorFromModel('bamboo');
   var makeStoneLanternDecor = makeDecorFromModel('stone_lantern');
   var makeLotusPondDecor = makeDecorFromModel('lotus_pond');
   var makeGoldenLanternDecor = makeDecorFromModel('golden_lantern');
-  // team_flag.glb was a byte-identical copy of target/flag.glb — deduped to
-  // the single 'flag' source so both zones share one fetch + one cache entry.
-  var makeTeamFlagDecor = makeDecorFromModel('flag');
+  // Team-zone flag reuses the same procedural pennant (see makeFlagDecorProc) —
+  // the old team_flag.glb / flag.glb shared the morph-target waving mesh that
+  // vanished on Android/tablet GPUs.
+  var makeTeamFlagDecor = makeFlagDecorProc;
   var makeBenchDecor = makeDecorFromModel('bench');
   var makeSlideDecor = makeDecorFromModel('slide');
   var makeChampionFlagDecor = makeDecorFromModel('champion_flag');
