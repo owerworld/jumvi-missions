@@ -910,7 +910,6 @@ export function initHub3D(opts) {
     var k = themeForZone(idx).key;
     return SUN_COLORS.hasOwnProperty(k) ? SUN_COLORS[k] : 0xffe27a;
   }
-  var HAZE = new THREE.Color(0x9fb0c4); // mountains lean toward this cool haze
 
   var skyGroup = new THREE.Group();
   scene.add(skyGroup);
@@ -947,40 +946,35 @@ export function initHub3D(opts) {
   sunGroup.position.set(-9, 9, -38); // within the narrow portrait FOV, low-left horizon
   skyGroup.add(sunGroup);
 
-  // --- low-poly mountain ring near the horizon (shared tinted material) ---
-  var mountainMat = new THREE.MeshStandardMaterial({ color: HAZE.clone(), flatShading: true, fog: false });
-  var mountainRing = new THREE.Group();
-  var MPEAKS = 26; // dense enough that the cones overlap into a continuous range
-  for (var mi = 0; mi < MPEAKS; mi++) {
-    var ang = (mi / MPEAKS) * Math.PI * 2;
-    var h = 11 + ((mi * 37) % 13) * 1.1;           // deterministic varied heights
-    var rad = 5.0 + ((mi * 53) % 7) * 0.6;
-    var peak = new THREE.Mesh(new THREE.ConeGeometry(rad, h, 5), mountainMat);
-    // Bases sunk well below eye level so the peaks rise from the horizon line
-    // rather than floating; radius 46 keeps them beyond the fog + treeline.
-    peak.position.set(Math.cos(ang) * 46, h / 2 - 7, Math.sin(ang) * 46);
-    peak.rotation.y = (mi * 1.1);                  // vary facets so they don't twin
-    peak.renderOrder = -9;
-    peak.frustumCulled = false;
-    mountainRing.add(peak);
-  }
-  skyGroup.add(mountainRing);
+  // (The procedural cone "mountain ring" was removed — all six zones now ship a
+  // hand-painted panorama strip below, so the cones are no longer needed as a
+  // fallback and can't poke through the artwork any more.)
 
   // --- per-theme hand-drawn panorama backdrop (wraps the horizon) ---
   // Replaces the cone ring for any zone that ships an artwork strip; zones
   // without one keep the cone mountains as the fallback. The strip is a
   // camera-following open cylinder (fog off) so it reads as a painted 360°
   // horizon; it's lazy-loaded the first time its theme is active.
-  var PANORAMAS = { target: 'assets/hub3d/panorama/target.png?v=20260710-1' };
+  // Each zone ships its own hand-painted strip. `repeat` = how many copies wrap
+  // the horizon; it's chosen per image aspect so nothing is stretched (4:1 art
+  // → 3 copies, 3:1 art → 4 copies). Tiny WebP (~20–50 KB each), lazy-loaded.
+  var PANORAMAS = {
+    target: { url: 'assets/hub3d/panorama/target.webp?v=20260711', repeat: 3 },
+    zen:    { url: 'assets/hub3d/panorama/zen.webp?v=20260711',    repeat: 4 },
+    play:   { url: 'assets/hub3d/panorama/play.webp?v=20260711',   repeat: 4 },
+    home:   { url: 'assets/hub3d/panorama/home.webp?v=20260711',   repeat: 4 },
+    beach:  { url: 'assets/hub3d/panorama/beach.webp?v=20260711',  repeat: 3 },
+    energy: { url: 'assets/hub3d/panorama/energy.webp?v=20260711', repeat: 3 }
+  };
   var _panoTexCache = {};
-  function loadPanoTex(url) {
-    if (_panoTexCache[url]) return _panoTexCache[url];
-    var t = new THREE.TextureLoader().load(url);
+  function loadPanoTex(entry) {
+    if (_panoTexCache[entry.url]) return _panoTexCache[entry.url];
+    var t = new THREE.TextureLoader().load(entry.url);
     if ('colorSpace' in t) t.colorSpace = THREE.SRGBColorSpace;
     t.wrapS = THREE.RepeatWrapping;
     t.wrapT = THREE.ClampToEdgeWrapping;
-    t.repeat.set(3, 1); // 3 copies around the horizon (image is seamless)
-    _panoTexCache[url] = t;
+    t.repeat.set(entry.repeat, 1); // seamless strip → copies wrap the horizon
+    _panoTexCache[entry.url] = t;
     return t;
   }
   var panoMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, fog: false, side: THREE.BackSide, depthWrite: false });
@@ -1022,7 +1016,6 @@ export function initHub3D(opts) {
     islands.push(isl);
   });
 
-  var _mountainTarget = new THREE.Color();
   function updateSky(delta, elapsed) {
     // Follow the camera so the whole backdrop stays "infinitely" far.
     skyGroup.position.set(camera.position.x, 0, camera.position.z);
@@ -1032,20 +1025,17 @@ export function initHub3D(opts) {
     domeUniforms.bottomColor.value.copy(scene.background); // horizon = theme sky
     sunGlowMat.color.lerp(themeTargets.sunDisc, k);
     sunCoreMat.color.lerp(themeTargets.sunDisc, k);
-    _mountainTarget.copy(themeTargets.skyTop).lerp(HAZE, 0.55);
-    mountainMat.color.lerp(_mountainTarget, k);
-    // Panorama backdrop: fade the current theme's artwork in (and the cone
-    // mountains out) when one exists; otherwise fall back to the cones.
+    // Panorama backdrop: swap to the current theme's artwork (the swap happens
+    // behind the cloud-bank wall as you cross a boundary, so it isn't seen to
+    // pop) and keep it faded fully in.
     var _pk = themeForZone(currentZoneIndex()).key;
-    var _purl = PANORAMAS[_pk];
-    if (_purl) {
-      if (_panoKey !== _pk) { _panoKey = _pk; panoMat.map = loadPanoTex(_purl); panoMat.needsUpdate = true; }
+    var _pe = PANORAMAS[_pk];
+    if (_pe) {
+      if (_panoKey !== _pk) { _panoKey = _pk; panoMat.map = loadPanoTex(_pe); panoMat.needsUpdate = true; }
       panoMat.opacity += (1 - panoMat.opacity) * k;
-      mountainRing.visible = panoMat.opacity < 0.9;
     } else {
       panoMat.opacity += (0 - panoMat.opacity) * k;
       if (panoMat.opacity < 0.02) _panoKey = null;
-      mountainRing.visible = true;
     }
     // Keep the sun facing the camera; gently bob + spin the islands.
     sunGroup.lookAt(camera.position.x, camera.position.y, camera.position.z);
