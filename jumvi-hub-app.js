@@ -3299,6 +3299,8 @@ export function initHub3D(opts) {
     // showHub3D). This is the "how long until the island appears" A/B metric.
     if (!_loadMsTracked) {
       _loadMsTracked = true;
+      // Tell app.js the first frame painted so it can dismiss the loading overlay.
+      if (typeof opts.onFirstFrame === 'function') { try { opts.onFirstFrame(); } catch (e) {} }
       if (window.__hub3dLoadStart) {
         var ms = performance.now() - window.__hub3dLoadStart;
         window.__hub3dLoadStart = null;

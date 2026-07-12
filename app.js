@@ -3981,17 +3981,27 @@ const NAV_TAB_KEY = "jumvi_active_tab_v1";
  * normal page load. */
 let _hub3dInstance = null;
 let _hub3dLoadPromise = null;
+let _hub3dLoadStage = "three"; // last import stage started — read on failure
+// Warming three.js first (its own module) lets us show a real staged progress
+// bar: three import → hub-module import → initHub3D() → first painted frame.
+// The hub module's internal `import ... from "three"` then resolves from cache.
+const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js";
 
-function ensureHub3DLoaded(){
+function ensureHub3DLoaded(onProgress){
   if(_hub3dLoadPromise) return _hub3dLoadPromise;
+  const step = (frac, stage) => { if(stage) _hub3dLoadStage = stage; if(onProgress) onProgress(frac, stage); };
   _hub3dLoadPromise = (async () => {
-    // jumvi-hub-app.js imports Three.js itself as an ES module (needed for the
-    // optional GLTF Coach Leo model's GLTFLoader, which only resolves via an
-    // import map — see index.html) — no classic <script src="three.min.js">
-    // preload needed here anymore.
-    const mod = await import("./jumvi-hub-app.js?v=20260524-113n");
+    _hub3dLoadStage = "three";
+    step(0.12, "three");
+    await import(THREE_MODULE_URL);                          // milestone 1: three.js
+    step(0.45, "hub_module");
+    const mod = await import("./jumvi-hub-app.js?v=20260524-113o"); // milestone 2: hub module
+    step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
+      // milestone 4: dismiss the loading overlay on the first PAINTED frame
+      // (decorative GLBs may keep streaming after this — we don't block on them)
+      onFirstFrame(){ step(1, "frame"); },
       PACKS, missions, done, openMission, container,
       // Bridges into EXISTING app flows — the hub triggers them, never
       // reimplements them: the real certificate modal, the real daily pick,
@@ -4022,75 +4032,120 @@ function ensureHub3DLoaded(){
         showToast("Running a bit slow — tap ☰ for the quick list anytime 📋");
       }
     });
+    step(0.85, "init"); // milestone 3: initHub3D() built the scene; first frame paints after resume()
   })();
   return _hub3dLoadPromise;
 }
 
-// Graceful-degradation gate (audit Bulgu #5/#6): decide up-front whether this
-// device/context can run the 3D hub at all. Returns a fallback reason string
-// or null. WebGL missing or a device too weak to render it (measured 14fps on
-// software GL) drops straight to the 2D list rather than a blank blue screen;
-// reduced-motion users get the calm list too. The hub is opt-in, so we always
-// have a safe 2D home to fall back to.
-function hub3dFallbackReason(){
+// WebGL feature-detect only (Task 1). Slow-but-capable devices aren't blocked
+// here — the load overlay + the in-hub FPS nudge handle them at runtime.
+function hub3dWebGLOk(){
   try{
-    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "reduced_motion";
-    if(typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 2) return "low_memory";
     const c = document.createElement("canvas");
-    const gl = c.getContext("webgl2") || c.getContext("webgl") || c.getContext("experimental-webgl");
-    if(!gl) return "no_webgl";
-  }catch(_){ return "no_webgl"; }
-  return null;
+    return !!(c.getContext("webgl2") || c.getContext("webgl") || c.getContext("experimental-webgl"));
+  }catch(_){ return false; }
+}
+const HUB3D_UNSUPPORTED_KEY = "jumvi_hub3d_unsupported_v1";
+// Once a device is known to lack WebGL, hide BOTH hub entry points for good.
+function applyHub3dUnsupported(){
+  const card = document.getElementById("advModeCard");
+  if(card) card.style.display = "none";
+  const tab = document.getElementById("navTabHub3D");
+  if(tab) tab.style.display = "none";
+}
+let _hub3dEntrySource = "nav_tab"; // set by the entry handlers before switchTab("hub3d")
+
+// ---- Hub loading overlay (pure DOM; shown synchronously before any import) ----
+let _hubLoadingEl = null, _hubLoadingLine2Timer = null;
+function buildHubLoadingOverlay(container){
+  if(_hubLoadingEl) return _hubLoadingEl;
+  const el = document.createElement("div");
+  el.id = "hub3dLoading";
+  el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#bfe3ff,#eaf7ff);transition:opacity 300ms ease;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
+  el.innerHTML =
+    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">🌲 Building your island…</div>' +
+    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;opacity:0;transition:opacity 400ms ease;">Coach Leo is on his way!</div>' +
+    '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.6);border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.12);">' +
+      '<div id="hub3dLoadBar" style="width:8%;height:100%;background:linear-gradient(90deg,#4fc46a,#35a04e);border-radius:6px;transition:width 350ms ease;"></div>' +
+    '</div>';
+  container.appendChild(el);
+  _hubLoadingEl = el;
+  // Line 2 only appears if we're still loading after 3s (fast loads never show it).
+  _hubLoadingLine2Timer = setTimeout(()=>{ const l2 = document.getElementById("hub3dLoadLine2"); if(l2) l2.style.opacity = "1"; }, 3000);
+  return el;
+}
+function setHubLoadingProgress(frac){
+  const bar = document.getElementById("hub3dLoadBar");
+  if(bar) bar.style.width = Math.max(8, Math.round(frac*100)) + "%";
+}
+function dismissHubLoadingOverlay(){
+  if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
+  const el = _hubLoadingEl; _hubLoadingEl = null;
+  if(!el) return;
+  el.style.opacity = "0";
+  setTimeout(()=>{ el.remove(); }, 320);
+}
+function showHubLoadingFailure(container, stage){
+  trackEvent("Hub3D Load Failed", { stage: stage || "import" });
+  if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
+  const el = _hubLoadingEl || buildHubLoadingOverlay(container);
+  el.style.opacity = "1";
+  el.innerHTML =
+    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">🌲 The island got lost!</div>' +
+    '<div style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:260px;">Check your connection and try again.</div>' +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px;">' +
+      '<button id="hub3dRetryBtn" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:15px;font-weight:900;padding:11px 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;">Try again</button>' +
+      '<button id="hub3dBackBtn" style="border:none;border-radius:14px;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:15px;font-weight:800;padding:11px 18px;cursor:pointer;">Back to missions</button>' +
+    '</div>';
+  const retry = document.getElementById("hub3dRetryBtn");
+  if(retry) retry.onclick = ()=>{ _hub3dLoadPromise = null; if(_hubLoadingEl){ _hubLoadingEl.remove(); _hubLoadingEl = null; } showHub3D(); };
+  const back = document.getElementById("hub3dBackBtn");
+  if(back) back.onclick = ()=>{ if(_hubLoadingEl){ _hubLoadingEl.remove(); _hubLoadingEl = null; } switchTab("today"); };
 }
 
 function showHub3D(){
-  // Fallback gate first — bail to the 2D list before touching the hub if the
-  // device/context can't handle it, and log why (3d_fallback_triggered).
-  const _fb = hub3dFallbackReason();
-  if(_fb){
-    trackEvent("3d_fallback_triggered", { reason: _fb });
-    showToast(_fb === "reduced_motion" ? "Showing the calm list view 🌿" : "Using the quick list view on this device 📋");
-    switchTab("today"); // safe 2D home (does not re-enter the hub)
+  const overlay = document.getElementById("hub3dOverlay");
+  // WebGL gate (Task 1): no WebGL → this device can't run the hub. Mark it
+  // unsupported, hide both entry points, stay in the 2D list.
+  if(!hub3dWebGLOk()){
+    lsSet(HUB3D_UNSUPPORTED_KEY, "1");
+    applyHub3dUnsupported();
+    showToast("Adventure Mode needs a newer device — missions still work great!");
+    switchTab("today");
     return;
   }
-  // Stopwatches for analytics: tap→first-frame (3d_load_ms, bucketed by the
-  // hub) and total time in hub (3d_session_end, fired in hideHub3D).
   window.__hub3dLoadStart = performance.now();
   window.__hub3dSessionStart = performance.now();
-  const overlay = document.getElementById("hub3dOverlay");
   if(overlay) overlay.style.display = "";
-  // The hub's own HUD occupies the top of the screen — hide the normal app
-  // topbar underneath it instead of letting them overlap.
   const sticky = document.querySelector(".sticky");
   if(sticky) sticky.style.display = "none";
-  // P0: hide the global bottom tab bar too. It used to stay visible UNDER the
-  // hub, so taps meant for the hub's own bottom controls (the "Today's
-  // Mission" button) landed on the nav and kicked the kid out of 3D. The hub
-  // carries its own navigation now (the ☰ menu routes to every real tab +
-  // Badges), so nothing is lost — and switchTab()/hideHub3D() restore the nav
-  // the moment we leave the hub.
   const bottomNav = document.getElementById("bottomNav");
   if(bottomNav) bottomNav.style.display = "none";
-  // Load watchdog (audit Bulgu #5): if no frame paints within 8s of THIS open
-  // the kid is staring at a blank canvas. The hub stamps __hub3dLastFrameAt on
-  // every painted frame, so a frame newer than this open means it's alive —
-  // this stays correct on re-opens (unlike watching the one-shot load stamp).
+  // Loading overlay — synchronous, BEFORE any import. Skipped once the hub is
+  // already loaded (re-opens are instant).
+  if(!_hub3dInstance && overlay) buildHubLoadingOverlay(overlay);
+  // Safety net: if no first frame ever paints (stuck, not a reject), show the
+  // friendly failure UI rather than an endless progress bar.
   const _openedAt = performance.now();
-  setTimeout(() => {
-    const painted = window.__hub3dLastFrameAt && window.__hub3dLastFrameAt >= _openedAt;
-    if(!painted && overlay && overlay.style.display !== "none"){
-      trackEvent("3d_fallback_triggered", { reason: "slow_load" });
-      showToast("This is taking a while — switching to quick view 📋");
-      switchTab("today");
+  setTimeout(()=>{
+    if(_hubLoadingEl && overlay && overlay.style.display !== "none"){
+      const painted = window.__hub3dLastFrameAt && window.__hub3dLastFrameAt >= _openedAt;
+      if(!painted) showHubLoadingFailure(overlay, "frame_timeout");
     }
-  }, 8000);
-  ensureHub3DLoaded().then(() => {
-    // Loading is async — the user may have switched to another tab before it
-    // finished. Only start rendering if hub3d is still the active/visible tab.
+  }, 15000);
+  ensureHub3DLoaded((frac)=>{
+    setHubLoadingProgress(frac);
+    if(frac >= 1) dismissHubLoadingOverlay();
+  }).then(() => {
+    // Loading is async — only start rendering if hub3d is still the visible tab.
     if(_hub3dInstance && overlay && overlay.style.display !== "none"){
       _hub3dInstance.resume();
     }
-  }).catch(e => console.warn("3D Hub failed to load:", e));
+  }).catch(e => {
+    console.warn("3D Hub failed to load:", e);
+    _hub3dLoadPromise = null; // let "Try again" re-run the import
+    if(overlay) showHubLoadingFailure(overlay, _hub3dLoadStage);
+  });
 }
 
 function hideHub3D(){
@@ -4272,8 +4327,11 @@ function renderFamilyInsights(){
 
 function initBottomNav(){
   // 3D Hub nav button stays hidden unless the user has the opt-in flag set —
-  // default state of the bottom nav is unchanged for everyone else.
-  if(isHub3DEnabled()){
+  // default state of the bottom nav is unchanged for everyone else. If a prior
+  // visit found the device unsupported (no WebGL), keep BOTH entry points hidden.
+  if(lsGet(HUB3D_UNSUPPORTED_KEY, "0") === "1"){
+    applyHub3dUnsupported();
+  } else if(isHub3DEnabled()){
     const hub3dBtn = document.getElementById("navTabHub3D");
     if(hub3dBtn) hub3dBtn.style.display = "";
   }
@@ -4289,6 +4347,7 @@ function initBottomNav(){
       lsSet(HUB3D_FLAG_KEY, "1");
       const hub3dBtn = document.getElementById("navTabHub3D");
       if(hub3dBtn) hub3dBtn.style.display = "";
+      _hub3dEntrySource = "adv_card";
       switchTab("hub3d");
     };
   }
@@ -4298,6 +4357,7 @@ function initBottomNav(){
     btn.addEventListener("click", ()=>{
       clickSound("click");
       const tab = btn.dataset.tab;
+      if(tab === "hub3d") _hub3dEntrySource = "nav_tab";
       switchTab(tab);
     });
   });
