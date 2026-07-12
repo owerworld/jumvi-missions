@@ -2947,6 +2947,10 @@ function markMissionDone(id, source="manual"){
   done.add(id);
   bumpDoneVersion();
 
+  // Hub3D Mission Completed — only for runs the kid launched from inside the hub
+  // (window._hubMissionFlow is set by openMissionFromHub, cleared on hub exit).
+  if(window._hubMissionFlow && packKey) trackEvent("Hub3D Mission Completed", { pack: packKey });
+
   // Path tree tile animasyonu işareti — render'da kullanılır
   window._justDoneMissionId = id;
 
@@ -3995,7 +3999,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260524-113o"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260524-113p"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4116,6 +4120,8 @@ function showHub3D(){
   }
   window.__hub3dLoadStart = performance.now();
   window.__hub3dSessionStart = performance.now();
+  trackEvent("Hub3D Entered", { source: _hub3dEntrySource });
+  _hub3dEntrySource = "nav_tab"; // reset default for the next open (deep link etc.)
   if(overlay) overlay.style.display = "";
   const sticky = document.querySelector(".sticky");
   if(sticky) sticky.style.display = "none";
@@ -4155,14 +4161,20 @@ function hideHub3D(){
   if(sticky) sticky.style.display = "";
   const bottomNav = document.getElementById("bottomNav");
   if(bottomNav) bottomNav.style.display = ""; // restore global nav on leaving the hub
-  // 3d_session_end — how long the kid actually spent in the hub this visit.
-  if(window.__hub3dSessionStart){
-    const secs = Math.round((performance.now() - window.__hub3dSessionStart) / 1000);
-    window.__hub3dSessionStart = null;
-    if(secs > 0) trackEvent("3d_session_end", { seconds_bucket: secs < 15 ? "<15s" : secs < 60 ? "15-60s" : secs < 180 ? "1-3m" : "3m+" });
-  }
+  fireHub3DExited();
   if(_hub3dInstance) _hub3dInstance.pause();
 }
+
+// "Hub3D Exited" — how long the kid spent in the hub this visit, bucketed.
+// Fires once per session (nulls the stopwatch) from both hideHub3D (tab switch
+// away) and pagehide (closing/backgrounding while still in the hub).
+function fireHub3DExited(){
+  if(!window.__hub3dSessionStart) return;
+  const secs = Math.round((performance.now() - window.__hub3dSessionStart) / 1000);
+  window.__hub3dSessionStart = null;
+  trackEvent("Hub3D Exited", { duration: secs < 30 ? "<30s" : secs < 120 ? "30-120s" : secs < 300 ? "2-5m" : "5m+" });
+}
+window.addEventListener("pagehide", fireHub3DExited);
 
 function switchTab(tabName){
   if(!tabName) tabName = "today";

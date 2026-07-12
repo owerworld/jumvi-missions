@@ -22,6 +22,7 @@ export function initHub3D(opts) {
   // its own events so the default-homepage A/B is measurable (audit Bulgu #20).
   var track = opts.track || function () {};
   var _firstHubMissionTracked = false;
+  var _firstWalkTracked = false; // "Hub3D First Walk" — first completed walk this session
   var _loadMsTracked = false;
   // FPS watchdog state (audit Bulgu #5): sample the first ~3s of real rendering
   // and, if it can't hold 20fps, offer the quick list without forcing it.
@@ -2641,6 +2642,8 @@ export function initHub3D(opts) {
       if (distT < arriveDist) {
         moveTargetActive = false;
         fadeOutTargetRing();
+        // Hub3D First Walk — the first time Leo actually reaches a tapped spot.
+        if (!_firstWalkTracked) { _firstWalkTracked = true; track('Hub3D First Walk'); }
       } else {
         ix = dxT / distT;
         iz = dzT / distT;
@@ -2818,10 +2821,8 @@ export function initHub3D(opts) {
     var cfg = gateConfig.filter(function (c) { return c.packKey === packKey; })[0];
     var themeHex = cfg ? '#' + new THREE.Color(themeForZone(cfg.zoneIndex).gateColor).getHexString() : null;
     window._hubMissionFlow = { packKey: packKey, themeColor: themeHex };
-    // 3d_first_mission_start — once per session, the first time a mission opens
-    // from inside the hub (kid reached a gate). The core "3D actually converted
-    // to play" A/B signal.
-    if (!_firstHubMissionTracked) { _firstHubMissionTracked = true; track('3d_first_mission_start', { pack: packKey }); }
+    // Hub3D Gate Opened — the kid reached a glowing gate and a mission opened.
+    track('Hub3D Gate Opened', { pack: packKey });
     openMission(missionId);
   }
 
@@ -3169,6 +3170,8 @@ export function initHub3D(opts) {
       // its own gate's already-existing champion sparkle (updateGateDecor),
       // so it's unambiguous which zone finished vs. which one just opened.
       var completedCfg = gateConfig[fw.zoneIndex - 1];
+      // Hub3D Zone Complete — the pack whose last mission just unlocked the next zone.
+      if (completedCfg) track('Hub3D Zone Complete', { pack: completedCfg.packKey });
       showZoneCompleteCelebration(completedCfg);
       playSuccess();
       leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
