@@ -23,6 +23,9 @@ export function initHub3D(opts) {
   var track = opts.track || function () {};
   var _firstHubMissionTracked = false;
   var _firstWalkTracked = false; // "Hub3D First Walk" — first completed walk this session
+  var _introStarted = false;      // Task 3 one-time greeting kicked off this session
+  var _introBubble2Pending = false;
+  var _introBubble1El = null;     // ref so the first tap can dismiss Bubble 1 early
   var _loadMsTracked = false;
   // FPS watchdog state (audit Bulgu #5): sample the first ~3s of real rendering
   // and, if it can't hold 20fps, offer the quick list without forcing it.
@@ -199,6 +202,30 @@ export function initHub3D(opts) {
     // The parent-facing "tap to walk" hint is only needed until the first walk;
     // fade it out too so it stops competing with the top HUD / the scene.
     if (hintEl) { hintEl.style.opacity = '0'; setTimeout(function () { hintEl.remove(); }, 450); }
+    // Task 3: the first tap also dismisses greeting Bubble 1 (it's pointer-events:
+    // none, so the tap itself passed through to start the walk).
+    if (_introBubble1El) { var _b = _introBubble1El; _introBubble1El = null; _b.style.opacity = '0'; setTimeout(function () { _b.remove(); }, 380); }
+  }
+
+  // ---------- Task 3: one-time Coach Leo greeting ----------
+  // A speech bubble in the UPPER area (well above the bottom:26% bouncing 👆, so
+  // they never collide), pointer-events:none so a tap passes straight through to
+  // walk. Spoken through the app's Web Speech util; text-only if speech is off.
+  function showLeoBubble(text, ms) {
+    var b = document.createElement('div');
+    b.style.cssText = 'position:absolute;top:12%;left:50%;transform:translateX(-50%);max-width:78%;background:rgba(255,255,255,0.96);padding:12px 20px;border-radius:20px;font-size:17px;font-weight:800;color:#3a2a1a;z-index:13;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,0.22);text-align:center;transition:opacity 350ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+    b.textContent = text;
+    container.appendChild(b);
+    if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak(text); } catch (e) {} }
+    setTimeout(function () { b.style.opacity = '0'; setTimeout(function () { b.remove(); }, 380); }, ms);
+    return b;
+  }
+  function startHubIntro() {
+    if (_introStarted) return;
+    _introStarted = true;
+    if (opts.hubIntroDone && opts.hubIntroDone()) return; // seen before → nothing
+    _introBubble1El = showLeoBubble("Welcome to my island! 🌲 Tap anywhere — I’ll walk there!", 4000);
+    _introBubble2Pending = true; // Bubble 2 fires after the first walk completes
   }
 
   // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
@@ -2644,6 +2671,12 @@ export function initHub3D(opts) {
         fadeOutTargetRing();
         // Hub3D First Walk — the first time Leo actually reaches a tapped spot.
         if (!_firstWalkTracked) { _firstWalkTracked = true; track('Hub3D First Walk'); }
+        // Task 3 Bubble 2 — shown once, after the first walk; then the intro is done.
+        if (_introBubble2Pending) {
+          _introBubble2Pending = false;
+          showLeoBubble("See the glowing gates? Each one is a mission!", 4000);
+          if (opts.markHubIntroDone) opts.markHubIntroDone();
+        }
       } else {
         ix = dxT / distT;
         iz = dzT / distT;
@@ -3304,6 +3337,8 @@ export function initHub3D(opts) {
       _loadMsTracked = true;
       // Tell app.js the first frame painted so it can dismiss the loading overlay.
       if (typeof opts.onFirstFrame === 'function') { try { opts.onFirstFrame(); } catch (e) {} }
+      // Task 3: kick the one-time greeting AFTER the loading overlay fades (~320ms).
+      setTimeout(startHubIntro, 450);
       if (window.__hub3dLoadStart) {
         var ms = performance.now() - window.__hub3dLoadStart;
         window.__hub3dLoadStart = null;

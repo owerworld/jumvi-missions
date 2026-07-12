@@ -446,6 +446,7 @@ const ACTIVE_PROFILE_KEY  = "jumvi_active_profile_v1";
  * 3D Hub — opt-in experimental view (off by default for everyone)
  * ======================= */
 const HUB3D_FLAG_KEY = "jumvi_3d_hub_enabled";
+const HUB_INTRO_KEY = "jumvi_hub_intro_done_v1"; // one-time Coach Leo greeting (Task 3)
 function isHub3DEnabled(){
   return lsGet(HUB3D_FLAG_KEY, "0") === "1";
 }
@@ -3999,13 +4000,19 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260524-113p"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260524-113r"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
       // milestone 4: dismiss the loading overlay on the first PAINTED frame
       // (decorative GLBs may keep streaming after this — we don't block on them)
       onFirstFrame(){ step(1, "frame"); },
+      // Task 3 — one-time Coach Leo greeting. The hub owns the bubbles (anchored
+      // to Leo, tied to the first walk); app.js only lends the Web Speech util
+      // and the persisted intro flag (via lsGet/lsSet).
+      coachSpeak,
+      hubIntroDone(){ return lsGet(HUB_INTRO_KEY, "0") === "1"; },
+      markHubIntroDone(){ lsSet(HUB_INTRO_KEY, "1"); },
       PACKS, missions, done, openMission, container,
       // Bridges into EXISTING app flows — the hub triggers them, never
       // reimplements them: the real certificate modal, the real daily pick,
