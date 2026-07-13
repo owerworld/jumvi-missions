@@ -19,7 +19,8 @@
     if (!el || !el.getBoundingClientRect) return false;
     if (el.offsetParent === null && getComputedStyle(el).position !== "fixed") return false;
     var r = el.getBoundingClientRect();
-    return r.width > 4 && r.height > 4 && r.bottom > 0 && r.top < (window.innerHeight || 0);
+    var vh = window.innerHeight || document.documentElement.clientHeight || 9999; // guard: some webviews report 0
+    return r.width > 4 && r.height > 4 && r.bottom > 0 && r.top < vh;
   }
   function firstVisible(sels) {
     for (var i = 0; i < sels.length; i++) {
