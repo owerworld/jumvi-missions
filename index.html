@@ -194,11 +194,14 @@
           .advCardSub{display:block;font-size:12px;opacity:.92;margin-top:2px;font-weight:600}
           .advCardArrow{margin-left:auto;font-size:18px;opacity:.9;flex:none}
         </style>
-        <button class="advCard" id="advModeCard" type="button" aria-label="Explore Adventure Mode">
-          <span class="advCardEmoji">🌲</span>
+        <!-- Card + nav tab share ONE name (Leo's Island) so a parent who taps
+             the card recognises the tab it opens — "Adventure Mode" + "3D Hub"
+             was two mystery names for the same thing. -->
+        <button class="advCard" id="advModeCard" type="button" aria-label="Visit Leo's Island">
+          <span class="advCardEmoji">🏝️</span>
           <span class="advCardText">
-            <span class="advCardTitle">Explore Adventure Mode<span class="advCardNew">NEW!</span></span>
-            <span class="advCardSub">Walk the magic forest with Coach Leo &amp; unlock zones!</span>
+            <span class="advCardTitle">Visit Leo&rsquo;s Island<span class="advCardNew">NEW!</span></span>
+            <span class="advCardSub">Walk with Coach Leo &amp; collect your missions!</span>
           </span>
           <span class="advCardArrow">▶</span>
         </button>
@@ -828,9 +831,12 @@
       <span class="navTabLabel">Profile</span>
     </button>
     <!-- 3D Hub — opt-in experimental view, hidden unless jumvi_3d_hub_enabled=1 in localStorage -->
-    <button class="navTab" data-tab="hub3d" id="navTabHub3D" type="button" style="display:none">
+    <!-- Label is parent/kid language on purpose: "3D Hub" meant nothing to a
+         first-time parent ("a 3D hub appeared… a what?"); Leo's Island says
+         exactly what's behind the tab. -->
+    <button class="navTab" data-tab="hub3d" id="navTabHub3D" type="button" style="display:none" aria-label="Leo's Island">
       <span class="navTabIcon">🏝️</span>
-      <span class="navTabLabel">3D Hub</span>
+      <span class="navTabLabel">Leo's Island</span>
     </button>
   </nav>
 
@@ -887,7 +893,7 @@
 <script src="data.js?v=20260524-30" defer></script>
 <script src="jumvi-mission-icons.js?v=20260524-29" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260524-126" defer></script>
+<script src="app.js?v=20260524-128" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260711-5" defer></script>
 <script>

@@ -220,12 +220,36 @@ export function initHub3D(opts) {
     setTimeout(function () { b.style.opacity = '0'; setTimeout(function () { b.remove(); }, 380); }, ms);
     return b;
   }
+  // First-ever entry: a DETERMINISTIC 1-2-3 card instead of a timed bubble.
+  // A parent scanning the QR lands here going "what is this?" — a 4s bubble is
+  // easy to miss mid-load; a button-gated card can't be. It explains the loop
+  // (walk → gate → real-life mission) in kid language and only dismisses on tap.
   function startHubIntro() {
     if (_introStarted) return;
     _introStarted = true;
     if (opts.hubIntroDone && opts.hubIntroDone()) return; // seen before → nothing
-    _introBubble1El = showLeoBubble("Welcome to my island! 🌲 Tap anywhere — I’ll walk there!", 4000);
-    _introBubble2Pending = true; // Bubble 2 fires after the first walk completes
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:absolute;inset:0;z-index:24;display:flex;align-items:center;justify-content:center;background:rgba(12,26,44,0.45);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+    var card = document.createElement('div');
+    card.style.cssText = 'background:#fff;border-radius:22px;padding:22px 20px;max-width:min(320px,86vw);box-shadow:0 14px 40px rgba(0,0,0,0.35);display:flex;flex-direction:column;gap:12px;text-align:left;';
+    card.innerHTML =
+      '<div style="font-size:19px;font-weight:900;color:#26364a;text-align:center;">Welcome to Leo’s Island! 🏝️</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">👆 <b>Tap the ground</b> — Leo walks there!</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">✨ <b>Reach a glowing gate</b> to get a mission</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">🏓 <b>Grab your paddles</b> and play for real!</div>' +
+      '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:16px;font-weight:900;min-height:46px;padding:0 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">Let’s go! 🚀</button>';
+    wrap.appendChild(card);
+    container.appendChild(wrap);
+    if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak("Welcome to my island! Tap the ground and I'll walk there!"); } catch (e) {} }
+    card.querySelector('button').addEventListener('click', function () {
+      wrap.style.transition = 'opacity 250ms ease';
+      wrap.style.opacity = '0';
+      setTimeout(function () { wrap.remove(); }, 280);
+      if (opts.markHubIntroDone) opts.markHubIntroDone();
+      resumeAudio();
+      playChime();
+    });
+    _introBubble2Pending = true; // praise bubble after the first real walk
   }
 
   // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
@@ -833,42 +857,16 @@ export function initHub3D(opts) {
   buildRibbon(1.85, 0.014, 0x8f6f45); // darker shoulder / border
   buildRibbon(1.45, 0.022, 0xE3CE9E); // bright sandy walkway on top
 
-  // ---------- ISLAND: SEA + SHORE + HORIZON ----------
-  // The world used to end in flat void past the ground strips. Now it reads
-  // as an actual island: a sand apron under the ground plane's edges, a huge
-  // slow-waving sea plane below that, two silhouette islands far out in the
-  // fog, and a few drifting clouds. All cheap: one 20x20-segment sea plane
-  // with the same reuse-base-positions wave trick as the river, and the rest
-  // is static or transform-only.
-  var seaGeo = new THREE.PlaneGeometry(320, 320, 20, 20);
-  var sea = new THREE.Mesh(seaGeo, new THREE.MeshStandardMaterial({ color: 0x4FB8C4, flatShading: true, fog: false }));
-  sea.rotation.x = -Math.PI / 2;
-  sea.position.set(0, -0.24, -(pathTotalLength / 2) + START_BOUNDARY_Z);
-  scene.add(sea);
-  var seaBasePositions = seaGeo.attributes.position.array.slice();
-  function updateSea(elapsedTime) {
-    var arr = seaGeo.attributes.position.array;
-    for (var i = 0; i < arr.length; i += 3) {
-      arr[i + 2] = Math.sin(seaBasePositions[i] * 0.25 + elapsedTime * 1.1) * 0.09 +
-        Math.sin(seaBasePositions[i + 1] * 0.3 + elapsedTime * 0.8) * 0.07;
-    }
-    seaGeo.attributes.position.needsUpdate = true;
-  }
-
-  var shore = new THREE.Mesh(
-    new THREE.PlaneGeometry(groundWidth + 9, pathTotalLength + 12, 1, 1),
-    new THREE.MeshStandardMaterial({ color: 0xEFDCA6, flatShading: true, fog: false })
-  );
-  shore.rotation.x = -Math.PI / 2;
-  shore.position.set(0, -0.12, -(pathTotalLength / 2) + START_BOUNDARY_Z);
-  scene.add(shore);
-
-  var farIslandMat = new THREE.MeshStandardMaterial({ color: 0x6f8f77, flatShading: true });
-  [[-62, -60, 7, 2.4], [58, -25, 5, 1.8]].forEach(function (isl) {
-    var mound = new THREE.Mesh(new THREE.ConeGeometry(isl[2], isl[3], 7), farIslandMat);
-    mound.position.set(isl[0], -0.2 + isl[3] / 2 - 0.4, isl[1]);
-    scene.add(mound);
-  });
+  // ---------- HORIZON GROUND (the sea/shore/far-island planes are GONE) ----------
+  // The old teal sea + sand shore planes filled the void past the ground strips
+  // back when the world was open. With the wrap-around panorama backdrop they
+  // only produced an ugly flat blue band between the ground's edge and the
+  // artwork (glowing bright teal at night, with a razor-sharp cut line — see
+  // the user's screenshots). Replaced by the camera-following, theme-tinted
+  // ground apron built next to the panorama (see "horizon apron" below), so
+  // the ground now runs seamlessly into the artwork's own ground line on every
+  // aspect ratio. updateSea() kept as a no-op so tick() needs no change.
+  function updateSea() {}
 
   // ---------- THEMED SIDE HORIZON (fills the flat empty sides per zone) ----------
   // The wide ground sides used to read as dead flat colour out to the sea. For
@@ -974,10 +972,12 @@ export function initHub3D(opts) {
   var sunGroup = new THREE.Group();
   var sunGlowMat = new THREE.MeshBasicMaterial({ color: sunColor, fog: false, transparent: true, opacity: 0.30, depthWrite: false });
   var sunCoreMat = new THREE.MeshBasicMaterial({ color: sunColor, fog: false, transparent: true, opacity: 0.95, depthWrite: false });
-  var sunGlow = new THREE.Mesh(new THREE.CircleGeometry(13, 28), sunGlowMat); sunGlow.renderOrder = -9;
-  var sunCore = new THREE.Mesh(new THREE.CircleGeometry(5, 28), sunCoreMat); sunCore.renderOrder = -8;
+  // Kept small on purpose: at 13/5 the disc filled a third of a WIDE screen,
+  // half-cut by the top edge — it read as a rendering glitch, not a sun.
+  var sunGlow = new THREE.Mesh(new THREE.CircleGeometry(7, 28), sunGlowMat); sunGlow.renderOrder = -9;
+  var sunCore = new THREE.Mesh(new THREE.CircleGeometry(2.6, 28), sunCoreMat); sunCore.renderOrder = -8;
   sunGroup.add(sunGlow); sunGroup.add(sunCore);
-  sunGroup.position.set(-9, 9, -38); // within the narrow portrait FOV, low-left horizon
+  sunGroup.position.set(-9, 11, -38); // within the narrow portrait FOV, upper-left sky
   skyGroup.add(sunGroup);
 
   // (The procedural cone "mountain ring" was removed — all six zones now ship a
@@ -1019,6 +1019,20 @@ export function initHub3D(opts) {
   skyGroup.add(panoMesh);
   var _panoKey = null;
 
+  // --- horizon apron: camera-following ground disc under everything ---
+  // Fills the space between the real ground strips and the panorama wall with
+  // the CURRENT zone's ground colour (lerped in updateSky), so no aspect ratio
+  // ever exposes a bare band between ground edge and artwork. Drawn after the
+  // dome, before the panorama (which overdraws it beyond radius 45), and the
+  // real depth-tested scene draws over it up close — it is pure backdrop.
+  var apronMat = new THREE.MeshBasicMaterial({ color: ZONE_THEMES[0].ground, fog: false, depthWrite: false });
+  var apron = new THREE.Mesh(new THREE.CircleGeometry(46, 40), apronMat);
+  apron.rotation.x = -Math.PI / 2;
+  apron.position.y = -0.32; // just under the real ground strips
+  apron.renderOrder = -9;   // dome (-10) → apron (-9) → panorama (-8.7) → scene
+  apron.frustumCulled = false;
+  skyGroup.add(apron);
+
   // --- a few floating islands drifting in the sky ---
   function makeFloatingIsland(scale) {
     var g = new THREE.Group();
@@ -1040,7 +1054,10 @@ export function initHub3D(opts) {
   var islands = [];
   // Kept within the narrow portrait horizontal FOV (small x relative to z) and
   // near eye level so the grassy top + rocky underside both read.
-  var ISLAND_DEFS = [[-11, 11, -42, 1.7], [12, 13, -47, 1.3], [2, 17, -54, 1.05]];
+  // Lowered so they float fully IN frame (they used to clip at the top edge on
+  // wide screens as odd dark wedges), and the left one pushed further left so
+  // it doesn't stack on the sun disc.
+  var ISLAND_DEFS = [[-18, 9.5, -42, 1.7], [12, 11, -47, 1.3], [3, 12.5, -54, 1.05]];
   ISLAND_DEFS.forEach(function (d, i) {
     var isl = makeFloatingIsland(d[3]);
     isl.position.set(d[0], d[1], d[2]);
@@ -1059,6 +1076,7 @@ export function initHub3D(opts) {
     domeUniforms.bottomColor.value.copy(scene.background); // horizon = theme sky
     sunGlowMat.color.lerp(themeTargets.sunDisc, k);
     sunCoreMat.color.lerp(themeTargets.sunDisc, k);
+    apronMat.color.lerp(themeTargets.ground, k);
     // Panorama backdrop: swap to the current theme's artwork (the swap happens
     // behind the cloud-bank wall as you cross a boundary, so it isn't seen to
     // pop) and keep it faded fully in.
@@ -1980,6 +1998,7 @@ export function initHub3D(opts) {
     sky: new THREE.Color(ZONE_THEMES[0].sky),
     skyTop: new THREE.Color(skyTopFor(0)), // skydome zenith (see buildSky above)
     sunDisc: new THREE.Color(sunColorFor(0)), // visible sun/moon disc colour
+    ground: new THREE.Color(ZONE_THEMES[0].ground), // horizon apron tint
     hemiSky: new THREE.Color(ZONE_THEMES[0].hemiSky),
     hemiGround: new THREE.Color(ZONE_THEMES[0].hemiGround),
     sun: new THREE.Color(ZONE_THEMES[0].sun),
@@ -2001,6 +2020,7 @@ export function initHub3D(opts) {
       themeTargets.sky.setHex(th.sky);
       themeTargets.skyTop.setHex(skyTopFor(idx));
       themeTargets.sunDisc.setHex(sunColorFor(idx));
+      themeTargets.ground.setHex(th.ground);
       themeTargets.hemiSky.setHex(th.hemiSky);
       themeTargets.hemiGround.setHex(th.hemiGround);
       themeTargets.sun.setHex(th.sun);
@@ -2671,11 +2691,10 @@ export function initHub3D(opts) {
         fadeOutTargetRing();
         // Hub3D First Walk — the first time Leo actually reaches a tapped spot.
         if (!_firstWalkTracked) { _firstWalkTracked = true; track('Hub3D First Walk'); }
-        // Task 3 Bubble 2 — shown once, after the first walk; then the intro is done.
+        // Intro praise bubble — once, right after the very first completed walk.
         if (_introBubble2Pending) {
           _introBubble2Pending = false;
-          showLeoBubble("See the glowing gates? Each one is a mission!", 4000);
-          if (opts.markHubIntroDone) opts.markHubIntroDone();
+          showLeoBubble("Great job! Now find a glowing gate ✨", 4000);
         }
       } else {
         ix = dxT / distT;
