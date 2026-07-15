@@ -78,6 +78,17 @@
   function start(replay) {
     if (running) return;
     if (!replay && done()) return;
+    // Never stack on the welcome/age overlay. Visibility checks race it (the
+    // app shows the welcome via JS AFTER our checks ran, so both dialogs ended
+    // up on screen together). The reliable signal is the app's own persisted
+    // onboarding flag: jumvi_onboarded_v2 is set the moment the welcome is
+    // dismissed — until then, keep politely retrying.
+    var onboarded = false;
+    try { onboarded = localStorage.getItem("jumvi_onboarded_v2") === "1"; } catch (e) { onboarded = true; }
+    var w = document.getElementById("welcomeOverlay");
+    var splash = document.getElementById("splashOverlay");
+    var splashUp = splash && splash.classList.contains("show");
+    if (!replay && (!onboarded || splashUp || (w && visible(w)))) { setTimeout(function () { start(false); }, 700); return; }
     buildPlan();
     if (plan.length === 0) return;
     running = true;

@@ -267,9 +267,9 @@ const BADGES = [
   { id:"first", icon:"⭐", name:"First Steps", req:"Complete your first mission", category:"start",
     check: (done)=>done.size>=1 },
 
-  // Pack badges — pack'in TAMAMINI bitirme
-  { id:"reflex", icon:"⚡", name:"Reflex Pro", req:"Finish all Lightning Hands", category:"pack", pack:"Reflex Rush",
-    check: (done)=>missions.filter(x=>x.pack==="Reflex Rush" && done.has(x.id)).length>=6 },
+  // Pack badges — pack'in TAMAMINI bitirme. Display order follows the PACK
+  // order above (Bullseye first, Lightning Hands last) so the badge row tells
+  // the same story as the mission path — ids/checks are key-based, unchanged.
   { id:"aim", icon:"🎯", name:"Sharp Shooter", req:"Finish all Bullseye missions", category:"pack", pack:"Aim Master",
     check: (done)=>missions.filter(x=>x.pack==="Aim Master" && done.has(x.id)).length>=6 },
   { id:"zen", icon:"🧘", name:"Zen Master", req:"Finish all Zen Mode missions", category:"pack", pack:"Focus Control",
@@ -280,6 +280,8 @@ const BADGES = [
     check: (done)=>missions.filter(x=>x.pack==="Indoor Compact" && done.has(x.id)).length>=6 },
   { id:"outdoor", icon:"🏖️", name:"Outdoor Adventurer", req:"Finish all Outdoor missions", category:"pack", pack:"Beach/Park",
     check: (done)=>missions.filter(x=>x.pack==="Beach/Park" && done.has(x.id)).length>=6 },
+  { id:"reflex", icon:"⚡", name:"Reflex Pro", req:"Finish all Lightning Hands", category:"pack", pack:"Reflex Rush",
+    check: (done)=>missions.filter(x=>x.pack==="Reflex Rush" && done.has(x.id)).length>=6 },
 
   // Streak badges
   { id:"streak3", icon:"🎖️", name:"3-Day Streak", req:"Play 3 days in a row", category:"streak",

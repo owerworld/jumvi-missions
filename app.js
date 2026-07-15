@@ -4138,14 +4138,17 @@ function showHub3D(){
   // already loaded (re-opens are instant).
   if(!_hub3dInstance && overlay) buildHubLoadingOverlay(overlay);
   // Safety net: if no first frame ever paints (stuck, not a reject), show the
-  // friendly failure UI rather than an endless progress bar.
+  // friendly failure UI rather than an endless progress bar. A hidden tab
+  // (locked phone, app switch) legitimately stops requestAnimationFrame — no
+  // frames is NORMAL there, so re-arm instead of firing a false failure.
   const _openedAt = performance.now();
-  setTimeout(()=>{
-    if(_hubLoadingEl && overlay && overlay.style.display !== "none"){
-      const painted = window.__hub3dLastFrameAt && window.__hub3dLastFrameAt >= _openedAt;
-      if(!painted) showHubLoadingFailure(overlay, "frame_timeout");
-    }
-  }, 15000);
+  const _frameCheck = ()=>{
+    if(!(_hubLoadingEl && overlay && overlay.style.display !== "none")) return;
+    if(document.hidden){ setTimeout(_frameCheck, 5000); return; }
+    const painted = window.__hub3dLastFrameAt && window.__hub3dLastFrameAt >= _openedAt;
+    if(!painted) showHubLoadingFailure(overlay, "frame_timeout");
+  };
+  setTimeout(_frameCheck, 15000);
   ensureHub3DLoaded((frac)=>{
     setHubLoadingProgress(frac);
     if(frac >= 1) dismissHubLoadingOverlay();
