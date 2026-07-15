@@ -13,11 +13,12 @@
    to the overlay (overlay tap = skip). Welcome step hides it (.leo-nospot). */
 .leo-spot{
   position:absolute; border-radius:16px; pointer-events:none;
-  box-shadow:0 0 0 9999px rgba(12,26,44,.62);
+  /* .68: at .62 the light theme stayed too bright around the spotlight */
+  box-shadow:0 0 0 9999px rgba(12,26,44,.68);
   outline:3px solid rgba(255,255,255,.95); outline-offset:2px;
   transition:all .3s cubic-bezier(.4,.2,.2,1);
 }
-.leo-overlay.leo-nospot .leo-spot{ box-shadow:0 0 0 9999px rgba(12,26,44,.62); width:0; height:0; left:50%; top:50%; outline:0; border-radius:0; }
+.leo-overlay.leo-nospot .leo-spot{ box-shadow:0 0 0 9999px rgba(12,26,44,.68); width:0; height:0; left:50%; top:50%; outline:0; border-radius:0; }
 
 /* Tour card: Leo + speech bubble + buttons */
 .leo-card{

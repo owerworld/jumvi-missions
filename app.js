@@ -4534,7 +4534,9 @@ function renderContinueHint(){
   if(!lastId){ hint.style.display = "none"; return; }
   const ms = missions.find(x=>x.id===lastId);
   if(!ms){ hint.style.display = "none"; return; }
-  // Sadece bugün oynanmamışsa göster (eğer bugün zaten oynadıysa, "continue" değil)
+  // A COMPLETED mission is not something to "continue" — right after finishing
+  // one, this card used to still offer "Resume" on it, which read as a bug.
+  if(done.has(lastId)){ hint.style.display = "none"; return; }
   hint.style.display = "";
   if(nameEl) nameEl.textContent = `${ms.icon} ${ms.title}`;
 }
