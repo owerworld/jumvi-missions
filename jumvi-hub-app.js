@@ -720,10 +720,22 @@ export function initHub3D(opts) {
   camera.position.set(0, CAM_HEIGHT, CAM_DISTANCE_BACK);
   camera.lookAt(0, CAM_LOOKAHEAD_HEIGHT, -CAM_LOOKAHEAD_DIST);
 
-  var renderer = new THREE.WebGLRenderer({ antialias: true });
+  // Device tier — weak phones get a cheaper renderer UP FRONT instead of
+  // stuttering first and being rescued later. ≤4 GB RAM or ≤4 cores covers the
+  // budget-Android band; iOS never exposes deviceMemory so it stays high-tier
+  // (fine — even old iPhones run this scene well).
+  var lowTier = false;
+  try {
+    lowTier = (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4) ||
+              (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4);
+  } catch (e) {}
+
+  var renderer = new THREE.WebGLRenderer({ antialias: !lowTier, powerPreference: 'high-performance' });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
+  // Full DPR×2 on a weak GPU quadruples the pixels for zero perceived gain on
+  // a low-poly flat-shaded scene; 1.5 keeps text/edges crisp enough there.
+  renderer.setPixelRatio(lowTier ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = !lowTier; // shadow pass is the other big cost on weak GPUs
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
 
@@ -2235,6 +2247,11 @@ export function initHub3D(opts) {
   // halves part left/right and rise as they fade. One shared geometry + material
   // per wall keeps it cheap.
   var _fogPuffGeo = new THREE.SphereGeometry(1, 8, 6);
+  // PERF: each wall used to be ~100 individual puff Meshes → ~500 extra draw
+  // calls across the 5 walls, the single biggest jank source on weak phones.
+  // Now each wall is exactly TWO InstancedMeshes (left half / right half —
+  // the same two halves the unlock animation parts anyway): 10 draw calls
+  // total, identical look.
   function createFogWall(zoneIndex) {
     var z = zoneBoundaryZ(zoneIndex);
     var x = pathCenterX(z);
@@ -2246,22 +2263,35 @@ export function initHub3D(opts) {
     });
     var wall = new THREE.Group();
     wall.position.set(x, 0, z);
+
+    // Collect puff transforms per side, then bake each side into one InstancedMesh.
+    var sides = { left: [], right: [] };
     var halfW = width / 2;
+    var dummy = new THREE.Object3D();
     for (var layer = 0; layer < 2; layer++) {           // two shallow z-layers → nothing shows through
       var zoff = layer * -1.5;
       for (var cx = -halfW; cx <= halfW; cx += 1.6) {
         var stack = 3 + Math.floor(Math.random() * 2);   // puffs stacked up to ~7 units tall
         for (var s = 0; s < stack; s++) {
           var r = 1.35 + Math.random() * 1.15;
-          var puff = new THREE.Mesh(_fogPuffGeo, mat);
-          puff.scale.set(r, r * 0.82, r);
-          puff.position.set(cx + (Math.random() - 0.5) * 1.3, 0.5 + s * 1.7 + Math.random() * 0.7, zoff + (Math.random() - 0.5) * 0.9);
-          puff.userData.side = cx < 0 ? -1 : 1;          // which way it parts on unlock
-          puff.userData.drift = 0.6 + Math.random() * 0.8;
-          wall.add(puff);
+          dummy.position.set(cx + (Math.random() - 0.5) * 1.3, 0.5 + s * 1.7 + Math.random() * 0.7, zoff + (Math.random() - 0.5) * 0.9);
+          dummy.scale.set(r, r * 0.82, r);
+          dummy.updateMatrix();
+          (cx < 0 ? sides.left : sides.right).push(dummy.matrix.clone());
         }
       }
     }
+    function bake(mats, side) {
+      var im = new THREE.InstancedMesh(_fogPuffGeo, mat, mats.length);
+      for (var i = 0; i < mats.length; i++) im.setMatrixAt(i, mats[i]);
+      im.instanceMatrix.needsUpdate = true;
+      im.userData.side = side; // which way this half parts on unlock
+      im.frustumCulled = false; // wall is huge + short-lived; skip per-frame bounds math
+      wall.add(im);
+      return im;
+    }
+    bake(sides.left, -1);
+    bake(sides.right, 1);
     scene.add(wall);
 
     return { zoneIndex: zoneIndex, wall: wall, mat: mat, baseZ: z, baseX: x, dissolving: null, dissolved: false };
@@ -3260,10 +3290,11 @@ export function initHub3D(opts) {
       var t = Math.min(elapsed / 1600, 1);
       var e = t * t * (3 - 2 * t); // smoothstep
       fw.mat.opacity = 1 - e;
-      // The two halves part left/right and drift up as the bank thins out.
-      fw.wall.children.forEach(function (p) {
-        p.position.x += p.userData.side * p.userData.drift * 0.06;
-        p.position.y += 0.035;
+      // The two instanced halves part left/right and drift up as the bank
+      // thins out (same motion as the old per-puff drift, 2 nodes instead of ~100).
+      fw.wall.children.forEach(function (half) {
+        half.position.x += half.userData.side * 0.07;
+        half.position.y += 0.035;
       });
       if (t >= 1) {
         fw.wall.visible = false;
@@ -3382,6 +3413,15 @@ export function initHub3D(opts) {
         _fpsChecked = true;
         var _fps = _fpsFrames / (_fpsEl / 1000);
         if (_fps < 20) {
+          // LIVE RESCUE first: drop to 1x pixels + kill the shadow pass on the
+          // spot — together these usually double the frame rate on a weak GPU,
+          // invisibly on a low-poly flat-shaded scene. The gentle "quick list"
+          // nudge still shows in case the device is beyond saving.
+          try {
+            renderer.setPixelRatio(1);
+            renderer.shadowMap.enabled = false;
+            renderer.setSize(container.clientWidth, container.clientHeight);
+          } catch (e) {}
           track('3d_fallback_triggered', { reason: 'low_fps' });
           if (typeof opts.onLowFps === 'function') opts.onLowFps(Math.round(_fps));
         }
