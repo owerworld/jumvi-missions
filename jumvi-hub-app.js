@@ -100,14 +100,14 @@ export function initHub3D(opts) {
   var hudTop = document.createElement('div');
   hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
   var badgesEl = document.createElement('div');
-  badgesEl.style.cssText = 'display:flex;gap:8px;background:rgba(255,255,255,0.88);padding:8px 12px;border-radius:20px;';
+  badgesEl.style.cssText = 'display:flex;gap:8px;background:rgba(255,255,255,0.94);padding:8px 13px;border-radius:22px;box-shadow:0 6px 18px rgba(18,38,66,0.20),inset 0 1px 0 rgba(255,255,255,0.9);border:1px solid rgba(120,150,180,0.20);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);';
   hudTop.appendChild(badgesEl);
 
   // Small pill under the badges row showing how many missions are left in
   // whichever zone Leo is currently standing in (real done Set, not a guess) —
   // purely a read of existing state, no new progress concept.
   var progressLabelEl = document.createElement('div');
-  progressLabelEl.style.cssText = 'background:rgba(255,255,255,0.85);padding:4px 14px;border-radius:14px;font-size:12px;font-weight:700;color:#3a2a1a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  progressLabelEl.style.cssText = 'background:linear-gradient(180deg,#fffdf7,#ffe9c4);padding:5px 15px;border-radius:16px;font-size:12.5px;font-weight:800;color:#7a4712;box-shadow:0 4px 12px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.85);border:1px solid rgba(226,178,104,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   hudTop.appendChild(progressLabelEl);
   container.appendChild(hudTop);
 
@@ -115,7 +115,7 @@ export function initHub3D(opts) {
   // 3D object), hidden via opacity:0 until showZoneCompleteCelebration() plays
   // its one-shot animation (see updateZoneLocks() below for the trigger).
   var celebrationCardEl = document.createElement('div');
-  celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,0.94);padding:18px 30px;border-radius:20px;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,0.97);padding:18px 30px;border-radius:22px;box-shadow:0 16px 38px rgba(18,38,66,0.30),0 3px 8px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   var celebrationTitleEl = document.createElement('div');
   celebrationTitleEl.style.cssText = 'font-size:20px;font-weight:900;color:#3a2a1a;white-space:nowrap;';
   celebrationTitleEl.textContent = HUB_TEXTS.zoneComplete;
@@ -153,7 +153,7 @@ export function initHub3D(opts) {
   // card above, but shorter (1.5s) and higher up so the two never collide
   // visually if a completion and a zone entry happen back to back.
   var zoneCardEl = document.createElement('div');
-  zoneCardEl.style.cssText = 'position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);z-index:14;pointer-events:none;background:rgba(255,255,255,0.92);padding:12px 26px;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,0.22);opacity:0;font-size:18px;font-weight:900;color:#3a2a1a;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  zoneCardEl.style.cssText = 'position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);z-index:14;pointer-events:none;background:rgba(255,255,255,0.96);padding:12px 26px;border-radius:20px;box-shadow:0 12px 30px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.14),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;font-size:18px;font-weight:900;color:#2c3a4d;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(zoneCardEl);
   if (!document.getElementById('hub3dZoneCardStyle')) {
     var zoneCardStyle = document.createElement('style');
@@ -185,12 +185,17 @@ export function initHub3D(opts) {
   // first touch/keypress, then fades for the rest of the session.
   var coachBubbleEl = document.createElement('div');
   coachBubbleEl.textContent = HUB_TEXTS.tapToWalk;
-  coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#3a2a1a;z-index:12;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,0.25);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
+  coachBubbleEl.className = 'h3tail';
+  coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);background:#ffffff;padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#2c3a4d;z-index:12;pointer-events:none;box-shadow:0 10px 26px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
   container.appendChild(coachBubbleEl);
   if (!document.getElementById('hub3dCoachStyle')) {
     var coachStyle = document.createElement('style');
     coachStyle.id = 'hub3dCoachStyle';
-    coachStyle.textContent = '@keyframes hub3dCoachBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-9px)}}';
+    coachStyle.textContent = '@keyframes hub3dCoachBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-9px)}}' +
+      // Speech-bubble tail: a small rotated square that reads as a pointer under
+      // the bubble, so the coach/greeting boxes look like Leo is talking instead
+      // of being flat floating labels. White matches the .h3 sticker fill.
+      '.h3tail::after{content:"";position:absolute;left:50%;bottom:-7px;width:15px;height:15px;background:#ffffff;border-right:1px solid rgba(120,150,180,.22);border-bottom:1px solid rgba(120,150,180,.22);transform:translateX(-50%) rotate(45deg);border-bottom-right-radius:4px;}';
     document.head.appendChild(coachStyle);
   }
   var coachBubbleDismissed = false;
@@ -213,7 +218,12 @@ export function initHub3D(opts) {
   // walk. Spoken through the app's Web Speech util; text-only if speech is off.
   function showLeoBubble(text, ms) {
     var b = document.createElement('div');
-    b.style.cssText = 'position:absolute;top:12%;left:50%;transform:translateX(-50%);max-width:78%;background:rgba(255,255,255,0.96);padding:12px 20px;border-radius:20px;font-size:17px;font-weight:800;color:#3a2a1a;z-index:13;pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,0.22);text-align:center;transition:opacity 350ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+    // top anchored to a fixed pixel offset that always clears the top HUD
+    // (badges row + progress pill ≈ 82px) — at the old top:12% this greeting
+    // landed ON the "6 missions to go" pill on tall phones. Tail + depth so it
+    // reads as Leo speaking, not a flat label.
+    b.className = 'h3tail';
+    b.style.cssText = 'position:absolute;top:calc(112px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:80%;background:#ffffff;padding:12px 20px;border-radius:20px;font-size:17px;font-weight:800;color:#2c3a4d;z-index:13;pointer-events:none;box-shadow:0 10px 26px rgba(18,38,66,0.26),0 2px 6px rgba(18,38,66,0.14),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);text-align:center;transition:opacity 350ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
     b.textContent = text;
     container.appendChild(b);
     if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak(text); } catch (e) {} }
@@ -231,7 +241,7 @@ export function initHub3D(opts) {
     var wrap = document.createElement('div');
     wrap.style.cssText = 'position:absolute;inset:0;z-index:24;display:flex;align-items:center;justify-content:center;background:rgba(12,26,44,0.45);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
     var card = document.createElement('div');
-    card.style.cssText = 'background:#fff;border-radius:22px;padding:22px 20px;max-width:min(320px,86vw);box-shadow:0 14px 40px rgba(0,0,0,0.35);display:flex;flex-direction:column;gap:12px;text-align:left;';
+    card.style.cssText = 'background:linear-gradient(180deg,#ffffff,#f4f8fc);border-radius:24px;padding:22px 20px;max-width:min(320px,86vw);box-shadow:0 22px 54px rgba(18,38,66,0.42),0 4px 12px rgba(18,38,66,0.22),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.20);display:flex;flex-direction:column;gap:12px;text-align:left;';
     card.innerHTML =
       '<div style="font-size:19px;font-weight:900;color:#26364a;text-align:center;">Welcome to Leo’s Island! 🏝️</div>' +
       '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">👆 <b>Tap the ground</b> — Leo walks there!</div>' +
@@ -2068,36 +2078,67 @@ export function initHub3D(opts) {
 
     var w = Math.ceil(textWidth + paddingX * 2);
     var h = fontSize + paddingY * 2;
+    // Transparent margin around the pill so the drop shadow + bottom rail don't
+    // clip. The pill sits inset by `m`; the sprite scale compensates below so
+    // the visible sign stays the same on-screen size as before.
+    var m = 9;
+    var cw = w + m * 2, ch = h + m * 2;
     var supersample = 2;
     var canvas = document.createElement('canvas');
-    canvas.width = w * supersample;
-    canvas.height = h * supersample;
+    canvas.width = cw * supersample;
+    canvas.height = ch * supersample;
     var ctx = canvas.getContext('2d');
     ctx.scale(supersample, supersample);
     ctx.font = font;
 
+    // Rounded pill, inset by the margin.
     var r = h / 2;
-    ctx.fillStyle = 'rgba(255,255,255,0.88)';
-    ctx.beginPath();
-    ctx.moveTo(r, 0);
-    ctx.arcTo(w, 0, w, h, r);
-    ctx.arcTo(w, h, 0, h, r);
-    ctx.arcTo(0, h, 0, 0, r);
-    ctx.arcTo(0, 0, w, 0, r);
-    ctx.closePath();
+    function pillPath() {
+      ctx.beginPath();
+      ctx.moveTo(m + r, m);
+      ctx.arcTo(m + w, m, m + w, m + h, r);
+      ctx.arcTo(m + w, m + h, m, m + h, r);
+      ctx.arcTo(m, m + h, m, m, r);
+      ctx.arcTo(m, m, m + w, m, r);
+      ctx.closePath();
+    }
+    // Soft grounded shadow so the sign reads as a solid object in the scene
+    // instead of flat floating text.
+    ctx.save();
+    ctx.shadowColor = 'rgba(20,40,70,0.30)';
+    ctx.shadowBlur = 9;
+    ctx.shadowOffsetY = 4;
+    ctx.fillStyle = 'rgba(255,255,255,0.97)';
+    pillPath();
     ctx.fill();
+    ctx.restore();
+    // Warm wooden bottom rail — a 3px accent under the pill so it looks like a
+    // little sign board, not a sticker.
+    ctx.save();
+    pillPath();
+    ctx.clip();
+    ctx.fillStyle = '#e7b26a';
+    ctx.fillRect(m, m + h - 4, w, 4);
+    ctx.restore();
+    // Thin outline for edge definition against bright sky.
+    ctx.strokeStyle = 'rgba(120,150,180,0.35)';
+    ctx.lineWidth = 1.5;
+    pillPath();
+    ctx.stroke();
 
-    ctx.fillStyle = '#3a2a1a';
+    ctx.fillStyle = '#2c3a4d';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, w / 2, h / 2 + 1);
+    ctx.fillText(text, m + w / 2, m + h / 2 + 1);
 
     var texture = new THREE.CanvasTexture(canvas);
     texture.minFilter = THREE.LinearFilter;
     var material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
     var sprite = new THREE.Sprite(material);
-    var worldHeight = 0.85;
-    sprite.scale.set(worldHeight * (w / h), worldHeight, 1);
+    // worldHeight maps the PILL (h) to 0.85 world units; the sprite is a bit
+    // taller to include the transparent shadow margin.
+    var worldHeight = 0.85 * (ch / h);
+    sprite.scale.set(worldHeight * (cw / ch), worldHeight, 1);
     return sprite;
   }
 
@@ -3013,7 +3054,7 @@ export function initHub3D(opts) {
   // max-width + text-align (no more white-space:nowrap) so a long item name
   // wraps inside the card on a narrow phone instead of running off-screen —
   // the previous nowrap forced a single line that could overflow the viewport.
-  rewardCardEl.style.cssText = 'position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);z-index:16;pointer-events:none;background:rgba(255,255,255,0.94);padding:12px 22px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,0.22);opacity:0;font-size:15px;font-weight:800;color:#3a2a1a;text-align:center;max-width:82vw;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  rewardCardEl.style.cssText = 'position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);z-index:16;pointer-events:none;background:rgba(255,255,255,0.97);padding:13px 22px;border-radius:18px;box-shadow:0 14px 34px rgba(18,38,66,0.28),0 3px 8px rgba(18,38,66,0.15),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);opacity:0;font-size:15px;font-weight:800;color:#2c3a4d;text-align:center;max-width:82vw;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(rewardCardEl);
   function showRewardCard(text) {
     rewardCardEl.textContent = text;
