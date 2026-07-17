@@ -52,8 +52,9 @@ export function initHub3D(opts) {
     zoneDoneLabel: 'complete! 🏆',
     steps: 'STEPS',
     win: 'HOW TO WIN',
-    stepsSoon: 'Steps are coming soon.',
-    winSoon: 'Win condition is coming soon.',
+    // (removed) stepsSoon / winSoon: dead fallbacks. The hub delegates every
+    // mission to the app's real openMission() view, and an audit confirmed all
+    // 36 missions in data.js have valid steps + win — so these never rendered.
     start: '▶ START!',
     running: function (s) { return '⏱ ' + s + 's — Go play!'; },
     timeUp: "⏰ Time's up — did you do it?",
