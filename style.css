@@ -2822,7 +2822,7 @@ html.theme--light .welcomeOverlay{
   background:var(--glass,rgba(255,255,255,0.14));
   border:1px solid var(--border,rgba(255,255,255,0.2));
   border-radius:28px;
-  padding:32px 24px 26px;
+  padding:22px 24px 26px;
   max-width:360px;
   width:100%;
   text-align:center;
@@ -2842,7 +2842,7 @@ html.theme--light .welcomePanel{
   to  { opacity:1; transform:scale(1) translateY(0); }
 }
 .welcomeLogo{
-  width:100px;
+  width:132px;
   height:auto;
   object-fit:contain;
 }
