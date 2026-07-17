@@ -44,7 +44,8 @@
 .leo-dot.on{ background:#fff; }
 
 /* ---- Coach Leo flat-vector quokka (built in JS, animated here) ---- */
-.leo-svg{ width:96px; height:96px; display:block; filter:drop-shadow(0 6px 10px rgba(0,0,0,.25)); transform-origin:50% 90%; animation:leoBob 1.8s ease-in-out infinite; }
+.leo-pic{ display:block; }
+.leo-svg{ width:118px; height:auto; display:block; filter:drop-shadow(0 7px 12px rgba(20,60,90,.28)); transform-origin:50% 90%; animation:leoBob 1.8s ease-in-out infinite; }
 .leo-arm{ transform-origin:74px 60px; animation:leoWave 1.1s ease-in-out infinite; }
 @keyframes leoBob{ 0%,100%{ transform:translateY(0) scale(1,1); } 50%{ transform:translateY(-5px) scale(1.02,.98); } }
 @keyframes leoWave{ 0%,100%{ transform:rotate(6deg); } 50%{ transform:rotate(-24deg); } }

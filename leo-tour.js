@@ -42,22 +42,15 @@
     { key: "threeD", sel: ["#advModeCard", '.navTab[data-tab="hub3d"]'], text: "There's a 3D world too — see you inside!", primary: "Start playing" }
   ];
 
-  // --- Coach Leo: flat-vector quokka (grouped so the arm can wave) ---
+  // --- Coach Leo: the real rendered mascot (guide pose — points at the
+  // spotlighted UI). WebP + PNG fallback; the bob animation lives in the CSS
+  // (.leo-svg), same class the old flat-vector used, so nothing else changes. ---
   function leoSVG() {
-    return '' +
-      '<svg class="leo-svg" viewBox="0 0 100 100" role="img" aria-hidden="true" focusable="false">' +
-        '<ellipse cx="31" cy="27" rx="8" ry="10" fill="#CFA06B"/><ellipse cx="69" cy="27" rx="8" ry="10" fill="#CFA06B"/>' +
-        '<ellipse cx="31" cy="28" rx="4" ry="5.5" fill="#F5E7CC"/><ellipse cx="69" cy="28" rx="4" ry="5.5" fill="#F5E7CC"/>' +
-        '<ellipse cx="50" cy="52" rx="30" ry="33" fill="#CFA06B"/>' +
-        '<ellipse cx="50" cy="63" rx="17" ry="19" fill="#F5E7CC"/>' +
-        '<circle cx="34" cy="60" r="5" fill="#E8B892"/><circle cx="66" cy="60" r="5" fill="#E8B892"/>' +
-        '<circle cx="40" cy="45" r="4.4" fill="#3A2A1A"/><circle cx="60" cy="45" r="4.4" fill="#3A2A1A"/>' +
-        '<circle cx="41.6" cy="43.4" r="1.5" fill="#fff"/><circle cx="61.6" cy="43.4" r="1.5" fill="#fff"/>' +
-        '<ellipse cx="50" cy="55" rx="3.4" ry="2.4" fill="#6B4A3A"/>' +
-        '<path d="M44 60 q6 5 12 0" stroke="#6B4A3A" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-        '<path d="M35 71 L65 71 L50 85 Z" fill="#2FB6E8"/><path d="M64 71 l7 -3 -2 7 Z" fill="#1E97C6"/>' +
-        '<g class="leo-arm"><ellipse cx="80" cy="52" rx="6" ry="11" fill="#CFA06B" transform="rotate(24 80 60)"/><circle cx="86" cy="43" r="5" fill="#E8B892"/></g>' +
-      '</svg>';
+    var b = 'assets/leo/leo-guide';
+    return '<picture class="leo-pic">' +
+      '<source srcset="' + b + '-256.webp?v=20260717-1" type="image/webp">' +
+      '<img class="leo-svg" src="' + b + '-256.png?v=20260717-1" alt="" aria-hidden="true" decoding="async" width="256" height="256">' +
+    '</picture>';
   }
 
   // --- tour engine ---

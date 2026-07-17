@@ -68,10 +68,10 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260524-30">
+  <link rel="stylesheet" href="style.css?v=20260524-31">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260524-29">
-  <link rel="stylesheet" href="leo-tour.css?v=20260711-2">
+  <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
   <script>
     (function(){
@@ -121,7 +121,11 @@
     <div class="welcomePanel">
       <img class="welcomeLogo logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" />
       <img class="welcomeLogo logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
-      <div class="welcomeTagline">Hey, paddle pro! 🦁</div>
+      <picture class="welcomeMascot">
+        <source srcset="assets/leo/leo-encourage-512.webp?v=20260717-1" type="image/webp">
+        <img src="assets/leo/leo-encourage-512.png?v=20260717-1" alt="Coach Leo" width="512" height="512" decoding="async" />
+      </picture>
+      <div class="welcomeTagline">Hey, paddle pro!</div>
       <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.<br>How old's your kid?</div>
       <div class="welcomeAges" id="welcomeAges">
         <button class="ageBtn" data-diff="Easy" type="button">🐣<span>3–5 years</span></button>
@@ -895,7 +899,7 @@
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
 <script src="app.js?v=20260524-133" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
-<script src="leo-tour.js?v=20260711-7" defer></script>
+<script src="leo-tour.js?v=20260711-8" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{

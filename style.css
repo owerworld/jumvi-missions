@@ -2850,6 +2850,11 @@ html.theme--light .welcomePanel{
 .welcomeLogo.logoDark{ display:none; }
 html.theme--dark .welcomeLogo.logoDark{ display:block; }
 html.theme--dark .welcomeLogo.logoLight{ display:none; }
+/* Coach Leo greeting mascot (encourage pose) above the tagline */
+.welcomeMascot{ display:block; width:104px; margin:4px auto -6px; filter:drop-shadow(0 9px 16px rgba(20,60,90,0.24)); animation:welcomeMascotBob 2.6s ease-in-out infinite; }
+.welcomeMascot img{ width:100%; height:auto; display:block; }
+@keyframes welcomeMascotBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
+@media (prefers-reduced-motion: reduce){ .welcomeMascot{ animation:none; } }
 .welcomeTagline{
   font-size:22px;
   font-weight:900;
