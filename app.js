@@ -447,6 +447,7 @@ const ACTIVE_PROFILE_KEY  = "jumvi_active_profile_v1";
  * ======================= */
 const HUB3D_FLAG_KEY = "jumvi_3d_hub_enabled";
 const HUB_INTRO_KEY = "jumvi_hub_intro_done_v1"; // one-time Coach Leo greeting (Task 3)
+const LEO_GUIDE_KEY = "jumvi_leo_guide_seen_v1"; // one-time "how to play" guide reaction (Task 5)
 function isHub3DEnabled(){
   return lsGet(HUB3D_FLAG_KEY, "0") === "1";
 }
@@ -1817,6 +1818,9 @@ function showBadgeUnlockModal(badge){
   modal.classList.add("show");
   if(!prefersReducedMotion) fireConfetti(2000);
   clickSound("success");
+  // Task 5 — celebrate Leo for the badge (dropped if a mission-completion
+  // celebrate is already on screen; the sole reaction for streak-earned badges).
+  showLeoReaction("celebrate", "New badge! 🏅");
   const dismiss = ()=>{ modal.classList.remove("show"); };
   if(closeBtn){ closeBtn.onclick = dismiss; }
   modal.onclick = (e)=>{ if(e.target===modal) dismiss(); };
@@ -2193,6 +2197,10 @@ function showCountdownThenStart(durationSeconds){
 function startTimer(durationSeconds) {
   if(timerInterval) clearInterval(timerInterval);
 
+  // Task 5 — the kid is about to play: a subtle, no-bubble encourage Leo.
+  // (Dropped automatically if a celebrate/guide is already showing.)
+  showLeoReaction("encourage", "", { ms: 1900 });
+
   timerUI.style.display = "block";
 
   timerTotal = durationSeconds;
@@ -2328,6 +2336,13 @@ function openMission(id){
   if(!_firstMissionStartTracked){
     _firstMissionStartTracked = true;
     trackEvent("first_mission_start", { source: window._hubMissionFlow ? "hub" : "2d" });
+  }
+  // Task 5 — one-time "how to play" hint the FIRST time a kid opens any mission
+  // (device-level key; only for a not-yet-done mission so it reads as guidance,
+  // not a recap). Guide Leo points beside the steps.
+  if(!done.has(id) && lsGet(LEO_GUIDE_KEY, "0") !== "1"){
+    lsSet(LEO_GUIDE_KEY, "1");
+    setTimeout(()=> showLeoReaction("guide", "Read the steps, then go play! 👀"), 500);
   }
   // If the Red Light / Green Light caller is running (mission 2) and the user
   // taps Next/Random/another mission, tear it down so the new mission isn't
@@ -2551,6 +2566,10 @@ function closeMission(){
     const openFor = Date.now() - (missionOpenedAt || 0);
     if(openFor >= 20000){
       incAttempt(lastOpenedId);
+      // Task 5 — mission abandoned midway (real engagement, then left without
+      // finishing): a gentle, no-pressure Leo. Deferred so it lands after the
+      // modal has closed, not on top of it.
+      setTimeout(()=> showLeoReaction("gentle", "No worries — let's try again!"), 450);
     }
   }
   resetTimerUI(); // Stop + reset timer on close
@@ -2614,6 +2633,9 @@ function openCertificate(){
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
   if(sheet) sheet.scrollTop = 0;
+  // Task 5 — the biggest moment: Champion certificate. Celebrate Leo (512, with
+  // the certificate modal already on screen this reads as a co-celebration).
+  showLeoReaction("celebrate", "Champion! 🏆", { size: 512 });
   // NOTE: "Open" should only open. Saving is done via the Save button inside the sheet.
 }
 
@@ -2965,6 +2987,11 @@ function markMissionDone(id, source="manual"){
   }
   clickSound("success");
   celebrate();
+  // Task 5 — Coach Leo celebrates ALONGSIDE the existing confetti/toast/badge
+  // flow (never replaces it). Corner burst, non-blocking. Repeated celebrate
+  // calls (badge, certificate) that land in this window are dropped, so the kid
+  // sees exactly one happy Leo, not a stack.
+  showLeoReaction("celebrate", "Nice! Mission complete 🎉");
   // Daily mini-challenge counter
   bumpDailyChallenge();
   fireDoneBurst(document.getElementById("btnToggleDone"));
@@ -4000,7 +4027,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260524-113w"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260524-113x"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4066,6 +4093,134 @@ function applyHub3dUnsupported(){
 }
 let _hub3dEntrySource = "nav_tab"; // set by the entry handlers before switchTab("hub3d")
 
+// Task 5 — "rest" Leo after 45s idle inside the hub (Silent Mode screen does
+// not exist in this build, so idle is the only trigger). Any input re-arms the
+// 45s timer; rest fires once per idle stretch (no nagging), low-opacity + silent.
+let _hubIdleTimer = null;
+function _hubIdleReset(){
+  if(_hubIdleTimer) clearTimeout(_hubIdleTimer);
+  _hubIdleTimer = setTimeout(()=>{
+    if(document.body.classList.contains("tab-hub3d") && !document.hidden){
+      showLeoReaction("rest", "", { corner: "right" });
+    }
+  }, 45000);
+}
+function startHubIdleWatch(){
+  stopHubIdleWatch();
+  ["pointerdown","keydown","touchstart"].forEach(ev=> document.addEventListener(ev, _hubIdleReset, true));
+  _hubIdleReset();
+}
+function stopHubIdleWatch(){
+  if(_hubIdleTimer){ clearTimeout(_hubIdleTimer); _hubIdleTimer = null; }
+  ["pointerdown","keydown","touchstart"].forEach(ev=> document.removeEventListener(ev, _hubIdleReset, true));
+}
+
+// ---- Coach Leo 2D expression sprites (assets/leo/*) ----
+// Served via <picture>: WebP source + PNG fallback. 256px file for corners/
+// inline/bubbles, 512px for large/modal. `px` picks the FILE; `display` is the
+// on-screen CSS width (never upscaled beyond native).
+const LEO_ASSET_V = "20260717-1";
+function leoPictureHTML(expr, px, display, alt, extraStyle){
+  const base = `assets/leo/leo-${expr}-${px}`;
+  const w = display || (px === 512 ? 120 : 84);
+  const style = `width:${w}px;height:auto;display:block;${extraStyle||""}`;
+  return '<picture>' +
+    `<source srcset="${base}.webp?v=${LEO_ASSET_V}" type="image/webp">` +
+    `<img src="${base}.png?v=${LEO_ASSET_V}" alt="${alt||""}" width="${px}" height="${px}" style="${style}" decoding="async">` +
+    '</picture>';
+}
+
+// ---- Coach Leo 2D expression reactions (Task 5) ----
+// One reusable, NON-BLOCKING corner mascot. Rules:
+//  • Never two at once. "celebrate" preempts anything; any other expression is
+//    dropped while a reaction (of equal-or-higher priority) is already showing.
+//  • The sprite layer is pointer-events:none, so it NEVER eats a gameplay tap.
+//  • "Skippable by tap": a document-level pointerdown dismisses the current
+//    reaction — the tap still passes through the layer to whatever's beneath.
+//  • prefers-reduced-motion → fade only, no pop/slide.
+//  • Visual-only: coachSpeak is used ONLY if opts.speak is explicitly set
+//    (Task 3 greeting owns speech; Task 5 reactions are silent by default).
+const LEO_REACTION_MS = { celebrate: 3400, encourage: 2200, guide: 3800, gentle: 3200, rest: 4200 };
+function _leoPriority(expr){ return expr === "celebrate" ? 2 : 1; }
+let _leoReactionEl = null, _leoReactionExpr = null, _leoReactionTimer = null, _leoDismissHandler = null;
+
+function dismissLeoReaction(){
+  if(_leoReactionTimer){ clearTimeout(_leoReactionTimer); _leoReactionTimer = null; }
+  if(_leoDismissHandler){ document.removeEventListener("pointerdown", _leoDismissHandler, true); _leoDismissHandler = null; }
+  const el = _leoReactionEl; _leoReactionEl = null; _leoReactionExpr = null;
+  if(!el) return;
+  el.style.opacity = "0";
+  el.style.transform = el.dataset.reduced === "1" ? "none" : "translateY(10px)";
+  setTimeout(()=>{ if(el && el.parentNode) el.parentNode.removeChild(el); }, 320);
+}
+
+function showLeoReaction(expression, message, opts){
+  opts = opts || {};
+  if(["celebrate","encourage","guide","gentle","rest"].indexOf(expression) < 0) return;
+  // Never two at once. Celebrate preempts a lower/equal reaction; otherwise the
+  // newcomer is simply dropped (one-shot, must never queue up and nag).
+  if(_leoReactionEl){
+    if(_leoPriority(expression) <= _leoPriority(_leoReactionExpr)) return;
+    dismissLeoReaction();
+  }
+  const reduced = !!prefersReducedMotion;
+  const px = opts.size === 512 ? 512 : 256;
+  const display = opts.display || (px === 512 ? 124 : 92);
+  const corner = opts.corner === "right" ? "right" : "left"; // left clears the top-right profile pill
+  const lowOpacity = expression === "rest";
+
+  const layer = document.createElement("div");
+  layer.className = "leoReactionLayer";
+  layer.dataset.reduced = reduced ? "1" : "0";
+  layer.style.cssText =
+    "position:fixed;z-index:2147482000;pointer-events:none;" +
+    (corner === "right" ? "right:14px;align-items:flex-end;" : "left:14px;align-items:flex-start;") +
+    // sits ABOVE the 2D bottom nav / hub bottom bar so Leo never overlaps them
+    "bottom:calc(78px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;" +
+    "opacity:0;transition:opacity 300ms ease,transform 300ms cubic-bezier(.34,1.56,.64,1);" +
+    "transform:" + (reduced ? "none" : "translateY(12px)") + ";";
+
+  if(message){
+    const bubble = document.createElement("div");
+    bubble.style.cssText = "max-width:210px;background:#fff;border:1px solid rgba(120,150,180,0.18);" +
+      "box-shadow:0 8px 22px rgba(18,38,66,0.22);border-radius:16px;padding:9px 13px;font-size:14px;" +
+      "font-weight:800;color:#2c3a4d;line-height:1.3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
+    bubble.textContent = message;
+    layer.appendChild(bubble);
+  }
+  const spriteWrap = document.createElement("div");
+  spriteWrap.style.cssText = "filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));" +
+    (lowOpacity ? "opacity:0.82;" : "") + (reduced ? "" : "animation:leoReactPop 480ms cubic-bezier(.34,1.56,.64,1);");
+  spriteWrap.innerHTML = leoPictureHTML(expression, px, display, "Coach Leo");
+  layer.appendChild(spriteWrap);
+  document.body.appendChild(layer);
+
+  if(!document.getElementById("leoReactStyle")){
+    const s = document.createElement("style");
+    s.id = "leoReactStyle";
+    s.textContent = "@keyframes leoReactPop{0%{transform:scale(.6)}60%{transform:scale(1.08)}100%{transform:scale(1)}}" +
+      "@media (prefers-reduced-motion: reduce){.leoReactionLayer *{animation:none !important}}";
+    document.head.appendChild(s);
+  }
+  void layer.offsetWidth; // reflow → animate in
+  layer.style.opacity = "1";
+  layer.style.transform = "none";
+
+  _leoReactionEl = layer; _leoReactionExpr = expression;
+  if(message && opts.speak && typeof coachSpeak === "function"){ try { coachSpeak(message); } catch(_){} }
+  trackEvent("Leo Reaction Shown", { expression });
+
+  _leoReactionTimer = setTimeout(dismissLeoReaction, opts.ms || LEO_REACTION_MS[expression] || 3000);
+  // Bind the tap-to-skip on the NEXT frame so the very tap that triggered this
+  // reaction (e.g. "Mark as Done") doesn't instantly dismiss it.
+  setTimeout(()=>{
+    if(_leoReactionEl !== layer) return;
+    _leoDismissHandler = ()=> dismissLeoReaction();
+    document.addEventListener("pointerdown", _leoDismissHandler, true);
+  }, 400);
+}
+window.showLeoReaction = showLeoReaction; // the hub module bridges into this
+
 // ---- Hub loading overlay (pure DOM; shown synchronously before any import) ----
 let _hubLoadingEl = null, _hubLoadingLine2Timer = null;
 function buildHubLoadingOverlay(container){
@@ -4074,11 +4229,21 @@ function buildHubLoadingOverlay(container){
   el.id = "hub3dLoading";
   el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#bfe3ff,#eaf7ff);transition:opacity 300ms ease;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
   el.innerHTML =
+    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
+      leoPictureHTML("encourage", 256, 96, "Coach Leo") +
+    '</div>' +
     '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">🌲 Building your island…</div>' +
     '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;opacity:0;transition:opacity 400ms ease;">Coach Leo is on his way!</div>' +
     '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.6);border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.12);">' +
       '<div id="hub3dLoadBar" style="width:8%;height:100%;background:linear-gradient(90deg,#4fc46a,#35a04e);border-radius:6px;transition:width 350ms ease;"></div>' +
     '</div>';
+  if(!document.getElementById("hub3dLeoFloatStyle")){
+    const s = document.createElement("style");
+    s.id = "hub3dLeoFloatStyle";
+    s.textContent = "@keyframes hub3dLeoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}" +
+      "@media (prefers-reduced-motion: reduce){[style*='hub3dLeoFloat']{animation:none !important}}";
+    document.head.appendChild(s);
+  }
   container.appendChild(el);
   _hubLoadingEl = el;
   // Line 2 only appears if we're still loading after 3s (fast loads never show it).
@@ -4102,6 +4267,9 @@ function showHubLoadingFailure(container, stage){
   const el = _hubLoadingEl || buildHubLoadingOverlay(container);
   el.style.opacity = "1";
   el.innerHTML =
+    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));">' +
+      leoPictureHTML("gentle", 256, 92, "Coach Leo") +
+    '</div>' +
     '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">🌲 The island got lost!</div>' +
     '<div style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:260px;">Check your connection and try again.</div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px;">' +
@@ -4156,6 +4324,7 @@ function showHub3D(){
     // Loading is async — only start rendering if hub3d is still the visible tab.
     if(_hub3dInstance && overlay && overlay.style.display !== "none"){
       _hub3dInstance.resume();
+      startHubIdleWatch(); // Task 5 — begin the 45s idle → "rest" Leo watch
     }
   }).catch(e => {
     console.warn("3D Hub failed to load:", e);
