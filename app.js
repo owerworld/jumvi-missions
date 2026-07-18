@@ -128,27 +128,37 @@ function ensureAudio(){
   return audioCtx;
 }
 
+let _lastClickSoundAt = 0;
 function clickSound(type="click"){
   if(!soundOn) return;
   const ctx = ensureAudio();
   if(!ctx) return;
+  // Rapid taps (browsing, toggling) used to STACK piercing ticks — user
+  // feedback: "buton sesleri çok kafa ütülüyor". Coalesce anything closer
+  // than 120ms into one sound; success cues always play.
+  const now = performance.now();
+  if(type !== "success"){
+    if(now - _lastClickSoundAt < 120) return;
+  }
+  _lastClickSoundAt = now;
   const t0 = ctx.currentTime;
 
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
 
-  // short, soft UI click
-  osc.type = "triangle";
-  osc.frequency.setValueAtTime(type==="success" ? 820 : 1050, t0);
+  // Barely-there UI tap: pure sine (no harsh harmonics), mid-low pitch,
+  // half the old volume, faster decay. Reads as felt-pad "tup", not "TIK".
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(type==="success" ? 740 : 560, t0);
   gain.gain.setValueAtTime(0.0001, t0);
-  gain.gain.exponentialRampToValueAtTime(type==="success" ? 0.08 : 0.06, t0 + 0.01);
-  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.06);
+  gain.gain.exponentialRampToValueAtTime(type==="success" ? 0.055 : 0.028, t0 + 0.008);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + (type==="success" ? 0.09 : 0.045));
 
   osc.connect(gain);
   gain.connect(ctx.destination);
 
   osc.start(t0);
-  osc.stop(t0 + 0.07);
+  osc.stop(t0 + 0.1);
 }
 
 const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -4768,7 +4778,7 @@ function pathSound(type){
     osc.start(t0 + delay); osc.stop(t0 + delay + dur + 0.05);
   };
   switch(type){
-    case "tap":     make(620, 0.06, 0.04); break;
+    case "tap":     make(560, 0.05, 0.028, "sine"); break; // matches the softened clickSound
     case "done":    makeAt(740,0,0.08,0.06); makeAt(1100,0.04,0.10,0.05); break;
     case "next":    makeAt(660,0,0.06,0.06); makeAt(880,0.06,0.08,0.05); break;
     case "preview": make(540, 0.10, 0.04, "sine"); break;
