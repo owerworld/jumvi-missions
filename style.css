@@ -2846,6 +2846,36 @@ html.theme--light .welcomePanel{
   height:auto;
   object-fit:contain;
 }
+/* Guide Leo beside the STEPS header + spoken-steps button (Task 4b/c) */
+.stepsHeadRow{ display:flex; align-items:center; gap:8px; position:relative; }
+.leoSpeakBtn{
+  border:none; background:none; padding:2px; cursor:pointer;
+  min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center;
+  margin-left:auto; -webkit-tap-highlight-color:transparent;
+}
+.leoSpeakBtn img{ width:40px; height:40px; display:block; pointer-events:none; filter:drop-shadow(0 3px 6px rgba(20,60,90,0.25)); }
+.leoSpeakBtn.speaking img{ animation:leoSpeakPulse 1s ease-in-out infinite; }
+@keyframes leoSpeakPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.12); } }
+@media (prefers-reduced-motion: reduce){ .leoSpeakBtn.speaking img{ animation:none; } }
+.leoSpeakBtn:focus-visible{ outline:3px solid #ffd23f; outline-offset:2px; border-radius:10px; }
+.leoSpeakTip{
+  position:absolute; right:0; top:100%; margin-top:4px; z-index:5;
+  background:#fff; color:#26364a; font-size:12px; font-weight:800;
+  padding:6px 11px; border-radius:12px; box-shadow:0 6px 16px rgba(18,38,66,0.25);
+  border:1px solid rgba(120,150,180,0.2); white-space:nowrap;
+  transition:opacity .35s ease; pointer-events:none;
+}
+.leoSpeakTip.fade{ opacity:0; }
+
+/* Visible IP notice — bottom of the footer, deliberately quiet */
+.copyrightLine{
+  margin-top:16px;
+  font-size:10px;
+  line-height:1.5;
+  color:var(--color-text-secondary,var(--muted,#7a8aa0));
+  opacity:0.75;
+}
+
 /* theme toggling for welcome logos */
 .welcomeLogo.logoDark{ display:none; }
 html.theme--dark .welcomeLogo.logoDark{ display:block; }

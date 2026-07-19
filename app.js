@@ -2158,6 +2158,50 @@ function coachSpeak(text, opts={}){
   }catch(_){}
 }
 
+// ---- Spoken steps (Task 4c): tap Leo by the STEPS header → he reads the
+// steps in order, then the win condition. Second tap stops. No autoplay;
+// same mute guard as every other sound (soundOn). ----
+const LEO_SPEAK_HINT_KEY = "jumvi_leo_speak_hint_v1";
+let _leoStepsSpeaking = false;
+function stopLeoSpeakSteps(){
+  _leoStepsSpeaking = false;
+  const btn = document.getElementById("leoSpeakBtn");
+  if(btn) btn.classList.remove("speaking");
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+}
+function toggleLeoSpeakSteps(ms){
+  if(_leoStepsSpeaking){ stopLeoSpeakSteps(); return; }
+  if(!soundOn){ showToast("Sound is off — turn it on in Settings 🔊"); return; }
+  if(!("speechSynthesis" in window)) { showToast("This device can't read aloud."); return; }
+  _leoStepsSpeaking = true;
+  const btn = document.getElementById("leoSpeakBtn");
+  if(btn) btn.classList.add("speaking");
+  trackEvent("Leo Steps Spoken", { missionId: ms.id });
+  try{
+    window.speechSynthesis.cancel();
+    const parts = (ms.steps || []).map((s, i)=> `Step ${i+1} — ${s}`);
+    if(ms.win) parts.push(`How to win — ${ms.win}`);
+    parts.forEach((text, i)=>{
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US"; u.rate = 1.0; u.pitch = 1.25; u.volume = 1;
+      if(typeof kidVoice !== "undefined" && kidVoice) u.voice = kidVoice;
+      if(i === parts.length - 1) u.onend = ()=> stopLeoSpeakSteps();
+      window.speechSynthesis.speak(u); // queued → natural pause between parts
+    });
+  }catch(_){ stopLeoSpeakSteps(); }
+}
+// One-time tooltip so parents discover the feature (first mission open only).
+function maybeShowLeoSpeakHint(btn){
+  if(!btn) return;
+  if(lsGet(LEO_SPEAK_HINT_KEY, "0") === "1") return;
+  lsSet(LEO_SPEAK_HINT_KEY, "1");
+  const tip = document.createElement("div");
+  tip.className = "leoSpeakTip";
+  tip.textContent = "Tap Leo to hear the steps!";
+  btn.parentElement.appendChild(tip);
+  setTimeout(()=>{ tip.classList.add("fade"); setTimeout(()=> tip.remove(), 400); }, 4200);
+}
+
 const _midplayLines = [
   "Keep going!",
   "Halfway there!",
@@ -2409,9 +2453,21 @@ function openMission(id){
   `;
 
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
-  mSteps.innerHTML = `<b>Steps</b><br/><ol style="margin:10px 0 0; padding-left:18px">
+  // Guide Leo beside the STEPS header (Task 4b/c): decorative pointing pose,
+  // but the 44px button wrapping him is tappable → speaks the steps aloud.
+  mSteps.innerHTML = `<div class="stepsHeadRow"><b>Steps</b>
+    <button type="button" class="leoSpeakBtn" id="leoSpeakBtn" aria-label="Hear the steps read aloud">
+      <picture>
+        <source srcset="assets/leo/leo-guide-256.webp?v=20260717-1" type="image/webp">
+        <img src="assets/leo/leo-guide-256.png?v=20260717-1" alt="" width="256" height="256" decoding="async">
+      </picture>
+    </button>
+  </div><ol style="margin:10px 0 0; padding-left:18px">
     ${steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
   </ol>`;
+  const leoSpeakBtn = document.getElementById("leoSpeakBtn");
+  if(leoSpeakBtn) leoSpeakBtn.onclick = ()=> toggleLeoSpeakSteps(ms);
+  maybeShowLeoSpeakHint(leoSpeakBtn);
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
@@ -2583,6 +2639,7 @@ function closeMission(){
     }
   }
   resetTimerUI(); // Stop + reset timer on close
+  stopLeoSpeakSteps(); // clears the speaking state + cancels speech
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   // Score tracker temizle
   toggleScoreTracker(false);
