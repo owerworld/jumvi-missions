@@ -292,4 +292,7 @@ const BADGES = [
   // Final
   { id:"champ", icon:"🏆", name:"JUMVI Champion", req:"Complete all 36 missions", category:"champion",
     check: (done)=>done.size>=36 },
+
+  { id:"zippy", icon:"🌀", name:"Zippy Zana", req:"Master the secret Zana bounce", category:"fun",
+    check: ()=>false },
 ];
