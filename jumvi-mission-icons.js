@@ -978,6 +978,92 @@ const MISSION_ICONS = {
 </div>`,
 };
 
+/* ============================================================
+ * BRANDED EQUIPMENT SWAP (runtime decorator — the 36 diagrams above
+ * are NOT redrawn; this rewrites their generic paddle ellipses and
+ * ball circles into <use> refs of the real JUMVI product art).
+ *
+ * - Paddle: every <ellipse fill="#85B7EB" stroke="#639922"> → #jmvEqPaddle,
+ *   sized from rx/ry, centered on the same cx/cy, rotation preserved.
+ * - Ball: every SOLID <circle fill="#EF9F27"> (no opacity) → #jmvEqBall.
+ *   Trail circles (opacity<1) stay — they read as motion, not equipment.
+ * - Catch: a ball whose center sits on/next to a paddle face merges into
+ *   #jmvEqCatch (ball-on-paddle product shot) and the ball is dropped.
+ * - The symbols carry the 128px PNGs (quantized, ~2-5KB each).
+ * ============================================================ */
+(function brandEquipment(){
+  if (typeof document === "undefined") return;
+  var V = "20260718-1";
+  var DEFS =
+    '<svg width="0" height="0" style="position:absolute" aria-hidden="true">' +
+      '<symbol id="jmvEqPaddle" viewBox="0 0 128 128"><image href="assets/equipment/jumvi-paddle-128.png?v=' + V + '" width="128" height="128"/></symbol>' +
+      '<symbol id="jmvEqBall" viewBox="0 0 128 128"><image href="assets/equipment/jumvi-ball-128.png?v=' + V + '" width="128" height="128"/></symbol>' +
+      '<symbol id="jmvEqCatch" viewBox="0 0 128 128"><image href="assets/equipment/jumvi-catch-128.png?v=' + V + '" width="128" height="128"/></symbol>' +
+    '</svg>';
+  function injectDefs(){
+    if (document.getElementById("jmvEqPaddle")) return;
+    var host = document.createElement("div");
+    host.innerHTML = DEFS;
+    document.body.appendChild(host.firstChild);
+  }
+  if (document.body) injectDefs();
+  else document.addEventListener("DOMContentLoaded", injectDefs);
+
+  var ELLIPSE_RE = /<ellipse ([^>]*?)fill="#85B7EB" stroke="#639922"([^>]*?)\/>/g;
+  var BALL_RE = /<circle cx="([0-9.]+)" cy="([0-9.]+)" r="([0-9.]+)" fill="#EF9F27"\/>/g;
+  function attr(s, name){
+    var m = s.match(new RegExp(name + '="([^"]*)"'));
+    return m ? m[1] : null;
+  }
+  function useTag(id, cx, cy, size, transform){
+    var half = size / 2;
+    return '<use href="#' + id + '" x="' + (cx - half).toFixed(1) + '" y="' + (cy - half).toFixed(1) +
+      '" width="' + size.toFixed(1) + '" height="' + size.toFixed(1) + '"' +
+      (transform ? ' transform="' + transform + '"' : '') + '/>';
+  }
+  Object.keys(MISSION_ICONS).forEach(function(id){
+    var src = MISSION_ICONS[id];
+    if (src.indexOf("#85B7EB") < 0 && src.indexOf("#EF9F27") < 0) return;
+
+    // Pass 1 — collect paddles (position + size) so balls can test proximity.
+    var paddles = [];
+    src.replace(ELLIPSE_RE, function(full, pre, post){
+      var all = pre + post;
+      paddles.push({
+        full: full,
+        cx: parseFloat(attr(all, "cx")), cy: parseFloat(attr(all, "cy")),
+        rx: parseFloat(attr(all, "rx")), ry: parseFloat(attr(all, "ry")),
+        transform: attr(all, "transform"), isCatch: false
+      });
+      return full;
+    });
+
+    // Pass 2 — solid balls: those resting ON a paddle face merge into a catch.
+    var out = src.replace(BALL_RE, function(full, cxs, cys, rs){
+      var cx = parseFloat(cxs), cy = parseFloat(cys), r = parseFloat(rs);
+      for (var i = 0; i < paddles.length; i++) {
+        var p = paddles[i];
+        var d = Math.hypot(cx - p.cx, cy - p.cy);
+        if (d <= p.ry + r + 2) { p.isCatch = true; return ""; } // ball merges into the paddle
+      }
+      // 2.4×r: the ball artwork fills ~85% of its square canvas, so this
+      // renders the visible ball at ≈ the old circle's diameter.
+      return useTag("jmvEqBall", cx, cy, r * 2.4, null);
+    });
+
+    // Pass 3 — paddles (now knowing which ones hold a ball).
+    var pi = 0;
+    out = out.replace(ELLIPSE_RE, function(){
+      var p = paddles[pi++];
+      // 2.7×ry: paddle artwork is ~86% of its canvas; keys off ry (the long
+      // axis) so all the different rx/ry combos land at the drawn size.
+      return useTag(p.isCatch ? "jmvEqCatch" : "jmvEqPaddle", p.cx, p.cy, p.ry * 2.7, p.transform);
+    });
+
+    MISSION_ICONS[id] = out;
+  });
+})();
+
 // FIX: expose on window for non-module consumers
 if(typeof window !== "undefined"){
   window.MISSION_ICONS = MISSION_ICONS;
