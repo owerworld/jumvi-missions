@@ -6,7 +6,6 @@
 (function () {
   "use strict";
   var FLAG = "jumvi_tour_done";
-  var START_DELAY = 600;
 
   // --- tiny helpers ---
   function done() { try { return localStorage.getItem(FLAG) === "1"; } catch (e) { return false; } }
@@ -204,23 +203,6 @@
     try { if (prevFocus && prevFocus.focus) prevFocus.focus(); } catch (e) {}
   }
 
-  // --- trigger: after DOM + welcome overlay gone + delay, if not done ---
-  function waitForHome(cb) {
-    var w = document.getElementById("welcomeOverlay");
-    if (!w || !visible(w)) { cb(); return; }
-    var obs = new MutationObserver(function () {
-      var wo = document.getElementById("welcomeOverlay");
-      if (!wo || !visible(wo)) { obs.disconnect(); cb(); }
-    });
-    obs.observe(document.body, { attributes: true, childList: true, subtree: true });
-    setTimeout(function () { try { obs.disconnect(); } catch (e) {} cb(); }, 20000); // safety
-  }
-
-  function schedule() {
-    if (done()) return;
-    waitForHome(function () { setTimeout(function () { start(false); }, START_DELAY); });
-  }
-
   // --- "Replay tour" in Settings (only if that UI exists; no new settings UI) ---
   function injectReplay() {
     var host = document.querySelector(".profileSettingsSection");
@@ -232,7 +214,16 @@
     host.appendChild(b);
   }
 
-  function init() { schedule(); injectReplay(); }
+  // §1.6 — the tour NO LONGER auto-opens on first entry (it was the last thing
+  // overlaying a fresh "welcome → playable mission" flow, breaking the 2-tap
+  // promise). It now starts ONLY on demand, from the persistent header "?"
+  // button. jumvi_tour_done is unchanged — still set on finish/skip; nothing
+  // auto-reads it now, and the "?" (start(true)) ignores it so help always works.
+  function init() {
+    injectReplay();
+    var help = document.getElementById("btnTourHelp");
+    if (help) help.addEventListener("click", function () { start(true); });
+  }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 

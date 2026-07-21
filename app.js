@@ -580,7 +580,12 @@ const state = {
   currentPack: lsGet(PACK_KEY, "all"),
   currentCategory: "all",
   currentPlayers: "all",
-  currentDifficulty: "all",
+  // §1.1 fix — restore the onboarding age ceiling on EVERY boot. The welcome
+  // screen is suppressed on return visits (jumvi_onboarded_v2), so without
+  // reading AGE_KEY here the age gate would be single-session only and
+  // currentDifficulty would silently fall back to "all". AGE_KEY holds the
+  // band's difficulty ceiling ("Easy" / "all").
+  currentDifficulty: lsGet(AGE_KEY, "all"),
   searchQuery: "",
   lastOpenedId: null,
   solidBg: (lsGet(SOLIDBG_KEY, "0")) === "1",
@@ -626,6 +631,20 @@ let themeMode = state.themeMode;
 function setState(key, value){
   state[key] = value;
   return value;
+}
+
+// §1.1 — cumulative age ceiling, shared by the welcome count AND the daily pick
+// so Today's Mission (the endpoint of the 2-tap flow) respects the age gate.
+// Data has 2 tiers (17 easy + 19 medium); add a "Hard" entry if a 3rd is added.
+const AGE_DIFF_CEIL = { Easy: 1, Medium: 2, all: Infinity };
+function ageCeiling(){
+  const c = AGE_DIFF_CEIL[currentDifficulty];
+  return (c != null) ? c : Infinity;
+}
+function ageEligibleMissions(){
+  const c = ageCeiling();
+  const pool = missions.filter(x => x.difficulty <= c);
+  return pool.length ? pool : missions; // never empty
 }
 
 /** =======================
@@ -1348,9 +1367,11 @@ function hashFNV1a(str){
   return h >>> 0;
 }
 function pickDailyId(iso, n){
+  // §1.1 — draw only from the age-eligible pool so Today's Mission never hands
+  // a 3–5 kid a mission above their tier. Deterministic per (day, ceiling).
+  const list = ageEligibleMissions();
   const h = hashFNV1a(`${iso}|${n}|JUMVI`);
-  const idx = h % missions.length;
-  return missions[idx].id;
+  return list[h % list.length].id;
 }
 function persistDaily(){
   lsSetDebounced(DAILY_DATE_KEY, String(dailyIso||""), 500);
@@ -1365,7 +1386,10 @@ function ensureDailyMission(){
     dailyIdStored = setState("dailyIdStored", pickDailyId(today, dailyN));
     persistDaily();
   }
-  if(!dailyIdStored || !missions.find(x=>x.id===dailyIdStored)){
+  // Re-pick if the stored mission is missing OR now sits above the age ceiling
+  // (e.g. the age band was chosen after today's pick was first computed).
+  const cur = missions.find(x=>x.id===dailyIdStored);
+  if(!dailyIdStored || !cur || cur.difficulty > ageCeiling()){
     dailyIdStored = setState("dailyIdStored", pickDailyId(today, dailyN||0));
     persistDaily();
   }
@@ -3980,6 +4004,18 @@ if(btnA2hsClose){
 /** =======================
  * Welcome Overlay (first-time onboarding)
  * ======================= */
+// K3 — single source of truth for the mission total. Do NOT hardcode the
+// number anywhere else; format the welcome count through renderMissionCount.
+const TOTAL_MISSIONS = 36;
+function renderMissionCount(bandLabel, n){
+  // Copy matches reality: the Browse Mission Path shows all 36 and every one is
+  // tappable (nothing is actually locked), so we don't claim "unlock". The band
+  // count is how many are hand-picked for that age; the full set lives in the path.
+  if(n >= TOTAL_MISSIONS){
+    return `All ${TOTAL_MISSIONS} missions for ages ${bandLabel}`;
+  }
+  return `${n} hand-picked for ages ${bandLabel} · all ${TOTAL_MISSIONS} in the Mission Path`;
+}
 function showWelcomeOverlay(){
   const overlay = document.getElementById("welcomeOverlay");
   if(!overlay) return;
@@ -3990,25 +4026,20 @@ function showWelcomeOverlay(){
   }
   // Default: first age group selected
   let selectedDiff = "Easy";
+  let selectedBand = "3–5";
   const ageBtns = overlay.querySelectorAll(".ageBtn");
   const countEl  = document.getElementById("welcomeMissionCount");
 
+  // §1.1 — CUMULATIVE ceiling (shared AGE_DIFF_CEIL, module scope): a kid sees
+  // every mission up to AND including their tier, so the count is monotonically
+  // non-decreasing with age.
   function getMissionCount(diff){
-    if(diff === "all") return missions.length;
-    if(diff === "Easy")   return missions.filter(x=>x.difficulty===1).length;
-    if(diff === "Medium") return missions.filter(x=>x.difficulty===2).length;
-    return missions.length;
+    const ceil = AGE_DIFF_CEIL[diff] != null ? AGE_DIFF_CEIL[diff] : Infinity;
+    return missions.filter(x => x.difficulty <= ceil).length;
   }
-  const welcomeLabels = {
-    "Easy":   (n) => `${n} beginner-friendly missions 🐣`,
-    "all":    (n) => `All ${n} missions unlocked 🚀`,
-    "Medium": (n) => `${n} missions — good challenge ⚡`,
-  };
-  function updateCount(diff){
+  function updateCount(diff, bandLabel){
     if(!countEl) return;
-    const n = getMissionCount(diff);
-    const fn = welcomeLabels[diff] || ((n)=> `${n} missions`);
-    countEl.textContent = fn(n);
+    countEl.textContent = renderMissionCount(bandLabel, getMissionCount(diff));
   }
 
   ageBtns.forEach(btn=>{
@@ -4017,11 +4048,16 @@ function showWelcomeOverlay(){
       ageBtns.forEach(b=>b.classList.remove("selected"));
       btn.classList.add("selected");
       selectedDiff = btn.dataset.diff || "all";
-      updateCount(selectedDiff);
+      selectedBand = btn.dataset.band || "3–5";
+      updateCount(selectedDiff, selectedBand);
     });
   });
-  if(ageBtns[0]) ageBtns[0].classList.add("selected");
-  updateCount(selectedDiff);
+  if(ageBtns[0]){
+    ageBtns[0].classList.add("selected");
+    selectedDiff = ageBtns[0].dataset.diff || "Easy";
+    selectedBand = ageBtns[0].dataset.band || "3–5";
+  }
+  updateCount(selectedDiff, selectedBand);
 
   const startBtn = document.getElementById("btnWelcomeStart");
   if(startBtn){
@@ -4033,41 +4069,30 @@ function showWelcomeOverlay(){
       // Persist selection
       try { lsSet(ONBOARD_KEY, "1"); } catch(e){}
       try { lsSet(AGE_KEY, selectedDiff); } catch(e){}
-      // Apply difficulty filter after overlay starts closing
+      // Apply the cumulative age ceiling app-wide (§1.1). ALWAYS set it (even
+      // for the "all" bands) so a re-onboard can't leave a stale narrower
+      // filter. This drives the surfaces that read currentDifficulty — Surprise
+      // me + "Next" — so they stay consistent with the welcome count.
       try {
-        if(selectedDiff !== "all"){
-          currentDifficulty = setState("currentDifficulty", selectedDiff);
-          renderFilterGroups();
-          renderList();
-        }
+        currentDifficulty = setState("currentDifficulty", selectedDiff);
+        renderFilterGroups();
+        renderList();
+        // Refresh Today's Mission so its pick respects the age ceiling that was
+        // just chosen (ensureDailyMission re-picks if the current one is above it).
+        if(typeof renderDailyUI === "function") renderDailyUI();
       } catch(e){ console.warn("Welcome filter:", e); }
-      // Splash transition: "Let's Play!" for 1.5s
-      const afterSplash = ()=>{
-        // First-visit auto-open of a mission card REMOVED (audit P0 / Bulgu #2):
-        // it popped a 2D mission card ~0.5s after "Let's Play" before the user
-        // chose anything, and in the QR→3D-hub flow that card completely covered
-        // the island's first reveal. The Today tab already surfaces today's
-        // mission with its own Play CTA, so 2D onboarding still guides the user;
-        // nothing here opens a modal on top of a fresh entry anymore.
-        try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
-      };
-      if(!prefersReducedMotion){
-        const splash = document.getElementById("splashOverlay");
-        if(splash){
-          splash.classList.add("show");
-          setTimeout(()=> splash.classList.add("hiding"), 1100);
-          setTimeout(()=>{
-            splash.classList.remove("show","hiding");
-            afterSplash();
-          }, 1500);
-        } else {
-          afterSplash();
-        }
-      } else {
-        setTimeout(afterSplash, 200);
-      }
+      // Splash removed (§1.4): the "Let's Play!" full-screen gate gave no
+      // information and the paddles are already in the kid's hands. The overlay
+      // simply fades out (380ms above) straight onto the Today tab.
+      // First-visit auto-open of a mission card was REMOVED earlier (audit P0):
+      // the Today tab already surfaces today's mission with its own Play CTA.
+      try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
     });
   }
+  // §1.3 — the sibling line is now STATIC helper text (a <p>), not a control:
+  // it was a false affordance (looked tappable, only started the app). Siblings
+  // are added any time from Profile's existing "Switch Player or Add Child".
+  // Nothing to wire, nothing persisted.
 }
 
 /** =======================

@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumvi-missions-v119";
+const CACHE_NAME = "jumvi-missions-v120";
 const CORE_ASSETS = [
   "/",
   "/index.html",

@@ -1,7 +1,7 @@
 {
   "name": "JUMVI Missions",
   "short_name": "JUMVI",
-  "description": "30 toss & catch missions for kids — play, track progress, earn a certificate.",
+  "description": "36 toss & catch missions for kids — play, track progress, earn a certificate.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260524-33">
+  <link rel="stylesheet" href="style.css?v=20260720-1">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260524-29">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -107,15 +107,6 @@
 <body class="tab-today">
   <div class="bgLayer" aria-hidden="true"></div>
 
-  <!-- Splash transition overlay — shown after age selection -->
-  <div id="splashOverlay" class="splashOverlay" aria-hidden="true">
-    <div class="splashContent">
-      <div class="splashEmoji">🎉</div>
-      <div class="splashTitle">Let's Play!</div>
-      <div class="splashSub">Grab your paddles!</div>
-    </div>
-  </div>
-
   <!-- Welcome Overlay — shown once for new visitors -->
   <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
     <div class="welcomePanel">
@@ -126,15 +117,18 @@
         <img src="assets/leo/leo-encourage-512.png?v=20260717-1" alt="Coach Leo" width="512" height="512" decoding="async" />
       </picture>
       <div class="welcomeTagline">Hey, paddle pro!</div>
-      <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.<br>How old's your kid?</div>
-      <div class="welcomeAges" id="welcomeAges">
-        <button class="ageBtn" data-diff="Easy" type="button">🐣<span>3–5 years</span></button>
-        <button class="ageBtn" data-diff="all" type="button">🚀<span>6–8 years</span></button>
-        <button class="ageBtn" data-diff="Medium" type="button">⚡<span>8+ years</span></button>
-      </div>
-      <div class="welcomeMissionCount" id="welcomeMissionCount">18 missions ready for this age</div>
-      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Let's Play!</button>
+      <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.</div>
       <div class="welcomeNote">✅ No sign-up · 🔒 Stays on your phone · 💝 Free forever</div>
+      <div class="welcomeDivider" aria-hidden="true"></div>
+      <div class="welcomeAgesHeading">Who's playing today?</div>
+      <div class="welcomeAges" id="welcomeAges">
+        <button class="ageBtn" data-diff="Easy" data-band="3–5" type="button">🐣<span>Ages 3–5</span></button>
+        <button class="ageBtn" data-diff="all" data-band="6–8" type="button">🚀<span>Ages 6–8</span></button>
+        <button class="ageBtn" data-diff="all" data-band="8 &amp; up" type="button">⚡<span>Ages 8 &amp; up</span></button>
+      </div>
+      <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
+      <p class="welcomeAddChild">Playing with a brother or sister? Add them any time from Profile.</p>
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Let's Play!</button>
     </div>
   </div>
 
@@ -152,11 +146,14 @@
           <div class="brandSub">Missions</div>
         </div>
       </div>
-      <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
-        <span class="profilePillAvatar" id="profilePillAvatar">🦁</span>
-        <span class="profilePillName" id="profilePillName">Player</span>
-        <span class="profilePillChevron">▾</span>
-      </button>
+      <div class="topbarActions">
+        <button class="tourHelpBtn" id="btnTourHelp" type="button" aria-label="How to play — start the guided tour">?</button>
+        <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
+          <span class="profilePillAvatar" id="profilePillAvatar">🦁</span>
+          <span class="profilePillName" id="profilePillName">Player</span>
+          <span class="profilePillChevron">▾</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -898,9 +895,9 @@
 <script src="data.js?v=20260524-32" defer></script>
 <script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260524-135" defer></script>
+<script src="app.js?v=20260720-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
-<script src="leo-tour.js?v=20260711-8" defer></script>
+<script src="leo-tour.js?v=20260720-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
