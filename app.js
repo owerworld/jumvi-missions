@@ -2899,8 +2899,9 @@ async function downloadCertificatePNG({auto=true}={}){
 async function shareCertificate(){
   clickSound("click");
   const filename = `JUMVI-Certificate-${getTodayISO()}.png`;
-  // FIX: correct mission count (36) + always try image file first
-  const shareText = "🏆 Completed all 36 JUMVI Toss & Catch missions!";
+  // FIX: correct mission count (36) + always try image file first.
+  // §6.3 — include qr.jumvi.co so the share is an organic growth channel.
+  const shareText = "🏆 Completed all 36 JUMVI Toss & Catch missions! Play along: qr.jumvi.co";
   try{
     const blob = await renderSimpleCertificateBlob();
     if(!blob){ showToast("Couldn't generate certificate."); return; }
@@ -3098,6 +3099,31 @@ function showUndoBar(id){
   };
 }
 
+// §6.1 — neutral review invitation, shown once after the 3rd completed mission.
+// No incentive, no "5-star"/"positive" wording (Amazon TOS). jumvi_review_prompt_shown
+// guards it; "Not now" and "Write a review" both mark it shown.
+const REVIEW_KEY = "jumvi_review_prompt_shown";
+function maybeShowReviewPrompt(){
+  try{ if(lsGet(REVIEW_KEY, "0") === "1") return; }catch(_){}
+  const ov = document.getElementById("reviewOverlay");
+  if(!ov) return;
+  ov.hidden = false;
+  trackEvent("Review Prompt Shown");
+}
+function dismissReviewPrompt(mark){
+  const ov = document.getElementById("reviewOverlay");
+  if(ov) ov.hidden = true;
+  if(mark){ try{ lsSet(REVIEW_KEY, "1"); }catch(_){} }
+}
+(function wireReviewPrompt(){
+  const go = document.getElementById("reviewGo");
+  const no = document.getElementById("reviewDismiss");
+  const ov = document.getElementById("reviewOverlay");
+  if(go) go.addEventListener("click", ()=>{ trackEvent("Review Prompt Clicked"); dismissReviewPrompt(true); }); // link still opens Amazon
+  if(no) no.addEventListener("click", ()=>{ trackEvent("Review Prompt Dismissed"); dismissReviewPrompt(true); });
+  if(ov) ov.addEventListener("click", (e)=>{ if(e.target === ov) dismissReviewPrompt(true); });
+})();
+
 function markMissionDone(id, source="manual"){
   if(id==null || done.has(id)) return;
   // Pack milestone hesabı için ÖN bilgi
@@ -3135,6 +3161,11 @@ function markMissionDone(id, source="manual"){
   fireDoneBurst(document.getElementById("btnToggleDone"));
   // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
   if(source === "manual" || source === "auto") showUndoBar(id);
+  // §6.1 — after the 3rd completed mission, once, offer a neutral review invite
+  // (after the celebration settles so it doesn't stack on the badge modal).
+  if((source === "manual" || source === "auto") && done.size === 3){
+    setTimeout(maybeShowReviewPrompt, 1400);
+  }
   // Streak +1 olduysa fire burst
   if(changed && streakCount >= 1){
     setTimeout(()=> fireStreakBurst(), 500);

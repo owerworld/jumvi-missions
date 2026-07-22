@@ -69,7 +69,7 @@
        ~6 KB). Was two unconditional 1024px webp (~121 KB) on the critical path. -->
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_dark-192.webp" media="(prefers-color-scheme: light)" />
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_light-192.webp" media="(prefers-color-scheme: dark)" />
-  <link rel="stylesheet" href="style.css?v=20260723-3">
+  <link rel="stylesheet" href="style.css?v=20260723-4">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260722-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -153,6 +153,19 @@
   <div class="undoBar" id="undoBar" role="status" aria-live="polite" hidden>
     <span class="undoBarText">Marked done</span>
     <button class="undoBarBtn" id="undoBtn" type="button">Undo</button>
+  </div>
+
+  <!-- §6.1 — review invitation, shown once after the 3rd completed mission.
+       Amazon-TOS-safe: neutral, no incentive, no "5-star"/"positive" language.
+       Copy is verbatim from the brief. -->
+  <div class="reviewOverlay" id="reviewOverlay" role="dialog" aria-modal="true" aria-labelledby="reviewHeading" hidden>
+    <div class="reviewCard">
+      <img class="reviewLeo" src="assets/leo/leo-cheer-200.webp" srcset="assets/leo/leo-cheer-200.webp 1x, assets/leo/leo-cheer-200@2x.webp 2x" width="120" height="120" alt="Coach Leo cheering" decoding="async">
+      <h2 class="reviewHeading" id="reviewHeading">Three missions done!</h2>
+      <p class="reviewBody">Other parents are deciding whether this set is worth it. Your honest experience — good or bad — helps them choose.</p>
+      <a class="btn btnPrimary reviewGo" id="reviewGo" href="https://www.amazon.com/review/create-review?&amp;asin=B0H16JPQCF" target="_blank" rel="noopener noreferrer">Write a review on Amazon</a>
+      <button class="reviewDismiss" id="reviewDismiss" type="button">Not now</button>
+    </div>
   </div>
 
   <div class="sticky">
@@ -743,6 +756,9 @@
         <!-- Tertiary: PDF text link -->
         <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">Or save as PDF</button>
 
+        <!-- §6.1 — quiet, permanent review link on the certificate (no incentive) -->
+        <a class="certReviewLink" href="https://www.amazon.com/review/create-review?&amp;asin=B0H16JPQCF" target="_blank" rel="noopener noreferrer">Share your honest experience on Amazon</a>
+
       </div>
     </div>
   </div>
@@ -805,6 +821,27 @@
           <span class="profileSettingValue" id="profileTtsValue">On</span>
         </button>
       </div>
+
+      <!-- §6.2 — Product Care. Answers the recurring Amazon questions Rufus/COSMO
+           can't; verbatim copy. Lowers returns and reads as premium care. -->
+      <details class="productCareSection">
+        <summary class="productCareSummary">🧰 Product Care</summary>
+        <div class="productCareBody">
+          <h3 class="productCareTitle">Keeping your set working</h3>
+
+          <p class="productCareQ">Does the sticky surface wear out?</p>
+          <p class="productCareA">Brush the paddle face with a dry hand or soft brush after sandy or grassy play. Lint is what weakens the grip, not use.</p>
+
+          <p class="productCareQ">Can I wash it?</p>
+          <p class="productCareA">Spot-clean with a damp cloth and air-dry. Don't machine wash and don't soak — the balls hold water.</p>
+
+          <p class="productCareQ">Is it pool-safe?</p>
+          <p class="productCareA">It's a dry-play set. Water on the ball stops it from sticking.</p>
+
+          <p class="productCareQ">What if the QR card is lost?</p>
+          <p class="productCareA">Bookmark qr.jumvi.co or add it to your home screen. Your progress stays on this device.</p>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -918,7 +955,7 @@
 <script src="data.js?v=20260524-32" defer></script>
 <script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260723-1" defer></script>
+<script src="app.js?v=20260723-2" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

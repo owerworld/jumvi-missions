@@ -7310,3 +7310,48 @@ html.theme--dark .missionSafetyLine{ background:#2e2211; color:#FFD8A8; border-c
   position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
   background: rgba(255,90,60,0.30); pointer-events: none; transition: width .05s linear;
 }
+
+/* ===== §6.1 — review invitation (Amazon-TOS-safe, neutral) ===== */
+.reviewOverlay{
+  position: fixed; inset: 0; z-index: 80; display: flex;
+  align-items: center; justify-content: center; padding: 24px;
+  background: rgba(10,22,40,0.6);
+}
+.reviewOverlay[hidden]{ display: none; }
+.reviewCard{
+  width: 100%; max-width: 360px; text-align: center;
+  background: #fff; color: var(--ink); border-radius: 20px;
+  padding: 22px 20px 14px; box-shadow: 0 18px 48px rgba(15,23,42,0.42);
+}
+html.theme--dark .reviewCard{ background: #16233f; color: #f1f5f9; }
+.reviewLeo{ width: 120px; height: auto; margin: 0 auto 6px; display: block; }
+.reviewHeading{ font-size: var(--fs-title); font-weight: 900; margin: 4px 0 8px; }
+.reviewBody{ font-size: var(--fs-body); line-height: 1.42; margin: 0 0 16px; color: var(--muted-on-light); }
+html.theme--dark .reviewBody{ color: #CBD5E1; }
+.reviewGo{ display: block; width: 100%; margin: 0 0 6px; text-decoration: none; }
+.reviewDismiss{
+  display: block; width: 100%; min-height: 44px; padding: 10px; cursor: pointer;
+  background: transparent; border: 0; font: inherit; font-weight: 700;
+  font-size: var(--fs-meta); color: var(--muted-on-light);
+}
+html.theme--dark .reviewDismiss{ color: #94A3B8; }
+/* §6.1 — quiet persistent review link on the certificate */
+.certReviewLink{
+  display: inline-block; margin-top: 10px; font-size: var(--fs-caption);
+  font-weight: 700; color: var(--muted-on-light); text-decoration: underline;
+}
+html.theme--dark .certReviewLink{ color: #94A3B8; }
+
+/* ===== §6.2 — Product Care accordion ===== */
+.productCareSection{
+  margin: 14px 0 0; border: 1px solid rgba(0,0,0,0.08); border-radius: 14px;
+  padding: 2px 14px; background: rgba(0,0,0,0.02);
+}
+html.theme--dark .productCareSection{ border-color: rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); }
+.productCareSummary{ cursor: pointer; font-weight: 900; font-size: var(--fs-body); padding: 12px 0; color: var(--ink); }
+html.theme--dark .productCareSummary{ color: #f1f5f9; }
+.productCareSummary::-webkit-details-marker{ display: none; }
+.productCareTitle{ font-size: var(--fs-lead); font-weight: 900; margin: 4px 0 8px; }
+.productCareQ{ font-weight: 800; font-size: var(--fs-body); margin: 12px 0 2px; }
+.productCareA{ font-size: var(--fs-meta); line-height: 1.45; margin: 0 0 6px; color: var(--muted-on-light); }
+html.theme--dark .productCareA{ color: #CBD5E1; }
