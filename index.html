@@ -179,21 +179,9 @@
         </div>
         <p class="sub">Today's mission is ready — let's play!</p>
 
-        <!-- Adventure Mode entry card — tapping it turns the hub3d flag on
-             (persisted) and jumps straight into the 3D Hub tab. Until then
-             the bottom-nav 3D Hub tab stays hidden; this card is the way in. -->
-        <!-- advCard styles moved to style.css (carry-over B) -->
-        <!-- Card + nav tab share ONE name (Leo's Island) so a parent who taps
-             the card recognises the tab it opens — "Adventure Mode" + "3D Hub"
-             was two mystery names for the same thing. -->
-        <button class="advCard" id="advModeCard" type="button" aria-label="Visit Leo's Island">
-          <span class="advCardEmoji">🏝️</span>
-          <span class="advCardText">
-            <span class="advCardTitle">Visit Leo&rsquo;s Island<span class="advCardNew">NEW!</span></span>
-            <span class="advCardSub">Walk with Coach Leo &amp; collect your missions!</span>
-          </span>
-          <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
-        </button>
+        <!-- §4.1 — the Leo's Island card moved BELOW #dailyBox (was above it,
+             so a 5-year-old tapped a 9.4 MB silent wall before the mission).
+             The mission comes first now; the island is the reward after. -->
 
         <!-- Continue where you left off (rendered by JS when applicable) -->
         <div class="continueHint" id="continueHint" style="display:none">
@@ -227,6 +215,19 @@
           <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
           <div class="dailyTitle" style="display:none">Today's Mission</div>
         </div>
+
+        <!-- §4.1 — Leo's Island entry card, now BELOW the mission. Tapping it
+             turns the hub3d flag on (persisted) and opens the 3D Hub tab. NEW!
+             badge removed; a one-line subtext sets the load expectation up front.
+             Card + nav tab share ONE name (Leo's Island). -->
+        <button class="advCard" id="advModeCard" type="button" aria-label="Visit Leo's Island">
+          <span class="advCardEmoji">🏝️</span>
+          <span class="advCardText">
+            <span class="advCardTitle">Visit Leo&rsquo;s Island</span>
+            <span class="advCardSub">Explore the island · Loads in a few seconds</span>
+          </span>
+          <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
+        </button>
 
         <!-- Coach Leo's Smart Pick — recommendation card -->
         <div class="coachPick" id="coachPick" style="display:none">
