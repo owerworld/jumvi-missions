@@ -4446,13 +4446,16 @@ function showLeoReaction(expression, message, opts){
 window.showLeoReaction = showLeoReaction; // the hub module bridges into this
 
 // ---- Hub loading overlay (pure DOM; shown synchronously before any import) ----
-let _hubLoadingEl = null, _hubLoadingLine2Timer = null;
+let _hubLoadingEl = null, _hubLoadingLine2Timer = null, _hubLoaderDelayTimer = null;
 function buildHubLoadingOverlay(container){
   if(_hubLoadingEl) return _hubLoadingEl;
   const el = document.createElement("div");
   el.id = "hub3dLoading";
   el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#bfe3ff,#eaf7ff);transition:opacity 300ms ease;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
   el.innerHTML =
+    // §4.2 — escape hatch: leave the wait and go back to the missions. The load
+    // keeps running (cached), so re-entry is instant.
+    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));min-width:44px;min-height:44px;border:none;border-radius:50%;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;">✕</button>' +
     '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
       leoPictureHTML("encourage", 256, 96, "Coach Leo") +
     '</div>' +
@@ -4470,6 +4473,9 @@ function buildHubLoadingOverlay(container){
   }
   container.appendChild(el);
   _hubLoadingEl = el;
+  // §4.2 — escape ✕ → leave the wait for the missions (load continues in bg).
+  const esc = document.getElementById("hub3dLoadEscape");
+  if(esc) esc.onclick = ()=>{ trackEvent("Hub3D Load Escaped", { stage: _hub3dLoadStage }); dismissHubLoadingOverlay(); switchTab("today"); };
   // Line 2 only appears if we're still loading after 3s (fast loads never show it).
   _hubLoadingLine2Timer = setTimeout(()=>{ const l2 = document.getElementById("hub3dLoadLine2"); if(l2) l2.style.opacity = "1"; }, 3000);
   return el;
@@ -4479,6 +4485,7 @@ function setHubLoadingProgress(frac){
   if(bar) bar.style.width = Math.max(8, Math.round(frac*100)) + "%";
 }
 function dismissHubLoadingOverlay(){
+  if(_hubLoaderDelayTimer){ clearTimeout(_hubLoaderDelayTimer); _hubLoaderDelayTimer = null; }
   if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
   const el = _hubLoadingEl; _hubLoadingEl = null;
   if(!el) return;
@@ -4487,6 +4494,7 @@ function dismissHubLoadingOverlay(){
 }
 function showHubLoadingFailure(container, stage){
   trackEvent("Hub3D Load Failed", { stage: stage || "import" });
+  if(_hubLoaderDelayTimer){ clearTimeout(_hubLoaderDelayTimer); _hubLoaderDelayTimer = null; }
   if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
   const el = _hubLoadingEl || buildHubLoadingOverlay(container);
   el.style.opacity = "1";
@@ -4526,9 +4534,15 @@ function showHub3D(){
   if(sticky) sticky.style.display = "none";
   const bottomNav = document.getElementById("bottomNav");
   if(bottomNav) bottomNav.style.display = "none";
-  // Loading overlay — synchronous, BEFORE any import. Skipped once the hub is
-  // already loaded (re-opens are instant).
-  if(!_hub3dInstance && overlay) buildHubLoadingOverlay(overlay);
+  // §4.2 — loading overlay, but delayed 300ms so a fast connection never flashes
+  // it. If the hub finishes (or is already cached) within 300ms, the timer is
+  // cleared and the loader never appears. Re-opens (cached instance) skip it.
+  if(!_hub3dInstance && overlay){
+    _hubLoaderDelayTimer = setTimeout(()=>{
+      _hubLoaderDelayTimer = null;
+      if(!_hub3dInstance) buildHubLoadingOverlay(overlay);
+    }, 300);
+  }
   // Safety net: if no first frame ever paints (stuck, not a reject), show the
   // friendly failure UI rather than an endless progress bar. A hidden tab
   // (locked phone, app switch) legitimately stops requestAnimationFrame — no
