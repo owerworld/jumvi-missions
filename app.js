@@ -2182,6 +2182,21 @@ function coachSpeak(text, opts={}){
   }catch(_){}
 }
 
+// §3.1 — auto read-aloud for the 3–5 band (they can't read the steps). Device
+// setting jumvi_tts_auto (default on); parents can turn it off in Profile.
+const TTS_AUTO_KEY = "jumvi_tts_auto";
+function ttsAuto(){ try{ return lsGet(TTS_AUTO_KEY, "1") === "1"; }catch(_){ return true; } }
+function autoReadMission(ms){
+  // Reads the mission name + first step, once, when a 3–5 mission opens. Must be
+  // called INSIDE the tap handler (openMission) so iOS allows speechSynthesis.
+  if(!soundOn) return;                       // shares the global mute guard
+  if(!("speechSynthesis" in window)) return;
+  const strip = s => String(s||"").replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}️]/gu, "").replace(/\s+/g," ").trim();
+  const first = (ms.steps && ms.steps[0]) ? strip(ms.steps[0]) : "";
+  const text = first ? `${strip(ms.title)}. Step 1 — ${first}` : strip(ms.title);
+  if(text) coachSpeak(text, { rate: 1.0 });
+}
+
 // ---- Spoken steps (Task 4c): tap Leo by the STEPS header → he reads the
 // steps in order, then the win condition. Second tap stops. No autoplay;
 // same mute guard as every other sound (soundOn). ----
@@ -2492,6 +2507,10 @@ function openMission(id){
   const leoSpeakBtn = document.getElementById("leoSpeakBtn");
   if(leoSpeakBtn) leoSpeakBtn.onclick = ()=> toggleLeoSpeakSteps(ms);
   maybeShowLeoSpeakHint(leoSpeakBtn);
+
+  // §3.1 — 3–5 band: read the mission aloud on open. Called here (synchronous
+  // within openMission, which runs in the tap handler) so iOS permits speech.
+  if(currentDifficulty === "Easy" && ttsAuto()) autoReadMission(ms);
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
   mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
@@ -3051,6 +3070,34 @@ if(certBox){
 btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
 
+// §3.2 — 5-second Undo bar shown after an interactive completion. Reverts the
+// done state (the accidental-tap net that replaced hold-to-finish). Streak/daily
+// counters aren't rewound — a rare edge for an undo inside 5s; flagged in report.
+let _undoTimer = null;
+function showUndoBar(id){
+  const bar = document.getElementById("undoBar");
+  const btn = document.getElementById("undoBtn");
+  if(!bar || !btn) return;
+  bar.hidden = false;
+  clearTimeout(_undoTimer);
+  _undoTimer = setTimeout(()=>{ bar.hidden = true; }, 5000);
+  btn.onclick = ()=>{
+    clearTimeout(_undoTimer);
+    bar.hidden = true;
+    if(done.has(id)){
+      done.delete(id);
+      bumpDoneVersion();
+      persist();
+      renderList();
+      if(typeof renderMissionPath === "function"){ try{ renderMissionPath(); }catch(_){} }
+      clickSound("click");
+      if(lastOpenedId === id) openMission(id);
+      showToast("Marked as not done");
+      trackEvent("Mission Undone", { id: id });
+    }
+  };
+}
+
 function markMissionDone(id, source="manual"){
   if(id==null || done.has(id)) return;
   // Pack milestone hesabı için ÖN bilgi
@@ -3086,6 +3133,8 @@ function markMissionDone(id, source="manual"){
   // Daily mini-challenge counter
   bumpDailyChallenge();
   fireDoneBurst(document.getElementById("btnToggleDone"));
+  // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
+  if(source === "manual" || source === "auto") showUndoBar(id);
   // Streak +1 olduysa fire burst
   if(changed && streakCount >= 1){
     setTimeout(()=> fireStreakBurst(), 500);
@@ -3320,16 +3369,51 @@ document.getElementById("btnRandomAll").onclick = ()=>{
   openMission(pick.id);
 };
 
-document.getElementById("btnReset").onclick = ()=>{
-  clickSound("click");
-  if(!confirm("Reset progress on this phone?")) return;
-  setDoneFromArray([]);
-  unlockedBefore = setState("unlockedBefore", false);
-  persist();
-  renderList();
-  closeMission();
-  closeCertificate();
-};
+// §3.2 — destructive reset now requires a deliberate press-and-hold (the guard
+// that left the reward moment lands here instead of a confirm() dialog). A plain
+// tap just hints. NOTE: there are two elements with id="btnReset" in the markup
+// (a dup-id bug — flagged in the report); bind both so neither is a live reset
+// without the hold.
+(function bindHoldToReset(){
+  const btns = document.querySelectorAll('[id="btnReset"]');
+  const HOLD_MS = 1200;
+  function doReset(){
+    setDoneFromArray([]);
+    unlockedBefore = setState("unlockedBefore", false);
+    persist();
+    renderList();
+    closeMission();
+    closeCertificate();
+    showToast("Progress reset");
+    trackEvent("Progress Reset");
+  }
+  btns.forEach(btn=>{
+    if(!btn) return;
+    btn.classList.add("holdConfirm");
+    const fill = document.createElement("span");
+    fill.className = "holdFill";
+    btn.appendChild(fill);
+    let t=null, raf=null, start=0, fired=false;
+    function tick(){
+      const p = Math.min(1, (Date.now()-start)/HOLD_MS);
+      fill.style.width = (p*100)+"%";
+      if(p<1) raf = requestAnimationFrame(tick);
+    }
+    function begin(e){
+      if(e && e.button) return;            // primary pointer only
+      fired=false; start=Date.now();
+      raf = requestAnimationFrame(tick);
+      t = setTimeout(()=>{ fired=true; fill.style.width="100%"; clickSound("success"); doReset(); clearHold(); }, HOLD_MS);
+    }
+    function clearHold(){ clearTimeout(t); cancelAnimationFrame(raf); fill.style.width="0%"; }
+    function cancel(){ if(!fired) clearHold(); }
+    btn.addEventListener("pointerdown", begin);
+    btn.addEventListener("pointerup", cancel);
+    btn.addEventListener("pointerleave", cancel);
+    btn.addEventListener("pointercancel", cancel);
+    btn.addEventListener("click", (e)=>{ e.preventDefault(); if(!fired) showToast("Hold to reset progress"); });
+  });
+})();
 
 document.getElementById("btnBadges").onclick = ()=>{
   clickSound("click");
@@ -3641,6 +3725,9 @@ function renderSettingsRows(){
     soundIcon.textContent = soundOn ? "🔊" : "🔇";
     soundVal.textContent  = soundOn ? "On" : "Off";
   }
+  // §3.1 — Read-aloud row
+  const ttsVal = document.getElementById("profileTtsValue");
+  if(ttsVal) ttsVal.textContent = ttsAuto() ? "On" : "Off";
 }
 function closeProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
@@ -3926,6 +4013,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
       renderSettingsRows();
       if(soundOn){ ensureAudio(); clickSound("click"); }
       trackEvent("Sound Toggled");
+    };
+  }
+  // §3.1 — Read missions aloud toggle
+  const ttsBtn = document.getElementById("profileTtsBtn");
+  if(ttsBtn){
+    ttsBtn.onclick = ()=>{
+      const next = ttsAuto() ? "0" : "1";
+      lsSet(TTS_AUTO_KEY, next);
+      renderSettingsRows();
+      if(soundOn) clickSound("click");
+      trackEvent("Read Aloud Toggled", { on: next });
     };
   }
 });

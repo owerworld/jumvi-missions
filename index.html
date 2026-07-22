@@ -69,7 +69,7 @@
        ~6 KB). Was two unconditional 1024px webp (~121 KB) on the critical path. -->
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_dark-192.webp" media="(prefers-color-scheme: light)" />
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_light-192.webp" media="(prefers-color-scheme: dark)" />
-  <link rel="stylesheet" href="style.css?v=20260723-1">
+  <link rel="stylesheet" href="style.css?v=20260723-3">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260722-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -145,6 +145,14 @@
   <div class="offlineBanner" id="offlineBanner" role="status" aria-live="polite" hidden>
     <span class="offlineDot" aria-hidden="true"></span>
     Offline — missions still work. Island needs a connection.
+  </div>
+
+  <!-- §3.2 — Undo bar. Completing is one tap now (the hold-to-finish guard is
+       gone from the reward moment); this 5-second bar is the accidental-tap
+       safety net instead. Sits below the celebration, above the nav. -->
+  <div class="undoBar" id="undoBar" role="status" aria-live="polite" hidden>
+    <span class="undoBarText">Marked done</span>
+    <button class="undoBarBtn" id="undoBtn" type="button">Undo</button>
   </div>
 
   <div class="sticky">
@@ -294,16 +302,19 @@
           <div class="pExtra" id="progressExtra"></div>
         </div>
 
-        <!-- Quick action: random -->
-        <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
-          <span class="todayQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
-          <span class="todayQuickText">Surprise me — pick a random mission</span>
-        </button>
+        <!-- §3.4 — "Surprise me" moved to Browse (it duplicated "Pick another"
+             on Today and encouraged card-spinning over playing). -->
       </div>
 
       <!-- ============== TAB: BROWSE (Path Tree only) ============== -->
       <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
         <h2 class="tabHeading">🗺️ Mission Path</h2>
+
+        <!-- §3.4 — random pick lives here now, where browsing is the intent. -->
+        <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
+          <span class="todayQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
+          <span class="todayQuickText">Surprise me — pick a random mission</span>
+        </button>
 
         <!-- Path view — sade grid -->
         <div class="missionPath" id="missionPath"></div>
@@ -557,6 +568,11 @@
         </div>
       </div>
 
+      <!-- §3.3 — safety line, always visible (was hidden inside a closed
+           accordion). Verbatim brief wording. Detailed tips stay in the
+           "More tips & safety" accordion below. -->
+      <p class="missionSafetyLine">Throw below face level · Stand 1–3 m apart · Adult nearby</p>
+
       <!-- Primary action row — tek dominant Start + ikon yardımcılar -->
       <div class="missionPrimary">
         <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
@@ -780,6 +796,14 @@
           </span>
           <span class="profileSettingValue" id="profileSoundValue">On</span>
         </button>
+        <!-- §3.1 — auto read-aloud toggle (default on; matters most for ages 3–5) -->
+        <button class="profileSettingRow" id="profileTtsBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon">🗣️</span>
+            <span class="profileSettingText">Read missions aloud</span>
+          </span>
+          <span class="profileSettingValue" id="profileTtsValue">On</span>
+        </button>
       </div>
     </div>
   </div>
@@ -894,7 +918,7 @@
 <script src="data.js?v=20260524-32" defer></script>
 <script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260722-2" defer></script>
+<script src="app.js?v=20260723-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

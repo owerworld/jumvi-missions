@@ -3551,7 +3551,10 @@ html.theme--dark .kvWin b{ color: #FCD34D !important; }
   margin: 18px 0 12px !important;
 }
 .missionStartBtn{
-  background: linear-gradient(135deg, #4FB3FF, #2999FF) !important;
+  /* §2.3 (found via §3 modal audit, bug #4): white on #4FB3FF was 2.28:1. Deep
+     blues carry white (~4.9:1); bright brand blue stays as the border identity. */
+  background: linear-gradient(135deg, var(--brand-blue-deep), #17639F) !important;
+  border: 2px solid var(--brand-blue) !important;
   font-size: 17px !important;
   font-weight: 950 !important;
   letter-spacing: -0.3px !important;
@@ -3602,7 +3605,9 @@ html.theme--dark .moreInfoDetails{
   min-height: 56px !important;
   box-shadow: 0 8px 22px rgba(67,160,71,0.32) !important;
   background: linear-gradient(135deg, #66BB6A, #43A047) !important;
-  color: #fff !important;
+  /* §2.3 (found via §3 modal audit): white on this green was 2.36:1. Keep the
+     success-green fill; ink text is ~7.3:1 (same move as the hero card). */
+  color: var(--ink) !important;
 }
 .sheetActions #btnNext{
   background: rgba(0,0,0,0.04) !important;
@@ -5866,7 +5871,8 @@ html.theme--dark .profileQuickToggle{
 }
 .todayGoalBadge.completed{
   background: linear-gradient(135deg, #66BB6A, #43A047);
-  color: #fff;
+  /* §2.3 (found via audit): white on this green was 2.36:1; ink is ~7.3:1. */
+  color: var(--ink);
 }
 html.theme--dark .todayGoalBadge{
   background: linear-gradient(135deg, rgba(255,214,0,0.85), rgba(255,171,0,0.95));
@@ -7270,3 +7276,37 @@ html.theme--dark .advCardNew{ color:#4a3000 !important; }
 html.theme--dark .offlineBanner{ color:#FFD8A8; background:#3a2810; border-bottom-color:#5a3d18; }
 /* island card can't work offline — dim it and show it's inert */
 .advCard.is-offline{ opacity:.5; animation:none !important; box-shadow:none !important; }
+
+/* ===== §3.3 — always-visible mission safety line ===== */
+.missionSafetyLine{
+  margin: 6px 0 10px; padding: 8px 12px; border-radius: 10px;
+  background: #FFF4E0; color: #7a3b00; border: 1px solid #F3D9AE;
+  font-size: var(--fs-caption); font-weight: 700; line-height: 1.35; text-align: center;
+}
+html.theme--dark .missionSafetyLine{ background:#2e2211; color:#FFD8A8; border-color:#5a4520; }
+
+/* ===== §3.2 — Undo bar (accidental-completion safety net) ===== */
+.undoBar{
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px)); z-index: 60;
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 12px 10px 16px; border-radius: 14px;
+  background: #0F172A; color: #fff; box-shadow: 0 8px 24px rgba(15,23,42,0.34);
+  font-size: var(--fs-meta); font-weight: 700; max-width: calc(100vw - 32px);
+  animation: undoIn .22s ease;
+}
+.undoBar[hidden]{ display: none; }
+@keyframes undoIn{ from{ opacity:0; transform: translate(-50%, 8px); } to{ opacity:1; transform: translate(-50%, 0); } }
+.undoBarBtn{
+  flex: none; border: 0; cursor: pointer; font: inherit; font-weight: 900;
+  padding: 8px 16px; min-height: 40px; border-radius: 10px;
+  background: var(--brand-blue); color: var(--ink);
+}
+@media (prefers-reduced-motion: reduce){ .undoBar{ animation: none; } }
+
+/* §3.2 — hold-to-confirm fill on destructive Reset controls */
+.holdConfirm{ position: relative; overflow: hidden; }
+.holdConfirm .holdFill{
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+  background: rgba(255,90,60,0.30); pointer-events: none; transition: width .05s linear;
+}
