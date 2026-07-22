@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260722-4">
+  <link rel="stylesheet" href="style.css?v=20260722-8">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260722-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -134,6 +134,13 @@
   </div>
 
   <div class="app-shell" id="app-wrapper">
+
+  <!-- §5.3 — offline status band. SW keeps the app openable offline, but the
+       user needs to know why the island won't load. Shown only when offline. -->
+  <div class="offlineBanner" id="offlineBanner" role="status" aria-live="polite" hidden>
+    <span class="offlineDot" aria-hidden="true"></span>
+    Offline — missions still work. Island needs a connection.
+  </div>
 
   <div class="sticky">
     <div class="topbar">
@@ -882,7 +889,7 @@
 <script src="data.js?v=20260524-32" defer></script>
 <script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260722-1" defer></script>
+<script src="app.js?v=20260722-2" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

@@ -7221,3 +7221,45 @@ html.theme--dark .advCardNew{ color:#4a3000 !important; }
 .i-x{ --m:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'><path d='M6 6l12 12M18 6L6 18'/></svg>"); }
 .i-user{ --m:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3.6-6 8-6s8 2 8 6'/></svg>"); }
 .i-target{ --m:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'><circle cx='12' cy='12' r='9'/><circle cx='12' cy='12' r='5'/><circle cx='12' cy='12' r='1.3' fill='black'/></svg>"); }
+
+/* ===== §5.4 — Landscape (QR users are in the browser, not the installed PWA,
+   so manifest "portrait" does not apply). Keep the welcome CTA reachable and
+   tighten vertical chrome on short landscape viewports. ===== */
+@media (orientation: landscape) and (max-height: 480px){
+  .topbar{ padding-block: 4px; }
+  .hero{ padding-block: 8px; }
+  .dailyBox.dailyBoxPromoted{ padding-top: 12px; padding-bottom: 12px; }
+  /* Welcome: keep the CTA reachable on a 375px-tall landscape phone. Drop the
+     redundant wordmark, shrink the mascot, and collapse vertical rhythm so the
+     age buttons + "Let's Play!" sit at/near the fold; the panel scrolls if the
+     keyboard/UA chrome steals height. */
+  .welcomePanel{ max-height: 94vh; overflow-y: auto; padding-top: 14px; padding-bottom: 14px; justify-content: flex-start; gap: 0; }
+  .welcomeLogo{ display: none; }
+  .welcomeMascot{ width: 54px; margin: 0 auto -2px; }
+  .welcomeMascot{ animation: none; }
+  .welcomeTagline{ margin-top: 2px; }
+  .welcomeSub{ margin: 2px 0; }
+  .welcomeNote{ margin: 4px 0; }
+  .welcomeDivider{ margin: 6px 0; }
+  .welcomeAgesHeading{ margin: 4px 0; }
+  .welcomeAddChild{ margin: 4px 0; }
+  .welcomeStart{ margin-top: 6px; }
+}
+
+/* ===== §5.3 — Offline status band + island-card disabled state ===== */
+.offlineBanner{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:7px 14px; font-size:var(--fs-caption); font-weight:800; line-height:1.3;
+  text-align:center; color:#7a3b00; background:#FFE8C2; border-bottom:1px solid #F3C98A;
+}
+.offlineBanner[hidden]{ display:none; }
+.offlineBanner.flash{ animation:offlineFlash .9s ease; }
+@keyframes offlineFlash{ 0%,100%{ background:#FFE8C2; } 30%,60%{ background:#FFD59B; } }
+@media (prefers-reduced-motion: reduce){ .offlineBanner.flash{ animation:none; } }
+.offlineDot{ width:8px; height:8px; border-radius:50%; background:#E8770A; flex:none;
+  box-shadow:0 0 0 0 rgba(232,119,10,.5); animation:offlinePulse 1.8s ease-out infinite; }
+@keyframes offlinePulse{ 0%{ box-shadow:0 0 0 0 rgba(232,119,10,.5); } 70%{ box-shadow:0 0 0 6px rgba(232,119,10,0); } 100%{ box-shadow:0 0 0 0 rgba(232,119,10,0); } }
+@media (prefers-reduced-motion: reduce){ .offlineDot{ animation:none; } }
+html.theme--dark .offlineBanner{ color:#FFD8A8; background:#3a2810; border-bottom-color:#5a3d18; }
+/* island card can't work offline — dim it and show it's inert */
+.advCard.is-offline{ opacity:.5; animation:none !important; box-shadow:none !important; }

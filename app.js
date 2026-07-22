@@ -4626,6 +4626,14 @@ function initBottomNav(){
   const advCard = document.getElementById("advModeCard");
   if(advCard){
     advCard.onclick = ()=>{
+      // §5.3 — the island is a 9.4 MB download; offline it can't load. Don't
+      // dump the user into a dead 3D tab — nudge them and keep them on Today.
+      if(!navigator.onLine){
+        clickSound("click");
+        const b = document.getElementById("offlineBanner");
+        if(b){ b.hidden = false; b.classList.add("flash"); setTimeout(()=>b.classList.remove("flash"), 900); }
+        return;
+      }
       clickSound("click");
       lsSet(HUB3D_FLAG_KEY, "1");
       const hub3dBtn = document.getElementById("navTabHub3D");
@@ -4634,6 +4642,21 @@ function initBottomNav(){
       switchTab("hub3d");
     };
   }
+
+  // §5.3 — offline awareness. The SW keeps the app open offline; this tells the
+  // user (banner) and marks the island card inert. No new state, no analytics.
+  (function initOfflineStatus(){
+    const banner = document.getElementById("offlineBanner");
+    const island = document.getElementById("advModeCard");
+    function sync(){
+      const off = !navigator.onLine;
+      if(banner) banner.hidden = !off;
+      if(island) island.classList.toggle("is-offline", off);
+    }
+    window.addEventListener("online", sync);
+    window.addEventListener("offline", sync);
+    sync();
+  })();
 
   const navBtns = document.querySelectorAll(".navTab");
   navBtns.forEach(btn => {
