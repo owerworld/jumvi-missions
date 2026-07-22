@@ -98,10 +98,14 @@
        useModel:true) — GLTFLoader/the ES module Three.js build both need the
        bare "three" specifier resolved. Inert for everyone else: nothing on
        the normal page imports "three". -->
+  <!-- §4.6 — three.js served locally (was jsdelivr). Removes a third-party
+       dependency from the hub's critical path and lets the island work on
+       networks that block jsdelivr. GLTFLoader (loaded on hub entry) imports
+       the bare "three" specifier, which this map resolves to the local copy. -->
   <script type="importmap">
   {
     "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"
+      "three": "./vendor/three.module.min.js"
     }
   }
   </script>
