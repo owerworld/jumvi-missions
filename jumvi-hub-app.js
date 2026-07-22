@@ -10,7 +10,7 @@
 // ships as an ES module. Same version (0.160.0) as before, just a different
 // build/packaging — every existing THREE.Xxx call below is unaffected.
 import * as THREE from 'three';
-import { createCoachLeo } from './jumvi-leo.js?v=20260524-101';
+import { createCoachLeo } from './jumvi-leo.js?v=20260723-1';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -1281,11 +1281,11 @@ export function initHub3D(opts) {
       // with "No DRACOLoader instance provided" and the slot just stays
       // an empty holder forever.
       gltfLoaderPromise = Promise.all([
-        import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js'),
-        import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/DRACOLoader.js')
+        import('./vendor/jsm/loaders/GLTFLoader.js'),
+        import('./vendor/jsm/loaders/DRACOLoader.js')
       ]).then(function (mods) {
         var dracoLoader = new mods[1].DRACOLoader();
-        dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/');
+        dracoLoader.setDecoderPath('./vendor/jsm/libs/draco/');
         var loader = new mods[0].GLTFLoader();
         loader.setDRACOLoader(dracoLoader);
         return loader;
@@ -1299,7 +1299,7 @@ export function initHub3D(opts) {
   var skeletonUtilsPromise = null;
   function getSkeletonUtils() {
     if (!skeletonUtilsPromise) {
-      skeletonUtilsPromise = import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/SkeletonUtils.js');
+      skeletonUtilsPromise = import('./vendor/jsm/utils/SkeletonUtils.js');
     }
     return skeletonUtilsPromise;
   }

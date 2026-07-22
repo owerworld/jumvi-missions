@@ -276,7 +276,7 @@ export function createCoachLeo(THREE, options) {
     // Dynamic + conditional: GLTFLoader is only ever fetched when useModel is
     // actually on, so pages that never set it (every existing caller today)
     // never touch the "three" import map at all.
-    import('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js')
+    import('./vendor/jsm/loaders/GLTFLoader.js')
       .then(function (mod) {
         var loader = new mod.GLTFLoader();
         loader.load(
