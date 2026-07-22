@@ -3,8 +3,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <!-- Mobile-first: lock zoom (per your request) + notch safe area -->
-  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <!-- §2.5 — pinch-zoom ENABLED (WCAG 1.4.4); notch safe area kept -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>JUMVI Missions — 36 Toss & Catch Games for Kids 3–8</title>
   <meta name="description" content="36 fun missions for the JUMVI Toss & Catch Paddle Set. Build reflex, focus, teamwork & confidence in kids ages 3–8. Track progress, earn badges, unlock the champion certificate." />
   <meta name="keywords" content="JUMVI, paddle set, toss and catch, kids games, ages 3-8, paddle ball, kids missions, family games" />
@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260720-1">
+  <link rel="stylesheet" href="style.css?v=20260721-4">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260524-29">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -179,8 +179,11 @@
              (persisted) and jumps straight into the 3D Hub tab. Until then
              the bottom-nav 3D Hub tab stays hidden; this card is the way in. -->
         <style>
+          /* §2.3 — was #2e7d4f→#8fbf5a (white text hit 2.15:1 on the light-green
+             end). Kept the green identity + white text, darkened the light stops
+             so white is AA (≥4.5:1) across the whole gradient. */
           .advCard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-            background:linear-gradient(135deg,#2e7d4f,#5aa869 55%,#8fbf5a);color:#fff;
+            background:linear-gradient(135deg,#215f3d,#256b44 55%,#2a744a);color:#fff;
             border:2px solid rgba(255,226,150,.85);border-radius:18px;padding:13px 16px;margin:0 0 14px;
             cursor:pointer;font-family:inherit;position:relative;
             animation:advGlow 2.6s ease-in-out infinite;}
@@ -192,7 +195,7 @@
           .advCardTitle{display:block;font-weight:900;font-size:16px;line-height:1.25}
           .advCardNew{background:#FFD23F;color:#4a3000;font-size:10px;font-weight:900;
             padding:2px 7px;border-radius:8px;margin-left:6px;vertical-align:middle;letter-spacing:.5px}
-          .advCardSub{display:block;font-size:12px;opacity:.92;margin-top:2px;font-weight:600}
+          .advCardSub{display:block;font-size:var(--fs-meta);opacity:1;margin-top:2px;font-weight:600}
           .advCardArrow{margin-left:auto;font-size:18px;opacity:.9;flex:none}
         </style>
         <!-- Card + nav tab share ONE name (Leo's Island) so a parent who taps

@@ -60,6 +60,25 @@ body::before {
   --lime: #97d700;
   --border: rgba(0,0,0,0.1);
   --shadow-soft: 0 4px 14px rgba(0,0,0,0.07);
+
+  /* §2.3 — brand + contrast tokens. Product is used outdoors in direct sun;
+     these are measured for WCAG AA, not decoration. Brand blue stays the
+     identity (borders/accents); white text only ever sits on brand-blue-deep. */
+  --brand-blue:      #4FB3FF;   /* border, accent, fill */
+  --brand-blue-deep: #1D6FB5;   /* white-text-on-blue surfaces — 4.84:1 */
+  --brand-lime:      #97D700;   /* dark text only */
+  --brand-orange:    #FF6A00;   /* dark text only */
+  --ink:             #0F172A;   /* text on lime / orange */
+  --muted-on-light:  #64748B;   /* 4.76:1 on white — replaces #94a3b8 in light */
+  --muted-on-dark:   #94A3B8;   /* stays in dark theme — 7.07:1 */
+
+  /* §2.5 — type scale. Floor is 13px (nothing smaller); body copy is 16px. */
+  --fs-caption: 13px;   /* was 10–11px */
+  --fs-meta:    14px;   /* was 12px */
+  --fs-body:    16px;   /* was 13–14px body copy */
+  --fs-lead:    18px;
+  --fs-title:   22px;
+  --fs-display: 30px;
 }
 
 
@@ -230,7 +249,7 @@ html.theme--dark .bgLayer{
     .tourHelpBtn:focus-visible{ outline:3px solid #ffd23f; outline-offset:2px; }
     .brandText{ display:flex; flex-direction:column; line-height:1.1; }
     .brandTitle{ font-size:16px; font-weight:950; color: var(--text); }
-    .brandSub{ font-size:11px; font-weight:700; color: var(--muted); }
+    .brandSub{ font-size:var(--fs-caption); font-weight:700; color: var(--muted); }
     .logoWrap{
       width:42px; height:42px; border-radius:14px;
       background: transparent;
@@ -288,7 +307,7 @@ html.theme--dark .bgLayer{
       letter-spacing:-0.2px;
     }
     .profilePillChevron{
-      font-size:11px;
+      font-size:var(--fs-caption);
       color: var(--muted);
       margin-left:-2px;
     }
@@ -297,7 +316,7 @@ html.theme--dark .bgLayer{
     .avatarBtn{ /* selector now matches button#avatarBtn which has class profilePill — no styles here */ }
 
     .pill{
-      font-size:12px; color:var(--muted);
+      font-size:var(--fs-meta); color:var(--muted);
       border:1px solid var(--border);
       background: rgba(255,255,255,0.6);
       padding:7px 12px; border-radius:999px;
@@ -336,7 +355,7 @@ html.theme--dark .bgLayer{
     @media (max-width: 360px){
       .brandText{ display:none; } /* Çok dar ekranda sadece logo */
       .topbar{ padding:10px 12px; }
-      .profilePillName{ max-width:70px; font-size:12px; }
+      .profilePillName{ max-width:70px; font-size:var(--fs-meta); }
     }
     .themeToggle{ cursor:pointer; }
     .themeToggleIcon{
@@ -392,7 +411,7 @@ html.theme--dark .h1{ color:#f8fafc; }
       margin:8px 0 0;
       color:var(--muted);
       line-height:1.5;
-      font-size:14px;
+      font-size:var(--fs-meta);
       max-width: 60ch;
       font-weight: 600;
     }
@@ -674,9 +693,9 @@ html.theme--dark #certSheet input::placeholder{ color:#64748b !important; }
 }
 .badgesListIcon{ font-size:28px; line-height:1; }
 .badgesListName{ font-weight:950; color: var(--blue); font-size:13px; }
-.badgesListReq{ color: #546E7A; font-size:11px; font-weight:700; margin-top:2px; }
+.badgesListReq{ color: #546E7A; font-size:var(--fs-caption); font-weight:700; margin-top:2px; }
 .badgesListStatus{
-  margin-top:4px; font-size:11px; font-weight:800;
+  margin-top:4px; font-size:var(--fs-caption); font-weight:800;
   display:inline-block; padding:2px 8px; border-radius:999px;
 }
 .badgesListItem.badge-earned .badgesListStatus{
@@ -730,7 +749,7 @@ html.theme--light .badgeUnlockPanel{
 .badgeUnlockEmoji{ font-size:56px; line-height:1; }
 .badgeUnlockTitle{ font-size:13px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
 .badgeUnlockName{ font-size:22px; font-weight:950; color:var(--text); letter-spacing:-0.5px; }
-.badgeUnlockReq{ font-size:12px; color:var(--muted); font-weight:700; }
+.badgeUnlockReq{ font-size:var(--fs-meta); color:var(--muted); font-weight:700; }
 .badgeUnlockBtn{
   margin-top:6px; width:100%;
   background: linear-gradient(135deg, #FFD600, #FFAB00);
@@ -755,7 +774,7 @@ html.theme--light .badgeUnlockPanel{
   transition: width 0.5s ease;
 }
 .certProgressText{
-  font-size:11px; font-weight:700; color:var(--muted);
+  font-size:var(--fs-caption); font-weight:700; color:var(--muted);
 }
 html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     .sub b { color: var(--orange); }
@@ -772,7 +791,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     .heroSecondaryRow .btn{ flex:1; }
     .btnTextLink{
       display:block; text-align:center; padding:8px;
-      color:var(--muted); font-size:13px; font-weight:700;
+      color:var(--muted); font-size:var(--fs-meta); font-weight:700;
       text-decoration:none; letter-spacing:0.1px;
     }
     .btnTextLink:active{ opacity:0.6; }
@@ -781,7 +800,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
 
     /* Safety details inside modal */
     .modalSafetyDetails{
-      margin:8px 0 4px; font-size:12px;
+      margin:8px 0 4px; font-size:var(--fs-meta);
       color:var(--muted); border-radius:10px;
       padding:6px 10px;
       background:rgba(255,165,0,0.08);
@@ -803,8 +822,11 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     }
     .btn:active{ transform: scale(.96); }
     .btnPrimary{
-      background: linear-gradient(135deg, var(--accent-blue), #2999FF);
+      /* §2.3 — white text only on brand-blue-deep (4.84:1). Brand blue lives in
+         the border. Was a #4FB3FF gradient at 2.28:1 (failed AA in sun). */
+      background: var(--brand-blue-deep);
       color:#FFFFFF;
+      border: 2px solid var(--brand-blue);
       box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
     }
 
@@ -854,8 +876,8 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
       box-shadow: 0 4px 12px var(--shadow);
     }
     .pText{ font-weight:950; letter-spacing:.2px; color: var(--blue); font-size: 15px; }
-    .pSub{ color:var(--muted); font-size:12px; margin-top:3px; font-weight: 700; }
-    .pExtra{ color:#475569; font-size:12px; margin-top:6px; font-weight:700; }
+    .pSub{ color:var(--muted); font-size:var(--fs-meta); margin-top:3px; font-weight: 700; }
+    .pExtra{ color:#475569; font-size:var(--fs-meta); margin-top:6px; font-weight:700; }
 .bar{
   flex:1; min-width:180px;
   height:40px; border-radius:999px;
@@ -975,7 +997,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
       min-height:40px;
     }
     .filterLabel{
-      font-size:11px;
+      font-size:var(--fs-caption);
       font-weight:950;
       color:#64748b;
       letter-spacing:.3px;
@@ -997,7 +1019,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
     .filterChips .chip{
       min-width:44px;
       padding:7px 12px;
-      font-size:12px;
+      font-size:var(--fs-meta);
       min-height:36px;
       line-height:1;
     }
@@ -1103,7 +1125,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
       margin-top:8px;
       display:flex; flex-wrap:wrap; gap:6px;
       color: rgba(6,19,38,0.72);
-      font-size:12px;
+      font-size:var(--fs-meta);
       font-weight:800;
     }
     .tag{
@@ -1112,7 +1134,7 @@ html.theme--dark .certProgressBar{ background:rgba(255,255,255,0.1); }
       background: #F1F5F9;
       color: #334155;
       white-space:nowrap;
-      font-size:11px;
+      font-size:var(--fs-caption);
       font-weight:800;
     }
 .tag.pack{ background: rgba(79,179,255,0.14); color: #1f6fb2; }
@@ -1205,7 +1227,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
     }
     .badgeIcon{ font-size:26px; }
     .badgeName{ margin-top:8px; font-weight:950; font-size:14px; color: var(--blue); }
-    .badgeReq{ margin-top:4px; color: var(--muted); font-size:11px; font-weight:700; }
+    .badgeReq{ margin-top:4px; color: var(--muted); font-size:var(--fs-caption); font-weight:700; }
 
     .certBox{
       margin-top:16px;
@@ -1219,7 +1241,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
     .certLeft{ display:flex; align-items:center; gap:12px; }
     .certIcon{ font-size:32px; }
     .certText b{ font-weight:950; font-size: 16px; color: #0f172a; }
-    .certText div{ color: var(--muted); font-size:12px; margin-top:4px; font-weight:700; }
+    .certText div{ color: var(--muted); font-size:var(--fs-meta); margin-top:4px; font-weight:700; }
     .certBtn{
       border-radius:18px;
       background: #EEEEEE;
@@ -1249,7 +1271,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
       border-radius:20px;
       padding:16px;
       color: rgba(6,19,38,0.72);
-      font-size:12px;
+      font-size:var(--fs-meta);
       line-height:1.5;
       box-shadow: 0 4px 12px var(--shadow);
     }
@@ -1258,7 +1280,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
       background: transparent;
       border: 1px solid rgba(0,0,0,0.12);
       color: #90A4AE;
-      font-size:12px;
+      font-size:var(--fs-meta);
       font-weight:800;
       padding:8px 14px;
       min-height:36px;
@@ -1271,7 +1293,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
     }
     .links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
     .linkGroup{ display:flex; flex-direction:column; gap:6px; }
-    .linkDesc{ font-size:11px; color: var(--muted); font-weight:700; }
+    .linkDesc{ font-size:var(--fs-caption); color: var(--muted); font-weight:700; }
     .linkBtn{
       border:1px solid var(--border);
       background: #FFFFFF;
@@ -1279,7 +1301,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
       border-radius:16px;
       color: var(--blue);
       font-weight:800;
-      font-size:13px;
+      font-size:var(--fs-meta);
       cursor:pointer;
       min-height:44px;
       display:inline-flex; align-items:center; justify-content:center;
@@ -1395,7 +1417,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
     }
     html.theme--dark .kv b{ color:#7dd3fc; }
     .sheetActions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
-.small{ font-size:12px; color: #90A4AE; margin-top:10px; }
+.small{ font-size:var(--fs-meta); color: #90A4AE; margin-top:10px; }
 .holdHint{
   margin-top:8px;
   font-weight:700;
@@ -1432,14 +1454,14 @@ html.theme--dark .shareScoreCard{
   color: var(--blue);
 }
 .shareScoreMeta{
-  font-size:10px;
+  font-size:var(--fs-caption);
   font-weight:700;
   color: var(--muted);
   white-space:nowrap;
 }
 .shareScoreBadge{
   margin-top:4px;
-  font-size:11px;
+  font-size:var(--fs-caption);
   font-weight:700;
   color: var(--text);
   text-align:center;
@@ -1469,14 +1491,14 @@ html.theme--dark .shareScoreCard{
   background:#25D366;
   color:#fff;
   border:none;
-  font-size:13px;
+  font-size:var(--fs-meta);
   padding:8px 14px;
   border-radius:999px;
   font-weight:700;
 }
 .shareWhatsAppBtn:active{ opacity:0.85; }
 .shareCopyBtn{
-  font-size:13px;
+  font-size:var(--fs-meta);
   padding:8px 14px;
 }
 
@@ -1491,7 +1513,7 @@ html.theme--dark .shareScoreCard{
 }
 .dashHeader{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
 .dashTitle{ font-weight:950; font-size:16px; color: var(--text); }
-.dashSub{ font-size:12px; color:#64748b; font-weight:700; }
+.dashSub{ font-size:var(--fs-meta); color:#64748b; font-weight:700; }
 .dashReport{ margin-top:6px; font-size:13px; color:#334155; font-weight:700; }
 .dashReport{ color: var(--text); }
 .dashSub{ color: var(--muted); }
@@ -1567,7 +1589,7 @@ html.theme--dark .dashShareWrap{
   flex: 1;
   border-radius: 12px;
   padding: 10px 12px;
-  font-size: 13px;
+  font-size: var(--fs-meta);
   font-weight: 900;
   cursor: pointer;
   border: none;
@@ -1643,7 +1665,7 @@ html.theme--dark .btnLime{
     }
     .fallbackMsg{
       margin-top:8px;
-      font-size:14px;
+      font-size:var(--fs-body);
       font-weight:850;
       color:#475569;
       line-height:1.45;
@@ -1865,7 +1887,7 @@ html.theme--dark .toast{
       background: #F5F5F5;
     }
     .field label{
-      font-size: 12px;
+      font-size: var(--fs-meta);
       font-weight: 950;
       color: #37474F;
       white-space:nowrap;
@@ -1973,7 +1995,7 @@ html.theme--dark .toast{
     .a2hsText b{ font-weight:950; color: var(--blue); }
     .a2hsText div{
       color: rgba(6,19,38,0.72);
-      font-size:12px;
+      font-size:var(--fs-meta);
       font-weight:850;
       margin-top:4px;
       line-height:1.35;
@@ -2081,7 +2103,7 @@ html.theme--dark .toast{
     .dailyText{ min-width:0; }
     .dailyTitle{
       font-weight:950;
-      font-size:12px;
+      font-size:var(--fs-meta);
       letter-spacing:.2px;
       color: #FF6F00;
       text-transform: uppercase;
@@ -2100,7 +2122,7 @@ html.theme--dark .toast{
     .dailyMeta{
       margin-top:4px;
       color: rgba(6,19,38,0.72);
-      font-size:12px;
+      font-size:var(--fs-meta);
       font-weight:900;
       display:flex;
       gap:8px;
@@ -2267,7 +2289,7 @@ html.theme--dark .toast{
   gap: 10px; margin-bottom: 10px;
 }
 .saveHint{ color:#fff; font-weight:950; font-size:14px; line-height:1.1; }
-.saveSub{ color: rgba(255,255,255,0.75); font-size:12px; margin-top:3px; }
+.saveSub{ color: rgba(255,255,255,0.75); font-size:var(--fs-meta); margin-top:3px; }
 .saveOpenBtn{
   background: #ffffff;
   border: 1px solid rgba(255,255,255,0.18);
@@ -2386,7 +2408,7 @@ body{
   display:flex;
   align-items:center;
   gap:10px;
-  font-size:13px;
+  font-size:var(--fs-meta);
   font-weight:700;
   color:#546E7A;
   margin:2px 0 10px;
@@ -2423,7 +2445,7 @@ body{
 /* Keep "progress saved" note visible but compact */
 #mSmall{
   color: var(--muted) !important;
-  font-size: 12px !important;
+  font-size: var(--fs-meta) !important;
   margin-top: 10px !important;
 }
 
@@ -2848,7 +2870,7 @@ html.theme--light .welcomePanel{
 .leoSpeakBtn:focus-visible{ outline:3px solid #ffd23f; outline-offset:2px; border-radius:10px; }
 .leoSpeakTip{
   position:absolute; right:0; top:100%; margin-top:4px; z-index:5;
-  background:#fff; color:#26364a; font-size:12px; font-weight:800;
+  background:#fff; color:#26364a; font-size:var(--fs-meta); font-weight:800;
   padding:6px 11px; border-radius:12px; box-shadow:0 6px 16px rgba(18,38,66,0.25);
   border:1px solid rgba(120,150,180,0.2); white-space:nowrap;
   transition:opacity .35s ease; pointer-events:none;
@@ -2858,7 +2880,7 @@ html.theme--light .welcomePanel{
 /* Visible IP notice — bottom of the footer, deliberately quiet */
 .copyrightLine{
   margin-top:16px;
-  font-size:10px;
+  font-size:var(--fs-caption);
   line-height:1.5;
   color:var(--color-text-secondary,var(--muted,#7a8aa0));
   opacity:0.75;
@@ -2882,7 +2904,7 @@ html.theme--dark .welcomeLogo.logoLight{ display:none; }
 }
 html.theme--light .welcomeTagline{ color:#0f172a; }
 .welcomeSub{
-  font-size:13px;
+  font-size:var(--fs-body);
   color:var(--muted);
   line-height:1.55;
 }
@@ -2911,7 +2933,7 @@ html.theme--light .welcomeSub{ color:#374151; }
 }
 .ageBtn:active{ transform:scale(0.95); }
 .ageBtn span{
-  font-size:11px;
+  font-size:var(--fs-meta);
   font-weight:700;
   color:var(--text);
   line-height:1.2;
@@ -2932,7 +2954,7 @@ html.theme--light .ageBtn.selected{
   border-color:#1d6fb5;
 }
 .welcomeMissionCount{
-  font-size:12px;
+  font-size:var(--fs-meta);
   font-weight:700;
   color:var(--blue,#4FB3FF);
   letter-spacing:0.2px;
@@ -2947,7 +2969,7 @@ html.theme--light .welcomeMissionCount{ color:#1d6fb5; }
   border-radius:16px;
 }
 .welcomeNote{
-  font-size:11px;
+  font-size:var(--fs-caption);
   color:var(--muted);
   opacity:0.7;
   line-height:1.4;
@@ -2971,7 +2993,7 @@ html.theme--light .welcomeAgesHeading{ color:#0f172a; }
 .welcomeAddChild{
   margin:0;
   padding:2px 4px;
-  font-size:12px;
+  font-size:var(--fs-meta);
   font-weight:600;
   line-height:1.35;
   color:var(--muted);
@@ -2995,7 +3017,7 @@ html .card.pack--beach-park   { background: linear-gradient(to right, #F59E0B 5p
 
 /* Badge hint */
 .badgesHint{
-  font-size:11px;
+  font-size:var(--fs-caption);
   color:var(--muted);
   opacity:0.6;
   text-align:right;
@@ -3008,7 +3030,7 @@ html.theme--light .badgesHint{ color:#374151; }
 .dailyHint{
   display:block;
   margin-top:5px;
-  font-size:11px;
+  font-size:var(--fs-caption);
   color:var(--blue,#4FB3FF);
   font-style:italic;
 }
@@ -3016,7 +3038,7 @@ html.theme--light .dailyHint{ color:#1d6fb5; }
 
 /* Mission Book in hero row */
 .missionBookBtn{
-  font-size:13px;
+  font-size:var(--fs-meta);
   padding:8px 12px;
   text-decoration:none;
 }
@@ -3090,7 +3112,7 @@ html.theme--dark .cardTeaser{ color: #9ca3af; }
   box-shadow: 0 2px 10px rgba(151,215,0,0.35) !important;
 }
 #btnRandomPack{
-  font-size: 13px;
+  font-size: var(--fs-meta);
   min-height: 38px;
   opacity: 0.75;
 }
@@ -3194,7 +3216,7 @@ html.theme--dark .sheet .kv {
 
 /* ── 4. Badges button: visually secondary vs Random ─────────── */
 #btnBadges {
-  font-size: 13px !important;
+  font-size: var(--fs-meta) !important;
   min-height: 40px !important;
   padding: 8px 14px !important;
   opacity: 0.85;
@@ -3398,7 +3420,7 @@ button, a, input, textarea, select, label {
   background: none !important;
   border: none !important;
   color: var(--muted) !important;
-  font-size: 13px !important;
+  font-size: var(--fs-meta) !important;
   font-weight: 600 !important;
   min-height: 36px !important;
   text-decoration: underline;
@@ -3469,7 +3491,7 @@ html.theme--dark .kvWin b{ color: #FCD34D !important; }
   position: relative;
   padding: 8px 4px 8px 38px;
   counter-increment: step;
-  font-size: 14px;
+  font-size: var(--fs-body);
   font-weight: 600;
   line-height: 1.5;
 }
@@ -3550,7 +3572,7 @@ html.theme--dark .moreInfoDetails{
 }
 .moreInfoDetails summary{
   padding: 12px 14px !important;
-  font-size: 12px !important;
+  font-size: var(--fs-meta) !important;
   letter-spacing: 0.3px !important;
   text-transform: uppercase !important;
   color: var(--muted) !important;
@@ -3596,7 +3618,7 @@ html.theme--dark .sheetActions #btnNext{
   flex-wrap: wrap;
 }
 .sheetMeta .tag{
-  font-size: 11px !important;
+  font-size: var(--fs-caption) !important;
   padding: 4px 10px !important;
   border-radius: 999px !important;
   background: rgba(0,0,0,0.05) !important;
@@ -3722,7 +3744,7 @@ html.theme--dark .moreInfoDetails{
   margin-top: 6px;
 }
 .sheetMeta .tag{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   padding: 3px 9px;
   border-radius: 999px;
   font-weight: 800;
@@ -3834,7 +3856,7 @@ html.theme--dark .missionIconWrap{
   text-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 .storyTagline{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 700;
   color: rgba(255,255,255,0.92);
   margin-top: 2px;
@@ -3921,7 +3943,7 @@ html.theme--dark .scoreTracker{
   letter-spacing:1px;
 }
 .scoreTrackerBest{
-  font-size:12px; font-weight:800;
+  font-size:var(--fs-meta); font-weight:800;
   color: var(--accent-blue);
   background: rgba(79,179,255,0.12);
   padding:4px 10px;
@@ -3948,9 +3970,9 @@ html.theme--dark .scoreTracker{
 }
 .scoreTrackerTap{
   width:100%;
-  background: linear-gradient(135deg, #4FB3FF, #2999FF);
+  background: var(--brand-blue-deep); /* §2.3 — was #4FB3FF gradient, 2.28:1 */
   color: #fff;
-  border: none;
+  border: 2px solid var(--brand-blue);
   border-radius: 18px;
   padding: 22px 16px;
   cursor: pointer;
@@ -3972,7 +3994,7 @@ html.theme--dark .scoreTracker{
   line-height:1;
 }
 .scoreTrackerTapHint{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 700;
   opacity: 0.85;
 }
@@ -3984,7 +4006,7 @@ html.theme--dark .scoreTracker{
   background: rgba(255,255,255,0.6);
   border: 1px solid rgba(0,0,0,0.08);
   color: var(--text);
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   padding: 8px 12px;
   border-radius: 12px;
@@ -4087,7 +4109,7 @@ html.theme--dark .profileItemAvatar{ background: rgba(255,255,255,0.08); }
   letter-spacing:-0.2px;
 }
 .profileItemMeta{
-  font-size:11px; font-weight:700;
+  font-size:var(--fs-caption); font-weight:700;
   color: var(--muted);
   margin-top:2px;
 }
@@ -4199,7 +4221,7 @@ html.theme--dark .profileEditSection{ border-top-color: rgba(255,255,255,0.1); }
   color: #DC2626;
   padding:10px 14px;
   border-radius:14px;
-  font-size:13px;
+  font-size:var(--fs-meta);
   font-weight:800;
   cursor:pointer;
   transition: all 0.15s ease;
@@ -4296,7 +4318,7 @@ html.theme--dark .tutorialCard{
   color: #e8e8e8;
 }
 .tutorialStep{
-  font-size:11px; font-weight:800;
+  font-size:var(--fs-caption); font-weight:800;
   color: var(--blue); text-transform:uppercase;
   letter-spacing:1.5px;
   margin-bottom:6px;
@@ -4308,7 +4330,7 @@ html.theme--dark .tutorialCard{
   margin-bottom:6px;
 }
 .tutorialDesc{
-  font-size:13px; font-weight:600;
+  font-size:var(--fs-body); font-weight:600;
   color: var(--muted); line-height:1.5;
   margin-bottom:14px;
 }
@@ -4317,13 +4339,13 @@ html.theme--dark .tutorialCard{
 }
 .tutorialSkip{
   background:transparent; border:none;
-  color: var(--muted); font-size:13px;
+  color: var(--muted); font-size:var(--fs-meta);
   font-weight:700; cursor:pointer;
   padding:8px 12px;
 }
 .tutorialNext{
-  background: linear-gradient(135deg, #4FB3FF, #2999FF);
-  color:#fff; border:none;
+  background: var(--brand-blue-deep); /* §2.3 */
+  color:#fff; border:2px solid var(--brand-blue);
   padding:10px 18px; border-radius:14px;
   font-weight:900; font-size:14px;
   cursor:pointer;
@@ -4455,7 +4477,7 @@ html.theme--dark .bottomNav{
   border: none;
   cursor: pointer;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 800;
   -webkit-tap-highlight-color: transparent;
   transition: color 0.15s ease, transform 0.1s ease;
@@ -4505,7 +4527,7 @@ body:has(.tutorialOverlay.show) .bottomNav{
   letter-spacing: -0.2px;
 }
 .emptyStateDesc{
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 700;
   line-height: 1.5;
   margin: 0 0 20px;
@@ -4566,7 +4588,7 @@ body.tab-browse .footer{ display: block; }
   pointer-events: none;
 }
 .dailyEyebrow{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 900;
   color: rgba(255,255,255,0.82);
   letter-spacing: 1.5px;
@@ -4602,7 +4624,7 @@ body.tab-browse .footer{ display: block; }
 }
 .dailyBox.dailyBoxPromoted .dailyMeta,
 .dailyBox.dailyBoxPromoted .dailyMeta *{
-  font-size: 12px !important;
+  font-size: var(--fs-meta) !important;
   color: rgba(255,255,255,0.85) !important;
   font-weight: 700 !important;
   margin-top: 4px !important;
@@ -4628,7 +4650,7 @@ body.tab-browse .footer{ display: block; }
 .dailyPlayBig{
   display: block; width: 100%;
   background: #fff !important;
-  color: #1E88E5 !important;
+  color: var(--brand-blue-deep) !important;
   font-size: 16px !important;
   font-weight: 950 !important;
   padding: 14px 16px !important;
@@ -4645,7 +4667,7 @@ body.tab-browse .footer{ display: block; }
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.25);
   color: #fff;
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   padding: 8px 14px;
   border-radius: 10px;
@@ -4669,12 +4691,12 @@ body.tab-browse .footer{ display: block; }
 /* FIX: allow longer mission names like "Step-Back Challenge" to wrap to a second line */
 .continueHintText b{ color: var(--accent-blue); display: inline; }
 .continueHintBtn{
-  background: var(--accent-blue);
+  background: var(--brand-blue-deep); /* §2.3 — was --accent-blue #4FB3FF */
   color: #fff;
-  border: none;
+  border: 2px solid var(--brand-blue);
   padding: 6px 12px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   cursor: pointer;
   flex-shrink: 0;
@@ -4729,7 +4751,7 @@ body.tab-browse .footer{ display: block; }
   background: rgba(102,187,106,0.18);
 }
 .dailyChallengeReward{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--muted);
   line-height: 1.4;
@@ -4812,7 +4834,7 @@ html.theme--dark .profileCardAvatar{ background: rgba(255,255,255,0.12); }
   letter-spacing: -0.3px;
 }
 .profileCardStats{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 700;
   color: var(--muted);
   margin-top: 4px;
@@ -4860,7 +4882,7 @@ html.theme--dark .profileQuickIcon{ background: rgba(255,255,255,0.06); }
   color: var(--text);
 }
 .profileQuickSub{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--muted);
   margin-top: 2px;
@@ -4881,7 +4903,7 @@ html.theme--dark .profileFooterInfo{ border-top-color: rgba(255,255,255,0.06); }
 .trustBadges{
   display: flex; flex-wrap: wrap; gap: 8px;
   justify-content: center;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 800;
   color: var(--muted);
   margin-bottom: 12px;
@@ -4893,7 +4915,7 @@ html.theme--dark .profileFooterInfo{ border-top-color: rgba(255,255,255,0.06); }
 }
 html.theme--dark .trustBadges span{ background: rgba(255,255,255,0.06); }
 .profileSupport{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   color: var(--muted);
   font-weight: 700;
 }
@@ -4989,7 +5011,7 @@ html.theme--dark .searchToggleBtn{
   }
   .brandSub{
     display: inline !important;
-    font-size: 12px !important;
+    font-size: var(--fs-meta) !important;
     font-weight: 700 !important;
     color: var(--muted);
     margin: 0 !important;
@@ -4997,15 +5019,15 @@ html.theme--dark .searchToggleBtn{
 
   /* Profile pill mobile compact */
   .profilePill{
-    font-size: 12px !important;
+    font-size: var(--fs-meta) !important;
     padding: 4px 10px 4px 4px !important;
     gap: 6px !important;
     min-height: 34px !important;
     flex-shrink: 0;
   }
   .profilePillAvatar{ width: 26px !important; height: 26px !important; font-size: 16px !important; }
-  .profilePillName{ max-width: 70px !important; font-size: 12px !important; }
-  .profilePillChevron{ font-size: 10px !important; }
+  .profilePillName{ max-width: 70px !important; font-size: var(--fs-meta) !important; }
+  .profilePillChevron{ font-size: var(--fs-caption) !important; }
 }
 
 @media (max-width: 360px){
@@ -5064,7 +5086,7 @@ html.theme--dark .searchToggleBtn{
 }
 @media (max-width: 520px){
   .filters .chip{
-    font-size: 12px;
+    font-size: var(--fs-meta);
     padding: 6px 12px;
   }
 }
@@ -5163,7 +5185,9 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
 
 /* Inactive tab: solgun, sade */
 .navTab{
-  color: #94a3b8 !important;
+  /* §2.3 — light theme: #94a3b8 was 2.56:1 on white. --muted-on-light is
+     4.76:1. Dark theme keeps its own value via html.theme--dark .navTab below. */
+  color: var(--muted-on-light) !important;
   font-weight: 700 !important;
   transition: color 0.25s ease, transform 0.2s ease !important;
   z-index: 1;
@@ -5177,7 +5201,7 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
   z-index: 2;
 }
 .navTab .navTabLabel{
-  font-size: 10px !important;
+  font-size: var(--fs-caption) !important;
   font-weight: 700 !important;
   opacity: 0.8;
   transition: all 0.25s ease;
@@ -5191,7 +5215,7 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
  * Frosted pill + glow + scale + animate-in
  * ============================================ */
 .navTab.active{
-  color: #1E88E5 !important;
+  color: var(--brand-blue-deep) !important; /* §2.3 — was #1E88E5 (3.68:1) → 5.26:1 */
   font-weight: 950 !important;
 }
 .navTab.active .navTabIcon{
@@ -5203,9 +5227,9 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
 .navTab.active .navTabLabel{
   font-weight: 950 !important;
   opacity: 1 !important;
-  font-size: 11px !important;
+  font-size: var(--fs-caption) !important;
   letter-spacing: 0;
-  color: #1E88E5;
+  color: var(--brand-blue-deep);
 }
 
 /* Liquid Glass pill background — büyük yumuşak frosted */
@@ -5503,7 +5527,7 @@ html.theme--dark .coachPick{
 html.theme--dark .coachPickAvatar{ background: rgba(255,255,255,0.1); }
 .coachPickInfo{ flex: 1; min-width: 0; }
 .coachPickEyebrow{
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 900;
   color: #B45309;
   letter-spacing: 1.2px;
@@ -5511,7 +5535,7 @@ html.theme--dark .coachPickAvatar{ background: rgba(255,255,255,0.1); }
 }
 html.theme--dark .coachPickEyebrow{ color: #FCD34D; }
 .coachPickReason{
-  font-size: 13px;
+  font-size: var(--fs-body);
   font-weight: 800;
   color: var(--text);
   line-height: 1.3;
@@ -5559,7 +5583,7 @@ html.theme--dark .coachPickIcon{
   line-height: 1.2;
 }
 .coachPickMeta{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--muted);
   white-space: nowrap;
@@ -5626,7 +5650,7 @@ html.theme--dark .familyMember{
 html.theme--dark .familyMemberAvatar{ background: rgba(255,255,255,0.08); }
 .familyMemberInfo{ flex: 1; min-width: 0; }
 .familyMemberName{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 900;
   color: var(--text);
   white-space: nowrap;
@@ -5636,13 +5660,13 @@ html.theme--dark .familyMemberAvatar{ background: rgba(255,255,255,0.08); }
 }
 .familyMemberStats{
   display: flex; gap: 6px;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--muted);
   margin-top: 2px;
 }
 .familyStreak{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   color: var(--text);
   text-align: center;
@@ -5672,7 +5696,7 @@ html.theme--dark .familyStreak b{ color: #FCD34D; }
  * DAILY REMINDER TOGGLE — Profile tab
  * ============================================ */
 .profileQuickToggle{
-  font-size: 11px;
+  font-size: var(--fs-meta);
   font-weight: 950;
   padding: 4px 12px;
   border-radius: var(--r-pill);
@@ -5737,7 +5761,7 @@ html.theme--dark .profileQuickToggle{
 }
 /* Streak pill mobilde küçük tut, ama görünür olsun */
 .statsCompact .streakPill{
-  font-size: 12px !important;
+  font-size: var(--fs-meta) !important;
   padding: 6px 12px !important;
   flex-shrink: 0;
 }
@@ -5768,7 +5792,7 @@ html.theme--dark .profileQuickToggle{
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid rgba(255,255,255,0.18);
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   color: rgba(255,255,255,0.85);
   text-align: center;
@@ -5784,7 +5808,7 @@ html.theme--dark .profileQuickToggle{
 /* Continue hint daha kompakt */
 .continueHint{
   padding: 10px 12px !important;
-  font-size: 12px !important;
+  font-size: var(--fs-meta) !important;
 }
 
 /* Greeting compact */
@@ -5797,13 +5821,13 @@ html.theme--dark .profileQuickToggle{
   width: 32px !important;
 }
 #tabToday .sub{
-  font-size: 12px !important;
+  font-size: var(--fs-meta) !important;
 }
 
 @media (max-width: 380px){
   #tabToday .h1{ font-size: 19px !important; }
   .statsCompact{ padding: 10px 12px !important; }
-  .statsCompact .streakPill{ font-size: 11px !important; padding: 5px 10px !important; }
+  .statsCompact .streakPill{ font-size: var(--fs-caption) !important; padding: 5px 10px !important; }
 }
 
 /* Stats compact tek satir — progress + today goal */
@@ -5814,11 +5838,11 @@ html.theme--dark .profileQuickToggle{
   gap: 8px;
 }
 .todayGoalBadge{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 900;
   padding: 3px 10px;
   background: linear-gradient(135deg, #FFD600, #FFAB00);
-  color: #92400E;
+  color: var(--ink); /* §2.3 — #92400E was 3.74:1 on the gold; ink is ~9:1 */
   border-radius: var(--r-pill);
   white-space: nowrap;
   flex-shrink: 0;
@@ -5918,7 +5942,7 @@ html.theme--dark .dashBar{ background: rgba(255,255,255,0.08); }
   flex: 0 0 auto;
   min-width: 28px;
   text-align: right;
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 900;
   color: var(--muted);
 }
@@ -5964,21 +5988,21 @@ html.theme--dark .dashBar{ background: rgba(255,255,255,0.08); }
   filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--card-accent, #97D700) 50%, transparent));
 }
 .badge .badgeName{
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 950;
   color: var(--text);
   letter-spacing: -0.1px;
   line-height: 1.2;
 }
 .badge .badgeReq{
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--muted);
   line-height: 1.3;
 }
 .badge .badgeProgress{
   margin-top: 4px;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 900;
   padding: 2px 8px;
   border-radius: var(--r-pill);
@@ -6128,7 +6152,7 @@ body.tab-browse #searchBox{
   border: none;
   padding: 6px 14px;
   border-radius: var(--r-pill);
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   color: var(--muted);
   cursor: pointer;
@@ -6136,8 +6160,9 @@ body.tab-browse #searchBox{
   -webkit-tap-highlight-color: transparent;
 }
 .viewToggleBtn.active{
-  background: linear-gradient(135deg, #4FB3FF, #1E88E5);
+  background: var(--brand-blue-deep); /* §2.3 */
   color: #fff;
+  border: 2px solid var(--brand-blue);
   box-shadow: 0 2px 6px rgba(37,99,235,0.25);
 }
 .viewToggleBtn:not(.active):active{ background: rgba(0,0,0,0.04); }
@@ -6219,7 +6244,7 @@ html.theme--dark .pathSection{
   text-overflow: ellipsis;
 }
 .pathSectionMeta{
-  font-size: 11px;
+  font-size: var(--fs-caption);
   font-weight: 700;
   color: var(--muted);
   margin-top: 2px;
@@ -6316,7 +6341,7 @@ html.theme--dark .pathStepNode{
 /* Mission label below node */
 .pathStepLabel{
   margin-top: 8px;
-  font-size: 12px;
+  font-size: var(--fs-meta);
   font-weight: 800;
   color: var(--text);
   text-align: center;
@@ -6368,7 +6393,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   right: calc(50% - 70px);
   background: #FFAB00;
   color: #fff;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 950;
   letter-spacing: 0.5px;
   padding: 4px 10px 4px 8px;
@@ -6398,7 +6423,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   right: auto;
   background: #FF6A00;
   color: #fff;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   font-weight: 950;
   letter-spacing: 0.5px;
   padding: 4px 10px;
@@ -6442,7 +6467,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   .pathStepIcon{ font-size: 26px; }
   .pathSectionIcon{ width: 38px; height: 38px; font-size: 20px; }
   .pathSectionName{ font-size: 14px; }
-  .pathStepLabel{ font-size: 11px; max-width: 120px; }
+  .pathStepLabel{ font-size: var(--fs-caption); max-width: 120px; }
   .pathStep.next::after,
   .pathStep.daily::after{ font-size: 9px; padding: 3px 8px; }
 }
@@ -6769,12 +6794,51 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 
 /* === PACK CHIP active state === */
 .chip.active{
-  background: linear-gradient(135deg, #4FB3FF, #2999FF) !important;
+  background: var(--brand-blue-deep) !important; /* §2.3 */
   color: #fff !important;
-  border: none;
+  border: 2px solid var(--brand-blue);
   font-weight: 900;
   box-shadow: 0 4px 12px rgba(37,99,235,0.25) !important;
 }
+
+/* §2.3 — orange fills carry DARK ink text. White on #FF6A00 is only 2.87:1;
+   ink (#0F172A) on brand-orange is ~6.5:1. Applies in both themes (the pill is
+   orange regardless of theme, so this is a text-on-orange fix, not a theme one). */
+.streakPill.streak-hot,
+.pathStep.daily::after{
+  background: var(--brand-orange) !important;
+  color: var(--ink) !important;
+}
+
+/* §2.3 — HERO CARD (Today's Mission, the largest text the 2-tap flow lands on).
+   Keep the bright #4FB3FF brand fill (kids'-product identity) and darken the TEXT
+   to --ink instead: #0F172A on #4FB3FF = 7.84:1 (AAA), beating white-on-deep-blue
+   without losing the blue. Covers both themes (the card is bright blue in both).
+   The primary Play CTA keeps its white-bg / blue-text inversion (unchanged); the
+   secondary "Pick another" ghost — not a deep-blue CTA — goes ink so it passes too. */
+.dailyBox.dailyBoxPromoted .dailyEyebrow,
+.dailyBox.dailyBoxPromoted .dailyName,
+.dailyBox.dailyBoxPromoted .dailyMeta,
+.dailyBox.dailyBoxPromoted .dailyMeta *,
+.dailyBox.dailyBoxPromoted .dailyMeta .tag,
+.dailyBox.dailyBoxPromoted .dailyAltSuggestion,
+.dailyBox.dailyBoxPromoted .dailyAltSuggestion *,
+.dailyBox.dailyBoxPromoted .dailyNewSmall,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyEyebrow,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyName,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyMeta,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyMeta *,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyMeta .tag,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyAltSuggestion,
+html.theme--dark .dailyBox.dailyBoxPromoted .dailyAltSuggestion *{
+  color: var(--ink) !important;
+}
+.dailyBox.dailyBoxPromoted .dailyNewSmall{ border-color: rgba(15,23,42,0.24) !important; }
+/* chip pills a touch more opaque so ink reads crisply on the bright card */
+.dailyBox.dailyBoxPromoted .dailyMeta .tag{ background: rgba(255,255,255,0.32) !important; }
+/* Primary Play CTA keeps white bg + blue text, but brand-blue-deep so the label
+   is AA (was #1E88E5 = 3.68:1 → #1D6FB5 = 5.26:1). Inversion preserved. */
+.dailyBox.dailyBoxPromoted .dailyPlayBig{ color: var(--brand-blue-deep) !important; }
 
 /* === EMPTY STATE === */
 .emptyState{
@@ -6819,11 +6883,11 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 .dailyBox.dailyBoxPromoted .dailyPlayBig,
 .dailyBox.dailyBoxPromoted button.dailyPlayBig{
   background: #ffffff !important;
-  color: #1E88E5 !important;
+  color: var(--brand-blue-deep) !important;
   font-size: 16px !important;
   font-weight: 950 !important;
   text-shadow: none !important;
-  -webkit-text-fill-color: #1E88E5 !important;
+  -webkit-text-fill-color: var(--brand-blue-deep) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -6832,8 +6896,8 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 /* btn btnPrimary inheritance ezme */
 .dailyBox.dailyBoxPromoted .dailyPlayBig.btnPrimary{
   background: #ffffff !important;
-  color: #1E88E5 !important;
-  -webkit-text-fill-color: #1E88E5 !important;
+  color: var(--brand-blue-deep) !important;
+  -webkit-text-fill-color: var(--brand-blue-deep) !important;
 }
 
 /* 3) FLOATING SOUND BUTTON kesin gizli (CSS override) */
@@ -6965,7 +7029,7 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
   margin-bottom: 4px !important;
 }
 #tabToday .sub{
-  font-size: 13px !important;
+  font-size: var(--fs-meta) !important;
   margin-bottom: 16px !important;
 }
 
@@ -7023,7 +7087,7 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
     line-height: 1.1;
   }
   .brandSub{
-    font-size: 10px !important;
+    font-size: var(--fs-caption) !important;
     color: var(--muted);
   }
   .logoWrap{
@@ -7042,7 +7106,7 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
   }
   .profilePillName{
     max-width: 60px !important;
-    font-size: 12px !important;
+    font-size: var(--fs-meta) !important;
   }
 
   /* Today tab'da hero üstüne nefes ekle */
@@ -7052,7 +7116,7 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
 
   /* Hero h1 mobilde daha kompakt */
   #tabToday .h1{ font-size: 20px !important; }
-  #tabToday .sub{ font-size: 12px !important; margin-bottom: 12px !important; }
+  #tabToday .sub{ font-size: var(--fs-meta) !important; margin-bottom: 12px !important; }
 }
 
 @media (max-width: 360px){
@@ -7068,4 +7132,4 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
   padding: 6px 2px !important;
 }
 .navTabIcon{ font-size: 20px !important; }
-.navTabLabel{ font-size: 10px !important; }
+.navTabLabel{ font-size: var(--fs-caption) !important; }
