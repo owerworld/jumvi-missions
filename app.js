@@ -3406,7 +3406,8 @@ document.getElementById("btnRandomAll").onclick = ()=>{
 // (a dup-id bug — flagged in the report); bind both so neither is a live reset
 // without the hold.
 (function bindHoldToReset(){
-  const btns = document.querySelectorAll('[id="btnReset"]');
+  // (btnReset = Profile quick-link; btnResetBottom = footer — both reset, one id each)
+  const btns = document.querySelectorAll('#btnReset, #btnResetBottom');
   const HOLD_MS = 1200;
   function doReset(){
     setDoneFromArray([]);

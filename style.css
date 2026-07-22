@@ -3484,8 +3484,10 @@ html.theme--dark .kvWin b{ color: #FCD34D !important; }
   width: 22px !important;
   height: 22px !important;
   font-size: 14px !important;
-  background: rgba(255,255,255,0.18) !important;
-  opacity: 0.8;
+  /* translucent dark (was white 0.18) + full opacity so the white × clears AA
+     over the scrim — the earlier 0.18-white + opacity:0.8 left it at ~4.0:1 */
+  background: rgba(0,0,0,0.32) !important;
+  opacity: 1;
 }
 
 /* Steps numbered list — pack-color daireli daha çocuk-dostu */
@@ -3854,6 +3856,14 @@ html.theme--dark .missionIconWrap{
   background: linear-gradient(135deg, var(--story-color, #4FB3FF) 0%, rgba(79,179,255,0.7) 100%);
   position: relative;
 }
+/* The per-mission gradient can be light (title/tagline/× were ~2.3:1). A dark
+   scrim under the white text passes AA on EVERY mission theme with one rule,
+   instead of per-mission text colours. */
+.storyBannerInner::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background: rgba(15,23,42,0.55);
+}
+.storyBannerInner > *{ position:relative; z-index:1; }
 .storyEmoji{
   font-size: 36px;
   line-height: 1;
@@ -3879,7 +3889,9 @@ html.theme--dark .missionIconWrap{
   width: 26px; height: 26px;
   border: none;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
+  /* translucent DARK (was white 0.25, which lightened the local bg and left the
+     white × at ~4.0:1 over the scrim); dark keeps the × high-contrast */
+  background: rgba(0,0,0,0.30);
   color: #fff;
   font-size: 16px;
   font-weight: 900;
@@ -3888,7 +3900,7 @@ html.theme--dark .missionIconWrap{
   display: flex; align-items: center; justify-content: center;
   transition: background 0.15s ease;
 }
-.storyToggle:hover, .storyToggle:active{ background: rgba(255,255,255,0.4); }
+.storyToggle:hover, .storyToggle:active{ background: rgba(0,0,0,0.45); }
 html.theme--dark .storyBanner{ border-color: rgba(255,255,255,0.08); }
 
 /* ============================================

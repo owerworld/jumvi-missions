@@ -65,6 +65,16 @@
           acc.forEach(function (base) { grad.forEach(function (st) { if (st) next.push(st.a >= 1 ? { r: st.r, g: st.g, b: st.b, a: 1 } : over(st, base)); }); });
           if (next.length) acc = next;
         }
+        // A full-bleed ::before/::after (absolute + inset:0) is a scrim painted
+        // OVER this element's background and UNDER its text — composite it on top.
+        ['::before', '::after'].forEach(function (pe) {
+          var ps = getComputedStyle(chain[i], pe);
+          if (!ps || ps.content === 'none' || ps.content === 'normal') return;
+          if (ps.position !== 'absolute') return;
+          if (parseFloat(ps.top) !== 0 || parseFloat(ps.left) !== 0 || parseFloat(ps.right) !== 0 || parseFloat(ps.bottom) !== 0) return;
+          var sc = toRGBA(ps.backgroundColor); if (!sc) return;
+          acc = acc.map(function (base) { return sc.a >= 1 ? { r: sc.r, g: sc.g, b: sc.b, a: 1 } : over(sc, base); });
+        });
       }
       return acc;
     }
