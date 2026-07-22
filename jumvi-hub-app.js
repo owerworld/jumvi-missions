@@ -112,6 +112,36 @@ export function initHub3D(opts) {
   hudTop.appendChild(progressLabelEl);
   container.appendChild(hudTop);
 
+  // §4.5 — persistent exit. The global bottom nav is hidden in 3D (FIX 1), so
+  // without this a child who tapped in has no obvious way back to the missions.
+  // 44px target, safe-area aware, top-left. Android hardware back leaves the
+  // island (not the whole site) via a pushed history sentinel. The hub instance
+  // isn't torn down on exit (app.js caches it), so re-entry returns to the same
+  // spot — position is effectively preserved.
+  var exitBtn = document.createElement('button');
+  exitBtn.type = 'button';
+  exitBtn.setAttribute('aria-label', 'Back to missions');
+  exitBtn.innerHTML = '← Missions';
+  exitBtn.style.cssText = 'position:absolute;top:calc(14px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));z-index:22;min-height:44px;min-width:44px;padding:9px 15px;border:none;border-radius:16px;background:rgba(255,255,255,0.94);color:#1d2b4a;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(18,38,66,0.22),inset 0 1px 0 rgba(255,255,255,0.9);pointer-events:auto;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  var _leaving = false;
+  function leaveHub(){
+    if (_leaving) return; _leaving = true;
+    try { track('3d_exit'); } catch (e) {}
+    try { if (typeof opts.navigate === 'function') opts.navigate('today'); } catch (e) {}
+  }
+  exitBtn.addEventListener('click', function () {
+    // Prefer popping the sentinel we pushed so history stays consistent; if it
+    // isn't there (older browsers), leave directly.
+    try { if (history.state && history.state.jumviHub) { history.back(); } else { leaveHub(); } }
+    catch (e) { leaveHub(); }
+  });
+  container.appendChild(exitBtn);
+  try {
+    history.pushState({ jumviHub: true }, '');
+    var _onHubPop = function () { leaveHub(); window.removeEventListener('popstate', _onHubPop); };
+    window.addEventListener('popstate', _onHubPop);
+  } catch (e) {}
+
   // Center-screen "zone complete" celebration card — pure DOM overlay (not a
   // 3D object), hidden via opacity:0 until showZoneCompleteCelebration() plays
   // its one-shot animation (see updateZoneLocks() below for the trigger).

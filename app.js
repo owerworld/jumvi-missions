@@ -4238,7 +4238,10 @@ let _hub3dLoadStage = "three"; // last import stage started — read on failure
 // Warming three.js first (its own module) lets us show a real staged progress
 // bar: three import → hub-module import → initHub3D() → first painted frame.
 // The hub module's internal `import ... from "three"` then resolves from cache.
-const THREE_MODULE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js";
+// §4.6 — local three.js (was jsdelivr). This explicit warm-import bypasses the
+// importmap (it's a full URL, not the bare "three" specifier), so it must point
+// at the vendored copy too, or the hub still hits the CDN.
+const THREE_MODULE_URL = "./vendor/three.module.min.js";
 
 function ensureHub3DLoaded(onProgress){
   if(_hub3dLoadPromise) return _hub3dLoadPromise;
@@ -4248,7 +4251,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260524-113x"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260723-1"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
