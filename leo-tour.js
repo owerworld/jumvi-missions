@@ -45,10 +45,14 @@
   // spotlighted UI). WebP + PNG fallback; the bob animation lives in the CSS
   // (.leo-svg), same class the old flat-vector used, so nothing else changes. ---
   function leoSVG() {
-    var b = 'assets/leo/leo-guide';
+    // §2.1 — Coach Leo pointing at the spotlighted UI (leo-point from the
+    // committed §2.1 sprite set; base + @2x). leo-point faces the viewer's
+    // LEFT, so the tour card sits with its bubble below the sprite (no
+    // left/right dependency). The bob animation lives in CSS (.leo-svg).
+    var b = 'assets/leo/leo-point-160';
     return '<picture class="leo-pic">' +
-      '<source srcset="' + b + '-256.webp?v=20260717-1" type="image/webp">' +
-      '<img class="leo-svg" src="' + b + '-256.png?v=20260717-1" alt="" aria-hidden="true" decoding="async" width="256" height="256">' +
+      '<img class="leo-svg" src="' + b + '.webp" srcset="' + b + '.webp 1x, ' + b + '@2x.webp 2x" ' +
+      'alt="" aria-hidden="true" decoding="async" width="160" height="160">' +
     '</picture>';
   }
 
@@ -209,7 +213,7 @@
     if (!host || host.querySelector(".leo-replay-btn")) return;
     var b = el("button", "leo-replay-btn");
     b.type = "button";
-    b.innerHTML = "🦁 <span>Replay Coach Leo tour</span>";
+    b.innerHTML = '<img src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" aria-hidden="true" style="vertical-align:-4px;margin-right:6px;border-radius:50%"> <span>Replay Coach Leo tour</span>';
     b.addEventListener("click", function () { try { localStorage.removeItem(FLAG); } catch (e) {} start(true); });
     host.appendChild(b);
   }

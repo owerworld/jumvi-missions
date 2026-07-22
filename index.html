@@ -68,7 +68,7 @@
   <!-- Preload above-the-fold assets -->
   <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
   <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260721-4">
+  <link rel="stylesheet" href="style.css?v=20260722-4">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260524-29">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -113,12 +113,11 @@
       <img class="welcomeLogo logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" />
       <img class="welcomeLogo logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
       <picture class="welcomeMascot">
-        <source srcset="assets/leo/leo-encourage-512.webp?v=20260717-1" type="image/webp">
-        <img src="assets/leo/leo-encourage-512.png?v=20260717-1" alt="Coach Leo" width="512" height="512" decoding="async" />
+        <img src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" alt="Coach Leo" width="240" height="240" decoding="async" fetchpriority="high" />
       </picture>
       <div class="welcomeTagline">Hey, paddle pro!</div>
       <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.</div>
-      <div class="welcomeNote">✅ No sign-up · 🔒 Stays on your phone · 💝 Free forever</div>
+      <div class="welcomeNote"><i class="ico i-check" aria-hidden="true"></i> No sign-up · <i class="ico i-lock" aria-hidden="true"></i> Stays on your phone · <i class="ico i-heart" aria-hidden="true"></i> Free forever</div>
       <div class="welcomeDivider" aria-hidden="true"></div>
       <div class="welcomeAgesHeading">Who's playing today?</div>
       <div class="welcomeAges" id="welcomeAges">
@@ -128,7 +127,7 @@
       </div>
       <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
       <p class="welcomeAddChild">Playing with a brother or sister? Add them any time from Profile.</p>
-      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button">▶︎ Let's Play!</button>
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Let's Play!</button>
     </div>
   </div>
 
@@ -149,7 +148,7 @@
       <div class="topbarActions">
         <button class="tourHelpBtn" id="btnTourHelp" type="button" aria-label="How to play — start the guided tour">?</button>
         <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
-          <span class="profilePillAvatar" id="profilePillAvatar">🦁</span>
+          <span class="profilePillAvatar" id="profilePillAvatar">🐵</span>
           <span class="profilePillName" id="profilePillName">Player</span>
           <span class="profilePillChevron">▾</span>
         </button>
@@ -167,37 +166,21 @@
           <div id="a2hsSteps">Share → Add to Home Screen</div>
         </div>
         <button class="btn btnPrimary" id="btnA2hsInstall" type="button" style="min-height:36px; padding:8px 12px;">Install</button>
-        <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button">✕</button>
+        <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
 
       <!-- ============== TAB: TODAY ============== -->
       <div class="tabPanel" id="tabToday" data-tab="today">
-        <h1 class="h1">Hey, Paddle Pro! 🦁</h1>
+        <div class="h1Row">
+          <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
+          <h1 class="h1">Hey, Paddle Pro!</h1>
+        </div>
         <p class="sub">Today's mission is ready — let's play!</p>
 
         <!-- Adventure Mode entry card — tapping it turns the hub3d flag on
              (persisted) and jumps straight into the 3D Hub tab. Until then
              the bottom-nav 3D Hub tab stays hidden; this card is the way in. -->
-        <style>
-          /* §2.3 — was #2e7d4f→#8fbf5a (white text hit 2.15:1 on the light-green
-             end). Kept the green identity + white text, darkened the light stops
-             so white is AA (≥4.5:1) across the whole gradient. */
-          .advCard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
-            background:linear-gradient(135deg,#215f3d,#256b44 55%,#2a744a);color:#fff;
-            border:2px solid rgba(255,226,150,.85);border-radius:18px;padding:13px 16px;margin:0 0 14px;
-            cursor:pointer;font-family:inherit;position:relative;
-            animation:advGlow 2.6s ease-in-out infinite;}
-          @keyframes advGlow{
-            0%,100%{box-shadow:0 4px 14px rgba(46,125,79,.35),0 0 0 0 rgba(255,210,63,0)}
-            50%{box-shadow:0 4px 14px rgba(46,125,79,.35),0 0 16px 3px rgba(255,210,63,.45)}
-          }
-          .advCardEmoji{font-size:30px;line-height:1}
-          .advCardTitle{display:block;font-weight:900;font-size:16px;line-height:1.25}
-          .advCardNew{background:#FFD23F;color:#4a3000;font-size:10px;font-weight:900;
-            padding:2px 7px;border-radius:8px;margin-left:6px;vertical-align:middle;letter-spacing:.5px}
-          .advCardSub{display:block;font-size:var(--fs-meta);opacity:1;margin-top:2px;font-weight:600}
-          .advCardArrow{margin-left:auto;font-size:18px;opacity:.9;flex:none}
-        </style>
+        <!-- advCard styles moved to style.css (carry-over B) -->
         <!-- Card + nav tab share ONE name (Leo's Island) so a parent who taps
              the card recognises the tab it opens — "Adventure Mode" + "3D Hub"
              was two mystery names for the same thing. -->
@@ -207,7 +190,7 @@
             <span class="advCardTitle">Visit Leo&rsquo;s Island<span class="advCardNew">NEW!</span></span>
             <span class="advCardSub">Walk with Coach Leo &amp; collect your missions!</span>
           </span>
-          <span class="advCardArrow">▶</span>
+          <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
         </button>
 
         <!-- Continue where you left off (rendered by JS when applicable) -->
@@ -219,7 +202,7 @@
 
         <!-- TODAY'S MISSION — promoted, fully tappable card -->
         <div class="dailyBox dailyBoxPromoted" id="dailyBox" aria-label="daily mission" role="button" tabindex="0">
-          <div class="dailyEyebrow">📅 TODAY'S MISSION</div>
+          <div class="dailyEyebrow"><i class="ico i-calendar" aria-hidden="true"></i> TODAY'S MISSION</div>
           <div class="dailyContent">
             <div class="dailyIconBig" id="dailyIcon">⚡</div>
             <div class="dailyText">
@@ -228,13 +211,13 @@
             </div>
           </div>
           <div class="dailyActionsBig">
-            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Play today's mission" type="button">▶ Play This Mission</button>
-            <button class="dailyNewSmall" id="btnDailyNew" aria-label="Pick another mission" type="button">🔁 Pick another</button>
+            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Play today's mission" type="button"><i class="ico i-play" aria-hidden="true"></i> Play This Mission</button>
+            <button class="dailyNewSmall" id="btnDailyNew" aria-label="Pick another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Pick another</button>
           </div>
 
           <!-- Coach pick alternatif — küçük link satırı -->
           <div class="dailyAltSuggestion" id="dailyAltSuggestion" style="display:none">
-            <span class="altLabel">🦁 Or try:</span>
+            <span class="altLabel"><img class="altLabelLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="24" height="24" alt="Coach Leo" decoding="async"> Or try:</span>
             <span class="altName" id="dailyAltName">—</span>
             <span class="altArrow">→</span>
           </div>
@@ -246,7 +229,7 @@
         <!-- Coach Leo's Smart Pick — recommendation card -->
         <div class="coachPick" id="coachPick" style="display:none">
           <div class="coachPickHeader">
-            <span class="coachPickAvatar">🦁</span>
+            <span class="coachPickAvatar"><img src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="44" height="44" alt="Coach Leo" decoding="async"></span>
             <div class="coachPickInfo">
               <div class="coachPickEyebrow">Coach Leo's pick</div>
               <div class="coachPickReason" id="coachPickReason">Try something new!</div>
@@ -258,14 +241,14 @@
               <span class="coachPickName" id="coachPickName">—</span>
               <span class="coachPickMeta" id="coachPickMeta">—</span>
             </span>
-            <span class="coachPickArrow">▶</span>
+            <span class="coachPickArrow"><i class="ico i-play" aria-hidden="true"></i></span>
           </button>
         </div>
 
         <!-- Daily Mini-Challenge: today's goal -->
         <div class="dailyChallenge" id="dailyChallenge">
           <div class="dailyChallengeHeader">
-            <span class="dailyChallengeIcon">🌟</span>
+            <span class="dailyChallengeIcon"><i class="ico i-star" aria-hidden="true"></i></span>
             <span class="dailyChallengeTitle">Today's Goal</span>
             <span class="dailyChallengeStatus" id="dailyChallengeStatus">0 / 1</span>
           </div>
@@ -298,7 +281,7 @@
 
         <!-- Quick action: random -->
         <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
-          <span class="todayQuickIcon">🎲</span>
+          <span class="todayQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
           <span class="todayQuickText">Surprise me — pick a random mission</span>
         </button>
       </div>
@@ -326,7 +309,7 @@
 
       <!-- ============== TAB: STATS ============== -->
       <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
-        <h2 class="tabHeading">📊 Your Progress</h2>
+        <h2 class="tabHeading"><i class="ico i-chart" aria-hidden="true"></i> Your Progress</h2>
 
         <!-- Family Insights — sadece >1 profil varsa görünür -->
         <div class="familyInsights" id="familyInsights" style="display:none">
@@ -340,16 +323,16 @@
 
         <!-- Empty state — yeni kullanıcı için -->
         <div class="emptyState" id="statsEmptyState" style="display:none">
-          <div class="emptyStateIcon">📊</div>
+          <div class="emptyStateIcon"><i class="ico i-chart" aria-hidden="true"></i></div>
           <div class="emptyStateTitle">Your stats will appear here</div>
           <div class="emptyStateDesc">Complete your first mission to unlock the dashboard, badges, and Champion Certificate!</div>
-          <button class="btn btnPrimary emptyStateBtn" data-go-tab="today" type="button">▶ Go to Today</button>
+          <button class="btn btnPrimary emptyStateBtn" data-go-tab="today" type="button"><i class="ico i-play" aria-hidden="true"></i> Go to Today</button>
         </div>
 
         <!-- Parent Dashboard -->
         <div class="dashCard" id="parentDashboard" aria-label="This Week's Progress">
           <div class="dashHeader">
-            <div class="dashTitle">📊 This Week's Progress</div>
+            <div class="dashTitle"><i class="ico i-chart" aria-hidden="true"></i> This Week's Progress</div>
             <div class="dashSub" id="dashDynSub">Keep playing to see your child's skills grow!</div>
           </div>
           <div class="dashReport" id="dashReport"></div>
@@ -370,7 +353,7 @@
 
         <!-- Badges section -->
         <div class="statsBadgesSection">
-          <h3 class="statsSectionTitle">🏅 Your Badges</h3>
+          <h3 class="statsSectionTitle"><i class="ico i-medal" aria-hidden="true"></i> Your Badges</h3>
           <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
           <div class="badgesHint" id="badgesHint">Swipe to see all badges →</div>
         </div>
@@ -378,7 +361,7 @@
         <!-- Certificate -->
         <div class="certBox" id="certBox">
           <div class="certLeft">
-            <div class="certIcon">🏆</div>
+            <div class="certIcon"><i class="ico i-trophy" aria-hidden="true"></i></div>
             <div class="certText">
               <b>Mission Champion Certificate</b>
               <div class="certProgressWrap">
@@ -423,11 +406,11 @@
 
       <!-- ============== TAB: PROFILE ============== -->
       <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
-        <h2 class="tabHeading">🦁 Profile</h2>
+        <h2 class="tabHeading">Profile</h2>
 
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
-          <div class="profileCardAvatar" id="profileCardAvatar">🦁</div>
+          <div class="profileCardAvatar" id="profileCardAvatar">🐵</div>
           <div class="profileCardBody">
             <div class="profileCardName" id="profileCardName">Player</div>
             <div class="profileCardStats" id="profileCardStats">0 missions · 0 day streak</div>
@@ -442,7 +425,7 @@
         <!-- Quick links -->
         <div class="profileQuickLinks">
           <button class="profileQuickLink" data-go-tab="stats" type="button">
-            <span class="profileQuickIcon">📊</span>
+            <span class="profileQuickIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
               <div class="profileQuickTitle">View Progress</div>
               <div class="profileQuickSub">Dashboard, badges & certificate</div>
@@ -470,9 +453,9 @@
         <!-- Trust + support -->
         <div class="profileFooterInfo">
           <div class="trustBadges">
-            <span>✅ No sign-up</span>
-            <span>🔒 Stays on phone</span>
-            <span>💝 Free forever</span>
+            <span><i class="ico i-check" aria-hidden="true"></i> No sign-up</span>
+            <span><i class="ico i-lock" aria-hidden="true"></i> Stays on phone</span>
+            <span><i class="ico i-heart" aria-hidden="true"></i> Free forever</span>
           </div>
           <div class="profileSupport">
             Need help? <a href="mailto:support@jumvi.co">support@jumvi.co</a>
@@ -499,7 +482,7 @@
         Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
       </div>
       <div class="small">
-        <a href="#" id="privacyLink" role="button">🔒 Privacy &amp; Safety</a>
+        <a href="#" id="privacyLink" role="button"><i class="ico i-lock" aria-hidden="true"></i> Privacy &amp; Safety</a>
       </div>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn btnResetFooter" id="btnReset" aria-label="Reset progress">🗑️ Reset Progress</button>
@@ -518,7 +501,7 @@
           <div class="sheetTitle" id="mTitle">Mission</div>
           <div class="sheetMeta" id="mMeta"></div>
         </div>
-        <button class="close" id="btnClose" aria-label="Close mission">✕</button>
+        <button class="close" id="btnClose" aria-label="Close mission"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="sheetBody" id="sheetBody">
       <!-- Mission motion-diagram icon (per-mission, populated in openMission) -->
@@ -561,9 +544,9 @@
 
       <!-- Primary action row — tek dominant Start + ikon yardımcılar -->
       <div class="missionPrimary">
-        <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer">▶ Start</button>
+        <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
         <button class="missionIconBtn" id="btnSpeak" aria-label="Read mission aloud" title="Read aloud">🗣️</button>
-        <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track score" title="Track score">📊</button>
+        <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track score" title="Track score"><i class="ico i-chart" aria-hidden="true"></i></button>
       </div>
 
       <!-- Score Tracker — sadece tracking açıksa görünür -->
@@ -609,7 +592,7 @@
       </div>
 
       <div class="sheetActions">
-        <button class="btn btnPrimary holdBtn" id="btnToggleDone" aria-label="Mark mission done">✅ Mark as Done</button>
+        <button class="btn btnPrimary holdBtn" id="btnToggleDone" aria-label="Mark mission done"><i class="ico i-check" aria-hidden="true"></i> Mark as Done</button>
         <button class="btn btnGhost" id="btnNext" aria-label="Next mission">➡️ Next Mission</button>
         <!-- "Random from Pack" gizli stub — JS uyumlulugu icin -->
         <button id="btnRandomPack" type="button" style="display:none" aria-hidden="true"></button>
@@ -625,10 +608,10 @@
     <div class="sheet">
       <div class="sheetTop">
         <div>
-          <div class="sheetTitle">🏅 Badges</div>
+          <div class="sheetTitle"><i class="ico i-medal" aria-hidden="true"></i> Badges</div>
           <div class="small">Unlock badges by completing missions.</div>
         </div>
-        <button class="close" id="btnBadgesClose" aria-label="Close badges">✕</button>
+        <button class="close" id="btnBadgesClose" aria-label="Close badges"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="kv" id="badgesList"></div>
       <div class="small">Badges update automatically on this phone.</div>
@@ -643,7 +626,7 @@
           <div class="sheetTitle">Where to Play</div>
           <div class="small" id="seasonalSub">Fresh ways to play all year.</div>
         </div>
-        <button class="close" id="btnSeasonalClose" aria-label="Close seasonal packs">✕</button>
+        <button class="close" id="btnSeasonalClose" aria-label="Close seasonal packs"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="kv" id="seasonalList"></div>
       <div class="small">Tap a mission to open it.</div>
@@ -655,10 +638,10 @@
     <div class="sheet">
       <div class="sheetTop">
         <div>
-          <div class="sheetTitle">🔒 Privacy &amp; Safety</div>
+          <div class="sheetTitle"><i class="ico i-lock" aria-hidden="true"></i> Privacy &amp; Safety</div>
           <div class="small">Made for kids — built for parents' peace of mind.</div>
         </div>
-        <button class="close" id="btnPrivacyClose" aria-label="Close privacy and safety">✕</button>
+        <button class="close" id="btnPrivacyClose" aria-label="Close privacy and safety"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="privacyBody" style="font-size:14px;line-height:1.5;color:#334155;display:flex;flex-direction:column;gap:12px;">
         <div>
@@ -674,7 +657,7 @@
           Mission progress and badges are saved only in this browser, on this device. They are never uploaded to a server, and the optional certificate name you type is used only to draw the image on your device — it is not sent anywhere.
         </div>
         <div>
-          <b>📊 Anonymous usage counts only.</b><br/>
+          <b><i class="ico i-chart" aria-hidden="true"></i> Anonymous usage counts only.</b><br/>
           We use <a href="https://plausible.io/privacy-focused-web-analytics" target="_blank" rel="noopener">Plausible</a>, a privacy-first analytics tool, to count aggregate usage (for example, how often a mission is opened). It uses <b>no cookies</b>, collects <b>no personal information</b>, and <b>never tracks your child across other sites or apps</b>.
         </div>
         <div>
@@ -704,8 +687,8 @@
 
       <!-- Header -->
       <div class="sheetTop certSheetTop">
-        <div class="sheetTitle certSheetTitle">🏆 Champion Certificate</div>
-        <button class="close certCloseBtn" id="btnCertClose" aria-label="Close certificate">✕</button>
+        <div class="sheetTitle certSheetTitle"><i class="ico i-trophy" aria-hidden="true"></i> Champion Certificate</div>
+        <button class="close certCloseBtn" id="btnCertClose" aria-label="Close certificate"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
 
       <div class="certWrap">
@@ -742,7 +725,7 @@
           <div class="sheetTitle">👤 Choose Player</div>
           <div class="small">Each child has their own progress, streak & badges.</div>
         </div>
-        <button class="close" id="btnProfileClose" aria-label="Close player picker">✕</button>
+        <button class="close" id="btnProfileClose" aria-label="Close player picker"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="profileList" id="profileList"></div>
 
@@ -820,19 +803,19 @@
   <!-- Bottom Navigation -->
   <nav class="bottomNav" id="bottomNav" aria-label="Main navigation">
     <button class="navTab active" data-tab="today" type="button">
-      <span class="navTabIcon">📅</span>
+      <span class="navTabIcon"><i class="ico i-calendar" aria-hidden="true"></i></span>
       <span class="navTabLabel">Today</span>
     </button>
     <button class="navTab" data-tab="browse" type="button">
-      <span class="navTabIcon">🎯</span>
+      <span class="navTabIcon"><i class="ico i-target" aria-hidden="true"></i></span>
       <span class="navTabLabel">Browse</span>
     </button>
     <button class="navTab" data-tab="stats" type="button">
-      <span class="navTabIcon">📊</span>
+      <span class="navTabIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
       <span class="navTabLabel">Stats</span>
     </button>
     <button class="navTab" data-tab="profile" type="button">
-      <span class="navTabIcon">🦁</span>
+      <span class="navTabIcon"><i class="ico i-user" aria-hidden="true"></i></span>
       <span class="navTabLabel">Profile</span>
     </button>
     <!-- 3D Hub — opt-in experimental view, hidden unless jumvi_3d_hub_enabled=1 in localStorage -->
@@ -862,7 +845,7 @@
         </div>
         <div style="display:flex; gap:8px; align-items:center;">
           <button class="saveOpenBtn" id="saveOpenBtn" aria-label="Open image" type="button">Open Image</button>
-          <button class="saveCloseBtn" id="saveOverlayClose" aria-label="Close save overlay" type="button">✕</button>
+          <button class="saveCloseBtn" id="saveOverlayClose" aria-label="Close save overlay" type="button"><i class="ico i-x" aria-hidden="true"></i></button>
         </div>
       </div>
       <img id="saveImg" alt="Certificate image" loading="lazy" decoding="async" />
@@ -889,18 +872,16 @@
        child instead lets this compete directly against bottomNav (9500) and the mission
        modal (80) on equal footing. -->
   <div id="hub3dOverlay" style="display:none"></div>
-  <style>
-    #hub3dOverlay { position: fixed; inset: 0; z-index: 40; background: #BEE3F5; }
-  </style>
+  <!-- #hub3dOverlay backdrop rule moved to style.css (carry-over B) -->
 </div>
 
 <script src="confetti.min.js?v=20260524-29" defer></script>
 <script src="data.js?v=20260524-32" defer></script>
 <script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260720-1" defer></script>
+<script src="app.js?v=20260722-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
-<script src="leo-tour.js?v=20260720-1" defer></script>
+<script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{

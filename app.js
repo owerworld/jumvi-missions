@@ -469,7 +469,7 @@ try {
     lsSet(HUB3D_FLAG_KEY, "1");
   }
 }catch(_){}
-const PROFILE_AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼","🐯","🐨","🐸","🦋"];
+const PROFILE_AVATARS = ["🐵","🐶","🦕","🦄","👽","🤖","🦊","🐼","🐯","🐨","🐸","🦋"];
 
 function getProfiles(){
   return lsGetJSON(PROFILES_KEY, []);
@@ -511,7 +511,7 @@ function nextProfileId(){
   });
 
   const oldAvatarIdx = Number(lsGet("jumvi_avatar_v1", "0")) || 0;
-  const defaultAvatar = PROFILE_AVATARS[oldAvatarIdx] || "🦁";
+  const defaultAvatar = PROFILE_AVATARS[oldAvatarIdx] || "🐵";
 
   const profiles = [{
     id: "p1",
@@ -528,7 +528,7 @@ function nextProfileId(){
   if(!storageAvailable) return;
   const ps = getProfiles();
   if(ps.length === 0){
-    const p = { id:"p1", name:"Player", avatar:"🦁", createdAt: new Date().toISOString() };
+    const p = { id:"p1", name:"Player", avatar:"🐵", createdAt: new Date().toISOString() };
     saveProfiles([p]);
     lsSet(ACTIVE_PROFILE_KEY, "p1");
   }
@@ -571,7 +571,7 @@ const HIGH_SCORES_KEY   = _PP + "high_scores_v1";
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
 const DIFFICULTY_OPTIONS = ["all","Easy","Medium"];
-const AVATARS = ["🦁","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
+const AVATARS = ["🐵","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
 
 const state = {
   done: new Set(lsGetJSON(LS_KEY, [])),
@@ -1353,7 +1353,7 @@ function checkStreakWarning(){
   // Streak kırılma riski — dün oynadıysa uyar
   const yesterday = yesterdayIso(today);
   if(lastActiveIso === yesterday){
-    setTimeout(()=> showToast("🦁 The lion misses you! Play today to keep your streak 🔥"), 2000);
+    setTimeout(()=> showToast("Coach Leo misses you! Play today to keep your streak going 🔥"), 2000);
   }
 }
 
@@ -3128,13 +3128,13 @@ function markMissionDone(id, source="manual"){
     // First ever completion — Coach Leo special moment
     const remaining = missions.length - done.size;
     if(done.size === 1){
-      setTimeout(()=>{ fireConfetti(2000); showToast("🦁 High-five, paddle pro! Your first mission is done!"); }, 400);
+      setTimeout(()=>{ fireConfetti(2000); showToast("High-five, paddle pro! Your first mission is done!"); }, 400);
     } else if(done.size === 5){
       setTimeout(()=>{ fireConfetti(1500); showToast("🔥 5 down! You're on fire — Coach Leo is proud!"); }, 400);
     } else if(done.size === 18){
       setTimeout(()=>{ fireConfetti(2000); showToast("🌟 Halfway there! 18 missions crushed!"); }, 400);
     } else if(remaining > 0){
-      const cheers = ["⭐ Awesome!", "🎯 Nailed it!", "🦁 Boom!", "🔥 You got this!", "💪 Amazing!"];
+      const cheers = ["⭐ Awesome!", "🎯 Nailed it!", "💥 Boom!", "🔥 You got this!", "💪 Amazing!"];
       const cheer = cheers[Math.floor(Math.random()*cheers.length)];
       showToast(`${cheer} ${remaining} mission${remaining===1?"":"s"} to go!`);
     }
@@ -3382,7 +3382,7 @@ function buildFamilyShareText(){
       if(n > topCount){ topCount = n; topPackLabel = p.label; }
     });
   }
-  let text = `🦁 ${name}'s JUMVI progress this week:\n`;
+  let text = `🏓 ${name}'s JUMVI progress this week:\n`;
   text += `✅ ${total}/36 missions completed\n`;
   if(sc > 0) text += `🔥 ${sc}-day streak\n`;
   if(topPackLabel) text += `🌟 Top skill: ${topPackLabel}\n`;
@@ -3591,10 +3591,10 @@ function renderAvatar(){
     const avatarEl = document.getElementById("profilePillAvatar");
     const nameEl   = document.getElementById("profilePillName");
     if(ap){
-      if(avatarEl) avatarEl.textContent = ap.avatar || "🦁";
+      if(avatarEl) avatarEl.textContent = ap.avatar || "🐵";
       if(nameEl)   nameEl.textContent   = ap.name   || "Player";
     } else {
-      if(avatarEl) avatarEl.textContent = AVATARS[currentAvatarIdx] || "🦁";
+      if(avatarEl) avatarEl.textContent = AVATARS[currentAvatarIdx] || "🐵";
       if(nameEl)   nameEl.textContent   = "Player";
     }
 }
@@ -3608,7 +3608,7 @@ if(avatarBtn){
 /* =======================
  * Profile Sheet (multi-child)
  * ======================= */
-let _profileSelectedAvatar = "🦁";
+let _profileSelectedAvatar = "🐵";
 
 function openProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
@@ -3661,7 +3661,7 @@ function renderProfileList(){
     const item = document.createElement("div");
     item.className = "profileItem" + (isActive ? " active" : "");
     item.innerHTML = `
-      <div class="profileItemAvatar">${escapeHtml(p.avatar || "🦁")}</div>
+      <div class="profileItemAvatar">${escapeHtml(p.avatar || "🐵")}</div>
       <div class="profileItemBody">
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
         <div class="profileItemMeta">${doneCount}/36 missions · 🔥 ${streak} day${streak===1?"":"s"}</div>
@@ -3688,14 +3688,14 @@ function renderProfileList(){
 
 /* Profil düzenleme paneli */
 let _profileEditingId = null;
-let _profileEditingAvatar = "🦁";
+let _profileEditingAvatar = "🐵";
 let _deleteConfirmTimer = null;
 
 function openProfileEdit(id){
   const p = getProfiles().find(x => x.id === id);
   if(!p) return;
   _profileEditingId = id;
-  _profileEditingAvatar = p.avatar || "🦁";
+  _profileEditingAvatar = p.avatar || "🐵";
 
   const editSection = document.getElementById("profileEditSection");
   const addSection  = document.getElementById("profileAddSection");
@@ -3874,7 +3874,7 @@ function addNewChildProfile(){
   const newProfile = {
     id: nextProfileId(),
     name: name,
-    avatar: _profileSelectedAvatar || "🦁",
+    avatar: _profileSelectedAvatar || "🐵",
     createdAt: new Date().toISOString()
   };
   profiles.push(newProfile);
@@ -4514,7 +4514,7 @@ function renderProfileTab(){
   const avatarEl = document.getElementById("profileCardAvatar");
   const nameEl   = document.getElementById("profileCardName");
   const statsEl  = document.getElementById("profileCardStats");
-  if(avatarEl) avatarEl.textContent = ap.avatar || "🦁";
+  if(avatarEl) avatarEl.textContent = ap.avatar || "🐵";
   if(nameEl)   nameEl.textContent   = ap.name   || "Player";
   if(statsEl){
     const total = done.size;
@@ -4557,7 +4557,7 @@ function renderFamilyInsights(){
     const card = document.createElement("div");
     card.className = "familyMember";
     card.innerHTML = `
-      <div class="familyMemberAvatar">${escapeHtml(it.p.avatar || "🦁")}</div>
+      <div class="familyMemberAvatar">${escapeHtml(it.p.avatar || "🐵")}</div>
       <div class="familyMemberInfo">
         <div class="familyMemberName">${escapeHtml(it.p.name || "Player")}</div>
         <div class="familyMemberStats">

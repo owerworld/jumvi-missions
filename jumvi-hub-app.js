@@ -84,7 +84,7 @@ export function initHub3D(opts) {
       { icon: '📅', label: 'Today', tab: 'today' },
       { icon: '🎯', label: 'Browse Missions', tab: 'browse' },
       { icon: '📊', label: 'Stats', tab: 'stats' },
-      { icon: '🦁', label: 'Profile', tab: 'profile' },
+      { icon: '👤', label: 'Profile', tab: 'profile' },
       { icon: '🏅', label: 'Badges', action: 'badges' }
     ],
     menuClose: 'Close menu'
