@@ -72,6 +72,13 @@ body::before {
   --muted-on-light:  #64748B;   /* 4.76:1 on white — replaces #94a3b8 in light */
   --muted-on-dark:   #94A3B8;   /* stays in dark theme — 7.07:1 */
 
+  /* Leo's Island card — forest greens (nature, not the lime CTA colour, which
+     would compete with the primary button). Promoted from one-off hexes so the
+     card gradient is tokenised like everything else. */
+  --island-green-1:  #215f3d;   /* gradient start */
+  --island-green-2:  #256b44;   /* gradient mid (55%) */
+  --island-green-3:  #2a744a;   /* gradient end */
+
   /* §2.5 — type scale. Floor is 13px (nothing smaller); body copy is 16px. */
   --fs-caption: 13px;   /* was 10–11px */
   --fs-meta:    14px;   /* was 12px */
@@ -7155,7 +7162,7 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
    so its white text is AA across the whole gradient. */
 .advCard{
   display:flex; align-items:center; gap:12px; width:100%; text-align:left;
-  background:linear-gradient(135deg,#215f3d,#256b44 55%,#2a744a); color:#fff;
+  background:linear-gradient(135deg,var(--island-green-1),var(--island-green-2) 55%,var(--island-green-3)); color:#fff;
   border:2px solid rgba(255,226,150,.85); border-radius:18px; padding:13px 16px; margin:0 0 14px;
   cursor:pointer; font-family:inherit; position:relative;
   animation:advGlow 2.6s ease-in-out infinite;

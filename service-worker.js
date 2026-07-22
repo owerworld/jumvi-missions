@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumvi-missions-v122";
+const CACHE_NAME = "jumvi-missions-v123";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -12,8 +12,11 @@ const CORE_ASSETS = [
   "/jumvi-mission-icons.js",
   "/jumvi-redlight.js",
   "/manifest.json",
-  "/jumvi_logo_dark.webp",
-  "/jumvi_logo_light.webp",
+  // §2.4 — logo derivatives (originals moved to assets/logo/source/, off the critical path)
+  "/assets/logo/jumvi_logo_dark-96.webp",
+  "/assets/logo/jumvi_logo_dark-192.webp",
+  "/assets/logo/jumvi_logo_light-96.webp",
+  "/assets/logo/jumvi_logo_light-192.webp",
   // §2.1 Coach Leo sprites — precached so the greeting/welcome/tour render offline
   "/assets/leo/leo-face-64.webp",
   "/assets/leo/leo-face-64@2x.webp",

@@ -65,10 +65,11 @@
       }catch(_){ }
     })();
   </script>
-  <!-- Preload above-the-fold assets -->
-  <link rel="preload" href="jumvi_logo_dark.webp" as="image" type="image/webp" />
-  <link rel="preload" href="jumvi_logo_light.webp" as="image" type="image/webp" />
-  <link rel="stylesheet" href="style.css?v=20260722-8">
+  <!-- §2.4 — preload only the LCP logo for the active theme (192px derivative,
+       ~6 KB). Was two unconditional 1024px webp (~121 KB) on the critical path. -->
+  <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_dark-192.webp" media="(prefers-color-scheme: light)" />
+  <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_light-192.webp" media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href="style.css?v=20260723-1">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260722-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -112,8 +113,8 @@
   <!-- Welcome Overlay — shown once for new visitors -->
   <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
     <div class="welcomePanel">
-      <img class="welcomeLogo logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" />
-      <img class="welcomeLogo logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
+      <img class="welcomeLogo logoLight" src="assets/logo/jumvi_logo_dark-192.webp" width="132" height="132" alt="JUMVI logo" decoding="async" />
+      <img class="welcomeLogo logoDark" src="assets/logo/jumvi_logo_light-192.webp" width="132" height="132" alt="" decoding="async" aria-hidden="true" />
       <picture class="welcomeMascot">
         <img src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" alt="Coach Leo" width="240" height="240" decoding="async" fetchpriority="high" />
       </picture>
@@ -146,8 +147,8 @@
     <div class="topbar">
       <div class="brand">
         <div class="logoWrap" title="JUMVI">
-          <img class="logoImg logoLight" src="jumvi_logo_dark.webp" alt="JUMVI logo" decoding="async" fetchpriority="high" />
-          <img class="logoImg logoDark" src="jumvi_logo_light.webp" alt="" decoding="async" aria-hidden="true" />
+          <img class="logoImg logoLight" src="assets/logo/jumvi_logo_dark-96.webp" srcset="assets/logo/jumvi_logo_dark-96.webp 1x, assets/logo/jumvi_logo_dark-192.webp 2x" width="36" height="36" alt="JUMVI logo" decoding="async" fetchpriority="high" />
+          <img class="logoImg logoDark" src="assets/logo/jumvi_logo_light-96.webp" srcset="assets/logo/jumvi_logo_light-96.webp 1x, assets/logo/jumvi_logo_light-192.webp 2x" width="36" height="36" alt="" decoding="async" aria-hidden="true" />
         </div>
         <div class="brandText">
           <div class="brandTitle">JUMVI</div>
