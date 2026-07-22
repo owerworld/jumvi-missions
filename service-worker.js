@@ -1,4 +1,4 @@
-const CACHE_NAME = "jumvi-missions-v121";
+const CACHE_NAME = "jumvi-missions-v122";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -14,6 +14,13 @@ const CORE_ASSETS = [
   "/manifest.json",
   "/jumvi_logo_dark.webp",
   "/jumvi_logo_light.webp",
+  // §2.1 Coach Leo sprites — precached so the greeting/welcome/tour render offline
+  "/assets/leo/leo-face-64.webp",
+  "/assets/leo/leo-face-64@2x.webp",
+  "/assets/leo/leo-wave-240.webp",
+  "/assets/leo/leo-wave-240@2x.webp",
+  "/assets/leo/leo-point-160.webp",
+  "/assets/leo/leo-point-160@2x.webp",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/apple-touch-icon.png"
