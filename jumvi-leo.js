@@ -23,7 +23,7 @@ export function createCoachLeo(THREE, options) {
   // option is off, or if it's on but the model fails to load (bad network,
   // wrong path, etc.) — Leo is never just an empty invisible group.
   var useModel = !!options.useModel;
-  var modelUrl = options.modelUrl || './prototypes/textured_mesh_optimized.glb';
+  var modelUrl = options.modelUrl || './prototypes/textured_mesh_optimized.glb?v=20260723-meshopt';
 
   // ---------- TOON MATERIAL HELPER ----------
   // Three-tone gradient map for cel-shaded look.
@@ -276,9 +276,17 @@ export function createCoachLeo(THREE, options) {
     // Dynamic + conditional: GLTFLoader is only ever fetched when useModel is
     // actually on, so pages that never set it (every existing caller today)
     // never touch the "three" import map at all.
-    import('./vendor/jsm/loaders/GLTFLoader.js')
-      .then(function (mod) {
+    // Leo's GLB is meshopt-compressed (§4.3), so this loader needs the decoder
+    // too — the hub's loader has it, but this module builds its own. Without it
+    // the parse fails silently and Leo falls back to the procedural rig.
+    Promise.all([
+      import('./vendor/jsm/loaders/GLTFLoader.js'),
+      import('./vendor/jsm/libs/meshopt_decoder.module.js')
+    ])
+      .then(function (mods) {
+        var mod = mods[0];
         var loader = new mod.GLTFLoader();
+        loader.setMeshoptDecoder(mods[1].MeshoptDecoder);
         loader.load(
           modelUrl,
           function (gltf) {

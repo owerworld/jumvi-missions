@@ -10,7 +10,7 @@
 // ships as an ES module. Same version (0.160.0) as before, just a different
 // build/packaging — every existing THREE.Xxx call below is unaffected.
 import * as THREE from 'three';
-import { createCoachLeo } from './jumvi-leo.js?v=20260723-1';
+import { createCoachLeo } from './jumvi-leo.js?v=20260723-2';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -1241,7 +1241,7 @@ export function initHub3D(opts) {
   // spot, and the real model quietly drops into it whenever the load
   // finishes (in practice: within a second or two of the hub tab opening,
   // long before a kid finishes enough missions to reveal any of these).
-  var MODEL_BASE = './assets/hub3d/';  /* flip to hub3d-optimized/ after a full-zone walk-through QA */
+  var MODEL_BASE = './assets/hub3d-optimized/';  /* §4.3 — meshopt-optimized set (contact-sheet QA approved) */
   // size = target world-space size (meters) for the model's LARGEST
   // dimension after fitModel() uniformly rescales it — tuned by eye against
   // the existing procedural props and Leo's ~1.3-unit height, not the
@@ -2584,7 +2584,7 @@ export function initHub3D(opts) {
   // rig as Leo's visible representation (rig is still built as the fallback
   // inside createCoachLeo() if the model fails to load).
   var USE_LEO_MODEL = true;
-  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './prototypes/textured_mesh_optimized.glb' });
+  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './prototypes/textured_mesh_optimized.glb?v=20260723-meshopt' });
   scene.add(leo.group);
 
   // ---------- INPUT: KEYBOARD ----------

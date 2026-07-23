@@ -1,0 +1,75 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Leo — source vs meshopt</title>
+<style>
+  body{margin:0;background:#0f1622;color:#e6edf6;font:13px/1.4 -apple-system,Segoe UI,Roboto,sans-serif}
+  h1{font-size:15px;padding:10px 14px;margin:0;background:#0a1120}
+  .row{display:flex;gap:12px;padding:12px;align-items:flex-start}
+  .pane{text-align:center}
+  .pane img{border-radius:10px;background:#f0f0f2;display:block}
+  .lab{font-size:12px;color:#9fb0c3;margin-top:5px}
+  .sz{color:#7fd08a;font-weight:800}
+  .cap{padding:2px 14px;font-weight:800;font-size:13px;color:#f0b86e}
+</style>
+<h1>Coach Leo — source (754 KB) vs meshopt, no simplification (245 KB) · 20,000 tri + 1024² webp both preserved</h1>
+<div class="cap">Full body</div><div class="row" id="rowA"></div>
+<div class="cap">Face, close range</div><div class="row" id="rowB"></div>
+<script type="importmap">{ "imports": { "three": "/vendor/three.module.min.js" } }</script>
+<script type="module">
+import * as THREE from '/vendor/three.module.min.js';
+import { GLTFLoader } from '/vendor/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from '/vendor/jsm/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from '/vendor/jsm/libs/meshopt_decoder.module.js';
+
+const draco = new DRACOLoader(); draco.setDecoderPath('/vendor/jsm/libs/draco/');
+const loader = new GLTFLoader(); loader.setDRACOLoader(draco); loader.setMeshoptDecoder(MeshoptDecoder);
+
+const SIZE = 400;
+const renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+renderer.setSize(SIZE, SIZE); renderer.setPixelRatio(1); renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+// mode 'body' = frame whole model; 'face' = tight on the head (upper ~35%)
+function shot(url, mode){
+  return new Promise(res=>{
+    loader.load(url, gltf=>{
+      const scene = new THREE.Scene(); scene.background = new THREE.Color(0xf0f0f2);
+      const obj = gltf.scene;
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+      obj.position.sub(center); scene.add(obj);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x8890a0, 1.1));
+      const d1 = new THREE.DirectionalLight(0xffffff, 1.6); d1.position.set(1.5,2.5,3); scene.add(d1);
+      const d2 = new THREE.DirectionalLight(0xffffff, 0.5); d2.position.set(-2,1,-1); scene.add(d2);
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      const cam = new THREE.PerspectiveCamera(30, 1, 0.001, 100);
+      let tgt, dist;
+      if(mode === 'face'){
+        tgt = new THREE.Vector3(0, size.y * 0.24, 0);   // head sits above centre
+        dist = maxDim * 1.15;                            // head-and-shoulders
+      } else {
+        tgt = new THREE.Vector3(0, 0, 0);
+        dist = maxDim * 2.0;
+      }
+      cam.position.set(dist*0.30, tgt.y + dist*0.20, dist*1.0);
+      cam.lookAt(tgt);
+      renderer.render(scene, cam);
+      let tris=0; obj.traverse(o=>{ if(o.isMesh&&o.geometry){const g=o.geometry; tris += (g.index?g.index.count:g.attributes.position.count)/3;} });
+      res({ img: renderer.domElement.toDataURL('image/png'), tris: Math.round(tris) });
+    }, undefined, e=> res({img:null, tris:0, err:String(e).slice(0,60)}));
+  });
+}
+
+const SRC = '/prototypes/textured_mesh_source.glb';
+const OPT = '/prototypes/textured_mesh_optimized.glb';
+function cell(r, label, sz){
+  return '<div class="pane"><img src="'+r.img+'" width="400" height="400">'+
+         '<div class="lab">'+label+' · <span class="sz">'+sz+'</span> · '+r.tris.toLocaleString()+' tri</div></div>';
+}
+(async()=>{
+  const a1 = await shot(SRC,'body'), a2 = await shot(OPT,'body');
+  document.getElementById('rowA').innerHTML = cell(a1,'source','754 KB') + cell(a2,'meshopt','245 KB');
+  const b1 = await shot(SRC,'face'), b2 = await shot(OPT,'face');
+  document.getElementById('rowB').innerHTML = cell(b1,'source','754 KB') + cell(b2,'meshopt','245 KB');
+  document.title = 'LEO COMPARE READY';
+})();
+</script>
