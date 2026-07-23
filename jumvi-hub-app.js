@@ -1241,7 +1241,7 @@ export function initHub3D(opts) {
   // spot, and the real model quietly drops into it whenever the load
   // finishes (in practice: within a second or two of the hub tab opening,
   // long before a kid finishes enough missions to reveal any of these).
-  var MODEL_BASE = './assets/hub3d/';
+  var MODEL_BASE = './assets/hub3d/';  /* flip to hub3d-optimized/ after a full-zone walk-through QA */
   // size = target world-space size (meters) for the model's LARGEST
   // dimension after fitModel() uniformly rescales it — tuned by eye against
   // the existing procedural props and Leo's ~1.3-unit height, not the
@@ -1282,12 +1282,14 @@ export function initHub3D(opts) {
       // an empty holder forever.
       gltfLoaderPromise = Promise.all([
         import('./vendor/jsm/loaders/GLTFLoader.js'),
-        import('./vendor/jsm/loaders/DRACOLoader.js')
+        import('./vendor/jsm/loaders/DRACOLoader.js'),
+        import('./vendor/jsm/libs/meshopt_decoder.module.js')  // §4.3 optimized set is meshopt-compressed
       ]).then(function (mods) {
         var dracoLoader = new mods[1].DRACOLoader();
         dracoLoader.setDecoderPath('./vendor/jsm/libs/draco/');
         var loader = new mods[0].GLTFLoader();
         loader.setDRACOLoader(dracoLoader);
+        loader.setMeshoptDecoder(mods[2].MeshoptDecoder);      // decode the meshopt geometry
         return loader;
       });
     }

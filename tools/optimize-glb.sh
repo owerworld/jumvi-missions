@@ -21,15 +21,19 @@ find "$SRC" -name '*.glb' -exec stat -f '%z %N' {} \; | sort -rn | while read -r
   out="$OUT/$rel"
   mkdir -p "$(dirname "$out")"
   before=$(stat -f%z "$path")
+  # meshopt (far stronger than draco on these dense meshes) + real simplify
+  # (ratio 0.10, error 0.02 — the brief's 0.001 tolerance never actually ran).
   if npx --yes @gltf-transform/cli@4 optimize "$path" "$out" \
-       --compress draco \
        --texture-compress webp \
        --texture-size 512 \
-       --simplify true >/dev/null 2>&1; then
+       --compress meshopt \
+       --simplify true --simplify-ratio 0.10 --simplify-error 0.02 >/dev/null 2>&1; then
     after=$(stat -f%z "$out")
+    # Keep the smaller of (optimized, original) so the output dir is deployable.
+    if [ "$after" -ge "$before" ]; then cp "$path" "$out"; after=$before; note=" (kept original)"; else note=""; fi
     total_before=$((total_before + before))
     total_after=$((total_after + after))
-    printf '%-34s %8d -> %8d  (%d%%)\n' "$rel" "$before" "$after" $((after * 100 / before))
+    printf '%-34s %8d -> %8d  (%d%%)%s\n' "$rel" "$before" "$after" $((after * 100 / before)) "$note"
   else
     echo "FAIL $rel"
   fi
