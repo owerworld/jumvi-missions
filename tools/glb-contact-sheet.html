@@ -1,0 +1,79 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GLB contact sheet — original vs optimized</title>
+<style>
+  body{ margin:0; background:#0f1622; color:#e6edf6; font:13px/1.4 -apple-system,Segoe UI,Roboto,sans-serif; }
+  h1{ font-size:16px; padding:12px 16px; margin:0; background:#0a1120; position:sticky; top:0; }
+  #grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; padding:12px; }
+  .cell{ background:#16202e; border:1px solid #24303f; border-radius:10px; padding:8px; }
+  .name{ font-weight:800; font-size:12px; margin-bottom:4px; }
+  .pair{ display:flex; gap:6px; }
+  .pane{ flex:1; text-align:center; }
+  .pane img{ width:100%; height:auto; border-radius:6px; display:block; background:#f0f0f2; }
+  .pane .lab{ font-size:10px; color:#9fb0c3; margin-top:3px; }
+  .kb{ color:#7fd08a; } .tri{ color:#f0b86e; }
+  .warn{ outline:2px solid #ff6a6a; }
+  .bad{ color:#ff8a8a; font-weight:800; }
+</style>
+<h1>GLB original → optimized (meshopt, simplify 0.10) · flagged = silhouette/tri drop worth a look</h1>
+<div id="grid"></div>
+<script type="importmap">{ "imports": { "three": "/vendor/three.module.min.js" } }</script>
+<script type="module">
+import * as THREE from '/vendor/three.module.min.js';
+import { GLTFLoader } from '/vendor/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from '/vendor/jsm/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from '/vendor/jsm/libs/meshopt_decoder.module.js';
+
+const MODELS = ["play/slide","zen/golden_lantern","beach/sandcastle","target/flag","energy/power_pole",
+"beach/palm_tree","home/swing","zen/bamboo","home/flower_bed","beach/seashell","zen/lotus_pond",
+"beach/beach_umbrella","play/bench","target/target_board","home/flower_crown","target/golden_target",
+"play/champion_flag","home/mailbox","zen/stone_lantern","energy/energy_orb","beach/golden_sun",
+"home/fence","energy/lightning_bolt"];
+
+const draco = new DRACOLoader(); draco.setDecoderPath('/vendor/jsm/libs/draco/');
+const loader = new GLTFLoader(); loader.setDRACOLoader(draco); loader.setMeshoptDecoder(MeshoptDecoder);
+
+const SIZE = 190;
+const renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+renderer.setSize(SIZE, SIZE); renderer.setPixelRatio(1); renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+function render(url){
+  return new Promise(res=>{
+    loader.load(url, gltf=>{
+      const scene = new THREE.Scene(); scene.background = new THREE.Color(0xf0f0f2);
+      const obj = gltf.scene;
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+      obj.position.sub(center); scene.add(obj);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x8890a0, 1.15));
+      const d1 = new THREE.DirectionalLight(0xffffff, 1.5); d1.position.set(2,3,2); scene.add(d1);
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      const cam = new THREE.PerspectiveCamera(35, 1, 0.01, 1000);
+      const dist = maxDim * 2.3; cam.position.set(dist*0.65, dist*0.5, dist*0.95); cam.lookAt(0,0,0);
+      renderer.render(scene, cam);
+      let tris=0; obj.traverse(o=>{ if(o.isMesh&&o.geometry){ const g=o.geometry; tris += (g.index?g.index.count:g.attributes.position.count)/3; } });
+      res({ img: renderer.domElement.toDataURL('image/png'), tris: Math.round(tris) });
+    }, undefined, err=> res({ img:null, tris:0, err:String(err).slice(0,50) }));
+  });
+}
+
+const grid = document.getElementById('grid');
+(async()=>{
+  for(const m of MODELS){
+    const o = await render('/assets/hub3d/'+m+'.glb');
+    const p = await render('/assets/hub3d-optimized/'+m+'.glb');
+    const triDrop = o.tris ? (1 - p.tris/o.tris) : 0;         // fraction of tris removed
+    const flag = triDrop > 0.92 || !p.img;                    // >92% removed → eyeball it
+    const cell = document.createElement('div');
+    cell.className = 'cell' + (flag ? ' warn' : '');
+    cell.innerHTML =
+      '<div class="name">'+m+(flag?' <span class="bad">⚠ check</span>':'')+'</div>'+
+      '<div class="pair">'+
+        '<div class="pane"><img src="'+(o.img||'')+'"><div class="lab">orig · <span class="tri">'+o.tris.toLocaleString()+' tri</span></div></div>'+
+        '<div class="pane"><img src="'+(p.img||'')+'"><div class="lab">opt · <span class="tri">'+p.tris.toLocaleString()+' tri</span></div></div>'+
+      '</div>';
+    grid.appendChild(cell);
+  }
+  document.title = 'CONTACT SHEET READY';
+})();
+</script>

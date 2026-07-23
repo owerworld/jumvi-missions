@@ -2792,7 +2792,10 @@ function _loadScriptOnce(src){
 }
 async function ensurePdfLib(){
   if(window.PDFLib) return true;
+  // §6.3 — the certificate PDF (a child's physical reward) must not depend on a
+  // reachable CDN. Local copy first; CDNs stay as a fallback only.
   const cdns = [
+    "vendor/pdf-lib.min.js",
     "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
   ];
