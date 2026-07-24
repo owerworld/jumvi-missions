@@ -1,3 +1,22 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * THE RULE: change any file in CORE_ASSETS  →  bump CACHE_NAME. Always.
+ *
+ * Why it matters more than it looks: CORE_ASSETS paths are deliberately
+ * UNVERSIONED (no ?v=) so the precache can match them literally. This worker
+ * serves them cache-first and NEVER refetches a precached file until
+ * CACHE_NAME changes. So editing, say, /style.css or a Leo sprite without
+ * bumping CACHE_NAME means every returning visitor keeps the OLD file
+ * indefinitely — and nothing anywhere reports it. (Coach Leo's 3D model
+ * shipped stale for exactly this class of reason; _headers had the same flaw
+ * one layer up, where "immutable" on an unversioned path stopped the browser
+ * from ever revalidating.)
+ *
+ * This is enforced, not just documented:
+ *     ./tools/check-core-assets.sh            → fails if an asset changed
+ *                                               without a CACHE_NAME bump
+ *     ./tools/check-core-assets.sh --update   → re-lock after bumping
+ * Run it before every deploy.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 const CACHE_NAME = "jumvi-missions-v123";
 const CORE_ASSETS = [
   "/",
