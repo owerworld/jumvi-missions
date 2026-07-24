@@ -10,7 +10,7 @@
 // ships as an ES module. Same version (0.160.0) as before, just a different
 // build/packaging — every existing THREE.Xxx call below is unaffected.
 import * as THREE from 'three';
-import { createCoachLeo } from './jumvi-leo.js?v=20260723-2';
+import { createCoachLeo } from './jumvi-leo.js?v=20260723-3';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -35,7 +35,12 @@ export function initHub3D(opts) {
   var _fpsWarmupUntil = 0; // skip the first ~1.5s of load jank before sampling
   // Exposed so the FIX-5 fallback layer (and app.js) can report a bail-out with
   // a reason ("no_webgl" | "low_memory" | "reduced_motion" | "low_fps" | "slow_load").
-  window._hub3dTrackFallback = function (reason) { track('3d_fallback_triggered', { reason: reason }); };
+  window._hub3dTrackFallback = function (reason) {
+    // Also record locally — analytics is aggregate; this makes it answerable
+    // on one real device ("did the island degrade for THIS child?").
+    if (window.__jumviFallback) window.__jumviFallback('hub3d_fell_back_to_2d', reason);
+    track('3d_fallback_triggered', { reason: reason });
+  };
 
   // ---------- HUB UI TEXTS (hub'ın tek dil kaynağı) ----------
   // Ana uygulamada i18n sistemi yok (tüm app metinleri hardcoded İngilizce);
@@ -1251,7 +1256,6 @@ export function initHub3D(opts) {
     lightning_bolt: { path: 'energy/lightning_bolt.glb', size: 1.3 },
     energy_orb: { path: 'energy/energy_orb.glb', size: 0.7 },
     target_board: { path: 'target/target_board.glb', size: 2.1 },
-    flag: { path: 'target/flag.glb', size: 1.7 },
     golden_target: { path: 'target/golden_target.glb', size: 0.85 },
     bamboo: { path: 'zen/bamboo.glb', size: 2.3 },
     stone_lantern: { path: 'zen/stone_lantern.glb', size: 1.2 },
@@ -1260,13 +1264,10 @@ export function initHub3D(opts) {
     bench: { path: 'play/bench.glb', size: 1.3 },
     slide: { path: 'play/slide.glb', size: 2.4 },
     champion_flag: { path: 'play/champion_flag.glb', size: 0.85 },
-    fence: { path: 'home/fence.glb', size: 1.4 },
     flower_bed: { path: 'home/flower_bed.glb', size: 1.1 },
     swing: { path: 'home/swing.glb', size: 2.2 },
-    mailbox: { path: 'home/mailbox.glb', size: 1.1 },
     flower_crown: { path: 'home/flower_crown.glb', size: 0.65 },
     palm_tree: { path: 'beach/palm_tree.glb', size: 2.6 },
-    beach_umbrella: { path: 'beach/beach_umbrella.glb', size: 1.8 },
     sandcastle: { path: 'beach/sandcastle.glb', size: 1.2 },
     seashell: { path: 'beach/seashell.glb', size: 0.5 },
     golden_sun: { path: 'beach/golden_sun.glb', size: 0.75 }
@@ -1399,7 +1400,8 @@ export function initHub3D(opts) {
       holder.add(SkeletonUtils.clone(template));
     }).catch(function (err) {
       holder.userData._decorLoaded = false; // allow a later retry
-      console.warn('Hub3D: decor model "' + key + '" failed to load:', err);
+      if (window.__jumviFallback) window.__jumviFallback('hub_decor_failed', key + ': ' + err);
+      else console.warn('Hub3D: decor model "' + key + '" failed to load:', err);
     });
   }
 
@@ -2584,7 +2586,7 @@ export function initHub3D(opts) {
   // rig as Leo's visible representation (rig is still built as the fallback
   // inside createCoachLeo() if the model fails to load).
   var USE_LEO_MODEL = true;
-  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './prototypes/textured_mesh_optimized.glb?v=20260723-meshopt' });
+  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './prototypes/textured_mesh_optimized.glb?v=20260723-meshopt', getLoader: getGLTFLoader });
   scene.add(leo.group);
 
   // ---------- INPUT: KEYBOARD ----------

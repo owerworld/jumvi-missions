@@ -273,20 +273,28 @@ export function createCoachLeo(THREE, options) {
   }
 
   function loadModel() {
-    // Dynamic + conditional: GLTFLoader is only ever fetched when useModel is
-    // actually on, so pages that never set it (every existing caller today)
-    // never touch the "three" import map at all.
-    // Leo's GLB is meshopt-compressed (§4.3), so this loader needs the decoder
-    // too — the hub's loader has it, but this module builds its own. Without it
-    // the parse fails silently and Leo falls back to the procedural rig.
-    Promise.all([
-      import('./vendor/jsm/loaders/GLTFLoader.js'),
-      import('./vendor/jsm/libs/meshopt_decoder.module.js')
-    ])
-      .then(function (mods) {
-        var mod = mods[0];
-        var loader = new mod.GLTFLoader();
-        loader.setMeshoptDecoder(mods[1].MeshoptDecoder);
+    // A SECOND GLTFLoader is how Leo silently became a procedural blob: this
+    // module built its own without the meshopt decoder his asset needs. So
+    // prefer a loader handed in by the caller — the hub already builds one with
+    // BOTH decoders (draco + meshopt) for decor, so reusing it means Leo can
+    // never drift out of sync with his asset's compression, and costs no extra
+    // bytes. The self-built path below stays for standalone callers and matches
+    // the compression Leo's GLB actually uses (meshopt); it deliberately does
+    // NOT pull the 286 KB draco decoder Leo doesn't need. If Leo's asset is ever
+    // re-encoded with draco, register it here — __jumviFallback('leo_model_failed')
+    // will surface the mistake immediately rather than hiding it.
+    var loaderPromise = (typeof options.getLoader === 'function')
+      ? Promise.resolve(options.getLoader())
+      : Promise.all([
+          import('./vendor/jsm/loaders/GLTFLoader.js'),
+          import('./vendor/jsm/libs/meshopt_decoder.module.js')
+        ]).then(function (mods) {
+          var l = new mods[0].GLTFLoader();
+          l.setMeshoptDecoder(mods[1].MeshoptDecoder);
+          return l;
+        });
+    loaderPromise
+      .then(function (loader) {
         loader.load(
           modelUrl,
           function (gltf) {
@@ -329,12 +337,15 @@ export function createCoachLeo(THREE, options) {
           function (err) {
             // Graceful fallback — keep showing the procedural rig instead of
             // leaving Leo invisible (bad path, flaky network, etc).
-            console.warn('Coach Leo model failed to load, keeping the procedural rig:', err);
+            // Visible-but-wrong degrade: Leo silently becomes a low-poly blob.
+            if (window.__jumviFallback) window.__jumviFallback('leo_model_failed', 'showing procedural rig instead: ' + err);
+            else console.warn('Coach Leo model failed to load, keeping the procedural rig:', err);
           }
         );
       })
       .catch(function (err) {
-        console.warn('Failed to load GLTFLoader, keeping the procedural rig:', err);
+        if (window.__jumviFallback) window.__jumviFallback('leo_loader_failed', 'GLTFLoader/Meshopt import failed: ' + err);
+        else console.warn('Failed to load GLTFLoader, keeping the procedural rig:', err);
       });
   }
 

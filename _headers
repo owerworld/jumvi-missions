@@ -6,22 +6,33 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
-# §5.2 — Cache policy. Every script/style is referenced with a ?v=YYYYMMDD-NN
-# query, which Cloudflare includes in the edge cache key, so "immutable" is safe
-# (a version bump is a new key). Entry points must revalidate so a deploy is
-# picked up immediately.
+# §5.2 — Cache policy.
+#
+# "immutable" is ONLY correct for a URL whose content can never change, i.e. one
+# carrying a version. Scripts and styles are always requested with ?v=YYYYMMDD-NN
+# (Cloudflare folds the query into the edge cache key), so those stay immutable.
+#
+# Everything under /assets, /icons and /vendor is referenced WITHOUT a version —
+# deliberately, because the service worker precaches those exact literal paths and
+# a ?v= would stop the precache from ever matching. Marking them immutable meant a
+# changed logo/sprite/model could never reach a returning visitor: the browser
+# would not even revalidate for a year. (Coach Leo's model hit exactly this — his
+# GLB changed at a static URL and served stale.) They get a short max-age plus
+# stale-while-revalidate instead: still instant from cache, still fully offline via
+# the service worker, but a change propagates within a day.
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
 /icons/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
 /vendor/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
 /*.webp
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
+# Versioned by ?v= on every reference — safe to freeze.
 /*.js
   Cache-Control: public, max-age=31536000, immutable
 

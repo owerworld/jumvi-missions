@@ -4,6 +4,33 @@
  * Unauthorized copying, modification, or redistribution of this
  * interface, missions, or structure is strictly prohibited.
  */
+/* ── Silent-fallback recorder ────────────────────────────────────────────────
+ * A fallback that activates without surfacing anything is indistinguishable
+ * from working code — Coach Leo shipped as a procedural blob once because of
+ * exactly that. Every degrade path calls __jumviFallback(): it warns with a
+ * distinct prefix AND records into window.__jumviFallbacks, so a real device
+ * can be opened and asked "did anything degrade?".
+ *
+ *   > __jumviFallbacks.counts      // { leo_model_failed: 1, ... }
+ *   > __jumviFallbacks.list        // [{ name, detail, at }, ...]
+ *
+ * Local only: no network, no analytics, nothing persisted. COPPA unchanged.
+ * Each distinct name warns once per session (the record still counts them all)
+ * so a per-frame path can't flood the console.
+ * ---------------------------------------------------------------------------*/
+window.__jumviFallbacks = { list: [], counts: {} };
+window.__jumviFallback = function (name, detail) {
+  try {
+    var F = window.__jumviFallbacks;
+    var first = !F.counts[name];
+    F.counts[name] = (F.counts[name] || 0) + 1;
+    if (F.list.length < 100) {
+      F.list.push({ name: name, detail: detail == null ? null : String(detail).slice(0, 200), at: new Date().toISOString() });
+    }
+    if (first) console.warn("[JUMVI fallback] " + name, detail == null ? "" : detail);
+  } catch (_) { }
+};
+
 // Safe localStorage helpers (avoid crashes in private/offline modes)
 const lsGet = (key, fallback = null) => {
   try{
@@ -22,7 +49,9 @@ const lsGetJSON = (key, fallback) => {
   }
 };
 const lsSet = (key, value) => {
-  try{ localStorage.setItem(key, value); }catch(_){ }
+  // A failed write means progress is NOT being saved — the most consequential
+  // silent degrade in the app (private mode / quota / blocked storage).
+  try{ localStorage.setItem(key, value); }catch(e){ window.__jumviFallback("storage_write_failed", key + ": " + (e && e.name)); }
 };
 const storageAvailable = (()=>{
   try{
@@ -31,6 +60,7 @@ const storageAvailable = (()=>{
     localStorage.removeItem(k);
     return true;
   }catch(_){
+    window.__jumviFallback("storage_unavailable", "progress will not persist this session");
     return false;
   }
 })();
@@ -376,8 +406,9 @@ async function loadImageWithFallback(sources){
     try{
       const img = await loadImage(src);
       return img;
-    }catch(_){}
+    }catch(_){ window.__jumviFallback("image_source_failed", src); }
   }
+  window.__jumviFallback("image_all_sources_failed", (sources||[]).join(", "));
   throw new Error("img_load_failed");
 }
 function fitText(ctx, text, maxWidth, startSize, fontFamily){
@@ -858,7 +889,7 @@ if("speechSynthesis" in window){
  * ======================= */
 function hideReadToMeIfUnsupported(){
   if(!btnSpeak) return;
-  if(!("speechSynthesis" in window)) btnSpeak.style.display = "none";
+  if(!("speechSynthesis" in window)){ btnSpeak.style.display = "none"; window.__jumviFallback("tts_unsupported", "read-aloud hidden; §3.1 auto-read disabled"); }
 }
 
 function persist(){
@@ -2805,6 +2836,7 @@ async function ensurePdfLib(){
       if(window.PDFLib) return true;
     }catch(_){ }
   }
+  if(!window.PDFLib) window.__jumviFallback("pdf_lib_unavailable", "certificate PDF export disabled");
   return !!window.PDFLib;
 }
 // iOS fallback: open image in a new tab (works even when downloads are blocked)
@@ -4255,7 +4287,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260723-6"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260723-7"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
