@@ -104,7 +104,11 @@ export function initHub3D(opts) {
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
-  hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:calc(16px + env(safe-area-inset-top)) 16px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
+  // padding-top clears the ~58px top-left ← Missions exit button (and the ☰
+  // below it): the centered badges row is 248px wide and cannot fit in the
+  // ~214px gap between the exit and mute corner buttons, so it drops to its own
+  // row beneath them instead of sitting behind the exit button on narrow phones.
+  hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:calc(64px + env(safe-area-inset-top)) 16px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
   var badgesEl = document.createElement('div');
   badgesEl.style.cssText = 'display:flex;gap:8px;background:rgba(255,255,255,0.94);padding:8px 13px;border-radius:22px;box-shadow:0 6px 18px rgba(18,38,66,0.20),inset 0 1px 0 rgba(255,255,255,0.9);border:1px solid rgba(120,150,180,0.20);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);';
   hudTop.appendChild(badgesEl);

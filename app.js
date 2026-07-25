@@ -4287,7 +4287,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260725-1"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260725-2"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
