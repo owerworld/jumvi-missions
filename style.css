@@ -2698,8 +2698,11 @@ body {
 .sheet{
   padding-top: calc(18px + env(safe-area-inset-top));
 }
+/* .sheet already adds env(safe-area-inset-top); adding it again here double-counted
+   the notch inset (~+59px extra), pushing the title far down and squeezing the
+   STEPS list behind the pinned actions on standalone iPhones. */
 .sheetTop{
-  padding-top: env(safe-area-inset-top);
+  padding-top: 0;
 }
 
 @supports (padding: max(0px)) {
