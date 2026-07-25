@@ -104,7 +104,7 @@ export function initHub3D(opts) {
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
-  hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
+  hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:calc(16px + env(safe-area-inset-top)) 16px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
   var badgesEl = document.createElement('div');
   badgesEl.style.cssText = 'display:flex;gap:8px;background:rgba(255,255,255,0.94);padding:8px 13px;border-radius:22px;box-shadow:0 6px 18px rgba(18,38,66,0.20),inset 0 1px 0 rgba(255,255,255,0.9);border:1px solid rgba(120,150,180,0.20);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);';
   hudTop.appendChild(badgesEl);
@@ -453,7 +453,7 @@ export function initHub3D(opts) {
   var muteBtn = document.createElement('button');
   muteBtn.type = 'button';
   muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
-  muteBtn.style.cssText = 'position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
+  muteBtn.style.cssText = 'position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
   muteBtn.textContent = isMuted() ? '🔇' : '🔊';
   muteBtn.addEventListener('click', function () {
     setSoundOnFn(isMuted()); // flip the app-wide setting
@@ -478,7 +478,9 @@ export function initHub3D(opts) {
   menuBtn.type = 'button';
   menuBtn.setAttribute('aria-label', HUB_TEXTS.menu);
   menuBtn.textContent = '☰';
-  menuBtn.style.cssText = 'position:absolute;top:14px;left:14px;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.88);border:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:13;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  // Stacked BELOW the ← Missions exit button (both top-left) so the two never overlap;
+  // 66px clears the 44px exit pill + gap. Safe-area aware for iOS standalone.
+  menuBtn.style.cssText = 'position:absolute;top:calc(66px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.88);border:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:13;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
   container.appendChild(menuBtn);
 
   var menuScrim = document.createElement('div');

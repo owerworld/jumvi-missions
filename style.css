@@ -2820,9 +2820,13 @@ html.theme--light .sheet .sheetMeta {
   inset:0;
   z-index:9999;
   display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
+  flex-direction:column;         /* main axis = vertical, so panel margin:auto centers WITHOUT the cross-axis clip-and-no-scroll flexbox bug */
+  align-items:center;            /* horizontal centering */
+  /* scroll when the panel is taller than the viewport (small iPhones / URL bar / landscape) */
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  /* keep the panel clear of the notch and home indicator */
+  padding:calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
   background:rgba(10,22,40,0.82);
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
@@ -2842,6 +2846,8 @@ html.theme--light .welcomeOverlay{
   padding:22px 24px 26px;
   max-width:360px;
   width:100%;
+  margin:auto 0;                 /* vertical auto margins (main axis) center when it fits AND keep the top reachable + scrollable when it overflows */
+  flex-shrink:0;                 /* never squeeze the panel — let the overlay scroll instead */
   text-align:center;
   box-shadow:0 8px 48px rgba(0,0,0,0.22);
   display:flex;
