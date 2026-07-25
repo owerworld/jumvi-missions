@@ -2673,7 +2673,12 @@ body {
   margin-bottom: 0 !important;
 }
 #app-wrapper {
-  padding-bottom: env(safe-area-inset-bottom) !important;
+  /* #app-wrapper IS .app-shell — the scroll container. The fixed .bottomNav
+     (~65px + safe-area) sits over its bottom, so it needs that much clearance
+     or the last rows of every tab hide behind the nav and can't be scrolled to.
+     This ID+!important rule was overriding the .app-shell rule (80px) down to
+     just the safe-area inset; restore the nav clearance. */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
   margin-bottom: 0 !important;
 }
 .wrap, .bottom-section {
