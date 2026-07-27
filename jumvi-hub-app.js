@@ -3534,16 +3534,65 @@ export function initHub3D(opts) {
     tick(delta);
   }
 
+  // The canvas was sized ONCE at init and only re-sized on window 'resize'.
+  // In an iOS standalone PWA the viewport height settles AFTER the first
+  // layout (status-bar/home-indicator insets resolve late) and no 'resize'
+  // event fires, so the canvas stayed ~90px short of the screen for the whole
+  // session — the dark band under the scene. Re-measure from every signal that
+  // can mean "the box changed", and never trust a zero measurement.
+  var _lastW = 0, _lastH = 0;
   function onResize() {
-    camera.aspect = container.clientWidth / container.clientHeight;
+    // Pin the overlay to the REAL screen box first. #app-wrapper carries
+    // -webkit-overflow-scrolling:touch, which on iOS makes it the containing
+    // block for its fixed children — so the overlay's inset:0/100dvh resolved
+    // against a box ~73px shorter than the screen in standalone, and the scene
+    // ended above the bottom edge. window.innerWidth/Height is the screen in
+    // standalone and the visible area in Safari, so it is correct in both.
+    try {
+      container.style.width = window.innerWidth + 'px';
+      container.style.height = window.innerHeight + 'px';
+    } catch (e) {}
+    var w = container.clientWidth || window.innerWidth;
+    var h = container.clientHeight || window.innerHeight;
+    if (!w || !h) return;                       // hidden/detached — a 0 here would blank the canvas
+    if (w === _lastW && h === _lastH) return;   // idempotent: safe to call from many listeners
+    _lastW = w; _lastH = h;
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(w, h, false);              // false: don't write inline px onto the canvas style
+  }
+  // Re-measure on the next two frames as well — iOS reports the final
+  // standalone height a frame or two after the overlay becomes visible.
+  function onResizeSoon() {
+    onResize();
+    requestAnimationFrame(function () {
+      onResize();
+      requestAnimationFrame(onResize);
+    });
   }
   window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResizeSoon);
+  window.addEventListener('pageshow', onResizeSoon);          // bfcache restore
+  try {
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', onResize);
+    }
+  } catch (e) {}
+  try {
+    // The most reliable signal: the container's own box changing, which covers
+    // display:none -> visible and any late inset resolution without polling.
+    if (typeof ResizeObserver === 'function') {
+      new ResizeObserver(onResize).observe(container);
+    }
+  } catch (e) {}
 
   function resume() {
     if (running) return;
     running = true;
+    // The overlay was display:none until now (and on re-entry the phone may
+    // have rotated or the insets changed), so the canvas box is only truly
+    // measurable from here on — see onResize().
+    onResizeSoon();
     muteBtn.textContent = isMuted() ? '🔇' : '🔊'; // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     startBgMusic(); // gentle background loop plays only while the hub is active

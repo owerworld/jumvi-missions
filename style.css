@@ -4,7 +4,7 @@
 /* === Full-screen fixed app shell === */
 html {
   height: 100%;
-  height: -webkit-fill-available;
+  height: 100dvh;   /* was -webkit-fill-available: resolves SHORT in iOS standalone PWA (everything fixed to bottom:0 landed ~74px above the screen edge — the bottom-nav gap and the 3D-hub dark band). dvh is the live viewport height and is correct in standalone, Safari and on rotate. */
   overflow: hidden;
   -webkit-text-size-adjust: 100%;
   background-color: var(--page-bg);
@@ -37,7 +37,7 @@ body::before {
 .app-shell {
   width: 100%;
   min-height: 100svh;
-  min-height: -webkit-fill-available;
+  min-height: 100dvh;   /* dvh, not -webkit-fill-available — see the note on html above */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
@@ -2548,13 +2548,13 @@ body {
 /* iOS PWA safe-area fix */
 html {
   background-color: var(--page-bg);
-  height: -webkit-fill-available;
+  height: 100dvh;   /* dvh, not -webkit-fill-available — see the note on html above */
 }
 
 body {
   background-color: var(--page-bg);
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  min-height: 100dvh;   /* dvh, not -webkit-fill-available — see the note on html above */
   min-height: 100dvh;
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -7216,7 +7216,17 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
 html.theme--dark .advCardNew{ color:#4a3000 !important; }
 
 /* 3D hub overlay backdrop (was inline near #hub3dOverlay) */
-#hub3dOverlay{ position:fixed; inset:0; z-index:40; background:#BEE3F5; }
+/* Height is stated explicitly as well as via inset:0 — on iOS standalone the
+   overlay was ending ~90px above the bottom of the screen (dark band under the
+   scene). dvh is the live viewport height, so it stays correct in standalone,
+   in Safari with the toolbar, and across rotation; the plain-% line is the
+   fallback for engines without dvh. */
+#hub3dOverlay{
+  position:fixed; inset:0; z-index:40; background:#BEE3F5;
+  width:100%;
+  height:100%;
+  height:100dvh;
+}
 
 /* ===== §2.1 — Coach Leo inline sprites (replacing 🦁 chrome) ===== */
 /* h1 with Leo's face to the LEFT of the greeting. The greeting's own margins
