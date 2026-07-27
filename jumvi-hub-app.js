@@ -302,6 +302,24 @@ export function initHub3D(opts) {
     _introBubble2Pending = true; // praise bubble after the first real walk
   }
 
+  // ---------- HAPTICS ----------
+  // The 2D app already buzzes on its big moments; the hub had none, so walking
+  // and reaching a gate felt flat next to it. Same rules as the audio below:
+  // silenced by the mute button (it's the one "feedback off" switch a parent
+  // will find) and by prefers-reduced-motion, which covers vestibular/sensory
+  // sensitivities. navigator.vibrate is absent on iOS Safari — the try/catch
+  // and the guard make that a silent no-op rather than an error.
+  var _reduceMotion = false;
+  try {
+    _reduceMotion = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+  function haptic(pattern) {
+    if (isMuted() || _reduceMotion) return;
+    if (!navigator.vibrate) return;
+    try { navigator.vibrate(pattern); } catch (e) {}
+  }
+
   // ---------- AUDIO (synthesized via Web Audio API — no asset files) ----------
   // Every sound below is one or two oscillator+gain nodes with a short
   // exponential-decay envelope; nothing is fetched/decoded, so there's no
@@ -2712,7 +2730,10 @@ export function initHub3D(opts) {
     moveTarget.x = THREE.MathUtils.clamp(hit.point.x, tCenter - tHalf, tCenter + tHalf);
     moveTarget.z = tz;
     moveTargetActive = true;
-    if (!isDrag) cancelAutoWalk(); // a fresh manual tap overrides the guided walk
+    if (!isDrag) {
+      cancelAutoWalk(); // a fresh manual tap overrides the guided walk
+      haptic(8);        // "I heard you" — only on a fresh tap, never per touchmove frame
+    }
     if (isDrag) {
       targetRing.position.x = moveTarget.x;
       targetRing.position.z = moveTarget.z;
@@ -2755,6 +2776,53 @@ export function initHub3D(opts) {
   // when a growth reveal / medal ceremony starts and out when it ends (see
   // the chase-camera block) so focus enter/exit glides instead of snapping.
   var focusBlend = 0;
+
+  // ---------- FOOT DUST ----------
+  // Small puffs kicked up while Leo walks. Without them he reads as sliding
+  // over the ground rather than pushing off it — and on lowTier, where the
+  // shadow pass is off entirely, this is the only thing tying him to the
+  // floor. Skipped on lowTier for exactly that cost reason: a fixed pool of
+  // 6 shared-geometry discs (no allocation per puff, recycled oldest-first).
+  var DUST_ON = !lowTier && !_reduceMotion;
+  var dustPool = [];
+  var dustNext = 0;
+  var dustCooldown = 0;
+  if (DUST_ON) {
+    var dustGeo = new THREE.CircleGeometry(0.16, 8);
+    for (var di = 0; di < 6; di++) {
+      var dm = new THREE.MeshBasicMaterial({
+        color: 0xF0E4CC, transparent: true, opacity: 0, depthWrite: false, fog: true
+      });
+      var disc = new THREE.Mesh(dustGeo, dm);
+      disc.rotation.x = -Math.PI / 2; // lie flat on the ground
+      disc.position.y = 0.04;
+      disc.visible = false;
+      disc.userData.life = 0;
+      scene.add(disc);
+      dustPool.push(disc);
+    }
+  }
+  function spawnDust(x, z) {
+    if (!DUST_ON) return;
+    var d = dustPool[dustNext];
+    dustNext = (dustNext + 1) % dustPool.length;
+    d.position.set(x + (Math.random() - 0.5) * 0.22, 0.04, z + (Math.random() - 0.5) * 0.22);
+    d.scale.setScalar(0.5);
+    d.userData.life = 1;
+    d.visible = true;
+  }
+  function updateDust(delta) {
+    if (!DUST_ON) return;
+    for (var i = 0; i < dustPool.length; i++) {
+      var d = dustPool[i];
+      if (!d.visible) continue;
+      d.userData.life -= delta * 1.8;          // ~0.55s to fade out
+      if (d.userData.life <= 0) { d.visible = false; d.material.opacity = 0; continue; }
+      var t = d.userData.life;                  // 1 -> 0
+      d.material.opacity = t * 0.42;            // never fully opaque — it's dust, not paint
+      d.scale.setScalar(0.5 + (1 - t) * 1.15);  // spreads as it settles
+    }
+  }
 
   function updateMovement(delta) {
     var ix = 0, iz = 0;
@@ -2818,6 +2886,14 @@ export function initHub3D(opts) {
     var len = Math.sqrt(ix * ix + iz * iz);
     var moving = len > 0.05;
     var targetFacing = facing;
+
+    // Kick up a puff on a fixed cadence while actually walking — tied to time,
+    // not to frames, so it looks the same at 60fps and at 30.
+    dustCooldown -= delta;
+    if (moving && dustCooldown <= 0) {
+      spawnDust(leo.group.position.x, leo.group.position.z);
+      dustCooldown = 0.16;
+    }
 
     if (moving) {
       ix /= len; iz /= len;
@@ -3060,6 +3136,7 @@ export function initHub3D(opts) {
         lastTriggeredGate = nearestGate.id;
         pendingGate = { cfg: nearestGate, ring: gateMeshes[nearestGate.id].userData.ring, startTime: performance.now() };
         playChime();
+        haptic([18, 40, 28]); // arrival: a two-beat bump under the chime
       }
     } else if (!pendingGate) {
       lastTriggeredGate = null;
@@ -3401,6 +3478,7 @@ export function initHub3D(opts) {
 
   function tick(delta) {
     updateMovement(delta);
+    updateDust(delta);
     checkGateProximity();
     updateGateAwareness();
     updateGateReaction();
@@ -3434,9 +3512,16 @@ export function initHub3D(opts) {
       var bob = Math.sin(elapsedTime * 1.6 + ring.userData.phase) * 0.08;
       ring.position.y = ring.userData.baseY + bob;
 
-      // slow breathing glow — a fully-completed pack's gate glows a bit brighter
+      // Slow breathing glow — a fully-completed pack's gate glows a bit brighter.
+      // "Getting close" now drives BRIGHTNESS as well as scale: a 12% size change
+      // is easy to miss on a phone held at arm's length, but the gate visibly
+      // lighting up as you approach reads instantly, and it breathes faster too
+      // so the anticipation builds instead of staying flat until the trigger.
       var champBoost = ring.userData.champion ? 0.25 : 0;
-      meshGroup.userData.glowMat.emissiveIntensity = 0.35 + champBoost + 0.18 * Math.sin(elapsedTime * 1.2 + ring.userData.phase);
+      var aware = ring.userData.awareness || 0;
+      var breathe = Math.sin(elapsedTime * (1.2 + aware * 1.6) + ring.userData.phase);
+      meshGroup.userData.glowMat.emissiveIntensity =
+        0.35 + champBoost + aware * 0.55 + (0.18 + aware * 0.12) * breathe;
 
       // "getting close" scale boost — skipped for the gate currently mid-reaction
       // or mid-celebration, each of which owns ring scale for its own brief window
@@ -3548,18 +3633,25 @@ export function initHub3D(opts) {
     // against a box ~73px shorter than the screen in standalone, and the scene
     // ended above the bottom edge. window.innerWidth/Height is the screen in
     // standalone and the visible area in Safari, so it is correct in both.
+    // Measure and validate BEFORE writing anything: while the page is hidden
+    // (phone locked, app switcher) innerWidth/Height report 0, and writing that
+    // through would pin the overlay to 0x0 and leave the hub blank on return.
+    var w = window.innerWidth || container.clientWidth;
+    var h = window.innerHeight || container.clientHeight;
+    if (!w || !h) return;                       // hidden/detached — never size to nothing
     try {
-      container.style.width = window.innerWidth + 'px';
-      container.style.height = window.innerHeight + 'px';
+      container.style.width = w + 'px';
+      container.style.height = h + 'px';
     } catch (e) {}
-    var w = container.clientWidth || window.innerWidth;
-    var h = container.clientHeight || window.innerHeight;
-    if (!w || !h) return;                       // hidden/detached — a 0 here would blank the canvas
     if (w === _lastW && h === _lastH) return;   // idempotent: safe to call from many listeners
     _lastW = w; _lastH = h;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setSize(w, h, false);              // false: don't write inline px onto the canvas style
+    // updateStyle must stay ON (the default): the canvas has no CSS size rule
+    // of its own, so if three.js doesn't write style.width/height the element
+    // lays out at 0x0 and the scene is invisible even though the drawing
+    // buffer is correct.
+    renderer.setSize(w, h);
   }
   // Re-measure on the next two frames as well — iOS reports the final
   // standalone height a frame or two after the overlay becomes visible.
@@ -3573,6 +3665,11 @@ export function initHub3D(opts) {
   window.addEventListener('resize', onResize);
   window.addEventListener('orientationchange', onResizeSoon);
   window.addEventListener('pageshow', onResizeSoon);          // bfcache restore
+  // Coming back from a locked phone / the app switcher: any resize that fired
+  // while hidden was skipped (innerHeight was 0), so re-measure on return.
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) onResizeSoon();
+  });
   try {
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', onResize);
