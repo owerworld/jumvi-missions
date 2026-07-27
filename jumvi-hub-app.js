@@ -595,29 +595,73 @@ export function initHub3D(opts) {
   function cancelAutoWalk() {
     if (autoWalk) { autoWalk = null; hideTrail(); }
   }
-  function startAutoWalkToMission() {
-    resumeAudio();
-    dismissCoachBubble();
-    // Always head to the CURRENT frontier — the first unlocked gate that still
-    // has an undone mission — so the button takes the kid forward to what they
-    // should play next, never backward to an already-finished zone (which is
-    // what targeting the daily mission's own pack used to do, and read as
-    // pointless when that pack was behind them).
-    var cfg = null;
+
+  // ---------- IDLE WAYFINDING NUDGE ----------
+  // Kids park Leo somewhere and lose track of where "next" is — the hub is a
+  // corridor, but nothing on screen says which way. After a spell with no
+  // input the trail to the frontier gate fades in by itself. Deliberately the
+  // SAME dots the "Today's Mission" walk draws, so there is one visual
+  // language for "forward" rather than a second thing to learn.
+  // It is a hint only: it never moves Leo, and any input clears it.
+  var IDLE_NUDGE_MS = 9000;    // long enough that it never interrupts play
+  var NUDGE_VISIBLE_MS = 4500;
+  var lastInputAt = performance.now();
+  var nudgeShownAt = 0;
+  var nudgeActive = false;
+  function noteInput() {
+    lastInputAt = performance.now();
+    if (nudgeActive) { nudgeActive = false; if (!autoWalk) hideTrail(); }
+  }
+  function updateIdleNudge() {
+    // Never compete with the guided walk (it owns the trail), the mission
+    // panel, or a kid who is actively walking somewhere.
+    if (autoWalk || isMissionViewOpen() || moveTargetActive) { noteInput(); return; }
+    var now = performance.now();
+    if (nudgeActive) {
+      if (now - nudgeShownAt > NUDGE_VISIBLE_MS) { nudgeActive = false; hideTrail(); }
+      return;
+    }
+    if (now - lastInputAt < IDLE_NUDGE_MS) return;
+    var cfg = frontierGate();
+    if (!cfg) return;
+    // Already standing at the frontier gate — the gate's own glow is the cue.
+    var dz = Math.abs(leo.group.position.z - cfg.z);
+    if (dz < 2.5) { lastInputAt = now; return; }
+    showTrail(pathPointsTo(cfg));
+    nudgeActive = true;
+    nudgeShownAt = now;
+    lastInputAt = now; // so it re-arms from here, not from the original idle start
+  }
+  // The CURRENT frontier — the first unlocked gate that still has an undone
+  // mission. Used both by the "Today's Mission" walk and by the idle nudge, so
+  // the two can never disagree about where "forward" is.
+  function frontierGate() {
     for (var gi = 0; gi < gateConfig.length; gi++) {
       if (!isZoneUnlocked(gateConfig[gi].zoneIndex)) break;
       var undone = packMissionList(gateConfig[gi].packKey).filter(function (m) { return !done.has(m.id); })[0];
-      if (undone) { cfg = gateConfig[gi]; break; }
+      if (undone) return gateConfig[gi];
     }
-    if (!cfg) cfg = gateConfig[gateConfig.length - 1]; // everything done → the last gate
+    return gateConfig[gateConfig.length - 1]; // everything done → the last gate
+  }
+  // Waypoints from wherever Leo is now to just inside a gate's trigger radius.
+  function pathPointsTo(cfg) {
     var pts = [];
     var z0 = leo.group.position.z;
-    var z1 = cfg.z + 1.0; // just inside the gate's trigger radius
+    var z1 = cfg.z + 1.0;
     var step = z1 < z0 ? -3 : 3;
     for (var z = z0 + step; (step < 0 ? z > z1 : z < z1); z += step) {
       pts.push({ x: pathCenterX(z), z: z });
     }
     pts.push({ x: cfg.x, z: z1 });
+    return pts;
+  }
+  function startAutoWalkToMission() {
+    resumeAudio();
+    dismissCoachBubble();
+    // Head to the frontier so the button always takes the kid forward to what
+    // they should play next, never backward into an already-finished zone.
+    var cfg = frontierGate();
+    var pts = pathPointsTo(cfg);
     autoWalk = { points: pts, i: 0 };
     moveTargetActive = false; // next frame picks up the first waypoint
     showTrail(pts);
@@ -2730,6 +2774,7 @@ export function initHub3D(opts) {
     moveTarget.x = THREE.MathUtils.clamp(hit.point.x, tCenter - tHalf, tCenter + tHalf);
     moveTarget.z = tz;
     moveTargetActive = true;
+    noteInput(); // any steering counts as "the kid is engaged" — clears/defers the idle nudge
     if (!isDrag) {
       cancelAutoWalk(); // a fresh manual tap overrides the guided walk
       haptic(8);        // "I heard you" — only on a fresh tap, never per touchmove frame
@@ -3479,6 +3524,7 @@ export function initHub3D(opts) {
   function tick(delta) {
     updateMovement(delta);
     updateDust(delta);
+    updateIdleNudge();
     checkGateProximity();
     updateGateAwareness();
     updateGateReaction();
