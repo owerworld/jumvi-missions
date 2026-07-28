@@ -4709,6 +4709,14 @@ body.tab-browse .footer{ display: block; }
   font-size: var(--fs-meta);
   font-weight: 800;
   padding: 8px 14px;
+  /* 44px minimum touch target (WCAG 2.5.5 / Apple HIG). This measured 34px —
+     the smallest interactive element in the app, on a screen aimed at 3-8 year
+     olds whose aim is the least precise. Padding alone left it short, so the
+     floor is stated explicitly; the label stays visually the same size. */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 10px;
   cursor: pointer;
   align-self: center;
@@ -6694,7 +6702,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   padding: 4px 14px 4px 4px !important;
   gap: 10px !important;
   border-radius: var(--r-pill) !important;
-  min-height: 40px !important;
+  min-height: 44px !important; /* was 40px, measured 42px — under the 44px touch floor */
   box-shadow: var(--sh-soft) !important;
 }
 .profilePillAvatar{
@@ -6704,6 +6712,24 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   font-size: 18px !important;
 }
 .profilePillName{ font-size: var(--fs-md) !important; }
+/* Touch-target expanders. Two controls are deliberately compact for layout
+   reasons — the header pill (kept small so the header stays balanced on
+   phones) and the "Resume" chip (sits inline in a one-line hint). Rather than
+   inflate them visually and undo that tuning, an invisible ::after stretches
+   the HIT area to the 44px floor (WCAG 2.5.5 / Apple HIG). It is inside the
+   button, so taps on it still hit the button; it is absolutely positioned, so
+   it changes no layout; and it is pointer-events-transparent to nothing —
+   the parent button is the target. Matters most here: the audience is 3-8. */
+.profilePill, .continueHintBtn{ position: relative; }
+.profilePill::after, .continueHintBtn::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 44px;
+  border-radius: inherit;
+}
 @media (max-width: 520px){
   .profilePill{
     min-height: 34px !important;
