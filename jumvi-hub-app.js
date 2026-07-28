@@ -2847,6 +2847,42 @@ export function initHub3D(opts) {
       dustPool.push(disc);
     }
   }
+  // ---------- CONTACT SHADOW ----------
+  // Leo casts a real shadow only while the shadow pass is on. It is off on
+  // lowTier from the start, and the FPS watchdog also switches it off mid-game
+  // to rescue a struggling device — in both cases Leo suddenly floats, which
+  // reads worse than the framerate did. This soft blob stands in for it: one
+  // 64px radial-gradient texture on a single disc, shown ONLY when the real
+  // shadow pass is off, so it never double-draws under him.
+  var blobShadow = (function () {
+    var c = document.createElement('canvas');
+    c.width = c.height = 64;
+    var g = c.getContext('2d');
+    var grd = g.createRadialGradient(32, 32, 2, 32, 32, 30);
+    grd.addColorStop(0, 'rgba(0,0,0,0.42)');
+    grd.addColorStop(0.6, 'rgba(0,0,0,0.20)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd;
+    g.fillRect(0, 0, 64, 64);
+    var tex = new THREE.CanvasTexture(c);
+    var m = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.5, 1.5),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, fog: true })
+    );
+    m.rotation.x = -Math.PI / 2;
+    m.position.y = 0.02; // just above the ground, under the dust discs
+    m.visible = false;
+    scene.add(m);
+    return m;
+  })();
+  function updateContactShadow() {
+    var needed = !renderer.shadowMap.enabled;
+    blobShadow.visible = needed;
+    if (!needed) return;
+    blobShadow.position.x = leo.group.position.x;
+    blobShadow.position.z = leo.group.position.z;
+  }
+
   function spawnDust(x, z) {
     if (!DUST_ON) return;
     var d = dustPool[dustNext];
@@ -3524,6 +3560,7 @@ export function initHub3D(opts) {
   function tick(delta) {
     updateMovement(delta);
     updateDust(delta);
+    updateContactShadow();
     updateIdleNudge();
     checkGateProximity();
     updateGateAwareness();
