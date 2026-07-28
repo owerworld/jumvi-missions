@@ -2847,6 +2847,85 @@ export function initHub3D(opts) {
       dustPool.push(disc);
     }
   }
+  // ---------- CONFETTI BURST (GDD §6 — "particle explosion") ----------
+  // Fired when a zone unlocks. Same pooling discipline as the foot dust: a
+  // fixed set of cubes, recycled oldest-first, no allocation at burst time and
+  // no garbage mid-celebration (a GC pause exactly on the reward beat is the
+  // one place it would be felt). Off on lowTier and reduced-motion.
+  var BURST_ON = !lowTier && !_reduceMotion;
+  var burstPool = [];
+  if (BURST_ON) {
+    var burstGeo = new THREE.BoxGeometry(0.16, 0.16, 0.16);
+    for (var bi = 0; bi < 14; bi++) {
+      var bm = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+      var cube = new THREE.Mesh(burstGeo, bm);
+      cube.visible = false;
+      cube.userData.v = new THREE.Vector3();
+      cube.userData.life = 0;
+      scene.add(cube);
+      burstPool.push(cube);
+    }
+  }
+  function burstAt(x, y, z, colorHex) {
+    if (!BURST_ON) return;
+    for (var i = 0; i < burstPool.length; i++) {
+      var c = burstPool[i];
+      c.position.set(x, y, z);
+      c.material.color.setHex(colorHex);
+      // Up-and-outward cone so it reads as a pop, not a sphere of dots.
+      var ang = (i / burstPool.length) * Math.PI * 2 + Math.random() * 0.4;
+      var sp = 2.6 + Math.random() * 1.8;
+      c.userData.v.set(Math.sin(ang) * sp * 0.6, 3.2 + Math.random() * 2.2, Math.cos(ang) * sp * 0.6);
+      c.userData.life = 1;
+      c.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+      c.visible = true;
+    }
+  }
+  function updateBurst(delta) {
+    if (!BURST_ON) return;
+    for (var i = 0; i < burstPool.length; i++) {
+      var c = burstPool[i];
+      if (!c.visible) continue;
+      c.userData.life -= delta * 0.85;              // ~1.2s flight
+      if (c.userData.life <= 0) { c.visible = false; continue; }
+      c.userData.v.y -= 9.5 * delta;                // gravity — cubes arc and fall
+      c.position.addScaledVector(c.userData.v, delta);
+      c.rotation.x += delta * 5; c.rotation.z += delta * 4;
+      c.material.opacity = Math.min(1, c.userData.life * 1.6);
+    }
+  }
+
+  // ---------- FLOATING PRAISE POPUP (GDD §7) ----------
+  // "Bullseye!" drifting up and fading. Deliberately DOM, not 3D text: a
+  // TextGeometry would mean a font payload and a new draw call for a label
+  // that is on screen for 1.5s, while a projected <div> costs nothing on the
+  // GPU and gets crisp text at any DPR for free.
+  var floatLayer = document.createElement('div');
+  floatLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:16;overflow:hidden;';
+  container.appendChild(floatLayer);
+  var _floatV = new THREE.Vector3();
+  function floatPraise(x, y, z, text) {
+    if (_reduceMotion) return;      // the words still arrive via the pack card
+    _floatV.set(x, y, z).project(camera);
+    if (_floatV.z > 1) return;      // behind the camera — nothing to point at
+    var el = document.createElement('div');
+    el.textContent = text;
+    el.style.cssText =
+      'position:absolute;left:' + ((_floatV.x * 0.5 + 0.5) * container.clientWidth) + 'px;' +
+      'top:' + ((-_floatV.y * 0.5 + 0.5) * container.clientHeight) + 'px;' +
+      'transform:translate(-50%,-50%);font-size:26px;font-weight:900;color:#fff;' +
+      'text-shadow:0 3px 10px rgba(10,22,40,.55),0 1px 0 rgba(10,22,40,.4);' +
+      'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;' +
+      'white-space:nowrap;opacity:0;transition:transform 1.5s cubic-bezier(.2,.7,.3,1),opacity 1.5s ease;';
+    floatLayer.appendChild(el);
+    requestAnimationFrame(function () {
+      el.style.opacity = '1';
+      el.style.transform = 'translate(-50%,-50%) translateY(-70px) scale(1.12)';
+      setTimeout(function () { el.style.opacity = '0'; }, 700);
+    });
+    setTimeout(function () { el.remove(); }, 1700);
+  }
+
   // ---------- CONTACT SHADOW ----------
   // Leo casts a real shadow only while the shadow pass is on. It is off on
   // lowTier from the start, and the FPS watchdog also switches it off mid-game
@@ -3112,6 +3191,23 @@ export function initHub3D(opts) {
     var lookAtY = chaseLookY + (focusLookY - chaseLookY) * fb;
     var lookAtZ = chaseLookZ + (focusLookZ - chaseLookZ) * fb;
 
+    // ---- Camera anti-clipping (GDD §4) ----
+    // The brief asks for a raycast from the player to the camera. Raycasting
+    // the whole scene every frame is the wrong trade here: decor is added
+    // straight to `scene`, so a recursive ray would walk hundreds of objects
+    // on phones we already downgrade for FPS. This world is a CORRIDOR, and
+    // that is what actually clips: the camera swings wide when Leo hugs an
+    // edge and ends up inside the rock wall. So the camera gets the same
+    // clamp Leo gets, one zone wider, which is exact and costs nothing.
+    // A focus shot (medal / growth reveal) is deliberately framed and is
+    // allowed outside the corridor, so skip the clamp while one is blending.
+    if (fb < 0.01) {
+      var camCenter = pathCenterX(targetCamZ);
+      var camHalf = corridorHalfWidthAt(targetCamZ) + 1.2; // 1.2 = breathing room before the rocks
+      targetCamX = THREE.MathUtils.clamp(targetCamX, camCenter - camHalf, camCenter + camHalf);
+      if (targetCamY < 1.2) targetCamY = 1.2; // never dip into the ground plane
+    }
+
     camera.position.x += (targetCamX - camera.position.x) * Math.min(delta * camLagFactor, 1);
     camera.position.z += (targetCamZ - camera.position.z) * Math.min(delta * camLagFactor, 1);
     camera.position.y += (targetCamY - camera.position.y) * Math.min(delta * camLagFactor, 1);
@@ -3311,6 +3407,15 @@ export function initHub3D(opts) {
     // aren't lost in the distance and big ones don't fill the whole screen.
     var radius = (obj.userData.decorSize || 1.2) / 2;
     growthFocus = { obj: obj, start: performance.now(), dur: GROWTH_FOCUS_MS, radius: radius };
+    // Praise floats off the thing that just grew. The label is the pack's own
+    // title, so in the target zone it literally reads "Bullseye!" (GDD §7)
+    // without hard-coding a second copy of that word anywhere.
+    try {
+      var zi = Math.max(0, Math.min(ZONE_THEMES.length - 1,
+        Math.floor(-obj.position.z / ZONE_LENGTH)));
+      floatPraise(obj.position.x, obj.position.y + radius + 0.7, obj.position.z,
+                  themeForZone(zi).cardTitle);
+    } catch (e) { }
   }
   function updateGrowthFocus() {
     if (growthFocus && performance.now() - growthFocus.start > growthFocus.dur) growthFocus = null;
@@ -3486,6 +3591,12 @@ export function initHub3D(opts) {
       scene.add(makeTree(pathCenterX(rewardZ2) + corridorHalfWidthAt(rewardZ2) + 0.9, rewardZ2, 0.95));
 
       celebratingRing = { ring: gateMeshes[fw.zoneIndex + 1].userData.ring, startTime: performance.now() };
+      // Confetti pop at the gate that just opened, in the NEW zone's own
+      // colour so the burst previews where the kid is heading next.
+      var openedRing = celebratingRing.ring;
+      burstAt(openedRing.position.x, openedRing.position.y + 0.4, openedRing.position.z,
+              new THREE.Color(themeForZone(fw.zoneIndex + 1).sun).getHex());
+      haptic([20, 50, 20, 50, 40]); // longer, celebratory — distinct from the arrival bump
 
       // The pack that just got completed (NOT the newly-opened next zone the
       // ring pulse above belongs to) — named explicitly in the card + tied to
@@ -3560,6 +3671,7 @@ export function initHub3D(opts) {
   function tick(delta) {
     updateMovement(delta);
     updateDust(delta);
+    updateBurst(delta);
     updateContactShadow();
     updateIdleNudge();
     checkGateProximity();
