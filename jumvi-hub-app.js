@@ -52,6 +52,7 @@ export function initHub3D(opts) {
     hint: '👆 Tap the ground to walk',
     tapToWalk: '👆 Tap to walk!',
     sound: 'Sound on/off',
+    jump: 'Jump',
     close: 'Close',
     missionsLeft: function (n) { return n + (n === 1 ? ' mission to go!' : ' missions to go!'); },
     zoneDoneLabel: 'complete! 🏆',
@@ -561,6 +562,34 @@ export function initHub3D(opts) {
   // under the iOS home bar now that the global nav is hidden beneath the hub.
   dailyBtn.style.cssText = 'position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:14px;z-index:11;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:13px;font-weight:900;padding:11px 15px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(dailyBtn);
+
+  // ---------- JUMP BUTTON (GDD §3, adapted for touch) ----------
+  // The brief maps jump to Spacebar. The audience is 3-8 on phones, so the
+  // real control is this button, sat in the right-thumb arc above the hint;
+  // Space still works for desktop. 56px (well over the 44px floor) because a
+  // small child is aiming, and pointerdown rather than click so the jump fires
+  // on touch-down like every platformer — waiting for click adds ~100ms lag.
+  var jumpBtn = document.createElement('button');
+  jumpBtn.type = 'button';
+  jumpBtn.setAttribute('aria-label', HUB_TEXTS.jump);
+  jumpBtn.textContent = '⤒';
+  jumpBtn.style.cssText = 'position:absolute;bottom:calc(64px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));z-index:11;width:56px;height:56px;border-radius:50%;border:none;background:rgba(255,255,255,0.92);color:#1d2b4a;font-size:26px;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(18,38,66,0.24),inset 0 1px 0 rgba(255,255,255,0.9);-webkit-tap-highlight-color:transparent;touch-action:manipulation;display:flex;align-items:center;justify-content:center;padding:0;';
+  // pointerdown for latency (fires on touch-down like every platformer), but
+  // click MUST also work: a keyboard user pressing Enter/Space on the focused
+  // button, and assistive tech, emit click with no pointerdown at all. Earlier
+  // this handler swallowed click, which left the button dead for exactly those
+  // users. The timestamp check keeps a normal tap from jumping twice.
+  var _lastPointerJump = -1e9;
+  jumpBtn.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    _lastPointerJump = performance.now();
+    requestJump();
+  });
+  jumpBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (performance.now() - _lastPointerJump > 500) requestJump(); // click-only path
+  });
+  container.appendChild(jumpBtn);
 
   var autoWalk = null; // { points: [{x,z}], i }
   // Trail dots are created lazily on first use: this HUD block runs before
@@ -2662,6 +2691,7 @@ export function initHub3D(opts) {
   function onKeyDown(e) {
     resumeAudio(); // first real keypress is as good a "user gesture" as any
     dismissCoachBubble();
+    if (e.code === 'Space') { e.preventDefault(); requestJump(); }
     if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
     if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
     if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
@@ -2984,6 +3014,53 @@ export function initHub3D(opts) {
     }
   }
 
+  // ---------- JUMP (GDD §3) ----------
+  // Gravity is the brief's -15.0. The impulse is NOT the brief's 12.0: that is
+  // sized for a human-scale character, and here (maxSpeed 4.2, Leo about one
+  // unit tall) it would throw him 4.8 units — five times his own height, and
+  // clean out of the camera frame. 5.6 gives an apex just over 1 unit, which
+  // is the same *feel* at this scene's scale. Terminal velocity is the brief's.
+  //
+  // There is no fall damage, no pit and no fail state anywhere in this hub, so
+  // jumping is pure play — which is exactly why it is safe to hand a 3-year-old.
+  var GRAVITY = -15.0;
+  var TERMINAL_V = -30.0;
+  var JUMP_IMPULSE = 5.6;
+  var COYOTE_MS = 150;   // §3 — still jumpable 0.15s after leaving the ground
+  var BUFFER_MS = 100;   // §3 — a jump pressed 0.1s before landing still fires
+  var jumpY = 0, jumpVelY = 0, airborne = false;
+  var lastGroundedAt = performance.now();
+  var jumpPressedAt = -1e9;
+  function requestJump() {
+    jumpPressedAt = performance.now();
+    resumeAudio(); // a jump is a real user gesture — unlocks audio on iOS
+  }
+  function updateJump(delta) {
+    var now = performance.now();
+    if (!airborne) lastGroundedAt = now;
+    // Jump buffering + coyote time, together: a press is live for BUFFER_MS,
+    // and the ground is "under you" for COYOTE_MS after you actually left it.
+    var pressLive = (now - jumpPressedAt) < BUFFER_MS;
+    var canLaunch = !airborne || (now - lastGroundedAt) < COYOTE_MS;
+    if (pressLive && canLaunch && jumpY <= 0.001 && !isMissionViewOpen()) {
+      jumpPressedAt = -1e9;         // consume, so one press is one jump
+      jumpVelY = JUMP_IMPULSE;
+      airborne = true;
+      haptic(12);
+      playChime();
+    }
+    if (airborne) {
+      jumpVelY = Math.max(TERMINAL_V, jumpVelY + GRAVITY * delta);
+      jumpY += jumpVelY * delta;
+      if (jumpY <= 0) {            // landed
+        jumpY = 0; jumpVelY = 0; airborne = false;
+        lastGroundedAt = now;
+        spawnDust(leo.group.position.x, leo.group.position.z); // puff on touchdown
+        haptic(8);
+      }
+    }
+  }
+
   function updateMovement(delta) {
     var ix = 0, iz = 0;
     if (!isMissionViewOpen()) {
@@ -3108,6 +3185,13 @@ export function initHub3D(opts) {
 
     var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
+
+    // Jump height is applied AFTER leo.update, which owns position.y for the
+    // walk hop — the same "later write wins" pattern the celebration bounce
+    // already uses. Only overridden while airborne, so the grounded hop is
+    // left completely alone.
+    updateJump(delta);
+    if (airborne) leo.group.position.y = jumpY;
 
     // Footstep cadence — faster steps at higher speed, silent the instant
     // Leo stops (reset to 0 so the very next step after a pause starts
