@@ -2966,6 +2966,11 @@ html.theme--light .welcomeSub{ color:#374151; }
   font-weight:700;
   color:var(--text);
   line-height:1.2;
+  /* "Ages 8 & up" is the longest of the three and was the only one wrapping,
+     which left the row ragged — two labels on one line, one on two. Keep them
+     all on a single line and let the longest shrink to fit its column instead. */
+  white-space:nowrap;
+  font-size:clamp(11px, 3.2vw, var(--fs-meta));
 }
 html.theme--light .ageBtn{
   border-color:rgba(79,179,255,0.22);
@@ -4710,6 +4715,11 @@ body.tab-browse .footer{ display: block; }
 }
 .dailyPlayBig:active{ transform: scale(0.97); }
 .dailyNewSmall{
+  /* This is a flex container, and a flex container drops the plain text node
+     between <i class="ico"> and the label — so the icon sat flush against
+     "Pick another". Every other icon+label button in the app sets a gap; this
+     one was the only one that didn't. */
+  gap: 8px;
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.25);
   color: #fff;
