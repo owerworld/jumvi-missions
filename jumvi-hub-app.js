@@ -3088,6 +3088,47 @@ export function initHub3D(opts) {
   var charging = false, chargeT = 0;
   var padCooldownUntil = 0;        // stops the pad re-arming the instant you step off
 
+  // --- procedural product art (no GLB, no download) ---
+  // The real toy is an orange/blue swirl ball and a lime-rimmed blue paddle
+  // with the JUMVI wordmark. Both are drawn into small canvases at runtime
+  // instead of modelled: the shapes are a sphere and a disc, so a mesh file
+  // would add download weight to a budget we spent this project shrinking,
+  // and the actual product identity here lives in the PATTERN, not the form.
+  function makeBallTexture() {
+    var c = document.createElement('canvas');
+    c.width = 256; c.height = 128;
+    var g = c.getContext('2d');
+    g.fillStyle = '#F47B20'; g.fillRect(0, 0, 256, 128);          // orange body
+    g.fillStyle = '#4BA6DD';                                       // blue swirl bands
+    for (var k = 0; k < 2; k++) {
+      g.beginPath();
+      var off = k * 128;
+      g.moveTo(off - 10, 0);
+      g.bezierCurveTo(off + 60, 34, off + 10, 94, off + 74, 128);
+      g.lineTo(off + 40, 128);
+      g.bezierCurveTo(off - 22, 94, off + 26, 34, off - 44, 0);
+      g.closePath(); g.fill();
+    }
+    var t = new THREE.CanvasTexture(c);
+    t.wrapS = THREE.RepeatWrapping;
+    return t;
+  }
+  function makePaddleTexture() {
+    var c = document.createElement('canvas');
+    c.width = c.height = 256;
+    var g = c.getContext('2d');
+    var grd = g.createLinearGradient(0, 0, 0, 256);
+    grd.addColorStop(0, '#7FC4F5');                                // lighter top half
+    grd.addColorStop(0.5, '#4fb3ff');                              // --accent-blue token
+    grd.addColorStop(1, '#2F7FD0');
+    g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+    g.fillStyle = '#ffffff';
+    g.font = '900 46px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('JUMVI', 128, 132);
+    return new THREE.CanvasTexture(c);
+  }
+
   function buildThrowRange() {
     var zc = zoneCenterZ(THROW_ZONE);
     var side = -1;                                   // range sits on one side of the path
@@ -3099,20 +3140,31 @@ export function initHub3D(opts) {
     throwPad.receiveShadow = true;
     scene.add(throwPad);
 
-    // Three rings at increasing distance — the brief's red/white concentric
-    // cylinders, facing the pad so they read as targets from where you stand.
-    var red = new THREE.MeshStandardMaterial({ color: 0xcc0000, flatShading: true });
-    var white = new THREE.MeshStandardMaterial({ color: 0xffffff, flatShading: true });
+    // The targets are the product's OWN paddles rather than the brief's generic
+    // red/white rings — same silhouette a kid is holding in the garden, which
+    // is the whole point of the hand-off at the end of the three throws.
+    // Lime rim + blue face are the --aurora-lime / --accent-blue tokens, so no
+    // new brand colour is introduced.
+    var paddleFaceMat = new THREE.MeshStandardMaterial({
+      map: makePaddleTexture(), roughness: 0.6, metalness: 0.0
+    });
+    var paddleRimMat = new THREE.MeshStandardMaterial({
+      color: 0x97d700, flatShading: true, roughness: 0.55        // --aurora-lime
+    });
     for (var i = 0; i < 3; i++) {
       var dist = 6 + i * 3.2;
       var tz = padZ - dist;
       var tx = pathCenterX(tz) + side * corridorHalfWidthAt(tz) * 0.55;
       var ty = 1.15 + i * 0.15;
       var g = new THREE.Group();
-      var outer = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.12, 20), red);
-      var mid = new THREE.Mesh(new THREE.CylinderGeometry(0.40, 0.40, 0.14, 20), white);
-      var bull = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.16, 16), red);
-      [outer, mid, bull].forEach(function (m) { m.rotation.x = Math.PI / 2; m.castShadow = !lowTier; g.add(m); });
+      // Face: a disc, squashed very slightly on X so it reads as the toy's
+      // egg-ish outline rather than a perfect circle.
+      var face = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.58, 0.09, 28), paddleFaceMat);
+      face.rotation.x = Math.PI / 2;
+      face.scale.x = 0.94;
+      var rim = new THREE.Mesh(new THREE.TorusGeometry(0.58, 0.055, 8, 28), paddleRimMat);
+      rim.scale.x = 0.94;
+      [face, rim].forEach(function (m) { m.castShadow = !lowTier; g.add(m); });
       var post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, ty, 8),
         new THREE.MeshStandardMaterial({ color: 0x8a5a2b, flatShading: true }));
       post.position.y = -ty / 2;
@@ -3173,8 +3225,8 @@ export function initHub3D(opts) {
   // --- balls ---
   var ballPool = [], ballNext = 0;
   (function buildBalls() {
-    var bg = new THREE.SphereGeometry(0.15, 10, 8);
-    var bm = new THREE.MeshStandardMaterial({ color: 0x4fb3ff, flatShading: true });
+    var bg = new THREE.SphereGeometry(0.15, 14, 12);   // a touch rounder — the swirl needs UV space
+    var bm = new THREE.MeshStandardMaterial({ map: makeBallTexture(), roughness: 0.85, metalness: 0.0 });
     for (var i = 0; i < 3; i++) {
       var b = new THREE.Mesh(bg, bm);
       b.castShadow = !lowTier;
