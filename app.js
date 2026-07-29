@@ -4288,7 +4288,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260727-5"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260727-6"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4305,6 +4305,10 @@ function ensureHub3DLoaded(onProgress){
       // as the intro flag, so every localStorage name still lives in one file.
       hubStarsGet(){ return lsGet(HUB_STARS_KEY, ""); },
       hubStarsSet(csv){ lsSet(HUB_STARS_KEY, csv); },
+      // The chosen age band is not persisted anywhere — only the difficulty it
+      // maps to is. "Easy" is the 3-5 band; the obstacle course reads this to
+      // stay out of the youngest band's way. See the note in jumvi-hub-app.js.
+      hubAgeDifficulty(){ return currentDifficulty; },
       PACKS, missions, done, openMission, container,
       // Bridges into EXISTING app flows — the hub triggers them, never
       // reimplements them: the real certificate modal, the real daily pick,

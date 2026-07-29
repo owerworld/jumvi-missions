@@ -2808,6 +2808,7 @@ export function initHub3D(opts) {
   function setMoveTargetFromClient(clientX, clientY, isDrag) {
     if (isMissionViewOpen()) return; // controls off while the mission view is up
     if (aimActive) return;           // aiming owns the canvas — see the throw range
+    if (performance.now() < tumbleUntil) return; // dizzy: taps are ignored, briefly
     var rect = renderer.domElement.getBoundingClientRect();
     var ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
     var ndcY = -((clientY - rect.top) / rect.height) * 2 + 1;
@@ -3306,6 +3307,117 @@ export function initHub3D(opts) {
     }
   }
 
+  // ---------- WOBBLE WALK (GDD §6 "obstacle course", rebuilt no-fail) ----------
+  // The brief's course is built on failure: a bottomless pit that respawns you,
+  // hammers that knock you off it, tiles whose colliders vanish under you. For
+  // an app whose youngest users are three, that is a machine for producing
+  // tears. Every element here keeps the SHAPE of the brief and removes the
+  // punishment:
+  //   pit          -> there is none; the ground never stops
+  //   hammers      -> soft bumpers that shove you and make you tumble, and the
+  //                   tumble costs nothing but half a second of dizzy
+  //   vanishing    -> tiles that TELEGRAPH, sink, and come back on their own
+  // What is left is the funny part of Fall Guys without the losing part.
+  //
+  // Age: the chosen band ("3-5" / "6-8" / "8 & up") is not persisted anywhere,
+  // only the difficulty it maps to, and 6-8 and 8+ both map to "all". So this
+  // cannot be "8+ only" as first planned — it is "not the Easy (3-5) band",
+  // which is the distinction the safety concern was actually about.
+  var COURSE_ZONE = 2;                 // Playground
+  var courseOn = false;
+  var bumpers = [];                    // { pivot, arm, speed }
+  var tiles = [];                      // { mesh, baseY, phase }
+  var tumbleUntil = 0;
+
+  function courseAllowed() {
+    try {
+      return (typeof opts.hubAgeDifficulty === 'function')
+        ? opts.hubAgeDifficulty() !== 'Easy'
+        : true;
+    } catch (e) { return true; }
+  }
+
+  function buildCourse() {
+    if (!courseAllowed() || lowTier) return;   // lowTier already sheds moving parts
+    courseOn = true;
+    var zc = zoneCenterZ(COURSE_ZONE);
+    var side = 1;                              // opposite side to the throw range
+
+    // Two bumper arms on posts — slow, chunky, obviously harmless.
+    var postMat = new THREE.MeshStandardMaterial({ color: 0x8a5a2b, flatShading: true });
+    var armMat = new THREE.MeshStandardMaterial({ color: 0xFF7043, flatShading: true, roughness: .7 });
+    for (var i = 0; i < 2; i++) {
+      var bz = zc + 3 - i * 4.5;
+      var bx = pathCenterX(bz) + side * corridorHalfWidthAt(bz) * 0.45;
+      var pivot = new THREE.Group();
+      pivot.position.set(bx, 0, bz);
+      var post = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 1.5, 8), postMat);
+      post.position.y = 0.75; pivot.add(post);
+      var arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 1.5, 4, 8), armMat);
+      arm.rotation.z = Math.PI / 2;
+      arm.position.y = 0.95;
+      arm.castShadow = !lowTier;
+      pivot.add(arm);
+      scene.add(pivot);
+      bumpers.push({ pivot: pivot, speed: (i % 2 ? -1 : 1) * 1.1, x: bx, z: bz });
+    }
+
+    // Five telegraphing tiles in a line down the middle of the zone.
+    var tileMat = new THREE.MeshStandardMaterial({ color: 0x9ad0ff, flatShading: true });
+    for (var t = 0; t < 5; t++) {
+      var tz2 = zc + 2 - t * 1.9;
+      var tx2 = pathCenterX(tz2) + side * corridorHalfWidthAt(tz2) * 0.15;
+      var tile = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.16, 1.1), tileMat.clone());
+      tile.position.set(tx2, 0.08, tz2);
+      tile.receiveShadow = true;
+      scene.add(tile);
+      tiles.push({ mesh: tile, baseY: 0.08, phase: t * 0.7 });
+    }
+  }
+
+  function updateCourse(delta) {
+    if (!courseOn) return;
+    var now = performance.now();
+    // bumpers: spin, and shove Leo if an arm sweeps through him
+    for (var i = 0; i < bumpers.length; i++) {
+      var b = bumpers[i];
+      b.pivot.rotation.y += delta * b.speed;
+      if (now < tumbleUntil) continue;
+      var dx = leo.group.position.x - b.x, dz = leo.group.position.z - b.z;
+      var d2 = dx * dx + dz * dz;
+      if (d2 > 0.04 && d2 < 1.3 * 1.3) {
+        // Is the arm actually pointing at him right now?
+        var toLeo = Math.atan2(dx, dz);
+        var diff = Math.abs(((toLeo - b.pivot.rotation.y + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+        if (diff > Math.PI - 0.55 || diff < 0.55) {
+          var d = Math.sqrt(d2) || 1;
+          velocity.x += (dx / d) * 7.5;      // a shove, not damage
+          velocity.z += (dz / d) * 7.5;
+          tumbleUntil = now + 600;
+          playChime(); haptic([25, 60, 25]);
+        }
+      }
+    }
+    // tiles: glow -> sink -> return, forever, harmlessly
+    for (var t = 0; t < tiles.length; t++) {
+      var ti = tiles[t];
+      var cyc = (elapsedTime * 0.55 + ti.phase) % 3;       // 3s cycle
+      if (cyc < 1.6) {                                      // resting
+        ti.mesh.position.y = ti.baseY;
+        ti.mesh.material.emissive && ti.mesh.material.emissive.setHex(0x000000);
+      } else if (cyc < 2.1) {                               // telegraph
+        ti.mesh.position.y = ti.baseY + Math.sin((cyc - 1.6) * 12) * 0.03;
+        if (ti.mesh.material.emissive) {
+          ti.mesh.material.emissive.setHex(0xFFD23F);
+          ti.mesh.material.emissiveIntensity = 0.6;
+        }
+      } else {                                              // sink and come back
+        var k = (cyc - 2.1) / 0.9;
+        ti.mesh.position.y = ti.baseY - Math.sin(k * Math.PI) * 0.55;
+      }
+    }
+  }
+
   // ---------- CONTACT SHADOW ----------
   // Leo casts a real shadow only while the shadow pass is on. It is off on
   // lowTier from the start, and the FPS watchdog also switches it off mid-game
@@ -3413,7 +3525,15 @@ export function initHub3D(opts) {
 
   function updateMovement(delta) {
     var ix = 0, iz = 0;
-    if (!isMissionViewOpen()) {
+    // Tumble (GDD §2 "clumsy physics"): input is off for the window, the mesh
+    // spins, and momentum from the shove carries him. Costs nothing but half a
+    // second of dizzy — there is no health, no pit and nothing to lose here.
+    var tumbling = performance.now() < tumbleUntil;
+    if (tumbling) {
+      leo.group.rotation.y += delta * 11;
+      moveTargetActive = false;
+    }
+    if (!isMissionViewOpen() && !tumbling) {
       if (keys.f) iz -= 1;
       if (keys.b) iz += 1;
       if (keys.l) ix -= 1;
@@ -4113,6 +4233,7 @@ export function initHub3D(opts) {
     updateStars(delta);
     updateThrowRange(delta);
     updateBalls(delta);
+    updateCourse(delta);
     updateContactShadow();
     updateIdleNudge();
     checkGateProximity();
@@ -4239,6 +4360,7 @@ export function initHub3D(opts) {
   buildStars();
   updateStarDock();
   buildThrowRange();
+  buildCourse();
 
   var clock = new THREE.Clock();
   var running = false;
