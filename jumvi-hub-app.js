@@ -53,6 +53,7 @@ export function initHub3D(opts) {
     tapToWalk: '👆 Tap to walk!',
     sound: 'Sound on/off',
     jump: 'Jump',
+    allStars: '\u2B50 Every star found!',
     close: 'Close',
     missionsLeft: function (n) { return n + (n === 1 ? ' mission to go!' : ' missions to go!'); },
     zoneDoneLabel: 'complete! 🏆',
@@ -3070,6 +3071,15 @@ export function initHub3D(opts) {
         starMeshes.splice(i, 1);
         updateStarDock();
         try { track('3d_star_collected', { total: starCount() }); } catch (e) { }
+        // All 18: one celebration so the collection turns out to have meant
+        // something. Deliberately just a moment — no badge, no unlock, nothing
+        // that would retroactively make the stars feel required.
+        if (starCount() >= totalStars()) {
+          burstAt(leo.group.position.x, 1.2, leo.group.position.z, 0xFFD23F);
+          floatPraise(leo.group.position.x, 2.0, leo.group.position.z, HUB_TEXTS.allStars);
+          haptic([20, 50, 20, 50, 60]);
+          try { track('3d_all_stars'); } catch (e) { }
+        }
       }
     }
   }

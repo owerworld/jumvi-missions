@@ -47,6 +47,13 @@ body::before {
 }
 
 :root{
+  /* Space the fixed .bottomNav needs to clear. ONE definition, because this
+     value being duplicated is what produced three separate mobile bugs: the
+     nav covering content, and two rules that quietly never applied (an
+     .app-shell 180px "final fix" that an ID+!important rule outranked, on the
+     same element). Anything that must sit above the nav references this. */
+  --bottom-nav-clearance: calc(80px + env(safe-area-inset-bottom));
+
   /* Liquid Glass common tokens */
   --aurora-blue: #4fb3ff;
   --aurora-lime: #97d700;
@@ -2678,7 +2685,7 @@ body {
      or the last rows of every tab hide behind the nav and can't be scrolled to.
      This ID+!important rule was overriding the .app-shell rule (80px) down to
      just the safe-area inset; restore the nav clearance. */
-  padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: var(--bottom-nav-clearance) !important;
   margin-bottom: 0 !important;
 }
 .wrap, .bottom-section {
@@ -4534,7 +4541,7 @@ html.theme--dark .bottomNav{
 
 /* Body padding-bottom for nav clearance */
 .app-shell{
-  padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  padding-bottom: var(--bottom-nav-clearance);
 }
 body.modalOpen .bottomNav{ display: none !important; }
 
@@ -7055,11 +7062,12 @@ html.theme--dark .dailyBox.dailyBoxPromoted .dailyAltSuggestion *{
  * badges aktif olmama, topbar sıkışıklık — hepsi tek pakette
  * ============================================================ */
 
-/* A. BOTTOM NAV CONTENT KAPATMA — final çözüm
-   Her tab için generous bottom space (180px = 100px nav + 80px nefes) */
-.app-shell{
-  padding-bottom: calc(180px + env(safe-area-inset-bottom)) !important;
-}
+/* A. BOTTOM NAV CONTENT KAPATMA
+   The 180px rule that used to live here NEVER APPLIED: .app-shell and
+   #app-wrapper are the same element, and the ID rule above (also !important)
+   outranks a class. It sat here looking like the fix while the real value was
+   80px the whole time. Removed rather than "corrected" — clearance now comes
+   from --bottom-nav-clearance in :root, defined once. */
 .wrap{
   padding-bottom: 40px !important;
 }
