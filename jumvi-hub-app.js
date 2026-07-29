@@ -1518,6 +1518,10 @@ export function initHub3D(opts) {
     Promise.all([loadDecorTemplate(key), getSkeletonUtils()]).then(function (res) {
       var template = res[0], SkeletonUtils = res[1];
       holder.add(SkeletonUtils.clone(template));
+      // Decor is fetched at DECOR_PRELOAD_RADIUS (13 units out), so compiling
+      // it here happens while Leo is still walking up — the stall lands in
+      // dead time instead of the moment the prop pops into view.
+      precompileScene();
     }).catch(function (err) {
       holder.userData._decorLoaded = false; // allow a later retry
       if (window.__jumviFallback) window.__jumviFallback('hub_decor_failed', key + ': ' + err);
@@ -3084,6 +3088,37 @@ export function initHub3D(opts) {
     }
   }
 
+  // ---------- SHADER PRE-COMPILE ----------
+  // three.js compiles a material's shader program the FIRST FRAME that material
+  // is visible, and uploads its textures then too. That is the real source of
+  // hitching here — not download. Even with every byte already cached, Leo, each
+  // zone theme, each decor model and the confetti would each cost a stall the
+  // first time they enter view.
+  //
+  // This is also why "download everything up front" is the wrong fix: it would
+  // undo the 1.03 MB -> 315 KB entry we worked for AND still hitch. Compiling
+  // early is the cheap half: it costs no extra bytes.
+  //
+  // compileAsync (r152+, present in this r160 build) walks the scene, builds
+  // every program and uploads every texture, yielding between items so it does
+  // not block the main thread. Falls back to the synchronous compile() — which
+  // is acceptable because both only ever run behind the loading overlay or
+  // while the kid is walking, never during interaction.
+  var _precompiling = false;
+  function precompileScene() {
+    if (_precompiling) return Promise.resolve();
+    _precompiling = true;
+    var done = function () { _precompiling = false; };
+    try {
+      if (typeof renderer.compileAsync === 'function') {
+        return renderer.compileAsync(scene, camera).then(done, done);
+      }
+      renderer.compile(scene, camera);
+    } catch (e) { /* never let warm-up break startup */ }
+    done();
+    return Promise.resolve();
+  }
+
   // ---------- JUMVI WORDMARK DECAL ----------
   // Used by the mission gate paddle. It is a TRANSPARENT decal on a flat
   // CircleGeometry rather than a texture on the face cylinder: a cylinder's
@@ -4257,7 +4292,12 @@ export function initHub3D(opts) {
     muteBtn.textContent = isMuted() ? '🔇' : '🔊'; // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     startBgMusic(); // gentle background loop plays only while the hub is active
-    animate();
+    // Warm every shader/texture currently in the scene BEFORE the first frame,
+    // so the reveal is smooth instead of stalling material by material. The
+    // loading overlay is still up at this point — this is the "load it fully,
+    // then open it" the hub was missing. animate() starts either way, so a slow
+    // or unsupported compile can never wedge the hub.
+    precompileScene().then(animate, animate);
   }
   function pause() {
     if (!running) return;
