@@ -53,6 +53,9 @@ export function initHub3D(opts) {
     tapToWalk: '👆 Tap to walk!',
     sound: 'Sound on/off',
     jump: 'Jump',
+    bullseye: 'Bullseye!',
+    throwsLeft: '\u{1F3AF} {n} throws left \u2014 hold to aim',
+    throwHandoff: '\u{1F3D3} Your turn \u2014 grab your paddle!',
     close: 'Close',
     missionsLeft: function (n) { return n + (n === 1 ? ' mission to go!' : ' missions to go!'); },
     zoneDoneLabel: 'complete! 🏆',
@@ -227,6 +230,15 @@ export function initHub3D(opts) {
     zoneCardEl.style.animation = 'none';
     void zoneCardEl.offsetWidth;
     zoneCardEl.style.animation = 'hub3dZoneCardIn 1500ms ease-out forwards';
+  }
+
+  // Same presentation as the zone card, with arbitrary text — used by the
+  // throw range hand-off so there is one "big centred line" look in the hub.
+  function showCoachLine(text) {
+    zoneCardEl.textContent = text;
+    zoneCardEl.style.animation = 'none';
+    void zoneCardEl.offsetWidth;
+    zoneCardEl.style.animation = 'hub3dZoneCardIn 2200ms ease-out forwards';
   }
 
   var hintEl = document.createElement('div');
@@ -2795,6 +2807,7 @@ export function initHub3D(opts) {
   // lock-on animation every frame.
   function setMoveTargetFromClient(clientX, clientY, isDrag) {
     if (isMissionViewOpen()) return; // controls off while the mission view is up
+    if (aimActive) return;           // aiming owns the canvas — see the throw range
     var rect = renderer.domElement.getBoundingClientRect();
     var ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
     var ndcY = -((clientY - rect.top) / rect.height) * 2 + 1;
@@ -2836,6 +2849,7 @@ export function initHub3D(opts) {
   // handler so stray touchmoves that didn't start on the canvas are ignored.
   var touchFollowing = false;
   renderer.domElement.addEventListener('touchstart', function (e) {
+    if (aimActive) { charging = true; chargeT = 0; return; } // hold to charge
     touchFollowing = true;
     dismissCoachBubble();
     var t = e.changedTouches[0];
@@ -2846,7 +2860,10 @@ export function initHub3D(opts) {
     var t = e.changedTouches[0];
     setMoveTargetFromClient(t.clientX, t.clientY, true);
   }, { passive: true });
-  renderer.domElement.addEventListener('touchend', function () { touchFollowing = false; }, { passive: true });
+  renderer.domElement.addEventListener('touchend', function () {
+    if (aimActive && charging) { releaseThrow(); return; }
+    touchFollowing = false;
+  }, { passive: true });
   renderer.domElement.addEventListener('touchcancel', function () { touchFollowing = false; }, { passive: true });
 
   // ---------- MOVEMENT (momentum-based; world position only — visuals owned by leo module) ----------
@@ -3051,6 +3068,192 @@ export function initHub3D(opts) {
     }
   }
 
+  // ---------- THROW RANGE (GDD §6 "archery zone", adapted) ----------
+  // The brief's version is an archery mini-game you can play forever. Two
+  // deliberate changes, because this app sells a physical toss-and-catch set:
+  //   * you throw a BALL, not an arrow — an archery game teaches the wrong verb
+  //   * you get THREE throws, then Leo hands you back to the real mission
+  // So it warms the kid up and points them at the paddles, instead of becoming
+  // a reason to keep staring at the screen. Targets are procedural concentric
+  // rings exactly as the brief describes, built here rather than reused from
+  // decor so the game never depends on a lazy-loaded GLB having arrived.
+  var THROW_ZONE = 0;              // zone 0 is the Target Range, and it is always unlocked
+  var THROWS_PER_VISIT = 3;
+  var throwTargets = [];           // { x, y, z, r }
+  var throwPad = null;
+  var aimActive = false;
+  var throwsLeft = THROWS_PER_VISIT;
+  var throwHits = 0;
+  var aimFacing = 0;
+  var charging = false, chargeT = 0;
+  var padCooldownUntil = 0;        // stops the pad re-arming the instant you step off
+
+  function buildThrowRange() {
+    var zc = zoneCenterZ(THROW_ZONE);
+    var side = -1;                                   // range sits on one side of the path
+    var padZ = zc + 2.0;
+    var padX = pathCenterX(padZ) + side * corridorHalfWidthAt(padZ) * 0.55;
+    var padMat = new THREE.MeshStandardMaterial({ color: 0xFFD23F, emissive: 0x8a6a00, emissiveIntensity: 0.25, flatShading: true });
+    throwPad = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.09, 16), padMat);
+    throwPad.position.set(padX, 0.05, padZ);
+    throwPad.receiveShadow = true;
+    scene.add(throwPad);
+
+    // Three rings at increasing distance — the brief's red/white concentric
+    // cylinders, facing the pad so they read as targets from where you stand.
+    var red = new THREE.MeshStandardMaterial({ color: 0xcc0000, flatShading: true });
+    var white = new THREE.MeshStandardMaterial({ color: 0xffffff, flatShading: true });
+    for (var i = 0; i < 3; i++) {
+      var dist = 6 + i * 3.2;
+      var tz = padZ - dist;
+      var tx = pathCenterX(tz) + side * corridorHalfWidthAt(tz) * 0.55;
+      var ty = 1.15 + i * 0.15;
+      var g = new THREE.Group();
+      var outer = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.12, 20), red);
+      var mid = new THREE.Mesh(new THREE.CylinderGeometry(0.40, 0.40, 0.14, 20), white);
+      var bull = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.16, 16), red);
+      [outer, mid, bull].forEach(function (m) { m.rotation.x = Math.PI / 2; m.castShadow = !lowTier; g.add(m); });
+      var post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, ty, 8),
+        new THREE.MeshStandardMaterial({ color: 0x8a5a2b, flatShading: true }));
+      post.position.y = -ty / 2;
+      g.add(post);
+      g.position.set(tx, ty, tz);
+      scene.add(g);
+      throwTargets.push({ x: tx, y: ty, z: tz, r: 0.62, mesh: g });
+    }
+  }
+
+  // --- aim UI (DOM: crosshair + power bar + throws left) ---
+  var aimUI = document.createElement('div');
+  aimUI.style.cssText = 'position:absolute;inset:0;display:none;pointer-events:none;z-index:17;';
+  aimUI.innerHTML =
+    '<div id="h3cross" style="position:absolute;left:50%;top:46%;width:34px;height:34px;margin:-17px 0 0 -17px;border:3px solid rgba(255,255,255,.95);border-radius:50%;box-shadow:0 0 0 2px rgba(10,22,40,.35);"></div>' +
+    '<div id="h3power" style="position:absolute;left:50%;bottom:120px;transform:translateX(-50%);width:180px;height:14px;border-radius:99px;background:rgba(10,22,40,.35);overflow:hidden;">' +
+      '<div id="h3powerFill" style="width:0%;height:100%;background:linear-gradient(90deg,#97d700,#FFD23F,#ff7043);"></div></div>' +
+    '<div id="h3throws" style="position:absolute;left:50%;bottom:146px;transform:translateX(-50%);font:900 15px -apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;color:#fff;text-shadow:0 2px 8px rgba(10,22,40,.6);white-space:nowrap;"></div>';
+  container.appendChild(aimUI);
+  var powerFillEl = aimUI.querySelector('#h3powerFill');
+  var throwsEl = aimUI.querySelector('#h3throws');
+
+  function enterAim() {
+    if (aimActive || isMissionViewOpen()) return;
+    aimActive = true;
+    throwsLeft = THROWS_PER_VISIT;
+    throwHits = 0;
+    moveTargetActive = false;
+    cancelAutoWalk();
+    // Face the targets — the chase camera then sits behind Leo looking down
+    // the range, which is the brief's over-the-shoulder view for free.
+    var t0 = throwTargets[0];
+    aimFacing = Math.atan2(t0.x - leo.group.position.x, t0.z - leo.group.position.z);
+    aimUI.style.display = '';
+    updateThrowsLabel();
+    playChime();
+    haptic(12);
+    try { track('3d_throw_range_enter'); } catch (e) { }
+  }
+  function exitAim(handOff) {
+    if (!aimActive) return;
+    aimActive = false;
+    charging = false; chargeT = 0;
+    aimUI.style.display = 'none';
+    powerFillEl.style.width = '0%';
+    padCooldownUntil = performance.now() + 1500;
+    if (handOff) {
+      // The whole point: three throws, then back to the real thing.
+      showCoachLine(HUB_TEXTS.throwHandoff);
+      try { track('3d_throw_range_done', { hits: throwHits }); } catch (e) { }
+      setTimeout(function () { if (!isMissionViewOpen()) startAutoWalkToMission(); }, 2200);
+    }
+  }
+  function updateThrowsLabel() {
+    throwsEl.textContent = HUB_TEXTS.throwsLeft.replace('{n}', throwsLeft);
+  }
+
+  // --- balls ---
+  var ballPool = [], ballNext = 0;
+  (function buildBalls() {
+    var bg = new THREE.SphereGeometry(0.15, 10, 8);
+    var bm = new THREE.MeshStandardMaterial({ color: 0x4fb3ff, flatShading: true });
+    for (var i = 0; i < 3; i++) {
+      var b = new THREE.Mesh(bg, bm);
+      b.castShadow = !lowTier;
+      b.visible = false;
+      b.userData.v = new THREE.Vector3();
+      b.userData.live = false;
+      scene.add(b);
+      ballPool.push(b);
+    }
+  })();
+  function throwBall(power) {
+    var b = ballPool[ballNext];
+    ballNext = (ballNext + 1) % ballPool.length;
+    b.position.set(leo.group.position.x, 0.85, leo.group.position.z);
+    var speed = 8 + power * 7;                  // 8..15
+    b.userData.v.set(Math.sin(aimFacing) * speed, 4.2 + power * 2.2, Math.cos(aimFacing) * speed);
+    b.userData.live = true;
+    b.visible = true;
+    haptic(14);
+  }
+  function updateBalls(delta) {
+    for (var i = 0; i < ballPool.length; i++) {
+      var b = ballPool[i];
+      if (!b.userData.live) continue;
+      b.userData.v.y += GRAVITY * delta;
+      b.position.addScaledVector(b.userData.v, delta);
+      // hit test — sphere against each target's face
+      for (var t = 0; t < throwTargets.length; t++) {
+        var tg = throwTargets[t];
+        var dx = b.position.x - tg.x, dy = b.position.y - tg.y, dz = b.position.z - tg.z;
+        if (dx * dx + dy * dy + dz * dz < (tg.r + 0.15) * (tg.r + 0.15)) {
+          throwHits++;
+          burstAt(b.position.x, b.position.y, b.position.z, 0xFFD23F);
+          floatPraise(tg.x, tg.y + 0.8, tg.z, HUB_TEXTS.bullseye);
+          playChime(); haptic([18, 40, 28]);
+          b.userData.live = false; b.visible = false;
+          break;
+        }
+      }
+      if (b.userData.live && b.position.y <= 0.15) {   // landed
+        b.userData.live = false; b.visible = false;
+        spawnDust(b.position.x, b.position.z);
+      }
+    }
+  }
+
+  function releaseThrow() {
+    if (!aimActive || !charging) return;
+    var p = chargeT % 2; if (p > 1) p = 2 - p;
+    charging = false; chargeT = 0;
+    powerFillEl.style.width = '0%';
+    throwBall(p);
+    throwsLeft--;
+    updateThrowsLabel();
+    if (throwsLeft <= 0) setTimeout(function () { exitAim(true); }, 1400);
+  }
+  renderer.domElement.addEventListener('mousedown', function () {
+    if (aimActive) { charging = true; chargeT = 0; }
+  });
+  window.addEventListener('mouseup', function () { if (aimActive && charging) releaseThrow(); });
+
+  function updateThrowRange(delta) {
+    if (!throwPad) return;
+    if (!aimActive) {
+      if (performance.now() < padCooldownUntil) return;
+      if (isMissionViewOpen()) return;
+      var dx = leo.group.position.x - throwPad.position.x;
+      var dz = leo.group.position.z - throwPad.position.z;
+      if (dx * dx + dz * dz < 1.0) enterAim();
+      return;
+    }
+    // charging: ping-pong 0..1 so a child can release on a "good" moment
+    if (charging) {
+      chargeT += delta * 1.25;
+      var p = chargeT % 2; if (p > 1) p = 2 - p;
+      powerFillEl.style.width = Math.round(p * 100) + '%';
+    }
+  }
+
   // ---------- CONTACT SHADOW ----------
   // Leo casts a real shadow only while the shadow pass is on. It is off on
   // lowTier from the start, and the FPS watchdog also switches it off mid-game
@@ -3218,6 +3421,10 @@ export function initHub3D(opts) {
     var len = Math.sqrt(ix * ix + iz * iz);
     var moving = len > 0.05;
     var targetFacing = facing;
+    // While aiming Leo turns down the range; the chase camera then sits
+    // behind him looking at the targets — the brief's over-the-shoulder
+    // view without a second camera mode to maintain.
+    if (aimActive) targetFacing = aimFacing;
 
     // Kick up a puff on a fixed cadence while actually walking — tied to time,
     // not to frames, so it looks the same at 60fps and at 30.
@@ -3852,6 +4059,8 @@ export function initHub3D(opts) {
     updateDust(delta);
     updateBurst(delta);
     updateStars(delta);
+    updateThrowRange(delta);
+    updateBalls(delta);
     updateContactShadow();
     updateIdleNudge();
     checkGateProximity();
@@ -3977,6 +4186,7 @@ export function initHub3D(opts) {
   // all exist — placement depends on all three.
   buildStars();
   updateStarDock();
+  buildThrowRange();
 
   var clock = new THREE.Clock();
   var running = false;
