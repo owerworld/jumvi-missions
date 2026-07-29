@@ -87,7 +87,11 @@ body::before {
   --island-green-3:  #2a744a;   /* gradient end */
 
   /* §2.5 — type scale. Floor is 13px (nothing smaller); body copy is 16px. */
-  --fs-caption: 13px;   /* was 10–11px */
+  --fs-caption: 14px;   /* was 10–11px, then 13px. Raised again: this is the
+                           smallest text a PARENT reads outdoors, one-handed,
+                           with a small child pulling at them. Now equal to
+                           --fs-meta by design — a 1px gap was never a real
+                           hierarchy step; the two could be merged later. */
   --fs-meta:    14px;   /* was 12px */
   --fs-body:    16px;   /* was 13–14px body copy */
   --fs-lead:    18px;
@@ -6575,7 +6579,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 
   /* Typography */
   --fs-xs: 11px;
-  --fs-sm: 12px;
+  --fs-sm: 13px;   /* was 12px — smallest tier in the app, lifted with caption */
   --fs-md: 13px;
   --fs-lg: 14px;
   --fs-xl: 16px;
