@@ -120,6 +120,19 @@ export function initHub3D(opts) {
   var progressLabelEl = document.createElement('div');
   progressLabelEl.style.cssText = 'background:linear-gradient(180deg,#fffdf7,#ffe9c4);padding:5px 15px;border-radius:16px;font-size:12.5px;font-weight:800;color:#7a4712;box-shadow:0 4px 12px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.85);border:1px solid rgba(226,178,104,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   hudTop.appendChild(progressLabelEl);
+
+  // Star dock (GDD §7 "icon dock"). Hidden until the first star is collected —
+  // an empty 0/18 counter on first entry reads as a chore list, which is the
+  // opposite of what a bonus collectible is for.
+  var starDockEl = document.createElement('div');
+  starDockEl.style.cssText = 'display:none;background:rgba(255,255,255,0.94);padding:4px 13px;border-radius:14px;font-size:12.5px;font-weight:900;color:#7a4712;box-shadow:0 4px 12px rgba(18,38,66,0.16);border:1px solid rgba(226,178,104,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  hudTop.appendChild(starDockEl);
+  function updateStarDock() {
+    var n = starCount();
+    if (!n) { starDockEl.style.display = 'none'; return; }
+    starDockEl.style.display = '';
+    starDockEl.textContent = '\u2B50 ' + n + ' / ' + totalStars();
+  }
   container.appendChild(hudTop);
 
   // §4.5 — persistent exit. The global bottom nav is hidden in 3D (FIX 1), so
@@ -2956,6 +2969,88 @@ export function initHub3D(opts) {
     setTimeout(function () { el.remove(); }, 1700);
   }
 
+  // ---------- COLLECTIBLE STARS (GDD §7 "collected items dock") ----------
+  // Purely a reason to walk. Stars NEVER gate a mission, a zone or a badge —
+  // the moment a collectible becomes required it turns the hub into homework,
+  // and this app's whole job is to send the kid outside, not to hold them here.
+  // Three per zone, placed OFF the path centre so reaching one is a small
+  // detour, and only in zones that are already unlocked (a star behind a fog
+  // wall would read as a taunt).
+  var STARS_PER_ZONE = 3;
+  var STAR_PICKUP_DIST = 1.15;
+  var starMeshes = [];
+  var collectedStars = {};
+  (function loadStars() {
+    var raw = '';
+    try { raw = (typeof opts.hubStarsGet === 'function') ? (opts.hubStarsGet() || '') : ''; } catch (e) { }
+    raw.split(',').forEach(function (id) { if (id) collectedStars[id] = 1; });
+  })();
+  function persistStars() {
+    try {
+      if (typeof opts.hubStarsSet === 'function') opts.hubStarsSet(Object.keys(collectedStars).join(','));
+    } catch (e) { }
+  }
+  function starCount() { return Object.keys(collectedStars).length; }
+  function totalStars() { return realPacks.length * STARS_PER_ZONE; }
+
+  function buildStars() {
+    // Octahedron reads as a "gem/star" at this poly budget and is 8 triangles.
+    var starGeo = new THREE.OctahedronGeometry(0.26, 0);
+    var starMat = new THREE.MeshStandardMaterial({
+      color: 0xFFD23F, emissive: 0xFFB000, emissiveIntensity: 0.35,
+      flatShading: true, roughness: 0.35, metalness: 0.1
+    });
+    for (var zi = 0; zi < realPacks.length; zi++) {
+      for (var si = 0; si < STARS_PER_ZONE; si++) {
+        var id = 'z' + zi + '_' + si;
+        if (collectedStars[id]) continue;              // already taken — don't respawn
+        // Spread along the zone, alternating sides, at ~70% of the corridor
+        // half-width so it is a detour but never outside the walkable area.
+        var t = (si + 0.5) / STARS_PER_ZONE;
+        var z = zoneCenterZ(zi) + (t - 0.5) * (ZONE_LENGTH * 0.7);
+        var side = (si % 2 === 0) ? 1 : -1;
+        var x = pathCenterX(z) + side * corridorHalfWidthAt(z) * 0.7;
+        var m = new THREE.Mesh(starGeo, starMat);
+        m.position.set(x, 0.75, z);
+        m.castShadow = !lowTier;
+        m.userData.id = id;
+        m.userData.zone = zi;
+        m.userData.phase = Math.random() * Math.PI * 2;
+        m.userData.baseY = 0.75;
+        scene.add(m);
+        starMeshes.push(m);
+      }
+    }
+  }
+
+  function updateStars(delta) {
+    if (!starMeshes.length) return;
+    for (var i = starMeshes.length - 1; i >= 0; i--) {
+      var m = starMeshes[i];
+      // Only live in unlocked zones — a star past a fog wall stays hidden
+      // rather than dangling something the kid physically cannot reach.
+      var reachable = isZoneUnlocked(m.userData.zone);
+      m.visible = reachable;
+      if (!reachable) continue;
+      m.rotation.y += delta * 1.6;
+      m.position.y = m.userData.baseY + Math.sin(elapsedTime * 2 + m.userData.phase) * 0.12;
+      var dx = leo.group.position.x - m.position.x;
+      var dz = leo.group.position.z - m.position.z;
+      if (dx * dx + dz * dz < STAR_PICKUP_DIST * STAR_PICKUP_DIST) {
+        collectedStars[m.userData.id] = 1;
+        persistStars();
+        burstAt(m.position.x, m.position.y, m.position.z, 0xFFD23F);
+        floatPraise(m.position.x, m.position.y + 0.5, m.position.z, '+1 ⭐');
+        playChime();
+        haptic(10);
+        scene.remove(m);
+        starMeshes.splice(i, 1);
+        updateStarDock();
+        try { track('3d_star_collected', { total: starCount() }); } catch (e) { }
+      }
+    }
+  }
+
   // ---------- CONTACT SHADOW ----------
   // Leo casts a real shadow only while the shadow pass is on. It is off on
   // lowTier from the start, and the FPS watchdog also switches it off mid-game
@@ -3756,6 +3851,7 @@ export function initHub3D(opts) {
     updateMovement(delta);
     updateDust(delta);
     updateBurst(delta);
+    updateStars(delta);
     updateContactShadow();
     updateIdleNudge();
     checkGateProximity();
@@ -3877,6 +3973,11 @@ export function initHub3D(opts) {
   }
 
   // ---------- LOOP (pause/resume-able — see hideHub3D()/showHub3D() in app.js) ----------
+  // Stars are built once the scene, the path helpers and the zone-lock state
+  // all exist — placement depends on all three.
+  buildStars();
+  updateStarDock();
+
   var clock = new THREE.Clock();
   var running = false;
   var rafId = null;

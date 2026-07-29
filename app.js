@@ -489,6 +489,7 @@ const ACTIVE_PROFILE_KEY  = "jumvi_active_profile_v1";
 const HUB3D_FLAG_KEY = "jumvi_3d_hub_enabled";
 const HUB_INTRO_KEY = "jumvi_hub_intro_done_v1"; // one-time Coach Leo greeting (Task 3)
 const LEO_GUIDE_KEY = "jumvi_leo_guide_seen_v1"; // one-time "how to play" guide reaction (Task 5)
+const HUB_STARS_KEY = "jumvi_hub_stars";        // collected hub stars, comma-separated ids (bonus only — never gates progress)
 function isHub3DEnabled(){
   return lsGet(HUB3D_FLAG_KEY, "0") === "1";
 }
@@ -4287,7 +4288,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260727-2"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260727-3"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4300,6 +4301,10 @@ function ensureHub3DLoaded(onProgress){
       coachSpeak,
       hubIntroDone(){ return lsGet(HUB_INTRO_KEY, "0") === "1"; },
       markHubIntroDone(){ lsSet(HUB_INTRO_KEY, "1"); },
+      // Hub stars: the hub owns the gameplay, app.js owns the key — same split
+      // as the intro flag, so every localStorage name still lives in one file.
+      hubStarsGet(){ return lsGet(HUB_STARS_KEY, ""); },
+      hubStarsSet(csv){ lsSet(HUB_STARS_KEY, csv); },
       PACKS, missions, done, openMission, container,
       // Bridges into EXISTING app flows — the hub triggers them, never
       // reimplements them: the real certificate modal, the real daily pick,
