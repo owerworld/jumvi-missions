@@ -2310,11 +2310,22 @@ export function initHub3D(opts) {
     // signposts only (they doubled up before).
     var gateColor = themeForZone(cfg.zoneIndex).gateColor;
     var paddle = new THREE.Group();
-    var faceMat = new THREE.MeshStandardMaterial({ color: 0xF7EFD9, flatShading: true });
+    // Face is the product's blue rather than the old cream: this IS the JUMVI
+    // paddle a kid is holding in the garden, and the gate is the moment we ask
+    // them to go use it. The rim below stays the ZONE colour, not the toy's
+    // lime — rim colour is how each zone is identified all over the hub, and
+    // that coding is load-bearing.
+    var faceMat = new THREE.MeshStandardMaterial({ color: 0x4fb3ff, flatShading: true });
     var face = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.12, 24), faceMat);
     face.rotation.x = Math.PI / 2;
     face.castShadow = true;
     paddle.add(face);
+    // Wordmark sits UNDER the progress slices (they are at z=0.08): as the zone
+    // fills up the pie covers the branding, which is the right priority order —
+    // progress first, logo second.
+    var gateWordmark = wordmarkDecal(0.78, 0.85);
+    gateWordmark.position.z = 0.065;
+    paddle.add(gateWordmark);
     var rimMat = new THREE.MeshStandardMaterial({
       color: gateColor, flatShading: true,
       emissive: gateColor, emissiveIntensity: 0.35
@@ -3114,20 +3125,34 @@ export function initHub3D(opts) {
     t.wrapS = THREE.RepeatWrapping;
     return t;
   }
-  function makePaddleTexture() {
+  // The wordmark is a TRANSPARENT DECAL on its own flat disc, not a texture
+  // painted onto the face cylinder. A cylinder's end-cap UVs rotate and mirror
+  // the image depending on which cap you look at, which is exactly why the
+  // first version read upside-down. A CircleGeometry has clean planar UVs
+  // facing +Z, so the text is upright and the right way round, always.
+  function makeWordmarkTexture() {
     var c = document.createElement('canvas');
     c.width = c.height = 256;
     var g = c.getContext('2d');
-    var grd = g.createLinearGradient(0, 0, 0, 256);
-    grd.addColorStop(0, '#7FC4F5');                                // lighter top half
-    grd.addColorStop(0.5, '#4fb3ff');                              // --accent-blue token
-    grd.addColorStop(1, '#2F7FD0');
-    g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+    g.clearRect(0, 0, 256, 256);                                   // transparent base
     g.fillStyle = '#ffffff';
-    g.font = '900 46px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    g.font = '900 52px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.fillText('JUMVI', 128, 132);
+    g.shadowColor = 'rgba(10,22,40,.35)'; g.shadowBlur = 6; g.shadowOffsetY = 2;
+    g.fillText('JUMVI', 128, 128);
     return new THREE.CanvasTexture(c);
+  }
+  var _wordmarkTex = null;
+  function wordmarkDecal(radius, opacity) {
+    if (!_wordmarkTex) _wordmarkTex = makeWordmarkTexture();
+    var m = new THREE.Mesh(
+      new THREE.CircleGeometry(radius, 24),
+      new THREE.MeshBasicMaterial({
+        map: _wordmarkTex, transparent: true, opacity: opacity,
+        depthWrite: false, side: THREE.FrontSide
+      })
+    );
+    return m;
   }
 
   function buildThrowRange() {
@@ -3147,7 +3172,7 @@ export function initHub3D(opts) {
     // Lime rim + blue face are the --aurora-lime / --accent-blue tokens, so no
     // new brand colour is introduced.
     var paddleFaceMat = new THREE.MeshStandardMaterial({
-      map: makePaddleTexture(), roughness: 0.6, metalness: 0.0
+      color: 0x4fb3ff, roughness: 0.6, metalness: 0.0, flatShading: true   // --accent-blue
     });
     var paddleRimMat = new THREE.MeshStandardMaterial({
       color: 0x97d700, flatShading: true, roughness: 0.55        // --aurora-lime
@@ -3166,6 +3191,10 @@ export function initHub3D(opts) {
       var rim = new THREE.Mesh(new THREE.TorusGeometry(0.58, 0.055, 8, 28), paddleRimMat);
       rim.scale.x = 0.94;
       [face, rim].forEach(function (m) { m.castShadow = !lowTier; g.add(m); });
+      var wm = wordmarkDecal(0.44, 0.95);       // faces +Z, which is where the pad is
+      wm.position.z = 0.055;
+      wm.scale.x = 0.94;
+      g.add(wm);
       var post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, ty, 8),
         new THREE.MeshStandardMaterial({ color: 0x8a5a2b, flatShading: true }));
       post.position.y = -ty / 2;
