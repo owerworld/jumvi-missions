@@ -74,7 +74,7 @@
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_light-192.webp" media="(prefers-color-scheme: dark)" />
   <link rel="stylesheet" href="style.css?v=20260727-4">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
-  <link rel="stylesheet" href="jumvi-icons.css?v=20260722-1">
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260730-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
   <!-- §5.1 — Tabler icon-webfont CDN removed. The 3 glyphs used (chevron-right,
        hand-three-fingers, message-off) are now inline mask-image SVGs in
@@ -199,7 +199,7 @@
       <!-- A2HS banner stays at top regardless of tab -->
       <div class="a2hs" id="a2hsBanner" style="display:none;">
         <div class="a2hsText">
-          <b>📲 Add to Home Screen</b>
+          <b><i class="jic jic-device-mobile-down" aria-hidden="true"></i> Add to Home Screen</b>
           <div id="a2hsHint">Use JUMVI like an app — no download needed.</div>
           <div id="a2hsSteps">Share → Add to Home Screen</div>
         </div>
@@ -294,7 +294,7 @@
           <div class="dailyChallengeBar">
             <div class="dailyChallengeFill" id="dailyChallengeFill"></div>
           </div>
-          <div class="dailyChallengeReward" id="dailyChallengeReward">Play 1 mission → earn the Daily Champion star ⭐</div>
+          <div class="dailyChallengeReward" id="dailyChallengeReward">Play 1 mission → earn the Daily Champion star</div>
         </div>
 
         <!-- Compact stats: progress + today goal + streak (tek satır) -->
@@ -302,14 +302,14 @@
           <div class="statsCompactLeft">
             <div class="statsCompactRow">
               <span class="statsCompactText" id="progressText">0 / 36 missions</span>
-              <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal">⭐ 0/1 today</span>
+              <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
             </div>
             <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="36">
               <div id="progressBarFill"></div>
             </div>
           </div>
           <div class="streakBox" aria-label="streak">
-            <div class="streakPill" id="streakPill">🔥 0</div>
+            <div class="streakPill" id="streakPill"><i class="jic jic-flame" aria-hidden="true"></i> 0</div>
           </div>
         </div>
         <!-- Hidden helpers for JS backward compatibility -->
@@ -324,7 +324,7 @@
 
       <!-- ============== TAB: BROWSE (Path Tree only) ============== -->
       <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
-        <h2 class="tabHeading">🗺️ Mission Path</h2>
+        <h2 class="tabHeading"><i class="jic jic-map" aria-hidden="true"></i> Mission Path</h2>
 
         <!-- §3.4 — random pick lives here now, where browsing is the intent. -->
         <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
@@ -360,7 +360,7 @@
             <span class="familyInsightsTitle">Family Stats</span>
           </div>
           <div class="familyInsightsGrid" id="familyInsightsGrid"></div>
-          <div class="familyStreak" id="familyStreak">🔥 Family streak: 0 days</div>
+          <div class="familyStreak" id="familyStreak"><i class="jic jic-flame" aria-hidden="true"></i> Family streak: 0 days</div>
         </div>
 
         <!-- Empty state — yeni kullanıcı için -->
@@ -384,8 +384,8 @@
             <div class="dashShareWrap">
               <div class="dashShareTitle">Share progress with family 🎉</div>
               <div class="dashShareBtns">
-                <button class="dashShareBtn dashShareWA" id="btnDashShareWA" type="button">💬 WhatsApp</button>
-                <button class="dashShareBtn dashShareCopy" id="btnDashShareCopy" type="button">🔗 Copy</button>
+                <button class="dashShareBtn dashShareWA" id="btnDashShareWA" type="button"><i class="jic jic-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
+                <button class="dashShareBtn dashShareCopy" id="btnDashShareCopy" type="button"><i class="jic jic-link" aria-hidden="true"></i> Copy</button>
               </div>
             </div>
             <!-- Eski print buton stub — JS uyumlulugu icin -->
@@ -425,8 +425,8 @@
           <div class="shareScoreRight">
             <div class="shareScoreTitle">Share with family! 🎉</div>
             <div class="shareScoreBtns">
-              <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button">💬 WhatsApp</button>
-              <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button">🔗 Copy Link</button>
+              <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button"><i class="jic jic-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
+              <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button"><i class="jic jic-link" aria-hidden="true"></i> Copy Link</button>
             </div>
           </div>
         </div>
@@ -461,7 +461,7 @@
 
         <!-- Primary action: switch/manage profiles -->
         <button class="profileTabOpenBtn btn btnPrimary" id="btnOpenProfileFromTab" type="button">
-          👤 Switch Player or Add Child
+          <i class="jic jic-users" aria-hidden="true"></i> Switch Player or Add Child
         </button>
 
         <!-- Quick links -->
@@ -475,7 +475,7 @@
             <span class="profileQuickArrow">›</span>
           </button>
           <a class="profileQuickLink" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener">
-            <span class="profileQuickIcon">📘</span>
+            <span class="profileQuickIcon"><i class="jic jic-book" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
               <div class="profileQuickTitle">Mission Book PDF</div>
               <div class="profileQuickSub">Printable list for parents</div>
@@ -483,7 +483,7 @@
             <span class="profileQuickArrow">›</span>
           </a>
           <button class="profileQuickLink" id="btnReset" type="button">
-            <span class="profileQuickIcon">🗑️</span>
+            <span class="profileQuickIcon"><i class="jic jic-trash" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
               <div class="profileQuickTitle">Reset Progress</div>
               <div class="profileQuickSub">Clear all data on this device</div>
@@ -513,10 +513,10 @@
       <b>Extras</b><br/>
             <div class="links">
         <div class="linkGroup">
-          <a class="linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf" target="_blank" rel="noopener">📘 Mission Book</a>
+          <a class="linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf" target="_blank" rel="noopener"><i class="jic jic-book" aria-hidden="true"></i> Mission Book</a>
           <div class="linkDesc">Printable mission list for parents.</div>
         </div>
-        <button class="linkBtn" id="btnShare" aria-label="Share progress">📤 Share</button>
+        <button class="linkBtn" id="btnShare" aria-label="Share progress"><i class="jic jic-share" aria-hidden="true"></i> Share</button>
       </div>
       <div class="small">Progress is saved on this device.</div>
       <div class="small">Adult supervision required.</div>
@@ -527,7 +527,7 @@
         <a href="#" id="privacyLink" role="button"><i class="ico i-lock" aria-hidden="true"></i> Privacy &amp; Safety</a>
       </div>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn btnResetFooter" id="btnResetBottom" aria-label="Reset progress">🗑️ Reset Progress</button>
+        <button class="btn btnResetFooter" id="btnResetBottom" aria-label="Reset progress"><i class="jic jic-trash" aria-hidden="true"></i> Reset Progress</button>
         <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button">🧒 Kids Mode</button>
       </div>
       <div class="copyrightLine">© 2026 SAY23 LLC · JUMVI® and Coach Leo are trademarks of SAY23 LLC. All mission content is protected by copyright.</div>
@@ -579,7 +579,7 @@
           <span class="callerHintDot callerHintDot-g"></span>
         </span>
         <div class="callerHintText">
-          <b id="callerHintTitle">📱 Phone calls the lights</b>
+          <b id="callerHintTitle"><i class="jic jic-device-mobile" aria-hidden="true"></i> Phone calls the lights</b>
           <span id="callerHintSub">Random Green/Red with voice + screen — tap Start, then play!</span>
         </div>
       </div>
@@ -592,7 +592,7 @@
       <!-- Primary action row — tek dominant Start + ikon yardımcılar -->
       <div class="missionPrimary">
         <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
-        <button class="missionIconBtn" id="btnSpeak" aria-label="Read mission aloud" title="Read aloud">🗣️</button>
+        <button class="missionIconBtn" id="btnSpeak" aria-label="Read mission aloud" title="Read aloud"><i class="jic jic-speakerphone" aria-hidden="true"></i></button>
         <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track score" title="Track score"><i class="ico i-chart" aria-hidden="true"></i></button>
       </div>
 
@@ -621,7 +621,7 @@
       <!-- More info akordion — secondary content (Tip, Kids, Safety) -->
       <details class="moreInfoDetails">
         <summary>
-          <span class="moreInfoSummaryText">📚 More tips &amp; safety</span>
+          <span class="moreInfoSummaryText"><i class="jic jic-books" aria-hidden="true"></i> More tips &amp; safety</span>
           <span class="moreInfoSummaryArrow">▾</span>
         </summary>
         <div class="moreInfoContent">
@@ -629,7 +629,7 @@
           <div class="kv" id="mKidsTip"></div>
           <div class="kv" id="mSafety"></div>
           <details class="safetyDetails modalSafetyDetails">
-            <summary>⚠️ General safe play tips</summary>
+            <summary><i class="jic jic-alert-triangle" aria-hidden="true"></i> General safe play tips</summary>
             Throw below face level · keep 1–3 m distance · adult supervision required.
           </details>
         </div>
@@ -692,15 +692,15 @@
       </div>
       <div class="privacyBody" style="font-size:14px;line-height:1.5;color:#334155;display:flex;flex-direction:column;gap:12px;">
         <div>
-          <b>🙅 No sign-up, no account.</b><br/>
+          <b><i class="jic jic-user-off" aria-hidden="true"></i> No sign-up, no account.</b><br/>
           No login, no password, no email required. Just open and play.
         </div>
         <div>
-          <b>🔐 No personal information collected.</b><br/>
+          <b><i class="jic jic-lock" aria-hidden="true"></i> No personal information collected.</b><br/>
           We never ask for or collect your child's name, email, address, phone number, photos, or location.
         </div>
         <div>
-          <b>📱 Everything stays on your device.</b><br/>
+          <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on your device.</b><br/>
           Mission progress and badges are saved only in this browser, on this device. They are never uploaded to a server, and the optional certificate name you type is used only to draw the image on your device — it is not sent anywhere.
         </div>
         <div>
@@ -708,14 +708,14 @@
           We use <a href="https://plausible.io/privacy-focused-web-analytics" target="_blank" rel="noopener">Plausible</a>, a privacy-first analytics tool, to count aggregate usage (for example, how often a mission is opened). It uses <b>no cookies</b>, collects <b>no personal information</b>, and <b>never tracks your child across other sites or apps</b>.
         </div>
         <div>
-          <b>🚫 No ads. No third-party trackers. No data selling — ever.</b>
+          <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling — ever.</b>
         </div>
         <div>
           <b>👶 COPPA &amp; children's privacy.</b><br/>
           This app is designed to align with the U.S. Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13. If you believe we have, contact us and we will address it promptly.
         </div>
         <div>
-          <b>🧑‍🤝‍🧑 Play safely.</b><br/>
+          <b><i class="jic jic-shield" aria-hidden="true"></i> Play safely.</b><br/>
           These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles.
         </div>
         <div class="small" style="border-top:1px solid #e5e7eb;padding-top:10px;">
@@ -751,10 +751,10 @@
         </div>
 
         <!-- Primary CTA -->
-        <button class="btn btnCertPrimary" id="btnCertSavePng" aria-label="Save certificate as image">💾 Save to Photos</button>
+        <button class="btn btnCertPrimary" id="btnCertSavePng" aria-label="Save certificate as image"><i class="jic jic-download" aria-hidden="true"></i> Save to Photos</button>
 
         <!-- Secondary CTA — Share opens the OS share sheet (WhatsApp, Messages, Mail, etc. all in one) -->
-        <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate">📤 Share with family</button>
+        <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate"><i class="jic jic-share" aria-hidden="true"></i> Share with family</button>
 
         <!-- Tertiary: PDF text link -->
         <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">Or save as PDF</button>
@@ -772,7 +772,7 @@
     <div class="sheet">
       <div class="sheetTop">
         <div>
-          <div class="sheetTitle">👤 Choose Player</div>
+          <div class="sheetTitle"><i class="jic jic-users" aria-hidden="true"></i> Choose Player</div>
           <div class="small">Each child has their own progress, streak & badges.</div>
         </div>
         <button class="close" id="btnProfileClose" aria-label="Close player picker"><i class="ico i-x" aria-hidden="true"></i></button>
@@ -781,18 +781,18 @@
 
       <!-- Edit panel (shown when editing a profile) -->
       <div class="profileEditSection" id="profileEditSection" style="display:none">
-        <div class="profileSectionTitle" id="profileEditTitle">✏️ Edit profile</div>
+        <div class="profileSectionTitle" id="profileEditTitle"><i class="jic jic-pencil" aria-hidden="true"></i> Edit profile</div>
         <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20" autocomplete="off" />
         <div class="profileAvatarPicker" id="profileEditAvatarPicker"></div>
         <div class="profileEditActions">
           <button class="btn btnGhost profileEditCancelBtn" id="btnProfileEditCancel" type="button">Cancel</button>
           <button class="btn btnPrimary profileEditSaveBtn" id="btnProfileEditSave" type="button">Save</button>
         </div>
-        <button class="profileDeleteBtn" id="btnProfileDelete" type="button">🗑️ Delete this profile</button>
+        <button class="profileDeleteBtn" id="btnProfileDelete" type="button"><i class="jic jic-trash" aria-hidden="true"></i> Delete this profile</button>
       </div>
 
       <div class="profileAddSection" id="profileAddSection">
-        <div class="profileSectionTitle">➕ Add a new child</div>
+        <div class="profileSectionTitle"><i class="jic jic-plus" aria-hidden="true"></i> Add a new child</div>
         <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20" autocomplete="off" />
         <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
         <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
@@ -800,17 +800,17 @@
 
       <!-- Settings section -->
       <div class="profileSettingsSection">
-        <div class="profileSectionTitle">⚙️ Settings</div>
+        <div class="profileSectionTitle"><i class="jic jic-settings" aria-hidden="true"></i> Settings</div>
         <button class="profileSettingRow" id="profileThemeBtn" type="button">
           <span class="profileSettingLabel">
-            <span class="profileSettingIcon" id="profileThemeIcon">🌓</span>
+            <span class="profileSettingIcon" id="profileThemeIcon"><i class="jic jic-moon-stars" aria-hidden="true"></i></span>
             <span class="profileSettingText">Theme</span>
           </span>
           <span class="profileSettingValue" id="profileThemeValue">System</span>
         </button>
         <button class="profileSettingRow" id="profileSoundBtn" type="button">
           <span class="profileSettingLabel">
-            <span class="profileSettingIcon" id="profileSoundIcon">🔊</span>
+            <span class="profileSettingIcon" id="profileSoundIcon"><i class="jic jic-volume" aria-hidden="true"></i></span>
             <span class="profileSettingText">Sound</span>
           </span>
           <span class="profileSettingValue" id="profileSoundValue">On</span>
@@ -818,7 +818,7 @@
         <!-- §3.1 — auto read-aloud toggle (default on; matters most for ages 3–5) -->
         <button class="profileSettingRow" id="profileTtsBtn" type="button">
           <span class="profileSettingLabel">
-            <span class="profileSettingIcon">🗣️</span>
+            <span class="profileSettingIcon"><i class="jic jic-speakerphone" aria-hidden="true"></i></span>
             <span class="profileSettingText">Read missions aloud</span>
           </span>
           <span class="profileSettingValue" id="profileTtsValue">On</span>
@@ -828,7 +828,7 @@
       <!-- §6.2 — Product Care. Answers the recurring Amazon questions Rufus/COSMO
            can't; verbatim copy. Lowers returns and reads as premium care. -->
       <details class="productCareSection">
-        <summary class="productCareSummary">🧰 Product Care</summary>
+        <summary class="productCareSummary"><i class="jic jic-tool" aria-hidden="true"></i> Product Care</summary>
         <div class="productCareBody">
           <h3 class="productCareTitle">Keeping your set working</h3>
 
@@ -909,7 +909,7 @@
 
   <!-- Floating sound toggle -->
   <!-- Floating sound toggle gizli — Profile tab > Settings'te zaten var -->
-  <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound" style="display:none" aria-hidden="true">🔊</button>
+  <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound" style="display:none" aria-hidden="true"><i class="jic jic-volume" aria-hidden="true"></i></button>
   <div id="statusLive" class="sr-only" role="status" aria-live="polite"></div>
   <div id="toast" class="toast" role="status" aria-live="assertive" aria-atomic="true"></div>
   <canvas id="confettiCanvas" aria-hidden="true"></canvas>
@@ -934,7 +934,7 @@
   <!-- Fallback modal: image generation failed -->
   <div class="backdrop fallbackBackdrop" id="fallbackBackdrop" role="dialog" aria-modal="true" aria-label="Image generation failed">
     <div class="sheet fallbackSheet">
-      <div class="fallbackIcon">🖼️</div>
+      <div class="fallbackIcon"><i class="jic jic-photo" aria-hidden="true"></i></div>
       <div class="fallbackTitle">Image couldn’t be created</div>
       <div class="fallbackMsg"></div>
       <div class="fallbackActions">
@@ -958,7 +958,7 @@
 <script src="data.js?v=20260524-32" defer></script>
 <script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
 <script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260727-12" defer></script>
+<script src="app.js?v=20260730-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

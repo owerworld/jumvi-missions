@@ -1171,8 +1171,8 @@ function applyTheme(){
   }
   if(themeToggle){
     const label = mode === "system" ? "System" : (mode === "dark" ? "Dark" : "Light");
-    const icons = { dark: "🌙", light: "☀️", system: "🌓" };
-    themeToggle.textContent = icons[mode] || "🌓";
+    const icons = { dark: '<i class="jic jic-moon" aria-hidden="true"></i>', light: '<i class="jic jic-sun" aria-hidden="true"></i>', system: '<i class="jic jic-moon-stars" aria-hidden="true"></i>' };
+    themeToggle.innerHTML = icons[mode] || '<i class="jic jic-moon-stars" aria-hidden="true"></i>';
     themeToggle.setAttribute("aria-label", `Theme: ${label}`);
   }
 }
@@ -1296,7 +1296,7 @@ function recordActivityToday(){
       streakCount = setState("streakCount", Math.max(0, streakCount) + 1);
       // UI'da bildiri (delay ile, completion toast ezmesin)
       setTimeout(()=>{
-        showToast("🛡️ Streak Freeze used! Your streak is safe.");
+        showToast("Streak Freeze used! Your streak is safe.");
         if(!prefersReducedMotion) fireConfetti(800);
       }, 2800);
       trackEvent("Streak Freeze Used");
@@ -1333,30 +1333,30 @@ function renderStreakUI(animate=false){
   if(!streakPill) return;
   const sc = streakCount || 0;
   // Seviye bazli emoji + label (Duolingo style)
-  let icon = "🔥";
+  let icon = "";
   let label;
   if(sc === 0){
-    icon = "✨";
+    icon = '<i class="jic jic-star" aria-hidden="true"></i>';
     label = "Start your streak!";
     streakPill.style.opacity = "0.6";
   } else if(sc >= 30){
-    icon = "💎🔥💎";
+    icon = '<i class="jic jic-flame" aria-hidden="true"></i>';
     label = `${sc} day legend!`;
     streakPill.style.opacity = "";
   } else if(sc >= 14){
-    icon = "🔥🔥🔥";
+    icon = '<i class="jic jic-flame" aria-hidden="true"></i>';
     label = `${sc} days on fire!`;
     streakPill.style.opacity = "";
   } else if(sc >= 7){
-    icon = "🔥🔥";
+    icon = '<i class="jic jic-flame" aria-hidden="true"></i>';
     label = `${sc} day streak!`;
     streakPill.style.opacity = "";
   } else if(sc >= 3){
-    icon = "🔥";
+    icon = '<i class="jic jic-flame" aria-hidden="true"></i>';
     label = `${sc} day streak`;
     streakPill.style.opacity = "";
   } else {
-    icon = "🔥";
+    icon = '<i class="jic jic-flame" aria-hidden="true"></i>';
     label = `${sc} day${sc === 1 ? "" : "s"}`;
     streakPill.style.opacity = "";
   }
@@ -1385,7 +1385,7 @@ function checkStreakWarning(){
   // Streak kırılma riski — dün oynadıysa uyar
   const yesterday = yesterdayIso(today);
   if(lastActiveIso === yesterday){
-    setTimeout(()=> showToast("Coach Leo misses you! Play today to keep your streak going 🔥"), 2000);
+    setTimeout(()=> showToast("Coach Leo misses you! Play today to keep your streak going!"), 2000);
   }
 }
 
@@ -1432,7 +1432,7 @@ function renderDailyUI(){
   if(!ms) return;
   const doneToday = done.has(ms.id);
 
-  if(dailyIcon) dailyIcon.textContent = doneToday ? "✅" : ms.icon;
+  if(dailyIcon) dailyIcon.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i>' : ms.icon;
   if(dailyName) dailyName.textContent = ms.title;
   if(dailyMeta){
     const contextHints = ["Great for first-time players!","Fun warm-up for today!","A quick favorite — try it!","Perfect for 5 minutes of play.","Challenge yourselves today!"];
@@ -1440,12 +1440,12 @@ function renderDailyUI(){
     dailyMeta.innerHTML = `
       <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
-      <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+      <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
       <span class="dailyHint">${hint}</span>
     `;
   }
   if(btnDailyPlay){
-    btnDailyPlay.textContent = doneToday ? "✅ View" : "▶︎ Play";
+    btnDailyPlay.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i> View' : "▶︎ Play";
   }
 }
 
@@ -1823,7 +1823,7 @@ function updateMissionCard(card, ms, isDone){
     r.title.textContent = ms.title;
     r.packTag.textContent = getPackName(ms.pack);
     r.diffTag.textContent = `${diffLabel(ms.difficulty)} • ${ms.time}`;
-    r.playersTag.textContent = `👥 ${ms.players}`;
+    r.playersTag.innerHTML = `<i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}`;
     // Teaser: first step, max 58 chars
     if(r.teaser){
       const first = (ms.steps && ms.steps[0]) || "";
@@ -1886,7 +1886,7 @@ function showBadgeUnlockModal(badge){
   clickSound("success");
   // Task 5 — celebrate Leo for the badge (dropped if a mission-completion
   // celebrate is already on screen; the sole reaction for streak-earned badges).
-  showLeoReaction("celebrate", "New badge! 🏅");
+  showLeoReaction("celebrate", "New badge!");
   const dismiss = ()=>{ modal.classList.remove("show"); };
   if(closeBtn){ closeBtn.onclick = dismiss; }
   modal.onclick = (e)=>{ if(e.target===modal) dismiss(); };
@@ -1962,7 +1962,7 @@ function updateBadges(){
         const left = Math.max(0, 36 - done.size);
         toGo = `${done.size}/36 · ${left} more to go`;
       } else {
-        toGo = "🔒 Locked";
+        toGo = '<i class="jic jic-lock" aria-hidden="true"></i> Locked';
       }
     }
     let extraClass = "";
@@ -2242,7 +2242,7 @@ function stopLeoSpeakSteps(){
 }
 function toggleLeoSpeakSteps(ms){
   if(_leoStepsSpeaking){ stopLeoSpeakSteps(); return; }
-  if(!soundOn){ showToast("Sound is off — turn it on in Settings 🔊"); return; }
+  if(!soundOn){ showToast("Sound is off — turn it on in Settings."); return; }
   if(!("speechSynthesis" in window)) { showToast("This device can't read aloud."); return; }
   _leoStepsSpeaking = true;
   const btn = document.getElementById("leoSpeakBtn");
@@ -2417,7 +2417,7 @@ function armHoldToReset(){
   timerHoldResetT = setTimeout(()=>{
     timerHoldResetArmed = true;
     resetTimerUI();
-    showToast("Timer reset ✅");
+    showToast("Timer reset.");
   }, 650);
 }
 function disarmHoldToReset(){
@@ -2467,7 +2467,7 @@ function openMission(id){
   // not a recap). Guide Leo points beside the steps.
   if(!done.has(id) && lsGet(LEO_GUIDE_KEY, "0") !== "1"){
     lsSet(LEO_GUIDE_KEY, "1");
-    setTimeout(()=> showLeoReaction("guide", "Read the steps, then go play! 👀"), 500);
+    setTimeout(()=> showLeoReaction("guide", "Read the steps, then go play!"), 500);
   }
   // If the Red Light / Green Light caller is running (mission 2) and the user
   // taps Next/Random/another mission, tear it down so the new mission isn't
@@ -2519,7 +2519,7 @@ function openMission(id){
   mTitle.textContent = `${ms.icon} ${ms.title}`;
   mMeta.innerHTML = `
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
-    <span class="tag">👥 ${escapeHtml(ms.players)}</span>
+    <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
   `;
 
@@ -2566,10 +2566,10 @@ function openMission(id){
   }
 
   const isDone = done.has(ms.id);
-  btnToggleDone.textContent = isDone ? "↩️ Mark as Not Done" : "✅ Mark as Done";
+  btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> Mark as Done';
   btnToggleDone.classList.toggle("btnDone", isDone);
   // After completing: promote "Next" as the clear CTA
-  btnNext.textContent = isDone ? "▶ Next Mission!" : "➡️ Next";
+  btnNext.innerHTML = isDone ? "▶ Next Mission!" : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
   btnNext.classList.toggle("btnNextHighlight", isDone);
   if(btnRandomPack) btnRandomPack.textContent = `🎲 Random from ${getPackName(ms.pack)}`;
 
@@ -2643,7 +2643,7 @@ let isSpeaking = false;
 function updateSpeakButton(){
   if(!btnSpeak) return;
   btnSpeak.classList.toggle("speaking", isSpeaking);
-  btnSpeak.textContent = isSpeaking ? "■" : "🗣️";
+  btnSpeak.innerHTML = isSpeaking ? "■" : '<i class="jic jic-speakerphone" aria-hidden="true"></i>';
   btnSpeak.setAttribute("title", isSpeaking ? "Stop reading" : "Read aloud");
   btnSpeak.setAttribute("aria-label", isSpeaking ? "Playing… Tap to stop" : "Read mission aloud");
 }
@@ -2869,7 +2869,7 @@ async function downloadCertificatePNG({auto=true}={}){
   const origHTML = btnCertSavePng ? btnCertSavePng.innerHTML : "";
   if(btnCertSavePng){
     btnCertSavePng.disabled = true;
-    btnCertSavePng.textContent = "⏳ Preparing…";
+    btnCertSavePng.textContent = "Preparing…";
   }
   if(isiOS){
     try{ showSaveOverlay("", "Preparing certificate… please wait."); }catch(_){}
@@ -2894,7 +2894,7 @@ async function downloadCertificatePNG({auto=true}={}){
           await navigator.share({files:[file], title:"JUMVI Certificate",
                                  text:"🏆 My JUMVI Champion Certificate!"});
           hideSaveOverlay();
-          if(!auto) showToast("✅ Saved to Photos!");
+          if(!auto) showToast("Saved to Photos!");
           return;
         }catch(e){
           if(e.name === "AbortError"){ hideSaveOverlay(); return; }
@@ -2917,7 +2917,7 @@ async function downloadCertificatePNG({auto=true}={}){
     a.click();
     a.remove();
     setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
-    if(!auto) showToast("✅ Certificate saved!");
+    if(!auto) showToast("Certificate saved!");
 
   }catch(err){
     hideSaveOverlay();
@@ -2926,7 +2926,7 @@ async function downloadCertificatePNG({auto=true}={}){
     // FIX: restore original button HTML (not hardcoded old text)
     if(btnCertSavePng){
       btnCertSavePng.disabled = false;
-      btnCertSavePng.innerHTML = origHTML || "💾 Save to Photos";
+      btnCertSavePng.innerHTML = origHTML || '<i class="jic jic-download" aria-hidden="true"></i> Save to Photos';
     }
   }
 }
@@ -2958,7 +2958,7 @@ async function shareCertificate(){
       a.href = url; a.download = filename;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
-      showToast("✅ Certificate saved!");
+      showToast("Certificate saved!");
     }
   }catch(e){
     if(e.name !== "AbortError") showToast("Share failed. Try Save to Photos.");
@@ -3054,7 +3054,7 @@ async function downloadCertificatePDF(){
     a.click();
     a.remove();
     setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(_){} }, 3000);
-    showToast("✅ PDF saved!");
+    showToast("PDF saved!");
   }catch(_){
     showToast("PDF export failed. Try again.");
   }
@@ -3228,7 +3228,7 @@ function markMissionDone(id, source="manual"){
     if(packAfter === Math.ceil(packTotal/2)){
       // Halfway hint
       setTimeout(()=>{
-        showToast(`🎯 Halfway through ${packLabel}! Keep going!`);
+        showToast(`Halfway through ${packLabel}! Keep going!`);
         if(navigator.vibrate) try { navigator.vibrate([40, 60, 40]); } catch(_){}
         pathSound("milestone");
       }, 1800);
@@ -3239,18 +3239,18 @@ function markMissionDone(id, source="manual"){
   }
 
   if(source === "auto"){
-    showToast("✅ Mission complete!");
+    showToast("Mission complete!");
   } else {
     // First ever completion — Coach Leo special moment
     const remaining = missions.length - done.size;
     if(done.size === 1){
       setTimeout(()=>{ fireConfetti(2000); showToast("High-five, paddle pro! Your first mission is done!"); }, 400);
     } else if(done.size === 5){
-      setTimeout(()=>{ fireConfetti(1500); showToast("🔥 5 down! You're on fire — Coach Leo is proud!"); }, 400);
+      setTimeout(()=>{ fireConfetti(1500); showToast("5 down! You're on fire — Coach Leo is proud!"); }, 400);
     } else if(done.size === 18){
       setTimeout(()=>{ fireConfetti(2000); showToast("🌟 Halfway there! 18 missions crushed!"); }, 400);
     } else if(remaining > 0){
-      const cheers = ["⭐ Awesome!", "🎯 Nailed it!", "💥 Boom!", "🔥 You got this!", "💪 Amazing!"];
+      const cheers = ["Awesome!", "Nailed it!", "Boom!", "You got this!", "Amazing!"];
       const cheer = cheers[Math.floor(Math.random()*cheers.length)];
       showToast(`${cheer} ${remaining} mission${remaining===1?"":"s"} to go!`);
     }
@@ -3258,11 +3258,11 @@ function markMissionDone(id, source="manual"){
     if(changed){
       const delay = 2100;
       if(streakCount === 7){
-        setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("🔥 WEEK CHAMPION! 7 days in a row — incredible!"); }, delay);
+        setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("WEEK CHAMPION! 7 days in a row — incredible!"); }, delay);
       } else if(streakCount === 3){
         setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("🎖️ 3-day streak! Keep showing up!"); }, delay);
       } else if(streakCount > 1){
-        setTimeout(()=>{ renderStreakUI(true); showToast(`🔥 ${streakCount} days in a row — keep it going!`); }, delay);
+        setTimeout(()=>{ renderStreakUI(true); showToast(`${streakCount} days in a row — keep it going!`); }, delay);
       } else {
         setTimeout(()=> renderStreakUI(true), 300);
       }
@@ -3562,7 +3562,7 @@ if(btnDashShareCopy){
         trackEvent("Dashboard Share Native");
       } else {
         await navigator.clipboard.writeText(text);
-        showToast("📋 Copied! Share with family.");
+        showToast("Copied! Share with family.");
         trackEvent("Dashboard Share Copy");
       }
     }catch(_){}
@@ -3689,7 +3689,7 @@ if(btnToggleFilters && filterGroupsEl){
     filtersOpen = !filtersOpen;
     filterGroupsEl.style.display = filtersOpen ? "" : "none";
     btnToggleFilters.classList.toggle("active", filtersOpen);
-    btnToggleFilters.textContent = filtersOpen ? "✕ Filters" : "⚙️ Filters";
+    btnToggleFilters.innerHTML = filtersOpen ? '<i class="jic jic-x" aria-hidden="true"></i> Filters' : '<i class="jic jic-settings" aria-hidden="true"></i> Filters';
   });
 }
 
@@ -3781,16 +3781,16 @@ function renderSettingsRows(){
   const themeVal  = document.getElementById("profileThemeValue");
   if(themeIcon && themeVal){
     const labels = { dark:"Dark", light:"Light", system:"System" };
-    const icons  = { dark:"🌙", light:"☀️", system:"🌓" };
+    const icons  = { dark:'<i class="jic jic-moon" aria-hidden="true"></i>', light:'<i class="jic jic-sun" aria-hidden="true"></i>', system:'<i class="jic jic-moon-stars" aria-hidden="true"></i>' };
     const mode = (typeof themeMode !== "undefined") ? themeMode : "system";
-    themeIcon.textContent = icons[mode] || "🌓";
+    themeIcon.innerHTML = icons[mode] || '<i class="jic jic-moon-stars" aria-hidden="true"></i>';
     themeVal.textContent  = labels[mode] || "System";
   }
   // Sound row
   const soundIcon = document.getElementById("profileSoundIcon");
   const soundVal  = document.getElementById("profileSoundValue");
   if(soundIcon && soundVal){
-    soundIcon.textContent = soundOn ? "🔊" : "🔇";
+    soundIcon.innerHTML = soundOn ? '<i class="jic jic-volume" aria-hidden="true"></i>' : '<i class="jic jic-volume-off" aria-hidden="true"></i>';
     soundVal.textContent  = soundOn ? "On" : "Off";
   }
   // §3.1 — Read-aloud row
@@ -3819,9 +3819,9 @@ function renderProfileList(){
       <div class="profileItemAvatar">${escapeHtml(p.avatar || "🐵")}</div>
       <div class="profileItemBody">
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
-        <div class="profileItemMeta">${doneCount}/36 missions · 🔥 ${streak} day${streak===1?"":"s"}</div>
+        <div class="profileItemMeta">${doneCount}/36 missions · <i class="jic jic-flame" aria-hidden="true"></i> ${streak} day${streak===1?"":"s"}</div>
       </div>
-      <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button">✏️</button>
+      <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button"><i class="jic jic-pencil" aria-hidden="true"></i></button>
       ${isActive ? '<div class="profileItemActive">●</div>' : ""}
     `;
     // Edit pencil click — opens edit panel
@@ -3859,7 +3859,7 @@ function openProfileEdit(id){
   const deleteBtn = document.getElementById("btnProfileDelete");
   if(editSection) editSection.style.display = "";
   if(addSection)  addSection.style.display  = "none";
-  if(titleEl) titleEl.textContent = "✏️ Edit " + (p.name || "Player");
+  if(titleEl) titleEl.innerHTML = '<i class="jic jic-pencil" aria-hidden="true"></i> Edit ' + escapeHtml(p.name || "Player");
   if(nameEl){ nameEl.value = p.name || ""; nameEl.focus(); }
 
   // Delete butonu: tek profil varsa devre dışı
@@ -3868,8 +3868,8 @@ function openProfileEdit(id){
     deleteBtn.disabled = profiles.length <= 1;
     deleteBtn.classList.remove("confirming");
     deleteBtn.textContent = profiles.length <= 1
-      ? "🗑️ Delete (need at least 1 profile)"
-      : "🗑️ Delete this profile";
+      ? '<i class="jic jic-trash" aria-hidden="true"></i> Delete (need at least 1 profile)'
+      : '<i class="jic jic-trash" aria-hidden="true"></i> Delete this profile';
     deleteBtn.style.opacity = profiles.length <= 1 ? "0.4" : "1";
   }
 
@@ -3921,7 +3921,7 @@ function saveProfileEdit(){
   if(_profileEditingId === getActiveProfileId()){
     renderAvatar();
   }
-  showToast("✅ Profile updated.");
+  showToast("Profile updated.");
 }
 function deleteProfile(){
   const id = _profileEditingId;
@@ -3974,11 +3974,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
         if(_deleteConfirmTimer){ clearTimeout(_deleteConfirmTimer); _deleteConfirmTimer = null; }
       } else {
         deleteBtn.classList.add("confirming");
-        deleteBtn.textContent = "Tap again to confirm 🗑️";
+        deleteBtn.innerHTML = 'Tap again to confirm <i class="jic jic-trash" aria-hidden="true"></i>';
         if(_deleteConfirmTimer) clearTimeout(_deleteConfirmTimer);
         _deleteConfirmTimer = setTimeout(()=>{
           deleteBtn.classList.remove("confirming");
-          deleteBtn.textContent = "🗑️ Delete this profile";
+          deleteBtn.innerHTML = '<i class="jic jic-trash" aria-hidden="true"></i> Delete this profile';
           _deleteConfirmTimer = null;
         }, 3500);
       }
@@ -4336,7 +4336,7 @@ function ensureHub3DLoaded(onProgress){
       onLowFps: (fps) => {
         if(window.__hub3dLowFpsNudged) return;
         window.__hub3dLowFpsNudged = true;
-        showToast("Running a bit slow — tap ☰ for the quick list anytime 📋");
+        showToast("Running a bit slow — tap the menu for the quick list anytime.");
       }
     });
     step(0.85, "init"); // milestone 3: initHub3D() built the scene; first frame paints after resume()
@@ -4710,7 +4710,7 @@ function renderProfileTab(){
   if(statsEl){
     const total = done.size;
     const sc    = streakCount || 0;
-    statsEl.textContent = `${total} mission${total===1?"":"s"} · 🔥 ${sc} day${sc===1?"":"s"} streak`;
+    statsEl.innerHTML = `${total} mission${total===1?"":"s"} · <i class="jic jic-flame" aria-hidden="true"></i> ${sc} day${sc===1?"":"s"} streak`;
   }
   // Daily reminder kaldirildi
 }
@@ -4753,7 +4753,7 @@ function renderFamilyInsights(){
         <div class="familyMemberName">${escapeHtml(it.p.name || "Player")}</div>
         <div class="familyMemberStats">
           <span class="familyMemberMissions">${it.doneCount}/36</span>
-          <span class="familyMemberStreak">🔥 ${it.streak}</span>
+          <span class="familyMemberStreak"><i class="jic jic-flame" aria-hidden="true"></i> ${it.streak}</span>
         </div>
       </div>
     `;
@@ -4790,7 +4790,7 @@ function renderFamilyInsights(){
 
   if(fStreakEl){
     if(familyStreakCount > 0){
-      fStreakEl.innerHTML = `🔥 <b>Family streak:</b> ${familyStreakCount} day${familyStreakCount===1?"":"s"} together`;
+      fStreakEl.innerHTML = `<i class="jic jic-flame" aria-hidden="true"></i> <b>Family streak:</b> ${familyStreakCount} day${familyStreakCount===1?"":"s"} together`;
       fStreakEl.classList.remove("dim");
     } else {
       fStreakEl.innerHTML = `✨ Start a family streak today!`;
@@ -4961,7 +4961,7 @@ function bumpDailyChallenge(){
     state.claimed = true;
     lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
     setTimeout(()=>{
-      showToast("⭐ Daily Champion! Goal completed!");
+      showToast("Daily Champion! Goal completed!");
       if(!prefersReducedMotion) fireConfetti(1500);
     }, 1200);
   }
@@ -4980,18 +4980,18 @@ function renderDailyChallenge(){
     if(status) status.textContent = `${Math.min(state.count, goal)} / ${goal}`;
     if(fill) fill.style.width = (Math.min(state.count, goal) / goal * 100) + "%";
     if(reward){
-      reward.textContent = completed
-        ? "⭐ Completed! See you tomorrow for a new goal!"
-        : "Play 1 mission today → earn the Daily Champion star ⭐";
+      reward.innerHTML = completed
+        ? '<i class="jic jic-star" aria-hidden="true"></i> Completed! See you tomorrow for a new goal!'
+        : "Play 1 mission today → earn the Daily Champion star";
     }
   }
   // Compact stats içindeki todayGoalBadge'i güncelle
   const badge = document.getElementById("todayGoalBadge");
   if(badge){
     const completed = state.count >= goal;
-    badge.textContent = completed
-      ? "⭐ Goal done!"
-      : `⭐ ${state.count}/${goal} today`;
+    badge.innerHTML = completed
+      ? '<i class="jic jic-star" aria-hidden="true"></i> Goal done!'
+      : `<i class="jic jic-star" aria-hidden="true"></i> ${state.count}/${goal} today`;
     badge.classList.toggle("completed", completed);
   }
 }
@@ -5334,7 +5334,7 @@ function renderCoachPick(){
   const reasonEl = document.getElementById("coachPickReason");
   if(iconEl) iconEl.textContent = ms.icon;
   if(nameEl) nameEl.textContent = ms.title;
-  if(metaEl) metaEl.textContent = `${getPackName(ms.pack)} · ${ms.time} · 👥 ${ms.players}`;
+  if(metaEl) metaEl.innerHTML = `${escapeHtml(getPackName(ms.pack))} · ${escapeHtml(ms.time)} · <i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}`;
   if(reasonEl) reasonEl.textContent = buildCoachReason(pick.pack, ms);
 
   // Click handler
@@ -5456,7 +5456,7 @@ function showScoreSummary(missionId){
   } else {
     summary.classList.remove("newRecord");
     const diff = best - _currentScore;
-    summary.innerHTML = `<span class="summaryEmoji">⭐</span>You scored <b>${_currentScore}</b> · Best: ${best} (${diff} more to beat!)`;
+    summary.innerHTML = `<span class="summaryEmoji"><i class="jic jic-star" aria-hidden="true"></i></span>You scored <b>${_currentScore}</b> · Best: ${best} (${diff} more to beat!)`;
     trackEvent("Score Recorded", { mission: missionId, score: _currentScore });
   }
   // Best değerini header'da yenile
@@ -5523,10 +5523,10 @@ function showTutorial(){
       title: "▶ Today's Mission",
       desc: "A fresh mission is picked for you each day. Tap here to start playing!" },
     { selector: "#streakPill",
-      title: "🔥 Build Your Streak",
+      title: '<i class="jic jic-flame" aria-hidden="true"></i> Build Your Streak',
       desc: "Play one mission every day to keep your streak alive. The longer it grows, the hotter it gets!" },
     { selector: '.navTab[data-tab="stats"]',
-      title: "📊 Track Progress",
+      title: '<i class="jic jic-chart-bar" aria-hidden="true"></i> Track Progress',
       desc: "Tap Stats anytime to see weekly progress, badges earned, and the Champion Certificate." }
   ];
 
@@ -5625,7 +5625,7 @@ function fireStreakBurst(){
  * ======================= */
 function renderSoundToggle(){
   soundToggle.classList.toggle("muted", !soundOn);
-  soundToggle.textContent = soundOn ? "🔊" : "🔇";
+  soundToggle.innerHTML = soundOn ? '<i class="jic jic-volume" aria-hidden="true"></i>' : '<i class="jic jic-volume-off" aria-hidden="true"></i>';
 }
 soundToggle.onclick = ()=>{
   soundOn = !soundOn;
