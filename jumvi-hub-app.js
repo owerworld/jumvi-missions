@@ -123,18 +123,6 @@ export function initHub3D(opts) {
   progressLabelEl.style.cssText = 'background:linear-gradient(180deg,#fffdf7,#ffe9c4);padding:5px 15px;border-radius:16px;font-size:12.5px;font-weight:800;color:#7a4712;box-shadow:0 4px 12px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.85);border:1px solid rgba(226,178,104,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   hudTop.appendChild(progressLabelEl);
 
-  // Star dock (GDD §7 "icon dock"). Hidden until the first star is collected —
-  // an empty 0/18 counter on first entry reads as a chore list, which is the
-  // opposite of what a bonus collectible is for.
-  var starDockEl = document.createElement('div');
-  starDockEl.style.cssText = 'display:none;background:rgba(255,255,255,0.94);padding:4px 13px;border-radius:14px;font-size:12.5px;font-weight:900;color:#7a4712;box-shadow:0 4px 12px rgba(18,38,66,0.16);border:1px solid rgba(226,178,104,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
-  hudTop.appendChild(starDockEl);
-  function updateStarDock() {
-    var n = starCount();
-    if (!n) { starDockEl.style.display = 'none'; return; }
-    starDockEl.style.display = '';
-    starDockEl.textContent = '\u2B50 ' + n + ' / ' + totalStars();
-  }
   container.appendChild(hudTop);
 
   // §4.5 — persistent exit. The global bottom nav is hidden in 3D (FIX 1), so
@@ -573,47 +561,7 @@ export function initHub3D(opts) {
     if (item.tab) navigateFn(item.tab); // leaves the hub for that real tab
   });
 
-  // ---------- "TODAY'S MISSION" AUTO-WALK (screen→play bridge) ----------
-  // One tap and Leo walks himself along the trail to the right gate — a
-  // 3-year-old needs zero navigation skill. Uses the app's real daily pick;
-  // if that zone is still fog-locked, falls back to the first not-done
-  // mission in an unlocked zone. Waypoints follow pathCenterX so he visibly
-  // walks THE TRAIL, with a line of glow dots showing where he's headed.
-  var dailyBtn = document.createElement('button');
-  dailyBtn.type = 'button';
-  dailyBtn.textContent = HUB_TEXTS.todaysMission;
-  // bottom offset includes the notch/home-indicator safe area so it never sits
-  // under the iOS home bar now that the global nav is hidden beneath the hub.
-  dailyBtn.style.cssText = 'position:absolute;bottom:calc(16px + env(safe-area-inset-bottom));left:14px;z-index:11;border:none;border-radius:16px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:13px;font-weight:900;padding:11px 15px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
-  container.appendChild(dailyBtn);
 
-  // ---------- JUMP BUTTON (GDD §3, adapted for touch) ----------
-  // The brief maps jump to Spacebar. The audience is 3-8 on phones, so the
-  // real control is this button, sat in the right-thumb arc above the hint;
-  // Space still works for desktop. 56px (well over the 44px floor) because a
-  // small child is aiming, and pointerdown rather than click so the jump fires
-  // on touch-down like every platformer — waiting for click adds ~100ms lag.
-  var jumpBtn = document.createElement('button');
-  jumpBtn.type = 'button';
-  jumpBtn.setAttribute('aria-label', HUB_TEXTS.jump);
-  jumpBtn.textContent = '⤒';
-  jumpBtn.style.cssText = 'position:absolute;bottom:calc(64px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));z-index:11;width:56px;height:56px;border-radius:50%;border:none;background:rgba(255,255,255,0.92);color:#1d2b4a;font-size:26px;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(18,38,66,0.24),inset 0 1px 0 rgba(255,255,255,0.9);-webkit-tap-highlight-color:transparent;touch-action:manipulation;display:flex;align-items:center;justify-content:center;padding:0;';
-  // pointerdown for latency (fires on touch-down like every platformer), but
-  // click MUST also work: a keyboard user pressing Enter/Space on the focused
-  // button, and assistive tech, emit click with no pointerdown at all. Earlier
-  // this handler swallowed click, which left the button dead for exactly those
-  // users. The timestamp check keeps a normal tap from jumping twice.
-  var _lastPointerJump = -1e9;
-  jumpBtn.addEventListener('pointerdown', function (e) {
-    e.preventDefault();
-    _lastPointerJump = performance.now();
-    requestJump();
-  });
-  jumpBtn.addEventListener('click', function (e) {
-    e.preventDefault();
-    if (performance.now() - _lastPointerJump > 500) requestJump(); // click-only path
-  });
-  container.appendChild(jumpBtn);
 
   var autoWalk = null; // { points: [{x,z}], i }
   // Trail dots are created lazily on first use: this HUD block runs before
@@ -720,7 +668,6 @@ export function initHub3D(opts) {
     showTrail(pts);
     playChime();
   }
-  dailyBtn.addEventListener('click', startAutoWalkToMission);
 
   // (The 📷 island-photo/share button was removed to keep the corner clean.)
 
@@ -2738,7 +2685,6 @@ export function initHub3D(opts) {
   function onKeyDown(e) {
     resumeAudio(); // first real keypress is as good a "user gesture" as any
     dismissCoachBubble();
-    if (e.code === 'Space') { e.preventDefault(); requestJump(); }
     if (e.key === 'w' || e.key === 'ArrowUp') keys.f = true;
     if (e.key === 's' || e.key === 'ArrowDown') keys.b = true;
     if (e.key === 'a' || e.key === 'ArrowLeft') keys.l = true;
@@ -3006,96 +2952,10 @@ export function initHub3D(opts) {
     setTimeout(function () { el.remove(); }, 1700);
   }
 
-  // ---------- COLLECTIBLE STARS (GDD §7 "collected items dock") ----------
-  // Purely a reason to walk. Stars NEVER gate a mission, a zone or a badge —
-  // the moment a collectible becomes required it turns the hub into homework,
-  // and this app's whole job is to send the kid outside, not to hold them here.
-  // Three per zone, placed OFF the path centre so reaching one is a small
-  // detour, and only in zones that are already unlocked (a star behind a fog
-  // wall would read as a taunt).
-  var STARS_PER_ZONE = 3;
-  var STAR_PICKUP_DIST = 1.15;
-  var starMeshes = [];
-  var collectedStars = {};
-  (function loadStars() {
-    var raw = '';
-    try { raw = (typeof opts.hubStarsGet === 'function') ? (opts.hubStarsGet() || '') : ''; } catch (e) { }
-    raw.split(',').forEach(function (id) { if (id) collectedStars[id] = 1; });
-  })();
-  function persistStars() {
-    try {
-      if (typeof opts.hubStarsSet === 'function') opts.hubStarsSet(Object.keys(collectedStars).join(','));
-    } catch (e) { }
-  }
-  function starCount() { return Object.keys(collectedStars).length; }
-  function totalStars() { return realPacks.length * STARS_PER_ZONE; }
-
-  function buildStars() {
-    // Octahedron reads as a "gem/star" at this poly budget and is 8 triangles.
-    var starGeo = new THREE.OctahedronGeometry(0.26, 0);
-    var starMat = new THREE.MeshStandardMaterial({
-      color: 0xFFD23F, emissive: 0xFFB000, emissiveIntensity: 0.35,
-      flatShading: true, roughness: 0.35, metalness: 0.1
-    });
-    for (var zi = 0; zi < realPacks.length; zi++) {
-      for (var si = 0; si < STARS_PER_ZONE; si++) {
-        var id = 'z' + zi + '_' + si;
-        if (collectedStars[id]) continue;              // already taken — don't respawn
-        // Spread along the zone, alternating sides, at ~70% of the corridor
-        // half-width so it is a detour but never outside the walkable area.
-        var t = (si + 0.5) / STARS_PER_ZONE;
-        var z = zoneCenterZ(zi) + (t - 0.5) * (ZONE_LENGTH * 0.7);
-        var side = (si % 2 === 0) ? 1 : -1;
-        var x = pathCenterX(z) + side * corridorHalfWidthAt(z) * 0.7;
-        var m = new THREE.Mesh(starGeo, starMat);
-        m.position.set(x, 0.75, z);
-        m.castShadow = !lowTier;
-        m.userData.id = id;
-        m.userData.zone = zi;
-        m.userData.phase = Math.random() * Math.PI * 2;
-        m.userData.baseY = 0.75;
-        scene.add(m);
-        starMeshes.push(m);
-      }
-    }
-  }
-
-  function updateStars(delta) {
-    if (!starMeshes.length) return;
-    for (var i = starMeshes.length - 1; i >= 0; i--) {
-      var m = starMeshes[i];
-      // Only live in unlocked zones — a star past a fog wall stays hidden
-      // rather than dangling something the kid physically cannot reach.
-      var reachable = isZoneUnlocked(m.userData.zone);
-      m.visible = reachable;
-      if (!reachable) continue;
-      m.rotation.y += delta * 1.6;
-      m.position.y = m.userData.baseY + Math.sin(elapsedTime * 2 + m.userData.phase) * 0.12;
-      var dx = leo.group.position.x - m.position.x;
-      var dz = leo.group.position.z - m.position.z;
-      if (dx * dx + dz * dz < STAR_PICKUP_DIST * STAR_PICKUP_DIST) {
-        collectedStars[m.userData.id] = 1;
-        persistStars();
-        burstAt(m.position.x, m.position.y, m.position.z, 0xFFD23F);
-        floatPraise(m.position.x, m.position.y + 0.5, m.position.z, '+1 ⭐');
-        playChime();
-        haptic(10);
-        scene.remove(m);
-        starMeshes.splice(i, 1);
-        updateStarDock();
-        try { track('3d_star_collected', { total: starCount() }); } catch (e) { }
-        // All 18: one celebration so the collection turns out to have meant
-        // something. Deliberately just a moment — no badge, no unlock, nothing
-        // that would retroactively make the stars feel required.
-        if (starCount() >= totalStars()) {
-          burstAt(leo.group.position.x, 1.2, leo.group.position.z, 0xFFD23F);
-          floatPraise(leo.group.position.x, 2.0, leo.group.position.z, HUB_TEXTS.allStars);
-          haptic([20, 50, 20, 50, 60]);
-          try { track('3d_all_stars'); } catch (e) { }
-        }
-      }
-    }
-  }
+  // (Collectible stars removed — the on-screen score went with them.
+  //  The jumvi_hub_stars localStorage key is deliberately left in place:
+  //  deleting a child's collected set would be unrecoverable if this is
+  //  ever brought back. Nothing reads it now.)
 
   // ---------- SHADER PRE-COMPILE ----------
   // three.js compiles a material's shader program the FIRST FRAME that material
@@ -3333,53 +3193,6 @@ export function initHub3D(opts) {
     }
   }
 
-  // ---------- JUMP (GDD §3) ----------
-  // Gravity is the brief's -15.0. The impulse is NOT the brief's 12.0: that is
-  // sized for a human-scale character, and here (maxSpeed 4.2, Leo about one
-  // unit tall) it would throw him 4.8 units — five times his own height, and
-  // clean out of the camera frame. 5.6 gives an apex just over 1 unit, which
-  // is the same *feel* at this scene's scale. Terminal velocity is the brief's.
-  //
-  // There is no fall damage, no pit and no fail state anywhere in this hub, so
-  // jumping is pure play — which is exactly why it is safe to hand a 3-year-old.
-  var GRAVITY = -15.0;
-  var TERMINAL_V = -30.0;
-  var JUMP_IMPULSE = 5.6;
-  var COYOTE_MS = 150;   // §3 — still jumpable 0.15s after leaving the ground
-  var BUFFER_MS = 100;   // §3 — a jump pressed 0.1s before landing still fires
-  var jumpY = 0, jumpVelY = 0, airborne = false;
-  var lastGroundedAt = performance.now();
-  var jumpPressedAt = -1e9;
-  function requestJump() {
-    jumpPressedAt = performance.now();
-    resumeAudio(); // a jump is a real user gesture — unlocks audio on iOS
-  }
-  function updateJump(delta) {
-    var now = performance.now();
-    if (!airborne) lastGroundedAt = now;
-    // Jump buffering + coyote time, together: a press is live for BUFFER_MS,
-    // and the ground is "under you" for COYOTE_MS after you actually left it.
-    var pressLive = (now - jumpPressedAt) < BUFFER_MS;
-    var canLaunch = !airborne || (now - lastGroundedAt) < COYOTE_MS;
-    if (pressLive && canLaunch && jumpY <= 0.001 && !isMissionViewOpen()) {
-      jumpPressedAt = -1e9;         // consume, so one press is one jump
-      jumpVelY = JUMP_IMPULSE;
-      airborne = true;
-      haptic(12);
-      playChime();
-    }
-    if (airborne) {
-      jumpVelY = Math.max(TERMINAL_V, jumpVelY + GRAVITY * delta);
-      jumpY += jumpVelY * delta;
-      if (jumpY <= 0) {            // landed
-        jumpY = 0; jumpVelY = 0; airborne = false;
-        lastGroundedAt = now;
-        spawnDust(leo.group.position.x, leo.group.position.z); // puff on touchdown
-        haptic(8);
-      }
-    }
-  }
-
   function updateMovement(delta) {
     var ix = 0, iz = 0;
     // Tumble (GDD §2 "clumsy physics"): input is off for the window, the mesh
@@ -3513,12 +3326,7 @@ export function initHub3D(opts) {
     var speedNow = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     leo.update(delta, { moving: moving, speed: speedNow, maxSpeed: maxSpeed, targetFacing: targetFacing });
 
-    // Jump height is applied AFTER leo.update, which owns position.y for the
-    // walk hop — the same "later write wins" pattern the celebration bounce
-    // already uses. Only overridden while airborne, so the grounded hop is
-    // left completely alone.
-    updateJump(delta);
-    if (airborne) leo.group.position.y = jumpY;
+    // (Jump was removed: leo.update owns position.y outright again.)
 
     // Footstep cadence — faster steps at higher speed, silent the instant
     // Leo stops (reset to 0 so the very next step after a pause starts
@@ -4083,7 +3891,6 @@ export function initHub3D(opts) {
     updateMovement(delta);
     updateDust(delta);
     updateBurst(delta);
-    updateStars(delta);
     updateCourse(delta);
     updateContactShadow();
     updateIdleNudge();
@@ -4237,8 +4044,6 @@ export function initHub3D(opts) {
   // ---------- LOOP (pause/resume-able — see hideHub3D()/showHub3D() in app.js) ----------
   // Stars are built once the scene, the path helpers and the zone-lock state
   // all exist — placement depends on all three.
-  buildStars();
-  updateStarDock();
   buildCourse();
 
   var clock = new THREE.Clock();
