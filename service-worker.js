@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v158";
+const CACHE_NAME = "jumvi-missions-v159";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -45,8 +45,8 @@ const CORE_ASSETS = [
   "/assets/leo/leo-point-160@2x.webp",
   // §6 — display typeface. Unversioned paths on purpose (precache matches
   // literally); _headers gives /assets/* a 1-day max-age + SWR, not immutable.
-  "/assets/fonts/fredoka-var-latin.woff2",
-  "/assets/fonts/fredoka-var-latin-ext.woff2",
+  "/assets/fonts/fredoka-var-latin-1.woff2",
+  "/assets/fonts/fredoka-var-latin-ext-1.woff2",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/icon-512-maskable.png",
