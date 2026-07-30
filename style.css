@@ -7539,3 +7539,30 @@ html.theme--light .sheetTitle,
 .dailyBox.dailyBoxPromoted .dailyName{
   font-weight:700 !important;
 }
+
+/* ============================================================
+   §7 — Mission Path scroll containment
+
+   Browse renders 36 .pathStep rows, median 135px, ~4900px of
+   content — and had contain:none / content-visibility:visible,
+   so the browser rasterised all 36 while roughly 6 are on
+   screen. Each row carries a layered box-shadow (including a
+   6px spread ring on the node), which is exactly the kind of
+   fill-rate work a Mali-G52 does slowly. This was reported as
+   "noticeable stutter scrolling the missions" on a Galaxy A31.
+
+   .card and .badge already had this treatment; .pathStep was
+   simply missed.
+
+   contain-intrinsic-size uses the `auto` keyword so the real
+   measured height is remembered once a row has been rendered
+   — the fixed-pixel form used elsewhere in this file guesses,
+   and a wrong guess makes the scrollbar jump as rows resize.
+   140px is only the first-paint estimate, close to the 135px
+   median so the initial scroll height is about right.
+   ============================================================ */
+.pathStep{
+  contain: content;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 140px;
+}
