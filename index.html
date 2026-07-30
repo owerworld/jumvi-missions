@@ -72,7 +72,11 @@
        ~6 KB). Was two unconditional 1024px webp (~121 KB) on the critical path. -->
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_dark-192.webp" media="(prefers-color-scheme: light)" />
   <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_light-192.webp" media="(prefers-color-scheme: dark)" />
-  <link rel="stylesheet" href="style.css?v=20260727-4">
+  <!-- §6 — the latin face is needed by the first heading painted; preloading it
+       removes the swap flash on a cold visit. crossorigin is required on font
+       preloads even same-origin, or the browser fetches it a second time. -->
+  <link rel="preload" href="assets/fonts/fredoka-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css?v=20260730-1">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260730-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">

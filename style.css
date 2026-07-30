@@ -7439,3 +7439,103 @@ html.theme--dark .productCareSummary{ color: #f1f5f9; }
 .productCareQ{ font-weight: 800; font-size: var(--fs-body); margin: 12px 0 2px; }
 .productCareA{ font-size: var(--fs-meta); line-height: 1.45; margin: 0 0 6px; color: var(--muted-on-light); }
 html.theme--dark .productCareA{ color: #CBD5E1; }
+
+
+/* ============================================================
+   §6 — Display typeface (Fredoka)
+
+   Everything in this app was set in the system stack, which is
+   the most legible choice for body copy and the least
+   distinctive one for a brand. The wordmark is a chunky rounded
+   face with a bouncing baseline; nothing in the interface
+   echoed it. Fredoka is the calm relative of that lockup —
+   rounded terminals, geometric, friendly — and it is applied
+   ONLY to display slots so it never competes with the logo and
+   never touches body copy a parent has to read outdoors.
+
+   Self-hosted, not Google Fonts CDN, for three separate reasons
+   and any one of them is sufficient:
+     1. The privacy copy shipping in this app says "No ads. No
+        third-party trackers." A request to fonts.googleapis.com
+        on every launch would carry the child's IP to Google.
+     2. The app is offline-first; a CDN font dies in airplane mode.
+     3. _headers already sets font-src 'self' — the CDN request
+        would be blocked by our own CSP anyway.
+
+   WHY THE WEIGHT IS PINNED: Fredoka's variable range stops at
+   700, and this stylesheet has 154 declarations above 700 (65 of
+   them at 950). Letting those through would make the browser
+   synthesise a fake bold, which on a rounded geometric face
+   blobs the terminals and closes up the counters. The range is
+   declared honestly below AND every display selector is pinned
+   to 700, so a real master is always used. !important is needed
+   because several of these selectors already carry
+   font-weight:950 !important.
+
+   Negative letter-spacing is zeroed for the same reason: -0.2px
+   to -0.5px suited SF Pro's narrow forms and crowds Fredoka's
+   round ones.
+   ============================================================ */
+@font-face{
+  font-family:'Fredoka';
+  font-style:normal;
+  font-weight:400 700;          /* real variable range — never ask for more */
+  font-display:swap;
+  src:url('assets/fonts/fredoka-var-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext carries the Turkish set (ğ ş İ Ğ Ş). Child names are
+   user-entered and appear in .profileCardName / .profileSectionTitle,
+   so without this a name like "Ayşe" would fall back mid-word. */
+@font-face{
+  font-family:'Fredoka';
+  font-style:normal;
+  font-weight:400 700;
+  font-display:swap;
+  src:url('assets/fonts/fredoka-var-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root{
+  --font-display:'Fredoka', -apple-system, BlinkMacSystemFont,
+                 'SF Pro Rounded', system-ui, sans-serif;
+}
+
+.brandTitle,
+.tabHeading,
+.welcomeTagline,
+.welcomeAgesHeading,
+.sheetTitle,
+.certSheetTitle,
+.mTitle,
+.dailyTitle,
+.dailyName,
+.profileSectionTitle,
+.profileCardName,
+.badgeUnlockName,
+.emptyStateTitle,
+.storyTitle,
+.tutorialTitle,
+.dashTitle,
+.dashShareTitle,
+.shareScoreTitle,
+.fallbackTitle,
+.productCareTitle{
+  font-family:var(--font-display);
+  font-weight:700 !important;
+  letter-spacing:0;
+}
+
+/* The two display slots that outranked the block above. Both carry
+   font-weight:...!important at a higher specificity, so an !important on a
+   bare class could not reach them — verified at runtime, not assumed:
+     html.theme--dark .sheetTitle              (0,2,1)  900 !important
+     .dailyBox.dailyBoxPromoted .dailyName     (0,3,0)  950 !important
+   These match that specificity and win on source order. Listing them by name
+   instead of inflating every selector keeps the conflict documented: if either
+   rule is ever deleted, this override is obviously the next thing to delete. */
+html.theme--dark  .sheetTitle,
+html.theme--light .sheetTitle,
+.dailyBox.dailyBoxPromoted .dailyName{
+  font-weight:700 !important;
+}
