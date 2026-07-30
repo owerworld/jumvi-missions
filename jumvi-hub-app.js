@@ -29,10 +29,11 @@ export function initHub3D(opts) {
   var _loadMsTracked = false;
   // FPS watchdog state (audit Bulgu #5): sample the first ~3s of real rendering
   // and, if it can't hold 20fps, offer the quick list without forcing it.
-  var _fpsChecked = false;
   var _fpsFrames = 0;
   var _fpsWindowStart = 0;
   var _fpsWarmupUntil = 0; // skip the first ~1.5s of load jank before sampling
+  var _fpsNudged = false;  // the "quick list" offer is shown at most once
+  var _qualityStep = 0;    // 0 = as configured; climbs only downward, never back up
   // Exposed so the FIX-5 fallback layer (and app.js) can report a bail-out with
   // a reason ("no_webgl" | "low_memory" | "reduced_motion" | "low_fps" | "slow_load").
   window._hub3dTrackFallback = function (reason) {
@@ -898,9 +899,17 @@ export function initHub3D(opts) {
 
   var renderer = new THREE.WebGLRenderer({ antialias: !lowTier, powerPreference: 'high-performance' });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  // Full DPR×2 on a weak GPU quadruples the pixels for zero perceived gain on
-  // a low-poly flat-shaded scene; 1.5 keeps text/edges crisp enough there.
-  renderer.setPixelRatio(lowTier ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2));
+  // Full DPR on a weak GPU multiplies fragments for almost no perceived gain
+  // on a low-poly flat-shaded scene, so the low tier renders at 1 CSS pixel.
+  //
+  // This used to be 1.5 and that was the wrong number. A Samsung A31 reports
+  // DPR ~2.75 on a 393-CSS-px-wide viewport: at 1.5 the drawing buffer is
+  // 590x1310 = 773k fragments, at 1.0 it is 343k — 2.25x less work every
+  // single frame, on a Mali-G52 MC2 that has two shader cores to do it with.
+  // The adaptive ladder in animate() already conceded the point by dropping
+  // to 1.0 the moment it detected trouble; all 1.5 bought was several seconds
+  // of bad frames before the rescue fired. Start where we were going to end up.
+  renderer.setPixelRatio(lowTier ? 1 : Math.min(window.devicePixelRatio, 2));
   renderer.shadowMap.enabled = !lowTier; // shadow pass is the other big cost on weak GPUs
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
@@ -3288,8 +3297,14 @@ export function initHub3D(opts) {
     scene.add(m);
     return m;
   })();
+  // BLOB_ON is a separate switch from shadowMap.enabled on purpose. This runs
+  // every frame, so without it the adaptive ladder could not turn the blob off:
+  // step 1 disables the shadow pass, which would make the line below turn the
+  // blob back ON, and step 2's attempt to hide it would be overwritten on the
+  // very next frame. The ladder clears BLOB_ON instead.
+  var BLOB_ON = true;
   function updateContactShadow() {
-    var needed = !renderer.shadowMap.enabled;
+    var needed = BLOB_ON && !renderer.shadowMap.enabled;
     blobShadow.visible = needed;
     if (!needed) return;
     blobShadow.position.x = leo.group.position.x;
@@ -4156,36 +4171,65 @@ export function initHub3D(opts) {
       }
     }
 
-    // FPS watchdog — measure STEADY-STATE frame rate, not the first-second
-    // load jank (GLB decode + skeleton clones make the opening frames stutter
-    // even on good devices). We skip a 1.5s warm-up after the first painted
-    // frame, then sample ~3s: a sustained <20fps means the device is genuinely
-    // struggling, so we fire low_fps and gently offer the quick list (onLowFps).
-    // Only reached on full-render frames, so the mission-card throttle can't
-    // taint it.
-    if (_loadMsTracked && !_fpsChecked) {
+    // ---- ADAPTIVE QUALITY (was: a single one-shot FPS check) ----------------
+    // The old version sampled once, ~4.5s in, and only acted below 20fps. Two
+    // holes followed from that, and a real Samsung A31 (Helio P65 / Mali-G52
+    // MC2) fell straight through both: a device parked at 22fps was never
+    // helped at all, and a device that only bogs down later — walking into a
+    // dense zone, a celebration burst — was never re-checked, because
+    // _fpsChecked latched true forever.
+    //
+    // Now it samples continuously in 2s windows and walks DOWN a quality
+    // ladder. It never walks back up: oscillating resolution is more
+    // distracting than a steady lower one, and a device that just failed a
+    // window is not a device to gamble on.
+    //
+    // 28fps, not 20. Twenty is already a bad experience for a six-year-old
+    // trying to steer a character; by the time we called it "struggling" the
+    // child had been struggling for a while.
+    if (_loadMsTracked && _qualityStep < 3) {
       if (_fpsWarmupUntil === 0) _fpsWarmupUntil = performance.now() + 1500;
       if (performance.now() >= _fpsWarmupUntil) {
-      if (_fpsWindowStart === 0) _fpsWindowStart = performance.now();
-      _fpsFrames++;
-      var _fpsEl = performance.now() - _fpsWindowStart;
-      if (_fpsEl >= 3000) {
-        _fpsChecked = true;
-        var _fps = _fpsFrames / (_fpsEl / 1000);
-        if (_fps < 20) {
-          // LIVE RESCUE first: drop to 1x pixels + kill the shadow pass on the
-          // spot — together these usually double the frame rate on a weak GPU,
-          // invisibly on a low-poly flat-shaded scene. The gentle "quick list"
-          // nudge still shows in case the device is beyond saving.
-          try {
-            renderer.setPixelRatio(1);
-            renderer.shadowMap.enabled = false;
-            renderer.setSize(container.clientWidth, container.clientHeight);
-          } catch (e) {}
-          track('3d_fallback_triggered', { reason: 'low_fps' });
-          if (typeof opts.onLowFps === 'function') opts.onLowFps(Math.round(_fps));
+        if (_fpsWindowStart === 0) _fpsWindowStart = performance.now();
+        _fpsFrames++;
+        var _fpsEl = performance.now() - _fpsWindowStart;
+        if (_fpsEl >= 2000) {
+          var _fps = _fpsFrames / (_fpsEl / 1000);
+          _fpsFrames = 0;
+          _fpsWindowStart = performance.now();
+          if (_fps < 28) {
+            _qualityStep++;
+            try {
+              if (_qualityStep === 1) {
+                // Cheapest first, and invisible on a low-poly flat-shaded
+                // scene: one fragment per CSS pixel, no shadow pass.
+                renderer.setPixelRatio(1);
+                renderer.shadowMap.enabled = false;
+              } else if (_qualityStep === 2) {
+                // Below 1x it starts to soften, so this is where the moving
+                // extras go instead — they cost fill rate and add nothing to
+                // finding the next mission.
+                DUST_ON = false;
+                BURST_ON = false;
+                BLOB_ON = false;   // see updateContactShadow — a plain
+                                   // .visible = false would be overwritten
+                                   // on the next frame.
+              } else {
+                // Last resort before we simply offer the 2D list. 0.75 is the
+                // floor: further down, the mission signs stop being readable.
+                renderer.setPixelRatio(0.75);
+              }
+              renderer.setSize(container.clientWidth, container.clientHeight);
+            } catch (e) {}
+            track('3d_quality_step', { step: String(_qualityStep), fps: String(Math.round(_fps)) });
+            // The nudge is a one-time courtesy, not a per-step nag.
+            if (_qualityStep >= 2 && !_fpsNudged) {
+              _fpsNudged = true;
+              track('3d_fallback_triggered', { reason: 'low_fps' });
+              if (typeof opts.onLowFps === 'function') opts.onLowFps(Math.round(_fps));
+            }
+          }
         }
-      }
       }
     }
   }
