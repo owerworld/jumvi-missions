@@ -1445,7 +1445,7 @@ function renderDailyUI(){
     `;
   }
   if(btnDailyPlay){
-    btnDailyPlay.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i> View' : "▶︎ Play";
+    btnDailyPlay.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i> View' : '<i class="ico i-play" aria-hidden="true"></i> Play';
   }
 }
 
@@ -2569,9 +2569,9 @@ function openMission(id){
   btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> Mark as Done';
   btnToggleDone.classList.toggle("btnDone", isDone);
   // After completing: promote "Next" as the clear CTA
-  btnNext.innerHTML = isDone ? "▶ Next Mission!" : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
+  btnNext.innerHTML = isDone ? '<i class="ico i-play" aria-hidden="true"></i> Next Mission!' : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
   btnNext.classList.toggle("btnNextHighlight", isDone);
-  if(btnRandomPack) btnRandomPack.textContent = `🎲 Random from ${getPackName(ms.pack)}`;
+  if(btnRandomPack) btnRandomPack.innerHTML = `<i class="ico i-dice" aria-hidden="true"></i> Random from ${escapeHtml(getPackName(ms.pack))}`;
 
   // Auto-scroll sheet body to bottom when done so actions are visible
   if(isDone){
@@ -4500,7 +4500,7 @@ function buildHubLoadingOverlay(container){
   el.innerHTML =
     // §4.2 — escape hatch: leave the wait and go back to the missions. The load
     // keeps running (cached), so re-entry is instant.
-    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));min-width:44px;min-height:44px;border:none;border-radius:50%;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;">✕</button>' +
+    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));min-width:44px;min-height:44px;border:none;border-radius:50%;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;"><i class="ico i-x" aria-hidden="true"></i></button>' +
     '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
       leoPictureHTML("encourage", 256, 96, "Coach Leo") +
     '</div>' +
@@ -5572,7 +5572,7 @@ function showTutorial(){
     stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
     titleEl.textContent = step.title;
     descEl.textContent  = step.desc;
-    btnNextEl.textContent = idx === steps.length-1 ? "Got it! 🎉" : "Next →";
+    btnNextEl.innerHTML = idx === steps.length-1 ? "Got it! 🎉" : 'Next <i class="jic jic-arrow-right" aria-hidden="true"></i>';
   };
 
   const next = ()=>{
