@@ -1,0 +1,9 @@
+.git/
+.claude/
+prototypes/
+tools/
+.gitignore
+CLAUDE.md
+README-leo-tour.md
+generate_mission_book.py
+wrangler.jsonc
