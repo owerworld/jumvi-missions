@@ -3517,10 +3517,21 @@ html.theme--dark .kvWin b{ color: #FCD34D !important; }
   width: 22px !important;
   height: 22px !important;
   font-size: 14px !important;
+  position: relative;
   /* translucent dark (was white 0.18) + full opacity so the white × clears AA
      over the scrim — the earlier 0.18-white + opacity:0.8 left it at ~4.0:1 */
   background: rgba(0,0,0,0.32) !important;
   opacity: 1;
+}
+.storyBanner .storyToggle::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 }
 
 /* Steps numbered list — pack-color daireli daha çocuk-dostu */
@@ -6052,9 +6063,16 @@ html.theme--dark .dashBar{ background: rgba(255,255,255,0.08); }
   text-align: center;
   align-items: center;
   transition: all 0.25s ease;
-  opacity: 0.5;
-  filter: grayscale(0.7);
+  opacity: 1;
+  filter: none;
 }
+.badge:not(.unlocked) .badgeIcon{
+  opacity: 0.56;
+  filter: grayscale(0.8) saturate(0.35);
+}
+.badge:not(.unlocked) .badgeName{ opacity: 0.82; }
+.badge:not(.unlocked) .badgeReq,
+.badge:not(.unlocked) .badgeProgress{ opacity: 0.74; }
 .badge.unlocked{
   opacity: 1;
   filter: none;
@@ -6476,8 +6494,9 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 .pathStep.next::after{
   content: "NEXT →";
   position: absolute;
-  top: 22px;
-  right: calc(50% - 70px);
+  top: -2px;
+  left: calc(50% + 44px);
+  right: auto;
   background: #FFAB00;
   color: #fff;
   font-size: var(--fs-caption);
@@ -6505,9 +6524,9 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 .pathStep.daily::after{
   content: "TODAY";
   position: absolute;
-  top: 22px;
-  left: calc(50% - 70px);
-  right: auto;
+  top: -2px;
+  left: auto;
+  right: calc(50% + 44px);
   background: #FF6A00;
   color: #fff;
   font-size: var(--fs-caption);
@@ -6524,8 +6543,8 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   /* Daily kazanir, NEXT pill gizli */
   content: "TODAY";
   background: #FF6A00;
-  right: auto;
-  left: calc(50% - 70px);
+  right: calc(50% + 44px);
+  left: auto;
 }
 
 /* JUST-DONE celebration */
@@ -6557,6 +6576,9 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   .pathStepLabel{ font-size: var(--fs-caption); max-width: 120px; }
   .pathStep.next::after,
   .pathStep.daily::after{ font-size: 9px; padding: 3px 8px; }
+  .pathStep.next::after{ left: calc(50% + 40px); }
+  .pathStep.daily::after,
+  .pathStep.daily.next::after{ right: calc(50% + 40px); }
 }
 
 /* ============================================================
@@ -6948,6 +6970,16 @@ html.theme--dark .dailyBox.dailyBoxPromoted .dailyAltSuggestion *{
 /* === EMPTY STATE === */
 .emptyState{
   padding: var(--sp-7) var(--sp-5) !important;
+}
+body.tab-stats #statsEmptyState{
+  padding: var(--sp-5) var(--sp-4) !important;
+}
+body.tab-stats #statsEmptyState .emptyStateIcon{
+  font-size: 52px;
+  margin-bottom: 10px;
+}
+body.tab-stats #statsEmptyState .emptyStateDesc{
+  margin-bottom: 16px;
 }
 
 /* === KAPSAYAN PADDING (mobile-first) === */
