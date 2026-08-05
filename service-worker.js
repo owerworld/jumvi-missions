@@ -17,13 +17,14 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v164";
+const CACHE_NAME = "jumvi-missions-v165";
 const CORE_ASSETS = [
   "/",
   "/index.html",
   "/style.css",
   "/app.js",
   "/data.js",
+  "/jumvi-mission-icons.js",
   "/jumvi-art.js",
   "/assets/ui/missions/01-speed-demon.webp",
   "/assets/ui/missions/02-red-light-green-light.webp",

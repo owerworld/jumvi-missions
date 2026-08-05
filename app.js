@@ -2515,10 +2515,11 @@ function openMission(id){
     storyBanner.style.display = "none";
   }
 
-  // Approved Soft-Play artwork per mission ID (1..36), served locally.
+  // Mission detail uses the instructional motion diagram. Soft-Play mission
+  // art remains on discovery surfaces (cards, Daily Mission, path and lists).
   const iconWrap = document.getElementById("missionIconWrap");
   if(iconWrap){
-    const markup = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt missionArt--detail", ms.title, true);
+    const markup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || "";
     iconWrap.innerHTML = markup;
     iconWrap.style.display = markup ? "" : "none";
   }
