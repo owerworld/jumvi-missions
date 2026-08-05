@@ -49,51 +49,51 @@ export function initHub3D(opts) {
   // noktadan yapılır. Görev VERİSİ (başlık/adımlar/win) ana uygulamadan
   // olduğu gibi gelir ve bilinçli olarak kendi dilinde bırakılır.
   var HUB_TEXTS = {
-    zoneComplete: 'Zone Complete! 🎉',
-    hint: '👆 Tap the ground to walk',
-    tapToWalk: '👆 Tap to walk!',
+    zoneComplete: 'Zone Complete!',
+    hint: 'Tap the ground to walk',
+    tapToWalk: 'Tap to walk!',
     sound: 'Sound on/off',
     jump: 'Jump',
-    allStars: '\u2B50 Every star found!',
+    allStars: 'Every star found!',
     close: 'Close',
     missionsLeft: function (n) { return n + (n === 1 ? ' mission to go!' : ' missions to go!'); },
-    zoneDoneLabel: 'complete! 🏆',
+    zoneDoneLabel: 'complete!',
     steps: 'STEPS',
     win: 'HOW TO WIN',
     // (removed) stepsSoon / winSoon: dead fallbacks. The hub delegates every
     // mission to the app's real openMission() view, and an audit confirmed all
     // 36 missions in data.js have valid steps + win — so these never rendered.
-    start: '▶ START!',
-    running: function (s) { return '⏱ ' + s + 's — Go play!'; },
-    timeUp: "⏰ Time's up — did you do it?",
-    didIt: '✅ I Did It!',
-    doneUndo: '✔ Done — tap to undo',
-    prev: '← Back',
-    next: 'Next →',
+    start: 'START!',
+    running: function (s) { return s + 's — Go play!'; },
+    timeUp: "Time's up — did you do it?",
+    didIt: 'I Did It!',
+    doneUndo: 'Done — tap to undo',
+    prev: 'Back',
+    next: 'Next',
     mission: 'Mission',
-    zoneDoneBtn: 'Zone Complete! 🏆',
+    zoneDoneBtn: 'Zone Complete!',
     // Short on purpose — the camera is now zoomed in on the actual object
     // (see growthFocus), so the caption's only job is to name it, not
     // narrate it. The old full sentence ("Woohoo! The Energy Zone just grew
-    // a new power pole 🎉") ran off a narrow phone screen with nowrap CSS.
-    reward: function (zone, item) { return '🌱 New: ' + item + '!'; },
+    // a new power pole") ran off a narrow phone screen with nowrap CSS.
+    reward: function (zone, item) { return 'New: ' + item + '!'; },
     surprise: 'surprise',
     help: 'How to play',
-    helpLines: ['👆 Tap the ground — Leo walks there!', '🚪 Reach a glowing gate to open a mission', '🌱 Finish missions to grow each zone!'],
+    helpLines: ['Tap the ground — Leo walks there!', 'Reach a glowing gate to open a mission', 'Finish missions to grow each zone!'],
     gotIt: 'Got it!',
-    todaysMission: "🎯 Today's Mission",
-    certTitle: 'CHAMPION! 🏆',
+    todaysMission: "Today's Mission",
+    certTitle: 'CHAMPION!',
     certBody: function (n) { return 'You did ALL ' + n + ' missions!'; },
     certBtn: 'Get your Champion Certificate!',
     photo: 'Island photo',
     menu: 'Menu',
     menuTitle: 'JUMVI',
     menuItems: [
-      { icon: '📅', label: 'Today', tab: 'today' },
-      { icon: '🎯', label: 'Browse Missions', tab: 'browse' },
-      { icon: '📊', label: 'Stats', tab: 'stats' },
-      { icon: '👤', label: 'Profile', tab: 'profile' },
-      { icon: '🏅', label: 'Badges', action: 'badges' }
+      { icon: '<i class="jic jic-play" aria-hidden="true"></i>', label: 'Today', tab: 'today' },
+      { icon: '<i class="jic jic-map" aria-hidden="true"></i>', label: 'Browse Missions', tab: 'browse' },
+      { icon: '<i class="jic jic-chart-bar" aria-hidden="true"></i>', label: 'Stats', tab: 'stats' },
+      { icon: '<i class="jic jic-users" aria-hidden="true"></i>', label: 'Profile', tab: 'profile' },
+      { icon: '<i class="jic jic-award" aria-hidden="true"></i>', label: 'Badges', action: 'badges' }
     ],
     menuClose: 'Close menu'
   };
@@ -107,7 +107,7 @@ export function initHub3D(opts) {
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
-  // padding-top clears the ~58px top-left ← Missions exit button (and the ☰
+  // padding-top clears the ~58px top-left Missions exit button (and the menu
   // below it): the centered badges row is 248px wide and cannot fit in the
   // ~214px gap between the exit and mute corner buttons, so it drops to its own
   // row beneath them instead of sitting behind the exit button on narrow phones.
@@ -187,7 +187,7 @@ export function initHub3D(opts) {
   // reset + reflow trick) so back-to-back completions each get their own
   // full play instead of being silently skipped by an already-running one.
   function showZoneCompleteCelebration(packCfg) {
-    celebrationSubtitleEl.textContent = packCfg.icon + ' ' + packCfg.name;
+    celebrationSubtitleEl.textContent = packCfg.name;
     celebrationCardEl.style.animation = 'none';
     void celebrationCardEl.offsetWidth;
     celebrationCardEl.style.animation = 'hub3dZoneCelebrate 1900ms ease-out forwards';
@@ -234,7 +234,7 @@ export function initHub3D(opts) {
   container.appendChild(hintEl);
 
   // First-tap coach bubble — the small hint above is parent-facing; a 3-year-
-  // old pre-reader needs the 👆 itself. Bounces center-screen until the very
+  // old pre-reader needs the coach bubble itself. Bounces center-screen until the very
   // first touch/keypress, then fades for the rest of the session.
   var coachBubbleEl = document.createElement('div');
   coachBubbleEl.textContent = HUB_TEXTS.tapToWalk;
@@ -266,7 +266,7 @@ export function initHub3D(opts) {
   }
 
   // ---------- Task 3: one-time Coach Leo greeting ----------
-  // A speech bubble in the UPPER area (well above the bottom:26% bouncing 👆, so
+  // A speech bubble in the UPPER area (well above the bottom:26% coach cue, so
   // they never collide), pointer-events:none so a tap passes straight through to
   // walk. Spoken through the app's Web Speech util; text-only if speech is off.
   function showLeoBubble(text, ms) {
@@ -295,12 +295,14 @@ export function initHub3D(opts) {
     wrap.style.cssText = 'position:absolute;inset:0;z-index:24;display:flex;align-items:center;justify-content:center;background:rgba(12,26,44,0.45);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
     var card = document.createElement('div');
     card.style.cssText = 'background:linear-gradient(180deg,#ffffff,#f4f8fc);border-radius:24px;padding:22px 20px;max-width:min(320px,86vw);box-shadow:0 22px 54px rgba(18,38,66,0.42),0 4px 12px rgba(18,38,66,0.22),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.20);display:flex;flex-direction:column;gap:12px;text-align:left;';
+    var introArt = window.JUMVI_ART ? window.JUMVI_ART.img(window.JUMVI_ART.special('leo-island'), 'specialArt', '', true) : '';
     card.innerHTML =
-      '<div style="font-size:19px;font-weight:900;color:#26364a;text-align:center;">Welcome to Leo’s Island! 🏝️</div>' +
-      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">👆 <b>Tap the ground</b> — Leo walks there!</div>' +
-      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">✨ <b>Reach a glowing gate</b> to get a mission</div>' +
-      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;">🏓 <b>Grab your paddles</b> and play for real!</div>' +
-      '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:16px;font-weight:900;min-height:46px;padding:0 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">Let’s go! 🚀</button>';
+      '<div style="width:74px;height:74px;margin:0 auto;">' + introArt + '</div>' +
+      '<div style="font-size:19px;font-weight:900;color:#26364a;text-align:center;">Welcome to Leo’s Island!</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;"><b>Tap the ground</b> — Leo walks there!</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;"><b>Reach a glowing gate</b> to get a mission</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;"><b>Grab your paddles</b> and play for real!</div>' +
+      '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:16px;font-weight:900;min-height:46px;padding:0 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">Let’s go!</button>';
     wrap.appendChild(card);
     container.appendChild(wrap);
     if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak("Welcome to my island! Tap the ground and I'll walk there!"); } catch (e) {} }
@@ -352,7 +354,7 @@ export function initHub3D(opts) {
     }
   }
   // ONE sound setting for the whole product: the hub mirrors the app's own
-  // "🔊 Sound On" toggle (Settings) instead of keeping a second mute concept
+  // Sound toggle (Settings) instead of keeping a second mute concept
   // that would confuse parents. Reads live through opts so a change in
   // Settings applies to the very next hub sound; the hub's mute button
   // writes back through the app's own setter.
@@ -489,20 +491,20 @@ export function initHub3D(opts) {
   muteBtn.type = 'button';
   muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
   muteBtn.style.cssText = 'position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
-  muteBtn.textContent = isMuted() ? '🔇' : '🔊';
+  muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>';
   muteBtn.addEventListener('click', function () {
     setSoundOnFn(isMuted()); // flip the app-wide setting
-    muteBtn.textContent = isMuted() ? '🔇' : '🔊';
+    muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>';
     resumeAudio();
   });
   container.appendChild(muteBtn);
 
-  // (The ❓ "How to play" button was removed — the how-to rules still live in
+  // (The "How to play" button was removed — the how-to rules still live in
   // the one-time coach bubble on first launch; the corner is kept clean.)
 
-  // ---------- IN-HUB MENU (☰) ----------
+  // ---------- IN-HUB MENU ----------
   // The hub is heading toward being the whole site's front door, so it carries
-  // its own menu: a ☰ button top-left opens a slide-in panel that routes to
+  // its own menu: a top-left button opens a slide-in panel that routes to
   // the app's REAL Today/Browse/Stats/Profile tabs + the Badges modal (via the
   // navigate()/openBadges() opts bridged from app.js). The bottom tab bar stays
   // as-is underneath — this is additive, nothing is removed.
@@ -512,8 +514,8 @@ export function initHub3D(opts) {
   var menuBtn = document.createElement('button');
   menuBtn.type = 'button';
   menuBtn.setAttribute('aria-label', HUB_TEXTS.menu);
-  menuBtn.textContent = '☰';
-  // Stacked BELOW the ← Missions exit button (both top-left) so the two never overlap;
+  menuBtn.innerHTML = '<i class="jic jic-menu" aria-hidden="true"></i>';
+  // Stacked BELOW the Missions exit button (both top-left) so the two never overlap;
   // 66px clears the 44px exit pill + gap. Safe-area aware for iOS standalone.
   menuBtn.style.cssText = 'position:absolute;top:calc(66px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.88);border:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:13;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
   container.appendChild(menuBtn);
@@ -532,7 +534,7 @@ export function initHub3D(opts) {
   });
   menuHtml += '<div style="flex:1;"></div>' +
     '<button type="button" data-mi="close" style="display:flex;align-items:center;gap:14px;background:none;border:none;color:#8fa0d0;font-size:14px;font-weight:700;padding:14px 22px;cursor:pointer;text-align:left;font-family:inherit;width:100%;">' +
-    '<span style="font-size:18px;width:26px;text-align:center;">✕</span>' + HUB_TEXTS.menuClose + '</button>';
+    '<span style="font-size:18px;width:26px;text-align:center;"><i class="jic jic-x" aria-hidden="true"></i></span>' + HUB_TEXTS.menuClose + '</button>';
   menuPanel.innerHTML = menuHtml;
   container.appendChild(menuPanel);
 
@@ -669,7 +671,7 @@ export function initHub3D(opts) {
     playChime();
   }
 
-  // (The 📷 island-photo/share button was removed to keep the corner clean.)
+  // (The island-photo/share button was removed to keep the corner clean.)
 
   // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
   // Each zone is one mission pack, ZONE_LENGTH apart along -Z. The corridor's
@@ -728,19 +730,13 @@ export function initHub3D(opts) {
   // ---------- GATE CONFIG (derived from real PACKS) ----------
   var realPacks = PACKS.filter(function (p) { return p.key !== 'all'; });
 
-  function splitIconAndLabel(name) {
-    var parts = name.split(' ');
-    return { icon: parts[0], label: parts.slice(1).join(' ') };
-  }
-
   var gateConfig = realPacks.map(function (pack, i) {
-    var parsed = splitIconAndLabel(pack.name);
     var z = zoneCenterZ(i);
     return {
       id: i + 1,
       packKey: pack.key,
-      name: parsed.label,
-      icon: parsed.icon,
+      name: pack.name,
+      art: window.JUMVI_ART ? window.JUMVI_ART.pack(pack.key) : '',
       x: pathCenterX(z),
       z: z,
       zoneIndex: i
@@ -772,7 +768,7 @@ export function initHub3D(opts) {
   gateConfig.forEach(function (cfg) {
     var slot = document.createElement('div');
     slot.style.cssText = 'width:30px;height:30px;border-radius:50%;background:#E5E2D8;border:2px solid #C5C1B0;display:flex;align-items:center;justify-content:center;font-size:15px;transition:opacity 240ms ease;';
-    slot.textContent = cfg.icon;
+    slot.innerHTML = cfg.art ? '<img src="' + cfg.art + '" alt="" width="30" height="30" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">' : '';
     slot.title = cfg.name;
     slot.style.opacity = isZoneUnlocked(cfg.zoneIndex) ? '1' : '0.35';
     badgesEl.appendChild(slot);
@@ -793,12 +789,12 @@ export function initHub3D(opts) {
     // make* functions — makers() (scattered edge dressing along the whole
     // corridor) is untouched and still procedural, that's a different,
     // much-higher-instance-count use of these same function names.
-    { key: 'target', cardTitle: '🎯 Target Range', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoardDecor, name: 'target board' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }]; }, championName: 'golden target' },
-    { key: 'zen', cardTitle: '🍃 Zen Garden', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }, { make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }]; }, championName: 'golden lantern' },
-    { key: 'play', cardTitle: '👥 Playground', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeSlideDecor, name: 'slide' }, { make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeTeamFlagDecor, name: 'flag' }]; }, championName: 'champion flag' },
-    { key: 'home', cardTitle: '🏠 Backyard', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFenceDecor, name: 'fence' }, { make: makeFlowerBedDecor, name: 'flower bed' }, { make: makeSwingDecor, name: 'swing' }, { make: makeFenceDecor, name: 'fence' }, { make: makeMailboxDecor, name: 'mailbox' }, { make: makeFlowerBedDecor, name: 'flower bed' }]; }, championName: 'flower crown' },
-    { key: 'beach', cardTitle: '🏖️ Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTreeDecor, name: 'palm tree' }, { make: makeBeachUmbrellaDecor, name: 'beach umbrella' }, { make: makeSandcastleDecor, name: 'sandcastle' }, { make: makeSeashellDecor, name: 'seashell' }, { make: makePalmTreeDecor, name: 'palm tree' }, { make: makeSeashellDecor, name: 'seashell' }]; }, championName: 'golden sun' },
-    { key: 'energy', cardTitle: '⚡ Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makePowerPoleDecor, name: 'power pole' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }]; }, championName: 'energy orb' }
+    { key: 'target', cardTitle: 'Target Range', gateColor: 0xFF5A5A, sky: 0xc8e6f5, ground: 0x7ab648, hemiSky: 0xeaf6ff, hemiGround: 0x7ab648, sun: 0xffffff, sunIntensity: 1.75, badgeBg: '#cfe9f8', makers: function () { return [makeTargetBoard, makeTree, makeTargetBoard]; }, growth: function () { return [{ make: makeTargetBoardDecor, name: 'target board' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }, { make: makeFlagDecor, name: 'flag' }, { make: makeTargetBoardDecor, name: 'target board' }]; }, championName: 'golden target' },
+    { key: 'zen', cardTitle: 'Zen Garden', gateColor: 0x6FC48A, sky: 0xf5e6d3, ground: 0x4a7c6a, hemiSky: 0xffe9c9, hemiGround: 0x4a7c6a, sun: 0xffd9a0, sunIntensity: 1.15, badgeBg: '#f3e2c8', makers: function () { return [makeBamboo, makeStoneLantern, makeLotusPool, makeBamboo]; }, growth: function () { return [{ make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }, { make: makeBambooDecor, name: 'bamboo' }, { make: makeStoneLanternDecor, name: 'stone lantern' }, { make: makeLotusPondDecor, name: 'lotus pond' }]; }, championName: 'golden lantern' },
+    { key: 'play', cardTitle: 'Playground', gateColor: 0xFFB347, sky: 0x87ceeb, ground: 0xc46a20, hemiSky: 0xbfe8ff, hemiGround: 0xc46a20, sun: 0xffffff, sunIntensity: 1.8, badgeBg: '#bfe4f7', makers: function () { return [makeBench, makePlayFlag, makeSlide, makePlayFlag]; }, growth: function () { return [{ make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeSlideDecor, name: 'slide' }, { make: makeTeamFlagDecor, name: 'flag' }, { make: makeBenchDecor, name: 'bench' }, { make: makeTeamFlagDecor, name: 'flag' }]; }, championName: 'champion flag' },
+    { key: 'home', cardTitle: 'Backyard', gateColor: 0xE8A23A, sky: 0xffe0a0, ground: 0x8FBF5A, hemiSky: 0xffd9a0, hemiGround: 0x8fbf5a, sun: 0xffb066, sunIntensity: 1.5, badgeBg: '#ffe7b8', makers: function () { return [makeFencePanel, makeGardenSwing, makeFlowerBed, makeMailbox]; }, growth: function () { return [{ make: makeFenceDecor, name: 'fence' }, { make: makeFlowerBedDecor, name: 'flower bed' }, { make: makeSwingDecor, name: 'swing' }, { make: makeFenceDecor, name: 'fence' }, { make: makeMailboxDecor, name: 'mailbox' }, { make: makeFlowerBedDecor, name: 'flower bed' }]; }, championName: 'flower crown' },
+    { key: 'beach', cardTitle: 'Beach', gateColor: 0xFFD98A, sky: 0x7ec8e3, ground: 0xf0dca0, hemiSky: 0xd8f1fb, hemiGround: 0xf0dca0, sun: 0xfff6e0, sunIntensity: 1.85, badgeBg: '#ffeccb', makers: function () { return [makePalmTree, makeBeachUmbrella, makePalmTree, makeSeashell]; }, growth: function () { return [{ make: makePalmTreeDecor, name: 'palm tree' }, { make: makeBeachUmbrellaDecor, name: 'beach umbrella' }, { make: makeSandcastleDecor, name: 'sandcastle' }, { make: makeSeashellDecor, name: 'seashell' }, { make: makePalmTreeDecor, name: 'palm tree' }, { make: makeSeashellDecor, name: 'seashell' }]; }, championName: 'golden sun' },
+    { key: 'energy', cardTitle: 'Energy Zone', gateColor: 0xFFD23F, sky: 0x2a2d52, ground: 0x4a4d7a, hemiSky: 0x8a8fd0, hemiGround: 0x50538a, sun: 0xaab4ff, sunIntensity: 1.25, badgeBg: '#b9bdf0', makers: function () { return [makeElectricPole, makeElectricPole, makeLightningBolt]; }, growth: function () { return [{ make: makePowerPoleDecor, name: 'power pole' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makePowerPoleDecor, name: 'power pole' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }, { make: makeLightningBoltDecor, name: 'lightning bolt' }]; }, championName: 'energy orb' }
   ];
   function themeForZone(i) {
     return ZONE_THEMES[THREE.MathUtils.clamp(i, 0, ZONE_THEMES.length - 1)];
@@ -2121,8 +2117,8 @@ export function initHub3D(opts) {
     if (cacheKey === lastProgressCacheKey) return;
     lastProgressCacheKey = cacheKey;
     progressLabelEl.textContent = remaining > 0
-      ? (cfg.icon + ' ' + cfg.name + ' — ' + HUB_TEXTS.missionsLeft(remaining))
-      : (cfg.icon + ' ' + cfg.name + ' ' + HUB_TEXTS.zoneDoneLabel);
+      ? (cfg.name + ' — ' + HUB_TEXTS.missionsLeft(remaining))
+      : (cfg.name + ' ' + HUB_TEXTS.zoneDoneLabel);
   }
 
   // ---------- ZONE THEME TRANSITIONS ----------
@@ -2552,7 +2548,7 @@ export function initHub3D(opts) {
 
     // entrance signpost: wooden post + a small billboarded zone-name plaque.
     // Pushed further off the path (was +0.9) and the label shrunk to ~0.45×
-    // its default: at full size the long "⚡ Energy Zone" sprite filled the
+    // its default: at full size the long Energy Zone sprite filled the
     // whole screen when you stood near it. It's a little world sign now, not a
     // banner — the HUD chip up top is the primary zone read anyway.
     var sz = (cfg.zoneIndex === 0 ? START_BOUNDARY_Z - 2.5 : zoneBoundaryZ(cfg.zoneIndex) - 1.6);
@@ -3251,7 +3247,7 @@ export function initHub3D(opts) {
         // Intro praise bubble — once, right after the very first completed walk.
         if (_introBubble2Pending) {
           _introBubble2Pending = false;
-          showLeoBubble("Great job! Now find a glowing gate ✨", 4000);
+          showLeoBubble("Great job! Now find a glowing gate", 4000);
         }
       } else {
         ix = dxT / distT;
@@ -3651,7 +3647,7 @@ export function initHub3D(opts) {
     } catch (e) {}
     var medal = document.createElement('div');
     medal.style.cssText = 'position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.3);z-index:24;width:110px;height:110px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:52px;background:radial-gradient(circle at 35% 30%,#ffe9a8,#f3b93c 58%,#c98a1e);box-shadow:0 8px 26px rgba(0,0,0,.4),inset 0 3px 8px rgba(255,255,255,.6);border:4px solid #a8741a;transition:transform 480ms cubic-bezier(.34,1.56,.64,1),opacity 300ms ease;opacity:0;pointer-events:none;';
-    medal.textContent = cfg.icon;
+    medal.innerHTML = cfg.art ? '<img src="' + cfg.art + '" alt="" width="88" height="88" style="width:80%;height:80%;object-fit:contain;">' : '';
     container.appendChild(medal);
     requestAnimationFrame(function () { requestAnimationFrame(function () {
       medal.style.opacity = '1';
@@ -3695,8 +3691,9 @@ export function initHub3D(opts) {
     if (certInviteShown || demoMode) return;
     if (!missions.length || done.size < missions.length) return;
     certInviteShown = true;
+    var certArt = window.JUMVI_ART ? window.JUMVI_ART.img(window.JUMVI_ART.badge('champ'), 'badgeArt', '', true) : '';
     certInviteEl.innerHTML =
-      '<div style="font-size:44px;line-height:1;">🏆</div>' +
+      '<div style="width:72px;height:72px;margin:0 auto;">' + certArt + '</div>' +
       '<div style="font-size:20px;font-weight:900;color:#3a2a1a;">' + HUB_TEXTS.certTitle + '</div>' +
       '<div style="font-size:14px;font-weight:700;color:#5a4632;">' + HUB_TEXTS.certBody(missions.length) + '</div>' +
       '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#FFD23F,#E8A23A);color:#4a3000;font-size:15px;font-weight:900;padding:12px 0;cursor:pointer;box-shadow:0 4px 0 #b07716;font-family:inherit;">' + HUB_TEXTS.certBtn + '</button>';
@@ -4138,7 +4135,7 @@ export function initHub3D(opts) {
     // have rotated or the insets changed), so the canvas box is only truly
     // measurable from here on — see onResize().
     onResizeSoon();
-    muteBtn.textContent = isMuted() ? '🔇' : '🔊'; // Settings may have changed while away
+    muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>'; // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     startBgMusic(); // gentle background loop plays only while the hub is active
     // Warm every shader/texture currently in the scene BEFORE the first frame,

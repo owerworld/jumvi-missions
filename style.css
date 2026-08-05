@@ -328,6 +328,7 @@ html.theme--dark .bgLayer{
       font-size:var(--fs-caption);
       color: var(--muted);
       margin-left:-2px;
+      transform:rotate(90deg);
     }
 
     /* Backwards compat: keep old .avatarBtn rule slot but it's now profilePill */
@@ -1188,8 +1189,10 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
       animation: doneCheck 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
     .donePill::before{
-      content: "✓";
+      content: "DONE";
       line-height: 1;
+      font-size: 8px;
+      letter-spacing: .04em;
     }
     @keyframes doneCheck{
       0%  { opacity: 0; transform: scale(0.5); }
@@ -3555,8 +3558,7 @@ html.theme--dark .kvWin b{ color: #FCD34D !important; }
 
 /* Win/Goal başlığı vurgu */
 #mWin b::before{
-  content: "🎯 ";
-  font-size: 1.05em;
+  content: "";
 }
 #mWin b{
   font-size: 14px !important;
@@ -3767,9 +3769,10 @@ html.theme--dark .moreInfoDetails{
 .moreInfoSummaryArrow{
   font-size: 14px;
   transition: transform 0.2s ease;
+  transform: rotate(90deg);
 }
 .moreInfoDetails[open] .moreInfoSummaryArrow{
-  transform: rotate(180deg);
+  transform: rotate(270deg);
 }
 .moreInfoContent{
   padding: 0 14px 14px;
@@ -4173,6 +4176,7 @@ html.theme--dark .profileItemAvatar{ background: rgba(255,255,255,0.08); }
   font-size:18px; font-weight:900;
   flex-shrink:0;
 }
+.profileItemActive .jic{ font-size:18px; }
 
 .profileAddSection{
   margin-top:18px; padding-top:14px;
@@ -5283,7 +5287,7 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
 }
 
 /* ============================================
- * 💎 LIQUID GLASS ACTIVE TAB
+ * LIQUID GLASS ACTIVE TAB
  * Apple iOS 26 Liquid Glass aesthetic
  * Frosted pill + glow + scale + animate-in
  * ============================================ */
@@ -5460,7 +5464,7 @@ html.theme--dark #tabProfile .tabHeading{
 
 /* ============================================
  * STREAK LEVEL SYSTEM (Duolingo-inspired)
- * 0 → ✨ Start your streak!
+ * 0 → Start your streak!
  * 1-2 → normal sari
  * 3-6 → turuncu (warm)
  * 7-13 → kirmizi + glow (hot)
@@ -6438,12 +6442,14 @@ html.theme--dark .pathStepNode{
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 .pathStep.done .pathStepNode::after{
-  content: "✓";
+  content: "DONE";
   position: absolute;
   top: -4px;
   right: -4px;
   width: 24px;
   height: 24px;
+  font-size: 7px;
+  letter-spacing: .02em;
   background: #43A047;
   color: #fff;
   border-radius: 50%;
@@ -6468,7 +6474,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   animation: pathStepNextPulse 2s ease-in-out infinite;
 }
 .pathStep.next::after{
-  content: "🦁 NEXT";
+  content: "NEXT →";
   position: absolute;
   top: 22px;
   right: calc(50% - 70px);
@@ -6497,7 +6503,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 
 /* TODAY — daily mission pill */
 .pathStep.daily::after{
-  content: "📅 TODAY";
+  content: "TODAY";
   position: absolute;
   top: 22px;
   left: calc(50% - 70px);
@@ -6516,7 +6522,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 }
 .pathStep.daily.next::after{
   /* Daily kazanir, NEXT pill gizli */
-  content: "📅 TODAY";
+  content: "TODAY";
   background: #FF6A00;
   right: auto;
   left: calc(50% - 70px);
@@ -6554,7 +6560,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
 }
 
 /* ============================================================
- * 🎨 GLOBAL POLISH PASS — ahenk + hizalama + nefes
+ * GLOBAL POLISH PASS — ahenk + hizalama + nefes
  * Tüm bileşenler tutarlı tasarım dili paylaşır
  * ============================================================ */
 
@@ -7263,6 +7269,86 @@ body.tab-stats:has(#statsEmptyState[style*="display: none"]) .statsBadgesSection
    to light #E5E7EB (1.17:1). Keep the dark-brown-on-gold pairing in dark too → ~9:1. */
 html.theme--dark .advCardNew{ color:#4a3000 !important; }
 
+/* ============================================================
+   JUMVI Soft-Play 3D art layer
+   Expressive mission/category/badge/avatar artwork is raster art;
+   compact controls remain the monochrome .jic SVG set above.
+   ============================================================ */
+.jumviArtImg,
+.missionArt,
+.packArt,
+.badgeArt,
+.avatarArt,
+.specialArt,
+.ageArt{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.ageArt{ width:54px; height:54px; }
+.advCardEmoji{ width:48px; height:48px; display:flex; align-items:center; justify-content:center; flex:none; }
+.dailyIconBig .missionArt{ width:60px; height:60px; }
+.storyEmoji{ width:48px; height:48px; font-size:0; }
+.coachPickIcon{ width:52px; height:52px; padding:2px; background:transparent; }
+.seasonalMissionArt{ width:46px; height:46px; flex:0 0 46px; }
+
+.card .mIcon{
+  width:56px;
+  height:56px;
+  padding:2px;
+  background:transparent;
+}
+.card.done .mIcon,
+html.theme--dark .card .mIcon{ background:transparent; }
+
+.dashRow .dashIcon{ width:38px; height:38px; padding:2px; }
+.dashRow.dashRowActive .dashIcon{ background:transparent; }
+.dashStatArt{ display:inline-flex; width:32px; height:32px; vertical-align:middle; }
+
+.badge .badgeIcon{ width:54px; height:54px; margin:0 auto 4px; font-size:0; }
+.badgesListIcon{ width:58px; height:58px; margin:0 auto 6px; font-size:0; }
+.badgeUnlockEmoji{ width:96px; height:96px; margin:0 auto 8px; font-size:0; }
+.summaryBadgeArt{ display:inline-flex; width:30px; height:30px; vertical-align:middle; }
+
+.profilePillAvatar,
+.profileCardAvatar,
+.profileItemAvatar,
+.familyMemberAvatar{ overflow:hidden; }
+.profilePillAvatar .avatarArt,
+.profileCardAvatar .avatarArt,
+.profileItemAvatar .avatarArt,
+.familyMemberAvatar .avatarArt{ width:100%; height:100%; }
+.profileAvatarOption{ padding:3px; overflow:hidden; }
+.profileAvatarOption .avatarArt{ width:100%; height:100%; }
+
+.pathSectionIcon{
+  width:50px;
+  height:50px;
+  padding:2px;
+  background:transparent;
+  box-shadow:none;
+  overflow:visible;
+}
+.pathStepIcon{
+  display:block;
+  width:62px;
+  height:62px;
+  font-size:0;
+}
+.pathStepIcon .missionArt{ width:62px; height:62px; }
+
+@media (max-width:520px){
+  .ageArt{ width:48px; height:48px; }
+  .card .mIcon{ width:52px; height:52px; }
+  .pathSectionIcon{ width:44px; height:44px; }
+  .pathStepIcon,
+  .pathStepIcon .missionArt{ width:56px; height:56px; }
+}
+
 /* 3D hub overlay backdrop (was inline near #hub3dOverlay) */
 /* Height is stated explicitly as well as via inset:0 — on iOS standalone the
    overlay was ending ~90px above the bottom of the screen (dark band under the
@@ -7276,7 +7362,7 @@ html.theme--dark .advCardNew{ color:#4a3000 !important; }
   height:100dvh;
 }
 
-/* ===== §2.1 — Coach Leo inline sprites (replacing 🦁 chrome) ===== */
+/* ===== §2.1 — Coach Leo inline sprites (replacing mascot chrome) ===== */
 /* h1 with Leo's face to the LEFT of the greeting. The greeting's own margins
    come from several #tabToday .h1{ ... !important } rules — neutralise them on
    the flex item (id + 2 classes beats them) and move spacing to the row. */
@@ -7291,7 +7377,7 @@ html.theme--dark .advCardNew{ color:#4a3000 !important; }
 
 /* ===== §2.2 — structural emoji → inline SVG (currentColor, theme-agnostic) =====
    Chrome icons rendered as CSS masks tinted with currentColor, so each icon
-   matches the exact colour of the text/button it sits in (a play ▶ inside a
+   matches the exact colour of the text/button it sits in (a play icon inside a
    white-on-blue button stays white; the same glyph in ink text goes dark).
    The .jmv wrapper was unsuitable here — it forces its own grey palette,
    which would override the button/label colour. Sizing follows font-size. */
