@@ -243,14 +243,14 @@ function celebrate(){
     }
   }catch(_){}
 
-  // Fallback: tiny star burst
+  // Fallback: tiny brand-color burst (no OS emoji glyphs)
   const root = document.createElement("div");
   root.className = "fxBurst";
-  const stars = ["⭐","✨","🌟","💫","🎉"];
   for(let i=0;i<18;i++){
     const s = document.createElement("div");
     s.className = "fxStar";
-    s.textContent = stars[i % stars.length];
+    s.textContent = "";
+    s.setAttribute("aria-hidden", "true");
     const cx = window.innerWidth * (0.25 + Math.random()*0.5);
     const cy = window.innerHeight * (0.35 + Math.random()*0.35);
     const dx = (Math.random()*2-1) * 140;
@@ -468,7 +468,7 @@ async function renderSimpleCertificateBlob(){
     ctx.textBaseline = "middle";
     ctx.font = `600 ${footerSize}px 'Helvetica Neue', Arial, sans-serif`;
     ctx.fillStyle = "rgba(80,80,100,0.55)";
-    ctx.fillText("🎾 JUMVI Toss & Catch Paddle Set • qr.jumvi.co", width * 0.5, footerY);
+    ctx.fillText("JUMVI Toss & Catch Paddle Set • qr.jumvi.co", width * 0.5, footerY);
 
     return await new Promise(res=>canvas.toBlob(res, "image/png", 1.0));
   }catch(_){
@@ -501,10 +501,15 @@ try {
     lsSet(HUB3D_FLAG_KEY, "1");
   }
 }catch(_){}
-const PROFILE_AVATARS = ["🐵","🐶","🦕","🦄","👽","🤖","🦊","🐼","🐯","🐨","🐸","🦋"];
+const PROFILE_AVATARS = window.JUMVI_ART ? [...window.JUMVI_ART.AVATAR_IDS] : ["monkey"];
 
 function getProfiles(){
-  return lsGetJSON(PROFILES_KEY, []);
+  const profiles = lsGetJSON(PROFILES_KEY, []);
+  if(!Array.isArray(profiles)) return [];
+  return profiles.map(p => ({
+    ...p,
+    avatar: window.JUMVI_ART ? window.JUMVI_ART.avatarId(p && p.avatar) : (p && p.avatar) || "monkey"
+  }));
 }
 function getActiveProfileId(){
   return lsGet(ACTIVE_PROFILE_KEY, "p1");
@@ -543,7 +548,7 @@ function nextProfileId(){
   });
 
   const oldAvatarIdx = Number(lsGet("jumvi_avatar_v1", "0")) || 0;
-  const defaultAvatar = PROFILE_AVATARS[oldAvatarIdx] || "🐵";
+  const defaultAvatar = PROFILE_AVATARS[oldAvatarIdx] || "monkey";
 
   const profiles = [{
     id: "p1",
@@ -560,7 +565,7 @@ function nextProfileId(){
   if(!storageAvailable) return;
   const ps = getProfiles();
   if(ps.length === 0){
-    const p = { id:"p1", name:"Player", avatar:"🐵", createdAt: new Date().toISOString() };
+    const p = { id:"p1", name:"Player", avatar:"monkey", createdAt: new Date().toISOString() };
     saveProfiles([p]);
     lsSet(ACTIVE_PROFILE_KEY, "p1");
   }
@@ -603,7 +608,7 @@ const HIGH_SCORES_KEY   = _PP + "high_scores_v1";
 const CATEGORY_OPTIONS = ["all","Reflex","Aim","Focus","Team","Indoor"];
 const PLAYERS_OPTIONS = ["all","Solo","2","3+"];
 const DIFFICULTY_OPTIONS = ["all","Easy","Medium"];
-const AVATARS = ["🐵","🐶","🦕","🦄","👽","🤖","🦊","🐼"];
+const AVATARS = PROFILE_AVATARS.slice(0, 8);
 
 const state = {
   done: new Set(lsGetJSON(LS_KEY, [])),
@@ -1085,14 +1090,14 @@ function getMilestoneLine(counts){
 /* Skill packs — yeni dile uygun, tam 6 kategori, pack-renk eşleşmeli */
 // Order MUST match PACKS (data.js) and ZONE_THEMES (jumvi-hub-app.js): drives
 // the 2D path view + "Pack N of 6" numbering. Reflex Rush is last so the walk
-// (and the list) starts on the bright 🎯 zone, not the dark ⚡ energy one.
+// (and the list) starts on the bright Aim zone, not the dark Reflex energy one.
 const SKILL_PACKS = [
-  { key:"Aim Master",     label:"Bullseye!",       icon:"🎯", color:"#4FB3FF" },
-  { key:"Focus Control",  label:"Zen Mode",        icon:"🧘", color:"#22c55e" },
-  { key:"Team Duo",       label:"Team Up",         icon:"👥", color:"#A855F7" },
-  { key:"Indoor Compact", label:"Indoor Fun",      icon:"🏠", color:"#06B6D4" },
-  { key:"Beach/Park",     label:"Outdoor",         icon:"🏖️", color:"#FFAB00" },
-  { key:"Reflex Rush",    label:"Lightning Hands", icon:"⚡", color:"#FF6A00" }
+  { key:"Aim Master",     label:"Bullseye!",       color:"#4FB3FF" },
+  { key:"Focus Control",  label:"Zen Mode",        color:"#22c55e" },
+  { key:"Team Duo",       label:"Team Up",         color:"#A855F7" },
+  { key:"Indoor Compact", label:"Indoor Fun",      color:"#06B6D4" },
+  { key:"Beach/Park",     label:"Outdoor",         color:"#FFAB00" },
+  { key:"Reflex Rush",    label:"Lightning Hands", color:"#FF6A00" }
 ];
 
 function renderParentDashboard(){
@@ -1109,7 +1114,9 @@ function renderParentDashboard(){
     row.style.setProperty("--skill-color", p.color);
     const icon = document.createElement("div");
     icon.className = "dashIcon";
-    icon.textContent = doneCount >= total ? "✓" : p.icon;
+    icon.innerHTML = doneCount >= total
+      ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
+      : JUMVI_ART.img(JUMVI_ART.pack(p.key), "packArt", "", true);
     const label = document.createElement("div");
     label.className = "dashLabel";
     label.textContent = p.label;
@@ -1137,7 +1144,7 @@ function renderParentDashboard(){
     const topSkill = getTopSkill(counts);
     const topSkillPack = topSkill ? SKILL_PACKS.find(p=>p.label===topSkill) : null;
     if(topSkillPack && counts[topSkill] > 0){
-      dynSub.textContent = `Building ${topSkillPack.label} skills ${topSkillPack.icon}`;
+      dynSub.textContent = `Building ${topSkillPack.label} skills`;
     } else {
       dynSub.textContent = "Keep playing to see your child's skills grow!";
     }
@@ -1152,7 +1159,7 @@ function renderParentDashboard(){
     statsEl.innerHTML = `
       <div class="dashStatItem"><span class="dashStatVal">${mins}</span><span class="dashStatLbl">min total play</span></div>
       <div class="dashStatItem"><span class="dashStatVal">${streakCount}</span><span class="dashStatLbl">day streak</span></div>
-      ${topSkillPack ? `<div class="dashStatItem"><span class="dashStatVal">${topSkillPack.icon}</span><span class="dashStatLbl">top: ${topSkillPack.label}</span></div>` : ""}
+      ${topSkillPack ? `<div class="dashStatItem"><span class="dashStatVal dashStatArt">${JUMVI_ART.img(JUMVI_ART.pack(topSkillPack.key), "packArt", "", true)}</span><span class="dashStatLbl">top: ${escapeHtml(topSkillPack.label)}</span></div>` : ""}
     `;
   }
 }
@@ -1432,7 +1439,9 @@ function renderDailyUI(){
   if(!ms) return;
   const doneToday = done.has(ms.id);
 
-  if(dailyIcon) dailyIcon.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i>' : ms.icon;
+  if(dailyIcon) dailyIcon.innerHTML = doneToday
+    ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
+    : JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title, true);
   if(dailyName) dailyName.textContent = ms.title;
   if(dailyMeta){
     const contextHints = ["Great for first-time players!","Fun warm-up for today!","A quick favorite — try it!","Perfect for 5 minutes of play.","Challenge yourselves today!"];
@@ -1445,7 +1454,7 @@ function renderDailyUI(){
     `;
   }
   if(btnDailyPlay){
-    btnDailyPlay.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i> View' : '<i class="ico i-play" aria-hidden="true"></i> Play';
+    btnDailyPlay.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i> View' : '<i class="jic jic-play" aria-hidden="true"></i> Play';
   }
 }
 
@@ -1819,7 +1828,7 @@ function createMissionCard(ms){
 function updateMissionCard(card, ms, isDone){
   const r = card._refs;
   if(r){
-    r.icon.textContent = ms.icon;
+    r.icon.innerHTML = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title);
     r.title.textContent = ms.title;
     r.packTag.textContent = getPackName(ms.pack);
     r.diffTag.textContent = `${diffLabel(ms.difficulty)} • ${ms.time}`;
@@ -1878,7 +1887,7 @@ function showBadgeUnlockModal(badge){
   const nameEl  = document.getElementById("badgeUnlockName");
   const reqEl   = document.getElementById("badgeUnlockReq");
   const closeBtn = document.getElementById("badgeUnlockClose");
-  if(emojiEl) emojiEl.textContent = badge.icon;
+  if(emojiEl) emojiEl.innerHTML = JUMVI_ART.img(JUMVI_ART.badge(badge.id) || JUMVI_ART.badge("unlocked"), "badgeArt", badge.name, true);
   if(nameEl)  nameEl.textContent  = badge.name;
   if(reqEl)   reqEl.textContent   = badge.req;
   modal.classList.add("show");
@@ -1928,10 +1937,10 @@ function updateBadges(){
       el.classList.add(slug);
     }
     el.innerHTML = `
-      <div class="badgeIcon">${b.icon}</div>
+      <div class="badgeIcon">${JUMVI_ART.img(JUMVI_ART.badge(b.id), "badgeArt", b.name)}</div>
       <div class="badgeName">${escapeHtml(b.name)}</div>
       <div class="badgeReq">${escapeHtml(b.req)}</div>
-      ${progressText ? `<div class="badgeProgress">${ok ? "✓ Earned" : progressText}</div>` : ""}
+      ${progressText ? `<div class="badgeProgress">${ok ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Earned' : progressText}</div>` : ""}
     `;
     badgesRow.appendChild(el);
   });
@@ -1972,10 +1981,10 @@ function updateBadges(){
     }
     return `
       <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}${extraClass}">
-        <div class="badgesListIcon">${b.icon}</div>
+        <div class="badgesListIcon">${JUMVI_ART.img(JUMVI_ART.badge(b.id), "badgeArt", b.name)}</div>
         <div class="badgesListName">${escapeHtml(b.name)}</div>
         <div class="badgesListReq">${escapeHtml(b.req)}</div>
-        <div class="badgesListStatus">${ok ? "✓ Earned" : toGo}</div>
+        <div class="badgesListStatus">${ok ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Earned' : toGo}</div>
       </div>
     `;
   }).join("");
@@ -1992,7 +2001,7 @@ function updateBadges(){
     certBtn.classList.remove("locked");
     certBtn.textContent = "Open";
     certBtn.setAttribute("aria-disabled","false");
-    certSub.textContent = "Unlocked! 🏆 Open and save your certificate.";
+    certSub.textContent = "Unlocked! Open and save your certificate.";
   }else{
     certBtn.classList.remove("unlocked");
     certBtn.classList.add("locked");
@@ -2009,7 +2018,7 @@ function updateBadges(){
     if(box){ box.classList.add("unlockedPulse"); setTimeout(()=> box.classList.remove("unlockedPulse"), 1150); }
     clickSound("success");
     fireConfetti();
-    showToast("🏆 Unlocked! Open your certificate.");
+    showToast("Unlocked! Open your certificate.");
   }
   if(!unlockedAll && unlockedBefore){
     unlockedBefore = setState("unlockedBefore", false);
@@ -2031,11 +2040,11 @@ function updateProgress(){
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
 
   if(completed>=total){
-    progressSub.textContent = "All missions completed! Certificate unlocked 🏆";
+    progressSub.textContent = "All missions completed! Certificate unlocked.";
   } else if(completed === 0){
     progressSub.textContent = "Pick 1 mission today → build your streak → unlock your certificate.";
   } else if(completed <= 3){
-    progressSub.textContent = `Great start! 🎉 Keep going — ${total - completed} missions to go.`;
+    progressSub.textContent = `Great start! Keep going — ${total - completed} missions to go.`;
   } else {
     const remaining = total - completed;
     progressSub.textContent = `${remaining} mission${remaining===1?"":"s"} left to unlock your certificate.`;
@@ -2076,7 +2085,7 @@ function renderShareCard(){
     if(b.check(done)) topBadge = b;
   }
   const badgeEl = document.getElementById("shareScoreBadge");
-  badgeEl.textContent = topBadge ? `${topBadge.icon} ${topBadge.name}` : "";
+  badgeEl.textContent = topBadge ? topBadge.name : "";
 }
 
 /** =======================
@@ -2107,11 +2116,11 @@ let missionOpenedAt = 0;
 
 function setTimerButtonLabel(){
   if(timerState === "running"){
-    btnStartTimer.textContent = "⏸ Pause";
+    btnStartTimer.innerHTML = '<i class="jic jic-pause" aria-hidden="true"></i> Pause';
   }else if(timerState === "paused"){
-    btnStartTimer.textContent = "▶ Resume";
+    btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Resume';
   }else{
-    btnStartTimer.textContent = "▶ Start";
+    btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Start';
   }
 }
 
@@ -2223,7 +2232,7 @@ function autoReadMission(ms){
   // called INSIDE the tap handler (openMission) so iOS allows speechSynthesis.
   if(!soundOn) return;                       // shares the global mute guard
   if(!("speechSynthesis" in window)) return;
-  const strip = s => String(s||"").replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}️]/gu, "").replace(/\s+/g," ").trim();
+  const strip = s => String(s||"").replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\uFE0F]/gu, "").replace(/\s+/g," ").trim();
   const first = (ms.steps && ms.steps[0]) ? strip(ms.steps[0]) : "";
   const text = first ? `${strip(ms.title)}. Step 1 — ${first}` : strip(ms.title);
   if(text) coachSpeak(text, { rate: 1.0 });
@@ -2498,7 +2507,7 @@ function openMission(id){
     const eEl = document.getElementById("storyEmoji");
     const tEl = document.getElementById("storyTitle");
     const lEl = document.getElementById("storyTagline");
-    if(eEl) eEl.textContent = theme.emoji;
+    if(eEl) eEl.innerHTML = JUMVI_ART.img(JUMVI_ART.pack(ms.pack), "packArt", "", true);
     if(tEl) tEl.textContent = theme.name;
     if(lEl) lEl.textContent = theme.tagline;
     storyBanner.style.display = "";
@@ -2506,17 +2515,15 @@ function openMission(id){
     storyBanner.style.display = "none";
   }
 
-  // Motion-diagram icon — pre-rendered SVG/HTML markup per mission ID (1..36)
-  // Lives at top of #sheetBody. Markup comes from jumvi-mission-icons.js (window.MISSION_ICONS).
-  // .jmv wrapper provides color tokens (light/dark auto). Hidden if markup missing.
+  // Approved Soft-Play artwork per mission ID (1..36), served locally.
   const iconWrap = document.getElementById("missionIconWrap");
   if(iconWrap){
-    const markup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || "";
+    const markup = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt missionArt--detail", ms.title, true);
     iconWrap.innerHTML = markup;
     iconWrap.style.display = markup ? "" : "none";
   }
 
-  mTitle.textContent = `${ms.icon} ${ms.title}`;
+  mTitle.textContent = ms.title;
   mMeta.innerHTML = `
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
@@ -2533,7 +2540,7 @@ function openMission(id){
         <img src="assets/leo/leo-guide-256.png?v=20260717-1" alt="" width="256" height="256" decoding="async">
       </picture>
     </button>
-  </div><ol style="margin:10px 0 0; padding-left:18px">
+  </div><ol class="missionStepsList">
     ${steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
   </ol>`;
   const leoSpeakBtn = document.getElementById("leoSpeakBtn");
@@ -2545,12 +2552,12 @@ function openMission(id){
   if(currentDifficulty === "Easy" && ttsAuto()) autoReadMission(ms);
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
-  mWin.innerHTML = `<b>Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
-  mTip.innerHTML = `<b>👨‍👩‍👧 Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
+  mWin.innerHTML = `<b><i class="jic jic-award" aria-hidden="true"></i> Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
+  mTip.innerHTML = `<b><i class="jic jic-users" aria-hidden="true"></i> Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   if(mKidsTip){
-    mKidsTip.innerHTML = `<b>🧒 Kids Challenge</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
+    mKidsTip.innerHTML = `<b><i class="jic jic-star" aria-hidden="true"></i> Kids Challenge</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
   }
-  mSafety.innerHTML = `<b>Safety</b><br/><div style="margin-top:8px">${escapeHtml(getSafetyText(ms))}</div>`;
+  mSafety.innerHTML = `<b><i class="jic jic-shield" aria-hidden="true"></i> Safety</b><br/><div style="margin-top:8px">${escapeHtml(getSafetyText(ms))}</div>`;
   if(mHint){
     const attemptsCount = getAttemptCount(ms.id);
     if(attemptsCount >= 3){
@@ -2569,9 +2576,9 @@ function openMission(id){
   btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> Mark as Done';
   btnToggleDone.classList.toggle("btnDone", isDone);
   // After completing: promote "Next" as the clear CTA
-  btnNext.innerHTML = isDone ? '<i class="ico i-play" aria-hidden="true"></i> Next Mission!' : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
+  btnNext.innerHTML = isDone ? '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission!' : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
   btnNext.classList.toggle("btnNextHighlight", isDone);
-  if(btnRandomPack) btnRandomPack.innerHTML = `<i class="ico i-dice" aria-hidden="true"></i> Random from ${escapeHtml(getPackName(ms.pack))}`;
+  if(btnRandomPack) btnRandomPack.innerHTML = `<i class="jic jic-dice" aria-hidden="true"></i> Random from ${escapeHtml(getPackName(ms.pack))}`;
 
   // Auto-scroll sheet body to bottom when done so actions are visible
   if(isDone){
@@ -2597,7 +2604,7 @@ function openMission(id){
   const isRedLightMission = (ms.id === 2 && typeof window.JumviRedLight !== "undefined");
   const callerHintEl = document.getElementById("callerHint");
   if(isRedLightMission){
-    btnStartTimer.textContent = "▶ Start Caller";
+    btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Start Caller';
     btnStartTimer.setAttribute("aria-label", "Start Red Light Green Light caller");
     btnStartTimer.classList.add("btnStartCaller");
     if(callerHintEl){
@@ -2616,7 +2623,7 @@ function openMission(id){
       });
     };
   } else {
-    btnStartTimer.textContent = "▶ Start";
+    btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Start';
     btnStartTimer.setAttribute("aria-label", "Start timer");
     btnStartTimer.classList.remove("btnStartCaller");
     if(callerHintEl){
@@ -2643,7 +2650,7 @@ let isSpeaking = false;
 function updateSpeakButton(){
   if(!btnSpeak) return;
   btnSpeak.classList.toggle("speaking", isSpeaking);
-  btnSpeak.innerHTML = isSpeaking ? "■" : '<i class="jic jic-speakerphone" aria-hidden="true"></i>';
+  btnSpeak.innerHTML = isSpeaking ? '<i class="jic jic-pause" aria-hidden="true"></i>' : '<i class="jic jic-speakerphone" aria-hidden="true"></i>';
   btnSpeak.setAttribute("title", isSpeaking ? "Stop reading" : "Read aloud");
   btnSpeak.setAttribute("aria-label", isSpeaking ? "Playing… Tap to stop" : "Read mission aloud");
 }
@@ -2777,7 +2784,7 @@ function openCertificate(){
   if(sheet) sheet.scrollTop = 0;
   // Task 5 — the biggest moment: Champion certificate. Celebrate Leo (512, with
   // the certificate modal already on screen this reads as a co-celebration).
-  showLeoReaction("celebrate", "Champion! 🏆", { size: 512 });
+  showLeoReaction("celebrate", "Champion!", { size: 512 });
   // NOTE: "Open" should only open. Saving is done via the Save button inside the sheet.
 }
 
@@ -2892,7 +2899,7 @@ async function downloadCertificatePNG({auto=true}={}){
       if(canShareFile){
         try{
           await navigator.share({files:[file], title:"JUMVI Certificate",
-                                 text:"🏆 My JUMVI Champion Certificate!"});
+                                 text:"My JUMVI Champion Certificate!"});
           hideSaveOverlay();
           if(!auto) showToast("Saved to Photos!");
           return;
@@ -2937,7 +2944,7 @@ async function shareCertificate(){
   const filename = `JUMVI-Certificate-${getTodayISO()}.png`;
   // FIX: correct mission count (36) + always try image file first.
   // §6.3 — include qr.jumvi.co so the share is an organic growth channel.
-  const shareText = "🏆 Completed all 36 JUMVI Toss & Catch missions! Play along: qr.jumvi.co";
+  const shareText = "Completed all 36 JUMVI Toss & Catch missions! Play along: qr.jumvi.co";
   try{
     const blob = await renderSimpleCertificateBlob();
     if(!blob){ showToast("Couldn't generate certificate."); return; }
@@ -2970,7 +2977,7 @@ async function shareCertificateWhatsApp(){
   const name = (certNameInput && certNameInput.value || "").trim();
   const namePart = name ? ` ${name}` : "";
   // FIX: correct mission count (36)
-  const shareText = `🏆${namePart} completed all 36 JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
+  const shareText = `${namePart.trim() || "We"} completed all 36 JUMVI Toss & Catch missions!\nCertificate: ${location.href}`;
 
   // FIX: try Web Share API with image file first (works on iOS + Android Chrome)
   // — this opens WhatsApp natively if the user picks it from the share sheet
@@ -3191,7 +3198,7 @@ function markMissionDone(id, source="manual"){
   // flow (never replaces it). Corner burst, non-blocking. Repeated celebrate
   // calls (badge, certificate) that land in this window are dropped, so the kid
   // sees exactly one happy Leo, not a stack.
-  showLeoReaction("celebrate", "Nice! Mission complete 🎉");
+  showLeoReaction("celebrate", "Nice! Mission complete");
   // Daily mini-challenge counter
   bumpDailyChallenge();
   fireDoneBurst(document.getElementById("btnToggleDone"));
@@ -3248,7 +3255,7 @@ function markMissionDone(id, source="manual"){
     } else if(done.size === 5){
       setTimeout(()=>{ fireConfetti(1500); showToast("5 down! You're on fire — Coach Leo is proud!"); }, 400);
     } else if(done.size === 18){
-      setTimeout(()=>{ fireConfetti(2000); showToast("🌟 Halfway there! 18 missions crushed!"); }, 400);
+      setTimeout(()=>{ fireConfetti(2000); showToast("Halfway there! 18 missions crushed!"); }, 400);
     } else if(remaining > 0){
       const cheers = ["Awesome!", "Nailed it!", "Boom!", "You got this!", "Amazing!"];
       const cheer = cheers[Math.floor(Math.random()*cheers.length)];
@@ -3260,7 +3267,7 @@ function markMissionDone(id, source="manual"){
       if(streakCount === 7){
         setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("WEEK CHAMPION! 7 days in a row — incredible!"); }, delay);
       } else if(streakCount === 3){
-        setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("🎖️ 3-day streak! Keep showing up!"); }, delay);
+        setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("3-day streak! Keep showing up!"); }, delay);
       } else if(streakCount > 1){
         setTimeout(()=>{ renderStreakUI(true); showToast(`${streakCount} days in a row — keep it going!`); }, delay);
       } else {
@@ -3311,7 +3318,7 @@ function renderSeasonalList(type){
     const row = document.createElement("div");
     row.className = "seasonalItem";
     row.innerHTML = `
-      <div style="font-size:18px; width:26px; text-align:center">${ms.icon}</div>
+      <div class="seasonalMissionArt">${JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title)}</div>
       <div style="flex:1">
         <div class="seasonalItemTitle">${escapeHtml(ms.title)}</div>
         <div style="margin-top:4px; display:flex; gap:6px; flex-wrap:wrap">
@@ -3382,7 +3389,7 @@ btnNext.onclick = ()=>{
   if(hubFlow && hubFlow.packKey){
     const packList = missions.filter(m=>m.pack===hubFlow.packKey);
     if(packList.length && packList.every(m=>done.has(m.id))){
-      showToast("Zone Complete! 🏆");
+      showToast("Zone Complete!");
       trackEvent("Hub Zone Complete Close");
       closeMission();
       return;
@@ -3534,10 +3541,10 @@ function buildFamilyShareText(){
       if(n > topCount){ topCount = n; topPackLabel = p.label; }
     });
   }
-  let text = `🏓 ${name}'s JUMVI progress this week:\n`;
-  text += `✅ ${total}/36 missions completed\n`;
-  if(sc > 0) text += `🔥 ${sc}-day streak\n`;
-  if(topPackLabel) text += `🌟 Top skill: ${topPackLabel}\n`;
+  let text = `${name}'s JUMVI progress this week:\n`;
+  text += `${total}/36 missions completed\n`;
+  if(sc > 0) text += `${sc}-day streak\n`;
+  if(topPackLabel) text += `Top skill: ${topPackLabel}\n`;
   text += `\nPlay along: https://qr.jumvi.co`;
   return text;
 }
@@ -3574,16 +3581,15 @@ if(btnDashPrint){
   btnDashPrint.onclick = ()=>{
     clickSound("click");
     const packs = [
-      { key:"Reflex Rush", label:"Reflex", icon:"⚡" },
-      { key:"Aim Master", label:"Aim", icon:"🎯" },
-      { key:"Focus Control", label:"Focus", icon:"🧘" },
-      { key:"Team Duo", label:"Team", icon:"👥" },
-      { key:"Indoor Compact", label:"Indoor", icon:"🏠" }
+      { key:"Reflex Rush", label:"Reflex" },
+      { key:"Aim Master", label:"Aim" },
+      { key:"Focus Control", label:"Focus" },
+      { key:"Team Duo", label:"Team" },
+      { key:"Indoor Compact", label:"Indoor" }
     ];
     const rows = packs.map(p=>{
       const n = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
-      const bar = "█".repeat(n) + "░".repeat(6-n);
-      return `<tr><td>${p.icon} ${p.label}</td><td style="font-family:monospace;letter-spacing:1px">${bar}</td><td>${n}/6</td></tr>`;
+      return `<tr><td>${p.label}</td><td>${n} of 6 complete</td><td>${n}/6</td></tr>`;
     }).join("");
     const mins = getEstimatedPlayMinutes();
     const dateStr = getToday();
@@ -3603,7 +3609,7 @@ if(btnDashPrint){
   .footer{margin-top:32px;font-size:11px;color:#94a3b8;border-top:1px solid #e5e7eb;padding-top:12px;}
   @media print{body{margin:20px;}}
 </style></head><body>
-<h1>🎾 JUMVI Missions — Parent Report</h1>
+<h1>JUMVI Missions — Parent Report</h1>
 <div class="sub">Generated: ${dateStr}</div>
 <div class="stats">
   <div class="stat"><div class="statVal">${done.size}</div><div class="statLbl">missions done</div></div>
@@ -3628,8 +3634,8 @@ document.getElementById("btnShareWhatsApp").onclick = ()=>{
   const url = location.href;
   let topBadge = null;
   for(const b of BADGES){ if(b.check(done)) topBadge = b; }
-  const badgePart = topBadge ? `Top badge: ${topBadge.icon} ${topBadge.name}\n` : "";
-  const text = `🎯 We completed ${done.size}/36 JUMVI missions!\n${badgePart}Try it: ${url}`;
+  const badgePart = topBadge ? `Top badge: ${topBadge.name}\n` : "";
+  const text = `We completed ${done.size}/36 JUMVI missions!\n${badgePart}Try it: ${url}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
 };
 document.getElementById("btnShareCopy").onclick = async ()=>{
@@ -3637,8 +3643,8 @@ document.getElementById("btnShareCopy").onclick = async ()=>{
   const url = location.href;
   let topBadge = null;
   for(const b of BADGES){ if(b.check(done)) topBadge = b; }
-  const badgePart = topBadge ? ` | Badge: ${topBadge.icon} ${topBadge.name}` : "";
-  const text = `🎯 ${done.size}/36 JUMVI missions completed${badgePart} → ${url}`;
+  const badgePart = topBadge ? ` | Badge: ${topBadge.name}` : "";
+  const text = `${done.size}/36 JUMVI missions completed${badgePart} — ${url}`;
   try{
     if(navigator.share){
       await navigator.share({ title:"JUMVI Missions", text, url });
@@ -3743,10 +3749,10 @@ function renderAvatar(){
     const avatarEl = document.getElementById("profilePillAvatar");
     const nameEl   = document.getElementById("profilePillName");
     if(ap){
-      if(avatarEl) avatarEl.textContent = ap.avatar || "🐵";
+      if(avatarEl) avatarEl.innerHTML = JUMVI_ART.img(JUMVI_ART.avatar(ap.avatar), "avatarArt", "", true);
       if(nameEl)   nameEl.textContent   = ap.name   || "Player";
     } else {
-      if(avatarEl) avatarEl.textContent = AVATARS[currentAvatarIdx] || "🐵";
+      if(avatarEl) avatarEl.innerHTML = JUMVI_ART.img(JUMVI_ART.avatar(AVATARS[currentAvatarIdx] || "monkey"), "avatarArt", "", true);
       if(nameEl)   nameEl.textContent   = "Player";
     }
 }
@@ -3760,7 +3766,7 @@ if(avatarBtn){
 /* =======================
  * Profile Sheet (multi-child)
  * ======================= */
-let _profileSelectedAvatar = "🐵";
+let _profileSelectedAvatar = "monkey";
 
 function openProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
@@ -3816,13 +3822,13 @@ function renderProfileList(){
     const item = document.createElement("div");
     item.className = "profileItem" + (isActive ? " active" : "");
     item.innerHTML = `
-      <div class="profileItemAvatar">${escapeHtml(p.avatar || "🐵")}</div>
+      <div class="profileItemAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(p.avatar), "avatarArt", "", true)}</div>
       <div class="profileItemBody">
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
         <div class="profileItemMeta">${doneCount}/36 missions · <i class="jic jic-flame" aria-hidden="true"></i> ${streak} day${streak===1?"":"s"}</div>
       </div>
       <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button"><i class="jic jic-pencil" aria-hidden="true"></i></button>
-      ${isActive ? '<div class="profileItemActive">●</div>' : ""}
+      ${isActive ? '<div class="profileItemActive"><i class="jic jic-circle-check" aria-hidden="true"></i></div>' : ""}
     `;
     // Edit pencil click — opens edit panel
     const pencil = item.querySelector(".profileEditPencil");
@@ -3843,14 +3849,14 @@ function renderProfileList(){
 
 /* Profil düzenleme paneli */
 let _profileEditingId = null;
-let _profileEditingAvatar = "🐵";
+let _profileEditingAvatar = "monkey";
 let _deleteConfirmTimer = null;
 
 function openProfileEdit(id){
   const p = getProfiles().find(x => x.id === id);
   if(!p) return;
   _profileEditingId = id;
-  _profileEditingAvatar = p.avatar || "🐵";
+  _profileEditingAvatar = JUMVI_ART.avatarId(p.avatar || "monkey");
 
   const editSection = document.getElementById("profileEditSection");
   const addSection  = document.getElementById("profileAddSection");
@@ -3867,7 +3873,7 @@ function openProfileEdit(id){
   if(deleteBtn){
     deleteBtn.disabled = profiles.length <= 1;
     deleteBtn.classList.remove("confirming");
-    deleteBtn.textContent = profiles.length <= 1
+    deleteBtn.innerHTML = profiles.length <= 1
       ? '<i class="jic jic-trash" aria-hidden="true"></i> Delete (need at least 1 profile)'
       : '<i class="jic jic-trash" aria-hidden="true"></i> Delete this profile';
     deleteBtn.style.opacity = profiles.length <= 1 ? "0.4" : "1";
@@ -3890,7 +3896,8 @@ function renderProfileEditAvatarPicker(){
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "profileAvatarOption" + (em === _profileEditingAvatar ? " selected" : "");
-    btn.textContent = em;
+    btn.innerHTML = JUMVI_ART.img(JUMVI_ART.avatar(em), "avatarArt", "", true);
+    btn.setAttribute("aria-label", `Choose ${em} avatar`);
     btn.onclick = ()=>{
       clickSound("click");
       _profileEditingAvatar = em;
@@ -3994,7 +4001,8 @@ function renderProfileAvatarPicker(){
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "profileAvatarOption" + (em === _profileSelectedAvatar ? " selected" : "");
-    btn.textContent = em;
+    btn.innerHTML = JUMVI_ART.img(JUMVI_ART.avatar(em), "avatarArt", "", true);
+    btn.setAttribute("aria-label", `Choose ${em} avatar`);
     btn.onclick = ()=>{
       clickSound("click");
       _profileSelectedAvatar = em;
@@ -4029,13 +4037,13 @@ function addNewChildProfile(){
   const newProfile = {
     id: nextProfileId(),
     name: name,
-    avatar: _profileSelectedAvatar || "🐵",
+    avatar: _profileSelectedAvatar || "monkey",
     createdAt: new Date().toISOString()
   };
   profiles.push(newProfile);
   saveProfiles(profiles);
   trackEvent("Profile Added");
-  showToast(`👋 Hi ${name}! Let's play!`);
+  showToast(`Hi ${name}! Let's play!`);
   // Yeni profile geç (page reload)
   switchProfile(newProfile.id);
 }
@@ -4288,7 +4296,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260730-3"); // milestone 2: hub module
+    const mod = await import("./jumvi-hub-app.js?v=20260805-2"); // milestone 2: hub module
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4320,7 +4328,7 @@ function ensureHub3DLoaded(onProgress){
         soundOn = !!v;
         lsSet(SOUND_KEY, soundOn ? "1" : "0");
       },
-      // In-hub menu bridges — the hub's ☰ menu opens the app's REAL panels
+      // In-hub menu bridges — the hub menu opens the app's REAL panels
       // (it never reimplements them). navigate() leaves the hub for a normal
       // tab; openBadges() pops the existing badges modal on top of the hub.
       navigate(tab){ switchTab(tab); },
@@ -4332,7 +4340,7 @@ function ensureHub3DLoaded(onProgress){
       track: trackEvent,
       // Soft FPS fallback (audit Bulgu #5): the hub measured a struggling frame
       // rate. We don't yank the kid out mid-play — just a one-time, dismissable
-      // nudge telling them the calm list is a tap away in the ☰ menu.
+      // nudge telling them the calm list is a tap away in the hub menu.
       onLowFps: (fps) => {
         if(window.__hub3dLowFpsNudged) return;
         window.__hub3dLowFpsNudged = true;
@@ -4500,11 +4508,11 @@ function buildHubLoadingOverlay(container){
   el.innerHTML =
     // §4.2 — escape hatch: leave the wait and go back to the missions. The load
     // keeps running (cached), so re-entry is instant.
-    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));min-width:44px;min-height:44px;border:none;border-radius:50%;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;"><i class="ico i-x" aria-hidden="true"></i></button>' +
+    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));min-width:44px;min-height:44px;border:none;border-radius:50%;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;"><i class="jic jic-x" aria-hidden="true"></i></button>' +
     '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
       leoPictureHTML("encourage", 256, 96, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">🌲 Building your island…</div>' +
+    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">Building your island…</div>' +
     '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;opacity:0;transition:opacity 400ms ease;">Coach Leo is on his way!</div>' +
     '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.6);border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.12);">' +
       '<div id="hub3dLoadBar" style="width:8%;height:100%;background:linear-gradient(90deg,#4fc46a,#35a04e);border-radius:6px;transition:width 350ms ease;"></div>' +
@@ -4547,7 +4555,7 @@ function showHubLoadingFailure(container, stage){
     '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));">' +
       leoPictureHTML("gentle", 256, 92, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">🌲 The island got lost!</div>' +
+    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">The island got lost!</div>' +
     '<div style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:260px;">Check your connection and try again.</div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px;">' +
       '<button id="hub3dRetryBtn" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:15px;font-weight:900;padding:11px 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;">Try again</button>' +
@@ -4705,7 +4713,7 @@ function renderProfileTab(){
   const avatarEl = document.getElementById("profileCardAvatar");
   const nameEl   = document.getElementById("profileCardName");
   const statsEl  = document.getElementById("profileCardStats");
-  if(avatarEl) avatarEl.textContent = ap.avatar || "🐵";
+  if(avatarEl) avatarEl.innerHTML = JUMVI_ART.img(JUMVI_ART.avatar(ap.avatar), "avatarArt", "", true);
   if(nameEl)   nameEl.textContent   = ap.name   || "Player";
   if(statsEl){
     const total = done.size;
@@ -4748,7 +4756,7 @@ function renderFamilyInsights(){
     const card = document.createElement("div");
     card.className = "familyMember";
     card.innerHTML = `
-      <div class="familyMemberAvatar">${escapeHtml(it.p.avatar || "🐵")}</div>
+      <div class="familyMemberAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(it.p.avatar), "avatarArt", "", true)}</div>
       <div class="familyMemberInfo">
         <div class="familyMemberName">${escapeHtml(it.p.name || "Player")}</div>
         <div class="familyMemberStats">
@@ -4793,7 +4801,7 @@ function renderFamilyInsights(){
       fStreakEl.innerHTML = `<i class="jic jic-flame" aria-hidden="true"></i> <b>Family streak:</b> ${familyStreakCount} day${familyStreakCount===1?"":"s"} together`;
       fStreakEl.classList.remove("dim");
     } else {
-      fStreakEl.innerHTML = `✨ Start a family streak today!`;
+      fStreakEl.innerHTML = `<i class="jic jic-star" aria-hidden="true"></i> Start a family streak today!`;
       fStreakEl.classList.add("dim");
     }
   }
@@ -4937,7 +4945,7 @@ function initBottomNav(){
 }
 
 /** =======================
- * Daily Mini-Challenge — bugün 1 mission tamamla = ⭐
+ * Daily Mini-Challenge — bugün 1 mission tamamla = one daily point
  * ======================= */
 const DAILY_CHALLENGE_KEY = _PP + "daily_challenge_v1"; // { iso, count, reward }
 
@@ -4956,7 +4964,7 @@ function bumpDailyChallenge(){
   state.count++;
   lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
   renderDailyChallenge();
-  // 1 mission tamamlandı = ⭐ kazandı
+  // 1 mission tamamlandı = daily point earned
   if(state.count === 1 && !state.claimed){
     state.claimed = true;
     lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
@@ -5013,7 +5021,7 @@ function renderContinueHint(){
   // one, this card used to still offer "Resume" on it, which read as a bug.
   if(done.has(lastId)){ hint.style.display = "none"; return; }
   hint.style.display = "";
-  if(nameEl) nameEl.textContent = `${ms.icon} ${ms.title}`;
+  if(nameEl) nameEl.textContent = ms.title;
 }
 
 /** =======================
@@ -5035,12 +5043,12 @@ function getActiveBrowseView(){ return "path"; }
 function setActiveBrowseView(){ applyBrowseView(); }
 
 const PACK_TAGLINES = {
-  "Reflex Rush":    "Lightning fast hands ⚡",
-  "Aim Master":     "Hit the bullseye 🎯",
-  "Focus Control":  "Calm body, sharp mind 🧘",
-  "Team Duo":       "Work together 🤝",
-  "Indoor Compact": "Small space, big fun 🏠",
-  "Beach/Park":     "Outdoor adventures 🏖️"
+  "Reflex Rush":    "Lightning fast hands",
+  "Aim Master":     "Hit the bullseye",
+  "Focus Control":  "Calm body, sharp mind",
+  "Team Duo":       "Work together",
+  "Indoor Compact": "Small space, big fun",
+  "Beach/Park":     "Outdoor adventures"
 };
 
 /* ============================================
@@ -5112,7 +5120,7 @@ function showPackCompleteCelebration(packKey, packLabel){
     }
   }
   pathSound("trophy");
-  showToast(`🏆 ${packLabel} mastered! Pack complete!`);
+  showToast(`${packLabel} mastered! Pack complete!`);
   trackEvent("Pack Completed", { pack: packKey });
   if(navigator.vibrate) try { navigator.vibrate([60, 80, 60, 80, 100]); } catch(_){}
 }
@@ -5161,7 +5169,7 @@ function renderMissionPath(){
     const header = document.createElement("div");
     header.className = "pathSectionHeader";
     header.innerHTML =
-      '<div class="pathSectionIcon">' + pack.icon + '</div>' +
+      '<div class="pathSectionIcon">' + JUMVI_ART.img(JUMVI_ART.pack(pack.key), "packArt", "", true) + '</div>' +
       '<div class="pathSectionInfo">' +
         '<div class="pathSectionName">' + escapeHtml(pack.label) + '</div>' +
         '<div class="pathSectionMeta">Pack ' + (SKILL_PACKS.indexOf(pack)+1) + ' of ' + SKILL_PACKS.length + ' · ' + doneCount + '/' + total + '</div>' +
@@ -5196,7 +5204,7 @@ function renderMissionPath(){
       node.setAttribute("aria-label", m.title + " — " + pack.label + (isDone ? " (completed)" : ""));
       node.setAttribute("data-mission-id", m.id);
       if(isNext) node.id = "pathNodeNext";
-      node.innerHTML = '<span class="pathStepIcon">' + m.icon + '</span>';
+      node.innerHTML = '<span class="pathStepIcon">' + JUMVI_ART.img(JUMVI_ART.mission(m.id), "missionArt", m.title) + '</span>';
 
       node.addEventListener("click", function(){
         try{ clickSound(isDone ? "success" : "click"); }catch(_){}
@@ -5332,7 +5340,7 @@ function renderCoachPick(){
   const nameEl   = document.getElementById("coachPickName");
   const metaEl   = document.getElementById("coachPickMeta");
   const reasonEl = document.getElementById("coachPickReason");
-  if(iconEl) iconEl.textContent = ms.icon;
+  if(iconEl) iconEl.innerHTML = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title, true);
   if(nameEl) nameEl.textContent = ms.title;
   if(metaEl) metaEl.innerHTML = `${escapeHtml(getPackName(ms.pack))} · ${escapeHtml(ms.time)} · <i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}`;
   if(reasonEl) reasonEl.textContent = buildCoachReason(pick.pack, ms);
@@ -5352,7 +5360,7 @@ function renderCoachPick(){
   const alt = document.getElementById("dailyAltSuggestion");
   const altName = document.getElementById("dailyAltName");
   if(alt && altName){
-    altName.textContent = `${ms.icon} ${ms.title}`;
+    altName.textContent = ms.title;
     alt.style.display = "";
     alt.onclick = ()=>{
       clickSound("click");
@@ -5450,7 +5458,7 @@ function showScoreSummary(missionId){
   summary.style.display = "";
   if(wasRecord){
     summary.classList.add("newRecord");
-    summary.innerHTML = `<span class="summaryEmoji">🏆</span><b>NEW RECORD!</b> ${_currentScore} catches!`;
+    summary.innerHTML = `<span class="summaryEmoji summaryBadgeArt">${JUMVI_ART.img(JUMVI_ART.badge("champ"), "badgeArt", "", true)}</span><b>NEW RECORD!</b> ${_currentScore} catches!`;
     if(!prefersReducedMotion) fireConfetti(1200);
     trackEvent("Score New Record", { mission: missionId, score: _currentScore });
   } else {
@@ -5520,7 +5528,7 @@ function showTutorial(){
 
   const steps = [
     { selector: "#btnDailyPlay",
-      title: "▶ Today's Mission",
+      title: '<i class="jic jic-play" aria-hidden="true"></i> Today\'s Mission',
       desc: "A fresh mission is picked for you each day. Tap here to start playing!" },
     { selector: "#streakPill",
       title: '<i class="jic jic-flame" aria-hidden="true"></i> Build Your Streak',
@@ -5570,9 +5578,11 @@ function showTutorial(){
     }, 360);
 
     stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
-    titleEl.textContent = step.title;
+    titleEl.innerHTML = step.title;
     descEl.textContent  = step.desc;
-    btnNextEl.innerHTML = idx === steps.length-1 ? "Got it! 🎉" : 'Next <i class="jic jic-arrow-right" aria-hidden="true"></i>';
+    btnNextEl.innerHTML = idx === steps.length-1
+      ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Got it!'
+      : 'Next <i class="jic jic-arrow-right" aria-hidden="true"></i>';
   };
 
   const next = ()=>{
@@ -5609,7 +5619,7 @@ function fireStreakBurst(){
   for(let i=0;i<5;i++){
     const el = document.createElement("div");
     el.className = "streakFireBurst";
-    el.textContent = "🔥";
+    el.innerHTML = '<i class="jic jic-flame" aria-hidden="true"></i>';
     el.style.left = `${cx - 16}px`;
     el.style.top  = `${cy - 16}px`;
     el.style.setProperty("--dx", `${(Math.random()-0.5)*120}px`);
@@ -5703,10 +5713,10 @@ function init(){
       const url = location.href;
       let topBadge = null;
       for(const b of BADGES){ if(b.check(done)) topBadge = b; }
-      const badgePart = topBadge ? `Top badge: ${topBadge.icon} ${topBadge.name}\n` : "";
+      const badgePart = topBadge ? `Top badge: ${topBadge.name}\n` : "";
       const msDone = lastOpenedId ? missions.find(x=>x.id===lastOpenedId) : null;
-      const missionPart = msDone ? `Just completed: ${msDone.icon} ${msDone.title}\n` : "";
-      const text = `🎯 ${missionPart}${badgePart}${done.size}/36 JUMVI missions done! Try it: ${url}`;
+      const missionPart = msDone ? `Just completed: ${msDone.title}\n` : "";
+      const text = `${missionPart}${badgePart}${done.size}/36 JUMVI missions done! Try it: ${url}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
     };
   }
@@ -5717,8 +5727,8 @@ function init(){
       const url = location.href;
       let topBadge = null;
       for(const b of BADGES){ if(b.check(done)) topBadge = b; }
-      const badgePart = topBadge ? ` | Badge: ${topBadge.icon} ${topBadge.name}` : "";
-      const text = `🎯 ${done.size}/36 JUMVI missions completed${badgePart} → ${url}`;
+      const badgePart = topBadge ? ` | Badge: ${topBadge.name}` : "";
+      const text = `${done.size}/36 JUMVI missions completed${badgePart} — ${url}`;
       try{
         if(navigator.share){ await navigator.share({ title:"JUMVI Missions", text, url }); }
         else{ await navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); }

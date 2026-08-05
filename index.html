@@ -76,9 +76,9 @@
        removes the swap flash on a cold visit. crossorigin is required on font
        preloads even same-origin, or the browser fetches it a second time. -->
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20260730-3">
+  <link rel="stylesheet" href="style.css?v=20260805-2">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
-  <link rel="stylesheet" href="jumvi-icons.css?v=20260730-1">
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260805-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
   <!-- §5.1 — Tabler icon-webfont CDN removed. The 3 glyphs used (chevron-right,
        hand-three-fingers, message-off) are now inline mask-image SVGs in
@@ -135,9 +135,9 @@
       <div class="welcomeDivider" aria-hidden="true"></div>
       <div class="welcomeAgesHeading">Who's playing today?</div>
       <div class="welcomeAges" id="welcomeAges">
-        <button class="ageBtn" data-diff="Easy" data-band="3–5" type="button">🐣<span>Ages 3–5</span></button>
-        <button class="ageBtn" data-diff="all" data-band="6–8" type="button">🚀<span>Ages 6–8</span></button>
-        <button class="ageBtn" data-diff="all" data-band="8 &amp; up" type="button">⚡<span>Ages 8 &amp; up</span></button>
+        <button class="ageBtn" data-diff="Easy" data-band="3–5" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span>Ages 3–5</span></button>
+        <button class="ageBtn" data-diff="all" data-band="6–8" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span>Ages 6–8</span></button>
+        <button class="ageBtn" data-diff="all" data-band="8 &amp; up" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span>Ages 8 &amp; up</span></button>
       </div>
       <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
       <p class="welcomeAddChild">Playing with a brother or sister? Add them any time from Profile.</p>
@@ -190,9 +190,9 @@
       <div class="topbarActions">
         <button class="tourHelpBtn" id="btnTourHelp" type="button" aria-label="How to play — start the guided tour">?</button>
         <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
-          <span class="profilePillAvatar" id="profilePillAvatar">🐵</span>
+          <span class="profilePillAvatar" id="profilePillAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></span>
           <span class="profilePillName" id="profilePillName">Player</span>
-          <span class="profilePillChevron">▾</span>
+          <span class="profilePillChevron"><i class="jic jic-arrow-right" aria-hidden="true"></i></span>
         </button>
       </div>
     </div>
@@ -225,7 +225,7 @@
 
         <!-- Continue where you left off (rendered by JS when applicable) -->
         <div class="continueHint" id="continueHint" style="display:none">
-          <span class="continueHintIcon">↩️</span>
+          <span class="continueHintIcon"><i class="jic jic-arrow-back-up" aria-hidden="true"></i></span>
           <span class="continueHintText">Continue where you left off: <b id="continueHintName">—</b></span>
           <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
         </div>
@@ -234,7 +234,7 @@
         <div class="dailyBox dailyBoxPromoted" id="dailyBox" aria-label="daily mission" role="button" tabindex="0">
           <div class="dailyEyebrow"><i class="ico i-calendar" aria-hidden="true"></i> TODAY'S MISSION</div>
           <div class="dailyContent">
-            <div class="dailyIconBig" id="dailyIcon">⚡</div>
+            <div class="dailyIconBig" id="dailyIcon"></div>
             <div class="dailyText">
               <div class="dailyName" id="dailyName">—</div>
               <div class="dailyMeta" id="dailyMeta">—</div>
@@ -261,7 +261,7 @@
              badge removed; a one-line subtext sets the load expectation up front.
              Card + nav tab share ONE name (Leo's Island). -->
         <button class="advCard" id="advModeCard" type="button" aria-label="Visit Leo's Island">
-          <span class="advCardEmoji">🏝️</span>
+          <span class="advCardEmoji"><img class="specialArt" src="assets/ui/special/leo-island.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
           <span class="advCardText">
             <span class="advCardTitle">Visit Leo&rsquo;s Island</span>
             <span class="advCardSub">Explore the island · Loads in a few seconds</span>
@@ -279,7 +279,7 @@
             </div>
           </div>
           <button class="coachPickCard" id="coachPickCard" type="button">
-            <span class="coachPickIcon" id="coachPickIcon">⚡</span>
+            <span class="coachPickIcon" id="coachPickIcon"></span>
             <span class="coachPickBody">
               <span class="coachPickName" id="coachPickName">—</span>
               <span class="coachPickMeta" id="coachPickMeta">—</span>
@@ -360,7 +360,7 @@
         <!-- Family Insights — sadece >1 profil varsa görünür -->
         <div class="familyInsights" id="familyInsights" style="display:none">
           <div class="familyInsightsHeader">
-            <span class="familyInsightsIcon">👨‍👩‍👧‍👦</span>
+            <span class="familyInsightsIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
             <span class="familyInsightsTitle">Family Stats</span>
           </div>
           <div class="familyInsightsGrid" id="familyInsightsGrid"></div>
@@ -386,7 +386,7 @@
           <div class="dashBars" id="dashBars"></div>
           <div class="dashFooter">
             <div class="dashShareWrap">
-              <div class="dashShareTitle">Share progress with family 🎉</div>
+              <div class="dashShareTitle">Share progress with family</div>
               <div class="dashShareBtns">
                 <button class="dashShareBtn dashShareWA" id="btnDashShareWA" type="button"><i class="jic jic-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
                 <button class="dashShareBtn dashShareCopy" id="btnDashShareCopy" type="button"><i class="jic jic-link" aria-hidden="true"></i> Copy</button>
@@ -427,7 +427,7 @@
             <div class="shareScoreBadge" id="shareScoreBadge"></div>
           </div>
           <div class="shareScoreRight">
-            <div class="shareScoreTitle">Share with family! 🎉</div>
+            <div class="shareScoreTitle">Share with family!</div>
             <div class="shareScoreBtns">
               <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button"><i class="jic jic-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
               <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button"><i class="jic jic-link" aria-hidden="true"></i> Copy Link</button>
@@ -456,7 +456,7 @@
 
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
-          <div class="profileCardAvatar" id="profileCardAvatar">🐵</div>
+          <div class="profileCardAvatar" id="profileCardAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></div>
           <div class="profileCardBody">
             <div class="profileCardName" id="profileCardName">Player</div>
             <div class="profileCardStats" id="profileCardStats">0 missions · 0 day streak</div>
@@ -532,7 +532,7 @@
       </div>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn btnResetFooter" id="btnResetBottom" aria-label="Reset progress"><i class="jic jic-trash" aria-hidden="true"></i> Reset Progress</button>
-        <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button"><i class="ico i-user" aria-hidden="true"></i> Kids Mode</button>
+        <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button"><i class="jic jic-users" aria-hidden="true"></i> Kids Mode</button>
       </div>
       <div class="copyrightLine">© 2026 SAY23 LLC · JUMVI® and Coach Leo are trademarks of SAY23 LLC. All mission content is protected by copyright.</div>
     </section>
@@ -562,7 +562,7 @@
       <!-- Story Banner — opsiyonel hayal katmanı -->
       <div class="storyBanner" id="storyBanner" style="display:none">
         <div class="storyBannerInner">
-          <div class="storyEmoji" id="storyEmoji">⚡</div>
+          <div class="storyEmoji" id="storyEmoji"></div>
           <div class="storyText">
             <div class="storyTitle" id="storyTitle">Lightning Strike</div>
             <div class="storyTagline" id="storyTagline">Catch the lightning!</div>
@@ -626,7 +626,7 @@
       <details class="moreInfoDetails">
         <summary>
           <span class="moreInfoSummaryText"><i class="jic jic-books" aria-hidden="true"></i> More tips &amp; safety</span>
-          <span class="moreInfoSummaryArrow">▾</span>
+          <span class="moreInfoSummaryArrow"><i class="jic jic-arrow-right" aria-hidden="true"></i></span>
         </summary>
         <div class="moreInfoContent">
           <div class="kv" id="mTip"></div>
@@ -715,7 +715,7 @@
           <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling — ever.</b>
         </div>
         <div>
-          <b>👶 COPPA &amp; children's privacy.</b><br/>
+          <b><i class="jic jic-shield" aria-hidden="true"></i> COPPA &amp; children's privacy.</b><br/>
           This app is designed to align with the U.S. Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13. If you believe we have, contact us and we will address it promptly.
         </div>
         <div>
@@ -869,11 +869,11 @@
   <!-- Badge Unlock Modal -->
   <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-label="Badge unlocked">
     <div class="badgeUnlockPanel">
-      <div class="badgeUnlockEmoji" id="badgeUnlockEmoji">🏅</div>
+      <div class="badgeUnlockEmoji" id="badgeUnlockEmoji"><img class="badgeArt" src="assets/ui/badges/unlocked.webp" alt="" width="256" height="256"></div>
       <div class="badgeUnlockTitle">Badge Unlocked!</div>
       <div class="badgeUnlockName" id="badgeUnlockName"></div>
       <div class="badgeUnlockReq" id="badgeUnlockReq"></div>
-      <button class="badgeUnlockBtn" id="badgeUnlockClose" type="button">Awesome! 🎉</button>
+      <button class="badgeUnlockBtn" id="badgeUnlockClose" type="button">Awesome!</button>
     </div>
   </div>
 
@@ -906,7 +906,7 @@
          first-time parent ("a 3D hub appeared… a what?"); Leo's Island says
          exactly what's behind the tab. -->
     <button class="navTab" data-tab="hub3d" id="navTabHub3D" type="button" style="display:none" aria-label="Leo's Island">
-      <span class="navTabIcon">🏝️</span>
+      <span class="navTabIcon"><i class="jic jic-map" aria-hidden="true"></i></span>
       <span class="navTabLabel">Leo's Island</span>
     </button>
   </nav>
@@ -959,10 +959,10 @@
 </div>
 
 <script src="confetti.min.js?v=20260524-29" defer></script>
-<script src="data.js?v=20260524-32" defer></script>
-<script src="jumvi-mission-icons.js?v=20260718-1" defer></script>
-<script src="jumvi-redlight.js?v=20260524-29" defer></script>
-<script src="app.js?v=20260805-1" defer></script>
+<script src="data.js?v=20260805-1" defer></script>
+<script src="jumvi-redlight.js?v=20260805-1" defer></script>
+<script src="jumvi-art.js?v=20260805-1" defer></script>
+<script src="app.js?v=20260805-3" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
@@ -1015,7 +1015,7 @@
   // 5. Console copyright notice (visible when DevTools is opened)
   var s1 = 'font-size:15px;font-weight:bold;color:#F97316;background:#0f172a;padding:4px 8px;border-radius:4px';
   var s2 = 'font-size:12px;color:#94a3b8';
-  console.log('%c⚡ JUMVI Missions', s1);
+  console.log('%cJUMVI Missions', s1);
   console.log('%cCopyright © 2026 SAY23 LLC / JUMVI. All rights reserved.\nqr.jumvi.co — Unauthorized copying or redistribution is prohibited.', s2);
 })();
 </script>

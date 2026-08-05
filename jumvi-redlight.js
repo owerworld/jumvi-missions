@@ -78,7 +78,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
   // pickGreenDuration below).
   var SPEEDS = {
     easy:   [2.6, 3.4, 3.4, 5.0, 5.5, 7.0, 1.8, 3.0],  // ages 3–5, learners
-    normal: [2.3, 3.0, 3.0, 4.5, 4.8, 6.0, 1.6, 2.6],  // ⬅ default — T=2.3s
+    normal: [2.3, 3.0, 3.0, 4.5, 4.8, 6.0, 1.6, 2.6],  // default — T=2.3s
     hard:   [2.0, 2.6, 2.6, 3.8, 4.0, 5.0, 1.4, 2.2]   // ages 7+, faster
   };
   // After this many switches, allow trickier patterns (double-red, false-restart)
@@ -337,7 +337,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     state.overlay.className = 'jrl-overlay jrl-idle';
     state.bigEl.textContent = "Time's up!";
     state.bigEl.className = 'jrl-end';
-    state.subEl.textContent = 'Great freezing 🎉';
+    state.subEl.textContent = 'Great freezing!';
     setLight('off');
     state.timerEl.textContent = '0:00';
     try { window.speechSynthesis.cancel(); } catch (e) {}
@@ -364,7 +364,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     var top = document.createElement('div');
     top.className = 'jrl-top';
     var timer = document.createElement('span'); timer.textContent = '0:00';
-    var vol = document.createElement('span'); vol.textContent = '🔊';
+    var vol = document.createElement('span'); vol.innerHTML = '<i class="jic jic-volume" aria-hidden="true"></i>';
     top.appendChild(timer); top.appendChild(vol);
 
     var close = document.createElement('button');
