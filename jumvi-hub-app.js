@@ -159,12 +159,12 @@ export function initHub3D(opts) {
   // 3D object), hidden via opacity:0 until showZoneCompleteCelebration() plays
   // its one-shot animation (see updateZoneLocks() below for the trigger).
   var celebrationCardEl = document.createElement('div');
-  celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;background:rgba(255,255,255,0.97);padding:18px 30px;border-radius:22px;box-shadow:0 16px 38px rgba(18,38,66,0.30),0 3px 8px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  celebrationCardEl.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;max-width:82vw;box-sizing:border-box;background:rgba(255,255,255,0.97);padding:18px 30px;border-radius:22px;box-shadow:0 16px 38px rgba(18,38,66,0.30),0 3px 8px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);opacity:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   var celebrationTitleEl = document.createElement('div');
-  celebrationTitleEl.style.cssText = 'font-size:20px;font-weight:900;color:#3a2a1a;white-space:nowrap;';
+  celebrationTitleEl.style.cssText = 'font-size:20px;font-weight:900;color:#3a2a1a;white-space:normal;text-align:center;';
   celebrationTitleEl.textContent = HUB_TEXTS.zoneComplete;
   var celebrationSubtitleEl = document.createElement('div');
-  celebrationSubtitleEl.style.cssText = 'font-size:15px;font-weight:700;color:#7a5a3a;white-space:nowrap;';
+  celebrationSubtitleEl.style.cssText = 'font-size:15px;font-weight:700;color:#7a5a3a;white-space:normal;text-align:center;';
   celebrationCardEl.appendChild(celebrationTitleEl);
   celebrationCardEl.appendChild(celebrationSubtitleEl);
   container.appendChild(celebrationCardEl);
@@ -197,7 +197,7 @@ export function initHub3D(opts) {
   // card above, but shorter (1.5s) and higher up so the two never collide
   // visually if a completion and a zone entry happen back to back.
   var zoneCardEl = document.createElement('div');
-  zoneCardEl.style.cssText = 'position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);z-index:14;pointer-events:none;background:rgba(255,255,255,0.96);padding:12px 26px;border-radius:20px;box-shadow:0 12px 30px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.14),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;font-size:18px;font-weight:900;color:#2c3a4d;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  zoneCardEl.style.cssText = 'position:absolute;top:22%;left:50%;transform:translate(-50%,-50%);z-index:14;pointer-events:none;max-width:82vw;box-sizing:border-box;text-align:center;background:rgba(255,255,255,0.96);padding:12px 26px;border-radius:20px;box-shadow:0 12px 30px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.14),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;font-size:18px;font-weight:900;color:#2c3a4d;white-space:normal;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(zoneCardEl);
   if (!document.getElementById('hub3dZoneCardStyle')) {
     var zoneCardStyle = document.createElement('style');
@@ -230,7 +230,7 @@ export function initHub3D(opts) {
 
   var hintEl = document.createElement('div');
   hintEl.textContent = HUB_TEXTS.hint;
-  hintEl.style.cssText = 'position:absolute;bottom:14px;right:14px;background:rgba(255,255,255,0.8);padding:6px 11px;border-radius:11px;font-size:11px;color:#555;z-index:10;text-align:right;pointer-events:none;transition:opacity 400ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
+  hintEl.style.cssText = 'position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));max-width:82vw;box-sizing:border-box;white-space:normal;background:rgba(255,255,255,0.8);padding:6px 11px;border-radius:11px;font-size:11px;color:#555;z-index:10;text-align:center;pointer-events:none;transition:opacity 400ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   container.appendChild(hintEl);
 
   // First-tap coach bubble — the small hint above is parent-facing; a 3-year-
@@ -239,7 +239,7 @@ export function initHub3D(opts) {
   var coachBubbleEl = document.createElement('div');
   coachBubbleEl.textContent = HUB_TEXTS.tapToWalk;
   coachBubbleEl.className = 'h3tail';
-  coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);background:#ffffff;padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#2c3a4d;z-index:12;pointer-events:none;box-shadow:0 10px 26px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
+  coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);max-width:82vw;box-sizing:border-box;white-space:normal;text-align:center;background:#ffffff;padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#2c3a4d;z-index:12;pointer-events:none;box-shadow:0 10px 26px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
   container.appendChild(coachBubbleEl);
   if (!document.getElementById('hub3dCoachStyle')) {
     var coachStyle = document.createElement('style');
@@ -490,7 +490,7 @@ export function initHub3D(opts) {
   var muteBtn = document.createElement('button');
   muteBtn.type = 'button';
   muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
-  muteBtn.style.cssText = 'position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
+  muteBtn.style.cssText = 'position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
   muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>';
   muteBtn.addEventListener('click', function () {
     setSoundOnFn(isMuted()); // flip the app-wide setting
@@ -517,7 +517,7 @@ export function initHub3D(opts) {
   menuBtn.innerHTML = '<i class="jic jic-menu" aria-hidden="true"></i>';
   // Stacked BELOW the Missions exit button (both top-left) so the two never overlap;
   // 66px clears the 44px exit pill + gap. Safe-area aware for iOS standalone.
-  menuBtn.style.cssText = 'position:absolute;top:calc(66px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,0.88);border:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:13;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
+  menuBtn.style.cssText = 'position:absolute;top:calc(66px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,0.88);border:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:13;padding:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
   container.appendChild(menuBtn);
 
   var menuScrim = document.createElement('div');
@@ -2714,24 +2714,21 @@ export function initHub3D(opts) {
   // but lets Leo actually hit stride on medium taps.
   var MOVE_SLOW_RADIUS = 1.2;
 
-  // Target ring — a small flat ring lying on the ground where the player
-  // tapped. Scales in on each new tap, fades out once Leo arrives (or the
-  // target is cancelled by WASD). One reusable mesh, never re-created.
+  // Target ring — a lightweight 600ms JUMVI-colour acknowledgement at the
+  // chosen walk point. One reusable mesh, never re-created.
   var targetRing = new THREE.Mesh(
-    new THREE.RingGeometry(0.28, 0.4, 24),
-    new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })
+    new THREE.RingGeometry(0.32, 0.52, 28),
+    new THREE.MeshBasicMaterial({ color: 0x97D700, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })
   );
   targetRing.rotation.x = -Math.PI / 2;
   targetRing.position.y = 0.03; // just above the ground plane, below Leo
   targetRing.visible = false;
   scene.add(targetRing);
-  // Dark rim just under/around the white ring — pure white alone disappears
-  // on the light beach-sand and backyard-grass grounds; the rim keeps the
-  // marker visible on every zone's ground color. Child of the ring so it
-  // inherits position/scale/visibility automatically.
+  // The sky-blue rim under the lime ring keeps the marker visible on every
+  // zone ground. Child of the ring so it inherits transform and visibility.
   var targetRingRim = new THREE.Mesh(
-    new THREE.RingGeometry(0.24, 0.46, 24),
-    new THREE.MeshBasicMaterial({ color: 0x33291c, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })
+    new THREE.RingGeometry(0.24, 0.62, 28),
+    new THREE.MeshBasicMaterial({ color: 0x4FB3FF, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })
   );
   targetRingRim.position.z = -0.005; // hair *behind* the ring in its local plane (renders below)
   targetRing.add(targetRingRim);
@@ -2752,16 +2749,17 @@ export function initHub3D(opts) {
     if (!targetRingAnim) return;
     var elapsed = performance.now() - targetRingAnim.startTime;
     if (targetRingAnim.mode === 'in') {
-      var t = Math.min(elapsed / 220, 1);
-      targetRing.material.opacity = 0.85 * t;
-      targetRingRim.material.opacity = 0.45 * t;
-      var s = 1.5 - 0.5 * t; // shrinks from wide to snug — reads as "locking on"
+      var t = Math.min(elapsed / 420, 1);
+      var eased = 1 - Math.pow(1 - t, 3);
+      targetRing.material.opacity = 0.95 * Math.min(t * 4, 1);
+      targetRingRim.material.opacity = 0.68 * Math.min(t * 4, 1);
+      var s = 1.8 - 0.8 * eased; // bold pulse shrinks to the chosen walk point
       targetRing.scale.set(s, s, 1);
-      if (t >= 1) targetRingAnim = null;
+      if (t >= 1) targetRingAnim = { mode: 'out', startTime: performance.now() };
     } else {
-      var t2 = Math.min(elapsed / 260, 1);
-      targetRing.material.opacity = 0.85 * (1 - t2);
-      targetRingRim.material.opacity = 0.45 * (1 - t2);
+      var t2 = Math.min(elapsed / 180, 1);
+      targetRing.material.opacity = 0.95 * (1 - t2);
+      targetRingRim.material.opacity = 0.68 * (1 - t2);
       if (t2 >= 1) { targetRing.visible = false; targetRingAnim = null; }
     }
   }
