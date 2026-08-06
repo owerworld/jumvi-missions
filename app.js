@@ -2975,10 +2975,12 @@ async function shareCertificate(){
 
 async function shareCertificateWhatsApp(){
   clickSound("click");
-  const name = (certNameInput && certNameInput.value || "").trim();
-  const namePart = name ? ` ${name}` : "";
-  // FIX: correct mission count (36)
-  const shareText = `${namePart.trim() || "We"} completed all 36 JUMVI Toss & Catch missions!\nCertificate: ${location.href}`;
+  // Faz 0 Denetim 2 bulgusu: shareText buraya certNameInput'tan çocuğun adını
+  // taşıyordu; Web Share dosya desteği olmayan tarayıcılarda bu metin wa.me
+  // URL'sine gömülüp isim URL üzerinden WhatsApp'a gidiyordu (aşağıdaki
+  // fallback, satır ~2994). Mesaj generic — sertifika görselindeki isim
+  // (renderSimpleCertificateBlob, canvas üzerinde) buna dokunulmadan kalıyor.
+  const shareText = `🏆 Completed all 36 JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
 
   // FIX: try Web Share API with image file first (works on iOS + Android Chrome)
   // — this opens WhatsApp natively if the user picks it from the share sheet
@@ -3554,7 +3556,12 @@ const btnDashShareWA = document.getElementById("btnDashShareWA");
 if(btnDashShareWA){
   btnDashShareWA.onclick = ()=>{
     clickSound("click");
-    const text = buildFamilyShareText();
+    // Faz 0 Denetim 2 bulgusu: bu buton buildFamilyShareText() (çocuğun profil
+    // adını içerir) her tıklamada koşulsuz olarak wa.me URL'sine gönderiyordu —
+    // isim URL üzerinden üçüncü tarafa (WhatsApp) gidiyordu. Buton kendi generic
+    // metnini kullanıyor; buildFamilyShareText() paylaşılan bir fonksiyon
+    // olduğundan (btnDashShareCopy da kullanıyor) ona dokunulmadı.
+    const text = "🏓 Great progress on JUMVI! Play along: https://qr.jumvi.co";
     window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
     trackEvent("Dashboard Share WhatsApp");
   };
