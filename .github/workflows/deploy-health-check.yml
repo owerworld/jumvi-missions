@@ -1,0 +1,56 @@
+name: Deploy Health Check
+
+# Faz 1 GÖREV 1.1 — runs tools/check-deploy-health.sh against the LIVE site
+# after a Cloudflare deploy finishes, so a broken deploy is caught without a
+# person having to notice qr.jumvi.co is wrong.
+#
+# Triggered by check_suite, not by push, and deliberately NOT by the same
+# `push` event that triggers Cloudflare's own build: this workflow needs the
+# deploy to have already FINISHED (bytes actually on the edge) before it is
+# useful to check them. check_suite:completed fires when a GitHub App (here,
+# Cloudflare's "cloudflare-workers-and-pages" app, id 85455) finishes all of
+# its check runs for a commit — both "Workers Builds: jumvi-missions" and
+# "Cloudflare Pages" report under that one app, so this fires once, after
+# both are done, gated on the whole suite's conclusion being success.
+#
+# Does NOT touch, replace, or run near the existing pages-build-deployment
+# workflow — that is GitHub's own synthetic GitHub Pages deploy, a separate,
+# unrelated target (see docs/audits/faz1-asset-monitor.md).
+#
+# NOTE ON WHAT THIS CAN'T PROVE YET: GitHub only starts listening for
+# check_suite events on a workflow once that workflow file exists on the
+# default branch. This means the trigger below cannot be exercised by this
+# same commit's own deploy — it can only be verified by whatever Cloudflare
+# deploy happens NEXT, after this file has merged to main. Faz 1
+# GÖREV 1.1's report says so explicitly; treat this workflow as unverified
+# until you see it actually run once in the Actions tab.
+
+on:
+  check_suite:
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  health-check:
+    if: >
+      github.event.check_suite.app.slug == 'cloudflare-workers-and-pages' &&
+      github.event.check_suite.conclusion == 'success' &&
+      github.event.check_suite.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for edge propagation
+        # Faz 0 learned the hard way that probing right after a deploy can
+        # catch a not-yet-updated edge node (jumvi-deploy-verify-order memory).
+        # 30s is a cheap, cheap-to-raise buffer, not a guarantee.
+        run: sleep 30
+
+      - name: Run deploy health check
+        run: bash tools/check-deploy-health.sh https://qr.jumvi.co
+
+      # Warn-only per GÖREV 1.1 scope: the script itself always exits 0, so
+      # this job always shows green. The point right now is a readable log a
+      # human can check, not a red X. Failing the run is a deliberate later step.
