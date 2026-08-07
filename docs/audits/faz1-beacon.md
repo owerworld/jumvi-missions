@@ -1,7 +1,9 @@
 # Faz 1 — Görev 1.2: Minimal Beacon (5 Event)
 
-**Branch:** `feat/faz1-beacon` · **Tarih:** 2026-08-07
-**Durum:** Kod tamam, lokal olarak doğrulandı. **Canlı Cloudflare pipeline'ından geçtiği HENÜZ DOĞRULANMADI** — bkz. "Test edilmemiş risk".
+**Branch:** `feat/faz1-beacon` · **Commit:** `43d7283` · **Tarih:** 2026-08-07
+**Durum:** ⛔ **Cloudflare Workers Builds bu branch'te BAŞARISIZ.** Kod lokalde tamamen doğrulandı,
+ancak `main` entry point'i eklemenin taşıdığı risk **gerçekleşti**. Production'a dokunulmadı ve
+merge edilmedi. Ayrıntı ve teşhis yolu: §6.
 
 ---
 
@@ -234,48 +236,100 @@ OK: CORE_ASSETS unchanged (CACHE_NAME=jumvi-missions-v168)
 
 ---
 
-## 6. TEST EDİLMEMİŞ RİSK — karar sizde
+## 6. ⛔ DEPLOY BAŞARISIZ — karar sizde
 
-Görev 1.1'in asset monitor'ü deploy **sonrasını** kontrol ediyor; buradaki risk deploy'un **kendisinde**.
+Öngörülen risk gerçekleşti. `feat/faz1-beacon` push edildi, Cloudflare Workers Builds tetiklendi
+ve **başarısız oldu**.
 
-### Risk
+```
+$ gh api repos/owerworld/jumvi-missions/commits/43d7283/check-runs
+Workers Builds: jumvi-missions = failure   [00:04:34 → 00:04:34]
+Cloudflare Pages               = success   [00:04:15 → 00:04:15]
 
-`wrangler.jsonc`'a `main` eklemek, bu repoda daha önce "Missing entry-point" deploy hatasına yol açan
-sınıfla aynı mimari değişiklik. Lokalde `wrangler dev` sorunsuz çalışıyor ama bu Cloudflare Workers
-Builds'in aynı sonucu vereceğini **kanıtlamıyor**.
+# karşılaştırma — main'deki son başarılı commit (81f0ddb):
+Workers Builds: jumvi-missions = success   [23:40:25 → 23:40:25]
+```
 
-### Ne doğrulanabildi, ne doğrulanamadı
+Build ID: `e9837a9e-d0fb-4f31-a7fa-543b687e5139`
+Log: dash.cloudflare.com → Workers → jumvi-missions → Builds → bu build ID.
 
-| | Durum |
+### Production etkilenmedi
+
+```
+$ curl https://qr.jumvi.co/            → 200
+$ curl https://qr.jumvi.co/app.js      → 200, "api/beacon" geçmiyor (0 eşleşme)
+$ curl https://qr.jumvi.co/service-worker.js → CACHE_NAME = "jumvi-missions-v167"
+```
+
+Canlı hâlâ v167, beacon kodu yok. `POST /api/beacon` → 405, ki bu zaten assets-only Worker'ın
+POST reddi — yeni Worker canlıda değil. `main` branch'ine dokunulmadı.
+
+Ayrıca Görev 1.1'in health-check workflow'u bu commit için **skipped** oldu — check suite başarısız
+olduğu için gate açılmadı. Yani 1.1 tasarlandığı gibi çalıştı: başarısız deploy'un ardından canlıya
+karşı kontrol çalıştırmadı.
+
+### Nedeni ne DEĞİL — lokalde elenenler
+
+| Hipotez | Durum |
 |---|---|
-| Analytics Engine plan gereksinimi | ✅ Cloudflare docs: Workers **Free** plan'a dahil (100.000 data point/gün, 10.000 sorgu/gün). Plan engeli yok. |
-| AE binding'in bu **hesapta** gerçekten açık olması | ❌ **Doğrulanamadı** — makinede `wrangler` oturumu yok (`wrangler whoami` → "Not logged in"), `CLOUDFLARE_API_TOKEN` da tanımlı değil. Uzak doğrulama yapılamadı. |
-| `main` ile config'in parse edilip Worker'ın derlenmesi | ✅ lokal `wrangler dev` |
-| Gerçek Cloudflare deploy'unun geçmesi | ❌ **Doğrulanmadı** |
+| Config parse edilmiyor / `main` bulunamıyor | ❌ elendi — `wrangler dev` iki binding'i de çözdü, Worker derlendi |
+| Bundling hatası | ❌ elendi — `wrangler deploy --dry-run` geçiyor (hem 4.61.1 hem 4.119.0 ile) |
+| Analytics Engine'in plan gereksinimi | ❌ elendi — Cloudflare docs: Workers **Free** plan'a dahil (100.000 yazma/gün) |
+| `src/` dosyalarının asset olarak yüklenmesi | ❌ elendi — `.assetsignore`'da |
 
-### Workers Builds preview durumu
+```
+$ npx wrangler@4.119.0 deploy --dry-run
+✨ Read 462 files from the assets directory
+Total Upload: 2.30 KiB / gzip: 1.01 KiB
+env.JUMVI_ANALYTICS (jumvi_events_v1)      Analytics Engine Dataset
+env.ASSETS                                 Assets
+--dry-run: exiting now.
+```
 
-Workers Builds non-production branch build'lerini destekliyor: production dışı bir dal için deploy
-komutu `npx wrangler versions upload` ile değiştiriliyor ve bir preview URL üretiliyor. Ancak bu
-**dashboard'dan açılması gereken opsiyonel bir ayar** ("Configure non-production branch builds",
-Settings → Build). Bu ayarın bu Worker'da açık olup olmadığını hesap erişimi olmadan göremiyorum.
+### En olası iki neden (log olmadan ayırt edilemiyor)
 
-### Öneri
+**(a) Non-production branch build'leri kapalı.**
+Workers Builds, production dışı bir dal için deploy komutunu `npx wrangler versions upload` ile
+değiştirir — ama bu **dashboard'dan açılması gereken opsiyonel bir ayar** (Settings → Build →
+"Configure non-production branch builds"). Kapalıysa build anında reddedilir. Bu, gözlenen
+**0 saniyelik** başarısızlıkla ve hiçbir build adımının çalışmamış olmasıyla uyumlu.
 
-`main`'e merge **edilmedi**. Sırasıyla:
+**(b) Analytics Engine binding'i bu hesapta açık değil.**
+Docs Free plan'a dahil diyor ama Faz 0'da Logpush'un aynı şekilde "olması gerekirken olmadığını"
+gördük. `--dry-run` API'ye hiç bağlanmadığı için bunu **yakalayamaz**; sadece gerçek deploy yakalar.
 
-1. Cloudflare dashboard → Worker `jumvi-missions` → Settings → Build → non-production branch build'lerin
-   açık olduğunu doğrulayın. Kapalıysa açın.
-2. `feat/faz1-beacon` için bir build tetiklenip **success** olduğunu görün. Bu, `main` entry riskini
-   production'a dokunmadan kapatır.
-3. Preview URL'de `POST /api/beacon` → 204 ve sayfanın normal açıldığını teyit edin.
-4. Ancak ondan sonra merge kararı.
+### Neden burada durdum
 
-Non-production build açılamıyorsa alternatif: yerelde `wrangler login` sonrası `npx wrangler versions upload`
-— preview version üretir, production'a promote etmez. Bu komut hesabınızda kimlik doğrulaması gerektirdiği
-için sizin çalıştırmanız gerekir.
+Ayırt etmenin yolu, binding'i çıkarıp tekrar push ederek bisect etmek. Bunu **yapmadım**: bu hesapta
+branch build'inin production deploy komutuyla mı yoksa `versions upload` ile mi yapılandırıldığını
+göremiyorum. Yanlış yapılandırılmışsa **başarılı** bir branch build'i doğrudan canlıya çıkabilir.
+Bu geri alması zor bir işlem ve sizin kararınız.
 
-**Bu risk kapanana kadar `main`'e merge edilmemeli.**
+### Sıradaki adımlar — sizin çalıştırmanız gerekenler
+
+1. **Build log'unu açın:** dash.cloudflare.com → Workers → `jumvi-missions` → Builds →
+   `e9837a9e-d0fb-4f31-a7fa-543b687e5139`. İlk hata satırı (a) ile (b) arasında kesin ayrım yapar.
+2. **Settings → Build**'de iki şeyi kontrol edin:
+   - non-production branch build'leri açık mı,
+   - non-production deploy komutu ne — `wrangler versions upload` olmalı, `wrangler deploy` **olmamalı**.
+     `deploy` ise branch build'i canlıya çıkar; düzeltilmeden tekrar denenmemeli.
+3. Sebep (b) çıkarsa — AE hesapta kapalıysa — bana söyleyin; beacon'ı geçici olarak
+   `writeDataPoint` yerine başka bir hedefe almak veya AE'yi açtırmak seçenekleri var.
+
+Alternatif, GitHub'ı hiç kullanmayan yol: yerelde `wrangler login` sonrası
+
+```bash
+npx wrangler versions upload
+```
+
+Bu preview version üretir, production'a promote etmez ve gerçek hatayı terminalde gösterir.
+Hesabınızda kimlik doğrulaması gerektirdiği için **sizin** çalıştırmanız gerekiyor — bu makinede
+wrangler oturumu yok (`wrangler whoami` → "Not logged in") ve `CLOUDFLARE_API_TOKEN` tanımlı değil.
+
+### Karar
+
+**`main`'e merge EDİLMEMELİ.** Branch push edilmiş durumda, kod hazır, tek eksik deploy'un neden
+reddedildiği. Sebep anlaşıldığında düzeltme muhtemelen tek satırlık bir config değişikliği olacak.
 
 ---
 
