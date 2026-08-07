@@ -73,7 +73,7 @@
        removes the swap flash on a cold visit. crossorigin is required on font
        preloads even same-origin, or the browser fetches it a second time. -->
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20260805-2">
+  <link rel="stylesheet" href="style.css?v=20260807-1">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260805-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -590,6 +590,18 @@
            "More tips & safety" accordion below. -->
       <p class="missionSafetyLine">Throw below face level · Stand 1–3 m apart · Adult nearby</p>
 
+      <!-- Player count — deliberately inline and skippable. Faz 1 spec: this
+           must NOT become a blocking step before mission selection; a gate
+           here would cost more starts than the datapoint is worth. -->
+      <div class="playerCount" id="playerCount">
+        <span class="playerCountLabel">Playing with</span>
+        <div class="playerCountOpts" role="group" aria-label="How many players">
+          <button class="playerCountBtn" type="button" data-n="2">2</button>
+          <button class="playerCountBtn" type="button" data-n="3">3</button>
+          <button class="playerCountBtn" type="button" data-n="4">4+</button>
+        </div>
+      </div>
+
       <!-- Primary action row — tek dominant Start + ikon yardımcılar -->
       <div class="missionPrimary">
         <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
@@ -635,6 +647,26 @@
           </details>
         </div>
       </details>
+
+      <!-- Help — the six reasons are a FIXED enum (Faz 1 spec), never a free
+           text box: free text would be personal data we have no business
+           collecting. Each choice answers the kid on the spot, so this earns
+           its place in the UI rather than existing only to emit an event. -->
+      <div class="missionHelp">
+        <button class="missionHelpTrigger" id="btnMissionHelp" type="button"
+                aria-expanded="false" aria-controls="missionHelpPanel">
+          <i class="jic jic-alert-triangle" aria-hidden="true"></i> Something not working?
+        </button>
+        <div class="missionHelpPanel" id="missionHelpPanel" hidden>
+          <button class="missionHelpOpt" type="button" data-reason="ball_stuck">The ball gets stuck</button>
+          <button class="missionHelpOpt" type="button" data-reason="ball_hard_to_remove">The ball is hard to pull off</button>
+          <button class="missionHelpOpt" type="button" data-reason="strap_uncomfortable">The strap feels uncomfortable</button>
+          <button class="missionHelpOpt" type="button" data-reason="need_more_space">We need more space</button>
+          <button class="missionHelpOpt" type="button" data-reason="instructions_unclear">The instructions are unclear</button>
+          <button class="missionHelpOpt" type="button" data-reason="mission_too_hard">This mission is too hard</button>
+          <p class="missionHelpTip" id="missionHelpTip" role="status" hidden></p>
+        </div>
+      </div>
 
       <div class="small" id="mSmall"></div>
       </div>
@@ -956,7 +988,7 @@
 <script src="jumvi-mission-icons.js?v=20260805-1" defer></script>
 <script src="jumvi-redlight.js?v=20260805-1" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260805-3" defer></script>
+<script src="app.js?v=20260807-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

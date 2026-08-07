@@ -7684,3 +7684,75 @@ html.theme--light .sheetTitle,
   content-visibility: auto;
   contain-intrinsic-size: auto 140px;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Faz 1 / 1.2 — beacon UI: player count + help reasons
+ * Both live inside the mission sheet and must stay visually secondary to the
+ * Start button. Neither is allowed to gate play.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+.playerCount{
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 10px 0 8px; padding: 8px 10px 8px 14px;
+  border: 1px solid var(--border); border-radius: 12px;
+}
+.playerCountLabel{
+  font-size: var(--fs-caption); font-weight: 700; color: var(--muted);
+}
+.playerCountOpts{ display: flex; gap: 6px; }
+.playerCountBtn{
+  min-width: 44px; min-height: 44px; padding: 0 12px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: transparent; color: var(--muted);
+  font-size: var(--fs-caption); font-weight: 800; cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.playerCountBtn:active{ transform: scale(0.94); }
+.playerCountBtn.active{
+  background: var(--brand-blue-deep); border-color: var(--brand-blue-deep);
+  color: #fff;
+}
+
+.missionHelp{ margin: 14px 0 4px; }
+.missionHelpTrigger{
+  width: 100%; min-height: 44px; padding: 10px 12px;
+  border: 1px dashed var(--border); border-radius: 12px;
+  background: transparent; color: var(--muted);
+  font-size: var(--fs-caption); font-weight: 700; cursor: pointer; text-align: center;
+}
+.missionHelpTrigger:active{ transform: scale(0.99); }
+.missionHelpPanel{
+  display: flex; flex-direction: column; gap: 6px;
+  margin-top: 8px; padding: 10px;
+  border: 1px solid var(--border); border-radius: 12px;
+}
+.missionHelpPanel[hidden]{ display: none; }
+.missionHelpOpt{
+  min-height: 44px; padding: 10px 12px; text-align: left;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: transparent; color: var(--ink, #0F172A);
+  font-size: var(--fs-caption); font-weight: 600; cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.missionHelpOpt.active{
+  background: #FFF4E0; border-color: #F3D9AE; color: #7a3b00; font-weight: 800;
+}
+.missionHelpTip{
+  margin: 4px 0 0; padding: 10px 12px; border-radius: 10px;
+  background: #FFF4E0; color: #7a3b00; border: 1px solid #F3D9AE;
+  font-size: var(--fs-caption); font-weight: 600; line-height: 1.4;
+}
+.missionHelpTip[hidden]{ display: none; }
+
+html.theme--dark .playerCountBtn{ color: var(--muted-on-dark); }
+html.theme--dark .playerCountBtn.active{ color: #fff; }
+html.theme--dark .missionHelpOpt{ color: #E2E8F0; }
+html.theme--dark .missionHelpOpt.active,
+html.theme--dark .missionHelpTip{
+  background: #2e2211; color: #FFD8A8; border-color: #5a4520;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .playerCountBtn, .missionHelpTrigger{ transition: none; }
+  .playerCountBtn:active, .missionHelpTrigger:active{ transform: none; }
+}
