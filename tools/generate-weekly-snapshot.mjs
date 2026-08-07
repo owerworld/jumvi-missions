@@ -25,6 +25,13 @@
  *   node tools/generate-weekly-snapshot.mjs --week 2026-32
  *   node tools/generate-weekly-snapshot.mjs --week 2026-32 --dry-run
  *
+ * A week is queried over its own Monday–Sunday range and nothing else. There
+ * is deliberately no "real data starts here" constant in this file: a weekly
+ * tool should not carry a permanent exception that belongs to one week. When
+ * a specific run has to drop rows — the launch week held beacon test traffic
+ * — pass --since for that run. The instant lands in the snapshot's
+ * excluded_before field, so the file records how it was made.
+ *
  * Credentials, in order of preference:
  *   CLOUDFLARE_API_TOKEN   (needs Account Analytics: Read)
  *   the local `wrangler login` OAuth token, if the env var is unset
@@ -40,21 +47,6 @@ import { fileURLToPath } from "node:url";
 
 const DATASET = "jumvi_events_v1";
 const SNAPSHOT_SCHEMA = 1;
-
-/* ── The cutoff ──────────────────────────────────────────────────────────────
- * Everything in the dataset before this instant is instrumentation test
- * traffic, not real users: the 1.2 preview smoke tests and the production
- * cut-over checks, all on 2026-08-07 (16 rows, 20:13:09–21:20:09 UTC).
- * Verified at the time of writing: the first query at or after this instant
- * returns zero rows.
- *
- * A single cutoff is used rather than a list of excluded windows on purpose.
- * The window list that existed in the notes was already missing a row
- * (20:42:01) — one instant cannot be missing anything.
- *
- * This constant is load-bearing for every past snapshot. Moving it later
- * silently changes what "week one" meant. Don't. */
-const DATA_START = Date.UTC(2026, 7, 8, 0, 0, 0); // 2026-08-08T00:00:00Z
 
 /** Frozen by the beacon allowlist (src/worker.js). Order matches the spec. */
 const HELP_REASONS = [
@@ -77,16 +69,24 @@ const METHODOLOGY = [
   "tarayıcı verisi temizleme nedeniyle olduğundan az/çok sayılabilir.",
   "Kesin kullanıcı sayısı değil, yönsel (directional) bir göstergedir.",
   "",
-  '"excluded_before" alanındaki andan önceki tüm veri sayımdan çıkarılmıştır:',
-  "dataset'in ilk satırları (2026-08-07) beacon'ın kurulum ve production",
-  "geçiş testlerinden gelir, gerçek kullanıcı verisi değildir.",
-  "",
   "Sayımlar count() değil sum(_sample_interval) ile hesaplanır; Analytics",
   "Engine örneklemeye başlarsa bu, ham satır sayısı yerine örneklemeye göre",
   "düzeltilmiş tahmini verir.",
   "",
+  '"excluded_before" null ise haftanın tamamı sayılmıştır; doluysa o andan',
+  "önceki satırlar sayıma girmemiştir ve gerekçesi aşağıda yazılıdır.",
+  "",
   "generated_at, period_end'den önceyse hafta o an henüz kapanmamıştı ve",
   "sayılar kısmi haftaya aittir.",
+];
+
+/** Appended only on a run that used --since, with the reason spelled out. */
+const exclusionNote = (isoInstant) => [
+  "",
+  `Bu snapshot ${isoInstant} öncesindeki satırları hariç tutarak üretildi.`,
+  "Beacon'ın canlıya çıktığı hafta olduğu için haftanın başındaki satırlar",
+  "kurulum ve production geçiş testlerinden gelir, gerçek kullanıcı verisi",
+  "değildir. Gerçek launch verisi bu andan itibaren başlar.",
 ];
 
 // ── ISO week arithmetic (UTC, Monday–Sunday — matches the spec's examples) ──
@@ -232,11 +232,10 @@ async function sql(ctx, statement) {
 }
 
 /**
- * Query every aggregate for one week and fold it into the snapshot body.
+ * Query every aggregate for one window and fold it into the snapshot body.
  *
- * `window` is already clamped to DATA_START by the caller. When the clamped
- * window is empty (a week entirely before the cutoff) no query runs at all —
- * the zero-filled skeleton is the correct answer.
+ * The window is [startMs, endMs) — the week's own Monday–Sunday range, with
+ * the floor raised only when the caller passed --since.
  */
 async function collect(ctx, startMs, endMs) {
   const counts = { app_open: 0, mission_start: 0, mission_complete: 0 };
@@ -244,63 +243,61 @@ async function collect(ctx, startMs, endMs) {
   const playerCount = Object.fromEntries(PLAYER_COUNTS.map((n) => [String(n), 0]));
   const missions = new Map();
 
-  if (startMs < endMs) {
-    const where =
-      `WHERE timestamp >= toDateTime('${sqlDateTime(startMs)}') ` +
-      `AND timestamp < toDateTime('${sqlDateTime(endMs)}')`;
+  const where =
+    `WHERE timestamp >= toDateTime('${sqlDateTime(startMs)}') ` +
+    `AND timestamp < toDateTime('${sqlDateTime(endMs)}')`;
 
-    // 1 — funnel totals.
-    for (const row of await sql(
-      ctx,
-      `SELECT blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
-        `AND blob1 IN ('app_open','mission_start','mission_complete') GROUP BY event`,
-    )) {
-      counts[row.event] = Number(row.n);
-    }
+  // 1 — funnel totals.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 IN ('app_open','mission_start','mission_complete') GROUP BY event`,
+  )) {
+    counts[row.event] = Number(row.n);
+  }
 
-    // 2 — help_open broken down by reason. This breakdown is the whole reason
-    // 1.2 stored props in plain columns instead of a JSON string.
-    for (const row of await sql(
-      ctx,
-      `SELECT blob2 AS reason, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
-        `AND blob1 = 'help_open' GROUP BY reason`,
-    )) {
-      if (!(row.reason in helpOpens)) {
-        // Unreachable through the Worker's allowlist. If it ever happens the
-        // number is still real, so keep it and make the noise loud.
-        console.error(`⚠️  unknown help_open reason in dataset: ${JSON.stringify(row.reason)}`);
-      }
-      helpOpens[row.reason] = (helpOpens[row.reason] ?? 0) + Number(row.n);
+  // 2 — help_open broken down by reason. This breakdown is the whole reason
+  // 1.2 stored props in plain columns instead of a JSON string.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob2 AS reason, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'help_open' GROUP BY reason`,
+  )) {
+    if (!(row.reason in helpOpens)) {
+      // Unreachable through the Worker's allowlist. If it ever happens the
+      // number is still real, so keep it and make the noise loud.
+      console.error(`⚠️  unknown help_open reason in dataset: ${JSON.stringify(row.reason)}`);
     }
+    helpOpens[row.reason] = (helpOpens[row.reason] ?? 0) + Number(row.n);
+  }
 
-    // 3 — player_count. double1 is ALWAYS read behind a blob1 filter: events
-    // with no numeric prop report double1 = 0, which is indistinguishable from
-    // a real zero (docs/audits/faz1-beacon.md, note 3).
-    for (const row of await sql(
-      ctx,
-      `SELECT double1 AS players, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
-        `AND blob1 = 'player_count' GROUP BY players`,
-    )) {
-      const key = String(Number(row.players));
-      if (!(key in playerCount)) {
-        console.error(`⚠️  unknown player_count value in dataset: ${key}`);
-      }
-      playerCount[key] = (playerCount[key] ?? 0) + Number(row.n);
+  // 3 — player_count. double1 is ALWAYS read behind a blob1 filter: events
+  // with no numeric prop report double1 = 0, which is indistinguishable from
+  // a real zero (docs/audits/faz1-beacon.md, note 3).
+  for (const row of await sql(
+    ctx,
+    `SELECT double1 AS players, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'player_count' GROUP BY players`,
+  )) {
+    const key = String(Number(row.players));
+    if (!(key in playerCount)) {
+      console.error(`⚠️  unknown player_count value in dataset: ${key}`);
     }
+    playerCount[key] = (playerCount[key] ?? 0) + Number(row.n);
+  }
 
-    // 4 — per-mission starts/completes. Not in the spec's example body; added
-    // because WAE drops the source rows at 90 days and "which mission gets
-    // abandoned" is not recoverable after that.
-    for (const row of await sql(
-      ctx,
-      `SELECT blob2 AS mission, blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
-        `AND blob1 IN ('mission_start','mission_complete') GROUP BY mission, event`,
-    )) {
-      const entry = missions.get(row.mission) ?? { starts: 0, completes: 0 };
-      if (row.event === "mission_start") entry.starts += Number(row.n);
-      else entry.completes += Number(row.n);
-      missions.set(row.mission, entry);
-    }
+  // 4 — per-mission starts/completes. Not in the spec's example body; added
+  // because WAE drops the source rows at 90 days and "which mission gets
+  // abandoned" is not recoverable after that.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob2 AS mission, blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 IN ('mission_start','mission_complete') GROUP BY mission, event`,
+  )) {
+    const entry = missions.get(row.mission) ?? { starts: 0, completes: 0 };
+    if (row.event === "mission_start") entry.starts += Number(row.n);
+    else entry.completes += Number(row.n);
+    missions.set(row.mission, entry);
   }
 
   return { counts, helpOpens, playerCount, missions };
@@ -308,7 +305,7 @@ async function collect(ctx, startMs, endMs) {
 
 // ── Snapshot body ───────────────────────────────────────────────────────────
 
-function buildSnapshot({ weekId, mondayMs, data, generatedAt }) {
+function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore }) {
   const { counts, helpOpens, playerCount, missions } = data;
 
   // Mission ids are numeric strings; sort them as numbers so 9 precedes 10.
@@ -335,30 +332,55 @@ function buildSnapshot({ weekId, mondayMs, data, generatedAt }) {
     generated_at: generatedAt,
     dataset: DATASET,
     snapshot_schema: SNAPSHOT_SCHEMA,
-    excluded_before: new Date(DATA_START).toISOString().replace(".000", ""),
-    methodology: METHODOLOGY,
+    // null on a normal run: the week's own range is the only filter.
+    excluded_before: excludedBefore ?? null,
+    methodology: excludedBefore
+      ? [...METHODOLOGY, ...exclusionNote(excludedBefore)]
+      : METHODOLOGY,
   };
 }
 
 // ── Entry point ─────────────────────────────────────────────────────────────
 
 function parseArgs(argv) {
-  const opts = { week: null, dryRun: false };
+  const opts = { week: null, since: null, dryRun: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--dry-run") opts.dryRun = true;
     else if (arg === "--week") opts.week = argv[++i];
     else if (arg.startsWith("--week=")) opts.week = arg.slice("--week=".length);
+    else if (arg === "--since") opts.since = argv[++i];
+    else if (arg.startsWith("--since=")) opts.since = arg.slice("--since=".length);
     else if (arg === "--help" || arg === "-h") opts.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
   }
   return opts;
 }
 
-const USAGE = `Usage: node tools/generate-weekly-snapshot.mjs [--week YYYY-WW] [--dry-run]
+const USAGE = `Usage: node tools/generate-weekly-snapshot.mjs [--week YYYY-WW] [--since INSTANT] [--dry-run]
 
   --week YYYY-WW   ISO week to snapshot (default: the last complete week)
+  --since INSTANT  drop rows before this UTC instant (ISO 8601), e.g.
+                   2026-08-08T00:00:00Z — for weeks that contain test traffic.
+                   Recorded in the snapshot as excluded_before.
   --dry-run        print the JSON, write nothing`;
+
+/** Parse --since into ms. Must be a real instant inside the target week. */
+function parseSince(raw, mondayMs, weekEndMs) {
+  const ms = Date.parse(raw);
+  if (Number.isNaN(ms)) {
+    throw new Error(`--since must be an ISO 8601 instant, got "${raw}"`);
+  }
+  if (ms <= mondayMs) {
+    throw new Error(
+      `--since ${raw} is at or before the week's start — it would filter nothing. Drop the flag.`,
+    );
+  }
+  if (ms >= weekEndMs) {
+    throw new Error(`--since ${raw} is at or after the week's end — it would filter everything.`);
+  }
+  return ms;
+}
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
@@ -376,26 +398,32 @@ async function main() {
 
   const weekId = formatWeekId(target.year, target.week);
   const weekEnd = target.monday + 7 * DAY_MS;
-  const queryStart = Math.max(target.monday, DATA_START);
+
+  // The week's own range is the query window. --since raises the floor for
+  // this run only; nothing about it is remembered between runs.
+  const sinceMs = opts.since ? parseSince(opts.since, target.monday, weekEnd) : null;
+  const queryStart = sinceMs ?? target.monday;
+  const excludedBefore = sinceMs ? new Date(sinceMs).toISOString().replace(/\.\d{3}Z$/, "Z") : null;
 
   const { token, source } = resolveToken();
   const accountId = await resolveAccountId(token);
 
   console.error(`week ${weekId}  ${isoDate(target.monday)} → ${isoDate(weekEnd - DAY_MS)}`);
   console.error(`auth ${source}`);
-  if (queryStart > target.monday) {
-    console.error(`note query clamped to excluded_before: ${sqlDateTime(queryStart)} UTC`);
+  if (excludedBefore) {
+    console.error(`note --since given: rows before ${excludedBefore} are excluded`);
   }
   if (now < weekEnd) {
     console.error("note this week has not closed yet — the snapshot is partial");
   }
 
-  const data = await collect({ token, accountId }, queryStart, Math.min(weekEnd, now));
+  const data = await collect({ token, accountId }, queryStart, weekEnd);
   const snapshot = buildSnapshot({
     weekId,
     mondayMs: target.monday,
     data,
     generatedAt: new Date(now).toISOString().replace(/\.\d{3}Z$/, "Z"),
+    excludedBefore,
   });
 
   const json = `${JSON.stringify(snapshot, null, 2)}\n`;

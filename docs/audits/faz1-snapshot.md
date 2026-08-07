@@ -2,7 +2,7 @@
 
 **Branch:** `feat/faz1-snapshot` · **Tarih:** 2026-08-07 (UTC) / 2026-08-08 (TR)
 **Durum:** ✅ Tool yazıldı, dört sorgu da canlı WAE'ye karşı doğrulandı, ilk snapshot üretildi.
-`main`'e **merge edilmedi**, remote'a **push edilmedi** — onay bekliyor.
+Branch push edildi; `main`'e **merge edilmedi** — onay bekliyor.
 
 ---
 
@@ -12,19 +12,26 @@
 |---|---|
 | `tools/generate-weekly-snapshot.mjs` | yeni — WAE SQL API'den haftalık aggregate çekip JSON yazar |
 | `data/snapshots/2026-32.json` | ilk snapshot |
-| `.assetsignore` | `data/` eklendi |
+| `.assetsignore` | `data/` ve `docs/` eklendi |
 
 Bağımlılık yok (repoda `package.json` yok): Node'un yerleşik `fetch`'i ve `node:fs`/`node:os`/`node:path`
 dışında hiçbir şey kullanılmıyor. `tools/check-beacon-schema.mjs` ile aynı ESM stili.
 
 **Otomatik çalışmıyor** — spec bu fazda manuel tetikleme istiyor. Workflow yok, cron yok, hook yok.
 
-### `data/` neden `.assetsignore`'a eklendi
+### `data/` ve `docs/` neden `.assetsignore`'a eklendi
 
 `wrangler.jsonc`'de `assets.directory = "."`. Yani repodaki her dosya, açıkça hariç tutulmadıkça
 `qr.jumvi.co` üzerinden servis edilir. Bu satır olmadan `data/snapshots/2026-32.json` ürün
 domain'inden indirilebilir hâle gelirdi. Repo zaten public olduğu için sayılar gizli değil, ama
 ürün domain'i ile git arşivi ayrı şeyler; snapshot'ların ikincisinde yeri var.
+
+`docs/` de aynı sebeple eklendi — bu görevin kapsamı dışındaydı ama tek satır. Denetim raporları
+(`docs/audits/*.md`, bu dosya dahil) o ana kadar `qr.jumvi.co/docs/...` üzerinden servis
+ediliyordu: neyin nasıl kırıldığını, hangi hipotezlerin elendiğini, hesap ve build kimliklerinin
+nerede geçtiğini anlatan bir iz. Hassas değil, ama ürün domain'inde durmasının bir faydası da yok.
+Altında yalnızca markdown var ve siteden hiçbir referans yok (`src/worker.js`'teki iki kod yorumu
+dışında) — kırılan bir şey olmadan hariç tutulabildi.
 
 ---
 
@@ -53,6 +60,7 @@ domain'inden indirilebilir hâle gelirdi. Repo zaten public olduğu için sayıl
 ```
 
 Spec'in dokuz alanı birebir korundu, sıraları da. Aşağıdaki eklerin hepsi **onaylandı**.
+`excluded_before` normal bir haftada `null`'dır — yalnızca `--since` ile üretilen koşularda dolar.
 
 ### Ek 1 — `missions`
 
@@ -103,34 +111,39 @@ Sorgu anında `jumvi_events_v1` içinde **16 satır** vardı, hepsi 2026-08-07'd
 
 Hiçbiri gerçek kullanıcı değil.
 
-### Karar: pencere listesi değil, tek eşik
+### Karar: pencere listesi değil, tek an — ve kodda sabit değil, `--since` bayrağı
 
-```js
-const DATA_START = Date.UTC(2026, 7, 8, 0, 0, 0); // 2026-08-08T00:00:00Z
+```bash
+node tools/generate-weekly-snapshot.mjs --week 2026-32 --since 2026-08-08T00:00:00Z
 ```
-
-Her sorgu bu andan öncesini hariç tutuyor; `excluded_before` alanı bunu her snapshot dosyasına
-yazıyor.
 
 Alternatif — iki test penceresini tek tek listeleyip çıkarmak — reddedildi: eldeki pencere listesi
 **zaten eksikti**. `20:42:01`'deki app_open ne 1.2 raporunda ne de görev notunda geçiyordu; pencere
 listesiyle sayıma dahil olur ve ilk haftanın `app_opens` değerini sessizce şişirirdi. Tek bir an
 eksik kalamaz. Doğrulandı: `timestamp >= '2026-08-08 00:00:00'` sorgusu sıfır satır döndürüyor.
 
-### Eşiğin bilinmesi gereken yan etkisi
+**Bu an script'te sabit olarak durmuyor.** İlk uygulamada `DATA_START` diye kalıcı bir sabit vardı
+ve her koşuda `max(haftanın pazartesisi, DATA_START)` uygulanıyordu. Sonucu bozmuyordu — taban
+değer olduğu için 2026-32'den sonraki her haftada etkisiz kalırdı — ama yeri yanlıştı: haftalık
+bir aracın gövdesinde tek bir haftaya ait bir istisna taşınmamalı. Sabit kaldırıldı; yerine o
+koşuya özel `--since` bayrağı kondu. Normal bir hafta hiçbir bayrak almadan, yalnızca kendi
+Pazartesi–Pazar aralığını sorgular.
 
-Bu rapor UTC'de 2026-08-07 21:33'te yazıldı — yani eşik yazıldığı anda **~27 dakika ileride**.
-Bugün gece yarısı UTC'ye kadar gelen gerçek bir beacon da sayılmaz. Ürün henüz lansmanda olmadığı
-için pratik risk yok, ama sayı böyle: `DATA_START` bir tahmin değil, sözleşme. Geriye çekilirse
-test verisi arşive sızar, ileriye itilirse gerçek veri kaybolur — ikisi de geçmiş snapshot'ların
-anlamını değiştirir. Sabit kalmalı.
+Filtre unutulursa sessiz kalmıyor: bayraksız `--week 2026-32` koşusu 16 test satırını olduğu gibi
+raporluyor (`app_opens: 8`), yani fark görünür. Ve `--since`, hedeflenen haftanın dışında bir an
+verilirse reddediliyor — "hiçbir şeyi filtrelemez" ve "her şeyi filtreler" durumlarının ikisi de
+hata.
 
 ### Dosyaya gömülen not
 
-Spec'in istediği metin birebir korunup üç blok eklendi: `excluded_before`'ın ne anlama geldiği,
-sayımların `sum(_sample_interval)` ile yapıldığı, ve kısmi hafta kuralı. Not `methodology`
-alanında **satır dizisi** olarak duruyor — tek uzun string olsaydı JSON'da `\n` kaçışlarıyla
-okunmaz hâle gelirdi.
+Spec'in istediği metin birebir korundu; üç blok eklendi: sayımların `sum(_sample_interval)` ile
+yapıldığı, `excluded_before` alanının semantiği (`null` ise haftanın tamamı sayılmıştır), ve kısmi
+hafta kuralı. `--since` kullanılan koşularda buna dördüncü bir paragraf ekleniyor: hangi andan
+öncesinin neden çıkarıldığı ve gerçek launch verisinin nereden başladığı. Yani filtre bilgisi
+kodda değil, **üretilen dosyanın kendisinde** yaşıyor.
+
+Not `methodology` alanında **satır dizisi** olarak duruyor — tek uzun string olsaydı JSON'da `\n`
+kaçışlarıyla okunmaz hâle gelirdi.
 
 ---
 
@@ -176,8 +189,8 @@ Hafta tamamen eşikten önceyse hiç sorgu atılmıyor; sıfırlarla dolu iskele
 
 ### Toplama matematiği — bilinen 16 satıra karşı
 
-Eşik geçici olarak 2026-08-07'ye çekilmiş bir kopyayla çalıştırıldı ve çıktı, ham satır
-dökümüyle birebir karşılaştırıldı:
+`--since` olmadan `--week 2026-32` koşusu (yani commit edilen kodun kendisi, hiçbir değişiklik
+olmadan) test verisinin tamamını topluyor. Çıktı, ham satır dökümüyle birebir karşılaştırıldı:
 
 ```
 app_opens                 8   ✅ (ham dökümde 8 app_open satırı)
@@ -189,9 +202,19 @@ player_count "2"=1, "3"=0, "4"=1                              ✅
 missions     33:{1,1}  36:{1,1}                                ✅
 ```
 
-Dört sorgunun dördü de gerçek veriyle çalıştı. Üretilen `2026-32.json` sıfırlarla dolu, ama bu
-sıfırlar sorgunun çalışmamasından değil, eşiğin sonrasında henüz veri olmamasından geliyor —
-yukarıdaki koşu bu ayrımı kanıtlıyor.
+Dört sorgunun dördü de gerçek veriyle çalıştı. Commit edilen `2026-32.json` — aynı komut
+`--since 2026-08-08T00:00:00Z` ile — sıfırlarla dolu, ama bu sıfırlar sorgunun çalışmamasından
+değil, o andan sonra henüz veri olmamasından geliyor. Yukarıdaki koşu bu ayrımı kanıtlıyor:
+aynı kod, aynı hafta, bayrak farkı.
+
+### `--since` doğrulaması
+
+| Girdi (hafta 2026-32) | Sonuç |
+|---|---|
+| `--since notadate` | ✗ `must be an ISO 8601 instant` ✅ |
+| `--since 2026-08-03T00:00:00Z` | ✗ haftanın başında ya da öncesinde — hiçbir şeyi filtrelemez ✅ |
+| `--since 2026-08-20T00:00:00Z` | ✗ haftanın sonunda ya da sonrasında — her şeyi filtreler ✅ |
+| `--since 2026-08-08T00:00:00Z` | kabul, `excluded_before` dolduruldu, nota paragraf eklendi ✅ |
 
 ### ISO hafta aritmetiği
 
@@ -226,7 +249,12 @@ node tools/generate-weekly-snapshot.mjs --week 2026-33
 node tools/generate-weekly-snapshot.mjs --week 2026-33 --dry-run   # stdout, yazma yok
 ```
 
-Normal ritim: her pazartesi, biten hafta için argümansız çalıştır ve çıkan dosyayı commit et.
+Normal ritim: her pazartesi, biten hafta için **argümansız** çalıştır ve çıkan dosyayı commit et.
+
+`--since` normal ritmin parçası değil. Yalnızca bir haftanın içinde gerçek olmayan trafik varsa
+kullanılır ve o ana kadar bunun tek örneği 2026-32'dir. İleride tekrar gerekirse (örneğin bir
+basın demosu ya da mağaza içi test günü) aynı bayrak kullanılır ve gerekçe otomatik olarak
+üretilen dosyanın `methodology` notuna düşer.
 
 ### Kimlik doğrulama
 
@@ -248,8 +276,5 @@ veya token oluşturmaya yönlendiriyor.
 ## 7. Kapsam dışı bırakılanlar
 
 - **Otomasyon** — spec açıkça istemiyor.
-- **`docs/` de `.assetsignore`'da değil**, yani bu rapor dahil tüm denetim dokümanları
-  `qr.jumvi.co/docs/...` üzerinden servis ediliyor. Bu görevden önce de böyleydi ve 1.3'ün
-  kapsamında değil, ama bilinçli bir karar mı diye bakılmalı.
 - **Geçmiş haftaların doldurulması** — beacon 2026-08-07'de canlıya çıktı; öncesi için veri yok.
 - **Snapshot'ları okuyan bir dashboard/rapor** — ayrı iş.
