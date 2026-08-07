@@ -80,17 +80,41 @@ function trackEvent(name, props){
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * MINIMAL BEACON — Faz 1, Görev 1.2
+ * BEACON — Faz 1, Görev 1.2 (5 events) + Faz 2, Görev 2.1 (16 more)
  *
- * Five events. No more, ever — the allowlist here is mirrored by a stricter
- * one in src/worker.js, which is what actually protects the dataset. This
- * copy exists to avoid pointless network calls, not as the security boundary.
+ * Twenty-one events. The allowlist here is mirrored by a stricter one in
+ * src/worker.js, which is what actually protects the dataset. This copy
+ * exists to avoid pointless network calls, not as the security boundary.
  *
+ * FAZ 1 — the funnel:
  *   app_open                      once per session
  *   mission_start     { id }      once per mission per session
  *   mission_complete  { id }
  *   help_open         { reason }  fixed 6-value enum, never free text
  *   player_count      { n }       2 | 3 | 4, once per session
+ *
+ * FAZ 2 — content and features:
+ *   pack_view         { pack }    6-value enum, once per pack per session
+ *   pack_complete     { pack }
+ *   daily_pick_tap                once per session
+ *   badge_earned      { badge }   11-value enum
+ *   certificate_made              once per session
+ *   share_tap         { channel } whatsapp | native | copy
+ *   speak_on                      once per session, on ENABLE only
+ *   timer_start       { id }      mission id, once per mission per session
+ *   score_saved
+ *   dashboard_open                once per session
+ *   missionbook_get
+ *   profile_add                   the EVENT only — never a name, age, avatar
+ *   progress_reset
+ *   hub3d             { step }    7-value enum, once per step per session
+ *
+ * FAZ 2 — reach and retention. app_open counts sessions, which is not the
+ * same question as "how many devices ever arrived" or "how many came back".
+ * Both of these keep their counter ON THE DEVICE and send only the fact that
+ * a threshold was crossed. No id is minted, stored, or transmitted:
+ *   app_first_open                once per device, forever (jumvi_seen)
+ *   return_visit      { n }       only on visit 2, 3, 5, 10 (jumvi_visits)
  *
  * NEVER add a user id, device id, or anything fingerprint-shaped to props.
  * Fire-and-forget: failures are swallowed. A metric must never break play.
@@ -98,6 +122,10 @@ function trackEvent(name, props){
 const BEACON_ENDPOINT = "/api/beacon";
 const BEACON_EVENTS = new Set([
   "app_open", "mission_start", "mission_complete", "help_open", "player_count",
+  "pack_view", "pack_complete", "daily_pick_tap", "badge_earned",
+  "certificate_made", "share_tap", "speak_on", "timer_start", "score_saved",
+  "dashboard_open", "missionbook_get", "profile_add", "progress_reset",
+  "hub3d", "app_first_open", "return_visit",
 ]);
 const HELP_REASONS = [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
@@ -134,6 +162,63 @@ function beaconOnce(key, name, props){
     // a blind spot for exactly the users most likely to be privacy-minded.
   }
   beacon(name, props);
+}
+
+/* ═══ Reach and retention — Faz 2, Görev 2.1 ═════════════════════════════
+ *
+ * The honest framing, and the reason these two exist: app_open counts
+ * SESSIONS. Read as "how many people", it lies in both directions — the same
+ * household coming back on Tuesday counts twice, two kids sharing one phone
+ * count once. Rather than pretend one number answers everything, three
+ * different numbers answer three different questions:
+ *
+ *   app_first_open  how many devices ever arrived   → reach
+ *   app_open        how many sessions happened      → usage
+ *   return_visit    how many devices came back      → retention
+ *
+ * WHAT IS AND IS NOT STORED. The counter lives in localStorage and never
+ * leaves the device. No id, no uuid, no fingerprint is minted here — the
+ * server learns "some device reached its 3rd visit", never WHICH device, and
+ * cannot tie two visits together. Nothing is sent between thresholds, so the
+ * 4th, 6th and 7th visits are invisible by design.
+ *
+ * app_first_open is still an ESTIMATE, not a headcount: clearing browser data
+ * makes a device new again, and a household with two phones counts twice.
+ * That caveat has to travel with the number wherever it is shown.
+ */
+const SEEN_KEY   = "jumvi_seen";
+const VISITS_KEY = "jumvi_visits";
+
+/** Visits that produce an event. Between them, nothing is sent. */
+const RETURN_VISIT_STEPS = new Set([2, 3, 5, 10]);
+
+function beaconReachAndRetention(){
+  // A "visit" is a session, not a page load — same rule app_open follows, or
+  // a kid reloading twice would look like a returning household.
+  try{
+    if(sessionStorage.getItem("jumvi_beacon_visit")) return;
+    sessionStorage.setItem("jumvi_beacon_visit", "1");
+  }catch(_){
+    // No sessionStorage: fall through. A reload may over-count by one, which
+    // is the same trade beaconOnce() already makes.
+  }
+
+  let visits;
+  try{
+    const first = !localStorage.getItem(SEEN_KEY);
+    if(first) localStorage.setItem(SEEN_KEY, "1");
+
+    visits = (parseInt(localStorage.getItem(VISITS_KEY), 10) || 0) + 1;
+    localStorage.setItem(VISITS_KEY, String(visits));
+
+    if(first) beacon("app_first_open");
+  }catch(_){
+    // Storage unavailable: every session would look like a first visit, which
+    // would inflate reach and fake retention. Send neither — a gap is honest,
+    // a wrong number is not.
+    return;
+  }
+  if(RETURN_VISIT_STEPS.has(visits)) beacon("return_visit", { n: visits });
 }
 
 const _lsDebounceTimers = new Map();
@@ -1153,6 +1238,40 @@ function getMilestoneLine(counts){
 // Order MUST match PACKS (data.js) and ZONE_THEMES (jumvi-hub-app.js): drives
 // the 2D path view + "Pack N of 6" numbering. Reflex Rush is last so the walk
 // (and the list) starts on the bright Aim zone, not the dark Reflex energy one.
+/* pack_view — Faz 2, Görev 2.1.
+ *
+ * The obvious hook, the pack filter chips in renderFilters(), is dead UI:
+ * #filters is display:none in index.html and nothing ever un-hides it. An
+ * event wired there would have read zero forever while looking healthy.
+ *
+ * The Mission Path is how a pack is actually browsed today — a vertical run
+ * of pack sections the child scrolls through. "Viewed" means the pack's
+ * HEADER came properly into view. Watching the whole section instead would
+ * look more natural and be quietly broken: a six-mission section is taller
+ * than a phone screen, so a 0.5 threshold on it can never be satisfied. The
+ * header is short, so the threshold means what it says.
+ *
+ * Once per pack per session, like every other browsing signal here. */
+let _packViewObserver = null;
+function packViewObserver(){
+  if(_packViewObserver) return _packViewObserver;
+  if(typeof IntersectionObserver !== "function"){
+    // No observer (very old browser): lose the signal rather than guess.
+    _packViewObserver = { observe(){}, disconnect(){} };
+    return _packViewObserver;
+  }
+  _packViewObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      const key = entry.target.dataset.packKey;
+      if(key) beaconOnce("pack_view_" + key, "pack_view", { pack: key });
+      // One report per pack is all we want; stop watching it either way.
+      _packViewObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.5 });
+  return _packViewObserver;
+}
+
 const SKILL_PACKS = [
   { key:"Aim Master",     label:"Bullseye!",       color:"#4FB3FF" },
   { key:"Focus Control",  label:"Zen Mode",        color:"#22c55e" },
@@ -1945,6 +2064,8 @@ function remainingText(){
 function showBadgeUnlockModal(badge){
   const modal = document.getElementById("badgeUnlockModal");
   if(!modal) return;
+  // The badge id is a frozen 11-value enum (BADGES in data.js), never a name.
+  beacon("badge_earned", { badge: badge.id });
   const emojiEl = document.getElementById("badgeUnlockEmoji");
   const nameEl  = document.getElementById("badgeUnlockName");
   const reqEl   = document.getElementById("badgeUnlockReq");
@@ -2399,6 +2520,12 @@ function startTimer(durationSeconds) {
 
   timerUI.style.display = "block";
 
+  // Once per mission per session: restarting the timer on the same mission is
+  // the same kid on the same task, not a second use of the feature.
+  if(_openMissionId){
+    beaconOnce("timer_start_" + _openMissionId, "timer_start", { id: _openMissionId });
+  }
+
   timerTotal = durationSeconds;
   timerLeft = durationSeconds;
   timerState = "running";
@@ -2523,9 +2650,15 @@ function applyHubMissionTheme(){
 }
 
 let _firstMissionStartTracked = false;
+
+/* The mission the sheet is currently showing. startTimer() is reached through
+ * a countdown callback that carries only a duration, so without this the
+ * timer_start beacon would have no idea which mission it belongs to. */
+let _openMissionId = 0;
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
+  _openMissionId = id;
   // first_mission_start — once per session, the moment any mission view opens,
   // tagged with where it came from (hub vs 2D). Parity with the audit's A/B
   // funnel (2D had it implicitly, 3D had nothing).
@@ -2864,6 +2997,10 @@ function buildCertificate(){
 
 function openCertificate(){
   if(!certBackdrop) return;
+  // Hooked here, not in buildCertificate(): that one also runs on every
+  // keystroke in the name field and on profile restore. The sheet opening is
+  // the moment a certificate actually exists for the child.
+  beaconOnce("certificate_made", "certificate_made");
   buildCertificate();
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
@@ -3271,7 +3408,10 @@ function markMissionDone(id, source="manual"){
 
   // Hub3D Mission Completed — only for runs the kid launched from inside the hub
   // (window._hubMissionFlow is set by openMissionFromHub, cleared on hub exit).
-  if(window._hubMissionFlow && packKey) trackEvent("Hub3D Mission Completed", { pack: packKey });
+  if(window._hubMissionFlow && packKey){
+    trackEvent("Hub3D Mission Completed", { pack: packKey });
+    beaconOnce("hub3d_mission", "hub3d", { step: "mission" });
+  }
 
   // Path tree tile animasyonu işareti — render'da kullanılır
   window._justDoneMissionId = id;
@@ -3553,6 +3693,7 @@ document.getElementById("btnRandomAll").onclick = ()=>{
     closeCertificate();
     showToast("Progress reset");
     trackEvent("Progress Reset");
+    beacon("progress_reset");
   }
   btns.forEach(btn=>{
     if(!btn) return;
@@ -3653,6 +3794,7 @@ if(btnDashShareWA){
     const text = "🏓 Great progress on JUMVI! Play along: https://qr.jumvi.co";
     window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
     trackEvent("Dashboard Share WhatsApp");
+    beacon("share_tap", { channel: "whatsapp" });
   };
 }
 const btnDashShareCopy = document.getElementById("btnDashShareCopy");
@@ -3664,10 +3806,12 @@ if(btnDashShareCopy){
       if(navigator.share){
         await navigator.share({ title: "JUMVI Progress", text, url: "https://qr.jumvi.co" });
         trackEvent("Dashboard Share Native");
+        beacon("share_tap", { channel: "native" });
       } else {
         await navigator.clipboard.writeText(text);
         showToast("Copied! Share with family.");
         trackEvent("Dashboard Share Copy");
+        beacon("share_tap", { channel: "copy" });
       }
     }catch(_){}
   };
@@ -4139,7 +4283,10 @@ function addNewChildProfile(){
   };
   profiles.push(newProfile);
   saveProfiles(profiles);
+  // The event only. Never the child's name, age or avatar — this answers
+  // "is the multi-child feature alive", nothing else.
   trackEvent("Profile Added");
+  beacon("profile_add");
   showToast(`Hi ${name}! Let's play!`);
   // Yeni profile geç (page reload)
   switchProfile(newProfile.id);
@@ -4160,6 +4307,18 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // returning tab does not inflate the denominator every other event is read
   // against in the weekly snapshot.
   beaconOnce("app_open", "app_open");
+  // Faz 2 — the same moment, two different questions: is this device new, and
+  // has it come back. Neither sends anything that identifies it.
+  beaconReachAndRetention();
+
+  // The Mission Book is a plain PDF link in two places (profile quick-link and
+  // the parent panel). Both are real <a href> navigations — bind, don't
+  // intercept: sendBeacon is built to survive the page going away.
+  try{
+    document.querySelectorAll('a[href="mission-book.pdf"]').forEach(a=>{
+      a.addEventListener("click", ()=>{ beacon("missionbook_get"); });
+    });
+  }catch(_){}
 });
 
 /* ═══ Beacons 4/5 and 5/5 — mission sheet controls ═══════════════════════ */
@@ -4272,6 +4431,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
       renderSettingsRows();
       if(soundOn) clickSound("click");
       trackEvent("Read Aloud Toggled", { on: next });
+      // Enable only: a toggle-off is not a use of the feature.
+      if(next) beaconOnce("speak_on", "speak_on");
     };
   }
 });
@@ -4474,7 +4635,10 @@ function ensureHub3DLoaded(onProgress){
     _hub3dInstance = mod.initHub3D({
       // milestone 4: dismiss the loading overlay on the first PAINTED frame
       // (decorative GLBs may keep streaming after this — we don't block on them)
-      onFirstFrame(){ step(1, "frame"); },
+      onFirstFrame(){
+        step(1, "frame");
+        beaconOnce("hub3d_ready", "hub3d", { step: "ready" });
+      },
       // Task 3 — one-time Coach Leo greeting. The hub owns the bubbles (anchored
       // to Leo, tied to the first walk); app.js only lends the Web Speech util
       // and the persisted intro flag (via lsGet/lsSet).
@@ -4509,7 +4673,12 @@ function ensureHub3DLoaded(onProgress){
       // so the default-homepage A/B couldn't be read. The hub fires its own
       // events (3d_load_ms, 3d_first_mission_start, 3d_fallback_triggered)
       // through this; app.js owns the actual trackEvent() call.
-      track: trackEvent,
+      track(name, props){
+        trackEvent(name, props);
+        // The hub reports its own first completed walk; that is "moved" — proof
+        // the child understood the controls, not just that the scene loaded.
+        if(name === "Hub3D First Walk") beaconOnce("hub3d_moved", "hub3d", { step: "moved" });
+      },
       // Soft FPS fallback (audit Bulgu #5): the hub measured a struggling frame
       // rate. We don't yank the kid out mid-play — just a one-time, dismissable
       // nudge telling them the calm list is a tap away in the hub menu.
@@ -4700,7 +4869,7 @@ function buildHubLoadingOverlay(container){
   _hubLoadingEl = el;
   // §4.2 — escape ✕ → leave the wait for the missions (load continues in bg).
   const esc = document.getElementById("hub3dLoadEscape");
-  if(esc) esc.onclick = ()=>{ trackEvent("Hub3D Load Escaped", { stage: _hub3dLoadStage }); dismissHubLoadingOverlay(); switchTab("today"); };
+  if(esc) esc.onclick = ()=>{ trackEvent("Hub3D Load Escaped", { stage: _hub3dLoadStage }); beaconOnce("hub3d_escaped", "hub3d", { step: "escaped" }); dismissHubLoadingOverlay(); switchTab("today"); };
   // Line 2 only appears if we're still loading after 3s (fast loads never show it).
   _hubLoadingLine2Timer = setTimeout(()=>{ const l2 = document.getElementById("hub3dLoadLine2"); if(l2) l2.style.opacity = "1"; }, 3000);
   return el;
@@ -4719,6 +4888,7 @@ function dismissHubLoadingOverlay(){
 }
 function showHubLoadingFailure(container, stage){
   trackEvent("Hub3D Load Failed", { stage: stage || "import" });
+  beaconOnce("hub3d_failed", "hub3d", { step: "failed" });
   if(_hubLoaderDelayTimer){ clearTimeout(_hubLoaderDelayTimer); _hubLoaderDelayTimer = null; }
   if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
   const el = _hubLoadingEl || buildHubLoadingOverlay(container);
@@ -4753,6 +4923,9 @@ function showHub3D(){
   window.__hub3dLoadStart = performance.now();
   window.__hub3dSessionStart = performance.now();
   trackEvent("Hub3D Entered", { source: _hub3dEntrySource });
+  // Step 2 of 7. "shown" fired earlier, when the entry point was offered —
+  // the gap between them is how many kids see the hub and never tap it.
+  beaconOnce("hub3d_entered", "hub3d", { step: "entered" });
   _hub3dEntrySource = "nav_tab"; // reset default for the next open (deep link etc.)
   if(overlay) overlay.style.display = "";
   const sticky = document.querySelector(".sticky");
@@ -4833,6 +5006,9 @@ function switchTab(tabName){
   document.querySelectorAll(".navTab").forEach(b => {
     b.classList.toggle("active", b.dataset.tab === tabName);
   });
+
+  // The dashboard lives in the "stats" tab — the parent-facing view.
+  if(tabName === "stats") beaconOnce("dashboard_open", "dashboard_open");
 
   // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez
   if(tabName === "hub3d") showHub3D(); else hideHub3D();
@@ -4985,9 +5161,15 @@ function initBottomNav(){
   // visit found the device unsupported (no WebGL), keep BOTH entry points hidden.
   if(lsGet(HUB3D_UNSUPPORTED_KEY, "0") === "1"){
     applyHub3dUnsupported();
-  } else if(isHub3DEnabled()){
-    const hub3dBtn = document.getElementById("navTabHub3D");
-    if(hub3dBtn) hub3dBtn.style.display = "";
+  } else {
+    if(isHub3DEnabled()){
+      const hub3dBtn = document.getElementById("navTabHub3D");
+      if(hub3dBtn) hub3dBtn.style.display = "";
+    }
+    // Step 1 of 7. The hub funnel starts here, not at "entered": without a
+    // "was it even offered" number, a low entry count cannot be told apart
+    // from a device that was never shown the door.
+    beaconOnce("hub3d_shown", "hub3d", { step: "shown" });
   }
 
   // Adventure Mode entry card (top of Today) — the discovery path for the
@@ -5294,6 +5476,7 @@ function showPackCompleteCelebration(packKey, packLabel){
   pathSound("trophy");
   showToast(`${packLabel} mastered! Pack complete!`);
   trackEvent("Pack Completed", { pack: packKey });
+  beacon("pack_complete", { pack: packKey });
   if(navigator.vibrate) try { navigator.vibrate([60, 80, 60, 80, 100]); } catch(_){}
 }
 
@@ -5347,6 +5530,8 @@ function renderMissionPath(){
         '<div class="pathSectionMeta">Pack ' + (SKILL_PACKS.indexOf(pack)+1) + ' of ' + SKILL_PACKS.length + ' · ' + doneCount + '/' + total + '</div>' +
       '</div>' +
       '<div class="pathSectionProgress">' + doneCount + '/' + total + '</div>';
+    header.dataset.packKey = pack.key;
+    packViewObserver().observe(header);
     section.appendChild(header);
 
     // Vertical steps container
@@ -5523,6 +5708,7 @@ function renderCoachPick(){
     cardBtn.onclick = ()=>{
       clickSound("click");
       trackEvent("Coach Pick Tapped");
+      beaconOnce("daily_pick_tap", "daily_pick_tap");
       openMission(ms.id);
     };
   }
@@ -5537,6 +5723,7 @@ function renderCoachPick(){
     alt.onclick = ()=>{
       clickSound("click");
       trackEvent("Coach Pick Tapped");
+      beaconOnce("daily_pick_tap", "daily_pick_tap");
       openMission(ms.id);
     };
   }
@@ -5638,6 +5825,7 @@ function showScoreSummary(missionId){
     const diff = best - _currentScore;
     summary.innerHTML = `<span class="summaryEmoji"><i class="jic jic-star" aria-hidden="true"></i></span>You scored <b>${_currentScore}</b> · Best: ${best} (${diff} more to beat!)`;
     trackEvent("Score Recorded", { mission: missionId, score: _currentScore });
+    beacon("score_saved");
   }
   // Best değerini header'da yenile
   renderScoreTracker();
