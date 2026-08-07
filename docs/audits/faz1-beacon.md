@@ -422,6 +422,35 @@ timestamp             blob1              blob2                double1  index1   
 §2'de dondurulan kolon düzeni birebir tuttu: `blob1`=event, `blob2`=string prop, `double1`=sayısal
 prop, `index1`=event. `_sample_interval = 1`, yani sampling yok.
 
+### Gerçek tarayıcı ile son halka
+
+curl testi endpoint'i kanıtlıyor ama deploy edilmiş `app.js`'in gerçekten beacon'ı çağırdığını
+kanıtlamıyor. Preview URL'i Chrome'da açıldı:
+
+```
+origin        = https://feat-faz1-beacon-jumvi-missions.saykirtasiye.workers.dev
+beacon fn     = var
+app_open      = ateşlendi (sessionStorage guard yazıldı)
+playerCount   = 3 buton, help = 6 seçenek
+ağ            = POST /api/beacon → 204
+konsol        = hata yok
+```
+
+Ve bu satır WAE'ye düştü: `app_open @ 2026-08-07 20:17:56`. Zincirin tamamı — tarayıcı → beacon →
+Worker → WAE — canlı deployment üzerinde doğrulanmış oldu.
+
+Toplam dataset durumu:
+
+```
+event              n   ilk                    son
+app_open           3   2026-08-07 20:13:09    2026-08-07 20:17:56
+help_open          2   2026-08-07 20:13:10    2026-08-07 20:13:51
+mission_complete   2   2026-08-07 20:13:10    2026-08-07 20:13:51
+mission_start      2   2026-08-07 20:13:10    2026-08-07 20:13:51
+player_count       2   2026-08-07 20:13:10    2026-08-07 20:13:51
+                  11
+```
+
 ### 1.3'ün ihtiyaç duyduğu sorgular çalışıyor
 
 Düz-kolon kararının asıl gerekçesi buydu; dördü de yerel `GROUP BY` ile çalıştı:
@@ -450,10 +479,15 @@ JSON-string şemasıyla bunların hiçbiri parse etmeden çalışmazdı.
 
 ### 1.3 için iki not
 
-1. **Bu 10 satır test verisidir.** `2026-08-07 20:13:09`–`20:13:51` UTC aralığında, preview
-   deployment'ından gönderildi. İlk haftalık snapshot bu pencereyi hariç tutmalı, yoksa
-   `app_opens` 2 fazla sayılır.
-2. **`double1`, sayısal prop'u olmayan event'lerde `0` döner** (kod `doubles: []` gönderiyor, WAE
+1. **Bu 11 satır test verisidir.** `2026-08-07 20:13:09`–`20:17:56` UTC aralığında, preview
+   deployment'ından gönderildi (10'u curl, 1'i gerçek tarayıcı açılışı). İlk haftalık snapshot bu
+   pencereyi hariç tutmalı, yoksa `app_opens` 3 fazla sayılır.
+2. **WAE SQL'inde `ORDER BY`, alias verilmiş kolonun ham adını kabul etmiyor.**
+   `SELECT blob1 AS event ... ORDER BY blob1` →
+   `Input was invalid: unable to find type of column: "blob1"`. Alias kullanılmalı:
+   `... GROUP BY event ORDER BY event`. Aynısı `GROUP BY` için de geçerli. 1.3'ün sorgu yazarken
+   kaybedeceği ilk yarım saat budur.
+3. **`double1`, sayısal prop'u olmayan event'lerde `0` döner** (kod `doubles: []` gönderiyor, WAE
    `0` raporluyor). "Değer yok" ile "değer 0" ayırt edilemez. Pratikte sorun değil çünkü `double1`
    yalnızca `blob1='player_count'` filtresiyle okunuyor ve `n` ∈ {2,3,4} — ama snapshot sorgusu
    `double1`'i **her zaman** `blob1` filtresiyle birlikte kullanmalı.
