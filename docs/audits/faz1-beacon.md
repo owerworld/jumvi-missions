@@ -1,9 +1,9 @@
 # Faz 1 — Görev 1.2: Minimal Beacon (5 Event)
 
-**Branch:** `feat/faz1-beacon` · **Commit:** `43d7283` · **Tarih:** 2026-08-07
-**Durum:** ⛔ **Cloudflare Workers Builds bu branch'te BAŞARISIZ.** Kod lokalde tamamen doğrulandı,
-ancak `main` entry point'i eklemenin taşıdığı risk **gerçekleşti**. Production'a dokunulmadı ve
-merge edilmedi. Ayrıntı ve teşhis yolu: §6.
+**Branch:** `feat/faz1-beacon` · **Tarih:** 2026-08-07
+**Durum:** ✅ **Build geçiyor, preview canlı, WAE'ye yazma uçtan uca doğrulandı.**
+Deploy iki kez başarısız oldu, kök sebep bulundu ve çözüldü — tüm hikâye §6'da (başarısızlık kaydı
+bilerek silinmedi). `main`'e **merge edilmedi**; onay bekliyor.
 
 ---
 
@@ -236,7 +236,7 @@ OK: CORE_ASSETS unchanged (CACHE_NAME=jumvi-missions-v168)
 
 ---
 
-## 6. ⛔ DEPLOY BAŞARISIZ — karar sizde
+## 6. Deploy — iki başarısızlık, kök sebep ve çözüm
 
 Öngörülen risk gerçekleşti. `feat/faz1-beacon` push edildi, Cloudflare Workers Builds tetiklendi
 ve **başarısız oldu**.
@@ -355,6 +355,113 @@ wrangler oturumu yok (`wrangler whoami` → "Not logged in") ve `CLOUDFLARE_API_
 reddedildiği. Sebep anlaşıldığında düzeltme muhtemelen tek satırlık bir config değişikliği olacak.
 
 ---
+
+---
+
+## 6b. ✅ RESOLVED — 2026-08-07
+
+```
+Build #33b20636                       → success
+Worker Version ID 15012c5e
+Preview: https://feat-faz1-beacon-jumvi-missions.saykirtasiye.workers.dev
+```
+
+### Kök sebep
+
+**Analytics Engine dataset'i `jumvi_events_v1` hesapta hiç oluşturulmamıştı.** Dataset oluşturulup
+binding'in doğru eşleştiği teyit edilince build ilk denemede geçti.
+
+Token izni **değildi** — §6'daki adayların hiçbiri de değildi.
+
+### Bu neden hiçbir lokal testte yakalanmadı
+
+Cloudflare'in dökümantasyonu şunu söylüyor: *"Workers Analytics Engine datasets are created
+automatically the first time you write to them after defining the binding in your Wrangler
+configuration."* Bu ifadeye dayanarak dataset'in deploy sırasında kendiliğinden oluşacağı varsayıldı
+ve hipotez listesine hiç alınmadı. Pratikte hesap böyle davranmadı: dataset önceden var olmadan
+deploy reddedildi.
+
+`wrangler dev`, `deploy --dry-run` ve `versions upload --dry-run` üçü de bunu yakalayamaz — hiçbiri
+hesabın dataset envanterine bakmaz. Bu sınıf hata **yalnızca gerçek deploy'da** görünür.
+
+**Ders:** WAE binding'i olan bir Worker'ı ilk kez deploy ederken, dataset'in hesapta var olduğu
+önceden doğrulanmalı. Auto-create davranışına güvenilmemeli.
+
+### Preview duman testi
+
+15 istek gönderildi:
+
+| İstek | Sonuç |
+|---|---|
+| 5 geçerli event ×2 parti | 204 ✅ |
+| 5 geçersiz (bilinmeyen event, serbest metin reason, `n=5`, `id=99999`, bozuk JSON) | 204 ✅, **yazma yok** |
+| `GET /api/beacon` | 405 ✅ |
+| `/`, `/app.js`, `/style.css`, `/service-worker.js` | 200 + doğru Content-Type ✅ |
+| `/yok-boyle` | 404 ✅ |
+| preview'daki `service-worker.js` | `CACHE_NAME = "jumvi-missions-v168"` ✅ |
+
+### WAE'ye yazma — uçtan uca kanıt
+
+WAE SQL API (`/accounts/{id}/analytics_engine/sql`) ile sorgulandı. **15 istek → 10 satır**;
+geçersiz olanların hiçbiri yazılmadı.
+
+```
+timestamp             blob1              blob2                double1  index1             samp
+2026-08-07 20:13:09   app_open           ''                         0  app_open           1
+2026-08-07 20:13:10   help_open          'ball_stuck'               0  help_open          1
+2026-08-07 20:13:10   mission_complete   '36'                       0  mission_complete   1
+2026-08-07 20:13:10   player_count       ''                         4  player_count       1
+2026-08-07 20:13:10   mission_start      '36'                       0  mission_start      1
+2026-08-07 20:13:50   app_open           ''                         0  app_open           1
+2026-08-07 20:13:51   mission_start      '33'                       0  mission_start      1
+2026-08-07 20:13:51   mission_complete   '33'                       0  mission_complete   1
+2026-08-07 20:13:51   help_open          'mission_too_hard'         0  help_open          1
+2026-08-07 20:13:51   player_count       ''                         2  player_count       1
+```
+
+§2'de dondurulan kolon düzeni birebir tuttu: `blob1`=event, `blob2`=string prop, `double1`=sayısal
+prop, `index1`=event. `_sample_interval = 1`, yani sampling yok.
+
+### 1.3'ün ihtiyaç duyduğu sorgular çalışıyor
+
+Düz-kolon kararının asıl gerekçesi buydu; dördü de yerel `GROUP BY` ile çalıştı:
+
+```sql
+-- funnel
+SELECT blob1, sum(_sample_interval) FROM jumvi_events_v1
+ WHERE blob1 IN ('app_open','mission_start','mission_complete') GROUP BY blob1;
+   → app_open=2  mission_start=2  mission_complete=2
+
+-- help_open reason kırılımı
+SELECT blob2, sum(_sample_interval) FROM jumvi_events_v1 WHERE blob1='help_open' GROUP BY blob2;
+   → ball_stuck=1  mission_too_hard=1
+
+-- player_count kırılımı
+SELECT double1, sum(_sample_interval) FROM jumvi_events_v1 WHERE blob1='player_count' GROUP BY double1;
+   → 2=1  4=1
+
+-- mission bazında start/complete
+SELECT blob2, blob1, sum(_sample_interval) FROM jumvi_events_v1
+ WHERE blob1 IN ('mission_start','mission_complete') GROUP BY blob2, blob1;
+   → 33/36 için start ve complete ayrı ayrı
+```
+
+JSON-string şemasıyla bunların hiçbiri parse etmeden çalışmazdı.
+
+### 1.3 için iki not
+
+1. **Bu 10 satır test verisidir.** `2026-08-07 20:13:09`–`20:13:51` UTC aralığında, preview
+   deployment'ından gönderildi. İlk haftalık snapshot bu pencereyi hariç tutmalı, yoksa
+   `app_opens` 2 fazla sayılır.
+2. **`double1`, sayısal prop'u olmayan event'lerde `0` döner** (kod `doubles: []` gönderiyor, WAE
+   `0` raporluyor). "Değer yok" ile "değer 0" ayırt edilemez. Pratikte sorun değil çünkü `double1`
+   yalnızca `blob1='player_count'` filtresiyle okunuyor ve `n` ∈ {2,3,4} — ama snapshot sorgusu
+   `double1`'i **her zaman** `blob1` filtresiyle birlikte kullanmalı.
+
+### Kalan tek ön koşul
+
+Beacon canlıya çıkmadan **Görev 1.4 (privacy policy)** tamamlanmalı. Bu iş, politikanın şu an
+bahsetmediği bir veri toplama başlatıyor.
 
 ## 7. Kapsam dışı bırakılanlar
 
