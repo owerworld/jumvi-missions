@@ -1,8 +1,20 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "jumvi-missions",
+  "main": "src/worker.js",
   "compatibility_date": "2026-08-05",
   "assets": {
-    "directory": "."
-  }
+    "directory": ".",
+    // Lets the Worker serve asset misses itself, keeping 404 behaviour
+    // identical to the assets-only setup this replaced.
+    "binding": "ASSETS"
+  },
+  // Faz 1 / 1.2 minimal beacon. Dataset is created on first write.
+  // Renaming it starts a new, empty history — see docs/audits/faz1-beacon.md.
+  "analytics_engine_datasets": [
+    {
+      "binding": "JUMVI_ANALYTICS",
+      "dataset": "jumvi_events_v1"
+    }
+  ]
 }

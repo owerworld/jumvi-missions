@@ -65,13 +65,75 @@ const storageAvailable = (()=>{
   }
 })();
 
-/* ===== Privacy-friendly analytics helper ===== */
+/* ===== Privacy-friendly analytics helper =====
+ * DORMANT. Plausible was removed in Faz 0 (privacy), so every trackEvent()
+ * call in this file is currently a no-op. They are left in place as markers
+ * of what was once measured — do NOT wire this to the beacon below. The
+ * beacon ships exactly five events; routing these ~45 legacy names into it
+ * would blow past that on day one and burn WAE's cardinality budget. */
 function trackEvent(name, props){
   try{
     if(typeof window.plausible === "function"){
       props ? window.plausible(name, { props }) : window.plausible(name);
     }
   }catch(_){}
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * MINIMAL BEACON — Faz 1, Görev 1.2
+ *
+ * Five events. No more, ever — the allowlist here is mirrored by a stricter
+ * one in src/worker.js, which is what actually protects the dataset. This
+ * copy exists to avoid pointless network calls, not as the security boundary.
+ *
+ *   app_open                      once per session
+ *   mission_start     { id }      once per mission per session
+ *   mission_complete  { id }
+ *   help_open         { reason }  fixed 6-value enum, never free text
+ *   player_count      { n }       2 | 3 | 4, once per session
+ *
+ * NEVER add a user id, device id, or anything fingerprint-shaped to props.
+ * Fire-and-forget: failures are swallowed. A metric must never break play.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+const BEACON_ENDPOINT = "/api/beacon";
+const BEACON_EVENTS = new Set([
+  "app_open", "mission_start", "mission_complete", "help_open", "player_count",
+]);
+const HELP_REASONS = [
+  "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
+  "need_more_space", "instructions_unclear", "mission_too_hard",
+];
+
+function beacon(name, props){
+  try{
+    if(!BEACON_EVENTS.has(name)) return;
+    const body = JSON.stringify(Object.assign({ e: name }, props || {}));
+    // sendBeacon survives the page being backgrounded mid-mission, which is
+    // exactly when a kid puts the phone down to go play.
+    if(navigator.sendBeacon &&
+       navigator.sendBeacon(BEACON_ENDPOINT, new Blob([body], { type: "application/json" }))){
+      return;
+    }
+    fetch(BEACON_ENDPOINT, {
+      method: "POST", body, keepalive: true,
+      headers: { "Content-Type": "application/json" },
+    }).catch(()=>{});
+  }catch(_){}
+}
+
+/* Session-scoped de-dupe. sessionStorage (not localStorage) so "once per
+ * session" means one browser session, and so a cleared-storage device simply
+ * loses de-duping rather than silently dropping every event. */
+function beaconOnce(key, name, props){
+  try{
+    const k = "jumvi_beacon_" + key;
+    if(sessionStorage.getItem(k)) return;
+    sessionStorage.setItem(k, "1");
+  }catch(_){
+    // Private mode / storage disabled: send anyway. Slight over-count beats
+    // a blind spot for exactly the users most likely to be privacy-minded.
+  }
+  beacon(name, props);
 }
 
 const _lsDebounceTimers = new Map();
@@ -2471,6 +2533,29 @@ function openMission(id){
     _firstMissionStartTracked = true;
     trackEvent("first_mission_start", { source: window._hubMissionFlow ? "hub" : "2d" });
   }
+  // Beacon 2/5 — de-duped per mission per session. Opening the sheet is the
+  // only reliable "started" signal: the timer is optional and plenty of kids
+  // just read the steps and go play. Re-opening the same mission to re-read
+  // it must not count as a second start, or the completion ratio is noise.
+  beaconOnce("mission_start_" + id, "mission_start", { id: id });
+
+  // A returning player already told us their party size last session; count it
+  // once here rather than making them re-tap, so player_count stays readable
+  // against app_opens. Still session-de-duped.
+  try{
+    const savedN = Number(lsGet(PLAYER_COUNT_KEY, ""));
+    if(savedN >= 2 && savedN <= 4) beaconOnce("player_count", "player_count", { n: savedN });
+  }catch(_){}
+
+  // Collapse the help panel between missions — a tip about the previous
+  // mission being too hard should not greet the next one.
+  const helpPanel = document.getElementById("missionHelpPanel");
+  const helpTip   = document.getElementById("missionHelpTip");
+  const helpBtn   = document.getElementById("btnMissionHelp");
+  if(helpPanel) helpPanel.hidden = true;
+  if(helpTip){ helpTip.hidden = true; helpTip.textContent = ""; }
+  if(helpBtn) helpBtn.setAttribute("aria-expanded", "false");
+  document.querySelectorAll(".missionHelpOpt.active").forEach(o=> o.classList.remove("active"));
   // Task 5 — one-time "how to play" hint the FIRST time a kid opens any mission
   // (device-level key; only for a not-yet-done mission so it reads as guidance,
   // not a recap). Guide Leo points beside the steps.
@@ -3179,6 +3264,10 @@ function markMissionDone(id, source="manual"){
 
   done.add(id);
   bumpDoneVersion();
+
+  // Beacon 3/5 — no de-dupe needed: the guard at the top of this function
+  // already returns early for a mission that is already done.
+  beacon("mission_complete", { id: id });
 
   // Hub3D Mission Completed — only for runs the kid launched from inside the hub
   // (window._hubMissionFlow is set by openMissionFromHub, cleared on hub exit).
@@ -4067,6 +4156,81 @@ document.addEventListener("DOMContentLoaded", ()=>{
       trackEvent("first_visit");
     }
   }catch(_){}
+  // Beacon 1/5 — top of the funnel. Once per session, not per page load, so a
+  // returning tab does not inflate the denominator every other event is read
+  // against in the weekly snapshot.
+  beaconOnce("app_open", "app_open");
+});
+
+/* ═══ Beacons 4/5 and 5/5 — mission sheet controls ═══════════════════════ */
+
+const PLAYER_COUNT_KEY = "jumvi_player_count_v1";
+
+/* Every reason answers the kid immediately. If a tip here ever goes stale,
+ * fix the tip — do not remove the option: the six reasons are a frozen enum
+ * shared with src/worker.js and the weekly snapshot. */
+const HELP_TIPS = {
+  ball_stuck:          "Stuck deep in the velcro? Peel it from one edge instead of pulling straight out.",
+  ball_hard_to_remove: "New sets grip hardest. Peel from the edge — after a few games it loosens up.",
+  strap_uncomfortable: "Loosen the strap one notch. The paddle should sit snug on your hand, not tight.",
+  need_more_space:     "Stand closer — 1–2 m — and toss underhand. Indoors, a hallway is plenty.",
+  instructions_unclear:"Tap the speaker icon to hear the steps read aloud, or open “More tips & safety”.",
+  mission_too_hard:    "Move a step closer and slow the throws down. Or tap “Next Mission” for an easier one.",
+};
+
+function setPlayerCountUI(n){
+  document.querySelectorAll(".playerCountBtn").forEach(b=>{
+    const on = b.dataset.n === String(n);
+    b.classList.toggle("active", on);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const saved = lsGet(PLAYER_COUNT_KEY, "");
+  if(saved) setPlayerCountUI(saved);
+
+  document.querySelectorAll(".playerCountBtn").forEach(b=>{
+    if(!b.hasAttribute("aria-pressed")) b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", ()=>{
+      const n = Number(b.dataset.n);
+      setPlayerCountUI(n);
+      lsSet(PLAYER_COUNT_KEY, String(n));
+      clickSound("click");
+      // Beacon 5/5 — one per session. The weekly snapshot reads player_count
+      // against app_opens 1:1, so a second tap must not double-count.
+      beaconOnce("player_count", "player_count", { n: n });
+    });
+  });
+
+  const trigger = document.getElementById("btnMissionHelp");
+  const panel   = document.getElementById("missionHelpPanel");
+  const tip     = document.getElementById("missionHelpTip");
+  if(trigger && panel){
+    trigger.addEventListener("click", ()=>{
+      const open = panel.hidden;
+      panel.hidden = !open;
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      clickSound("click");
+      // Opening the panel is NOT the event — only picking a reason is, so an
+      // idle tap never lands in the dataset as a phantom problem report.
+    });
+  }
+  document.querySelectorAll(".missionHelpOpt").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const reason = b.dataset.reason;
+      if(!HELP_REASONS.includes(reason)) return;
+      if(tip){
+        tip.textContent = HELP_TIPS[reason] || "";
+        tip.hidden = false;
+      }
+      document.querySelectorAll(".missionHelpOpt").forEach(o=> o.classList.toggle("active", o === b));
+      clickSound("click");
+      // Beacon 4/5 — fires per pick, not de-duped: a kid hitting the same
+      // problem in three different missions is exactly the signal we want.
+      beacon("help_open", { reason: reason });
+    });
+  });
 });
 
 document.addEventListener("DOMContentLoaded", ()=>{

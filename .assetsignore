@@ -2,6 +2,9 @@
 .claude/
 prototypes/
 tools/
+src/
+node_modules/
+.wrangler/
 .gitignore
 CLAUDE.md
 README-leo-tour.md
