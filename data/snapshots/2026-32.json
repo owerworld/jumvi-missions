@@ -1,0 +1,49 @@
+{
+  "week": "2026-32",
+  "period_start": "2026-08-03",
+  "period_end": "2026-08-09",
+  "app_opens": 0,
+  "mission_starts": 0,
+  "mission_completes": 0,
+  "recorded_completion_ratio": null,
+  "help_opens": {
+    "ball_stuck": 0,
+    "ball_hard_to_remove": 0,
+    "strap_uncomfortable": 0,
+    "need_more_space": 0,
+    "instructions_unclear": 0,
+    "mission_too_hard": 0
+  },
+  "player_count": {
+    "2": 0,
+    "3": 0,
+    "4": 0
+  },
+  "missions": {},
+  "generated_at": "2026-08-07T21:50:30Z",
+  "dataset": "jumvi_events_v1",
+  "snapshot_schema": 1,
+  "excluded_before": "2026-08-08T00:00:00Z",
+  "methodology": [
+    "QR Activation Proxy — metodoloji notu:",
+    "Bu sayılar cihaz/kullanıcı kimliği içermez. \"app_opens\" ilk tarayıcı",
+    "açılışlarının tahmini sayısıdır; hane başına birden fazla cihaz veya",
+    "tarayıcı verisi temizleme nedeniyle olduğundan az/çok sayılabilir.",
+    "Kesin kullanıcı sayısı değil, yönsel (directional) bir göstergedir.",
+    "",
+    "Sayımlar count() değil sum(_sample_interval) ile hesaplanır; Analytics",
+    "Engine örneklemeye başlarsa bu, ham satır sayısı yerine örneklemeye göre",
+    "düzeltilmiş tahmini verir.",
+    "",
+    "\"excluded_before\" null ise haftanın tamamı sayılmıştır; doluysa o andan",
+    "önceki satırlar sayıma girmemiştir ve gerekçesi aşağıda yazılıdır.",
+    "",
+    "generated_at, period_end'den önceyse hafta o an henüz kapanmamıştı ve",
+    "sayılar kısmi haftaya aittir.",
+    "",
+    "Bu snapshot 2026-08-08T00:00:00Z öncesindeki satırları hariç tutarak üretildi.",
+    "Beacon'ın canlıya çıktığı hafta olduğu için haftanın başındaki satırlar",
+    "kurulum ve production geçiş testlerinden gelir, gerçek kullanıcı verisi",
+    "değildir. Gerçek launch verisi bu andan itibaren başlar."
+  ]
+}
