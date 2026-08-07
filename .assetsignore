@@ -3,6 +3,7 @@
 prototypes/
 tools/
 src/
+data/
 node_modules/
 .wrangler/
 .gitignore
