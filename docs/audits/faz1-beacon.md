@@ -268,13 +268,37 @@ Ayrıca Görev 1.1'in health-check workflow'u bu commit için **skipped** oldu �
 olduğu için gate açılmadı. Yani 1.1 tasarlandığı gibi çalıştı: başarısız deploy'un ardından canlıya
 karşı kontrol çalıştırmadı.
 
+### İkinci deneme — Analytics Engine etkinleştirildikten sonra (2026-08-07 18:23)
+
+Hesapta AE etkinleştirildi (dashboard'da "Setup Analytics Engine" boş durumu, dataset elle
+oluşturulmadı — binding ilk yazmada oluşturur). Aynı ağaç boş commit `821368e` ile yeniden
+tetiklendi:
+
+```
+Workers Builds: jumvi-missions = failure
+Build ID: 521f3f71-5943-471f-a3e7-966acb9b1c4b
+```
+
+**Aynı hata.** Yani Analytics Engine'in kapalı olması sebep DEĞİLDİ — yukarıdaki (b) hipotezi elendi.
+Production yine dokunulmadı (v167, `app.js`'te `api/beacon` yok, site 200).
+
+### Düzeltme — "0 saniyede reddedildi" çıkarımı yanlıştı
+
+İlk raporda build'in `started_at == completed_at` olmasına dayanarak "build başlamadan reddedildi"
+denmişti. Bu yanlış: main'deki **başarılı** build'in de `started_at == completed_at` (23:40:25 →
+23:40:25). Bu alanlar build süresini değil, sonucun GitHub'a yazıldığı anı gösteriyor. Build gerçekten
+çalışıyor — poll sırasında ~40 saniye `in_progress` gözlendi — ve sonra başarısız oluyor. Süreden
+hiçbir sonuç çıkarılamaz.
+
 ### Nedeni ne DEĞİL — lokalde elenenler
 
 | Hipotez | Durum |
 |---|---|
 | Config parse edilmiyor / `main` bulunamıyor | ❌ elendi — `wrangler dev` iki binding'i de çözdü, Worker derlendi |
 | Bundling hatası | ❌ elendi — `wrangler deploy --dry-run` geçiyor (hem 4.61.1 hem 4.119.0 ile) |
-| Analytics Engine'in plan gereksinimi | ❌ elendi — Cloudflare docs: Workers **Free** plan'a dahil (100.000 yazma/gün) |
+| Analytics Engine'in plan gereksinimi | ❌ elendi — docs: Workers **Free** plan'a dahil (100.000 yazma/gün) |
+| AE'nin hesapta kapalı olması | ❌ elendi — etkinleştirildikten sonra da aynı hata |
+| Non-prod komutunun (`versions upload`) config'i reddetmesi | ❌ elendi — `versions upload --dry-run` temiz geçiyor |
 | `src/` dosyalarının asset olarak yüklenmesi | ❌ elendi — `.assetsignore`'da |
 
 ```
@@ -286,17 +310,16 @@ env.ASSETS                                 Assets
 --dry-run: exiting now.
 ```
 
-### En olası iki neden (log olmadan ayırt edilemiyor)
+### Geriye kalan — log olmadan ilerlenemiyor
 
-**(a) Non-production branch build'leri kapalı.**
-Workers Builds, production dışı bir dal için deploy komutunu `npx wrangler versions upload` ile
-değiştirir — ama bu **dashboard'dan açılması gereken opsiyonel bir ayar** (Settings → Build →
-"Configure non-production branch builds"). Kapalıysa build anında reddedilir. Bu, gözlenen
-**0 saniyelik** başarısızlıkla ve hiçbir build adımının çalışmamış olmasıyla uyumlu.
+İki denemeden sonra lokalde test edilebilecek her hipotez elendi. `wrangler dev`, `deploy --dry-run`
+ve `versions upload --dry-run` üçü de temiz; AE artık açık. Hata yalnızca Cloudflare'in build
+ortamında görünüyor ve **build log'u olmadan daha fazla daraltılamaz.**
 
-**(b) Analytics Engine binding'i bu hesapta açık değil.**
-Docs Free plan'a dahil diyor ama Faz 0'da Logpush'un aynı şekilde "olması gerekirken olmadığını"
-gördük. `--dry-run` API'ye hiç bağlanmadığı için bunu **yakalayamaz**; sadece gerçek deploy yakalar.
+En olası kalan aday: **non-production branch build'lerinin kapalı veya yanlış yapılandırılmış olması**
+(Settings → Build). İkincil aday: dashboard'da tanımlı bir build komutunun bu repoda karşılığı
+olmaması — repoda `package.json` yok, dolayısıyla `npm ci` / `npm run build` türü bir komut
+başarısız olur. `main` entry eklenmeden önce bu fark etmemiş olabilir.
 
 ### Neden burada durdum
 
