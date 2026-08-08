@@ -1,0 +1,323 @@
+{
+  "generated_from": "data.js",
+  "mission_count": 36,
+  "pack_keys": [
+    "Aim Master",
+    "Focus Control",
+    "Team Duo",
+    "Indoor Compact",
+    "Beach/Park",
+    "Reflex Rush"
+  ],
+  "pack_labels": {
+    "Aim Master": "Bullseye!",
+    "Focus Control": "Zen Mode",
+    "Team Duo": "Team Up",
+    "Indoor Compact": "Indoor Fun",
+    "Beach/Park": "Outdoor",
+    "Reflex Rush": "Lightning Hands"
+  },
+  "badge_ids": [
+    "first",
+    "aim",
+    "zen",
+    "team",
+    "indoor",
+    "outdoor",
+    "reflex",
+    "streak3",
+    "streak7",
+    "champ",
+    "zippy"
+  ],
+  "missions": {
+    "1": {
+      "pack": "Reflex Rush",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "45s",
+      "age": "3+",
+      "setting": "outdoor"
+    },
+    "2": {
+      "pack": "Reflex Rush",
+      "difficulty": 1,
+      "players": "2-3",
+      "duration": "60s",
+      "age": "4+",
+      "setting": "outdoor"
+    },
+    "3": {
+      "pack": "Reflex Rush",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "60s",
+      "age": "6+",
+      "setting": "outdoor"
+    },
+    "4": {
+      "pack": "Reflex Rush",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "90s",
+      "age": "6+",
+      "setting": "outdoor"
+    },
+    "5": {
+      "pack": "Reflex Rush",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "60s",
+      "age": "4+",
+      "setting": "outdoor"
+    },
+    "6": {
+      "pack": "Reflex Rush",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "60s",
+      "age": "3+",
+      "setting": "outdoor"
+    },
+    "7": {
+      "pack": "Aim Master",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "90s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "8": {
+      "pack": "Aim Master",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "9": {
+      "pack": "Aim Master",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "120s",
+      "age": "5+",
+      "setting": "indoor"
+    },
+    "10": {
+      "pack": "Aim Master",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "90s",
+      "age": "5+",
+      "setting": "indoor"
+    },
+    "11": {
+      "pack": "Aim Master",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "3+",
+      "setting": "indoor"
+    },
+    "12": {
+      "pack": "Aim Master",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "120s",
+      "age": "6+",
+      "setting": "indoor"
+    },
+    "13": {
+      "pack": "Focus Control",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "120s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "14": {
+      "pack": "Focus Control",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "90s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "15": {
+      "pack": "Focus Control",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "3+",
+      "setting": "indoor"
+    },
+    "16": {
+      "pack": "Focus Control",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "17": {
+      "pack": "Focus Control",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "120s",
+      "age": "6+",
+      "setting": "indoor"
+    },
+    "18": {
+      "pack": "Focus Control",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "3+",
+      "setting": "indoor"
+    },
+    "19": {
+      "pack": "Team Duo",
+      "difficulty": 2,
+      "players": "3-6",
+      "duration": "180s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "20": {
+      "pack": "Team Duo",
+      "difficulty": 2,
+      "players": "4+",
+      "duration": "180s",
+      "age": "5+",
+      "setting": "indoor"
+    },
+    "21": {
+      "pack": "Team Duo",
+      "difficulty": 2,
+      "players": "3+",
+      "duration": "150s",
+      "age": "6+",
+      "setting": "indoor"
+    },
+    "22": {
+      "pack": "Team Duo",
+      "difficulty": 2,
+      "players": "4",
+      "duration": "180s",
+      "age": "6+",
+      "setting": "indoor"
+    },
+    "23": {
+      "pack": "Team Duo",
+      "difficulty": 2,
+      "players": "4+",
+      "duration": "180s",
+      "age": "6+",
+      "setting": "indoor"
+    },
+    "24": {
+      "pack": "Team Duo",
+      "difficulty": 2,
+      "players": "4",
+      "duration": "240s",
+      "age": "6+",
+      "setting": "indoor"
+    },
+    "25": {
+      "pack": "Indoor Compact",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "120s",
+      "age": "3+",
+      "setting": "indoor"
+    },
+    "26": {
+      "pack": "Indoor Compact",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "27": {
+      "pack": "Indoor Compact",
+      "difficulty": 1,
+      "players": "2-3",
+      "duration": "120s",
+      "age": "4+",
+      "setting": "indoor"
+    },
+    "28": {
+      "pack": "Indoor Compact",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "120s",
+      "age": "5+",
+      "setting": "indoor"
+    },
+    "29": {
+      "pack": "Indoor Compact",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "120s",
+      "age": "3+",
+      "setting": "indoor"
+    },
+    "30": {
+      "pack": "Indoor Compact",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "90s",
+      "age": "5+",
+      "setting": "indoor"
+    },
+    "31": {
+      "pack": "Beach/Park",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "60s",
+      "age": "4+",
+      "setting": "outdoor"
+    },
+    "32": {
+      "pack": "Beach/Park",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "90s",
+      "age": "4+",
+      "setting": "outdoor"
+    },
+    "33": {
+      "pack": "Beach/Park",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "120s",
+      "age": "5+",
+      "setting": "outdoor"
+    },
+    "34": {
+      "pack": "Beach/Park",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "120s",
+      "age": "5+",
+      "setting": "outdoor"
+    },
+    "35": {
+      "pack": "Beach/Park",
+      "difficulty": 2,
+      "players": "2",
+      "duration": "150s",
+      "age": "6+",
+      "setting": "outdoor"
+    },
+    "36": {
+      "pack": "Beach/Park",
+      "difficulty": 1,
+      "players": "2",
+      "duration": "180s",
+      "age": "4+",
+      "setting": "outdoor"
+    }
+  }
+}

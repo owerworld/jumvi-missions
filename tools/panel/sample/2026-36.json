@@ -1,0 +1,249 @@
+{
+  "week": "2026-36",
+  "period_start": "2026-08-31",
+  "period_end": "2026-09-06",
+  "app_opens": 644,
+  "mission_starts": 653,
+  "mission_completes": 368,
+  "recorded_completion_ratio": 0.56,
+  "help_opens": {
+    "ball_stuck": 3,
+    "ball_hard_to_remove": 8,
+    "strap_uncomfortable": 1,
+    "need_more_space": 0,
+    "instructions_unclear": 2,
+    "mission_too_hard": 4
+  },
+  "player_count": {
+    "2": 40,
+    "3": 12,
+    "4": 22
+  },
+  "app_first_opens": 293,
+  "return_visits": {
+    "2": 99,
+    "3": 61,
+    "5": 32,
+    "10": 11
+  },
+  "packs": {
+    "Aim Master": {
+      "views": 67,
+      "starts": 113,
+      "completes": 68,
+      "completed_pack": 1
+    },
+    "Focus Control": {
+      "views": 0,
+      "starts": 0,
+      "completes": 0,
+      "completed_pack": 0
+    },
+    "Team Duo": {
+      "views": 70,
+      "starts": 118,
+      "completes": 67,
+      "completed_pack": 0
+    },
+    "Indoor Compact": {
+      "views": 91,
+      "starts": 152,
+      "completes": 78,
+      "completed_pack": 1
+    },
+    "Beach/Park": {
+      "views": 98,
+      "starts": 164,
+      "completes": 88,
+      "completed_pack": 3
+    },
+    "Reflex Rush": {
+      "views": 63,
+      "starts": 106,
+      "completes": 67,
+      "completed_pack": 1
+    }
+  },
+  "missions": {
+    "1": {
+      "starts": 8,
+      "completes": 3
+    },
+    "2": {
+      "starts": 15,
+      "completes": 10
+    },
+    "3": {
+      "starts": 8,
+      "completes": 5
+    },
+    "4": {
+      "starts": 16,
+      "completes": 10
+    },
+    "5": {
+      "starts": 29,
+      "completes": 16
+    },
+    "6": {
+      "starts": 30,
+      "completes": 23
+    },
+    "7": {
+      "starts": 17,
+      "completes": 13
+    },
+    "8": {
+      "starts": 18,
+      "completes": 11
+    },
+    "9": {
+      "starts": 22,
+      "completes": 10
+    },
+    "10": {
+      "starts": 15,
+      "completes": 10
+    },
+    "11": {
+      "starts": 19,
+      "completes": 15
+    },
+    "12": {
+      "starts": 22,
+      "completes": 9
+    },
+    "19": {
+      "starts": 19,
+      "completes": 9
+    },
+    "20": {
+      "starts": 10,
+      "completes": 5
+    },
+    "21": {
+      "starts": 24,
+      "completes": 16
+    },
+    "22": {
+      "starts": 39,
+      "completes": 26
+    },
+    "23": {
+      "starts": 18,
+      "completes": 8
+    },
+    "24": {
+      "starts": 8,
+      "completes": 3
+    },
+    "25": {
+      "starts": 28,
+      "completes": 9
+    },
+    "26": {
+      "starts": 34,
+      "completes": 14
+    },
+    "27": {
+      "starts": 15,
+      "completes": 6
+    },
+    "28": {
+      "starts": 24,
+      "completes": 15
+    },
+    "29": {
+      "starts": 16,
+      "completes": 6
+    },
+    "30": {
+      "starts": 35,
+      "completes": 28
+    },
+    "31": {
+      "starts": 28,
+      "completes": 3
+    },
+    "32": {
+      "starts": 31,
+      "completes": 17
+    },
+    "33": {
+      "starts": 35,
+      "completes": 28
+    },
+    "34": {
+      "starts": 29,
+      "completes": 18
+    },
+    "35": {
+      "starts": 19,
+      "completes": 10
+    },
+    "36": {
+      "starts": 22,
+      "completes": 12
+    }
+  },
+  "by_age": {
+    "3+": 0.15,
+    "4+": 0.35,
+    "6+": 0.24,
+    "5+": 0.26
+  },
+  "by_difficulty": {
+    "1": 0.45,
+    "2": 0.55
+  },
+  "by_players": {
+    "2": 0.77,
+    "2-3": 0.05,
+    "3-6": 0.03,
+    "4+": 0.04,
+    "3+": 0.04,
+    "4": 0.07
+  },
+  "by_duration": {
+    "45s": 0.01,
+    "60s": 0.17,
+    "90s": 0.28,
+    "120s": 0.29,
+    "180s": 0.17,
+    "150s": 0.07,
+    "240s": 0.01
+  },
+  "by_setting": {
+    "outdoor": 0.41,
+    "indoor": 0.59
+  },
+  "features": {
+    "daily_pick_tap": 139,
+    "speak_on": 90,
+    "timer_start": 77,
+    "badge_earned": 62,
+    "certificate_made": 7,
+    "share_tap": 11,
+    "score_saved": 21,
+    "dashboard_open": 28,
+    "missionbook_get": 15,
+    "profile_add": 0,
+    "progress_reset": 9
+  },
+  "hub3d": {
+    "shown": 120,
+    "entered": 38,
+    "ready": 31,
+    "moved": 22,
+    "mission": 9,
+    "failed": 4,
+    "escaped": 3
+  },
+  "generated_at": "2026-09-07T09:00:00Z",
+  "dataset": "jumvi_events_v1",
+  "snapshot_schema": 2,
+  "excluded_before": null,
+  "methodology": [
+    "ÖRNEK VERİ — gerçek değil. Panel testi için üretildi."
+  ]
+}

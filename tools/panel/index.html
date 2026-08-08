@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JUMVI · Ar-Ge Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0D1B2A;
+  --sand:#FFF7EC;
+  --sky:#4A9FD4;
+  --lime:#6DBE45;
+  --orange:#F47A20;
+  --surface:#FFFDF9;
+  --ink-60:rgba(13,27,42,.60);
+  --ink-38:rgba(13,27,42,.38);
+  --ink-12:rgba(13,27,42,.12);
+  --ink-06:rgba(13,27,42,.06);
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--sand);color:var(--navy);
+  font-family:var(--body);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 24px 80px}
+
+/* ---------- header ---------- */
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-38);
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--ink-12);padding-bottom:10px;
+}
+.thesis{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(26px,4.2vw,40px);line-height:1.18;
+  letter-spacing:-.02em;margin:26px 0 6px;max-width:22ch;
+}
+.thesis em{font-style:normal;color:var(--orange)}
+.thesis-sub{color:var(--ink-60);max-width:56ch;margin:0 0 34px}
+
+/* ---------- section frame ---------- */
+.sec{margin:0 0 34px}
+.sec-h{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-38);
+  margin:0 0 14px;display:flex;align-items:center;gap:10px;
+}
+.sec-h::after{content:"";flex:1;height:1px;background:var(--ink-12)}
+
+/* ---------- alerts ---------- */
+.alert{
+  background:var(--surface);border-left:3px solid var(--orange);
+  border-radius:0 10px 10px 0;padding:16px 18px;margin-bottom:10px;
+  display:flex;gap:16px;align-items:flex-start;
+}
+.alert-num{
+  font-family:var(--display);font-weight:800;font-size:30px;
+  line-height:1;color:var(--orange);min-width:52px;
+}
+.alert-b{font-weight:600;display:block;margin-bottom:3px}
+.alert-w{color:var(--ink-60);font-size:14px}
+.alert.calm{border-left-color:var(--sky)}
+.alert.calm .alert-num{color:var(--sky)}
+
+/* ---------- SIGNATURE: mission grid ---------- */
+.grid-note{color:var(--ink-60);font-size:13.5px;margin:-4px 0 16px;max-width:60ch}
+.gridwrap{background:var(--surface);border-radius:14px;padding:20px 18px 14px;overflow-x:auto}
+.prow{display:grid;grid-template-columns:132px repeat(6,1fr) 58px;gap:6px;align-items:center;margin-bottom:6px;min-width:560px}
+.pname{
+  font-size:13px;font-weight:600;text-align:right;padding-right:8px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.cell{
+  aspect-ratio:1/1;border-radius:7px;display:flex;
+  align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  background:var(--ink-06);color:var(--ink-38);
+  position:relative;cursor:default;transition:transform .12s ease;
+}
+.cell:hover{transform:scale(1.09);z-index:3}
+.cell[data-t]:hover::after{
+  content:attr(data-t);position:absolute;bottom:calc(100% + 7px);left:50%;
+  transform:translateX(-50%);background:var(--navy);color:var(--sand);
+  font-family:var(--body);font-size:12px;font-weight:500;line-height:1.35;
+  padding:7px 10px;border-radius:7px;white-space:pre;z-index:5;
+  box-shadow:0 6px 18px rgba(13,27,42,.22);
+}
+.pct{font-family:var(--mono);font-size:12px;color:var(--ink-38);text-align:right}
+.legend{
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-38);
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--ink-12);
+}
+.sw{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-2px;margin-right:5px}
+
+/* ---------- two column ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.card{background:var(--surface);border-radius:14px;padding:20px}
+
+/* funnel */
+.fstep{margin-bottom:15px}
+.fstep:last-child{margin-bottom:0}
+.ftop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.flab{font-size:13.5px;font-weight:500}
+.fnum{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.01em}
+.ftrack{height:9px;background:var(--ink-06);border-radius:5px;overflow:hidden}
+.fbar{height:100%;border-radius:5px}
+.fpct{font-family:var(--mono);font-size:11px;color:var(--ink-38);margin-top:4px}
+
+/* cross tabs */
+.xt{margin-bottom:17px}
+.xt:last-child{margin-bottom:0}
+.xt-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-38);margin-bottom:7px}
+.xbar{display:flex;height:26px;border-radius:6px;overflow:hidden;margin-bottom:6px}
+.xseg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:#fff;min-width:0}
+.xkeys{display:flex;gap:13px;flex-wrap:wrap;font-size:12px;color:var(--ink-60)}
+.xkeys span{white-space:nowrap}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:0}
+.xread{font-size:12.5px;color:var(--ink-60);margin-top:8px;padding-top:8px;border-top:1px solid var(--ink-12)}
+
+/* features */
+.frow{display:grid;grid-template-columns:1fr 132px 46px;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--ink-06)}
+.frow:last-child{border-bottom:0}
+.fname{font-size:13.5px}
+.fmini{height:7px;background:var(--ink-06);border-radius:4px;overflow:hidden}
+.fmini i{display:block;height:100%;border-radius:4px}
+.fval{font-family:var(--mono);font-size:12px;text-align:right;color:var(--ink-60)}
+.dead .fname{color:var(--ink-38)}
+.tagdead{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);border:1px solid var(--orange);border-radius:4px;padding:1px 5px;margin-left:7px;vertical-align:1px}
+
+.foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--ink-12);font-size:12.5px;color:var(--ink-38);max-width:64ch}
+.foot b{color:var(--orange);font-weight:600}
+
+/* ---------- added for the live panel (Faz 2 / 2.3) ---------- */
+
+/* Week picker sits in the eyebrow, styled to disappear into it. */
+.wk{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-60);background:transparent;border:1px solid var(--ink-12);
+  border-radius:6px;padding:3px 7px;cursor:pointer}
+.wk:focus{outline:2px solid var(--sky);outline-offset:1px}
+.eyebrow .right{display:flex;align-items:center;gap:10px}
+
+/* Week-over-week delta. Colourless on purpose: up is not automatically good
+   (progress_reset going up is bad), so the arrow states direction and the
+   reader supplies the judgement. */
+.delta{font-family:var(--mono);font-size:11px;color:var(--ink-38);margin-left:8px;white-space:nowrap}
+
+/* Sample-size warning. Not dismissable while it applies — a small-sample
+   number read as fact is the failure mode this whole panel exists to avoid. */
+.smallN{background:#FFF3E2;border:1px solid var(--orange);border-radius:10px;
+  padding:12px 16px;margin:0 0 22px;font-size:13.5px;color:var(--navy)}
+.smallN b{color:var(--orange)}
+
+.empty{background:var(--surface);border-radius:14px;padding:28px 24px;max-width:70ch}
+.empty h3{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 8px}
+.empty p{color:var(--ink-60);margin:0 0 14px}
+.empty code{font-family:var(--mono);font-size:12.5px;background:var(--ink-06);
+  padding:9px 12px;border-radius:7px;display:block;margin:0 0 14px;overflow-x:auto}
+.empty input[type=file]{font-family:var(--body);font-size:13px}
+.hint{font-size:12.5px;color:var(--ink-38);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">
+    <span>JUMVI · Ar-Ge Paneli</span>
+    <span class="right">
+      <select class="wk" id="weekPick" hidden aria-label="Hafta seç"></select>
+      <span id="weekRange">—</span>
+    </span>
+  </div>
+
+  <div id="panel" hidden>
+    <div id="smallN"></div>
+
+    <h1 class="thesis" id="thesis"></h1>
+    <p class="thesis-sub" id="thesisSub"></p>
+
+    <section class="sec">
+      <h2 class="sec-h">Karar bekliyor</h2>
+      <div id="alerts"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">36 görev · tamamlanma haritası</h2>
+      <p class="grid-note">Her satır bir paket, her kare bir görev. Koyuluk = başlatanların kaçının bitirdiği. Boş kareler hiç açılmamış görevler.</p>
+      <div class="gridwrap" id="gridwrap"></div>
+    </section>
+
+    <div class="cols">
+      <section class="sec">
+        <h2 class="sec-h">Huni</h2>
+        <div class="card" id="funnel"></div>
+      </section>
+
+      <section class="sec">
+        <h2 class="sec-h">Çapraz okuma</h2>
+        <div class="card" id="cross"></div>
+      </section>
+    </div>
+
+    <section class="sec">
+      <h2 class="sec-h">Özellik kullanımı · canlı mı ölü mü</h2>
+      <div class="card" id="features"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">3D Hub hunisi</h2>
+      <div class="card" id="hub"></div>
+    </section>
+
+    <p class="foot" id="foot"></p>
+  </div>
+
+  <div id="emptyState" hidden></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+ * JUMVI Ar-Ge Paneli — Faz 2, Görev 2.3
+ *
+ * Reads data/snapshots/*.json. Never queries Analytics Engine: that needs an
+ * API token, and a token in a page is a leaked token. The snapshot generator
+ * holds the credential in a terminal, this page reads its output.
+ *
+ * NOT DEPLOYED to qr.jumvi.co — that is the children's app. tools/ is in
+ * .assetsignore, so the platform will not serve this even by accident.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Ayarlar — eşikler burada, tek yerde ────────────────────────────────────
+ * Değiştirmek için sadece bu bloğa dokun. */
+const CONFIG = {
+  // Bir görevin tamamlanma oranı, genel ortalamanın bu katının altındaysa uyarı.
+  weakMissionRatio: 0.5,
+  // Bu sayıdan çok sıfırlama olduysa uyarı.
+  resetAlertAbove: 5,
+  // app_opens bunun altındayken örneklem uyarısı görünür.
+  smallSampleBelow: 100,
+  // Bir görevin "denendi" sayılması için gereken en az başlatma — tek kişilik
+  // gürültünün "sorunlu görev" uyarısı üretmesini engeller.
+  minStartsForAlert: 5,
+  // Satılan ünite sayısı elle girilir; hiçbir veri kaynağında yok.
+  // null bırakılırsa huninin ilk basamağı gizlenir.
+  unitsSold: null,
+};
+
+/* Event adı → panelde görünen ad. */
+const FEATURE_LABELS = {
+  daily_pick_tap:   "Günün görevi (Coach Leo)",
+  speak_on:         "Sesli okuma",
+  timer_start:      "Zamanlayıcı",
+  badge_earned:     "Rozet kazanma",
+  certificate_made: "Sertifika",
+  share_tap:        "Paylaşım (WhatsApp/kopyala)",
+  score_saved:      "Skor takibi",
+  dashboard_open:   "Ebeveyn paneli",
+  missionbook_get:  "Mission Book PDF",
+  profile_add:      "Çoklu çocuk profili",
+  progress_reset:   "İlerlemeyi sıfırlama",
+};
+
+const HUB_LABELS = {
+  shown: "Giriş gösterildi", entered: "Girildi", ready: "Sahne yüklendi",
+  moved: "Yürüdü", mission: "Görev bitirdi", failed: "Yükleme hatası",
+  escaped: "Yüklemeden çıktı",
+};
+
+const CROSS_TITLES = {
+  by_age: "Yaş etiketi", by_difficulty: "Zorluk seviyesi",
+  by_players: "Oyuncu sayısı", by_duration: "Görev süresi", by_setting: "Mekan",
+};
+
+const SEG_COLORS = ["var(--lime)", "var(--sky)", "var(--navy)", "var(--orange)", "#7fb9e0", "#b3dd9c", "#8ecf72"];
+
+const TR_MONTHS = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const pct = (x) => `${Math.round(x * 100)}%`;
+const nf = (n) => Number(n).toLocaleString("tr-TR");
+
+function dateRange(startIso, endIso) {
+  const a = new Date(startIso + "T00:00:00Z"), b = new Date(endIso + "T00:00:00Z");
+  const am = a.getUTCMonth(), bm = b.getUTCMonth();
+  const left = am === bm ? `${a.getUTCDate()}` : `${a.getUTCDate()} ${TR_MONTHS[am]}`;
+  return `${left}–${b.getUTCDate()} ${TR_MONTHS[bm]}`;
+}
+
+/* ── Yükleme ───────────────────────────────────────────────────────────────
+ * Sayfa http üzerinden açıldıysa dosyaları kendi çeker. file:// üzerinden
+ * tarayıcı bunu engeller (CORS) — o durumda dosya seçtirilir. */
+const BASE = "../../data/";
+let META = null, WEEKS = [], CACHE = new Map();
+
+async function getJson(path) {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${path} → HTTP ${res.status}`);
+  return res.json();
+}
+
+async function boot() {
+  try {
+    META = await getJson(BASE + "missions-meta.json");
+    const index = await getJson(BASE + "snapshots/index.json");
+    WEEKS = (index.weeks || []).slice().sort();
+    if (!WEEKS.length) return showEmpty("Snapshot dizini boş.");
+    for (const w of WEEKS) CACHE.set(w, await getJson(`${BASE}snapshots/${w}.json`));
+    mountPicker(WEEKS[WEEKS.length - 1]);
+  } catch (err) {
+    showEmpty(err.message);
+  }
+}
+
+function mountPicker(selected) {
+  const pick = $("weekPick");
+  pick.innerHTML = WEEKS.map((w) => `<option value="${esc(w)}">${esc(w)}</option>`).join("");
+  pick.value = selected;
+  pick.hidden = false;
+  pick.onchange = () => render(pick.value);
+  render(selected);
+}
+
+/* Boş durum. Hem "hiç snapshot yok" hem "file:// yüzünden okunamadı" buraya
+ * düşer, çünkü kullanıcı açısından ikisi de aynı: ekranda veri yok. */
+function showEmpty(reason) {
+  $("panel").hidden = true;
+  const el = $("emptyState");
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="empty">
+      <h3>Henüz veri yok</h3>
+      <p>Önce bir haftalık snapshot üret:</p>
+      <code>node tools/generate-weekly-snapshot.mjs</code>
+      <p>Panel dosyaları <b>data/snapshots/</b> altından okur. Bu sayfayı doğrudan
+         dosya olarak açtıysan tarayıcı bu okumayı engeller — ya yerel sunucudan aç:</p>
+      <code>python3 -m http.server 8080 &amp;&amp; open http://localhost:8080/tools/panel/</code>
+      <p>…ya da snapshot dosyalarını buradan yükle
+         (<b>missions-meta.json</b> ile birlikte seç):</p>
+      <input type="file" id="filePick" multiple accept="application/json">
+      <div class="hint">Sebep: ${esc(reason)}</div>
+    </div>`;
+  $("filePick").onchange = async (e) => {
+    const files = [...e.target.files];
+    for (const f of files) {
+      const text = await f.text();
+      let json; try { json = JSON.parse(text); } catch { continue; }
+      if (json.generated_from === "data.js") META = json;
+      else if (json.week) CACHE.set(json.week, json);
+    }
+    WEEKS = [...CACHE.keys()].sort();
+    if (!META) return alert("missions-meta.json da seçilmeli — görev/paket etiketleri oradan geliyor.");
+    if (!WEEKS.length) return alert("En az bir snapshot dosyası seçilmeli.");
+    el.hidden = true;
+    $("panel").hidden = false;
+    mountPicker(WEEKS[WEEKS.length - 1]);
+  };
+}
+
+/* ── Türetilenler ─────────────────────────────────────────────────────────── */
+
+/** Genel tamamlanma ortalaması: toplam complete / toplam start. */
+function overallRatio(snap) {
+  return snap.mission_starts > 0 ? snap.mission_completes / snap.mission_starts : null;
+}
+
+function missionStats(snap, id) {
+  const m = snap.missions?.[String(id)];
+  return { starts: m?.starts ?? 0, completes: m?.completes ?? 0 };
+}
+
+/** Prototipin renk merdiveni; "sorunlu" ayrı bir durum, skalanın parçası değil. */
+function cellColor(ratio, weak) {
+  if (weak) return { bg: "var(--orange)", fg: "#fff" };
+  if (ratio >= 0.75) return { bg: "#6DBE45", fg: "#fff" };
+  if (ratio >= 0.65) return { bg: "#8ecf72", fg: "#fff" };
+  if (ratio >= 0.55) return { bg: "#b3dd9c", fg: "#0D1B2A" };
+  if (ratio >= 0.45) return { bg: "#d3ebc6", fg: "#0D1B2A" };
+  return { bg: "#e6f3de", fg: "#0D1B2A" };
+}
+
+/* ── Render ────────────────────────────────────────────────────────────────── */
+
+function render(weekId) {
+  const snap = CACHE.get(weekId);
+  const prevId = WEEKS[WEEKS.indexOf(weekId) - 1];
+  const prev = prevId ? CACHE.get(prevId) : null;
+
+  $("panel").hidden = false;
+  $("emptyState").hidden = true;
+  $("weekRange").textContent = `Hafta ${snap.week} · ${dateRange(snap.period_start, snap.period_end)}`;
+
+  renderSmallN(snap);
+  renderThesis(snap);
+  renderAlerts(snap);
+  renderGrid(snap);
+  renderFunnel(snap, prev);
+  renderCross(snap);
+  renderFeatures(snap);
+  renderHub(snap);
+  renderFoot(snap, prev);
+}
+
+function renderSmallN(snap) {
+  const el = $("smallN");
+  if (snap.app_opens >= CONFIG.smallSampleBelow) { el.innerHTML = ""; return; }
+  el.innerHTML = `<div class="smallN"><b>Örneklem küçük (N=${nf(snap.app_opens)}).</b>
+    Paket seviyesi okunabilir, tek görev seviyesi henüz güvenilir değil.</div>`;
+}
+
+function renderThesis(snap) {
+  const ratio = overallRatio(snap);
+  const reach = snap.app_first_opens ?? 0;
+  $("thesis").innerHTML = reach
+    ? `${nf(reach)} cihaz açtı, <em>${nf(snap.mission_completes)} görev bitti.</em>`
+    : `${nf(snap.app_opens)} oturum, <em>${nf(snap.mission_completes)} görev bitti.</em>`;
+
+  const bits = [];
+  if (ratio !== null) bits.push(`Başlatılan görevlerin ${pct(ratio)}'i tamamlanıyor.`);
+  const dead = META.pack_keys.filter((k) => {
+    const p = snap.packs?.[k];
+    return p && p.views === 0 && p.starts === 0;
+  });
+  if (dead.length) {
+    bits.push(`${dead.map((k) => META.pack_labels[k]).join(", ")} paketine hiç girilmedi.`);
+  }
+  if (!snap.mission_starts) bits.push("Bu hafta hiç görev başlatılmadı.");
+  $("thesisSub").textContent = bits.join(" ");
+}
+
+function renderAlerts(snap) {
+  const out = [];
+  const avg = overallRatio(snap);
+
+  // A week with no traffic at all would otherwise fire one "never entered"
+  // warning per pack — six alarms that all say the same thing, and none of
+  // them about the packs. Say the one true thing instead.
+  if (!snap.app_opens && !snap.mission_starts) {
+    $("alerts").innerHTML = `<div class="alert calm"><div class="alert-num">—</div>
+      <div><b class="alert-b">Bu hafta hiç veri yok</b>
+      <span class="alert-w">Tek bir oturum bile kaydedilmedi, dolayısıyla uyarı eşiklerinin hiçbiri
+      anlamlı değil. Beacon canlıysa bu, kimsenin uygulamayı açmadığı anlamına gelir.</span></div></div>`;
+    return;
+  }
+
+  // 1 — genel ortalamanın yarısının altındaki görevler
+  if (avg !== null) {
+    for (const id of Object.keys(snap.missions || {}).sort((a, b) => a - b)) {
+      const { starts, completes } = missionStats(snap, id);
+      if (starts < CONFIG.minStartsForAlert) continue;
+      const r = completes / starts;
+      if (r >= avg * CONFIG.weakMissionRatio) continue;
+      out.push({
+        num: pct(r),
+        title: `Görev ${id} yarıda kalıyor`,
+        text: `${nf(starts)} başlatma, ${nf(completes)} tamamlama. Diğer görevlerin ortalaması ${pct(avg)}. Adımları veya süresi sorunlu olabilir.`,
+      });
+    }
+  }
+
+  // 2 — hiç girilmemiş paketler
+  for (const key of META.pack_keys) {
+    const p = snap.packs?.[key];
+    if (!p || p.views > 0 || p.starts > 0) continue;
+    out.push({
+      num: "0",
+      title: `${META.pack_labels[key]} paketine hiç girilmedi`,
+      text: "Altı görevin hiçbiri açılmadı. Ya paket adı çekmiyor ya listede çok aşağıda.",
+    });
+  }
+
+  // 3 — sıfırlama eşiği
+  const resets = snap.features?.progress_reset ?? 0;
+  if (resets > CONFIG.resetAlertAbove) {
+    out.push({
+      num: nf(resets),
+      title: "İlerleme sıfırlama beklenenin üstünde",
+      text: `Eşik ${CONFIG.resetAlertAbove}. Sıfırlama genelde "baştan başlamak istiyorum" değil, "bir şey bozuldu" demektir.`,
+    });
+  }
+
+  $("alerts").innerHTML = out.length
+    ? out.map((a) => `
+        <div class="alert">
+          <div class="alert-num">${esc(a.num)}</div>
+          <div><b class="alert-b">${esc(a.title)}</b><span class="alert-w">${esc(a.text)}</span></div>
+        </div>`).join("")
+    : `<div class="alert calm"><div class="alert-num">0</div>
+        <div><b class="alert-b">Eşikleri aşan bir şey yok</b>
+        <span class="alert-w">Zayıf görev, girilmemiş paket ve sıfırlama eşiklerinin üçü de temiz.</span></div></div>`;
+}
+
+function renderGrid(snap) {
+  const avg = overallRatio(snap);
+  const rows = META.pack_keys.map((key) => {
+    const ids = Object.keys(META.missions)
+      .filter((id) => META.missions[id].pack === key)
+      .sort((a, b) => a - b);
+
+    let ps = 0, pc = 0;
+    const cells = ids.map((id) => {
+      const { starts, completes } = missionStats(snap, id);
+      ps += starts; pc += completes;
+      if (!starts) {
+        return `<div class="cell" data-t="Görev ${id}&#10;hiç açılmadı">${id}</div>`;
+      }
+      const r = completes / starts;
+      const weak = avg !== null && starts >= CONFIG.minStartsForAlert && r < avg * CONFIG.weakMissionRatio;
+      const c = cellColor(r, weak);
+      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ sorunlu" : ""}`;
+      return `<div class="cell" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</div>`;
+    }).join("");
+
+    return `<div class="prow">
+        <div class="pname">${esc(META.pack_labels[key])}</div>
+        ${cells}
+        <div class="pct">${ps ? pct(pc / ps) : "—"}</div>
+      </div>`;
+  }).join("");
+
+  $("gridwrap").innerHTML = rows + `
+    <div class="legend">
+      <span><i class="sw" style="background:var(--ink-06)"></i>hiç açılmadı</span>
+      <span><i class="sw" style="background:#e6f3de"></i>düşük</span>
+      <span><i class="sw" style="background:#b3dd9c"></i>orta</span>
+      <span><i class="sw" style="background:#6DBE45"></i>yüksek</span>
+      <span><i class="sw" style="background:var(--orange)"></i>sorunlu</span>
+    </div>`;
+}
+
+/** Önceki haftaya göre değişim. Yön belirtilir, yorum okuyucuya bırakılır. */
+function delta(now, before) {
+  if (before === null || before === undefined) return "";
+  const d = now - before;
+  if (d === 0) return `<span class="delta">▬ değişmedi</span>`;
+  return `<span class="delta">${d > 0 ? "▲" : "▼"}${nf(Math.abs(d))}</span>`;
+}
+
+function renderFunnel(snap, prev) {
+  const reach = snap.app_first_opens ?? 0;
+  const rv = snap.return_visits || {};
+  const top = CONFIG.unitsSold ?? Math.max(reach, snap.app_opens, 1);
+
+  const steps = [];
+  if (CONFIG.unitsSold) {
+    steps.push({ label: "Satılan ünite", n: CONFIG.unitsSold, color: "var(--navy)", note: "" });
+  }
+  steps.push({
+    label: "Farklı cihaz açtı", n: reach, color: "var(--sky)",
+    note: CONFIG.unitsSold ? `satılanın ${pct(reach / CONFIG.unitsSold)}'i · yönsel tahmin` : "yönsel tahmin — kesin kişi sayısı değil",
+    prev: prev?.app_first_opens,
+  });
+  steps.push({
+    label: "Toplam oturum", n: snap.app_opens, color: "var(--sky)",
+    note: reach ? `cihaz başına ${(snap.app_opens / reach).toFixed(1)} oturum` : "",
+    prev: prev?.app_opens,
+  });
+  for (const n of [2, 3, 5, 10]) {
+    steps.push({
+      label: `${n}. kez geldi`, n: rv[String(n)] ?? 0, color: "var(--lime)",
+      note: reach ? `açan cihazların ${pct((rv[String(n)] ?? 0) / reach)}'i` : "",
+      prev: prev?.return_visits?.[String(n)],
+    });
+  }
+  steps.push({
+    label: "Sertifika üreten", n: snap.features?.certificate_made ?? 0, color: "var(--orange)",
+    note: "36 görevin tamamı", prev: prev?.features?.certificate_made,
+  });
+
+  $("funnel").innerHTML = steps.map((s) => `
+    <div class="fstep">
+      <div class="ftop">
+        <span class="flab">${esc(s.label)}${delta(s.n, s.prev)}</span>
+        <span class="fnum">${nf(s.n)}</span>
+      </div>
+      <div class="ftrack"><i class="fbar" style="width:${Math.min(100, (s.n / top) * 100)}%;background:${s.color}"></i></div>
+      ${s.note ? `<div class="fpct">${esc(s.note)}</div>` : ""}
+    </div>`).join("");
+}
+
+function renderCross(snap) {
+  const blocks = Object.entries(CROSS_TITLES).map(([field, title]) => {
+    const data = snap[field] || {};
+    const entries = Object.entries(data).filter(([, v]) => v > 0);
+    if (!entries.length) {
+      return `<div class="xt"><div class="xt-h">${esc(title)}</div>
+        <div class="xread">Bu hafta veri yok.</div></div>`;
+    }
+    // The prototype had three segments per bar and could label each one in
+    // place. Real data has up to seven (duration alone has seven buckets), so
+    // a narrow slice gets no text — it would overlap its neighbour into an
+    // unreadable smear — and the key underneath carries every value.
+    const segs = entries.map(([k, v], i) =>
+      `<div class="xseg" style="flex:${v * 100};background:${SEG_COLORS[i % SEG_COLORS.length]}">${
+        v >= 0.12 ? `${esc(k)} · ${pct(v)}` : ""
+      }</div>`
+    ).join("");
+    const keys = entries.map(([k, v], i) =>
+      `<span><i class="dot" style="background:${SEG_COLORS[i % SEG_COLORS.length]}"></i>${esc(k)} · ${pct(v)}</span>`
+    ).join("");
+    return `<div class="xt">
+        <div class="xt-h">${esc(title)}</div>
+        <div class="xbar">${segs}</div>
+        <div class="xkeys">${keys}</div>
+      </div>`;
+  }).join("");
+
+  $("cross").innerHTML = blocks +
+    `<div class="xread">Paylar <b>başlatılan görev</b> üzerinden. Kova başına tamamlanma oranı
+      snapshot'taki <b>missions</b> ve <b>missions-meta.json</b>'dan türetilebilir.</div>`;
+}
+
+function renderFeatures(snap) {
+  const entries = Object.entries(FEATURE_LABELS)
+    .map(([key, label]) => ({ key, label, n: snap.features?.[key] ?? 0 }))
+    .sort((a, b) => b.n - a.n);
+  const max = Math.max(1, ...entries.map((e) => e.n));
+
+  $("features").innerHTML = entries.map((e) => {
+    const dead = e.n === 0;
+    const color = dead ? "var(--ink-12)" : e.n >= max * 0.4 ? "var(--lime)" : e.n >= max * 0.15 ? "var(--sky)" : "var(--orange)";
+    return `<div class="frow${dead ? " dead" : ""}">
+        <span class="fname">${esc(e.label)}${dead ? '<span class="tagdead">ölü</span>' : ""}</span>
+        <span class="fmini"><i style="width:${(e.n / max) * 100}%;background:${color}"></i></span>
+        <span class="fval">${nf(e.n)}</span>
+      </div>`;
+  }).join("");
+}
+
+function renderHub(snap) {
+  const hub = snap.hub3d || {};
+  const top = Math.max(1, hub.shown || 0);
+  $("hub").innerHTML = Object.entries(HUB_LABELS).map(([step, label]) => `
+    <div class="frow">
+      <span class="fname">${esc(label)}</span>
+      <span class="fmini"><i style="width:${Math.min(100, ((hub[step] ?? 0) / top) * 100)}%;background:${step === "failed" || step === "escaped" ? "var(--orange)" : "var(--sky)"}"></i></span>
+      <span class="fval">${nf(hub[step] ?? 0)}</span>
+    </div>`).join("");
+}
+
+function renderFoot(snap, prev) {
+  const partial = snap.generated_at && snap.generated_at.slice(0, 10) < snap.period_end;
+  const bits = [
+    `Kaynak: <b>data/snapshots/${esc(snap.week)}.json</b> · şema v${esc(snap.snapshot_schema ?? 1)} · üretildi ${esc((snap.generated_at || "").replace("T", " ").replace("Z", " UTC"))}.`,
+    prev ? `Karşılaştırma: ${esc(prev.week)}.` : "Önceki hafta yok — karşılaştırma gösterilmiyor.",
+    partial ? "<b>Bu hafta kapanmamıştı</b>, sayılar kısmi." : "",
+    snap.excluded_before ? `<b>${esc(snap.excluded_before)}</b> öncesi hariç tutuldu (test verisi).` : "",
+    "“Farklı cihaz açtı” kimlik tutulmadığı için kesin değil, yönsel bir göstergedir — aynı hane iki telefondan girerse iki sayılır, tarayıcı verisi temizlenirse yeniden sayılır.",
+  ].filter(Boolean);
+  $("foot").innerHTML = bits.join(" ");
+}
+
+boot();
+</script>
+</body>
+</html>
