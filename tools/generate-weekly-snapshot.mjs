@@ -46,7 +46,7 @@
  * This repo is public; keep it that way.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -634,6 +634,17 @@ async function main() {
   const out = join(dir, `${weekId}.json`);
   writeFileSync(out, json);
   console.error(`wrote ${out}`);
+
+  // The panel is a static page: it cannot list a directory, so the directory
+  // lists itself. Rebuilt from what is actually on disk, not appended to, so
+  // a deleted snapshot disappears from the index too.
+  const weeks = readdirSync(dir)
+    .filter((f) => /^\d{4}-\d{2}\.json$/.test(f))
+    .map((f) => f.replace(/\.json$/, ""))
+    .sort();
+  const indexPath = join(dir, "index.json");
+  writeFileSync(indexPath, `${JSON.stringify({ weeks }, null, 2)}\n`);
+  console.error(`wrote ${indexPath} — ${weeks.length} week(s)`);
 }
 
 main().catch((err) => {

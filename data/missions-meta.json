@@ -9,6 +9,14 @@
     "Beach/Park",
     "Reflex Rush"
   ],
+  "pack_labels": {
+    "Aim Master": "Bullseye!",
+    "Focus Control": "Zen Mode",
+    "Team Duo": "Team Up",
+    "Indoor Compact": "Indoor Fun",
+    "Beach/Park": "Outdoor",
+    "Reflex Rush": "Lightning Hands"
+  },
   "badge_ids": [
     "first",
     "aim",

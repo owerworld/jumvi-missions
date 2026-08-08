@@ -83,6 +83,11 @@ export function buildMeta() {
     generated_from: "data.js",
     mission_count: missions.length,
     pack_keys: packKeys,
+    // Display names, for anything that shows a pack to a human. Kept here so
+    // the panel never has to hardcode a second copy of the marketing wording.
+    pack_labels: Object.fromEntries(
+      PACKS.filter((p) => p.key !== "all").map((p) => [p.key, p.name]),
+    ),
     badge_ids: BADGES.map((b) => b.id),
     missions: byId,
   };
