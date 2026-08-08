@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ═══════════════════════════════════════════════════════════════════════════
- * JUMVI weekly snapshot generator — Faz 1, Görev 1.3
+ * JUMVI weekly snapshot generator — Faz 1, Görev 1.3 + Faz 2, Görev 2.2
  *
  * WHY THIS EXISTS
  * Workers Analytics Engine deletes rows after 90 days. Everything that must
@@ -12,6 +12,12 @@
  * A number that is not in a snapshot is gone forever 90 days after the event.
  * That is the reason the mission-level breakdown is captured here even though
  * nothing reads it yet.
+ *
+ * FAZ 2 adds the sixteen content/feature events, and five cross-reads that
+ * need no extra event at all: mission ids are joined against the labels each
+ * mission already carries (age, difficulty, players, duration, pack setting)
+ * via data/missions-meta.json, which is DERIVED from data.js and re-verified
+ * on every run — see loadMissionsMeta().
  *
  * MANUAL ONLY — Faz 1 spec is explicit that this must not run on a schedule
  * in this phase. There is no workflow, no cron, no hook. A human runs it.
@@ -44,9 +50,33 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildMeta, serialiseMeta } from "./derive-missions-meta.mjs";
 
 const DATASET = "jumvi_events_v1";
-const SNAPSHOT_SCHEMA = 1;
+const SNAPSHOT_SCHEMA = 2;
+
+/* Feature events: a flat count each, no props to break down. Order is the
+ * order the panel reads them in. */
+const FEATURE_EVENTS = [
+  "daily_pick_tap", "speak_on", "timer_start", "badge_earned",
+  "certificate_made", "share_tap", "score_saved", "dashboard_open",
+  "missionbook_get", "profile_add", "progress_reset",
+];
+
+/** The hub funnel, in order. Frozen with the event (src/worker.js). */
+const HUB3D_STEPS = ["shown", "entered", "ready", "moved", "mission", "failed", "escaped"];
+
+/** Only these visit numbers are ever reported (app.js). */
+const RETURN_VISIT_STEPS = [2, 3, 5, 10];
+
+/** The five cross-reads, and which mission label each one groups by. */
+const CROSS_READS = {
+  by_age: "age",
+  by_difficulty: "difficulty",
+  by_players: "players",
+  by_duration: "duration",
+  by_setting: "setting",
+};
 
 /** Frozen by the beacon allowlist (src/worker.js). Order matches the spec. */
 const HELP_REASONS = [
@@ -60,6 +90,32 @@ const HELP_REASONS = [
 
 const PLAYER_COUNTS = [2, 3, 4];
 
+/* Mission labels, derived from data.js — never hand-written. See
+ * tools/derive-missions-meta.mjs for why, and re-run it after editing data.js
+ * (--check fails loudly when this file has drifted). */
+function loadMissionsMeta() {
+  const path = fileURLToPath(new URL("../data/missions-meta.json", import.meta.url));
+  let raw;
+  try {
+    raw = readFileSync(path, "utf8");
+  } catch {
+    throw new Error(
+      "data/missions-meta.json is missing. Run: node tools/derive-missions-meta.mjs",
+    );
+  }
+  // Re-derive and compare, every run. A stale meta file does not crash — it
+  // quietly files missions under the wrong age band and produces a breakdown
+  // that looks perfectly reasonable. Nothing downstream could catch that, and
+  // the snapshot is permanent.
+  if (raw !== serialiseMeta(buildMeta())) {
+    throw new Error(
+      "data/missions-meta.json no longer matches data.js — the cross-reads would be wrong.\n" +
+        "  Re-run: node tools/derive-missions-meta.mjs",
+    );
+  }
+  return JSON.parse(raw);
+}
+
 /* The note travels inside every snapshot file. A number in a git repo outlives
  * the person who can explain it; this is that explanation, attached. */
 const METHODOLOGY = [
@@ -68,6 +124,20 @@ const METHODOLOGY = [
   "açılışlarının tahmini sayısıdır; hane başına birden fazla cihaz veya",
   "tarayıcı verisi temizleme nedeniyle olduğundan az/çok sayılabilir.",
   "Kesin kullanıcı sayısı değil, yönsel (directional) bir göstergedir.",
+  "",
+  "Üç sayı üç ayrı soruyu cevaplar ve birbirinin yerine kullanılamaz:",
+  '"app_first_opens" kaç farklı cihazın hiç ulaştığı (erişim), "app_opens"',
+  'toplam oturum (kullanım), "return_visits" kaç cihazın geri döndüğü',
+  "(tutundurma). app_first_opens de KESİN KULLANICI SAYISI DEĞİL, yönsel",
+  "tahmindir: tarayıcı verisi temizlenirse aynı cihaz yeniden sayılır, iki",
+  "telefonlu hane iki sayılır, tek telefonu paylaşan iki çocuk bir sayılır.",
+  "return_visits yalnızca 2., 3., 5. ve 10. ziyaretlerde kaydedilir; aradaki",
+  "ziyaretler hiç gönderilmez ve cihaz kimliği hiçbir zaman üretilmez.",
+  "",
+  'by_* kırılımları mission_start payıdır (toplamları 1.0). Kova başına',
+  '"kaçı bitirildi" oranı burada hazır durmaz ama türetilebilir: "missions"',
+  "her görevin start/complete sayısını, data/missions-meta.json her görevin",
+  "etiketlerini tutar.",
   "",
   "Sayımlar count() değil sum(_sample_interval) ile hesaplanır; Analytics",
   "Engine örneklemeye başlarsa bu, ham satır sayısı yerine örneklemeye göre",
@@ -238,10 +308,15 @@ async function sql(ctx, statement) {
  * the floor raised only when the caller passed --since.
  */
 async function collect(ctx, startMs, endMs) {
-  const counts = { app_open: 0, mission_start: 0, mission_complete: 0 };
+  const counts = { app_open: 0, mission_start: 0, mission_complete: 0, app_first_open: 0 };
   const helpOpens = Object.fromEntries(HELP_REASONS.map((r) => [r, 0]));
   const playerCount = Object.fromEntries(PLAYER_COUNTS.map((n) => [String(n), 0]));
   const missions = new Map();
+  const features = Object.fromEntries(FEATURE_EVENTS.map((e) => [e, 0]));
+  const hub3d = Object.fromEntries(HUB3D_STEPS.map((k) => [k, 0]));
+  const returnVisits = Object.fromEntries(RETURN_VISIT_STEPS.map((n) => [String(n), 0]));
+  const packViews = new Map();
+  const packCompletes = new Map();
 
   const where =
     `WHERE timestamp >= toDateTime('${sqlDateTime(startMs)}') ` +
@@ -300,17 +375,124 @@ async function collect(ctx, startMs, endMs) {
     missions.set(row.mission, entry);
   }
 
-  return { counts, helpOpens, playerCount, missions };
+  /* ── Faz 2 ─────────────────────────────────────────────────────────────── */
+
+  // 5 — feature counts, plus app_first_open. One GROUP BY: every one of these
+  // is a bare count with no prop to break down.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 IN (${[...FEATURE_EVENTS, "app_first_open"].map((e) => `'${e}'`).join(",")}) ` +
+      `GROUP BY event`,
+  )) {
+    if (row.event === "app_first_open") counts.app_first_open = Number(row.n);
+    else features[row.event] = Number(row.n);
+  }
+
+  // 6 — pack_view / pack_complete, both keyed by pack.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob1 AS event, blob2 AS pack, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 IN ('pack_view','pack_complete') GROUP BY event, pack`,
+  )) {
+    const target = row.event === "pack_view" ? packViews : packCompletes;
+    target.set(row.pack, (target.get(row.pack) ?? 0) + Number(row.n));
+  }
+
+  // 7 — the hub funnel, step by step.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob2 AS step, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'hub3d' GROUP BY step`,
+  )) {
+    if (!(row.step in hub3d)) console.error(`⚠️  unknown hub3d step in dataset: ${row.step}`);
+    hub3d[row.step] = (hub3d[row.step] ?? 0) + Number(row.n);
+  }
+
+  // 8 — retention. double1 behind a blob1 filter, same rule as player_count:
+  // an event with no numeric prop reports 0, not "absent".
+  for (const row of await sql(
+    ctx,
+    `SELECT double1 AS visit, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'return_visit' GROUP BY visit`,
+  )) {
+    const key = String(Number(row.visit));
+    if (!(key in returnVisits)) console.error(`⚠️  off-threshold return_visit in dataset: ${key}`);
+    returnVisits[key] = (returnVisits[key] ?? 0) + Number(row.n);
+  }
+
+  return {
+    counts, helpOpens, playerCount, missions,
+    features, hub3d, returnVisits, packViews, packCompletes,
+  };
 }
 
 // ── Snapshot body ───────────────────────────────────────────────────────────
 
-function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore }) {
-  const { counts, helpOpens, playerCount, missions } = data;
+/**
+ * Roll mission-level starts up into whatever label the meta file carries —
+ * age band, difficulty, players, duration, setting.
+ *
+ * The bucket keys come from the DATA, not from a list written here. The
+ * spec's example assumed three age bands and three difficulties; the real
+ * missions carry four age bands and only two difficulties. A hardcoded list
+ * would have silently dropped the 5+ band into nothing.
+ *
+ * Each value is that bucket's share of mission_starts, 2dp. Completion per
+ * bucket is deliberately not precomputed: `missions` keeps starts AND
+ * completes per id, and missions-meta.json keeps every label, so any ratio
+ * the panel wants can be derived from the snapshot without another query.
+ */
+function crossRead(missions, meta, field) {
+  const totals = new Map();
+  let grand = 0;
+  for (const [id, entry] of missions) {
+    const labels = meta.missions[id];
+    if (!labels) {
+      console.error(`⚠️  mission ${id} is in the dataset but not in missions-meta.json`);
+      continue;
+    }
+    const key = String(labels[field]);
+    totals.set(key, (totals.get(key) ?? 0) + entry.starts);
+    grand += entry.starts;
+  }
+  // Every bucket the catalogue has, so a zero reads as "nobody played this"
+  // rather than as a missing key.
+  const out = {};
+  for (const labels of Object.values(meta.missions)) out[String(labels[field])] = 0;
+  for (const [key, n] of totals) out[key] = grand > 0 ? Math.round((n / grand) * 100) / 100 : 0;
+  return Object.fromEntries(Object.entries(out).sort((a, b) => a[0].localeCompare(b[0], "en", { numeric: true })));
+}
+
+function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, meta }) {
+  const { counts, helpOpens, playerCount, missions,
+          features, hub3d, returnVisits, packViews, packCompletes } = data;
 
   // Mission ids are numeric strings; sort them as numbers so 9 precedes 10.
   const missionsSorted = Object.fromEntries(
     [...missions.entries()].sort((a, b) => Number(a[0]) - Number(b[0])),
+  );
+
+  // Pack rollup: views and completed_pack come straight off their events,
+  // starts/completes are summed from the missions that belong to the pack.
+  const packs = {};
+  for (const key of meta.pack_keys) {
+    packs[key] = {
+      views: packViews.get(key) ?? 0,
+      starts: 0,
+      completes: 0,
+      completed_pack: packCompletes.get(key) ?? 0,
+    };
+  }
+  for (const [id, entry] of missions) {
+    const labels = meta.missions[id];
+    if (!labels || !packs[labels.pack]) continue;
+    packs[labels.pack].starts += entry.starts;
+    packs[labels.pack].completes += entry.completes;
+  }
+
+  const crossReads = Object.fromEntries(
+    Object.entries(CROSS_READS).map(([out, field]) => [out, crossRead(missions, meta, field)]),
   );
 
   return {
@@ -328,7 +510,18 @@ function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore }) 
         : null,
     help_opens: helpOpens,
     player_count: playerCount,
+
+    // Reach and retention — the two numbers app_opens alone cannot give.
+    // See the methodology note: app_first_opens is directional, not a headcount.
+    app_first_opens: counts.app_first_open,
+    return_visits: returnVisits,
+
+    packs,
     missions: missionsSorted,
+    ...crossReads,
+    features,
+    hub3d,
+
     generated_at: generatedAt,
     dataset: DATASET,
     snapshot_schema: SNAPSHOT_SCHEMA,
@@ -417,6 +610,7 @@ async function main() {
     console.error("note this week has not closed yet — the snapshot is partial");
   }
 
+  const meta = loadMissionsMeta();
   const data = await collect({ token, accountId }, queryStart, weekEnd);
   const snapshot = buildSnapshot({
     weekId,
@@ -424,6 +618,7 @@ async function main() {
     data,
     generatedAt: new Date(now).toISOString().replace(/\.\d{3}Z$/, "Z"),
     excludedBefore,
+    meta,
   });
 
   const json = `${JSON.stringify(snapshot, null, 2)}\n`;
