@@ -2,8 +2,11 @@
 
 **Branch:** `feat/faz2-arge` · **Tarih:** 2026-08-08
 **Durum:** ✅ 21 event bağlandı, 19'u gerçek tarayıcıda uçtan uca doğrulandı.
-`main`'e **merge edilmedi.** Canlı `jumvi_events_v1` dataset'ine **tek satır yazılmadı** — doğrulama
-`wrangler dev` üzerinde yapıldı, orada Analytics Engine lokal simülasyon.
+`main`'e merge edildi (`2d1ea37`, 2026-08-09) ve canlıda doğrulandı — bkz. §6b.
+
+Geliştirme sırasındaki doğrulama `wrangler dev`'in varsayılan **lokal** modunda yapıldı ve canlı
+`jumvi_events_v1` dataset'ine tek satır yazmadı; iş bitiminde çalıştırılan sorgu bunu doğruladı
+(16 satır, değişmemiş). Production doğrulaması ise bilerek **yazdı** — penceresi §6b'de kayıtlı.
 
 ---
 
@@ -203,6 +206,76 @@ Headless tarayıcı paneli boyamadığı sürece `IntersectionObserver` hiç cal
 observer bile ateşlenmiyor, `innerHeight` 0 dönüyor). `pack_view` ancak panel ekran görüntüsüyle
 boyandığında ateşledi. Bu bir kod sorunu değil, ölçüm ortamının sınırı — ama `pack_view`'in gerçek
 cihazda kaydırmayla ateşlendiği launch öncesi teyit edilmeli.
+
+---
+
+## 6b. Production doğrulaması — 2026-08-09
+
+`main`'e merge edildi (`2d1ea37`), Cloudflare build'inin beş check'i de success. Canlıda:
+`CACHE_NAME = jumvi-missions-v170`, `app.js?v=20260808-3`, `packViewObserver` servis edilen
+`app.js`'te mevcut, `docs/` ve `tools/` → 404, `GET /api/beacon` → 405, `POST` → 204.
+
+### `pack_view` gerçek cihazda ateşliyor — headless'ta doğrulanamayan tek şey
+
+§6'da not edilmişti: headless panel boyamadığı sürece `IntersectionObserver` hiç callback
+üretmiyor. Bu yüzden canlıda gerçek tarayıcıyla, 375×812 mobil viewport'ta, depolama temizlenmiş
+"yeni cihaz" olarak Mission Path kaydırıldı. **Kaydırma ile dört paket başlığı görüş alanına girdi
+ve dördü de event üretti:**
+
+```
+01:34:10  pack_view  Aim Master
+01:34:35  pack_view  Team Duo
+01:34:48  pack_view  Indoor Compact
+01:35:05  pack_view  Reflex Rush
+```
+
+Focus Control ve Beach/Park başlıkları iki boyama arasında geçtiği için ateşlemedi — aynı headless
+sınırı, gerçek bir çocuğun telefonunda geçerli değil.
+
+### TEST PENCERESİ — snapshot'ta dışlanacak
+
+```
+2026-08-09 01:32:12 – 01:35:21 UTC   10 satır
+```
+
+| Event | n | Not |
+|---|---|---|
+| `app_first_open` | 2 | depolama iki kez temizlendi; gerçek "yeni cihaz" sayısını 2 şişirir |
+| `app_open` | 2 | |
+| `hub3d {shown}` | 2 | |
+| `pack_view` | 4 | yukarıdaki dört paket |
+
+Bu haftanın (2026-W33) snapshot'ı üretilirken:
+
+```bash
+node tools/generate-weekly-snapshot.mjs --week 2026-33 --since 2026-08-09T01:36:00Z
+```
+
+…**yalnızca** bu pencereyi dışlamak istiyorsan yeterli değil: `--since` bir taban değerdir, öncesindeki
+her şeyi keser. Aşağıdaki açık maddeyle birlikte karara bağlanmalı.
+
+### AÇIK MADDE — 2026-08-08'de kaynağı belirlenemeyen 70 satır
+
+Bu görevin sonunda dataset 16 satırdı. Production doğrulamasına başlarken **86** satırdı:
+
+```
+2026-08-07   16 satır   Faz 1 test verisi (docs/audits/faz1-snapshot.md §3)
+2026-08-08   70 satır   12:44:51 – 19:41:04 UTC  ← kaynağı belirlenemedi
+2026-08-09   10 satır   yukarıdaki test penceresi
+```
+
+70 satır **Faz 2 event'leri içeriyor** (`pack_view`, `badge_earned`, `hub3d`, `app_first_open`,
+`pack_complete`, `timer_start`, `dashboard_open`). Ama o saatlerde Faz 2 kodu production'da değildi
+ve `feat/faz2-arge` uzağa hiç push edilmedi — yani preview deployment da yoktu. Bu satırlar bu
+oturumdaki çalışmadan da gelmiyor: buradaki doğrulama `wrangler dev`'in varsayılan lokal modunda
+yapıldı ve iş bitiminde çalıştırılan sorgu hâlâ 16 satır döndürüyordu.
+
+Geriye kalan tek açıklama, Faz 2 kodunun iki oturum arasında **yerel olarak çalıştırılmış** olması.
+Bu doğruysa bir şeyi de gösterir: o çalıştırma canlı dataset'e yazmış, yani yerel çalıştırmanın
+"nereye yazdığı" varsayılamaz.
+
+**Karar gerekiyor:** bu 70 satır gerçek kullanıcı verisi mi, test mi? Testse ilk gerçek haftalık
+snapshot bu pencereyi de dışlamalı, yoksa `app_first_opens` ve tüm özellik sayıları şişer.
 
 ---
 
