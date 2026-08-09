@@ -48,10 +48,30 @@ $ npx wrangler dev --help
 
 `--remote` (mixed-mode "remote bindings"den farklı) Worker'ın **tamamını** Cloudflare'in edge'inde
 çalıştırır — binding bazlı seçim yok, hepsi gerçek. Analytics Engine mixed-mode'a giremediği için,
-gerçek WAE'ye lokal makineden ulaşmanın **tek** yolu budur.
+gerçek WAE'ye lokal makineden ulaşmanın **tek** yolu budur — *teoride.*
 
-En olası açıklama: Faz 2 kodu (`feat/faz2-arge`, hiç push edilmemiş) bir noktada lokalde
-`wrangler dev --remote` ile çalıştırılmış ve etkileşim doğrudan `jumvi_events_v1`'e yazmış.
+### Bu teoriyi bu hesapta test ettim — ve şu an çalışmıyor
+
+`wrangler dev --remote` bu makineden, hem `--env dev` ile hem de mevcut production script adına
+(`jumvi-missions`) karşı denendi. İkisi de aynı hatayla düştü, deploy edilen hiçbir şeye
+dokunmadan:
+
+```
+✘ [ERROR] Could not create remote preview session on your account.
+```
+
+`WRANGLER_LOG_SANITIZE=false` ile ham HTTP gövdesine bakıldığında Cloudflare edge'i
+**"Invalid Workers Preview configuration" (error 1031)** döndürüyor — `*.workers.dev` preview
+mekanizmasının token exchange adımında. Bu, bu oturumun yaptığı bir değişiklikten kaynaklanmıyor:
+production script'in `workers_dev` ayarı API'den `enabled: true, previews_enabled: true` olarak
+doğrulandı, `env.dev` hiç ortada yokken de aynı hata çıktı. Bu, [cloudflare/workers-sdk#10773]
+(https://github.com/cloudflare/workers-sdk/issues/10773) ile eşleşen, hâlâ açık, hesaba özgü
+olmayan bilinen bir wrangler/Cloudflare sorunu.
+
+**Sonuç:** `--remote` mekanizması "70 satırın nasıl yazılabileceğini" açıklamaya devam ediyor
+(kod düzeyinde bu tek gerçek yol), ama *o gün gerçekten çalışıp çalışmadığı* doğrulanamadı —
+bugün bu hesapta çalışmıyor. Kaynağı belirlenemeyen 70 satır hâlâ tam olarak açıklanmış değil;
+en olası aday budur ama kanıtlanmış değildir.
 
 ## Bundan çıkan ikinci ders — `analytics_engine_datasets` env'ler arası **inherit edilmiyor**
 
@@ -65,9 +85,16 @@ yazma hatasını önlemek için kasıtlı" diye tanımlıyor.
 
 - `npx wrangler dev` (bayraksız) → her zaman güvenli, hangi dataset tanımlı olursa olsun; binding
   ne yazarsa yazsın gövdesi boş.
-- `npx wrangler dev --remote` veya `-r` → **gerçek** production kaynaklarına dokunur. Bu repoda
-  Analytics Engine söz konusu olduğunda bu, gerçek `jumvi_events_v1`'e yazmak demektir. Kasıtlı bir
-  sebep yoksa **kullanılmamalı**.
+- `npx wrangler dev --remote` veya `-r` → **gerçek** production kaynaklarına dokunur — çalıştığı
+  zaman. Bu repoda Analytics Engine söz konusu olduğunda bu, gerçek `jumvi_events_v1`'e yazmak
+  demektir. Kasıtlı bir sebep yoksa **kullanılmamalı**; bugün itibariyle zaten çalışmıyor (yukarı
+  bakın), ama yukarı akış düzeltmesi bunu her an tekrar çalışır hale getirebilir — varsayım
+  "çalışmıyor" üzerine kurulmamalı.
 - Cloudflare Workers Builds'in branch/preview deploy'ları (`git push`) da aynı riski taşır — bu
   zaten `docs/audits/faz1-beacon.md` §6b'de belgelenmişti (preview URL'i gerçek dataset'e 11 satır
-  yazmıştı). `--remote` ikinci, bağımsız bir yol.
+  yazmıştı) ve `--remote`'dan bağımsız olarak hâlâ geçerli. Bu yol test edilmedi/kapatılmadı.
+
+## Faz 2 dev dataset ayrımı — `docs/audits/faz2-dev-dataset.md`
+
+Yukarıdaki riski kalıcı olarak azaltan `wrangler.jsonc` `env.dev` bloğu ve
+`tools/wrangler-dev-remote.sh` script'i eklendi — detay ve doğrulama ayrı raporda.
