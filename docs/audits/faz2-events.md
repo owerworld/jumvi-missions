@@ -270,12 +270,17 @@ ve `feat/faz2-arge` uzağa hiç push edilmedi — yani preview deployment da yok
 oturumdaki çalışmadan da gelmiyor: buradaki doğrulama `wrangler dev`'in varsayılan lokal modunda
 yapıldı ve iş bitiminde çalıştırılan sorgu hâlâ 16 satır döndürüyordu.
 
-Geriye kalan tek açıklama, Faz 2 kodunun iki oturum arasında **yerel olarak çalıştırılmış** olması.
-Bu doğruysa bir şeyi de gösterir: o çalıştırma canlı dataset'e yazmış, yani yerel çalıştırmanın
-"nereye yazdığı" varsayılamaz.
+**Kısmen açıklığa kavuştu — [`docs/audits/wrangler-dev-analytics-engine.md`](wrangler-dev-analytics-engine.md).**
+Varsayılan `wrangler dev` Analytics Engine'i her zaman no-op simüle eder (kod düzeyinde ve resmi
+dokümantasyonla doğrulandı) — bu **kesin**. Gerçek dataset'e lokal makineden ulaşmanın tek yolu
+kodda `wrangler dev --remote` (`-r`), ama bu mekanizma bu hesapta **test edilip çalışmadığı
+doğrulandı** — `error 1031, Invalid Workers Preview configuration` ile düşüyor, bilinen açık bir
+wrangler sorunu ([workers-sdk#10773](https://github.com/cloudflare/workers-sdk/issues/10773)).
+Yani en olası aday hâlâ budur ama *o gün gerçekten çalıştığı* kanıtlanamadı; mekanizma tam
+doğrulanmış değil.
 
-**Karar gerekiyor:** bu 70 satır gerçek kullanıcı verisi mi, test mi? Testse ilk gerçek haftalık
-snapshot bu pencereyi de dışlamalı, yoksa `app_first_opens` ve tüm özellik sayıları şişer.
+**Karar hâlâ gerekiyor:** bu 70 satır gerçek kullanıcı verisi mi, test mi? Testse ilk gerçek
+haftalık snapshot bu pencereyi de dışlamalı, yoksa `app_first_opens` ve tüm özellik sayıları şişer.
 
 ---
 

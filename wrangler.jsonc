@@ -16,5 +16,25 @@
       "binding": "JUMVI_ANALYTICS",
       "dataset": "jumvi_events_v1"
     }
-  ]
+  ],
+
+  // Faz 2 / dev dataset split — see docs/audits/wrangler-dev-analytics-engine.md.
+  // Bindings are NOT inherited between environments (unlike main/assets/
+  // compatibility_date above, which env.dev gets for free): this block has
+  // to restate the binding NAME to keep src/worker.js unchanged, but points
+  // it at a separate dataset. Only reached via
+  //   npx wrangler dev --remote --env dev
+  // (or tools/wrangler-dev-remote.sh). Plain `wrangler dev` never reaches
+  // any of this — Analytics Engine has no remote-bindings support, so local
+  // dev writes nowhere, ever, env or no env.
+  "env": {
+    "dev": {
+      "analytics_engine_datasets": [
+        {
+          "binding": "JUMVI_ANALYTICS",
+          "dataset": "jumvi_events_dev"
+        }
+      ]
+    }
+  }
 }
