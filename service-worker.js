@@ -17,10 +17,20 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v182";
+const CACHE_NAME = "jumvi-missions-v183";
 const CORE_ASSETS = [
   "/",
   "/index.html",
+  // The Turkish navigation shell, precached for the same reason as
+  // /index.html above. Without it the two languages are not equal offline:
+  // the English shell is on the device from the install step, but /tr only
+  // reaches the cache once a navigation is INTERCEPTED, and the very first
+  // visit happens before this worker controls the page. A family whose first
+  // ever visit is /tr would then have nothing to fall back to offline, while
+  // an English-first family would. Served by the Worker (TR_APP_PATHS), so
+  // addAll resolves it.
+  "/tr/index.html",
+  "/tr/manifest.json",
   "/style.css",
   "/app.js",
   "/data.js",

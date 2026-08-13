@@ -45,6 +45,22 @@ while IFS= read -r a; do
   [ -z "$a" ] && continue
   f=".${a}"                      # "/app.js" -> "./app.js"
   if [ "$a" = "/" ]; then f="./index.html"; fi
+
+  # /tr/index.html has no file on disk on purpose: the Worker builds it from
+  # the English shell plus the locale layer, and creating a real tr/index.html
+  # would make Cloudflare serve that file directly and bypass the Worker
+  # entirely. Hash its actual inputs instead, so a change to any of them still
+  # trips the "bump CACHE_NAME" rule the same way a real file would.
+  if [ "$a" = "/tr/index.html" ]; then
+    for dep in ./index.html ./tr/i18n.js ./src/worker.js; do
+      if [ ! -f "$dep" ]; then echo "MISSING: $dep (input to $a)"; missing=1; fi
+    done
+    [ "$missing" -ne 0 ] && continue
+    h=$(cat ./index.html ./tr/i18n.js ./src/worker.js | shasum -a 256 | cut -d' ' -f1)
+    echo "$h  $a" >> "$tmp"
+    continue
+  fi
+
   if [ ! -f "$f" ]; then echo "MISSING: $a (listed in CORE_ASSETS, not on disk)"; missing=1; continue; fi
   h=$(shasum -a 256 "$f" | cut -d' ' -f1)
   echo "$h  $a" >> "$tmp"

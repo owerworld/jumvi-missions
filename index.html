@@ -764,13 +764,18 @@
         </div>
         <div>
           <b><i class="jic jic-shield" aria-hidden="true"></i> Anonymous play analytics.</b><br/>
-          We measure five simple, anonymous events — app opened, mission started, mission
-          completed, a help topic opened, and player count — to see which missions work and
-          where kids get stuck. Every event is just an event name plus, at most, one small
-          value (a mission number, a help topic, or a player count). We never attach a name,
-          account, IP address, device ID, or any other identifier to this data. This is
-          measured using our own infrastructure (not a third-party analytics service) and
-          stored for 90 days, then automatically deleted.
+          We measure a short, fixed list of anonymous events to see which missions work and
+          where kids get stuck: the app being opened, missions started and completed, which
+          help topic a parent opened, the player count, pack and badge milestones, whether an
+          optional feature was used at all (certificate, sharing, read-aloud, the timer, the
+          score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
+          few fixed return-visit milestones. Every event is just an event name plus, at most,
+          one small value — a mission number, a pack or badge name, a player count, or a fixed
+          option such as which help topic or which share button. Anything not on that list is
+          discarded without being stored. We never attach a name, account, email address, the
+          certificate name you type, a profile name, an IP address, a device ID, or any other
+          identifier to this data. This is measured using our own infrastructure (not a
+          third-party analytics service) and stored for 90 days, then automatically deleted.
         </div>
         <div>
           <b><i class="jic jic-volume" aria-hidden="true"></i> No microphone, ever.</b><br/>

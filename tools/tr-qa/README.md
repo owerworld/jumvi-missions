@@ -21,7 +21,15 @@ node tools/tr-qa/serve.mjs . 8787 &
 node tools/tr-qa/locale.mjs
 node tools/tr-qa/sw-cache.mjs
 node tools/tr-qa/residual-english.mjs
+node tools/tr-qa/beacon-privacy.mjs
+node tools/tr-qa/production.mjs
 ```
+
+> **These do not run in CI.** The repository's only workflow,
+> `deploy-health-check.yml`, fires on `check_suite: completed` and is gated on
+> `head_branch == 'main'` — it probes the live site after a Cloudflare deploy
+> and never runs on a pull request. Everything here is a local check; a green
+> run is evidence someone ran it, not a gate that blocks a merge.
 
 Set `CHROMIUM_PATH` if Playwright cannot find a browser, and `BASE` to point
 the checks at a deployed preview instead of the local harness.
@@ -56,6 +64,22 @@ first, because copy inside a closed panel is computed-invisible and an earlier
 pass that skipped this step under-reported by 27 strings. Brand and contact
 tokens (JUMVI, SAY23 LLC, WhatsApp, support@jumvi.co) are allow-listed as
 deliberately identical.
+
+**`beacon-privacy.mjs`** — backs the Privacy & Safety modal's central claim with
+evidence instead of prose. It plants sentinel strings in every field a parent
+can fill in (certificate name, profile name, text inputs), drives the flows
+that emit beacons, and captures them at `sendBeacon`/`fetch`. A grep over
+`app.js` shows the call sites are clean today; this catches the case a grep
+cannot — a future prop that happens to carry something the user typed.
+
+**`production.mjs`** — the release sweep: all four routes, a hard refresh, the
+service worker generation change, both language orders each followed by going
+offline, progress shared across languages, and the features (Coach Leo, TTS,
+Red Light / Green Light, certificate, mission book, 3D Hub, privacy modal,
+install metadata). It also covers the one risk the architecture introduces:
+`/tr` injects `<base href="/">`, so every sub-resource, every anchor and the
+in-app tab navigation are checked for silently dropping the child back onto the
+English route.
 
 See also `tools/check-tr-invariants.mjs`, which locks the values the locale
 layer must never touch: mission ids, pack keys, badge ids, the frozen
