@@ -2669,11 +2669,21 @@ export function initHub3D(opts) {
   }
 
   // ---------- COACH LEO (from shared module — no character code duplicated here) ----------
-  // Real GLTF model approved by user comparison — replaces the procedural
-  // rig as Leo's visible representation (rig is still built as the fallback
-  // inside createCoachLeo() if the model fails to load).
+  // Source: AI image-to-3D conversion (temp mesh name "tmphriv0dlo.ply" in the
+  // original file confirms this). Geometry/shape has known issues — does not
+  // match the locked 2D Coach Leo spec proportions. Texture/colors are correct.
+  // Shape needs a real remodel post-launch (see docs/audits/faz2-leo-model.md).
+  // Rig is still built as the fallback inside createCoachLeo() if the model
+  // fails to load.
+  //
+  // Path is under /assets, not /prototypes: prototypes/ is excluded from
+  // deploy (.assetsignore) — that's where the 3.98 MB source lives, which
+  // must never ship. No ?v= here, unlike the file this replaced: everything
+  // under /assets is referenced without a version deliberately (see
+  // _headers) so the service worker's literal-path precache still matches;
+  // freshness comes from max-age=86400 + stale-while-revalidate instead.
   var USE_LEO_MODEL = true;
-  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './prototypes/textured_mesh_optimized.glb?v=20260723-meshopt', getLoader: getGLTFLoader });
+  var leo = createCoachLeo(THREE, { useModel: USE_LEO_MODEL, modelUrl: './assets/leo/coach-leo-optimized.glb', getLoader: getGLTFLoader });
   scene.add(leo.group);
 
   // ---------- INPUT: KEYBOARD ----------
