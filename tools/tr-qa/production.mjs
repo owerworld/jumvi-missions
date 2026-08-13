@@ -129,7 +129,7 @@ head("Service worker kuşak değişimi (eski cache temizliği)");
   await p.evaluate(() => navigator.serviceWorker.ready);
   await p.waitForTimeout(2000);
   const names = await p.evaluate(() => caches.keys());
-  ok("v182 cache açıldı", names.includes("jumvi-missions-v184"), JSON.stringify(names));
+  ok("v182 cache açıldı", names.includes("jumvi-missions-v185"), JSON.stringify(names));
   ok("v181 cache silindi (activate temizliği)", !names.includes("jumvi-missions-v181"), JSON.stringify(names));
   await ctx.close();
 }
@@ -145,7 +145,7 @@ for (const order of [["/", "/tr"], ["/tr", "/"]]) {
     await p.waitForTimeout(1400);
   }
   const bodies = await p.evaluate(async () => {
-    const c = await caches.open("jumvi-missions-v184");
+    const c = await caches.open("jumvi-missions-v185");
     const read = async (k) => {
       const r = await c.match(k);
       if (!r) return null;
