@@ -1,7 +1,11 @@
 # `/tr` — English text baked into binary assets
 
-**Durum:** İki dosya üretilmedi. Bu ortamda görsel kaliteyi koruyarak üretilemedikleri
-için tahmin edilmedi; aşağıda ne gerektiği tam olarak listelendi.
+**Durum:**
+- `tr/certificate-template.webp` — **üretildi, inceleme bekliyor.** Metinler, tipografi
+  ve geometri tamam; altın banttaki `BAŞARDIN!` plakası tasarımcı elden geçirmesi
+  gerektiriyor (aşağıda "Bilinen kusur").
+- `tr/mission-book.pdf` — üretilmedi. Bu ortamda görsel kaliteyi koruyarak
+  üretilemediği için tahmin edilmedi; aşağıda ne gerektiği tam olarak listelendi.
 
 `tr/i18n.js` bir DOM/canvas katmanı: `fillText` ile çizilen ve DOM'a giren her metni
 çevirir. Bir raster görselin piksellerine veya bir PDF'in içine gömülü metne
@@ -14,7 +18,7 @@ bozmaz**:
 
 | Asset | `/` (değişmez) | `/tr` (dosya eklendiğinde) | Dosya yokken |
 |---|---|---|---|
-| Sertifika şablonu | `certificate-template.webp` | `/tr/certificate-template.webp` | `loadImageWithFallback()` sıradaki İngilizce şablona düşer |
+| Sertifika şablonu | `certificate-template.webp` | `/tr/certificate-template.webp` ✅ mevcut | (yedek artık devrede değil) |
 | Görev kitabı | `mission-book.pdf` | `/tr/mission-book.pdf` | `HEAD` 404 döner, link İngilizce PDF'te kalır |
 
 İngilizce dosyaların üzerine yazılmaz. Türkçe dosyalar `tr/` klasörüne bu adlarla
@@ -34,9 +38,9 @@ bilgi — ve bunların üçü de `/tr`'de zaten Türkçeleşiyor. Aşağıdakile
 | Üst orta (3D altın rozet) | `YOU DID IT!` | `BAŞARDIN!` |
 | Ana başlık (2 satır, mavi) | `MISSION CHAMPION & STAR CATCHER CERTIFICATE` | `GÖREV ŞAMPİYONU VE YILDIZ AVCISI SERTİFİKASI` |
 | Başlık altı | `High five! You completed every mission and caught every star!` | `Çak bir beşlik! Tüm görevleri tamamladın ve bütün yıldızları yakaladın!` |
-| Sarı rozet şerit | `All Missions Complete • Safe play • Kids 3–8` | `Tüm Görevler Tamamlandı • Güvenli oyun • 3–8 yaş` |
+| Sarı rozet şerit | `All Missions Complete • Safe play • Kids 3–8` | `Tüm Görevler Tamamlandı • Güvenli Oyun • 3–12 Yaş` |
 | Sol alt kutu | `Achievement` / `Status: Complete` / `Badge: Champion 🏆` | `Başarı` / `Durum: Tamamlandı` / `Rozet: Şampiyon 🏆` |
-| Sağ alt | `JUMVI Team` / `Safe play • Kids 3–8` | `JUMVI Ekibi` / `Güvenli oyun • 3–8 yaş` |
+| Sağ alt | `JUMVI Team` / `Safe play • Kids 3–8` | `JUMVI Ekibi` / `Güvenli Oyun • 3–12 Yaş` |
 
 Değişmemeli: `JUMVI` kelime markası, sol üstteki logo, sağ alttaki `JUMVI` filigranı,
 yıldız/parıltı süslemeleri, arka plan, kenarlık ve **noktalı ad çizgisinin konumu**.
@@ -45,8 +49,31 @@ yıldız/parıltı süslemeleri, arka plan, kenarlık ve **noktalı ad çizgisin
 > `height * 0.935`'e, alt bilgiyi `height * 0.975`'e çizer. Türkçe şablon **1376×768
 > olmalı** ve noktalı çizgi aynı yükseklikte kalmalı; yoksa ad yanlış yere düşer.
 
-`YOU DID IT!` 3D altın kabartma bir tipografi çalışması — bu ortamda kalite kaybı
-olmadan yeniden üretilemez. Tasarımcı işi.
+### Bilinen kusur — altın `BAŞARDIN!` plakası
+
+Diğer her şey (başlık, alt başlık, sarı şerit, başarı kutusu, ekip bloğu, logo,
+yıldızlar, kenarlık, zemin, noktalı isim çizgisi) orijinaliyle birebir hizada.
+Tek zayıf nokta altın plaka:
+
+- Eski `YOU DID IT!` harflerinin solda hafif bir hayaleti kalıyor.
+- Harflerin bulunduğu şeritte plakanın parıltı dokusu inceldi ve hafif dikey
+  çizgilenme var.
+
+Nedeni: plaka elle çizilmiş — düzensiz kenarlı, parlak bevel'li ve parıltılı. Harf
+pikselleri programatik olarak temizlenirken ya hayalet kalıyor ya da eşik
+yükseltilince plakanın kendi dokusu siliniyor. Beş farklı yaklaşım denendi; ikisi
+arasındaki denge bu ortamda tasarımcı kalitesine çıkmıyor.
+
+Harflerin kendisi (Fredoka + çok katmanlı extrude + sıcak temas gölgesi) orijinalin
+yuvarlak karakterine yakın. Gereken: plakanın temiz bir sürümü (harfsiz) veya
+tasarımcı tarafından yeniden dizilmiş bir `BAŞARDIN!` katmanı.
+
+### Yeniden üretim
+
+Asset `tools/cert-tr/` içindeki script ile üretiliyor. Poppins TTF'leri repoda
+değil; script çalışma anında Google Fonts'tan çeker (yalnızca rasterleştirme için
+kullanılır, sitede sunulmaz). Altın banttaki yazı deponun kendi Fredoka fontunu
+kullanır.
 
 ---
 

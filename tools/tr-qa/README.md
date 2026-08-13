@@ -1,6 +1,6 @@
 # `/tr` localization QA
 
-Four scripts that check the Turkish route against the English one. They exist
+Seven scripts that check the Turkish route against the English one. They exist
 because the `/tr` layer is invisible to the eye in the ways that matter most:
 a missed string, a poisoned offline cache, or a renamed storage key all look
 fine on the screen you happen to be looking at.
@@ -22,6 +22,7 @@ node tools/tr-qa/locale.mjs
 node tools/tr-qa/sw-cache.mjs
 node tools/tr-qa/residual-english.mjs
 node tools/tr-qa/beacon-privacy.mjs
+node tools/tr-qa/certificate.mjs
 node tools/tr-qa/production.mjs
 ```
 
@@ -71,6 +72,12 @@ can fill in (certificate name, profile name, text inputs), drives the flows
 that emit beacons, and captures them at `sendBeacon`/`fetch`. A grep over
 `app.js` shows the call sites are clean today; this catches the case a grep
 cannot — a future prop that happens to carry something the user typed.
+
+**`certificate.mjs`** — the Turkish certificate template is a separate binary, so
+no amount of locale-layer testing can catch a regression in it. Checks the three
+things that would break silently: the exact 1376×768 geometry `app.js` draws the
+child's name against, that the file decodes as a WebP at all, and that each route
+requests its own template instead of quietly falling back to the other language's.
 
 **`production.mjs`** — the release sweep: all four routes, a hard refresh, the
 service worker generation change, both language orders each followed by going

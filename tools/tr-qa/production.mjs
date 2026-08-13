@@ -129,7 +129,7 @@ head("Service worker kuşak değişimi (eski cache temizliği)");
   await p.evaluate(() => navigator.serviceWorker.ready);
   await p.waitForTimeout(2000);
   const names = await p.evaluate(() => caches.keys());
-  ok("v182 cache açıldı", names.includes("jumvi-missions-v183"), JSON.stringify(names));
+  ok("v182 cache açıldı", names.includes("jumvi-missions-v184"), JSON.stringify(names));
   ok("v181 cache silindi (activate temizliği)", !names.includes("jumvi-missions-v181"), JSON.stringify(names));
   await ctx.close();
 }
@@ -145,7 +145,7 @@ for (const order of [["/", "/tr"], ["/tr", "/"]]) {
     await p.waitForTimeout(1400);
   }
   const bodies = await p.evaluate(async () => {
-    const c = await caches.open("jumvi-missions-v183");
+    const c = await caches.open("jumvi-missions-v184");
     const read = async (k) => {
       const r = await c.match(k);
       if (!r) return null;
@@ -238,7 +238,9 @@ head("Özellikler (/tr)");
 
   // Certificate — meta line drawn onto the canvas
   const cert = await p.evaluate(() => new Promise((r) => {
-    const probe = "Awarded 2026-08-13  ·  ID: AB12";
+    // A real certificate carries a locale-formatted date with spaces in it;
+    // probing with an ISO date hid a regex that only matched \S+.
+    const probe = "Awarded 13 Ağu 2026  ·  ID: JUMVI-E956-C790";
     const d = document.createElement("div");
     d.textContent = probe;
     document.body.appendChild(d);
@@ -246,7 +248,7 @@ head("Özellikler (/tr)");
     // canvas by swapping fillText would overwrite the locale layer's own patch,
     // so compare widths there and read the text here.
     const c = document.createElement("canvas").getContext("2d");
-    const sameWidth = c.measureText(probe).width === c.measureText("Veriliş: 2026-08-13 · Kimlik: AB12").width;
+    const sameWidth = c.measureText(probe).width === c.measureText("Veriliş: 13 Ağu 2026 · Kimlik: JUMVI-E956-C790").width;
     setTimeout(() => { const out = d.textContent; d.remove(); r({ out, sameWidth }); }, 300);
   }));
   ok("sertifika tarih/kimlik satırı Türkçe (DOM)", /Veriliş:|Kimlik:/.test(cert.out || ""), JSON.stringify(cert));

@@ -193,7 +193,10 @@
     if ((m = norm.match(/^(\d+) \/ (\d+) done — (\d+) more to go!$/i))) return `${m[1]} / ${m[2]} tamamlandı — ${m[3]} tane daha!`;
     if ((m = norm.match(/^Best: (\d+)$/i))) return `En iyi: ${m[1]}`;
     // Certificate meta strip, drawn onto the canvas by app.js.
-    if ((m = norm.match(/^Awarded (\S+)\s*·\s*ID: (\S+)$/i))) return `Veriliş: ${m[1]} · Kimlik: ${m[2]}`;
+    // The date is locale-formatted before it gets here, so it contains spaces
+    // ("13 Ağu 2026"). An \S+ here silently fails to match and the labels stay
+    // English on a real certificate.
+    if ((m = norm.match(/^Awarded\s+(.+?)\s*·\s*ID:\s*(\S+)$/i))) return `Veriliş: ${m[1]} · Kimlik: ${m[2]}`;
     // Mission durations come straight from data.js ("45s", "60s") and are not
     // part of the translated mission table.
     if ((m = norm.match(/^(\d+)s$/))) return `${m[1]}sn`;

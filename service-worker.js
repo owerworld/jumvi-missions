@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v183";
+const CACHE_NAME = "jumvi-missions-v184";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -155,7 +155,11 @@ self.addEventListener("activate", (event) => {
 });
 
 const LARGE_ASSETS = new Set([
-  "/certificate-template.webp"
+  "/certificate-template.webp",
+  // Same treatment for the Turkish template: it is the same kind of asset,
+  // fetched on demand when a child opens the certificate, and blocking the
+  // first paint on it would be a /tr-only regression.
+  "/tr/certificate-template.webp"
 ]);
 
 self.addEventListener("fetch", (event) => {
