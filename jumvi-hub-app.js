@@ -92,8 +92,8 @@ export function initHub3D(opts) {
     menuItems: [
       { icon: '<i class="jic jic-play" aria-hidden="true"></i>', label: 'Today', tab: 'today' },
       { icon: '<i class="jic jic-map" aria-hidden="true"></i>', label: 'Browse Missions', tab: 'browse' },
-      { icon: '<i class="jic jic-chart-bar" aria-hidden="true"></i>', label: 'Stats', tab: 'stats' },
-      { icon: '<i class="jic jic-users" aria-hidden="true"></i>', label: 'Profile', tab: 'profile' },
+      { icon: '<i class="jic jic-chart-bar" aria-hidden="true"></i>', label: 'Progress', tab: 'stats' },
+      { icon: '<i class="jic jic-users" aria-hidden="true"></i>', label: 'Adults', tab: 'profile' },
       { icon: '<i class="jic jic-award" aria-hidden="true"></i>', label: 'Badges', action: 'badges' }
     ],
     menuClose: 'Close menu'
@@ -302,10 +302,12 @@ export function initHub3D(opts) {
     var introArt = window.JUMVI_ART ? window.JUMVI_ART.img(window.JUMVI_ART.special('leo-island'), 'specialArt', '', true) : '';
     card.innerHTML =
       '<div style="width:74px;height:74px;margin:0 auto;">' + introArt + '</div>' +
+      '<div style="font-size:12px;font-weight:900;letter-spacing:1px;color:#1D6FB5;text-align:center;">BONUS 3D ADVENTURE</div>' +
       '<div style="font-size:19px;font-weight:900;color:#26364a;text-align:center;">Welcome to Leo’s Island!</div>' +
       '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;"><b>Tap the ground</b> — Leo walks there!</div>' +
       '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;"><b>Reach a glowing gate</b> to get a mission</div>' +
       '<div style="font-size:15px;font-weight:700;color:#3a4a5c;line-height:1.45;"><b>Grab your paddles</b> and play for real!</div>' +
+      '<div style="font-size:13px;font-weight:700;color:#64748b;line-height:1.35;">Cloud paths open as you finish each zone.</div>' +
       '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:16px;font-weight:900;min-height:46px;padding:0 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">Let’s go!</button>';
     wrap.appendChild(card);
     container.appendChild(wrap);
@@ -2476,9 +2478,8 @@ export function initHub3D(opts) {
   // prototypes/jumvi-forest-mini-example.html's growForest()/animateFog() —
   // ported to run off the shared tick() clock instead of its own
   // requestAnimationFrame loop (see updateFogDissolves() below).
-  // The old flat, sky-tinted plane read as cheap artificial mist. Instead each
-  // locked entrance is now a dense, OPAQUE low-poly cloud bank the path vanishes
-  // into — it fully hides the next zone (writes depth) and, on unlock, its two
+  // The old flat, sky-tinted plane read as cheap artificial mist. Each locked
+  // entrance is now a soft low-poly cloud bank the path vanishes into; its two
   // halves part left/right and rise as they fade. One shared geometry + material
   // per wall keeps it cheap.
   var _fogPuffGeo = new THREE.SphereGeometry(1, 8, 6);
@@ -2492,9 +2493,10 @@ export function initHub3D(opts) {
     var x = pathCenterX(z);
     var width = corridorHalfWidthAt(z) * 2 + 9;
 
+    var baseOpacity = 0.58;
     var mat = new THREE.MeshStandardMaterial({
-      color: 0xf4f8ff, emissive: 0xc4d2ea, emissiveIntensity: 0.4,
-      flatShading: true, transparent: false, opacity: 1
+      color: 0xe9f3ff, emissive: 0xc5d8ed, emissiveIntensity: 0.16,
+      flatShading: true, transparent: true, opacity: baseOpacity, depthWrite: false
     });
     var wall = new THREE.Group();
     wall.position.set(x, 0, z);
@@ -2506,7 +2508,7 @@ export function initHub3D(opts) {
     for (var layer = 0; layer < 2; layer++) {           // two shallow z-layers → nothing shows through
       var zoff = layer * -1.5;
       for (var cx = -halfW; cx <= halfW; cx += 1.6) {
-        var stack = 3 + Math.floor(Math.random() * 2);   // puffs stacked up to ~7 units tall
+        var stack = 2 + Math.floor(Math.random() * 2);   // low mist; the route stays readable
         for (var s = 0; s < stack; s++) {
           var r = 1.35 + Math.random() * 1.15;
           dummy.position.set(cx + (Math.random() - 0.5) * 1.3, 0.5 + s * 1.7 + Math.random() * 0.7, zoff + (Math.random() - 0.5) * 0.9);
@@ -2527,9 +2529,13 @@ export function initHub3D(opts) {
     }
     bake(sides.left, -1);
     bake(sides.right, 1);
+    // Keep distant locks out of the opening composition. The first frame is
+    // about Leo, the path and the real JUMVI target; the cloud bank appears
+    // only when the player actually approaches the next zone boundary.
+    wall.visible = false;
     scene.add(wall);
 
-    return { zoneIndex: zoneIndex, wall: wall, mat: mat, baseZ: z, baseX: x, dissolving: null, dissolved: false };
+    return { zoneIndex: zoneIndex, wall: wall, mat: mat, baseOpacity: baseOpacity, baseZ: z, baseX: x, dissolving: null, dissolved: false };
   }
 
   var fogWalls = [];
@@ -3922,7 +3928,7 @@ export function initHub3D(opts) {
       if (!isZoneUnlocked(fw.zoneIndex)) return;
 
       fw.dissolving = { startTime: performance.now() };
-      fw.mat.transparent = true; // opaque until now (so it fully hid the zone); now it can fade
+      fw.mat.transparent = true; // already translucent; keep enabled for the dissolve
       fw.mat.needsUpdate = true;
 
       // Reward trees just inside the newly opened entrance — same idea as
@@ -3978,11 +3984,19 @@ export function initHub3D(opts) {
   // by tick()'s elapsed time instead of its own requestAnimationFrame loop.
   function updateFogDissolves() {
     fogWalls.forEach(function (fw) {
-      if (!fw.dissolving) return;
+      if (!fw.dissolving) {
+        if (!fw.dissolved) {
+          var dx = leo.group.position.x - fw.baseX;
+          var dz = leo.group.position.z - fw.baseZ;
+          fw.wall.visible = Math.sqrt(dx * dx + dz * dz) <= 12.5;
+        }
+        return;
+      }
+      fw.wall.visible = true;
       var elapsed = performance.now() - fw.dissolving.startTime;
       var t = Math.min(elapsed / 1600, 1);
       var e = t * t * (3 - 2 * t); // smoothstep
-      fw.mat.opacity = 1 - e;
+      fw.mat.opacity = fw.baseOpacity * (1 - e);
       // The two instanced halves part left/right and drift up as the bank
       // thins out (same motion as the old per-puff drift, 2 nodes instead of ~100).
       fw.wall.children.forEach(function (half) {

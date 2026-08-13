@@ -635,7 +635,6 @@ const ACTIVE_PROFILE_KEY  = "jumvi_active_profile_v1";
  * ======================= */
 const HUB3D_FLAG_KEY = "jumvi_3d_hub_enabled";
 const HUB_INTRO_KEY = "jumvi_hub_intro_done_v1"; // one-time Coach Leo greeting (Task 3)
-const LEO_GUIDE_KEY = "jumvi_leo_guide_seen_v1"; // one-time "how to play" guide reaction (Task 5)
 const HUB_STARS_KEY = "jumvi_hub_stars";        // collected hub stars, comma-separated ids (bonus only — never gates progress)
 function isHub3DEnabled(){
   return lsGet(HUB3D_FLAG_KEY, "0") === "1";
@@ -784,7 +783,7 @@ const state = {
   autoDoneOnEnd: (lsGet(AUTO_DONE_KEY, "0")) === "1",
   attempts: lsGetJSON(ATTEMPTS_KEY, {}),
   skips: lsGetJSON(SKIPS_KEY, {}),
-  themeMode: lsGet(THEME_KEY, "system")
+  themeMode: lsGet(THEME_KEY, "light")
 };
 if(isNaN(state.currentAvatarIdx) || state.currentAvatarIdx < 0) state.currentAvatarIdx = 0;
 state.unlockedBefore = state.done.size >= missions.length;
@@ -849,6 +848,71 @@ const badgesRow = document.getElementById("badgesRow");
 const backdrop = document.getElementById("backdrop");
 const btnClose = document.getElementById("btnClose");
 const sheet = document.getElementById("sheet");
+
+let _missionBackgroundRestore = null;
+let _missionReturnFocus = null;
+const MISSION_BACKGROUND_SELECTORS = [
+  "#app-wrapper > .sticky",
+  "#app-wrapper > .wrap",
+  "#offlineBanner",
+  "#undoBar",
+  "#bottomNav",
+  "#soundToggle"
+];
+function setMissionBackgroundIsolation(active){
+  if(active){
+    if(_missionBackgroundRestore) return;
+    const seen = new Set();
+    _missionBackgroundRestore = MISSION_BACKGROUND_SELECTORS
+      .map(sel => document.querySelector(sel))
+      .filter(el => el && !seen.has(el) && seen.add(el))
+      .map(el => ({
+        el,
+        inert: !!el.inert,
+        hadInert: el.hasAttribute("inert"),
+        ariaHidden: el.getAttribute("aria-hidden")
+      }));
+    _missionBackgroundRestore.forEach(state => {
+      state.el.inert = true;
+      state.el.setAttribute("inert", "");
+      state.el.setAttribute("aria-hidden", "true");
+    });
+    return;
+  }
+  if(!_missionBackgroundRestore) return;
+  _missionBackgroundRestore.forEach(state => {
+    state.el.inert = state.inert;
+    if(state.hadInert) state.el.setAttribute("inert", "");
+    else state.el.removeAttribute("inert");
+    if(state.ariaHidden == null) state.el.removeAttribute("aria-hidden");
+    else state.el.setAttribute("aria-hidden", state.ariaHidden);
+  });
+  _missionBackgroundRestore = null;
+}
+function dialogFocusable(container){
+  if(!container) return [];
+  return Array.from(container.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+    .filter(el => !el.hidden && el.getClientRects().length && el.getAttribute("aria-hidden") !== "true");
+}
+function handleDialogKeys(event, container, closeDialog){
+  if(event.key === "Escape"){
+    event.preventDefault();
+    closeDialog();
+    return;
+  }
+  if(event.key !== "Tab") return;
+  const focusable = dialogFocusable(container);
+  if(!focusable.length){ event.preventDefault(); return; }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if(event.shiftKey && document.activeElement === first){
+    event.preventDefault();
+    last.focus();
+  }else if(!event.shiftKey && document.activeElement === last){
+    event.preventDefault();
+    first.focus();
+  }
+}
 
 const mTitle = document.getElementById("mTitle");
 const mMeta  = document.getElementById("mMeta");
@@ -1625,17 +1689,16 @@ function renderDailyUI(){
     : JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title, true);
   if(dailyName) dailyName.textContent = ms.title;
   if(dailyMeta){
-    const contextHints = ["Great for first-time players!","Fun warm-up for today!","A quick favorite — try it!","Perfect for 5 minutes of play.","Challenge yourselves today!"];
-    const hint = contextHints[ms.id % contextHints.length];
     dailyMeta.innerHTML = `
       <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
       <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
-      <span class="dailyHint">${hint}</span>
     `;
   }
   if(btnDailyPlay){
-    btnDailyPlay.innerHTML = doneToday ? '<i class="jic jic-circle-check" aria-hidden="true"></i> View' : '<i class="jic jic-play" aria-hidden="true"></i> Play';
+    btnDailyPlay.innerHTML = doneToday
+      ? '<i class="jic jic-loop" aria-hidden="true"></i> Play Again'
+      : '<i class="jic jic-play" aria-hidden="true"></i> Start Mission';
   }
 }
 
@@ -1800,7 +1863,6 @@ function applyBackupPayload(p){
   if(p.cert && typeof p.cert.name === "string"){
     lsSet(CERT_NAME_KEY, p.cert.name);
     if(certNameInput) certNameInput.value = p.cert.name;
-    buildCertificate();
   }
 
   // refresh UI
@@ -1997,6 +2059,7 @@ function createMissionCard(ms){
   donePill.className = "donePill";
   donePill.setAttribute("aria-label", "Mission completed");
   donePill.setAttribute("title", "Done");
+  donePill.innerHTML = '<span aria-hidden="true">✓</span>';
 
   c.appendChild(icon);
   c.appendChild(main);
@@ -2025,6 +2088,14 @@ function updateMissionCard(card, ms, isDone){
 }
 
 function renderList(){
+  // Browse is path-only now. Do not build 36 hidden legacy cards during the
+  // QR first impression; that network burst can starve the visible welcome
+  // art on budget phones. Keep this function as a compatibility refresh hook.
+  if(!listEl || getComputedStyle(listEl).display === "none"){
+    if(listEl) listEl.replaceChildren();
+    updateProgress({ deferStats: done.size === 0 });
+    return;
+  }
   const list = getVisibleMissions();
 
   if(list.length === 0){
@@ -2070,18 +2141,50 @@ function showBadgeUnlockModal(badge){
   const nameEl  = document.getElementById("badgeUnlockName");
   const reqEl   = document.getElementById("badgeUnlockReq");
   const closeBtn = document.getElementById("badgeUnlockClose");
+  const returnFocus = document.activeElement;
+  const missionState = backdrop && backdrop.classList.contains("show") ? {
+    inert: !!backdrop.inert,
+    hadInert: backdrop.hasAttribute("inert"),
+    ariaHidden: backdrop.getAttribute("aria-hidden")
+  } : null;
   if(emojiEl) emojiEl.innerHTML = JUMVI_ART.img(JUMVI_ART.badge(badge.id) || JUMVI_ART.badge("unlocked"), "badgeArt", badge.name, true);
   if(nameEl)  nameEl.textContent  = badge.name;
   if(reqEl)   reqEl.textContent   = badge.req;
-  modal.classList.add("show");
+  modal.hidden = false;
+  modal.inert = false;
+  modal.removeAttribute("inert");
+  modal.setAttribute("aria-hidden", "false");
+  if(missionState){
+    backdrop.inert = true;
+    backdrop.setAttribute("inert", "");
+    backdrop.setAttribute("aria-hidden", "true");
+  }
+  requestAnimationFrame(()=> modal.classList.add("show"));
+  requestAnimationFrame(()=>{ try{ closeBtn?.focus({ preventScroll:true }); }catch(_){ closeBtn?.focus(); } });
   if(!prefersReducedMotion) fireConfetti(2000);
   clickSound("success");
-  // Task 5 — celebrate Leo for the badge (dropped if a mission-completion
-  // celebrate is already on screen; the sole reaction for streak-earned badges).
-  showLeoReaction("celebrate", "New badge!");
-  const dismiss = ()=>{ modal.classList.remove("show"); };
+  const dismiss = ()=>{
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    modal.inert = true;
+    modal.setAttribute("inert", "");
+    if(missionState){
+      backdrop.inert = missionState.inert;
+      if(missionState.hadInert) backdrop.setAttribute("inert", "");
+      else backdrop.removeAttribute("inert");
+      if(missionState.ariaHidden == null) backdrop.removeAttribute("aria-hidden");
+      else backdrop.setAttribute("aria-hidden", missionState.ariaHidden);
+    }
+    setTimeout(()=>{ if(!modal.classList.contains("show")) modal.hidden = true; }, 300);
+    requestAnimationFrame(()=>{
+      if(returnFocus && returnFocus.isConnected && returnFocus.getClientRects().length){
+        try{ returnFocus.focus({ preventScroll:true }); }catch(_){ returnFocus.focus(); }
+      }
+    });
+  };
   if(closeBtn){ closeBtn.onclick = dismiss; }
   modal.onclick = (e)=>{ if(e.target===modal) dismiss(); };
+  modal.onkeydown = (e)=> handleDialogKeys(e, modal, dismiss);
 }
 
 function updateBadges(){
@@ -2214,10 +2317,11 @@ function updateBadges(){
   }
 }
 
-function updateProgress(){
+function updateProgress(options = {}){
+  const deferStats = !!options.deferStats;
   const total = missions.length;
   const completed = done.size;
-  progressText.textContent = `${completed} / ${total} missions done`;
+  progressText.textContent = `${completed} of ${total} missions complete`;
   const pct = Math.round((completed/total)*100);
   progressFill.style.width = pct + "%";
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
@@ -2225,7 +2329,7 @@ function updateProgress(){
   if(completed>=total){
     progressSub.textContent = "All missions completed! Certificate unlocked.";
   } else if(completed === 0){
-    progressSub.textContent = "Pick 1 mission today → build your streak → unlock your certificate.";
+    progressSub.textContent = "Pick a mission, read the steps, and go play.";
   } else if(completed <= 3){
     progressSub.textContent = `Great start! Keep going — ${total - completed} missions to go.`;
   } else {
@@ -2235,8 +2339,8 @@ function updateProgress(){
 
   renderStreakUI();
   renderDailyUI();
-  updateBadges();
-  renderParentDashboard();
+  if(!deferStats) updateBadges();
+  if(document.body.classList.contains("tab-stats")) renderParentDashboard();
 
   // 0 progress'te boş kartları gizle (yeni kullanıcı için temiz arayüz)
   const isFresh = done.size === 0;
@@ -2254,6 +2358,11 @@ function updateProgress(){
   // Stats tab empty state — yeni kullanıcı için davet
   const emptyState = document.getElementById("statsEmptyState");
   if(emptyState) emptyState.style.display = isFresh ? "" : "none";
+  // The 3D island is a bonus after physical play, never a gate before it.
+  const islandCard = document.getElementById("advModeCard");
+  if(islandCard && lsGet(HUB3D_UNSUPPORTED_KEY, "0") !== "1"){
+    islandCard.style.display = isFresh ? "none" : "";
+  }
 }
 
 function renderShareCard(){
@@ -2514,10 +2623,6 @@ function showCountdownThenStart(durationSeconds){
 function startTimer(durationSeconds) {
   if(timerInterval) clearInterval(timerInterval);
 
-  // Task 5 — the kid is about to play: a subtle, no-bubble encourage Leo.
-  // (Dropped automatically if a celebrate/guide is already showing.)
-  showLeoReaction("encourage", "", { ms: 1900 });
-
   timerUI.style.display = "block";
 
   // Once per mission per session: restarting the timer on the same mission is
@@ -2658,6 +2763,12 @@ let _openMissionId = 0;
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
+  const missionWasOpen = backdrop.classList.contains("show");
+  if(!missionWasOpen){
+    _missionReturnFocus = document.activeElement && document.activeElement !== document.body
+      ? document.activeElement
+      : btnDailyPlay;
+  }
   _openMissionId = id;
   // first_mission_start — once per session, the moment any mission view opens,
   // tagged with where it came from (hub vs 2D). Parity with the audit's A/B
@@ -2689,13 +2800,6 @@ function openMission(id){
   if(helpTip){ helpTip.hidden = true; helpTip.textContent = ""; }
   if(helpBtn) helpBtn.setAttribute("aria-expanded", "false");
   document.querySelectorAll(".missionHelpOpt.active").forEach(o=> o.classList.remove("active"));
-  // Task 5 — one-time "how to play" hint the FIRST time a kid opens any mission
-  // (device-level key; only for a not-yet-done mission so it reads as guidance,
-  // not a recap). Guide Leo points beside the steps.
-  if(!done.has(id) && lsGet(LEO_GUIDE_KEY, "0") !== "1"){
-    lsSet(LEO_GUIDE_KEY, "1");
-    setTimeout(()=> showLeoReaction("guide", "Read the steps, then go play!"), 500);
-  }
   // If the Red Light / Green Light caller is running (mission 2) and the user
   // taps Next/Random/another mission, tear it down so the new mission isn't
   // hidden behind the green/red overlay.
@@ -2792,7 +2896,8 @@ function openMission(id){
   }
 
   const isDone = done.has(ms.id);
-  btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> Mark as Done';
+  btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> We Finished!';
+  btnToggleDone.setAttribute("aria-label", isDone ? "Mark mission as not done" : "We finished this mission");
   btnToggleDone.classList.toggle("btnDone", isDone);
   // After completing: promote "Next" as the clear CTA
   btnNext.innerHTML = isDone ? '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission!' : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
@@ -2909,6 +3014,10 @@ if(btnSpeak){
   };
 }
 
+  backdrop.inert = false;
+  backdrop.removeAttribute("inert");
+  backdrop.setAttribute("aria-hidden", "false");
+  setMissionBackgroundIsolation(true);
   backdrop.classList.add("show");
   document.body.classList.add("modalOpen");
   if(window._hubMissionFlow) setHubDialogIsolation(true);
@@ -2923,6 +3032,7 @@ if(btnSpeak){
   // Lock background scroll while modal is open
   const _aw = document.getElementById("app-wrapper");
   if(_aw) _aw.style.overflowY = "hidden";
+  requestAnimationFrame(()=>{ try{ btnClose.focus({ preventScroll:true }); }catch(_){ btnClose.focus(); } });
 }
 
 function closeMission(){
@@ -2939,7 +3049,6 @@ function closeMission(){
       // Task 5 — mission abandoned midway (real engagement, then left without
       // finishing): a gentle, no-pressure Leo. Deferred so it lands after the
       // modal has closed, not on top of it.
-      setTimeout(()=> showLeoReaction("gentle", "No worries — let's try again!"), 450);
     }
   }
   resetTimerUI(); // Stop + reset timer on close
@@ -2950,6 +3059,9 @@ function closeMission(){
   // Tear down Red Light / Green Light caller overlay if it was running (mission 2)
   try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
   backdrop.classList.remove("show");
+  backdrop.setAttribute("aria-hidden", "true");
+  backdrop.inert = true;
+  backdrop.setAttribute("inert", "");
   document.body.classList.remove("modalOpen");
   if(wasHubMission){
     setHubDialogIsolation(false);
@@ -2960,6 +3072,15 @@ function closeMission(){
   // Restore background scroll
   const _aw = document.getElementById("app-wrapper");
   if(_aw) _aw.style.overflowY = "";
+  setMissionBackgroundIsolation(false);
+  const returnFocus = _missionReturnFocus;
+  _missionReturnFocus = null;
+  const focusTarget = returnFocus && returnFocus.isConnected && returnFocus.getClientRects().length
+    ? returnFocus
+    : btnDailyPlay;
+  if(!wasHubMission && focusTarget && focusTarget.isConnected && focusTarget.getClientRects().length){
+    requestAnimationFrame(()=>{ try{ focusTarget.focus({ preventScroll:true }); }catch(_){ focusTarget.focus(); } });
+  }
   // Continue hint güncelle (last opened değişti)
   renderContinueHint();
   // Browse tab'daysak path'i de yenile — done state guncel olsun
@@ -3014,9 +3135,6 @@ function openCertificate(){
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
   if(sheet) sheet.scrollTop = 0;
-  // Task 5 — the biggest moment: Champion certificate. Celebrate Leo (512, with
-  // the certificate modal already on screen this reads as a co-celebration).
-  showLeoReaction("celebrate", "Champion!", { size: 512 });
   // NOTE: "Open" should only open. Saving is done via the Save button inside the sheet.
 }
 
@@ -3347,6 +3465,7 @@ if(certBox){
 
 btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
+backdrop.addEventListener("keydown",(e)=> handleDialogKeys(e, backdrop, closeMission));
 
 // §3.2 — 5-second Undo bar shown after an interactive completion. Reverts the
 // done state (the accidental-tap net that replaced hold-to-finish). Streak/daily
@@ -3375,31 +3494,6 @@ function showUndoBar(id){
     }
   };
 }
-
-// §6.1 — neutral review invitation, shown once after the 3rd completed mission.
-// No incentive, no "5-star"/"positive" wording (Amazon TOS). jumvi_review_prompt_shown
-// guards it; "Not now" and "Write a review" both mark it shown.
-const REVIEW_KEY = "jumvi_review_prompt_shown";
-function maybeShowReviewPrompt(){
-  try{ if(lsGet(REVIEW_KEY, "0") === "1") return; }catch(_){}
-  const ov = document.getElementById("reviewOverlay");
-  if(!ov) return;
-  ov.hidden = false;
-  trackEvent("Review Prompt Shown");
-}
-function dismissReviewPrompt(mark){
-  const ov = document.getElementById("reviewOverlay");
-  if(ov) ov.hidden = true;
-  if(mark){ try{ lsSet(REVIEW_KEY, "1"); }catch(_){} }
-}
-(function wireReviewPrompt(){
-  const go = document.getElementById("reviewGo");
-  const no = document.getElementById("reviewDismiss");
-  const ov = document.getElementById("reviewOverlay");
-  if(go) go.addEventListener("click", ()=>{ trackEvent("Review Prompt Clicked"); dismissReviewPrompt(true); }); // link still opens Amazon
-  if(no) no.addEventListener("click", ()=>{ trackEvent("Review Prompt Dismissed"); dismissReviewPrompt(true); });
-  if(ov) ov.addEventListener("click", (e)=>{ if(e.target === ov) dismissReviewPrompt(true); });
-})();
 
 function markMissionDone(id, source="manual"){
   if(id==null || done.has(id)) return;
@@ -3435,25 +3529,9 @@ function markMissionDone(id, source="manual"){
   }
   clickSound("success");
   celebrate();
-  // Task 5 — Coach Leo celebrates ALONGSIDE the existing confetti/toast/badge
-  // flow (never replaces it). Corner burst, non-blocking. Repeated celebrate
-  // calls (badge, certificate) that land in this window are dropped, so the kid
-  // sees exactly one happy Leo, not a stack.
-  showLeoReaction("celebrate", "Nice! Mission complete");
-  // Daily mini-challenge counter
-  bumpDailyChallenge();
   fireDoneBurst(document.getElementById("btnToggleDone"));
   // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
   if(source === "manual" || source === "auto") showUndoBar(id);
-  // §6.1 — after the 3rd completed mission, once, offer a neutral review invite
-  // (after the celebration settles so it doesn't stack on the badge modal).
-  if((source === "manual" || source === "auto") && done.size === 3){
-    setTimeout(maybeShowReviewPrompt, 1400);
-  }
-  // Streak +1 olduysa fire burst
-  if(changed && streakCount >= 1){
-    setTimeout(()=> fireStreakBurst(), 500);
-  }
   // Score özeti — eğer tracker açıksa ve skor varsa
   if(_scoreTrackerOpen && _currentScore > 0){
     showScoreSummary(id);
@@ -3502,19 +3580,7 @@ function markMissionDone(id, source="manual"){
       const cheer = cheers[Math.floor(Math.random()*cheers.length)];
       showToast(`${cheer} ${remaining} mission${remaining===1?"":"s"} to go!`);
     }
-    // Streak milestones — delayed so they don't overwrite the completion toast
-    if(changed){
-      const delay = 2100;
-      if(streakCount === 7){
-        setTimeout(()=>{ fireConfetti(2200); renderStreakUI(true); showToast("WEEK CHAMPION! 7 days in a row — incredible!"); }, delay);
-      } else if(streakCount === 3){
-        setTimeout(()=>{ celebrate(); renderStreakUI(true); showToast("3-day streak! Keep showing up!"); }, delay);
-      } else if(streakCount > 1){
-        setTimeout(()=>{ renderStreakUI(true); showToast(`${streakCount} days in a row — keep it going!`); }, delay);
-      } else {
-        setTimeout(()=> renderStreakUI(true), 300);
-      }
-    }
+    if(changed) renderStreakUI(false);
   }
   // Hub flow: instead of staying on this mission (old behavior), let the kid
   // see the done-confirmation beat (checkmark burst + score summary, both
@@ -3989,7 +4055,7 @@ if(btnDailyNew){
     dailyIdStored = setState("dailyIdStored", pickDailyId(dailyIso || isoLocalDate(), dailyN));
     persistDaily();
     renderDailyUI();
-    showToast("New daily mission selected!");
+    showToast("Another mission is ready.");
   };
 }
 
@@ -4524,25 +4590,39 @@ if(btnA2hsClose){
 // number anywhere else; format the welcome count through renderMissionCount.
 const TOTAL_MISSIONS = 36;
 function renderMissionCount(bandLabel, n){
-  // Copy matches reality: the Browse Mission Path shows all 36 and every one is
-  // tappable (nothing is actually locked), so we don't claim "unlock". The band
-  // count is how many are hand-picked for that age; the full set lives in the path.
+  // Every mission stays available; the selected band only tunes the first pick.
   if(n >= TOTAL_MISSIONS){
-    return `All ${TOTAL_MISSIONS} missions for ages ${bandLabel}`;
+    return `All ${TOTAL_MISSIONS} missions available`;
   }
-  return `${n} hand-picked for ages ${bandLabel} · all ${TOTAL_MISSIONS} in the Mission Path`;
+  return `${n} matched missions · all ${TOTAL_MISSIONS} always available`;
 }
 function showWelcomeOverlay(){
   const overlay = document.getElementById("welcomeOverlay");
   if(!overlay) return;
+  const appShell = document.getElementById("app-wrapper");
+  const isolateWelcome = (active)=>{
+    if(!appShell) return;
+    if(active){
+      document.body.classList.add("welcomeActive");
+      appShell.setAttribute("inert", "");
+      appShell.setAttribute("aria-hidden", "true");
+    }else{
+      document.body.classList.remove("welcomeActive");
+      appShell.removeAttribute("inert");
+      appShell.removeAttribute("aria-hidden");
+    }
+  };
   // Already onboarded — hide immediately without animation
   if(lsGet(ONBOARD_KEY, "0") === "1"){
     overlay.style.display = "none";
+    overlay.setAttribute("aria-hidden", "true");
+    isolateWelcome(false);
     return;
   }
+  isolateWelcome(true);
   // Default: first age group selected
   let selectedDiff = "Easy";
-  let selectedBand = "3–5";
+  let selectedBand = "just-starting";
   const ageBtns = overlay.querySelectorAll(".ageBtn");
   const countEl  = document.getElementById("welcomeMissionCount");
 
@@ -4564,23 +4644,23 @@ function showWelcomeOverlay(){
       ageBtns.forEach(b=>b.classList.remove("selected"));
       btn.classList.add("selected");
       selectedDiff = btn.dataset.diff || "all";
-      selectedBand = btn.dataset.band || "3–5";
+      selectedBand = btn.dataset.band || "just-starting";
       updateCount(selectedDiff, selectedBand);
     });
   });
   if(ageBtns[0]){
     ageBtns[0].classList.add("selected");
     selectedDiff = ageBtns[0].dataset.diff || "Easy";
-    selectedBand = ageBtns[0].dataset.band || "3–5";
+    selectedBand = ageBtns[0].dataset.band || "just-starting";
+    requestAnimationFrame(()=> ageBtns[0].focus());
   }
   updateCount(selectedDiff, selectedBand);
 
   const startBtn = document.getElementById("btnWelcomeStart");
   if(startBtn){
     startBtn.addEventListener("click", ()=>{
-      // Always close overlay first — nothing should block this
-      overlay.classList.add("hiding");
-      setTimeout(()=>{ overlay.style.display = "none"; }, 380);
+      const firstMissionId = pickFirstMissionForNewUser(selectedDiff);
+      // Close first so the mission hand-off feels immediate and never stacks.
       clickSound("success");
       // Persist selection
       try { lsSet(ONBOARD_KEY, "1"); } catch(e){}
@@ -4592,17 +4672,24 @@ function showWelcomeOverlay(){
       try {
         currentDifficulty = setState("currentDifficulty", selectedDiff);
         renderFilterGroups();
-        renderList();
-        // Refresh Today's Mission so its pick respects the age ceiling that was
-        // just chosen (ensureDailyMission re-picks if the current one is above it).
+        updateProgress({ deferStats: true });
+        // Make the selected first mission the home-card pick too, so closing the
+        // sheet never lands on a different recommendation.
+        if(firstMissionId){
+          dailyIso = setState("dailyIso", isoLocalDate());
+          dailyN = setState("dailyN", 0);
+          dailyIdStored = setState("dailyIdStored", firstMissionId);
+          persistDaily();
+        }
         if(typeof renderDailyUI === "function") renderDailyUI();
       } catch(e){ console.warn("Welcome filter:", e); }
-      // Splash removed (§1.4): the "Let's Play!" full-screen gate gave no
-      // information and the paddles are already in the kid's hands. The overlay
-      // simply fades out (380ms above) straight onto the Today tab.
-      // First-visit auto-open of a mission card was REMOVED earlier (audit P0):
-      // the Today tab already surfaces today's mission with its own Play CTA.
       try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
+      // Keep the mission open in the original tap stack so iOS permits the
+      // automatic read-aloud for the just-starting level.
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden", "true");
+      isolateWelcome(false);
+      if(firstMissionId) openMission(firstMissionId);
     });
   }
   // §1.3 — the sibling line is now STATIC helper text (a <p>), not a control:
@@ -4638,7 +4725,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260813-4"); // mobile hub UX + deployed Leo model
+    const mod = await import("./jumvi-hub-app.js?v=20260813-9"); // play-first mobile hub UX + deployed Leo model
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4931,7 +5018,6 @@ const HUB_BACKGROUND_SELECTORS = [
   "#app-wrapper > .wrap",
   "#offlineBanner",
   "#undoBar",
-  "#reviewOverlay",
   "#seasonalBackdrop",
   "#privacyBackdrop",
   "#profileBackdrop",
@@ -5120,9 +5206,7 @@ function switchTab(tabName){
       renderCoachPick();
     }
     if(tabName === "stats") {
-      // Badge ve dashboard taze render
-      if(typeof updateBadges === "function") updateBadges();
-      if(typeof renderParentDashboard === "function") renderParentDashboard();
+      // Badge, dashboard and progress render only when this tab is opened.
       if(typeof updateProgress === "function") updateProgress();
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
     }
@@ -5143,8 +5227,8 @@ function switchTab(tabName){
     window.scrollTo({ top: 0, behavior: "auto" });
   } catch(_){}
 
-  // Aktif tab'ı kaydet
-  try { lsSet(NAV_TAB_KEY, tabName); } catch(_){}
+  // The island is a temporary bonus view, never the QR return destination.
+  try { lsSet(NAV_TAB_KEY, tabName === "hub3d" ? "today" : tabName); } catch(_){}
 
   trackEvent("Tab Switched", { tab: tabName });
 }
@@ -5159,8 +5243,7 @@ function renderProfileTab(){
   if(nameEl)   nameEl.textContent   = ap.name   || "Player";
   if(statsEl){
     const total = done.size;
-    const sc    = streakCount || 0;
-    statsEl.innerHTML = `${total} mission${total===1?"":"s"} · <i class="jic jic-flame" aria-hidden="true"></i> ${sc} day${sc===1?"":"s"} streak`;
+    statsEl.textContent = `${total} mission${total===1?"":"s"} complete`;
   }
   // Daily reminder kaldirildi
 }
@@ -5256,10 +5339,6 @@ function initBottomNav(){
   if(lsGet(HUB3D_UNSUPPORTED_KEY, "0") === "1"){
     applyHub3dUnsupported();
   } else {
-    if(isHub3DEnabled()){
-      const hub3dBtn = document.getElementById("navTabHub3D");
-      if(hub3dBtn) hub3dBtn.style.display = "";
-    }
     // Step 1 of 7. The hub funnel starts here, not at "entered": without a
     // "was it even offered" number, a low entry count cannot be told apart
     // from a device that was never shown the door.
@@ -5283,8 +5362,6 @@ function initBottomNav(){
       }
       clickSound("click");
       lsSet(HUB3D_FLAG_KEY, "1");
-      const hub3dBtn = document.getElementById("navTabHub3D");
-      if(hub3dBtn) hub3dBtn.style.display = "";
       _hub3dEntrySource = "adv_card";
       switchTab("hub3d");
     };
@@ -5329,7 +5406,7 @@ function initBottomNav(){
 
   // İlk yükleme: kayıtlı tab veya "today"
   const saved = lsGet(NAV_TAB_KEY, "today");
-  switchTab(saved);
+  switchTab(saved === "hub3d" ? "today" : saved);
 
   // Profil tab'ından profile sheet aç
   const openFromTab = document.getElementById("btnOpenProfileFromTab");
@@ -5351,24 +5428,6 @@ function initBottomNav(){
       if(lastId){
         const ms = missions.find(x=>x.id===lastId);
         if(ms) openMission(lastId);
-      }
-    });
-  }
-
-  // Daily card fully tappable (whole card opens mission)
-  const dailyBox = document.getElementById("dailyBox");
-  if(dailyBox){
-    dailyBox.addEventListener("click", (e)=>{
-      // Buton zaten click yakaladıysa çift tetikleme önle
-      if(e.target.closest("button")) return;
-      const btnPlay = document.getElementById("btnDailyPlay");
-      if(btnPlay) btnPlay.click();
-    });
-    dailyBox.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter" || e.key === " "){
-        e.preventDefault();
-        const btnPlay = document.getElementById("btnDailyPlay");
-        if(btnPlay) btnPlay.click();
       }
     });
   }
@@ -5463,6 +5522,8 @@ function renderContinueHint(){
   if(!hint) return;
   const lastId = Number(lsGet(LAST_OPENED_KEY, "0"));
   if(!lastId){ hint.style.display = "none"; return; }
+  // The main card already carries this mission; never show the same choice twice.
+  if(lastId === dailyIdStored){ hint.style.display = "none"; return; }
   const ms = missions.find(x=>x.id===lastId);
   if(!ms){ hint.style.display = "none"; return; }
   // A COMPLETED mission is not something to "continue" — right after finishing
@@ -5652,10 +5713,18 @@ function renderMissionPath(){
       const node = document.createElement("button");
       node.type = "button";
       node.className = "pathStepNode";
-      node.setAttribute("aria-label", m.title + " — " + pack.label + (isDone ? " (completed)" : ""));
+      const nodeState = isDone ? "completed" : (isDaily ? "today's pick" : (isNext ? "next mission" : ""));
+      node.setAttribute("aria-label", m.title + " — " + pack.label + (nodeState ? " (" + nodeState + ")" : ""));
       node.setAttribute("data-mission-id", m.id);
       if(isNext) node.id = "pathNodeNext";
       node.innerHTML = '<span class="pathStepIcon">' + JUMVI_ART.img(JUMVI_ART.mission(m.id), "missionArt", m.title) + '</span>';
+      if(isDone){
+        const doneMark = document.createElement("span");
+        doneMark.className = "pathStepDoneMark";
+        doneMark.setAttribute("aria-hidden", "true");
+        doneMark.textContent = "✓";
+        node.appendChild(doneMark);
+      }
 
       node.addEventListener("click", function(){
         try{ clickSound(isDone ? "success" : "click"); }catch(_){}
@@ -5670,6 +5739,13 @@ function renderMissionPath(){
 
       step.appendChild(node);
       step.appendChild(label);
+      if(!isDone && (isDaily || isNext)){
+        const status = document.createElement("span");
+        status.className = "pathStepStatus " + (isDaily ? "pathStepStatusDaily" : "pathStepStatusNext");
+        status.setAttribute("aria-hidden", "true");
+        status.textContent = isDaily ? "TODAY" : "NEXT";
+        step.appendChild(status);
+      }
 
       // Just-done celebration
       if(window._justDoneMissionId === m.id){
@@ -5933,10 +6009,12 @@ function toggleScoreTracker(force){
   _scoreTrackerOpen = next;
   tracker.style.display = next ? "" : "none";
   btn.classList.toggle("active", next);
+  btn.setAttribute("aria-pressed", next ? "true" : "false");
   btn.setAttribute("title", next ? "Tracking score (tap to hide)" : "Track score");
   if(next){
     resetScore();
     trackEvent("Score Tracker Opened");
+    setTimeout(()=> tracker.scrollIntoView({ behavior: "smooth", block: "center" }), 40);
   }
 }
 
@@ -6133,7 +6211,7 @@ function init(){
   renderFilterGroups();
   const _dash = document.getElementById("parentDashboard");
   if(_dash) _dash.style.display = done.size === 0 ? "none" : "";
-  renderList();
+  updateProgress({ deferStats: true });
 
   renderStreakUI();
   renderDailyUI();
@@ -6202,7 +6280,6 @@ function init(){
   hideReadToMeIfUnsupported();
   if(!storageAvailable){ showToast("Storage is unavailable. Progress will only stay in this session."); }
   showWelcomeOverlay();
-  checkStreakWarning();
   // Bottom nav + Today-first UI elementleri
   initBottomNav();
   renderDailyChallenge();
@@ -6221,7 +6298,6 @@ function init(){
     const savedCertName = lsGet(CERT_NAME_KEY);
     const ap = getActiveProfile();
     certNameInput.value = savedCertName || (ap && ap.name && ap.name !== "Player" ? ap.name : "");
-    buildCertificate();
   }
 }
 
