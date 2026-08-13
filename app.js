@@ -2911,6 +2911,7 @@ if(btnSpeak){
 
   backdrop.classList.add("show");
   document.body.classList.add("modalOpen");
+  if(window._hubMissionFlow) setHubDialogIsolation(true);
   applyHubMissionTheme();
   sheet.scrollTop = 0;
   const _sb = document.getElementById("sheetBody");
@@ -2927,6 +2928,8 @@ if(btnSpeak){
 function closeMission(){
   // Hub flow ends when the mission view closes — the hub tab is still the
   // active tab underneath, so the user lands right back on the island.
+  const wasHubMission = !!window._hubMissionFlow;
+  const hubMissionCompleted = lastOpenedId != null && done.has(lastOpenedId);
   window._hubMissionFlow = null;
   releaseWakeLock();
   if(lastOpenedId != null && !done.has(lastOpenedId)){
@@ -2948,6 +2951,12 @@ function closeMission(){
   try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
   backdrop.classList.remove("show");
   document.body.classList.remove("modalOpen");
+  if(wasHubMission){
+    setHubDialogIsolation(false);
+    if(_hub3dInstance && typeof _hub3dInstance.onMissionClosed === "function"){
+      _hub3dInstance.onMissionClosed(hubMissionCompleted);
+    }
+  }
   // Restore background scroll
   const _aw = document.getElementById("app-wrapper");
   if(_aw) _aw.style.overflowY = "";
@@ -4629,7 +4638,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260805-3"); // mobile polish: hub feedback + safe-area
+    const mod = await import("./jumvi-hub-app.js?v=20260813-4"); // mobile hub UX + deployed Leo model
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -4679,13 +4688,15 @@ function ensureHub3DLoaded(onProgress){
         // the child understood the controls, not just that the scene loaded.
         if(name === "Hub3D First Walk") beaconOnce("hub3d_moved", "hub3d", { step: "moved" });
       },
-      // Soft FPS fallback (audit Bulgu #5): the hub measured a struggling frame
-      // rate. We don't yank the kid out mid-play — just a one-time, dismissable
-      // nudge telling them the calm list is a tap away in the hub menu.
+      // Soft FPS fallback (audit Bulgu #5): the hub already walks down its
+      // quality ladder automatically. Keep that adaptation silent — a vague
+      // "running slow" toast interrupts the child's first task without giving
+      // them a useful action, while the always-visible Menu remains the escape
+      // hatch to the lightweight mission list.
       onLowFps: (fps) => {
         if(window.__hub3dLowFpsNudged) return;
         window.__hub3dLowFpsNudged = true;
-        showToast("Running a bit slow — tap the menu for the quick list anytime.");
+        trackEvent("Hub3D Low FPS", { fps: String(fps || 0), response: "silent_quality_fallback" });
       }
     });
     step(0.85, "init"); // milestone 3: initHub3D() built the scene; first frame paints after resume()
@@ -4849,12 +4860,12 @@ function buildHubLoadingOverlay(container){
   el.innerHTML =
     // §4.2 — escape hatch: leave the wait and go back to the missions. The load
     // keeps running (cached), so re-entry is instant.
-    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));min-width:44px;min-height:44px;border:none;border-radius:50%;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;"><i class="jic jic-x" aria-hidden="true"></i></button>' +
+    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));min-height:44px;padding:9px 15px;border:none;border-radius:16px;background:rgba(255,255,255,0.9);color:#2a5a7a;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;">← Missions</button>' +
     '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
       leoPictureHTML("encourage", 256, 96, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">Building your island…</div>' +
-    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;opacity:0;transition:opacity 400ms ease;">Coach Leo is on his way!</div>' +
+    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">Opening the first play zone…</div>' +
+    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:280px;opacity:0;transition:opacity 400ms ease;">Taking longer? Missions are always ready from the button above.</div>' +
     '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.6);border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.12);">' +
       '<div id="hub3dLoadBar" style="width:8%;height:100%;background:linear-gradient(90deg,#4fc46a,#35a04e);border-radius:6px;transition:width 350ms ease;"></div>' +
     '</div>';
@@ -4909,6 +4920,87 @@ function showHubLoadingFailure(container, stage){
   if(back) back.onclick = ()=>{ if(_hubLoadingEl){ _hubLoadingEl.remove(); _hubLoadingEl = null; } switchTab("today"); };
 }
 
+// The hub lives inside #app-wrapper so it can out-stack the app's modals, which
+// means aria-hiding the wrapper itself would also hide the hub. Isolate only the
+// page chrome/content behind it and leave the real mission/badge/certificate
+// dialogs available — those are intentionally opened from inside the island.
+let _hubBackgroundRestore = null;
+let _hubReturnFocus = null;
+const HUB_BACKGROUND_SELECTORS = [
+  "#app-wrapper > .sticky",
+  "#app-wrapper > .wrap",
+  "#offlineBanner",
+  "#undoBar",
+  "#reviewOverlay",
+  "#seasonalBackdrop",
+  "#privacyBackdrop",
+  "#profileBackdrop",
+  "#tutorialOverlay",
+  "#bottomNav",
+  "#soundToggle",
+  "#saveOverlay",
+  "#fallbackBackdrop"
+];
+function setHubBackgroundIsolation(active){
+  const overlay = document.getElementById("hub3dOverlay");
+  if(active){
+    if(!_hubBackgroundRestore){
+      _hubReturnFocus = document.activeElement && document.activeElement !== document.body ? document.activeElement : null;
+      const seen = new Set();
+      _hubBackgroundRestore = HUB_BACKGROUND_SELECTORS
+        .map(sel => document.querySelector(sel))
+        .filter(el => el && !seen.has(el) && seen.add(el))
+        .map(el => ({
+          el,
+          inert: !!el.inert,
+          hadInert: el.hasAttribute("inert"),
+          ariaHidden: el.getAttribute("aria-hidden")
+        }));
+      _hubBackgroundRestore.forEach(state => {
+        state.el.inert = true;
+        state.el.setAttribute("inert", "");
+        state.el.setAttribute("aria-hidden", "true");
+      });
+    }
+    if(overlay){
+      overlay.setAttribute("aria-hidden", "false");
+      requestAnimationFrame(()=>{ try{ overlay.focus({ preventScroll:true }); }catch(_){ overlay.focus(); } });
+    }
+    return;
+  }
+
+  if(overlay) overlay.setAttribute("aria-hidden", "true");
+  if(_hubBackgroundRestore){
+    _hubBackgroundRestore.forEach(state => {
+      state.el.inert = state.inert;
+      if(state.hadInert) state.el.setAttribute("inert", "");
+      else state.el.removeAttribute("inert");
+      if(state.ariaHidden == null) state.el.removeAttribute("aria-hidden");
+      else state.el.setAttribute("aria-hidden", state.ariaHidden);
+    });
+    _hubBackgroundRestore = null;
+  }
+  const returnFocus = _hubReturnFocus;
+  _hubReturnFocus = null;
+  if(returnFocus && returnFocus.isConnected && returnFocus.getClientRects().length){
+    try{ returnFocus.focus({ preventScroll:true }); }catch(_){ }
+  }
+}
+
+function setHubDialogIsolation(open){
+  const overlay = document.getElementById("hub3dOverlay");
+  if(!overlay) return;
+  overlay.inert = !!open;
+  if(open){
+    overlay.setAttribute("inert", "");
+    overlay.setAttribute("aria-hidden", "true");
+  }else{
+    overlay.removeAttribute("inert");
+    overlay.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(()=>{ try{ overlay.focus({ preventScroll:true }); }catch(_){ } });
+  }
+}
+
 function showHub3D(){
   const overlay = document.getElementById("hub3dOverlay");
   // WebGL gate (Task 1): no WebGL → this device can't run the hub. Mark it
@@ -4928,6 +5020,7 @@ function showHub3D(){
   beaconOnce("hub3d_entered", "hub3d", { step: "entered" });
   _hub3dEntrySource = "nav_tab"; // reset default for the next open (deep link etc.)
   if(overlay) overlay.style.display = "";
+  setHubBackgroundIsolation(true);
   const sticky = document.querySelector(".sticky");
   if(sticky) sticky.style.display = "none";
   const bottomNav = document.getElementById("bottomNav");
@@ -4972,6 +5065,7 @@ function showHub3D(){
 function hideHub3D(){
   const overlay = document.getElementById("hub3dOverlay");
   if(overlay) overlay.style.display = "none";
+  setHubBackgroundIsolation(false);
   const sticky = document.querySelector(".sticky");
   if(sticky) sticky.style.display = "";
   const bottomNav = document.getElementById("bottomNav");

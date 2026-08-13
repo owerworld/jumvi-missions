@@ -10,7 +10,7 @@
 // ships as an ES module. Same version (0.160.0) as before, just a different
 // build/packaging — every existing THREE.Xxx call below is unaffected.
 import * as THREE from 'three';
-import { createCoachLeo } from './jumvi-leo.js?v=20260723-3';
+import { createCoachLeo } from './jumvi-leo.js?v=20260813-1';
 
 export function initHub3D(opts) {
   var PACKS = opts.PACKS;
@@ -32,6 +32,7 @@ export function initHub3D(opts) {
   var _fpsFrames = 0;
   var _fpsWindowStart = 0;
   var _fpsWarmupUntil = 0; // skip the first ~1.5s of load jank before sampling
+  var _fpsNudgeAfter = 0;  // never cover onboarding/first movement with a perf message
   var _fpsNudged = false;  // the "quick list" offer is shown at most once
   var _qualityStep = 0;    // 0 = as configured; climbs only downward, never back up
   // Exposed so the FIX-5 fallback layer (and app.js) can report a bail-out with
@@ -51,7 +52,7 @@ export function initHub3D(opts) {
   var HUB_TEXTS = {
     zoneComplete: 'Zone Complete!',
     hint: 'Tap the ground to walk',
-    tapToWalk: 'Tap to walk!',
+    tapToWalk: 'Tap the path to walk',
     sound: 'Sound on/off',
     jump: 'Jump',
     allStars: 'Every star found!',
@@ -107,12 +108,16 @@ export function initHub3D(opts) {
 
   // ---------- HUD: built into the container — no markup needed in index.html ----------
   var hudTop = document.createElement('div');
+  hudTop.className = 'hub3dHudTop';
   // padding-top clears the ~58px top-left Missions exit button (and the menu
   // below it): the centered badges row is 248px wide and cannot fit in the
   // ~214px gap between the exit and mute corner buttons, so it drops to its own
   // row beneath them instead of sitting behind the exit button on narrow phones.
   hudTop.style.cssText = 'position:absolute;top:0;left:0;right:0;padding:calc(64px + env(safe-area-inset-top)) 16px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:10;';
   var badgesEl = document.createElement('div');
+  badgesEl.className = 'hub3dBadges';
+  badgesEl.setAttribute('role', 'list');
+  badgesEl.setAttribute('aria-label', 'Island zones');
   badgesEl.style.cssText = 'display:flex;gap:8px;background:rgba(255,255,255,0.94);padding:8px 13px;border-radius:22px;box-shadow:0 6px 18px rgba(18,38,66,0.20),inset 0 1px 0 rgba(255,255,255,0.9);border:1px solid rgba(120,150,180,0.20);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);';
   hudTop.appendChild(badgesEl);
 
@@ -120,6 +125,9 @@ export function initHub3D(opts) {
   // whichever zone Leo is currently standing in (real done Set, not a guess) —
   // purely a read of existing state, no new progress concept.
   var progressLabelEl = document.createElement('div');
+  progressLabelEl.className = 'hub3dProgress';
+  progressLabelEl.setAttribute('role', 'status');
+  progressLabelEl.setAttribute('aria-live', 'polite');
   progressLabelEl.style.cssText = 'background:linear-gradient(180deg,#fffdf7,#ffe9c4);padding:5px 15px;border-radius:16px;font-size:12.5px;font-weight:800;color:#7a4712;box-shadow:0 4px 12px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.85);border:1px solid rgba(226,178,104,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
   hudTop.appendChild(progressLabelEl);
 
@@ -132,6 +140,7 @@ export function initHub3D(opts) {
   // isn't torn down on exit (app.js caches it), so re-entry returns to the same
   // spot — position is effectively preserved.
   var exitBtn = document.createElement('button');
+  exitBtn.className = 'hub3dExitButton';
   exitBtn.type = 'button';
   exitBtn.setAttribute('aria-label', 'Back to missions');
   exitBtn.innerHTML = '← Missions';
@@ -228,18 +237,14 @@ export function initHub3D(opts) {
     zoneCardEl.style.animation = 'hub3dZoneCardIn 2200ms ease-out forwards';
   }
 
-  var hintEl = document.createElement('div');
-  hintEl.textContent = HUB_TEXTS.hint;
-  hintEl.style.cssText = 'position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));max-width:82vw;box-sizing:border-box;white-space:normal;background:rgba(255,255,255,0.8);padding:6px 11px;border-radius:11px;font-size:11px;color:#555;z-index:10;text-align:center;pointer-events:none;transition:opacity 400ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
-  container.appendChild(hintEl);
-
-  // First-tap coach bubble — the small hint above is parent-facing; a 3-year-
-  // old pre-reader needs the coach bubble itself. Bounces center-screen until the very
-  // first touch/keypress, then fades for the rest of the session.
+  // First-tap coach bubble. Keep a single instruction (the older duplicate
+  // bottom-right hint was easy to read as a second control) and place it just
+  // above the guided-walk button so Leo's face stays visible on portrait phones.
+  var hintEl = null;
   var coachBubbleEl = document.createElement('div');
   coachBubbleEl.textContent = HUB_TEXTS.tapToWalk;
-  coachBubbleEl.className = 'h3tail';
-  coachBubbleEl.style.cssText = 'position:absolute;bottom:26%;left:50%;transform:translateX(-50%);max-width:82vw;box-sizing:border-box;white-space:normal;text-align:center;background:#ffffff;padding:12px 22px;border-radius:20px;font-size:19px;font-weight:900;color:#2c3a4d;z-index:12;pointer-events:none;box-shadow:0 10px 26px rgba(18,38,66,0.28),0 2px 6px rgba(18,38,66,0.16),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
+  coachBubbleEl.className = 'h3tail hub3dCoachBubble';
+  coachBubbleEl.style.cssText = 'position:absolute;bottom:calc(80px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:82vw;box-sizing:border-box;white-space:normal;text-align:center;background:#ffffff;padding:9px 16px;border-radius:16px;font-size:15px;font-weight:900;color:#2c3a4d;z-index:12;pointer-events:none;box-shadow:0 8px 20px rgba(18,38,66,0.24),0 2px 5px rgba(18,38,66,0.14),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;transition:opacity 400ms ease;animation:hub3dCoachBounce 1.3s ease-in-out infinite;';
   container.appendChild(coachBubbleEl);
   if (!document.getElementById('hub3dCoachStyle')) {
     var coachStyle = document.createElement('style');
@@ -257,8 +262,7 @@ export function initHub3D(opts) {
     coachBubbleDismissed = true;
     coachBubbleEl.style.opacity = '0';
     setTimeout(function () { coachBubbleEl.remove(); }, 450);
-    // The parent-facing "tap to walk" hint is only needed until the first walk;
-    // fade it out too so it stops competing with the top HUD / the scene.
+    // Defensive: older cached hub markup may still have the retired hint.
     if (hintEl) { hintEl.style.opacity = '0'; setTimeout(function () { hintEl.remove(); }, 450); }
     // Task 3: the first tap also dismisses greeting Bubble 1 (it's pointer-events:
     // none, so the tap itself passed through to start the walk).
@@ -313,6 +317,16 @@ export function initHub3D(opts) {
       if (opts.markHubIntroDone) opts.markHubIntroDone();
       resumeAudio();
       playChime();
+      // Reveal the same route language used by the guided-walk CTA immediately;
+      // waiting nine idle seconds made the first portrait frame look like an
+      // empty lawn with no visible mission destination.
+      setTimeout(function () {
+        var cfg = frontierGate();
+        if (!cfg || moveTargetActive || autoWalk) return;
+        showTrail(pathPointsTo(cfg));
+        nudgeActive = true;
+        nudgeShownAt = performance.now();
+      }, 320);
     });
     _introBubble2Pending = true; // praise bubble after the first real walk
   }
@@ -488,13 +502,20 @@ export function initHub3D(opts) {
   // element above (own absolute position, not nested in hudTop's
   // pointer-events:none column).
   var muteBtn = document.createElement('button');
+  muteBtn.className = 'hub3dSoundButton';
   muteBtn.type = 'button';
-  muteBtn.setAttribute('aria-label', HUB_TEXTS.sound);
   muteBtn.style.cssText = 'position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.85);border:none;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:11;padding:0;';
-  muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>';
+  function renderMuteButton() {
+    var muted = isMuted();
+    muteBtn.innerHTML = muted ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>';
+    muteBtn.setAttribute('aria-label', muted ? 'Turn sound on' : 'Turn sound off');
+    muteBtn.setAttribute('aria-pressed', muted ? 'false' : 'true');
+    muteBtn.title = muted ? 'Turn sound on' : 'Turn sound off';
+  }
+  renderMuteButton();
   muteBtn.addEventListener('click', function () {
     setSoundOnFn(isMuted()); // flip the app-wide setting
-    muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>';
+    renderMuteButton();
     resumeAudio();
   });
   container.appendChild(muteBtn);
@@ -512,6 +533,7 @@ export function initHub3D(opts) {
   var openBadgesFn = opts.openBadges || function () {};
 
   var menuBtn = document.createElement('button');
+  menuBtn.className = 'hub3dMenuButton';
   menuBtn.type = 'button';
   menuBtn.setAttribute('aria-label', HUB_TEXTS.menu);
   menuBtn.innerHTML = '<i class="jic jic-menu" aria-hidden="true"></i>';
@@ -671,6 +693,21 @@ export function initHub3D(opts) {
     playChime();
   }
 
+  // A deterministic escape from "where do I tap?": the child can still walk
+  // freely by tapping the world, but this persistent, thumb-sized CTA draws a
+  // route to the next playable gate and lets Leo follow it automatically.
+  var missionGuideBtn = document.createElement('button');
+  missionGuideBtn.type = 'button';
+  missionGuideBtn.className = 'hub3dMissionGuide';
+  missionGuideBtn.setAttribute('aria-label', 'Walk to the next mission');
+  missionGuideBtn.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i><span>GO TO NEXT MISSION</span>';
+  missionGuideBtn.style.cssText = 'position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:14;display:flex;align-items:center;justify-content:center;gap:9px;min-height:50px;width:min(260px,calc(100% - 96px));padding:10px 18px;border:1px solid rgba(255,255,255,.7);border-radius:16px;background:linear-gradient(180deg,#4fc46a,#2f9b49);color:#fff;font-size:14px;font-weight:900;letter-spacing:.25px;box-shadow:0 5px 0 #24763a,0 12px 26px rgba(18,38,66,.28);cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;pointer-events:auto;';
+  missionGuideBtn.addEventListener('click', function () {
+    noteInput();
+    startAutoWalkToMission();
+  });
+  container.appendChild(missionGuideBtn);
+
   // (The island-photo/share button was removed to keep the corner clean.)
 
   // ---------- PATH/CORRIDOR (zigzag forest path — replaces the old circular island) ----------
@@ -767,6 +804,9 @@ export function initHub3D(opts) {
   var badgeSlots = {};
   gateConfig.forEach(function (cfg) {
     var slot = document.createElement('div');
+    slot.className = 'hub3dZoneBadge';
+    slot.setAttribute('role', 'listitem');
+    slot.setAttribute('aria-label', cfg.name + (isZoneUnlocked(cfg.zoneIndex) ? '' : ', locked'));
     slot.style.cssText = 'width:30px;height:30px;border-radius:50%;background:#E5E2D8;border:2px solid #C5C1B0;display:flex;align-items:center;justify-content:center;font-size:15px;transition:opacity 240ms ease;';
     slot.innerHTML = cfg.art ? '<img src="' + cfg.art + '" alt="" width="30" height="30" style="width:100%;height:100%;object-fit:contain;border-radius:50%;">' : '';
     slot.title = cfg.name;
@@ -822,13 +862,40 @@ export function initHub3D(opts) {
   var CAM_LAG_MOVING = 4.5;
   var CAM_LAG_IDLE = 3;
 
-  var camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+  // Portrait phones need a deliberately wider establishing shot: with the
+  // landscape chase values Leo filled the lower half and the first gate sat
+  // outside the frame behind a wall of scenery. These values keep Leo readable
+  // while putting the target range, path and destination into frame from the
+  // first second. The chase eases between profiles on rotation.
+  function cameraProfile() {
+    var portrait = camera && camera.aspect < 0.82;
+    if (portrait) {
+      // Establish the route on entry, then tighten to a true chase view after
+      // Leo's first completed leg. Keeping the long look-ahead forever pushed
+      // him behind the bottom CTA whenever a mission closed near a gate.
+      return _firstWalkTracked
+        ? { portrait: true, distance: 7.2, height: 3.35, lookahead: 3.8, lookHeight: 1.15 }
+        : { portrait: true, distance: 8.4, height: 3.8, lookahead: 7.0, lookHeight: 1.15 };
+    }
+    return { portrait: false, distance: CAM_DISTANCE_BACK, height: CAM_HEIGHT, lookahead: CAM_LOOKAHEAD_DIST, lookHeight: CAM_LOOKAHEAD_HEIGHT };
+  }
+
+  var initialCameraAspect = container.clientWidth / container.clientHeight;
+  // PerspectiveCamera's FOV is vertical. Reusing the landscape value on a
+  // narrow portrait phone leaves only a sliver of horizontal world visible,
+  // making the first paddle and rock wall fill the screen. A wider portrait
+  // FOV restores context without changing the established landscape framing.
+  var camera = new THREE.PerspectiveCamera(initialCameraAspect < 0.82 ? 68 : 50, initialCameraAspect, 0.1, 100);
   // Idle default assumes Leo is oriented toward -Z (the forest/gates) even
   // though his rig's own internal facing only updates once he actually moves
   // — this is purely the camera's own starting assumption, so the very first
   // frame already looks into the path instead of back at the spawn point.
-  camera.position.set(0, CAM_HEIGHT, CAM_DISTANCE_BACK);
-  camera.lookAt(0, CAM_LOOKAHEAD_HEIGHT, -CAM_LOOKAHEAD_DIST);
+  var openingCamera = cameraProfile();
+  var openingFacing = openingCamera.portrait ? Math.PI + 0.34 : Math.PI;
+  var openingForwardX = Math.sin(openingFacing);
+  var openingForwardZ = Math.cos(openingFacing);
+  camera.position.set(-openingForwardX * openingCamera.distance, openingCamera.height, -openingForwardZ * openingCamera.distance);
+  camera.lookAt(openingForwardX * openingCamera.lookahead, openingCamera.lookHeight, openingForwardZ * openingCamera.lookahead);
 
   // Device tier — weak phones get a cheaper renderer UP FRONT instead of
   // stuttering first and being rescued later. ≤4 GB RAM or ≤4 cores covers the
@@ -852,7 +919,8 @@ export function initHub3D(opts) {
   // The adaptive ladder in animate() already conceded the point by dropping
   // to 1.0 the moment it detected trouble; all 1.5 bought was several seconds
   // of bad frames before the rescue fired. Start where we were going to end up.
-  renderer.setPixelRatio(lowTier ? 1 : Math.min(window.devicePixelRatio, 2));
+  var compactViewport = Math.min(window.innerWidth || 9999, window.innerHeight || 9999) <= 430;
+  renderer.setPixelRatio(lowTier ? 1 : Math.min(window.devicePixelRatio, compactViewport ? 1.5 : 2));
   renderer.shadowMap.enabled = !lowTier; // shadow pass is the other big cost on weak GPUs
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.appendChild(renderer.domElement);
@@ -2103,7 +2171,7 @@ export function initHub3D(opts) {
     return THREE.MathUtils.clamp(idx, 0, gateConfig.length - 1);
   }
 
-  // Updates the "N missions left in this zone" pill from the real done Set —
+  // Updates the compact current-zone pill from the real done Set —
   // guarded so the DOM text is only touched when the zone or count actually
   // changes, not every frame.
   var lastProgressCacheKey = null;
@@ -2116,9 +2184,7 @@ export function initHub3D(opts) {
     var cacheKey = idx + ':' + remaining;
     if (cacheKey === lastProgressCacheKey) return;
     lastProgressCacheKey = cacheKey;
-    progressLabelEl.textContent = remaining > 0
-      ? (cfg.name + ' — ' + HUB_TEXTS.missionsLeft(remaining))
-      : (cfg.name + ' ' + HUB_TEXTS.zoneDoneLabel);
+    progressLabelEl.textContent = cfg.name + ' · ' + doneCount + '/' + packMissions.length + (remaining > 0 ? ' complete' : ' complete!');
   }
 
   // ---------- ZONE THEME TRANSITIONS ----------
@@ -2160,7 +2226,13 @@ export function initHub3D(opts) {
       themeTargets.sunIntensity = th.sunIntensity;
       showZoneCard(th);
       gateConfig.forEach(function (cfg) {
-        badgeSlots[cfg.id].style.background = cfg.zoneIndex === idx ? th.badgeBg : '#E5E2D8';
+        var slot = badgeSlots[cfg.id];
+        var unlocked = isZoneUnlocked(cfg.zoneIndex);
+        var total = packMissionList(cfg.packKey).length;
+        var completed = packMissionList(cfg.packKey).filter(function (m) { return done.has(m.id); }).length;
+        slot.style.background = cfg.zoneIndex === idx ? th.badgeBg : '#E5E2D8';
+        slot.setAttribute('aria-current', cfg.zoneIndex === idx ? 'true' : 'false');
+        slot.setAttribute('aria-label', cfg.name + ': ' + completed + ' of ' + total + ' missions complete' + (unlocked ? '' : ', locked'));
       });
     }
     // time-constant 0.55s → ~97% settled after 2s, frame-rate independent
@@ -2814,27 +2886,37 @@ export function initHub3D(opts) {
       showTargetRing(moveTarget.x, moveTarget.z);
     }
   }
-  // Touch-follow steering: touchstart picks the destination, and holding the
-  // finger down keeps re-picking it every touchmove — so dragging steers Leo
-  // continuously (the "follow my finger" scheme every mobile ARPG uses)
-  // while a plain tap still behaves as before. touchFollowing gates the move
-  // handler so stray touchmoves that didn't start on the canvas are ignored.
-  var touchFollowing = false;
-  renderer.domElement.addEventListener('touchstart', function (e) {
-    touchFollowing = true;
+  // Pointer Events cover touch, pen, hybrid laptops and mouse with one path.
+  // The previous touchstart-only listener made the hub appear frozen anywhere
+  // the browser exposed a fine pointer (including tablets with a paired pen).
+  // touch-action:none keeps a drag on the canvas from panning the page beneath
+  // the fixed overlay; Pointer Capture keeps steering stable at the edges.
+  var pointerFollowing = false;
+  var activePointerId = null;
+  renderer.domElement.style.touchAction = 'none';
+  renderer.domElement.addEventListener('pointerdown', function (e) {
+    if (e.button != null && e.button !== 0) return;
+    pointerFollowing = true;
+    activePointerId = e.pointerId;
+    try { renderer.domElement.setPointerCapture(e.pointerId); } catch (err) {}
     dismissCoachBubble();
-    var t = e.changedTouches[0];
-    setMoveTargetFromClient(t.clientX, t.clientY, false);
-  }, { passive: true });
-  renderer.domElement.addEventListener('touchmove', function (e) {
-    if (!touchFollowing) return;
-    var t = e.changedTouches[0];
-    setMoveTargetFromClient(t.clientX, t.clientY, true);
-  }, { passive: true });
-  renderer.domElement.addEventListener('touchend', function () {
-    touchFollowing = false;
-  }, { passive: true });
-  renderer.domElement.addEventListener('touchcancel', function () { touchFollowing = false; }, { passive: true });
+    setMoveTargetFromClient(e.clientX, e.clientY, false);
+  });
+  renderer.domElement.addEventListener('pointermove', function (e) {
+    if (!pointerFollowing || e.pointerId !== activePointerId) return;
+    // Mouse movement without a held button should not continuously steer;
+    // touch and pen remain captured until pointerup.
+    if (e.pointerType === 'mouse' && e.buttons === 0) return;
+    setMoveTargetFromClient(e.clientX, e.clientY, true);
+  });
+  function endPointerFollow(e) {
+    if (activePointerId != null && e.pointerId !== activePointerId) return;
+    pointerFollowing = false;
+    activePointerId = null;
+  }
+  renderer.domElement.addEventListener('pointerup', endPointerFollow);
+  renderer.domElement.addEventListener('pointercancel', endPointerFollow);
+  renderer.domElement.addEventListener('lostpointercapture', endPointerFollow);
 
   // ---------- MOVEMENT (momentum-based; world position only — visuals owned by leo module) ----------
   var velocity = new THREE.Vector3();
@@ -2846,7 +2928,7 @@ export function initHub3D(opts) {
   var stepTimer = 0; // footstep sound cadence — see updateMovement()
   // Camera's own facing — separate from Leo's (see updateMovement()), starts
   // at PI to match the idle camera setup above (looking toward -Z).
-  var cameraFacing = Math.PI;
+  var cameraFacing = openingFacing;
   // 0..1 blend between the chase camera and an active focus target, eased in
   // when a growth reveal / medal ceremony starts and out when it ends (see
   // the chase-camera block) so focus enter/exit glides instead of snapping.
@@ -3367,16 +3449,17 @@ export function initHub3D(opts) {
     }
 
     var forwardX = Math.sin(cameraFacing), forwardZ = Math.cos(cameraFacing);
+    var activeCamera = cameraProfile();
     // The default (chase) camera + look-at target. A focus event (growth
     // reveal / medal ceremony) computes its OWN target below, then we blend
     // between the two by focusBlend so entering and leaving a focus is a
     // smooth glide, not the hard snap the old instant-switch produced.
-    var chaseCamX = leo.group.position.x - forwardX * CAM_DISTANCE_BACK;
-    var chaseCamZ = leo.group.position.z - forwardZ * CAM_DISTANCE_BACK;
-    var chaseCamY = CAM_HEIGHT;
-    var chaseLookX = leo.group.position.x + forwardX * CAM_LOOKAHEAD_DIST;
-    var chaseLookY = CAM_LOOKAHEAD_HEIGHT;
-    var chaseLookZ = leo.group.position.z + forwardZ * CAM_LOOKAHEAD_DIST;
+    var chaseCamX = leo.group.position.x - forwardX * activeCamera.distance;
+    var chaseCamZ = leo.group.position.z - forwardZ * activeCamera.distance;
+    var chaseCamY = activeCamera.height;
+    var chaseLookX = leo.group.position.x + forwardX * activeCamera.lookahead;
+    var chaseLookY = activeCamera.lookHeight;
+    var chaseLookZ = leo.group.position.z + forwardZ * activeCamera.lookahead;
 
     // Whichever focus is active supplies the focus target; focusBlend eases
     // toward 1 while a focus is active and back toward 0 when it clears.
@@ -3451,6 +3534,7 @@ export function initHub3D(opts) {
   // active tab underneath. window._hubMissionFlow is cleared by the app's
   // closeMission().
   var appBackdropEl = document.getElementById('backdrop');
+  var activeMissionGateCfg = null;
   function isMissionViewOpen() {
     return !!(appBackdropEl && appBackdropEl.classList.contains('show'));
   }
@@ -3459,11 +3543,45 @@ export function initHub3D(opts) {
     // tint itself to the badge the kid walked into (see applyHubMissionTheme
     // there). '#rrggbb' string so app.js needs no THREE dependency.
     var cfg = gateConfig.filter(function (c) { return c.packKey === packKey; })[0];
+    activeMissionGateCfg = cfg || null;
     var themeHex = cfg ? '#' + new THREE.Color(themeForZone(cfg.zoneIndex).gateColor).getHexString() : null;
     window._hubMissionFlow = { packKey: packKey, themeColor: themeHex };
     // Hub3D Gate Opened — the kid reached a glowing gate and a mission opened.
     track('Hub3D Gate Opened', { pack: packKey });
     openMission(missionId);
+  }
+
+  // Closing an unfinished mission used to reveal Leo almost inside the gate:
+  // on narrow phones the large themed sign then covered both him and most of
+  // the route. Return him a few steps along the direction he arrived from and
+  // establish the chase camera immediately. Completed missions stay exactly
+  // where they are so their growth/reward choreography remains untouched.
+  function onMissionClosed(completed) {
+    var cfg = activeMissionGateCfg;
+    activeMissionGateCfg = null;
+    if (completed || !cfg) return;
+    var arrivalFacing = leo.getFacing();
+    var retreatDistance = 3.2;
+    var retreatZ = cfg.z - Math.cos(arrivalFacing) * retreatDistance;
+    var centerX = pathCenterX(retreatZ);
+    var half = corridorHalfWidthAt(retreatZ) - 0.35;
+    var retreatX = THREE.MathUtils.clamp(
+      cfg.x - Math.sin(arrivalFacing) * retreatDistance,
+      centerX - half,
+      centerX + half
+    );
+    autoWalk = null;
+    moveTargetActive = false;
+    hideTrail();
+    fadeOutTargetRing();
+    velocity.set(0, 0, 0);
+    leo.group.position.x = retreatX;
+    leo.group.position.z = retreatZ;
+    cameraFacing = arrivalFacing;
+    var p = cameraProfile();
+    var fx = Math.sin(cameraFacing), fz = Math.cos(cameraFacing);
+    camera.position.set(retreatX - fx * p.distance, p.height, retreatZ - fz * p.distance);
+    camera.lookAt(cfg.x, p.lookHeight, cfg.z);
   }
 
   // Called by app.js's markMissionDone once it auto-closes the mission view
@@ -3972,6 +4090,7 @@ export function initHub3D(opts) {
     // showHub3D). This is the "how long until the island appears" A/B metric.
     if (!_loadMsTracked) {
       _loadMsTracked = true;
+      _fpsNudgeAfter = performance.now() + 12000;
       // Tell app.js the first frame painted so it can dismiss the loading overlay.
       if (typeof opts.onFirstFrame === 'function') { try { opts.onFirstFrame(); } catch (e) {} }
       // Task 3: kick the one-time greeting AFTER the loading overlay fades (~320ms).
@@ -3999,7 +4118,17 @@ export function initHub3D(opts) {
     // 28fps, not 20. Twenty is already a bad experience for a six-year-old
     // trying to steer a character; by the time we called it "struggling" the
     // child had been struggling for a while.
-    if (_loadMsTracked && _qualityStep < 3) {
+    // Do not diagnose a covered/background tab as a slow GPU. The mission
+    // sheet deliberately throttles the hub to ~4fps, and browsers throttle a
+    // tab that lost focus; counting either window produced a false warning.
+    var _qualityEligible = !isMissionViewOpen() && !document.hidden &&
+      (typeof document.hasFocus !== 'function' || document.hasFocus());
+    if (!_qualityEligible) {
+      _fpsFrames = 0;
+      _fpsWindowStart = 0;
+      _fpsWarmupUntil = performance.now() + 1000;
+    }
+    if (_loadMsTracked && (_qualityStep < 3 || !_fpsNudged) && _qualityEligible) {
       if (_fpsWarmupUntil === 0) _fpsWarmupUntil = performance.now() + 1500;
       if (performance.now() >= _fpsWarmupUntil) {
         if (_fpsWindowStart === 0) _fpsWindowStart = performance.now();
@@ -4010,32 +4139,34 @@ export function initHub3D(opts) {
           _fpsFrames = 0;
           _fpsWindowStart = performance.now();
           if (_fps < 28) {
-            _qualityStep++;
-            try {
-              if (_qualityStep === 1) {
-                // Cheapest first, and invisible on a low-poly flat-shaded
-                // scene: one fragment per CSS pixel, no shadow pass.
-                renderer.setPixelRatio(1);
-                renderer.shadowMap.enabled = false;
-              } else if (_qualityStep === 2) {
-                // Below 1x it starts to soften, so this is where the moving
-                // extras go instead — they cost fill rate and add nothing to
-                // finding the next mission.
-                DUST_ON = false;
-                BURST_ON = false;
-                BLOB_ON = false;   // see updateContactShadow — a plain
-                                   // .visible = false would be overwritten
-                                   // on the next frame.
-              } else {
-                // Last resort before we simply offer the 2D list. 0.75 is the
-                // floor: further down, the mission signs stop being readable.
-                renderer.setPixelRatio(0.75);
-              }
-              renderer.setSize(container.clientWidth, container.clientHeight);
-            } catch (e) {}
-            track('3d_quality_step', { step: String(_qualityStep), fps: String(Math.round(_fps)) });
+            if (_qualityStep < 3) {
+              _qualityStep++;
+              try {
+                if (_qualityStep === 1) {
+                  // Cheapest first, and invisible on a low-poly flat-shaded
+                  // scene: one fragment per CSS pixel, no shadow pass.
+                  renderer.setPixelRatio(1);
+                  renderer.shadowMap.enabled = false;
+                } else if (_qualityStep === 2) {
+                  // Below 1x it starts to soften, so this is where the moving
+                  // extras go instead — they cost fill rate and add nothing to
+                  // finding the next mission.
+                  DUST_ON = false;
+                  BURST_ON = false;
+                  BLOB_ON = false;   // see updateContactShadow — a plain
+                                     // .visible = false would be overwritten
+                                     // on the next frame.
+                } else {
+                  // Last resort before we simply offer the 2D list. 0.75 is the
+                  // floor: further down, the mission signs stop being readable.
+                  renderer.setPixelRatio(0.75);
+                }
+                renderer.setSize(container.clientWidth, container.clientHeight);
+              } catch (e) {}
+              track('3d_quality_step', { step: String(_qualityStep), fps: String(Math.round(_fps)) });
+            }
             // The nudge is a one-time courtesy, not a per-step nag.
-            if (_qualityStep >= 2 && !_fpsNudged) {
+            if (_qualityStep >= 2 && !_fpsNudged && coachBubbleDismissed && performance.now() >= _fpsNudgeAfter) {
               _fpsNudged = true;
               track('3d_fallback_triggered', { reason: 'low_fps' });
               if (typeof opts.onLowFps === 'function') opts.onLowFps(Math.round(_fps));
@@ -4099,6 +4230,7 @@ export function initHub3D(opts) {
     if (w === _lastW && h === _lastH) return;   // idempotent: safe to call from many listeners
     _lastW = w; _lastH = h;
     camera.aspect = w / h;
+    camera.fov = camera.aspect < 0.82 ? 68 : 50;
     camera.updateProjectionMatrix();
     // updateStyle must stay ON (the default): the canvas has no CSS size rule
     // of its own, so if three.js doesn't write style.width/height the element
@@ -4143,15 +4275,16 @@ export function initHub3D(opts) {
     // have rotated or the insets changed), so the canvas box is only truly
     // measurable from here on — see onResize().
     onResizeSoon();
-    muteBtn.innerHTML = isMuted() ? '<i class="jic jic-volume-off" aria-hidden="true"></i>' : '<i class="jic jic-volume" aria-hidden="true"></i>'; // Settings may have changed while away
+    renderMuteButton(); // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
     startBgMusic(); // gentle background loop plays only while the hub is active
-    // Warm every shader/texture currently in the scene BEFORE the first frame,
-    // so the reveal is smooth instead of stalling material by material. The
-    // loading overlay is still up at this point — this is the "load it fully,
-    // then open it" the hub was missing. animate() starts either way, so a slow
-    // or unsupported compile can never wedge the hub.
-    precompileScene().then(animate, animate);
+    // Paint the first useful frame immediately. Waiting for a whole-scene
+    // compile here kept the friendly loader up for 10–13 seconds on some mobile
+    // GPUs even though the first zone was already ready. Warm the remaining
+    // shaders just after the reveal (compileAsync yields between programs),
+    // while the one-time intro card is still covering the scene.
+    animate();
+    setTimeout(function () { precompileScene(); }, 180);
   }
   function pause() {
     if (!running) return;
@@ -4165,5 +4298,5 @@ export function initHub3D(opts) {
   // Intentionally NOT auto-started — the caller (app.js) decides when to call
   // resume(), and re-checks that the hub is still the active tab before doing
   // so (loading is async; the user may navigate away before it finishes).
-  return { pause: pause, resume: resume };
+  return { pause: pause, resume: resume, onMissionClosed: onMissionClosed };
 }

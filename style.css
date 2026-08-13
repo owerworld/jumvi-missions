@@ -7394,6 +7394,69 @@ html.theme--dark .card .mIcon{ background:transparent; }
   height:100dvh;
 }
 
+/* 3D hub mobile hierarchy. Portrait keeps one readable zone pill instead of
+   squeezing six unlabeled 30px badges between the exit/menu controls. The
+   full zone trail remains visible in landscape, where the width supports it. */
+#hub3dOverlay .hub3dExitButton:focus-visible,
+#hub3dOverlay .hub3dMenuButton:focus-visible,
+#hub3dOverlay .hub3dSoundButton:focus-visible,
+#hub3dOverlay .hub3dMissionGuide:focus-visible{
+  outline:3px solid #fff !important;
+  outline-offset:3px;
+  box-shadow:0 0 0 6px rgba(31,101,188,.72),0 10px 28px rgba(18,38,66,.3) !important;
+}
+#hub3dOverlay .hub3dMissionGuide:active{
+  transform:translateX(-50%) translateY(3px) !important;
+  box-shadow:0 2px 0 #24763a,0 8px 18px rgba(18,38,66,.24) !important;
+}
+
+@media (orientation:portrait) and (max-width:600px){
+  #hub3dOverlay .hub3dBadges{ display:none !important; }
+  #hub3dOverlay .hub3dHudTop{
+    padding-top:calc(66px + env(safe-area-inset-top)) !important;
+    padding-inline:58px !important;
+  }
+  #hub3dOverlay .hub3dProgress{
+    min-height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:5px 14px !important;
+    font-size:13px !important;
+    white-space:nowrap;
+  }
+  #hub3dOverlay .hub3dMenuButton{
+    top:calc(14px + env(safe-area-inset-top)) !important;
+    left:calc(132px + env(safe-area-inset-left)) !important;
+  }
+}
+
+@media (orientation:portrait) and (max-width:340px){
+  #hub3dOverlay .hub3dExitButton{ padding-inline:12px !important; }
+  #hub3dOverlay .hub3dMenuButton{ left:calc(126px + env(safe-area-inset-left)) !important; }
+  #hub3dOverlay .hub3dProgress{ font-size:12px !important; }
+  #hub3dOverlay .hub3dMissionGuide{
+    width:min(230px,calc(100% - 72px)) !important;
+    font-size:12.5px !important;
+  }
+}
+
+@media (orientation:landscape) and (max-height:480px){
+  #hub3dOverlay .hub3dCoachBubble{ bottom:76px !important; }
+  #hub3dOverlay .hub3dMissionGuide{
+    left:auto !important;
+    right:14px !important;
+    transform:none !important;
+    width:auto !important;
+    min-width:210px;
+  }
+  #hub3dOverlay .hub3dMissionGuide:active{ transform:translateY(3px) !important; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #hub3dOverlay .hub3dCoachBubble{ animation:none !important; }
+}
+
 /* ===== §2.1 — Coach Leo inline sprites (replacing mascot chrome) ===== */
 /* h1 with Leo's face to the LEFT of the greeting. The greeting's own margins
    come from several #tabToday .h1{ ... !important } rules — neutralise them on
