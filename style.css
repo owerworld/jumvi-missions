@@ -1189,7 +1189,7 @@ html.theme--dark .pack--beach-park    .tag.pack { background: rgba(245,158,11,0.
       animation: doneCheck 0.4s cubic-bezier(0.34,1.56,0.64,1);
     }
     .donePill::before{
-      content: "DONE";
+      content: "";
       line-height: 1;
       font-size: 8px;
       letter-spacing: .04em;
@@ -7143,10 +7143,7 @@ body.modalOpen .app-shell{
   display: none !important;
 }
 
-/* C. BADGES SECTION GORUNURLUK — done.size>0 oldugunda kesin gorulsun */
-.statsBadgesSection{
-  display: block !important;
-}
+/* C. BADGES SECTION — JS hides the entire section for a fresh player. */
 body.tab-stats #badgesRow{
   display: flex !important;
   flex-wrap: nowrap;
@@ -7576,37 +7573,6 @@ html.theme--dark .missionSafetyLine{ background:#2e2211; color:#FFD8A8; border-c
   background: rgba(255,90,60,0.30); pointer-events: none; transition: width .05s linear;
 }
 
-/* ===== §6.1 — review invitation (Amazon-TOS-safe, neutral) ===== */
-.reviewOverlay{
-  position: fixed; inset: 0; z-index: 80; display: flex;
-  align-items: center; justify-content: center; padding: 24px;
-  background: rgba(10,22,40,0.6);
-}
-.reviewOverlay[hidden]{ display: none; }
-.reviewCard{
-  width: 100%; max-width: 360px; text-align: center;
-  background: #fff; color: var(--ink); border-radius: 20px;
-  padding: 22px 20px 14px; box-shadow: 0 18px 48px rgba(15,23,42,0.42);
-}
-html.theme--dark .reviewCard{ background: #16233f; color: #f1f5f9; }
-.reviewLeo{ width: 120px; height: auto; margin: 0 auto 6px; display: block; }
-.reviewHeading{ font-size: var(--fs-title); font-weight: 900; margin: 4px 0 8px; }
-.reviewBody{ font-size: var(--fs-body); line-height: 1.42; margin: 0 0 16px; color: var(--muted-on-light); }
-html.theme--dark .reviewBody{ color: #CBD5E1; }
-.reviewGo{ display: block; width: 100%; margin: 0 0 6px; text-decoration: none; }
-.reviewDismiss{
-  display: block; width: 100%; min-height: 44px; padding: 10px; cursor: pointer;
-  background: transparent; border: 0; font: inherit; font-weight: 700;
-  font-size: var(--fs-meta); color: var(--muted-on-light);
-}
-html.theme--dark .reviewDismiss{ color: #94A3B8; }
-/* §6.1 — quiet persistent review link on the certificate */
-.certReviewLink{
-  display: inline-block; margin-top: 10px; font-size: var(--fs-caption);
-  font-weight: 700; color: var(--muted-on-light); text-decoration: underline;
-}
-html.theme--dark .certReviewLink{ color: #94A3B8; }
-
 /* ===== §6.2 — Product Care accordion ===== */
 .productCareSection{
   margin: 14px 0 0; border: 1px solid rgba(0,0,0,0.08); border-radius: 14px;
@@ -7818,4 +7784,459 @@ html.theme--dark .missionHelpTip{
 @media (prefers-reduced-motion: reduce){
   .playerCountBtn, .missionHelpTrigger{ transition: none; }
   .playerCountBtn:active, .missionHelpTrigger:active{ transform: none; }
+}
+
+/* ========================================================================
+   PLAY-FIRST MOBILE PASS — QR opens into a real-world game, not another app.
+   Keeps the established JUMVI palette while removing competing glass, glow,
+   daily-pressure chrome, and first-mission friction.
+   ======================================================================== */
+
+html.theme--light{
+  --page-bg:#F4F7FB;
+  --bg:radial-gradient(circle at 8% 0%,rgba(79,179,255,.14),transparent 34%),
+       radial-gradient(circle at 95% 10%,rgba(255,106,0,.08),transparent 30%),
+       #F4F7FB;
+  --glass:#FFFFFF;
+  --glass-border:#DCE6EF;
+  --border:#DCE6EF;
+  --shadow:rgba(15,23,42,.06);
+}
+html.theme--light .bgLayer{
+  background:var(--bg);
+  animation:none;
+}
+html.theme--light .sticky{
+  background:#FFFFFF;
+  border-bottom:1px solid #DCE6EF;
+  box-shadow:0 1px 0 rgba(15,23,42,.03);
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+html.theme--light .hero{
+  margin-top:4px;
+  padding:8px 0 0;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+
+/* The first QR decision: set ready, choose level, begin. */
+.welcomeOverlay{ padding:12px; }
+.welcomePanel{
+  max-width:380px;
+  padding:18px 18px 20px;
+  gap:9px;
+  border-radius:24px;
+  box-shadow:0 18px 50px rgba(15,23,42,.20);
+  animation:welcomeIn .24s ease-out both;
+}
+.welcomeBrandLine{
+  height:70px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:2px;
+}
+.welcomeBrandLine .welcomeLogo{
+  width:76px;
+  height:76px;
+  object-fit:contain;
+}
+.welcomeBrandLine .welcomeMascot{
+  width:70px;
+  margin:0 0 -2px -8px;
+  animation:none;
+  filter:drop-shadow(0 5px 9px rgba(20,60,90,.16));
+}
+.welcomeTagline{
+  font-size:26px;
+  line-height:1.08;
+  letter-spacing:-.3px;
+}
+.welcomeSub{
+  max-width:290px;
+  font-size:15px;
+  line-height:1.35;
+}
+.welcomeGear{
+  width:100%;
+  min-height:62px;
+  padding:7px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  border:1px solid #DCE6EF;
+  border-radius:16px;
+  background:#F7FAFD;
+}
+.welcomeGearItem{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#26364A;
+  font-size:13px;
+  white-space:nowrap;
+}
+.welcomePaddlePair{
+  position:relative;
+  display:block;
+  width:62px;
+  height:48px;
+}
+.welcomePaddlePair img{
+  position:absolute;
+  top:1px;
+  width:46px;
+  height:46px;
+  object-fit:contain;
+}
+.welcomePaddlePair img:first-child{ left:0; transform:rotate(-8deg); }
+.welcomePaddlePair img:last-child{ right:0; transform:rotate(8deg); }
+.welcomeBall{ width:42px; height:42px; object-fit:contain; }
+.welcomeGearPlus{ color:#93A4B7; font-size:20px; font-weight:800; }
+.welcomeNote{
+  color:#526477;
+  opacity:1;
+  font-size:12.5px;
+  font-weight:700;
+}
+.welcomeDivider{ margin:2px 0; background:#E2EAF2; }
+.welcomeAgesHeading{ margin:0; font-size:14px; }
+.welcomeAges{ gap:8px; }
+.ageBtn{
+  min-height:80px;
+  padding:7px 4px;
+  gap:3px;
+  border-radius:14px;
+  background:#F8FAFC;
+  box-shadow:none;
+}
+.ageBtn .ageArt{ width:42px; height:42px; }
+.ageBtn.selected{
+  transform:none;
+  background:#EAF5FF;
+  border-color:var(--brand-blue-deep);
+  box-shadow:0 0 0 2px rgba(29,111,181,.10);
+}
+.welcomeMissionCount{
+  min-height:18px;
+  font-size:12.5px;
+  line-height:1.3;
+}
+.welcomeStart{
+  min-height:54px;
+  padding:13px 16px;
+  border-radius:15px;
+  background:var(--brand-blue-deep) !important;
+  border:2px solid var(--brand-blue) !important;
+  color:#fff !important;
+  box-shadow:0 7px 16px rgba(29,111,181,.24) !important;
+  text-transform:uppercase;
+  letter-spacing:.2px;
+}
+
+/* Product-specific hierarchy on the Play tab. */
+#btnTourHelp{ display:none !important; }
+#tabToday .h1Row{ margin:2px 0 0 !important; gap:9px; }
+#tabToday .h1Leo{ width:44px; height:44px; }
+#tabToday .h1Row .h1{ font-size:23px !important; }
+#tabToday .sub{
+  max-width:520px;
+  font-size:14px !important;
+  font-weight:600 !important;
+  line-height:1.4;
+}
+#tabToday{ gap:11px !important; }
+.continueHint{
+  padding:9px 11px !important;
+  border-radius:13px !important;
+  background:#FFF8EE !important;
+  border-color:#F1D2A5 !important;
+  box-shadow:none !important;
+}
+.dailyBox.dailyBoxPromoted{
+  padding:15px !important;
+  border-radius:20px !important;
+  background:#4FB3FF !important;
+  border:2px solid #2A88C9 !important;
+  box-shadow:0 8px 20px rgba(29,111,181,.20) !important;
+  cursor:default;
+}
+.dailyBox.dailyBoxPromoted:active{ transform:none !important; }
+.dailyBoxPromoted::before{ display:none; }
+.dailyEyebrow{
+  margin-bottom:7px;
+  color:var(--ink) !important;
+  letter-spacing:1px;
+}
+.dailyContent{ gap:12px; margin-bottom:11px; }
+.dailyIconBig{
+  width:58px;
+  height:58px;
+  border-radius:15px;
+  background:rgba(255,255,255,.34);
+  filter:none;
+}
+.dailyIconBig .missionArt{ width:54px; height:54px; }
+.dailyBox.dailyBoxPromoted .dailyName{ font-size:21px !important; }
+.dailyBox.dailyBoxPromoted .dailyMeta{ gap:5px !important; }
+.dailyBox.dailyBoxPromoted .dailyMeta .tag{
+  margin-top:0 !important;
+  padding:4px 8px;
+  background:rgba(255,255,255,.35) !important;
+}
+.dailyActionsBig{ gap:7px; }
+.dailyBox.dailyBoxPromoted .dailyPlayBig{
+  min-height:52px !important;
+  border:2px solid rgba(15,23,42,.10) !important;
+  border-radius:14px !important;
+  box-shadow:0 4px 10px rgba(15,23,42,.12) !important;
+}
+.dailyBox.dailyBoxPromoted .dailyNewSmall{
+  min-height:42px;
+  background:transparent;
+  border-color:rgba(15,23,42,.28) !important;
+  border-radius:12px;
+}
+.dailyAltSuggestion{ display:none !important; }
+#tabToday .todayGoalBadge,
+#tabToday .streakBox{ display:none !important; }
+.statsCompact{
+  padding:12px 14px !important;
+  border:1px solid #DCE6EF !important;
+  background:#FFFFFF !important;
+  box-shadow:none !important;
+}
+.statsCompactLeft{ order:initial; }
+.statsCompact .bar{ height:7px !important; }
+.advCard{
+  margin-top:3px !important;
+  margin-bottom:0 !important;
+  padding:12px 14px;
+  border:1px solid #397454;
+  border-radius:16px;
+  background:#2F6849;
+  box-shadow:none;
+  animation:none;
+}
+.advCardEmoji{ width:44px; height:44px; }
+.advCardTitle{ font-size:15px; }
+.advCardSub{ font-size:13px; font-weight:600; opacity:.88; }
+
+/* Plain-language tabs and parent surfaces. */
+.tabIntro{
+  margin-top:-8px !important;
+  color:var(--muted);
+  font-size:14px;
+  font-weight:600;
+  line-height:1.45;
+}
+html.theme--light .todayQuickAction,
+html.theme--light .profileCard,
+html.theme--light .profileQuickLink,
+html.theme--light .productCareSection,
+html.theme--light .emptyState,
+html.theme--light .dashCard,
+html.theme--light .certBox{
+  background:#FFFFFF !important;
+  border:1px solid #DCE6EF !important;
+  box-shadow:none !important;
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+.todayQuickAction{
+  min-height:50px;
+  border-style:solid !important;
+  opacity:1;
+}
+.profileResetLink{
+  opacity:.78;
+  box-shadow:none !important;
+}
+.profileResetLink .profileQuickIcon{
+  background:#FFF2F0 !important;
+  color:#A13A2B;
+}
+#tabProfile .productCareSection{ margin:0; }
+.productCareSection[open]{ padding-bottom:12px; }
+.productCareSummary{ min-height:48px; display:flex; align-items:center; gap:8px; }
+.productCareA{ color:#526477; }
+.profileFooterInfo{ box-shadow:none !important; }
+.footer{ display:none !important; }
+
+/* The mission hand-off keeps Start visible and completion secondary. */
+#storyBanner{ display:none !important; }
+.screenSmartCue{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:10px 0 12px;
+  padding:11px 12px;
+  border:1px solid #CFE2F4;
+  border-radius:13px;
+  background:#F1F8FE;
+  color:#2E4B65;
+  font-size:13px;
+  line-height:1.35;
+}
+.screenSmartCue > i{ flex:none; font-size:21px; color:var(--brand-blue-deep); }
+.stepsHeadRow{ flex-wrap:wrap; }
+.leoSpeakTip{
+  position:static;
+  flex:1 0 100%;
+  margin:2px 0 0;
+  padding:6px 9px;
+  white-space:normal;
+  text-align:center;
+  font-size:12.5px;
+  background:#EAF5FF;
+  border-color:#CFE2F4;
+  box-shadow:none;
+}
+.sheetActions .missionPrimary{
+  width:100%;
+  display:flex;
+  flex-direction:row;
+  gap:8px !important;
+  margin:0 !important;
+}
+#sheet > .sheetActions{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:9px !important;
+}
+.sheetActions .missionStartBtn{ flex:1 1 auto; }
+.sheetActions .missionIconBtn{ flex:0 0 54px; }
+.sheetActions .holdBtn.btnPrimary{
+  min-height:48px !important;
+  background:#EFF9F1 !important;
+  border:1.5px solid #68A874 !important;
+  color:#174B24 !important;
+  box-shadow:none !important;
+  font-size:15px !important;
+}
+.sheetActions #btnNext{
+  min-height:44px !important;
+  box-shadow:none !important;
+}
+.sheetActions #btnNext.btnNextHighlight{
+  min-height:52px !important;
+  opacity:1;
+  background:var(--brand-lime) !important;
+  color:var(--ink) !important;
+  border:1px solid #6FA500 !important;
+  box-shadow:0 5px 14px rgba(111,165,0,.20) !important;
+}
+html.theme--dark .screenSmartCue{
+  background:#142A42;
+  border-color:#31506D;
+  color:#D5E7F5;
+}
+html.theme--dark .sheetActions .holdBtn.btnPrimary{
+  background:#183625 !important;
+  border-color:#4B8A5B !important;
+  color:#C8F3D1 !important;
+}
+
+/* Fresh progress really is an empty state; hidden dialogs stay out of a11y. */
+.statsBadgesSection[style*="display: none"]{ display:none !important; }
+.badgeUnlockModal[hidden]{ display:none !important; }
+body.welcomeActive #app-wrapper{ visibility:hidden; }
+body.modalOpen #app-wrapper > .sticky,
+body.modalOpen #app-wrapper > .wrap,
+body.modalOpen #bottomNav,
+body.modalOpen #soundToggle{
+  visibility:hidden;
+}
+body.modalOpen #backdrop,
+body.modalOpen #badgeUnlockModal{
+  visibility:visible;
+}
+
+/* Mission-path state is visible, while decorative labels stay out of screen readers. */
+.pathStep.done .pathStepNode::after,
+.pathStep.next::after,
+.pathStep.daily::after,
+.pathStep.daily.next::after{
+  content:none !important;
+  display:none !important;
+}
+.pathStepDoneMark{
+  position:absolute;
+  top:-4px;
+  right:-4px;
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border:3px solid #fff;
+  border-radius:50%;
+  background:#43A047;
+  color:#fff;
+  font-size:14px;
+  font-weight:950;
+  line-height:1;
+  box-shadow:0 2px 6px rgba(67,160,71,.35);
+}
+.pathStepStatus{
+  position:absolute;
+  top:-2px;
+  left:calc(50% + 44px);
+  z-index:2;
+  padding:4px 9px;
+  border-radius:999px;
+  color:#fff;
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.5px;
+  line-height:1.2;
+  pointer-events:none;
+}
+.pathStepStatusDaily{ background:#D95A00; }
+.pathStepStatusNext{ background:#996600; }
+.pathStep.daily .pathStepStatusDaily{
+  right:calc(50% + 44px);
+  left:auto;
+}
+html.theme--dark .pathStepDoneMark{ border-color:#15233a; }
+
+/* One persistent way out is enough inside the optional island. */
+#hub3dOverlay .hub3dMenuButton{ display:none !important; }
+body.tab-hub3d #app-wrapper > .sticky,
+body.tab-hub3d #app-wrapper > .wrap,
+body.tab-hub3d #bottomNav,
+body.tab-hub3d #soundToggle{
+  visibility:hidden;
+}
+body.tab-hub3d #hub3dOverlay{ visibility:visible; }
+
+/* Pinch zoom stays available; controls retain fast tap behavior. */
+html, body{ touch-action:pan-x pan-y pinch-zoom; }
+button, a, input, textarea, select, label{ touch-action:manipulation; }
+
+@media (max-width:360px){
+  .welcomePanel{ padding:14px 14px 16px; gap:7px; }
+  .welcomeBrandLine{ height:58px; }
+  .welcomeBrandLine .welcomeLogo{ width:64px; height:64px; }
+  .welcomeBrandLine .welcomeMascot{ width:58px; }
+  .welcomeTagline{ font-size:23px; }
+  .welcomeGear{ min-height:56px; padding:5px 10px; gap:8px; }
+  .welcomePaddlePair{ width:56px; height:42px; }
+  .welcomePaddlePair img{ width:41px; height:41px; }
+  .welcomeBall{ width:38px; height:38px; }
+  .ageBtn{ min-height:72px; padding:5px 2px; }
+  .ageBtn .ageArt{ width:36px; height:36px; }
+  .welcomeMissionCount{ font-size:11.5px; }
+  .welcomeStart{ font-size:14px !important; letter-spacing:0; white-space:nowrap; }
+  #tabToday .h1Leo{ width:40px; height:40px; }
+  #tabToday .h1Row .h1{ font-size:21px !important; }
+  .dailyBox.dailyBoxPromoted{ padding:13px !important; }
+  .dailyIconBig{ width:52px; height:52px; }
+  .dailyIconBig .missionArt{ width:49px; height:49px; }
+  .dailyBox.dailyBoxPromoted .dailyName{ font-size:19px !important; }
+  .dailyContent{ margin-bottom:9px; }
 }

@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v176";
+const CACHE_NAME = "jumvi-missions-v181";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -98,6 +98,8 @@ const CORE_ASSETS = [
   "/assets/ui/special/leo-island.webp",
   "/assets/ui/special/streak.webp",
   "/assets/ui/special/celebration.webp",
+  "/assets/equipment/jumvi-paddle-128.png",
+  "/assets/equipment/jumvi-ball-128.png",
   "/confetti.min.js",
   "/jumvi-icons.css",
   "/leo-tour.css",

@@ -5,9 +5,9 @@
   <meta charset="utf-8" />
   <!-- §2.5 — pinch-zoom ENABLED (WCAG 1.4.4); notch safe area kept -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>JUMVI Missions — 36 Toss & Catch Games for Kids 3–12</title>
-  <meta name="description" content="36 fun missions for the JUMVI Toss & Catch Paddle Set. Build reflex, focus, teamwork & confidence in kids ages 3–12. Track progress, earn badges, unlock the champion certificate." />
-  <meta name="keywords" content="JUMVI, paddle set, toss and catch, kids games, ages 3-12, paddle ball, kids missions, family games" />
+  <title>JUMVI Missions — Toss, Catch &amp; Keep Playing</title>
+  <meta name="description" content="Quick, active games for the JUMVI Toss & Catch Paddle Set. Pick a play level, read the steps, then put the phone down and play. No app, account, or ads." />
+  <meta name="keywords" content="JUMVI, paddle set, toss and catch, active kids games, paddle ball, kids missions, family games" />
   <meta name="author" content="SAY23 LLC / JUMVI" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://qr.jumvi.co/" />
@@ -30,7 +30,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://qr.jumvi.co/" />
   <meta name="twitter:title" content="JUMVI Missions — Kids Paddle Set Games" />
-  <meta name="twitter:description" content="36 fun missions for kids ages 3–12. Build skills, earn badges, unlock the champion certificate." />
+  <meta name="twitter:description" content="Quick, active toss & catch missions. Read the steps, then put the phone down and play." />
   <meta name="twitter:image" content="https://qr.jumvi.co/assets/og/cert-og.jpg" />
 
   <!-- Schema.org JSON-LD -->
@@ -40,11 +40,11 @@
     "@type": "WebApplication",
     "name": "JUMVI Missions",
     "url": "https://qr.jumvi.co/",
-    "description": "36 toss & catch missions for kids ages 3–12 with the JUMVI Paddle Set.",
+    "description": "36 quick, active toss & catch missions for the JUMVI Paddle Set.",
     "applicationCategory": "GameApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "audience": { "@type": "PeopleAudience", "suggestedMinAge": 3, "suggestedMaxAge": 12 },
+    "audience": { "@type": "PeopleAudience", "suggestedMinAge": 3 },
     "publisher": { "@type": "Organization", "name": "SAY23 LLC", "url": "https://jumvi.co" }
   }
   </script>
@@ -58,9 +58,9 @@
   <script>
     (function(){
       try{
-        var mode = localStorage.getItem("jumvi_theme_v1") || "system";
+        var mode = localStorage.getItem("jumvi_theme_v1") || "light";
         var systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        var useDark = mode === "dark" || (mode !== "light" && systemDark);
+        var useDark = mode === "dark" || (mode === "system" && systemDark);
         document.documentElement.classList.add(useDark ? "theme--dark" : "theme--light");
       }catch(_){ }
     })();
@@ -73,7 +73,7 @@
        removes the swap flash on a cold visit. crossorigin is required on font
        preloads even same-origin, or the browser fetches it a second time. -->
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20260813-1">
+  <link rel="stylesheet" href="style.css?v=20260813-6">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260805-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -121,24 +121,39 @@
   <!-- Welcome Overlay — shown once for new visitors -->
   <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
     <div class="welcomePanel">
-      <img class="welcomeLogo logoLight" src="assets/logo/jumvi_logo_dark-192.webp" width="132" height="132" alt="JUMVI logo" decoding="async" />
-      <img class="welcomeLogo logoDark" src="assets/logo/jumvi_logo_light-192.webp" width="132" height="132" alt="" decoding="async" aria-hidden="true" />
-      <picture class="welcomeMascot">
-        <img src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" alt="Coach Leo" width="240" height="240" decoding="async" fetchpriority="high" />
-      </picture>
-      <div class="welcomeTagline">Hey, paddle pro!</div>
-      <div class="welcomeSub">36 fun missions for your JUMVI Toss &amp; Catch Set.</div>
-      <div class="welcomeNote"><i class="ico i-check" aria-hidden="true"></i> No sign-up · <i class="ico i-lock" aria-hidden="true"></i> Stays on your phone · <i class="ico i-heart" aria-hidden="true"></i> Free forever</div>
+      <div class="welcomeBrandLine" aria-hidden="true">
+        <img class="welcomeLogo logoLight" src="assets/logo/jumvi_logo_dark-192.webp" width="96" height="96" alt="" decoding="async" />
+        <img class="welcomeLogo logoDark" src="assets/logo/jumvi_logo_light-192.webp" width="96" height="96" alt="" decoding="async" />
+        <picture class="welcomeMascot">
+          <img src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" alt="" width="240" height="240" decoding="async" fetchpriority="high" />
+        </picture>
+      </div>
+      <div class="welcomeTagline">Ready to play?</div>
+      <div class="welcomeSub">Grab your set. We&rsquo;ll pick a quick first game.</div>
+      <div class="welcomeGear" aria-label="Get two paddles and one ball ready">
+        <div class="welcomeGearItem">
+          <span class="welcomePaddlePair" aria-hidden="true">
+            <img src="assets/equipment/jumvi-paddle-128.png" alt="" width="64" height="64">
+            <img src="assets/equipment/jumvi-paddle-128.png" alt="" width="64" height="64">
+          </span>
+          <strong>2 paddles</strong>
+        </div>
+        <span class="welcomeGearPlus" aria-hidden="true">+</span>
+        <div class="welcomeGearItem">
+          <img class="welcomeBall" src="assets/equipment/jumvi-ball-128.png" alt="" width="56" height="56">
+          <strong>1 ball</strong>
+        </div>
+      </div>
+      <div class="welcomeNote"><i class="ico i-check" aria-hidden="true"></i> No app &nbsp;·&nbsp; No account &nbsp;·&nbsp; No ads</div>
       <div class="welcomeDivider" aria-hidden="true"></div>
-      <div class="welcomeAgesHeading">Who's playing today?</div>
+      <div class="welcomeAgesHeading">Choose a play level</div>
       <div class="welcomeAges" id="welcomeAges">
-        <button class="ageBtn" data-diff="Easy" data-band="3–5" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span>Ages 3–5</span></button>
-        <button class="ageBtn" data-diff="all" data-band="6–8" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span>Ages 6–8</span></button>
-        <button class="ageBtn" data-diff="all" data-band="8 &amp; up" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span>Ages 8 &amp; up</span></button>
+        <button class="ageBtn" data-diff="Easy" data-band="just-starting" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span>Just starting</span></button>
+        <button class="ageBtn" data-diff="Medium" data-band="some-practice" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span>Some practice</span></button>
+        <button class="ageBtn" data-diff="all" data-band="any-challenge" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span>Any challenge</span></button>
       </div>
       <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
-      <p class="welcomeAddChild">Playing with a brother or sister? Add them any time from Profile.</p>
-      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Let's Play!</button>
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Start My First Mission</button>
     </div>
   </div>
 
@@ -157,19 +172,6 @@
   <div class="undoBar" id="undoBar" role="status" aria-live="polite" hidden>
     <span class="undoBarText">Marked done</span>
     <button class="undoBarBtn" id="undoBtn" type="button">Undo</button>
-  </div>
-
-  <!-- §6.1 — review invitation, shown once after the 3rd completed mission.
-       Amazon-TOS-safe: neutral, no incentive, no "5-star"/"positive" language.
-       Copy is verbatim from the brief. -->
-  <div class="reviewOverlay" id="reviewOverlay" role="dialog" aria-modal="true" aria-labelledby="reviewHeading" hidden>
-    <div class="reviewCard">
-      <img class="reviewLeo" src="assets/leo/leo-cheer-200.webp" srcset="assets/leo/leo-cheer-200.webp 1x, assets/leo/leo-cheer-200@2x.webp 2x" width="120" height="120" alt="Coach Leo cheering" decoding="async">
-      <h2 class="reviewHeading" id="reviewHeading">Three missions done!</h2>
-      <p class="reviewBody">Other parents are deciding whether this set is worth it. Your honest experience — good or bad — helps them choose.</p>
-      <a class="btn btnPrimary reviewGo" id="reviewGo" href="https://www.amazon.com/review/create-review?&amp;asin=B0H16JPQCF" target="_blank" rel="noopener noreferrer">Write a review on Amazon</a>
-      <button class="reviewDismiss" id="reviewDismiss" type="button">Not now</button>
-    </div>
   </div>
 
   <div class="sticky">
@@ -212,9 +214,9 @@
       <div class="tabPanel" id="tabToday" data-tab="today">
         <div class="h1Row">
           <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
-          <h1 class="h1">Hey, Paddle Pro!</h1>
+          <h1 class="h1">Ready to play?</h1>
         </div>
-        <p class="sub">Today's mission is ready — let's play!</p>
+        <p class="sub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
 
         <!-- §4.1 — the Leo's Island card moved BELOW #dailyBox (was above it,
              so a 5-year-old tapped a 9.4 MB silent wall before the mission).
@@ -228,8 +230,8 @@
         </div>
 
         <!-- TODAY'S MISSION — promoted, fully tappable card -->
-        <div class="dailyBox dailyBoxPromoted" id="dailyBox" aria-label="daily mission" role="button" tabindex="0">
-          <div class="dailyEyebrow"><i class="ico i-calendar" aria-hidden="true"></i> TODAY'S MISSION</div>
+        <div class="dailyBox dailyBoxPromoted" id="dailyBox">
+          <div class="dailyEyebrow"><i class="ico i-target" aria-hidden="true"></i> PICKED FOR YOU</div>
           <div class="dailyContent">
             <div class="dailyIconBig" id="dailyIcon"></div>
             <div class="dailyText">
@@ -238,33 +240,13 @@
             </div>
           </div>
           <div class="dailyActionsBig">
-            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Play today's mission" type="button"><i class="ico i-play" aria-hidden="true"></i> Play This Mission</button>
-            <button class="dailyNewSmall" id="btnDailyNew" aria-label="Pick another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Pick another</button>
-          </div>
-
-          <!-- Coach pick alternatif — küçük link satırı -->
-          <div class="dailyAltSuggestion" id="dailyAltSuggestion" style="display:none">
-            <span class="altLabel"><img class="altLabelLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="24" height="24" alt="Coach Leo" decoding="async"> Or try:</span>
-            <span class="altName" id="dailyAltName">—</span>
-            <span class="altArrow">→</span>
+            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Start this mission" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
+            <button class="dailyNewSmall" id="btnDailyNew" aria-label="Choose another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Choose another</button>
           </div>
           <!-- Stub for backward JS compat -->
           <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
           <div class="dailyTitle" style="display:none">Today's Mission</div>
         </div>
-
-        <!-- §4.1 — Leo's Island entry card, now BELOW the mission. Tapping it
-             turns the hub3d flag on (persisted) and opens the 3D Hub tab. NEW!
-             badge removed; a one-line subtext sets the load expectation up front.
-             Card + nav tab share ONE name (Leo's Island). -->
-        <button class="advCard" id="advModeCard" type="button" aria-label="Visit Leo's Island">
-          <span class="advCardEmoji"><img class="specialArt" src="assets/ui/special/leo-island.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
-          <span class="advCardText">
-            <span class="advCardTitle">Visit Leo&rsquo;s Island</span>
-            <span class="advCardSub">Explore the island · Loads in a few seconds</span>
-          </span>
-          <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
-        </button>
 
         <!-- Coach Leo's Smart Pick — recommendation card -->
         <div class="coachPick" id="coachPick" style="display:none">
@@ -302,7 +284,7 @@
         <div class="statsCompact" aria-label="progress">
           <div class="statsCompactLeft">
             <div class="statsCompactRow">
-              <span class="statsCompactText" id="progressText">0 / 36 missions</span>
+              <span class="statsCompactText" id="progressText">0 of 36 missions complete</span>
               <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
             </div>
             <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="36">
@@ -319,18 +301,29 @@
           <div class="pExtra" id="progressExtra"></div>
         </div>
 
+        <!-- Optional reward after real-world play; hidden until one mission is complete. -->
+        <button class="advCard" id="advModeCard" type="button" aria-label="Explore Leo's Island, an optional 3D adventure">
+          <span class="advCardEmoji"><img class="specialArt" src="assets/ui/special/leo-island.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <span class="advCardText">
+            <span class="advCardTitle">Explore Leo&rsquo;s Island</span>
+            <span class="advCardSub">Bonus 3D adventure · optional</span>
+          </span>
+          <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
+        </button>
+
         <!-- §3.4 — "Surprise me" moved to Browse (it duplicated "Pick another"
              on Today and encouraged card-spinning over playing). -->
       </div>
 
       <!-- ============== TAB: BROWSE (Path Tree only) ============== -->
       <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
-        <h2 class="tabHeading"><i class="jic jic-map" aria-hidden="true"></i> Mission Path</h2>
+        <h2 class="tabHeading"><i class="jic jic-map" aria-hidden="true"></i> All Missions</h2>
+        <p class="tabIntro">36 games in 6 skill packs. Tap any mission to see how to play.</p>
 
         <!-- §3.4 — random pick lives here now, where browsing is the intent. -->
         <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
           <span class="todayQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
-          <span class="todayQuickText">Surprise me — pick a random mission</span>
+          <span class="todayQuickText">Pick one for me</span>
         </button>
 
         <!-- Path view — sade grid -->
@@ -368,8 +361,8 @@
         <div class="emptyState" id="statsEmptyState" style="display:none">
           <div class="emptyStateIcon"><i class="ico i-chart" aria-hidden="true"></i></div>
           <div class="emptyStateTitle">Your stats will appear here</div>
-          <div class="emptyStateDesc">Complete your first mission to unlock the dashboard, badges, and Champion Certificate!</div>
-          <button class="btn btnPrimary emptyStateBtn" data-go-tab="today" type="button"><i class="ico i-play" aria-hidden="true"></i> Go to Today</button>
+          <div class="emptyStateDesc">Finish your first game and your progress will show up here.</div>
+          <button class="btn btnPrimary emptyStateBtn" data-go-tab="today" type="button"><i class="ico i-play" aria-hidden="true"></i> Pick a Mission</button>
         </div>
 
         <!-- Parent Dashboard -->
@@ -449,20 +442,21 @@
 
       <!-- ============== TAB: PROFILE ============== -->
       <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
-        <h2 class="tabHeading">Profile</h2>
+        <h2 class="tabHeading">For Grown-ups</h2>
+        <p class="tabIntro">Players, settings, product care, privacy, and support.</p>
 
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
           <div class="profileCardAvatar" id="profileCardAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></div>
           <div class="profileCardBody">
             <div class="profileCardName" id="profileCardName">Player</div>
-            <div class="profileCardStats" id="profileCardStats">0 missions · 0 day streak</div>
+            <div class="profileCardStats" id="profileCardStats">0 missions complete</div>
           </div>
         </div>
 
         <!-- Primary action: switch/manage profiles -->
         <button class="profileTabOpenBtn btn btnPrimary" id="btnOpenProfileFromTab" type="button">
-          <i class="jic jic-users" aria-hidden="true"></i> Switch Player or Add Child
+          <i class="jic jic-users" aria-hidden="true"></i> Players &amp; Settings
         </button>
 
         <!-- Quick links -->
@@ -483,25 +477,55 @@
             </div>
             <span class="profileQuickArrow">›</span>
           </a>
-          <button class="profileQuickLink" id="btnReset" type="button">
-            <span class="profileQuickIcon"><i class="jic jic-trash" aria-hidden="true"></i></span>
+          <button class="profileQuickLink" id="privacyLink" type="button">
+            <span class="profileQuickIcon"><i class="ico i-lock" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
-              <div class="profileQuickTitle">Reset Progress</div>
-              <div class="profileQuickSub">Clear all data on this device</div>
+              <div class="profileQuickTitle">Privacy &amp; Safety</div>
+              <div class="profileQuickSub">No account, ads, or personal data</div>
             </div>
             <span class="profileQuickArrow">›</span>
           </button>
         </div>
 
+        <details class="productCareSection">
+          <summary class="productCareSummary"><i class="jic jic-tool" aria-hidden="true"></i> Product Care &amp; Quick Help</summary>
+          <div class="productCareBody">
+            <h3 class="productCareTitle">Keeping your set working</h3>
+
+            <p class="productCareQ">The ball is hard to remove</p>
+            <p class="productCareA">Peel it from one edge instead of pulling straight up. A grown-up can show younger players the first time.</p>
+
+            <p class="productCareQ">The paddle is not gripping well</p>
+            <p class="productCareA">Brush away grass, sand, and lint with a dry hand or soft brush.</p>
+
+            <p class="productCareQ">Can I wash it?</p>
+            <p class="productCareA">Spot-clean with a damp cloth and air-dry. Don&rsquo;t machine wash or soak the set.</p>
+
+            <p class="productCareQ">Is it pool-safe?</p>
+            <p class="productCareA">Use it for dry play. Water on the ball stops it from sticking.</p>
+
+            <p class="productCareQ">Lost the QR card?</p>
+            <p class="productCareA">Bookmark qr.jumvi.co. Progress stays in this browser on this device.</p>
+          </div>
+        </details>
+
+        <button class="profileQuickLink profileResetLink" id="btnReset" type="button">
+          <span class="profileQuickIcon"><i class="jic jic-trash" aria-hidden="true"></i></span>
+          <div class="profileQuickInfo">
+            <div class="profileQuickTitle">Reset Progress</div>
+            <div class="profileQuickSub">Press and hold to clear this device</div>
+          </div>
+        </button>
+
         <!-- Trust + support -->
         <div class="profileFooterInfo">
           <div class="trustBadges">
-            <span><i class="ico i-check" aria-hidden="true"></i> No sign-up</span>
-            <span><i class="ico i-lock" aria-hidden="true"></i> Stays on phone</span>
-            <span><i class="ico i-heart" aria-hidden="true"></i> Free forever</span>
+            <span><i class="ico i-check" aria-hidden="true"></i> No account</span>
+            <span><i class="ico i-lock" aria-hidden="true"></i> No ads</span>
+            <span><i class="ico i-heart" aria-hidden="true"></i> Progress stays here</span>
           </div>
           <div class="profileSupport">
-            Need help? <a href="mailto:support@jumvi.co">support@jumvi.co</a>
+            Questions or missing parts? <a href="mailto:support@jumvi.co">support@jumvi.co</a>
           </div>
         </div>
       </div>
@@ -510,7 +534,7 @@
     <!-- Mission list — only shown when tab is browse -->
     <section class="list" id="list" aria-label="missions"></section>
 
-    <section class="footer">
+    <section class="footer" hidden aria-hidden="true">
       <b>Extras</b><br/>
             <div class="links">
         <div class="linkGroup">
@@ -524,9 +548,6 @@
       <div class="small">
         Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
       </div>
-      <div class="small">
-        <a href="#" id="privacyLink" role="button"><i class="ico i-lock" aria-hidden="true"></i> Privacy &amp; Safety</a>
-      </div>
       <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn btnResetFooter" id="btnResetBottom" aria-label="Reset progress"><i class="jic jic-trash" aria-hidden="true"></i> Reset Progress</button>
         <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button"><i class="jic jic-users" aria-hidden="true"></i> Kids Mode</button>
@@ -536,7 +557,7 @@
   </div>
 
   <!-- Mission Modal -->
-  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-label="Mission details">
+  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-hidden="true" inert>
     <div class="sheet" id="sheet">
       <div class="sheetHandle" aria-hidden="true"></div>
       <div class="sheetTop">
@@ -554,6 +575,11 @@
       <div id="timerUI">
         <div id="timerDisplay">60s</div>
         <div id="timerBar"><div id="timerFill"></div></div>
+      </div>
+
+      <div class="screenSmartCue">
+        <i class="jic jic-device-mobile" aria-hidden="true"></i>
+        <span><b>Read it together.</b> When play starts, eyes on the ball&mdash;not the screen.</span>
       </div>
 
       <!-- Story Banner — opsiyonel hayal katmanı -->
@@ -600,13 +626,6 @@
           <button class="playerCountBtn" type="button" data-n="3">3</button>
           <button class="playerCountBtn" type="button" data-n="4">4+</button>
         </div>
-      </div>
-
-      <!-- Primary action row — tek dominant Start + ikon yardımcılar -->
-      <div class="missionPrimary">
-        <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
-        <button class="missionIconBtn" id="btnSpeak" aria-label="Read mission aloud" title="Read aloud"><i class="jic jic-speakerphone" aria-hidden="true"></i></button>
-        <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track score" title="Track score"><i class="ico i-chart" aria-hidden="true"></i></button>
       </div>
 
       <!-- Score Tracker — sadece tracking açıksa görünür -->
@@ -672,6 +691,10 @@
       </div>
 
       <div class="sheetActions">
+        <div class="missionPrimary">
+          <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
+          <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track catches" aria-pressed="false" title="Track catches"><i class="ico i-chart" aria-hidden="true"></i></button>
+        </div>
         <button class="btn btnPrimary holdBtn" id="btnToggleDone" aria-label="Mark mission done"><i class="ico i-check" aria-hidden="true"></i> Mark as Done</button>
         <button class="btn btnGhost" id="btnNext" aria-label="Next mission"><i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission</button>
         <!-- "Random from Pack" gizli stub — JS uyumlulugu icin -->
@@ -805,9 +828,6 @@
         <!-- Tertiary: PDF text link -->
         <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">Or save as PDF</button>
 
-        <!-- §6.1 — quiet, permanent review link on the certificate (no incentive) -->
-        <a class="certReviewLink" href="https://www.amazon.com/review/create-review?&amp;asin=B0H16JPQCF" target="_blank" rel="noopener noreferrer">Share your honest experience on Amazon</a>
-
       </div>
     </div>
   </div>
@@ -871,26 +891,6 @@
         </button>
       </div>
 
-      <!-- §6.2 — Product Care. Answers the recurring Amazon questions Rufus/COSMO
-           can't; verbatim copy. Lowers returns and reads as premium care. -->
-      <details class="productCareSection">
-        <summary class="productCareSummary"><i class="jic jic-tool" aria-hidden="true"></i> Product Care</summary>
-        <div class="productCareBody">
-          <h3 class="productCareTitle">Keeping your set working</h3>
-
-          <p class="productCareQ">Does the sticky surface wear out?</p>
-          <p class="productCareA">Brush the paddle face with a dry hand or soft brush after sandy or grassy play. Lint is what weakens the grip, not use.</p>
-
-          <p class="productCareQ">Can I wash it?</p>
-          <p class="productCareA">Spot-clean with a damp cloth and air-dry. Don't machine wash and don't soak — the balls hold water.</p>
-
-          <p class="productCareQ">Is it pool-safe?</p>
-          <p class="productCareA">It's a dry-play set. Water on the ball stops it from sticking.</p>
-
-          <p class="productCareQ">What if the QR card is lost?</p>
-          <p class="productCareA">Bookmark qr.jumvi.co or add it to your home screen. Your progress stays on this device.</p>
-        </div>
-      </details>
     </div>
   </div>
 
@@ -909,10 +909,10 @@
   </div>
 
   <!-- Badge Unlock Modal -->
-  <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-label="Badge unlocked">
+  <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-labelledby="badgeUnlockTitle" aria-hidden="true" inert hidden>
     <div class="badgeUnlockPanel">
       <div class="badgeUnlockEmoji" id="badgeUnlockEmoji"><img class="badgeArt" src="assets/ui/badges/unlocked.webp" alt="" width="256" height="256"></div>
-      <div class="badgeUnlockTitle">Badge Unlocked!</div>
+      <div class="badgeUnlockTitle" id="badgeUnlockTitle">Badge Unlocked!</div>
       <div class="badgeUnlockName" id="badgeUnlockName"></div>
       <div class="badgeUnlockReq" id="badgeUnlockReq"></div>
       <button class="badgeUnlockBtn" id="badgeUnlockClose" type="button">Awesome!</button>
@@ -929,19 +929,19 @@
   <nav class="bottomNav" id="bottomNav" aria-label="Main navigation">
     <button class="navTab active" data-tab="today" type="button">
       <span class="navTabIcon"><i class="ico i-calendar" aria-hidden="true"></i></span>
-      <span class="navTabLabel">Today</span>
+      <span class="navTabLabel">Play</span>
     </button>
     <button class="navTab" data-tab="browse" type="button">
       <span class="navTabIcon"><i class="ico i-target" aria-hidden="true"></i></span>
-      <span class="navTabLabel">Browse</span>
+      <span class="navTabLabel">Missions</span>
     </button>
     <button class="navTab" data-tab="stats" type="button">
       <span class="navTabIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
-      <span class="navTabLabel">Stats</span>
+      <span class="navTabLabel">Progress</span>
     </button>
     <button class="navTab" data-tab="profile" type="button">
       <span class="navTabIcon"><i class="ico i-user" aria-hidden="true"></i></span>
-      <span class="navTabLabel">Profile</span>
+      <span class="navTabLabel">Adults</span>
     </button>
     <!-- 3D Hub — opt-in experimental view, hidden unless jumvi_3d_hub_enabled=1 in localStorage -->
     <!-- Label is parent/kid language on purpose: "3D Hub" meant nothing to a
@@ -1005,62 +1005,16 @@
 <script src="jumvi-mission-icons.js?v=20260805-1" defer></script>
 <script src="jumvi-redlight.js?v=20260805-1" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260813-4" defer></script>
+<script src="app.js?v=20260813-9" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260813-5")
+      navigator.serviceWorker.register("/service-worker.js?v=20260813-10")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
-</script>
-
-<!-- ©2026 JUMVI / SAY23 LLC — Site Protection -->
-<script>
-(function(){
-  'use strict';
-
-  // 1. Double-tap zoom lock (Android Chrome ignores user-scalable=no since v55)
-  var lastTap = 0;
-  document.addEventListener('touchstart', function(e) {
-    var now = Date.now();
-    if (now - lastTap < 300 && e.touches.length === 1) {
-      e.preventDefault();
-    }
-    lastTap = now;
-  }, { passive: false });
-
-  // 2. Right-click / long-press context menu disabled
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    return false;
-  });
-
-  // 3. Keyboard shortcuts: block view-source (Ctrl+U), save (Ctrl+S), DevTools (Ctrl+Shift+I/J, F12)
-  document.addEventListener('keydown', function(e) {
-    var k = e.key;
-    if (e.ctrlKey && (k === 'u' || k === 'U' || k === 's' || k === 'S')) {
-      e.preventDefault(); return false;
-    }
-    if (e.ctrlKey && e.shiftKey && (k === 'i' || k === 'I' || k === 'j' || k === 'J' || k === 'c' || k === 'C')) {
-      e.preventDefault(); return false;
-    }
-    if (k === 'F12') { e.preventDefault(); return false; }
-  });
-
-  // 4. Drag protection on images
-  document.addEventListener('dragstart', function(e) {
-    if (e.target.tagName === 'IMG') e.preventDefault();
-  });
-
-  // 5. Console copyright notice (visible when DevTools is opened)
-  var s1 = 'font-size:15px;font-weight:bold;color:#F97316;background:#0f172a;padding:4px 8px;border-radius:4px';
-  var s2 = 'font-size:12px;color:#94a3b8';
-  console.log('%cJUMVI Missions', s1);
-  console.log('%cCopyright © 2026 SAY23 LLC / JUMVI. All rights reserved.\nqr.jumvi.co — Unauthorized copying or redistribution is prohibited.', s2);
-})();
 </script>
 
 </body>
