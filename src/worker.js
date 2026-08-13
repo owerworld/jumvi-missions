@@ -22,6 +22,82 @@
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 const BEACON_PATH = "/api/beacon";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * /analiz — password-gated Ar-Ge panel, Faz 2 follow-up.
+ *
+ * Lives on the SAME Worker/domain as the children's app. That was a
+ * deliberate, discussed trade-off, not an oversight: it needed zero
+ * Cloudflare dashboard work (no new DNS/subdomain), at the cost of the panel
+ * now sharing blast radius with qr.jumvi.co. The mitigation is that this
+ * block is small, self-contained, and touches nothing the beacon or asset
+ * fall-through paths use.
+ *
+ * data/ used to be excluded in .assetsignore (Faz 1: "product domain and
+ * git archive are different things"). It no longer is — the panel's own
+ * client-side JS fetches data/snapshots/*.json and data/missions-meta.json
+ * directly, and .assetsignore has no notion of "servable but only with a
+ * password". So instead: data/ ships as a normal asset, and every request
+ * under /data/ is gated by the SAME Basic Auth check as /analiz itself,
+ * enforced here before ASSETS.fetch ever runs. This also means a plain
+ * `git push` after `generate-weekly-snapshot.mjs` is still the entire
+ * update path — no separate panel deploy step.
+ *
+ * The data itself was never secret (data/snapshots/*.json sits in this
+ * public GitHub repo already). The password's job is to keep it from being
+ * casually stumbled on at the product domain, not to protect something that
+ * would otherwise be hidden.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+const ANALIZ_PATH = "/analiz";
+const DATA_PREFIX = "/data/";
+/** The panel's own HTML lives here as a normal asset — must be gated exactly
+ *  like /data/, or a direct request bypasses /analiz's check entirely. */
+const ANALIZ_ASSET_PREFIX = "/assets/analiz/";
+const ANALIZ_REALM = "jumvi-analiz";
+
+/** Every branch takes the same time regardless of where a/b first differ —
+ *  a plain === would let an attacker time out the correct password
+ *  character by character. Overkill for a low-stakes internal password,
+ *  but free to get right. */
+function safeEqual(a, b) {
+  const len = Math.max(a.length, b.length);
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  }
+  return diff === 0;
+}
+
+/** Username is not checked — only the shared secret matters. Set with
+ *  `wrangler secret put ANALIZ_PASSWORD` (never in wrangler.jsonc or here). */
+function isAuthorized(request, env) {
+  if (!env.ANALIZ_PASSWORD) return false; // secret not set → nobody gets in
+  const header = request.headers.get("Authorization") || "";
+  if (!header.startsWith("Basic ")) return false;
+  let decoded;
+  try {
+    decoded = atob(header.slice(6));
+  } catch (_) {
+    return false;
+  }
+  const password = decoded.slice(decoded.indexOf(":") + 1);
+  return safeEqual(password, env.ANALIZ_PASSWORD);
+}
+
+const UNAUTHORIZED = () =>
+  new Response("Authentication required.", {
+    status: 401,
+    headers: {
+      "WWW-Authenticate": `Basic realm="${ANALIZ_REALM}"`,
+      "X-Robots-Tag": "noindex",
+    },
+  });
+
+/** True for exactly /analiz, /analiz/, and anything under /data/. */
+function isGatedPath(pathname) {
+  return pathname === ANALIZ_PATH || pathname === `${ANALIZ_PATH}/` ||
+    pathname.startsWith(DATA_PREFIX) || pathname.startsWith(ANALIZ_ASSET_PREFIX);
+}
 const TR_APP_PATHS = new Set(["/tr", "/tr/", "/tr/index.html"]);
 
 /** Bodies are tiny by construction; anything larger is not ours. */
@@ -283,9 +359,28 @@ export default {
     if (pathname === BEACON_PATH) return handleBeacon(request, env);
     if (TR_APP_PATHS.has(pathname)) return handleTurkishApp(request, env);
 
+    if (isGatedPath(pathname)) {
+      if (!isAuthorized(request, env)) return UNAUTHORIZED();
+      if (pathname === ANALIZ_PATH || pathname === `${ANALIZ_PATH}/`) {
+        // The real file lives at /assets/analiz/index.html (a normal,
+        // servable asset) — /analiz is just the gate in front of it. Ask for
+        // the directory form, not .../index.html directly: the asset layer
+        // 307-redirects the literal filename to its clean-URL form, and
+        // that redirect would otherwise go straight to the client instead
+        // of being followed.
+        const panelUrl = new URL(request.url);
+        panelUrl.pathname = "/assets/analiz/";
+        return env.ASSETS.fetch(new Request(panelUrl, request));
+      }
+      // /data/* and direct /assets/analiz/* requests — authorized, fall
+      // through to the normal asset fetch below; the request URL already
+      // matches the real path.
+    }
+
     // Everything else is the static site, exactly as before this Worker
     // existed. Assets that match are served by the platform without reaching
-    // us at all; this covers the misses so 404 behaviour is unchanged.
+    // us at all (except the run_worker_first paths above, which always land
+    // here first) — this covers the misses so 404 behaviour is unchanged.
     return env.ASSETS.fetch(request);
   },
 };

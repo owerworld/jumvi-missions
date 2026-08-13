@@ -4,9 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>JUMVI · Ar-Ge Paneli</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- No Google Fonts: this page is served from qr.jumvi.co behind /analiz, under
+     the same strict CSP as the children's app (_headers). style-src/font-src
+     don't allow fonts.googleapis.com/fonts.gstatic.com, and widening the CSP
+     site-wide just for this admin page's typeface isn't worth the blast
+     radius. Falls back to the system-ui/ui-monospace stack below — fine for
+     an internal tool. -->
 <style>
 :root{
   --navy:#0D1B2A;
@@ -299,8 +302,13 @@ function dateRange(startIso, endIso) {
 
 /* ── Yükleme ───────────────────────────────────────────────────────────────
  * Sayfa http üzerinden açıldıysa dosyaları kendi çeker. file:// üzerinden
- * tarayıcı bunu engeller (CORS) — o durumda dosya seçtirilir. */
-const BASE = "../../data/";
+ * tarayıcı bunu engeller (CORS) — o durumda dosya seçtirilir.
+ *
+ * Mutlak yol — göreli değil: bu dosya artık iki farklı yerden servis
+ * ediliyor (lokal test: /assets/analiz/, canlı: /analiz, src/worker.js'in
+ * yeniden yazdığı istek). Göreli bir "../../data/" ikisinde de aynı anda
+ * doğru olamaz; /data/ her iki durumda da origin köküne göre çözülür. */
+const BASE = "/data/";
 let META = null, WEEKS = [], CACHE = new Map();
 
 async function getJson(path) {
@@ -344,7 +352,8 @@ function showEmpty(reason) {
       <code>node tools/generate-weekly-snapshot.mjs</code>
       <p>Panel dosyaları <b>data/snapshots/</b> altından okur. Bu sayfayı doğrudan
          dosya olarak açtıysan tarayıcı bu okumayı engeller — ya yerel sunucudan aç:</p>
-      <code>python3 -m http.server 8080 &amp;&amp; open http://localhost:8080/tools/panel/</code>
+      <code>python3 -m http.server 8080 &amp;&amp; open http://localhost:8080/assets/analiz/</code>
+      <p>…ya da (şifreli) canlı adresten: <b>qr.jumvi.co/analiz</b></p>
       <p>…ya da snapshot dosyalarını buradan yükle
          (<b>missions-meta.json</b> ile birlikte seç):</p>
       <input type="file" id="filePick" multiple accept="application/json">
