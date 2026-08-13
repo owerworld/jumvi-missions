@@ -42,4 +42,14 @@ if [ "$failures" -ne 0 ]; then
   exit 1
 fi
 
-echo "OK: $EXPECTED_COUNT/$EXPECTED_COUNT production UI WebPs returned HTTP 200 + image/webp ($BASE_URL)"
+model_asset="assets/leo/coach-leo-optimized.glb"
+model_body="$tmp_dir/coach-leo-optimized.glb"
+model_status=$(curl -sS -L -o "$model_body" -w '%{http_code}' \
+  "$BASE_URL/$model_asset?qa=$cache_bust") || model_status="curl-error"
+model_magic=$(od -An -tx1 -N4 "$model_body" 2>/dev/null | tr -d ' \n')
+if [ "$model_status" != "200" ] || [ "$model_magic" != "676c5446" ]; then
+  echo "FAIL: $model_asset status=$model_status magic=${model_magic:-missing} (expected binary glTF)" >&2
+  exit 1
+fi
+
+echo "OK: $EXPECTED_COUNT/$EXPECTED_COUNT production UI WebPs + deployed Leo GLB verified ($BASE_URL)"
