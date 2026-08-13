@@ -17,13 +17,13 @@ export function createCoachLeo(THREE, options) {
   var bellyColor = options.bellyColor != null ? options.bellyColor : 0xF5E7CC;
   var bandanaColor = options.bandanaColor != null ? options.bandanaColor : 0x2FB6E8;
   var pawColor = options.pawColor != null ? options.pawColor : 0x6B4423;
-  // Opt-in real GLTF model (prototypes/textured_mesh_optimized.glb) instead of
+  // Opt-in real GLTF model (assets/leo/coach-leo-optimized.glb) instead of
   // the procedural rig below. Defaults to false — the procedural rig is built
   // unconditionally either way and stays as the visible fallback if the model
   // option is off, or if it's on but the model fails to load (bad network,
   // wrong path, etc.) — Leo is never just an empty invisible group.
   var useModel = !!options.useModel;
-  var modelUrl = options.modelUrl || './prototypes/textured_mesh_optimized.glb?v=20260723-meshopt';
+  var modelUrl = options.modelUrl || './assets/leo/coach-leo-optimized.glb';
 
   // ---------- TOON MATERIAL HELPER ----------
   // Three-tone gradient map for cel-shaded look.

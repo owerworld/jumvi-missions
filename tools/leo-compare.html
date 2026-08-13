@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>Leo — source vs meshopt</title>
+<title>Leo — source vs optimized</title>
 <style>
   body{margin:0;background:#0f1622;color:#e6edf6;font:13px/1.4 -apple-system,Segoe UI,Roboto,sans-serif}
   h1{font-size:15px;padding:10px 14px;margin:0;background:#0a1120}
@@ -11,7 +11,7 @@
   .sz{color:#7fd08a;font-weight:800}
   .cap{padding:2px 14px;font-weight:800;font-size:13px;color:#f0b86e}
 </style>
-<h1>Coach Leo — source (754 KB) vs meshopt, no simplification (245 KB) · 20,000 tri + 1024² webp both preserved</h1>
+<h1>Coach Leo — source (3.98 MB, 2048² png) vs optimized (331 KB, meshopt + 2048² webp, no simplification)</h1>
 <div class="cap">Full body</div><div class="row" id="rowA"></div>
 <div class="cap">Face, close range</div><div class="row" id="rowB"></div>
 <script type="importmap">{ "imports": { "three": "/vendor/three.module.min.js" } }</script>
@@ -59,17 +59,21 @@ function shot(url, mode){
   });
 }
 
-const SRC = '/prototypes/textured_mesh_source.glb';
-const OPT = '/prototypes/textured_mesh_optimized.glb';
+// SRC is under /prototypes (excluded from deploy — see .assetsignore) and
+// is only fetchable from a local dev server like this one, never from
+// qr.jumvi.co. OPT is the one production actually loads.
+const SRC = '/prototypes/coach-leo-source.glb';
+const OPT = '/assets/leo/coach-leo-optimized.glb';
 function cell(r, label, sz){
+  if(!r.img) return '<div class="pane">FAILED: '+(r.err||'?')+'</div>';
   return '<div class="pane"><img src="'+r.img+'" width="400" height="400">'+
          '<div class="lab">'+label+' · <span class="sz">'+sz+'</span> · '+r.tris.toLocaleString()+' tri</div></div>';
 }
 (async()=>{
   const a1 = await shot(SRC,'body'), a2 = await shot(OPT,'body');
-  document.getElementById('rowA').innerHTML = cell(a1,'source','754 KB') + cell(a2,'meshopt','245 KB');
+  document.getElementById('rowA').innerHTML = cell(a1,'source','3.98 MB') + cell(a2,'optimized','331 KB');
   const b1 = await shot(SRC,'face'), b2 = await shot(OPT,'face');
-  document.getElementById('rowB').innerHTML = cell(b1,'source','754 KB') + cell(b2,'meshopt','245 KB');
+  document.getElementById('rowB').innerHTML = cell(b1,'source','3.98 MB') + cell(b2,'optimized','331 KB');
   document.title = 'LEO COMPARE READY';
 })();
 </script>
