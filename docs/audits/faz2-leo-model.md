@@ -65,7 +65,16 @@ Bu, gerçek kullanıcıların (launch'tan beri, `.assetsignore`'a `prototypes/` 
 
 **Düzeltme:** yeni dosya `assets/leo/coach-leo-optimized.glb`'de — bu dizin `.assetsignore`'da değil, servis ediliyor (doğrulandı: `assets/leo/leo-face-64.webp` ve `assets/hub3d-optimized/.../*.glb` canlıda 200 dönüyor). `prototypes/coach-leo-source.glb` ise bilerek `prototypes/` altında kaldı — 3.98 MB'lık dosyanın production'a gitmemesi gereken tam da bu.
 
-Bu branch merge edilip deploy olduktan sonra `https://qr.jumvi.co/assets/leo/coach-leo-optimized.glb`'nin 200 döndüğü ayrıca doğrulanmalı — local test bunu kanıtlayamaz, sadece `.assetsignore` analizini ve kardeş yolların davranışını kanıtlar.
+**Doğrulandı — preview deploy'da (2026-08-13):** `feat/faz2-leo-cleanup` push edildikten sonra Cloudflare Workers Builds'in ürettiği preview URL'inde (`feat-faz2-leo-cleanup-jumvi-missions.saykirtasiye.workers.dev`) üç yol test edildi:
+
+```
+/assets/leo/coach-leo-optimized.glb      → 200, content-type: model/gltf-binary
+                                            cache-control: public, max-age=86400, stale-while-revalidate=604800
+/prototypes/textured_mesh_optimized.glb  → 404  (eski silinen yol)
+/prototypes/coach-leo-source.glb         → 404  (3.98 MB kaynak — production'a gitmedi, beklendiği gibi)
+```
+
+`.assetsignore` analizinin ve `_headers` kuralının doğru çalıştığının uçtan uca kanıtı bu — `main`'e merge edilmeden.
 
 ### Versiyon sorgu dizesi bilerek yok
 
