@@ -22,6 +22,7 @@
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 const BEACON_PATH = "/api/beacon";
+const TR_APP_PATHS = new Set(["/tr", "/tr/", "/tr/index.html"]);
 
 /** Bodies are tiny by construction; anything larger is not ours. */
 const MAX_BODY_BYTES = 512;
@@ -158,6 +159,96 @@ export function buildDataPoint(payload) {
  *  able to tell a rejected event from an accepted one. Nothing to probe. */
 const NO_CONTENT = () => new Response(null, { status: 204 });
 
+/**
+ * /tr is not a fork of index.html. It is the current root shell with one
+ * locale layer injected after data.js and before app.js. That guarantees
+ * design, features and internal progress IDs stay in lockstep with English.
+ */
+async function handleTurkishApp(request, env) {
+  const rootUrl = new URL(request.url);
+  rootUrl.pathname = "/index.html";
+  rootUrl.search = "";
+
+  const rootRequest = new Request(rootUrl.toString(), {
+    method: "GET",
+    headers: request.headers,
+  });
+  const upstream = await env.ASSETS.fetch(rootRequest);
+  if (!upstream.ok) return upstream;
+
+  let html = await upstream.text();
+
+  // Relative URLs on the root shell must keep resolving from /, not /tr/.
+  html = html.replace(/<html\s+lang=["']en["']>/i, '<html lang="tr">');
+  if (!/<base\s/i.test(html)) {
+    html = html.replace(/<head>/i, '<head>\n  <base href="/">');
+  }
+
+  // Server-visible locale metadata (JS repeats this client-side as a guard).
+  html = html
+    .replace(/<title>[\s\S]*?<\/title>/i,
+      '<title>JUMVI Görevleri — Oyna, Yakala, Devam Et</title>')
+    .replace(/<meta\s+name=["']description["'][^>]*>/i,
+      '<meta name="description" content="JUMVI Toss & Catch için 36 eğlenceli görev. İlerlemeyi takip et, rozetleri kazan ve Koç Leo’nun 3D macerasını keşfet. Kayıt, hesap ve reklam yok." />')
+    .replace(/<link\s+rel=["']canonical["'][^>]*>/i,
+      '<link rel="canonical" href="https://qr.jumvi.co/tr" />\n' +
+      '  <link rel="alternate" hreflang="en" href="https://qr.jumvi.co/" />\n' +
+      '  <link rel="alternate" hreflang="tr" href="https://qr.jumvi.co/tr" />\n' +
+      '  <link rel="alternate" hreflang="x-default" href="https://qr.jumvi.co/" />')
+    .replace(/<meta\s+property=["']og:url["'][^>]*>/i,
+      '<meta property="og:url" content="https://qr.jumvi.co/tr" />')
+    .replace(/<meta\s+property=["']og:title["'][^>]*>/i,
+      '<meta property="og:title" content="JUMVI Görevleri — Çocuklar için 36 Toss & Catch Oyunu" />')
+    .replace(/<meta\s+property=["']og:description["'][^>]*>/i,
+      '<meta property="og:description" content="36 JUMVI görevi, ilerleme, rozetler ve Koç Leo’nun 3D macerası." />')
+    .replace(/<meta\s+name=["']twitter:url["'][^>]*>/i,
+      '<meta name="twitter:url" content="https://qr.jumvi.co/tr" />')
+    .replace(/<meta\s+name=["']twitter:title["'][^>]*>/i,
+      '<meta name="twitter:title" content="JUMVI Görevleri — Çocuklar için Aktif Oyunlar" />')
+    .replace(/<meta\s+name=["']twitter:description["'][^>]*>/i,
+      '<meta name="twitter:description" content="Kısa ve hareketli Toss & Catch görevleri. Kuralları oku, telefonu bırak ve oyna." />')
+    .replace(/<link\s+rel=["']manifest["'][^>]*>/i,
+      '<link rel="manifest" href="/tr/manifest.json" />')
+    // Structured data. Left English, this hands search engines an English
+    // name and a "url" pointing at "/" for a page whose canonical is "/tr" —
+    // the two would contradict each other. Only the localizable fields and
+    // the url change; @type, offers, audience and publisher are identical in
+    // both languages and stay byte-for-byte as the English page has them.
+    .replace(/"name": "JUMVI Missions"/, '"name": "JUMVI Görevleri"')
+    .replace(/"url": "https:\/\/qr\.jumvi\.co\/"/, '"url": "https://qr.jumvi.co/tr"')
+    .replace(/"description": "36 quick, active toss & catch missions for the JUMVI Paddle Set\."/,
+      '"description": "JUMVI Toss & Catch Raket Seti için 36 kısa ve hareketli görev."')
+    .replace(/("@type": "WebApplication",)/, '$1\n    "inLanguage": "tr-TR",');
+
+  // Deferred scripts preserve source order. data.js defines mission/pack data;
+  // locale layer mutates display strings; app.js then renders Turkish.
+  const localeScript = '<script src="/tr/i18n.js?v=20260813-1" defer></script>';
+  if (!html.includes('/tr/i18n.js')) {
+    const dataTag = /(<script\s+src=["']data\.js[^"']*["'][^>]*><\/script>)/i;
+    if (dataTag.test(html)) {
+      html = html.replace(dataTag, `$1\n${localeScript}`);
+    } else {
+      const appTag = /(<script\s+src=["']app\.js[^"']*["'][^>]*><\/script>)/i;
+      if (!appTag.test(html)) {
+        return new Response("JUMVI TR injection marker missing", { status: 500 });
+      }
+      html = html.replace(appTag, `${localeScript}\n$1`);
+    }
+  }
+
+  const headers = new Headers(upstream.headers);
+  headers.delete("content-length");
+  headers.delete("etag");
+  headers.set("content-type", "text/html; charset=utf-8");
+  headers.set("content-language", "tr");
+
+  return new Response(html, {
+    status: upstream.status,
+    statusText: upstream.statusText,
+    headers,
+  });
+}
+
 async function handleBeacon(request, env) {
   if (request.method !== "POST") {
     return new Response(null, { status: 405, headers: { Allow: "POST" } });
@@ -190,6 +281,7 @@ export default {
   async fetch(request, env) {
     const { pathname } = new URL(request.url);
     if (pathname === BEACON_PATH) return handleBeacon(request, env);
+    if (TR_APP_PATHS.has(pathname)) return handleTurkishApp(request, env);
 
     // Everything else is the static site, exactly as before this Worker
     // existed. Assets that match are served by the platform without reaching

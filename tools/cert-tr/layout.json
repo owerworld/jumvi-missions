@@ -1,0 +1,241 @@
+{
+ "quality": 0.95,
+ "blocks": [
+  {
+   "id": "program",
+   "erase": {
+    "x": 128,
+    "y": 92,
+    "w": 210,
+    "h": 20,
+    "pad": 3
+   },
+   "lines": [
+    {
+     "x": 131,
+     "y": 109,
+     "align": "left",
+     "size": 20,
+     "weight": 600,
+     "color": "#33485a",
+     "segs": [
+      {
+       "t": "Görev Programı"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "title",
+   "erase": {
+    "x": 290,
+    "y": 164,
+    "w": 800,
+    "h": 96,
+    "pad": 4
+   },
+   "lines": [
+    {
+     "id": "t1",
+     "x": 640,
+     "y": 203,
+     "align": "center",
+     "size": 46,
+     "weight": 800,
+     "color": "#2463C9",
+     "segs": [
+      {
+       "t": "GÖREV ŞAMPİYONU VE YILDIZ"
+      }
+     ]
+    },
+    {
+     "id": "t2",
+     "x": 640,
+     "y": 249,
+     "align": "center",
+     "size": 46,
+     "weight": 800,
+     "color": "#2463C9",
+     "segs": [
+      {
+       "t": "AVCISI SERTİFİKASI"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "subtitle",
+   "erase": {
+    "x": 290,
+    "y": 272,
+    "w": 800,
+    "h": 32,
+    "pad": 4
+   },
+   "lines": [
+    {
+     "x": 640,
+     "y": 296,
+     "align": "center",
+     "size": 24,
+     "weight": 600,
+     "color": "#243447",
+     "segs": [
+      {
+       "t": "Çak bir beşlik! Tüm görevleri tamamladın ve bütün yıldızları yakaladın!"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pill",
+   "erase": {
+    "x": 139,
+    "y": 337,
+    "w": 505,
+    "h": 26,
+    "pad": 3
+   },
+   "lines": [
+    {
+     "x": 141,
+     "y": 359,
+     "align": "left",
+     "size": 19,
+     "weight": 700,
+     "color": "#3d2c05",
+     "segs": [
+      {
+       "t": "Tüm Görevler Tamamlandı"
+      },
+      {
+       "t": " • Güvenli Oyun • 3–12 Yaş",
+       "w": 600
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ach",
+   "erase": {
+    "x": 64,
+    "y": 548,
+    "w": 272,
+    "h": 86,
+    "pad": 4
+   },
+   "lines": [
+    {
+     "id": "a1",
+     "x": 71,
+     "y": 569,
+     "align": "left",
+     "size": 22,
+     "weight": 700,
+     "color": "#24384f",
+     "segs": [
+      {
+       "t": "Başarı"
+      }
+     ]
+    },
+    {
+     "id": "a2",
+     "x": 71,
+     "y": 597,
+     "align": "left",
+     "size": 22,
+     "weight": 600,
+     "color": "#24384f",
+     "segs": [
+      {
+       "t": "Durum: Tamamlandı"
+      }
+     ]
+    },
+    {
+     "id": "a3",
+     "x": 71,
+     "y": 625,
+     "align": "left",
+     "size": 22,
+     "weight": 600,
+     "color": "#24384f",
+     "segs": [
+      {
+       "t": "Rozet: Şampiyon 🏆"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "team",
+   "erase": {
+    "x": 1040,
+    "y": 632,
+    "w": 245,
+    "h": 60,
+    "pad": 4
+   },
+   "lines": [
+    {
+     "id": "tm1",
+     "x": 1250,
+     "y": 653,
+     "align": "right",
+     "size": 23,
+     "weight": 700,
+     "color": "#2463C9",
+     "segs": [
+      {
+       "t": "JUMVI Ekibi"
+      }
+     ]
+    },
+    {
+     "id": "tm2",
+     "x": 1273,
+     "y": 685,
+     "align": "right",
+     "size": 21,
+     "weight": 600,
+     "color": "#24384f",
+     "segs": [
+      {
+       "t": "Güvenli Oyun • 3–12 Yaş"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "banner": {
+  "text": "BAŞARDIN!",
+  "region": {
+   "x": 490,
+   "y": 30,
+   "w": 410,
+   "h": 140
+  },
+  "cx": 690,
+  "cy": 97,
+  "tilt": -3.8,
+  "size": 52,
+  "textY": 1,
+  "weight": 600,
+  "fill": "#FDF7DA",
+  "depth": 4,
+  "depthColor": "#C9741B",
+  "shadow": "rgba(150,70,0,0.40)",
+  "shadowBlur": 5,
+  "shadowY": 3,
+  "lx0": 540,
+  "lx1": 842
+ }
+}

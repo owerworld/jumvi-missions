@@ -17,10 +17,20 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v181";
+const CACHE_NAME = "jumvi-missions-v185";
 const CORE_ASSETS = [
   "/",
   "/index.html",
+  // The Turkish navigation shell, precached for the same reason as
+  // /index.html above. Without it the two languages are not equal offline:
+  // the English shell is on the device from the install step, but /tr only
+  // reaches the cache once a navigation is INTERCEPTED, and the very first
+  // visit happens before this worker controls the page. A family whose first
+  // ever visit is /tr would then have nothing to fall back to offline, while
+  // an English-first family would. Served by the Worker (TR_APP_PATHS), so
+  // addAll resolves it.
+  "/tr/index.html",
+  "/tr/manifest.json",
   "/style.css",
   "/app.js",
   "/data.js",
@@ -145,7 +155,11 @@ self.addEventListener("activate", (event) => {
 });
 
 const LARGE_ASSETS = new Set([
-  "/certificate-template.webp"
+  "/certificate-template.webp",
+  // Same treatment for the Turkish template: it is the same kind of asset,
+  // fetched on demand when a child opens the certificate, and blocking the
+  // first paint on it would be a /tr-only regression.
+  "/tr/certificate-template.webp"
 ]);
 
 self.addEventListener("fetch", (event) => {
@@ -161,16 +175,20 @@ self.addEventListener("fetch", (event) => {
   // (script-src, which allows these CDNs) and the browser's HTTP cache.
   if (url.origin !== self.location.origin) return;
 
-  // Network-first for HTML/navigation
+  // Network-first for HTML/navigation.
+  // IMPORTANT: /tr must never overwrite the English /index.html cache.
   if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
+    const navCacheKey = /^\/tr(?:\/|$)/.test(url.pathname)
+      ? "/tr/index.html"
+      : "/index.html";
     event.respondWith(
       fetch(req)
         .then((res) => {
           const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(navCacheKey, copy));
           return res;
         })
-        .catch(() => caches.match("/index.html"))
+        .catch(() => caches.match(navCacheKey))
     );
     return;
   }
