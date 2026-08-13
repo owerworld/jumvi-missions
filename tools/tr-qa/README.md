@@ -1,0 +1,62 @@
+# `/tr` localization QA
+
+Four scripts that check the Turkish route against the English one. They exist
+because the `/tr` layer is invisible to the eye in the ways that matter most:
+a missed string, a poisoned offline cache, or a renamed storage key all look
+fine on the screen you happen to be looking at.
+
+## Running
+
+Playwright is not a repo dependency (this project ships no `package.json`), so
+install it once in the repo root:
+
+```bash
+npm install playwright
+```
+
+Then, from the repo root, start the harness server and run the checks:
+
+```bash
+node tools/tr-qa/serve.mjs . 8787 &
+node tools/tr-qa/locale.mjs
+node tools/tr-qa/sw-cache.mjs
+node tools/tr-qa/residual-english.mjs
+```
+
+Set `CHROMIUM_PATH` if Playwright cannot find a browser, and `BASE` to point
+the checks at a deployed preview instead of the local harness.
+
+## What each one does
+
+**`serve.mjs`** — runs the *real* `src/worker.js` over a local HTTP server with
+`env.ASSETS` shimmed to read the repo from disk, mirroring `.assetsignore` and
+Cloudflare's "a matching asset is served without invoking the Worker" rule.
+Nothing about the `/tr` logic is reimplemented here; that is the whole point.
+Without it the routing could only be checked by deploying.
+
+**`locale.mjs`** — 41 assertions: `/` stays English, `/tr` is Turkish across all
+36 missions (title, steps, win, safety, tip), pack names and badge names are
+translated while pack keys and badge ids are not, read-aloud switches to
+`tr-TR`, the Red Light / Green Light caller speaks Turkish, both routes write
+the same `localStorage` keys, the Turkish manifest is correct and the English
+one is untouched, and `/tr?hub3d=1` flips the 3D Hub opt-in flag.
+
+**`sw-cache.mjs`** — registers the real service worker and drives a full
+online → offline sequence. It reads the cached shell *bodies*, not just the
+key names: presence of two keys proves nothing, and Chromium's own HTTP cache
+can serve an offline navigation without ever consulting the service worker,
+which makes a poisoned cache look healthy. Verified against a control build
+with the old single-key behaviour, where `/index.html` does come back Turkish
+after a `/tr` visit — so this check fails when the bug is present.
+
+**`residual-english.mjs`** — collects every visible string on `/` and on `/tr`
+and reports the intersection; anything identical on both is text the locale
+layer missed. It dismisses the welcome overlay and opens every tab panel
+first, because copy inside a closed panel is computed-invisible and an earlier
+pass that skipped this step under-reported by 27 strings. Brand and contact
+tokens (JUMVI, SAY23 LLC, WhatsApp, support@jumvi.co) are allow-listed as
+deliberately identical.
+
+See also `tools/check-tr-invariants.mjs`, which locks the values the locale
+layer must never touch: mission ids, pack keys, badge ids, the frozen
+Analytics Engine enums, and all 45 `localStorage` keys.

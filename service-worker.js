@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v181";
+const CACHE_NAME = "jumvi-missions-v182";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -161,16 +161,20 @@ self.addEventListener("fetch", (event) => {
   // (script-src, which allows these CDNs) and the browser's HTTP cache.
   if (url.origin !== self.location.origin) return;
 
-  // Network-first for HTML/navigation
+  // Network-first for HTML/navigation.
+  // IMPORTANT: /tr must never overwrite the English /index.html cache.
   if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
+    const navCacheKey = /^\/tr(?:\/|$)/.test(url.pathname)
+      ? "/tr/index.html"
+      : "/index.html";
     event.respondWith(
       fetch(req)
         .then((res) => {
           const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/index.html", copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(navCacheKey, copy));
           return res;
         })
-        .catch(() => caches.match("/index.html"))
+        .catch(() => caches.match(navCacheKey))
     );
     return;
   }

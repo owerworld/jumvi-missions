@@ -47,3 +47,10 @@
 
 /manifest.json
   Cache-Control: public, max-age=0, must-revalidate
+
+# Same reasoning as /manifest.json above, for the Turkish route. The rule has
+# to be spelled out: _headers matches exact paths, so /tr/manifest.json does
+# NOT inherit the /manifest.json rule, and the Turkish manifest is referenced
+# without a ?v= — an updated one could otherwise sit stale on the device.
+/tr/manifest.json
+  Cache-Control: public, max-age=0, must-revalidate
