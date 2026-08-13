@@ -3,7 +3,6 @@
 prototypes/
 tools/
 src/
-data/
 docs/
 node_modules/
 .wrangler/

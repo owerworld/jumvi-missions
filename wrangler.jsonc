@@ -7,7 +7,18 @@
     "directory": ".",
     // Lets the Worker serve asset misses itself, keeping 404 behaviour
     // identical to the assets-only setup this replaced.
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // Default asset routing serves a matching static file straight from the
+    // edge, WITHOUT ever invoking fetch() below — confirmed by testing:
+    // /data/snapshots/index.json returned 200 with no Authorization header
+    // at all, CF-Cache-Status: HIT, the Basic Auth check in worker.js never
+    // ran. run_worker_first is Cloudflare's own documented fix for exactly
+    // this case ("gating assets behind authentication"). Both prefixes are
+    // listed: /data/* is what the panel's client-side JS fetches, and
+    // /assets/analiz/* is the panel's own HTML file — without the second
+    // one, a request straight to /assets/analiz/ would skip /analiz's gate
+    // entirely and reach the file unauthenticated.
+    "run_worker_first": ["/data/*", "/assets/analiz/*"]
   },
   // Faz 1 / 1.2 minimal beacon. Dataset is created on first write.
   // Renaming it starts a new, empty history — see docs/audits/faz1-beacon.md.

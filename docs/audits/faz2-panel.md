@@ -4,6 +4,11 @@
 **Durum:** ✅ Panel çalışıyor, beş ek gereksinimin beşi de doğrulandı.
 WAE'ye **sahte veri yazılmadı** — test yerel örnek JSON'larla yapıldı, dataset 16 satırda kaldı.
 
+> **2026-08-14 güncellemesi — bu belgedeki "deploy edilmiyor" iddiası artık geçerli değil.**
+> Panel `tools/panel/` → `assets/analiz/`'e taşındı ve şifre korumalı `qr.jumvi.co/analiz`
+> route'u eklendi. §1 ve §6'daki mimari ve kapsam notları **tarihsel** — o an doğruydu, artık
+> değil. Güncel mimari: [`docs/audits/faz2-analiz-route.md`](faz2-analiz-route.md).
+
 ---
 
 ## 1. Mimari
@@ -111,7 +116,7 @@ kullanıcı açısından ikisi de "veride bir şey yok":
 
 ```
 node tools/generate-weekly-snapshot.mjs
-python3 -m http.server 8080 && open http://localhost:8080/tools/panel/
+python3 -m http.server 8080 && open http://localhost:8080/assets/analiz/   # (o zamanki yol: tools/panel/)
 ```
 
 artı bir **dosya seçici**. `file://` üzerinden tarayıcı yerel JSON okumasını CORS ile engellediği
