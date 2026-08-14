@@ -90,6 +90,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     active: false, overlay: null, dots: [], bigEl: null, subEl: null, timerEl: null,
     timers: [], endAt: 0, tickId: 0, opts: null, audioCtx: null,
     switchCount: 0,           // total light changes — gates trickery
+    greenCount: 0,            // GREENs called this run — gates first vs later cue
     lastDoubleRedAt: -999,    // throttle: see DOUBLE_RED_COOLDOWN_S above
     voicesReady: false, speechPrimed: false, voice: null
   };
@@ -166,6 +167,26 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
         try { window.speechSynthesis.speak(u); } catch (_) {}
       }, 120));
     } catch (e) {}
+  }
+
+  // Prerecorded Coach Leo cue, TTS as the fallback — English pilot only.
+  // window.CoachLeoAudio is locale-gated (no-op on /tr), so /tr always falls
+  // straight through to speak(), leaving its speechSynthesis path (translated
+  // by tr/i18n.js) exactly as before. Always stops any in-flight Coach Leo
+  // clip first so a fast state change (e.g. green -> red) cuts off cleanly —
+  // this never touches the Web Audio chimes/haptics above.
+  function speakCue(cueKey, fallbackText) {
+    if (!state.opts || !state.opts.sound) return;
+    try { if (global.CoachLeoAudio) global.CoachLeoAudio.stop(); } catch (e) {}
+    var started = false;
+    try {
+      if (global.CoachLeoAudio && global.CoachLeoAudio.isAvailable && global.CoachLeoAudio.isAvailable()) {
+        started = global.CoachLeoAudio.playCue(cueKey, {
+          onError: function () { speak(fallbackText, state.opts.sound); }
+        });
+      }
+    } catch (e) { started = false; }
+    if (!started) speak(fallbackText, state.opts.sound);
   }
 
   // Subtle haptic — works on Android & iOS PWA (silent on desktop, harmless)
@@ -258,7 +279,8 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     setLight('green');
     chimeGreen();  // C5–E5–G5 ascending triad (cleaner than single beep)
     buzz(30);      // short, soft go-signal
-    speak('Green light!', state.opts.sound);
+    state.greenCount++;
+    speakCue(state.greenCount === 1 ? 'green' : 'keepPlaying', 'Green light!');
     state.switchCount++;
     scheduleNext('green');
   }
@@ -271,7 +293,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     setLight('red');
     chimeRed();              // G3-G3-C3 urgent low pulse (alarm-like)
     buzz([45, 35, 60]);      // distinct stop haptic pattern
-    speak('Red light! Freeze!', state.opts.sound);  // richer phrase reads clearer
+    speakCue('red', 'Red light! Freeze!');  // richer phrase reads clearer
     state.switchCount++;
     scheduleNext('red');
   }
@@ -342,7 +364,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     state.timerEl.textContent = '0:00';
     try { window.speechSynthesis.cancel(); } catch (e) {}
     chimeEnd();
-    speak("Time is up! Great freezing!", state.opts.sound);
+    speakCue('greatJob', "Time is up! Great freezing!");
     state.timers.push(setTimeout(function () { teardown(true); }, 2600));
   }
 
@@ -350,6 +372,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     var onEnd = state.opts && state.opts.onEnd;
     clearTimers();
     try { window.speechSynthesis.cancel(); } catch (e) {}
+    try { if (global.CoachLeoAudio) global.CoachLeoAudio.stop(); } catch (e) {}
     if (state.overlay && state.overlay.parentNode) state.overlay.parentNode.removeChild(state.overlay);
     state.active = false; state.overlay = null; state.dots = [];
     if (callEnd && typeof onEnd === 'function') { try { onEnd(); } catch (e) {} }
@@ -399,6 +422,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     };
     state.active = true;
     state.switchCount = 0;
+    state.greenCount = 0;
     state.lastDoubleRedAt = -999;
     build();
 
@@ -417,6 +441,17 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
       }
     } catch (e) {}
     if (state.opts.sound) primeSpeech();
+    // Prerecorded cues fire later from timers (the 3-2-1 countdown, then the
+    // random scheduler), well outside this tap's gesture — unlock playback
+    // now while we still have one, and warm the cache for the four clips.
+    if (state.opts.sound) {
+      try {
+        if (global.CoachLeoAudio) {
+          global.CoachLeoAudio.unlock();
+          if (global.CoachLeoAudio.preloadCues) global.CoachLeoAudio.preloadCues();
+        }
+      } catch (e) {}
+    }
 
     // 3-2-1 ready countdown, then go
     var n = 3;
