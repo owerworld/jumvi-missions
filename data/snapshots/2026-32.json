@@ -2,24 +2,24 @@
   "week": "2026-32",
   "period_start": "2026-08-03",
   "period_end": "2026-08-09",
-  "app_opens": 0,
-  "mission_starts": 0,
-  "mission_completes": 0,
-  "recorded_completion_ratio": null,
+  "app_opens": 15,
+  "mission_starts": 14,
+  "mission_completes": 15,
+  "recorded_completion_ratio": 1.07,
   "help_opens": {
-    "ball_stuck": 0,
+    "ball_stuck": 1,
     "ball_hard_to_remove": 0,
     "strap_uncomfortable": 0,
     "need_more_space": 0,
     "instructions_unclear": 0,
-    "mission_too_hard": 0
+    "mission_too_hard": 1
   },
   "player_count": {
-    "2": 0,
+    "2": 1,
     "3": 0,
-    "4": 0
+    "4": 1
   },
-  "app_first_opens": 0,
+  "app_first_opens": 7,
   "return_visits": {
     "2": 0,
     "3": 0,
@@ -28,10 +28,10 @@
   },
   "packs": {
     "Aim Master": {
-      "views": 0,
-      "starts": 0,
-      "completes": 0,
-      "completed_pack": 0
+      "views": 5,
+      "starts": 12,
+      "completes": 13,
+      "completed_pack": 4
     },
     "Focus Control": {
       "views": 0,
@@ -40,43 +40,76 @@
       "completed_pack": 0
     },
     "Team Duo": {
-      "views": 0,
+      "views": 1,
       "starts": 0,
       "completes": 0,
       "completed_pack": 0
     },
     "Indoor Compact": {
-      "views": 0,
+      "views": 1,
       "starts": 0,
       "completes": 0,
       "completed_pack": 0
     },
     "Beach/Park": {
-      "views": 0,
-      "starts": 0,
-      "completes": 0,
+      "views": 2,
+      "starts": 2,
+      "completes": 2,
       "completed_pack": 0
     },
     "Reflex Rush": {
-      "views": 0,
+      "views": 1,
       "starts": 0,
       "completes": 0,
       "completed_pack": 0
     }
   },
-  "missions": {},
+  "missions": {
+    "7": {
+      "starts": 3,
+      "completes": 6
+    },
+    "8": {
+      "starts": 3,
+      "completes": 2
+    },
+    "9": {
+      "starts": 3,
+      "completes": 2
+    },
+    "10": {
+      "starts": 3,
+      "completes": 1
+    },
+    "11": {
+      "starts": 0,
+      "completes": 1
+    },
+    "12": {
+      "starts": 0,
+      "completes": 1
+    },
+    "33": {
+      "starts": 1,
+      "completes": 1
+    },
+    "36": {
+      "starts": 1,
+      "completes": 1
+    }
+  },
   "by_age": {
     "3+": 0,
-    "4+": 0,
-    "5+": 0,
+    "4+": 0.5,
+    "5+": 0.5,
     "6+": 0
   },
   "by_difficulty": {
-    "1": 0,
-    "2": 0
+    "1": 0.29,
+    "2": 0.71
   },
   "by_players": {
-    "2": 0,
+    "2": 1,
     "4": 0,
     "2-3": 0,
     "3-6": 0,
@@ -86,42 +119,42 @@
   "by_duration": {
     "45s": 0,
     "60s": 0,
-    "90s": 0,
-    "120s": 0,
+    "90s": 0.64,
+    "120s": 0.29,
     "150s": 0,
-    "180s": 0,
+    "180s": 0.07,
     "240s": 0
   },
   "by_setting": {
-    "indoor": 0,
-    "outdoor": 0
+    "indoor": 0.86,
+    "outdoor": 0.14
   },
   "features": {
     "daily_pick_tap": 0,
     "speak_on": 0,
-    "timer_start": 0,
-    "badge_earned": 0,
+    "timer_start": 1,
+    "badge_earned": 7,
     "certificate_made": 0,
     "share_tap": 0,
     "score_saved": 0,
-    "dashboard_open": 0,
+    "dashboard_open": 1,
     "missionbook_get": 0,
     "profile_add": 0,
     "progress_reset": 0
   },
   "hub3d": {
-    "shown": 0,
-    "entered": 0,
-    "ready": 0,
-    "moved": 0,
-    "mission": 0,
+    "shown": 7,
+    "entered": 4,
+    "ready": 4,
+    "moved": 3,
+    "mission": 3,
     "failed": 0,
     "escaped": 0
   },
-  "generated_at": "2026-08-08T00:03:33Z",
+  "generated_at": "2026-08-14T22:14:19Z",
   "dataset": "jumvi_events_v1",
   "snapshot_schema": 2,
-  "excluded_before": "2026-08-08T00:00:00Z",
+  "excluded_before": null,
   "methodology": [
     "QR Activation Proxy — metodoloji notu:",
     "Bu sayılar cihaz/kullanıcı kimliği içermez. \"app_opens\" ilk tarayıcı",
@@ -151,11 +184,6 @@
     "önceki satırlar sayıma girmemiştir ve gerekçesi aşağıda yazılıdır.",
     "",
     "generated_at, period_end'den önceyse hafta o an henüz kapanmamıştı ve",
-    "sayılar kısmi haftaya aittir.",
-    "",
-    "Bu snapshot 2026-08-08T00:00:00Z öncesindeki satırları hariç tutarak üretildi.",
-    "Beacon'ın canlıya çıktığı hafta olduğu için haftanın başındaki satırlar",
-    "kurulum ve production geçiş testlerinden gelir, gerçek kullanıcı verisi",
-    "değildir. Gerçek launch verisi bu andan itibaren başlar."
+    "sayılar kısmi haftaya aittir."
   ]
 }
