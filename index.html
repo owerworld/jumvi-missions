@@ -718,7 +718,13 @@
           <button class="missionHelpOpt" type="button" data-reason="ball_hard_to_remove">The ball is hard to remove</button>
           <button class="missionHelpOpt" type="button" data-reason="strap_uncomfortable">The strap doesn&rsquo;t feel right</button>
           <button class="missionHelpOpt" type="button" data-reason="mission_too_hard">My child is missing most catches</button>
-          <a class="missionHelpMore" id="btnMoreProductHelp" href="#">More product help</a>
+          <!-- A button, not an anchor with a bare "#": the click handler
+               already cancels the navigation, but /tr is served with a base
+               element pointing at the root, so "#" resolves to the ENGLISH
+               root. A middle-click, a ctrl-click, "open in new tab", or a tap
+               landing before app.js binds would drop a Turkish visitor onto /.
+               Nothing here navigates, so the anchor was never right. -->
+          <button class="missionHelpMore" id="btnMoreProductHelp" type="button">More product help</button>
           <p class="missionHelpTip" id="missionHelpTip" role="status" hidden></p>
         </div>
       </div>

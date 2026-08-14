@@ -172,6 +172,17 @@
     "We measure a short, fixed list of anonymous events to see which missions work and where kids get stuck: the app being opened, missions started and completed, which help topic a parent opened, the player count, pack and badge milestones, whether an optional feature was used at all (certificate, sharing, read-aloud, the timer, the score tracker, the dashboard, the mission book), progress through the 3D Hub, and a few fixed return-visit milestones. Every event is just an event name plus, at most, one small value — a mission number, a pack or badge name, a player count, or a fixed option such as which help topic or which share button. Anything not on that list is discarded without being stored. We never attach a name, account, email address, the certificate name you type, a profile name, an IP address, a device ID, or any other identifier to this data. This is measured using our own infrastructure, not a third-party analytics service.":
       "Hangi görevlerin işe yaradığını ve çocukların nerede takıldığını görmek için kısa ve sabit bir anonim olay listesi ölçüyoruz: uygulamanın açılması, başlatılan ve tamamlanan görevler, ebeveynin hangi yardım konusunu açtığı, oyuncu sayısı, paket ve rozet kilometre taşları, isteğe bağlı bir özelliğin hiç kullanılıp kullanılmadığı (sertifika, paylaşım, sesli okuma, kronometre, skor takibi, panel, görev kitabı), 3D Hub içindeki ilerleme ve birkaç sabit tekrar ziyaret kilometre taşı. Her olay yalnızca bir olay adından ve en fazla bir küçük değerden oluşur — bir görev numarası, bir paket veya rozet adı, bir oyuncu sayısı ya da hangi yardım konusu veya hangi paylaşım düğmesi gibi sabit bir seçenek. Bu listede olmayan hiçbir şey saklanmadan atılır. Bu veriye asla isim, hesap, e-posta adresi, yazdığınız sertifika adı, profil adı, IP adresi, cihaz kimliği ya da başka bir tanımlayıcı eklemeyiz. Ölçüm üçüncü taraf bir analitik hizmetiyle değil kendi altyapımızla yapılır.",
 
+    /* Product-care safety line, added with Play Modes. It is split across two
+     * text nodes around the support mailto, so each half is keyed separately —
+     * and the surrounding whitespace is re-added by translateText, so neither
+     * value carries its own leading space. Of everything on /tr this is the
+     * one line that must not stay English: it tells a parent to stop using a
+     * torn or cracked piece. */
+    "Stop using any torn or cracked piece. Ask a grown-up to email":
+      "Yırtık veya çatlak hiçbir parçayı kullanmayın. Bir yetişkin, sipariş numarası ve bir fotoğrafla",
+    "with the order number and a photo.":
+      "adresine e-posta göndersin.",
+
     // index.html aria-labels / alt text
     "missions": "görevler",
     "progress": "ilerleme",

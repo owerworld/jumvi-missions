@@ -8375,6 +8375,15 @@ html.theme--dark .productHelpItem p{ color:#B9C7D8; }
   font-size:12.5px;
   font-weight:800;
   text-decoration:none;
+  /* This is a <button> so it cannot navigate (see index.html). Buttons do not
+     inherit font-family and carry a UA background/border, so the link
+     appearance has to be restated rather than assumed. */
+  width:100%;
+  background:none;
+  border:0;
+  padding:0;
+  font-family:inherit;
+  cursor:pointer;
 }
 .modeFilter:focus-visible,
 .modeCard:focus-visible,
