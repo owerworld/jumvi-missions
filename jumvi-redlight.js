@@ -442,6 +442,7 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
   }
 
   function stop() { teardown(true); }
+  function isActive() { return !!state.active; }
 
-  global.JumviRedLight = { start: start, stop: stop };
+  global.JumviRedLight = { start: start, stop: stop, isActive: isActive };
 })(window);

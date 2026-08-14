@@ -256,7 +256,12 @@ async function handleTurkishApp(request, env) {
 
   // Relative URLs on the root shell must keep resolving from /, not /tr/.
   html = html.replace(/<html\s+lang=["']en["']>/i, '<html lang="tr">');
-  if (!/<base\s/i.test(html)) {
+  // Comments are prose and must never be able to switch off a load-bearing
+  // injection. A code comment in index.html that merely MENTIONED a base tag
+  // once satisfied this guard, and /tr shipped with no base element at all —
+  // which silently breaks every relative URL on /tr/ and /tr/index.html.
+  // Strip comments before deciding whether a real one is already present.
+  if (!/<base\s/i.test(html.replace(/<!--[\s\S]*?-->/g, ""))) {
     html = html.replace(/<head>/i, '<head>\n  <base href="/">');
   }
 
@@ -298,7 +303,7 @@ async function handleTurkishApp(request, env) {
 
   // Deferred scripts preserve source order. data.js defines mission/pack data;
   // locale layer mutates display strings; app.js then renders Turkish.
-  const localeScript = '<script src="/tr/i18n.js?v=20260813-1" defer></script>';
+  const localeScript = '<script src="/tr/i18n.js?v=20260814-4" defer></script>';
   if (!html.includes('/tr/i18n.js')) {
     const dataTag = /(<script\s+src=["']data\.js[^"']*["'][^>]*><\/script>)/i;
     if (dataTag.test(html)) {

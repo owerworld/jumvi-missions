@@ -90,7 +90,7 @@ function trackEvent(name, props){
  *   app_open                      once per session
  *   mission_start     { id }      once per mission per session
  *   mission_complete  { id }
- *   help_open         { reason }  fixed 6-value enum, never free text
+ *   help_open         { reason }  fixed 6-value legacy enum, never free text
  *   player_count      { n }       2 | 3 | 4, once per session
  *
  * FAZ 2 — content and features:
@@ -1071,10 +1071,10 @@ function pickKidVoice(voices){
     if(lang.startsWith("en-gb")) s += 2;
     if(v.localService) s += 1;
 
-    // Prefer bright/friendly voices (heuristic)
-    if(name.includes("female")) s += 4;
-    if(name.includes("child") || name.includes("kid")) s += 6;
-    if(name.includes("male")) s -= 4;
+    // Prefer clear local voices without artificially forcing a child persona.
+    if(name.includes("female")) s += 2;
+    if(name.includes("child") || name.includes("kid")) s += 1;
+    if(name.includes("male")) s -= 1;
     if(name.includes("fred")) s -= 6;
 
     for(const p of prefer){
@@ -2405,18 +2405,52 @@ let timerEndAt = 0;
 let timerHoldResetArmed = false;
 let timerHoldResetT = null;
 let missionOpenedAt = 0;
+let timerCountdownInterval = null;
+let timerCountdownTimeout = null;
+let timerCountdownToken = 0;
+
+function cancelTimerCountdown(){
+  timerCountdownToken++;
+  if(timerCountdownInterval) clearInterval(timerCountdownInterval);
+  if(timerCountdownTimeout) clearTimeout(timerCountdownTimeout);
+  timerCountdownInterval = null;
+  timerCountdownTimeout = null;
+  const countdown = document.getElementById("timerCountdown");
+  countdown?.classList.remove("show");
+  countdown?.setAttribute("aria-hidden", "true");
+}
+const timerCountdownOverlay = document.getElementById("timerCountdown");
+if(timerCountdownOverlay){
+  const cancelFromOverlay = ()=>{
+    cancelTimerCountdown();
+    if(timerState === "idle") setTimerButtonLabel();
+    btnStartTimer.focus({preventScroll:true});
+  };
+  timerCountdownOverlay.addEventListener("click", cancelFromOverlay);
+  timerCountdownOverlay.addEventListener("keydown", event=>{
+    if(event.key === "Enter" || event.key === " "){
+      event.preventDefault();
+      cancelFromOverlay();
+    }
+  });
+}
 
 function setTimerButtonLabel(){
+  btnStartTimer.disabled = false;
   if(timerState === "running"){
     btnStartTimer.innerHTML = '<i class="jic jic-pause" aria-hidden="true"></i> Pause';
+    btnStartTimer.setAttribute("aria-label", "Pause timer");
   }else if(timerState === "paused"){
     btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Resume';
+    btnStartTimer.setAttribute("aria-label", "Resume timer");
   }else{
     btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Start';
+    btnStartTimer.setAttribute("aria-label", "Start timer");
   }
 }
 
 function resetTimerUI() {
+  cancelTimerCountdown();
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   releaseWakeLock();
@@ -2424,6 +2458,7 @@ function resetTimerUI() {
   timerTotal = 0;
   timerLeft = 0;
   timerEndAt = 0;
+  _missionCoachFired = new Set();
 
   timerUI.style.display = "none";
   timerFill.style.transition = "none";
@@ -2455,10 +2490,12 @@ function updateTimerTick(){
     // palette (the hub registers this hook only while the 3D flag is on).
     try{ if(window._hubMissionFlow && window._hub3dComeBack) window._hub3dComeBack(); }catch(_){ }
     // Coach: time's up announcement
-    if(_currentScore > 0){
-      coachSpeak(`Time's up! You got ${_currentScore}!`);
-    } else {
-      coachSpeak("Time's up! Great job!");
+    if(_openMissionId !== 13){
+      if(_currentScore > 0){
+        coachSpeak(`Time's up! You got ${_currentScore}!`);
+      } else {
+        coachSpeak("Time's up! Great job!");
+      }
     }
     if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
       markMissionDone(lastOpenedId, "auto");
@@ -2468,11 +2505,17 @@ function updateTimerTick(){
     return;
   }
 
-  // Mid-play encouragement: timer'ın yarısı geçince bir kez söyle
-  if(!_midplayAnnounced && timerTotal > 10 && secLeft <= timerTotal / 2){
-    _midplayAnnounced = true;
-    const line = _midplayLines[Math.floor(Math.random() * _midplayLines.length)];
-    coachSpeak(line, { rate: 1.1, pitch: 1.2 });
+  // Voice Coach repeats only a real rule from the open mission. No generic
+  // praise, no invented copy, and never during the phone-driven/silent games.
+  if(_missionCoachEnabled && !document.hidden && timerTotal > 0 && _openMissionId){
+    const ms = missions.find(x=>x.id === _openMissionId);
+    const elapsedFraction = (timerTotal - secLeft) / timerTotal;
+    _missionCoachReminders.forEach((reminder, index)=>{
+      if(_missionCoachFired.has(index) || elapsedFraction < Number(reminder.fraction || 1)) return;
+      _missionCoachFired.add(index); // mark before speaking so pause/resume cannot repeat it
+      const line = resolveMissionCoachReminder(ms, reminder);
+      if(line) coachSpeak(line, { rate: 0.96, pitch: 1.02 });
+    });
   }
 
   // Son 3 saniye: kırmızı pulse + ses
@@ -2485,7 +2528,7 @@ function updateTimerTick(){
     const lastDisplay = timerDisplay.textContent;
     const newText = secLeft + "s";
     if(lastDisplay !== newText){
-      clickSound("click");
+      if(_openMissionId !== 13) clickSound("click");
     }
   } else {
     if(timerDisplay.classList.contains("timerUrgent")){
@@ -2507,8 +2550,8 @@ function coachSpeak(text, opts={}){
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-US';
-    u.rate = opts.rate || 1.05;
-    u.pitch = opts.pitch || 1.25;
+    u.rate = opts.rate || 0.96;
+    u.pitch = opts.pitch || 1.02;
     u.volume = 1;
     if(typeof kidVoice !== "undefined" && kidVoice) u.voice = kidVoice;
     window.speechSynthesis.speak(u);
@@ -2518,15 +2561,129 @@ function coachSpeak(text, opts={}){
 // §3.1 — auto read-aloud for the 3–5 band (they can't read the steps). Device
 // setting jumvi_tts_auto (default on); parents can turn it off in Profile.
 const TTS_AUTO_KEY = "jumvi_tts_auto";
+const MISSION_COACH_RUN_KEY = _PP + "mission_coach_runs_v1";
+let _missionCoachEnabled = false;
+let _missionCoachReminders = [];
+let _missionCoachFired = new Set();
+let _missionNarrationPending = false;
+let _missionNarratedId = 0;
+let _missionNarrationToken = 0;
+let _missionNarrationWatchdog = null;
+
+function missionCoachingFor(ms){
+  return (window.JUMVI_MISSION_COACHING && ms) ? window.JUMVI_MISSION_COACHING[ms.id] || null : null;
+}
+function missionCoachRuns(){
+  const raw = lsGetJSON(MISSION_COACH_RUN_KEY, {});
+  return raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+}
+function markMissionCoachRun(ms){
+  if(!ms) return;
+  const runs = missionCoachRuns();
+  runs[ms.id] = Math.min(99, Number(runs[ms.id] || 0) + 1);
+  try{ lsSet(MISSION_COACH_RUN_KEY, JSON.stringify(runs)); }catch(_){ }
+}
+function stripSpeechText(value){
+  return String(value || "")
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\uFE0F]/gu, "")
+    .replace(/\s+/g, " ").trim();
+}
+function missionCoachParts(ms, fullRead=false){
+  const meta = missionCoachingFor(ms);
+  const runs = missionCoachRuns();
+  const firstRun = Number(runs[ms.id] || 0) === 0;
+  let indexes = (ms.steps || []).map((_, i)=>i);
+  if(!fullRead && !firstRun && meta && meta.replay !== "full"){
+    indexes = Array.isArray(meta.quickStepIndexes) && meta.quickStepIndexes.length
+      ? meta.quickStepIndexes
+      : indexes.slice(0, meta.replay === "quick" ? 1 : 2);
+  }
+  const parts = [`Mission: ${stripSpeechText(ms.title)}.`];
+  indexes.forEach(i=>{
+    if(ms.steps && ms.steps[i]) parts.push(`Step ${i+1} — ${stripSpeechText(ms.steps[i])}`);
+  });
+  if(ms.win) parts.push(`How to win — ${stripSpeechText(ms.win)}`);
+  return parts;
+}
+function stopMissionCoach(){
+  if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
+  _missionNarrationWatchdog = null;
+  _missionCoachEnabled = false;
+  _missionCoachReminders = [];
+  _missionCoachFired = new Set();
+  _missionNarrationPending = false;
+  _missionNarratedId = 0;
+  _missionNarrationToken++;
+}
+function prepareMissionCoach(ms){
+  if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
+  _missionNarrationWatchdog = null;
+  _missionNarrationToken++;
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  const meta = missionCoachingFor(ms);
+  _missionCoachEnabled = !!(soundOn && ttsAuto() && meta && ms.id !== 2 && ms.id !== 13);
+  _missionCoachReminders = meta && Array.isArray(meta.reminders) ? meta.reminders : [];
+  _missionCoachFired = new Set();
+  _missionNarrationPending = false;
+  _missionNarratedId = 0;
+}
+function resolveMissionCoachReminder(ms, reminder){
+  if(!ms || !reminder) return "";
+  if(reminder.source === "safety") return stripSpeechText(ms.safety || getSafetyText(ms));
+  if(reminder.source === "step" && ms.steps && ms.steps[reminder.index]) return stripSpeechText(ms.steps[reminder.index]);
+  return "";
+}
+function playMissionNarration(ms, onDone){
+  if(!ms || !soundOn || !ttsAuto() || !("speechSynthesis" in window)){
+    onDone();
+    return false;
+  }
+  const parts = missionCoachParts(ms, false);
+  const text = parts.join(" ");
+  if(!text){ onDone(); return false; }
+  _missionNarrationPending = true;
+  _missionNarratedId = ms.id;
+  const token = ++_missionNarrationToken;
+  let finished = false;
+  const doneOnce = (heardNaturally=false)=>{
+    if(finished || token !== _missionNarrationToken) return;
+    finished = true;
+    _missionNarrationPending = false;
+    _missionNarratedId = ms.id;
+    if(heardNaturally) markMissionCoachRun(ms);
+    btnStartTimer.disabled = true;
+    btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Get ready…';
+    onDone();
+  };
+  _missionNarrationWatchdog = setTimeout(doneOnce, Math.min(26000, Math.max(10000, text.length * 75)));
+  try{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "en-US";
+    utter.rate = 0.96;
+    utter.pitch = 1.02;
+    utter.volume = 1;
+    if(kidVoice) utter.voice = kidVoice;
+    utter.onend = ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(true); };
+    utter.onerror = ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(false); };
+    window.speechSynthesis.speak(utter);
+  }catch(_){ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(false); }
+  return true;
+}
+
+function markMissionNarrationHeard(ms){
+  if(!ms) return;
+  _missionNarratedId = ms.id;
+  markMissionCoachRun(ms);
+}
 function ttsAuto(){ try{ return lsGet(TTS_AUTO_KEY, "1") === "1"; }catch(_){ return true; } }
 function autoReadMission(ms){
   // Reads the mission name + first step, once, when a 3–5 mission opens. Must be
   // called INSIDE the tap handler (openMission) so iOS allows speechSynthesis.
   if(!soundOn) return;                       // shares the global mute guard
   if(!("speechSynthesis" in window)) return;
-  const strip = s => String(s||"").replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\uFE0F]/gu, "").replace(/\s+/g," ").trim();
-  const first = (ms.steps && ms.steps[0]) ? strip(ms.steps[0]) : "";
-  const text = first ? `${strip(ms.title)}. Step 1 — ${first}` : strip(ms.title);
+  const first = (ms.steps && ms.steps[0]) ? stripSpeechText(ms.steps[0]) : "";
+  const text = first ? `${stripSpeechText(ms.title)}. Step 1 — ${first}` : stripSpeechText(ms.title);
   if(text) coachSpeak(text, { rate: 1.0 });
 }
 
@@ -2551,13 +2708,12 @@ function toggleLeoSpeakSteps(ms){
   trackEvent("Leo Steps Spoken", { missionId: ms.id });
   try{
     window.speechSynthesis.cancel();
-    const parts = (ms.steps || []).map((s, i)=> `Step ${i+1} — ${s}`);
-    if(ms.win) parts.push(`How to win — ${ms.win}`);
+    const parts = missionCoachParts(ms, true).slice(1);
     parts.forEach((text, i)=>{
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = "en-US"; u.rate = 1.0; u.pitch = 1.25; u.volume = 1;
+      u.lang = "en-US"; u.rate = 0.96; u.pitch = 1.02; u.volume = 1;
       if(typeof kidVoice !== "undefined" && kidVoice) u.voice = kidVoice;
-      if(i === parts.length - 1) u.onend = ()=> stopLeoSpeakSteps();
+      if(i === parts.length - 1) u.onend = ()=>{ markMissionNarrationHeard(ms); stopLeoSpeakSteps(); };
       window.speechSynthesis.speak(u); // queued → natural pause between parts
     });
   }catch(_){ stopLeoSpeakSteps(); }
@@ -2574,25 +2730,26 @@ function maybeShowLeoSpeakHint(btn){
   setTimeout(()=>{ tip.classList.add("fade"); setTimeout(()=> tip.remove(), 400); }, 4200);
 }
 
-const _midplayLines = [
-  "Keep going!",
-  "Halfway there!",
-  "You can do it!",
-  "Awesome work!",
-  "Don't stop!"
-];
-let _midplayAnnounced = false;
+let _midplayAnnounced = false; // retained for state compatibility; no generic praise is spoken
 
 /* Visual countdown 3-2-1-GO before timer starts */
 function showCountdownThenStart(durationSeconds){
+  cancelTimerCountdown();
+  const countdownToken = timerCountdownToken;
+  const countdownMissionId = _openMissionId;
   const overlay = document.getElementById("timerCountdown");
   if(!overlay){
     // Yedek: overlay yoksa direkt başlat
-    startTimer(durationSeconds);
+    if(countdownMissionId === _openMissionId) startTimer(durationSeconds);
     return;
   }
+  btnStartTimer.disabled = true;
+  btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Get ready…';
+  btnStartTimer.setAttribute("aria-label", "Countdown in progress");
   let n = 3;
   overlay.classList.add("show");
+  overlay.setAttribute("aria-hidden", "false");
+  overlay.focus({preventScroll:true});
   const display = overlay.querySelector(".timerCountdownNum");
   const announce = (val)=>{
     if(display) display.textContent = val;
@@ -2601,19 +2758,29 @@ function showCountdownThenStart(durationSeconds){
       void display.offsetWidth;
       display.classList.add("pop");
     }
-    coachSpeak(val === "GO!" ? "Go!" : String(val), { rate: 1.1, pitch: 1.3 });
-    clickSound("click");
+    if(countdownMissionId !== 13){
+      coachSpeak(val === "GO!" ? "Go!" : String(val), { rate: 1.1, pitch: 1.3 });
+      clickSound("click");
+    }
   };
   announce(n);
-  const tick = setInterval(()=>{
+  timerCountdownInterval = setInterval(()=>{
+    if(countdownToken !== timerCountdownToken || countdownMissionId !== _openMissionId){
+      cancelTimerCountdown();
+      return;
+    }
     n--;
     if(n > 0){
       announce(String(n));
     } else {
       announce("GO!");
-      clearInterval(tick);
-      setTimeout(()=>{
+      clearInterval(timerCountdownInterval);
+      timerCountdownInterval = null;
+      timerCountdownTimeout = setTimeout(()=>{
+        timerCountdownTimeout = null;
+        if(countdownToken !== timerCountdownToken || countdownMissionId !== _openMissionId || !backdrop.classList.contains("show")) return;
         overlay.classList.remove("show");
+        overlay.setAttribute("aria-hidden", "true");
         startTimer(durationSeconds);
       }, 600);
     }
@@ -2621,6 +2788,7 @@ function showCountdownThenStart(durationSeconds){
 }
 
 function startTimer(durationSeconds) {
+  if(!_openMissionId || !backdrop.classList.contains("show") || document.hidden) return;
   if(timerInterval) clearInterval(timerInterval);
 
   timerUI.style.display = "block";
@@ -2634,7 +2802,9 @@ function startTimer(durationSeconds) {
   timerTotal = durationSeconds;
   timerLeft = durationSeconds;
   timerState = "running";
+  btnStartTimer.disabled = false;
   _midplayAnnounced = false;
+  _missionCoachFired = new Set();
   setTimerButtonLabel();
 
   // UI baseline
@@ -2649,7 +2819,7 @@ function startTimer(durationSeconds) {
 
   timerEndAt = Date.now() + (timerLeft * 1000);
 
-  clickSound("click");
+  if(_openMissionId !== 13) clickSound("click");
   requestWakeLock(); // keep the screen on while the kid plays (released on end/reset/close)
 
   // Update text smoothly (and accurate if tab is throttled)
@@ -2667,6 +2837,8 @@ function pauseTimer(){
   timerInterval = null;
 
   timerState = "paused";
+  releaseWakeLock();
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
   setTimerButtonLabel();
 
   // Freeze bar where it is now
@@ -2675,7 +2847,7 @@ function pauseTimer(){
   timerFill.style.width = Math.max(0, Math.min(100, pct)) + "%";
 
   timerDisplay.textContent = timerLeft + "s";
-  clickSound("click");
+  if(_openMissionId !== 13) clickSound("click");
 }
 
 function resumeTimer(){
@@ -2698,7 +2870,8 @@ function resumeTimer(){
 
   timerEndAt = Date.now() + (timerLeft * 1000);
 
-  clickSound("click");
+  if(_openMissionId !== 13) clickSound("click");
+  requestWakeLock();
 
   timerInterval = setInterval(updateTimerTick, 200);
 }
@@ -2769,6 +2942,11 @@ function openMission(id){
       ? document.activeElement
       : btnDailyPlay;
   }
+  // Opening a new mission invalidates narration/countdown callbacks owned by
+  // the previous sheet before the new mission id becomes current.
+  stopMissionCoach();
+  stopLeoSpeakSteps();
+  cancelTimerCountdown();
   _openMissionId = id;
   // first_mission_start — once per session, the moment any mission view opens,
   // tagged with where it came from (hub vs 2D). Parity with the audit's A/B
@@ -2818,6 +2996,7 @@ function openMission(id){
   }
 
   resetTimerUI(); // Ensure timer is reset when opening
+  prepareMissionCoach(ms);
 
   // Story banner — pack temasından hayal katmanı
   // Görev kurallarını DEĞIŞTIRMEZ; sadece sahneyi kurar
@@ -2870,9 +3049,8 @@ function openMission(id){
   if(leoSpeakBtn) leoSpeakBtn.onclick = ()=> toggleLeoSpeakSteps(ms);
   maybeShowLeoSpeakHint(leoSpeakBtn);
 
-  // §3.1 — 3–5 band: read the mission aloud on open. Called here (synchronous
-  // within openMission, which runs in the tap handler) so iOS permits speech.
-  if(currentDifficulty === "Easy" && ttsAuto()) autoReadMission(ms);
+  // Narration begins from the explicit Start or Leo button, so the child does
+  // not hear the first rule twice and the timer never runs under speech.
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
   mWin.innerHTML = `<b><i class="jic jic-award" aria-hidden="true"></i> Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
@@ -2942,7 +3120,7 @@ function openMission(id){
       window.JumviRedLight.start({
         duration: seconds,
         speed: "normal",
-        sound: true,
+        sound: !!soundOn,
         onEnd: ()=>{ trackEvent("RedLight Caller Ended", { mission: ms.id }); }
       });
     };
@@ -2956,6 +3134,25 @@ function openMission(id){
     }
     btnStartTimer.onclick = () => {
       if(timerHoldResetArmed) return; // ignore click right after a hold-reset
+      if(timerState === "idle" && _missionNarrationPending){
+        if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
+        _missionNarrationWatchdog = null;
+        _missionNarrationPending = false;
+        _missionNarrationToken++;
+        if("speechSynthesis" in window) window.speechSynthesis.cancel();
+        btnStartTimer.disabled = true;
+        btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Get ready…';
+        showCountdownThenStart(seconds);
+        return;
+      }
+      if(timerState === "idle" && _missionCoachEnabled && _missionNarratedId !== ms.id){
+        const narrationStarted = playMissionNarration(ms, ()=>showCountdownThenStart(seconds));
+        if(narrationStarted){
+          btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Skip & Play';
+          btnStartTimer.setAttribute("aria-label", "Skip narration and start timer");
+        }
+        return;
+      }
       toggleTimer(seconds); // tap: start / pause / resume
     };
   }
@@ -3053,6 +3250,7 @@ function closeMission(){
   }
   resetTimerUI(); // Stop + reset timer on close
   stopLeoSpeakSteps(); // clears the speaking state + cancels speech
+  stopMissionCoach();
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
   // Score tracker temizle
   toggleScoreTracker(false);
@@ -3062,6 +3260,7 @@ function closeMission(){
   backdrop.setAttribute("aria-hidden", "true");
   backdrop.inert = true;
   backdrop.setAttribute("inert", "");
+  _openMissionId = 0;
   document.body.classList.remove("modalOpen");
   if(wasHubMission){
     setHubDialogIsolation(false);
@@ -4404,12 +4603,15 @@ const PLAYER_COUNT_KEY = "jumvi_player_count_v1";
  * fix the tip — do not remove the option: the six reasons are a frozen enum
  * shared with src/worker.js and the weekly snapshot. */
 const HELP_TIPS = {
-  ball_stuck:          "Stuck deep in the velcro? Peel it from one edge instead of pulling straight out.",
-  ball_hard_to_remove: "New sets grip hardest. Peel from the edge — after a few games it loosens up.",
-  strap_uncomfortable: "Loosen the strap one notch. The paddle should sit snug on your hand, not tight.",
-  need_more_space:     "Stand closer — 1–2 m — and toss underhand. Indoors, a hallway is plenty.",
+  ball_stuck:          "Peel the ball slowly from one edge instead of pulling straight up.",
+  ball_hard_to_remove: "Peel it slowly from one edge. Younger players may need a grown-up's help — don't yank or twist the paddle.",
+  strap_uncomfortable: "Loosen it first, slide your hand under the strap, then make it snug — not tight. The strap is for hands only.",
+  need_more_space:     "Clear breakables, stand closer, and use soft underhand tosses below face level.",
   instructions_unclear:"Tap the speaker icon to hear the steps read aloud, or open “More tips & safety”.",
-  mission_too_hard:    "Move a step closer and slow the throws down. Or tap “Next Mission” for an easier one.",
+  mission_too_hard:    "Move to 3–4 ft apart and use slow underhand tosses toward the center. Get one easy catch, then take one small step back.",
+};
+const HELP_ONLY_TIPS = {
+  ball_wont_stick: "Use the blue catching face. Remove visible lint, grass, or sand with a soft, dry brush; let every piece dry fully; then move closer and aim a soft toss at the center.",
 };
 
 function setPlayerCountUI(n){
@@ -4453,16 +4655,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.querySelectorAll(".missionHelpOpt").forEach(b=>{
     b.addEventListener("click", ()=>{
       const reason = b.dataset.reason;
-      if(!HELP_REASONS.includes(reason)) return;
+      const helpOnly = b.dataset.helpOnly;
+      if(!HELP_REASONS.includes(reason) && !HELP_ONLY_TIPS[helpOnly]) return;
       if(tip){
-        tip.textContent = HELP_TIPS[reason] || "";
+        tip.textContent = HELP_ONLY_TIPS[helpOnly] || HELP_TIPS[reason] || "";
         tip.hidden = false;
       }
       document.querySelectorAll(".missionHelpOpt").forEach(o=> o.classList.toggle("active", o === b));
       clickSound("click");
       // Beacon 4/5 — fires per pick, not de-duped: a kid hitting the same
       // problem in three different missions is exactly the signal we want.
-      beacon("help_open", { reason: reason });
+      if(HELP_REASONS.includes(reason)) beacon("help_open", { reason: reason });
     });
   });
 });
@@ -4804,8 +5007,6 @@ const HUB3D_UNSUPPORTED_KEY = "jumvi_hub3d_unsupported_v1";
 function applyHub3dUnsupported(){
   const card = document.getElementById("advModeCard");
   if(card) card.style.display = "none";
-  const tab = document.getElementById("navTabHub3D");
-  if(tab) tab.style.display = "none";
 }
 let _hub3dEntrySource = "nav_tab"; // set by the entry handlers before switchTab("hub3d")
 
@@ -5170,10 +5371,34 @@ function fireHub3DExited(){
   trackEvent("Hub3D Exited", { duration: secs < 30 ? "<30s" : secs < 120 ? "30-120s" : secs < 300 ? "2-5m" : "5m+" });
 }
 window.addEventListener("pagehide", fireHub3DExited);
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden){
+    cancelTimerCountdown();
+    if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
+    _missionNarrationWatchdog = null;
+    _missionNarrationToken++;
+    _missionNarrationPending = false;
+    _missionNarratedId = 0;
+    if(_modeNarrationWatchdog) clearTimeout(_modeNarrationWatchdog);
+    _modeNarrationWatchdog = null;
+    _modeNarrationToken++;
+    _modeNarrationPending = false;
+    updateModeStartLabel();
+    if(timerState === "idle") setTimerButtonLabel();
+    if(timerState === "running") pauseTimer();
+    if(_modeTimerState === "running") pauseModeTimer();
+    try{
+      if(window.JumviRedLight && typeof window.JumviRedLight.isActive === "function" && window.JumviRedLight.isActive()){
+        window.JumviRedLight.stop();
+      }
+    }catch(_){ }
+    if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  }
+});
 
 function switchTab(tabName){
   if(!tabName) tabName = "today";
-  const validTabs = ["today","browse","stats","profile"];
+  const validTabs = ["today","browse","modes","stats","profile"];
   if(isHub3DEnabled()) validTabs.push("hub3d");
   if(!validTabs.includes(tabName)) tabName = "today";
 
@@ -5194,7 +5419,7 @@ function switchTab(tabName){
   if(tabName === "hub3d") showHub3D(); else hideHub3D();
 
   // Body class — mission list ve footer görünürlüğü için
-  document.body.classList.remove("tab-today","tab-browse","tab-stats","tab-profile","tab-hub3d");
+  document.body.classList.remove("tab-today","tab-browse","tab-modes","tab-stats","tab-profile","tab-hub3d");
   document.body.classList.add("tab-" + tabName);
 
   // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
@@ -5216,6 +5441,7 @@ function switchTab(tabName){
         renderMissionPath();
       }
     }
+    if(tabName === "modes" && typeof renderPlayModes === "function") renderPlayModes();
   } catch(e) {
     console.warn("Tab render error:", e);
   }
@@ -5247,6 +5473,305 @@ function renderProfileTab(){
   }
   // Daily reminder kaldirildi
 }
+
+/** =======================
+ * Repeatable Play Modes
+ * Separate data, separate dialog, and intentionally no writes to `done`,
+ * badges, streaks, certificates, or the mission analytics funnel.
+ * ======================= */
+let _playModeGroup = "solo";
+let _openPlayMode = null;
+let _modeReturnFocus = null;
+let _modeTimerInterval = null;
+let _modeTimerState = "idle";
+let _modeTimerLeft = 0;
+let _modeTimerEndAt = 0;
+let _modeCoachOn = true;
+let _modeCueFired = new Set();
+let _modeNarrationPending = false;
+let _modeNarrationToken = 0;
+let _modeNarrationWatchdog = null;
+
+function playModeLocale(){ return window.__JUMVI_LOCALE === "tr-TR" ? "tr" : "en"; }
+function modeText(value){
+  if(value == null) return "";
+  if(typeof value === "string") return value;
+  const locale = playModeLocale();
+  return value[locale] || value.en || value.tr || "";
+}
+function getPlayModes(group=_playModeGroup){
+  const all = Array.isArray(window.JUMVI_PLAY_MODES) ? window.JUMVI_PLAY_MODES : [];
+  return all.filter(mode=>mode && mode.group === group);
+}
+function renderPlayModes(){
+  const grid = document.getElementById("modeGrid");
+  if(!grid) return;
+  document.querySelectorAll(".modeFilter").forEach(btn=>{
+    const active = btn.dataset.modeGroup === _playModeGroup;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+  const modes = getPlayModes();
+  grid.innerHTML = modes.map(mode=>`
+    <button class="modeCard" type="button" data-mode-id="${escapeHtml(mode.id)}" aria-label="${escapeHtml(modeText(mode.title))}">
+      <span class="modeCardVisual" aria-hidden="true">
+        <img class="modeCardPaddle" src="assets/equipment/jumvi-paddle-real.webp" alt="" width="96" height="128" loading="lazy" decoding="async">
+        <img class="modeCardBall" src="assets/equipment/jumvi-ball-real.webp" alt="" width="48" height="48" loading="lazy" decoding="async">
+      </span>
+      <span class="modeCardBody">
+        <span class="modeCardKicker">REPEAT ANYTIME</span>
+        <span class="modeCardTitle">${escapeHtml(modeText(mode.title))}</span>
+        <span class="modeCardMeta">${escapeHtml(modeText(mode.players.label))} · ${escapeHtml(modeGearLabel(mode))} · ${escapeHtml(modeDurationLabel(mode.seconds))}</span>
+        <span class="modeCardGoal">${escapeHtml(modeText(mode.goal))}</span>
+      </span>
+      <span class="modeCardArrow" aria-hidden="true">›</span>
+    </button>`).join("");
+  grid.querySelectorAll(".modeCard").forEach(card=>{
+    card.addEventListener("click", ()=>{
+      const mode = (window.JUMVI_PLAY_MODES || []).find(x=>x.id === card.dataset.modeId);
+      if(mode){ clickSound("click"); openPlayMode(mode, card); }
+    });
+  });
+}
+
+function modeGearLabel(mode){
+  if(mode.gear && mode.gear.label) return modeText(mode.gear.label);
+  const p = Number(mode.gear && mode.gear.paddles || 0);
+  const b = Number(mode.gear && mode.gear.balls || 0);
+  if(playModeLocale() === "tr") return `${p} paddle + ${b} top`;
+  return `${p} paddle${p===1?"":"s"} + ${b} ball${b===1?"":"s"}`;
+}
+function modeDurationLabel(seconds){ return playModeLocale() === "tr" ? `${seconds}sn` : `${seconds}s`; }
+function updateModeStartLabel(){
+  const btn = document.getElementById("btnModeStart");
+  if(!btn) return;
+  const icon = _modeTimerState === "running" ? "jic-pause" : "jic-play";
+  const label = _modeTimerState === "running" ? "Pause" : (_modeTimerState === "paused" ? "Resume" : "Start");
+  btn.innerHTML = `<i class="jic ${icon}" aria-hidden="true"></i> ${label}`;
+}
+function cancelModeTimer({reset=true}={}){
+  if(_modeNarrationWatchdog) clearTimeout(_modeNarrationWatchdog);
+  _modeNarrationWatchdog = null;
+  if(_modeTimerInterval) clearInterval(_modeTimerInterval);
+  _modeTimerInterval = null;
+  _modeNarrationPending = false;
+  _modeNarrationToken++;
+  releaseWakeLock();
+  if(reset){
+    _modeTimerState = "idle";
+    _modeTimerLeft = _openPlayMode ? _openPlayMode.seconds : 0;
+    _modeTimerEndAt = 0;
+    _modeCueFired = new Set();
+    const timer = document.getElementById("modeTimer");
+    const display = document.getElementById("modeTimerDisplay");
+    const fill = document.getElementById("modeTimerFill");
+    if(timer) timer.hidden = true;
+    if(display) display.textContent = modeDurationLabel(_modeTimerLeft || 0);
+    if(fill){ fill.style.transition = "none"; fill.style.width = "100%"; }
+  }
+  updateModeStartLabel();
+}
+function speakModeCue(value){
+  const text = modeText(value);
+  if(_modeCoachOn && text && !document.hidden) coachSpeak(text, { rate:0.96, pitch:1.02 });
+}
+function modeElapsedSeconds(mode){ return Math.max(0, mode.seconds - _modeTimerLeft); }
+function tickModeTimer(){
+  if(_modeTimerState !== "running" || !_openPlayMode) return;
+  const mode = _openPlayMode;
+  _modeTimerLeft = Math.max(0, Math.ceil((_modeTimerEndAt - Date.now()) / 1000));
+  const display = document.getElementById("modeTimerDisplay");
+  if(display) display.textContent = _modeTimerLeft > 0 ? modeDurationLabel(_modeTimerLeft) : (playModeLocale() === "tr" ? "Süre doldu!" : "Time's up!");
+  const elapsed = modeElapsedSeconds(mode);
+  const voice = mode.voice || {};
+  const cues = [];
+  if(voice.mid && Number.isFinite(Number(voice.mid.at))) cues.push({ key:"mid", at:Number(voice.mid.at), text:voice.mid.text });
+  if(voice.final && Number.isFinite(Number(voice.final.remaining))) cues.push({ key:"final", at:mode.seconds - Number(voice.final.remaining), text:voice.final.text });
+  (voice.orchestratedCues || []).forEach((cue,index)=>cues.push({ key:`cue-${index}`, at:Number(cue.at), text:cue.text }));
+  cues.sort((a,b)=>a.at-b.at).forEach(cue=>{
+    if(_modeCueFired.has(cue.key) || elapsed < cue.at) return;
+    _modeCueFired.add(cue.key);
+    speakModeCue(cue.text);
+  });
+  if(_modeTimerLeft <= 0){
+    if(_modeTimerInterval) clearInterval(_modeTimerInterval);
+    _modeTimerInterval = null;
+    _modeTimerState = "idle";
+    releaseWakeLock();
+    updateModeStartLabel();
+  }
+}
+function startModeTimer(){
+  const modeBackdropEl = document.getElementById("modeBackdrop");
+  if(!_openPlayMode || !modeBackdropEl?.classList.contains("show") || document.hidden) return;
+  const mode = _openPlayMode;
+  const timer = document.getElementById("modeTimer");
+  const fill = document.getElementById("modeTimerFill");
+  if(timer) timer.hidden = false;
+  _modeTimerState = "running";
+  _modeNarrationPending = false;
+  _modeTimerLeft = mode.seconds;
+  _modeTimerEndAt = Date.now() + mode.seconds * 1000;
+  _modeCueFired = new Set();
+  if(fill){
+    fill.style.transition = "none";
+    fill.style.width = "100%";
+    void fill.offsetWidth;
+    fill.style.transition = `width ${mode.seconds}s linear`;
+    fill.style.width = "0%";
+  }
+  updateModeStartLabel();
+  requestWakeLock();
+  _modeTimerInterval = setInterval(tickModeTimer, 200);
+}
+function narrateModeThenStart(mode){
+  const intro = modeText(mode && mode.voice && mode.voice.intro);
+  if(!_modeCoachOn || !soundOn || !intro || !("speechSynthesis" in window)){
+    startModeTimer();
+    return;
+  }
+  const btn = document.getElementById("btnModeStart");
+  if(btn) btn.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Skip & Play';
+  _modeNarrationPending = true;
+  const token = ++_modeNarrationToken;
+  let finished = false;
+  const doneOnce = ()=>{
+    if(finished || token !== _modeNarrationToken) return;
+    finished = true;
+    _modeNarrationPending = false;
+    startModeTimer();
+  };
+  _modeNarrationWatchdog = setTimeout(doneOnce, Math.min(18000, Math.max(8000, intro.length * 75)));
+  try{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(intro);
+    utter.lang = "en-US"; utter.rate = 0.96; utter.pitch = 1.02; utter.volume = 1;
+    if(kidVoice) utter.voice = kidVoice;
+    utter.onend = ()=>{ clearTimeout(_modeNarrationWatchdog); _modeNarrationWatchdog = null; doneOnce(); };
+    utter.onerror = ()=>{ clearTimeout(_modeNarrationWatchdog); _modeNarrationWatchdog = null; doneOnce(); };
+    window.speechSynthesis.speak(utter);
+  }catch(_){ clearTimeout(_modeNarrationWatchdog); _modeNarrationWatchdog = null; doneOnce(); }
+}
+function pauseModeTimer(){
+  if(_modeTimerState !== "running") return;
+  _modeTimerLeft = Math.max(0, Math.ceil((_modeTimerEndAt - Date.now()) / 1000));
+  if(_modeTimerInterval) clearInterval(_modeTimerInterval);
+  _modeTimerInterval = null;
+  _modeTimerState = "paused";
+  releaseWakeLock();
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  const fill = document.getElementById("modeTimerFill");
+  if(fill && _openPlayMode){
+    fill.style.transition = "none";
+    fill.style.width = `${Math.max(0,(_modeTimerLeft/_openPlayMode.seconds)*100)}%`;
+  }
+  updateModeStartLabel();
+}
+function resumeModeTimer(){
+  if(_modeTimerState !== "paused" || !_openPlayMode) return;
+  _modeTimerState = "running";
+  _modeTimerEndAt = Date.now() + _modeTimerLeft * 1000;
+  const fill = document.getElementById("modeTimerFill");
+  if(fill){
+    fill.style.transition = "none";
+    fill.style.width = `${Math.max(0,(_modeTimerLeft/_openPlayMode.seconds)*100)}%`;
+    void fill.offsetWidth;
+    fill.style.transition = `width ${_modeTimerLeft}s linear`;
+    fill.style.width = "0%";
+  }
+  updateModeStartLabel();
+  requestWakeLock();
+  _modeTimerInterval = setInterval(tickModeTimer, 200);
+}
+function openPlayMode(mode, returnFocus){
+  const backdropEl = document.getElementById("modeBackdrop");
+  if(!backdropEl || !mode) return;
+  _openPlayMode = mode;
+  _modeReturnFocus = returnFocus || document.activeElement;
+  _modeCoachOn = !!soundOn;
+  document.getElementById("modeTitle").textContent = modeText(mode.title);
+  document.getElementById("modeMeta").innerHTML = `<span class="tag">${escapeHtml(modeText(mode.players.label))}</span><span class="tag">${escapeHtml(modeText(mode.difficulty))}</span><span class="tag">${escapeHtml(modeDurationLabel(mode.seconds))}</span>`;
+  document.getElementById("modeGearLine").innerHTML = `<span class="modeGearChip">${escapeHtml(modeGearLabel(mode))}</span><span class="modeGearChip">${escapeHtml(modeText(mode.space))}</span>`;
+  document.getElementById("modeSteps").innerHTML = (mode.steps || []).map(step=>`<li>${escapeHtml(modeText(step))}</li>`).join("");
+  document.getElementById("modeGoal").textContent = modeText(mode.goal);
+  document.getElementById("modeSafety").textContent = modeText(mode.safety);
+  const listen = document.getElementById("btnModeListen");
+  if(listen){ listen.classList.toggle("active", _modeCoachOn); listen.setAttribute("aria-pressed", _modeCoachOn ? "true" : "false"); }
+  cancelModeTimer({reset:true});
+  backdropEl.inert = false;
+  backdropEl.removeAttribute("inert");
+  backdropEl.setAttribute("aria-hidden","false");
+  backdropEl.classList.add("show");
+  document.body.classList.add("modalOpen");
+  setMissionBackgroundIsolation(true);
+  requestAnimationFrame(()=>document.getElementById("btnModeClose")?.focus({preventScroll:true}));
+}
+function closePlayMode(){
+  const backdropEl = document.getElementById("modeBackdrop");
+  cancelModeTimer({reset:true});
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  if(backdropEl){
+    backdropEl.classList.remove("show");
+    backdropEl.setAttribute("aria-hidden","true");
+    backdropEl.inert = true;
+    backdropEl.setAttribute("inert","");
+  }
+  document.body.classList.remove("modalOpen");
+  setMissionBackgroundIsolation(false);
+  _openPlayMode = null;
+  const focus = _modeReturnFocus;
+  _modeReturnFocus = null;
+  if(focus && focus.isConnected) requestAnimationFrame(()=>focus.focus({preventScroll:true}));
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  document.querySelectorAll(".modeFilter").forEach(btn=>btn.addEventListener("click", ()=>{
+    _playModeGroup = btn.dataset.modeGroup || "solo";
+    clickSound("click");
+    renderPlayModes();
+  }));
+  document.getElementById("btnModeClose")?.addEventListener("click", ()=>{ clickSound("click"); closePlayMode(); });
+  document.getElementById("modeBackdrop")?.addEventListener("click", event=>{ if(event.target === event.currentTarget) closePlayMode(); });
+  document.getElementById("btnModeListen")?.addEventListener("click", ()=>{
+    if(!soundOn){
+      _modeCoachOn = false;
+      const btn = document.getElementById("btnModeListen");
+      btn.classList.remove("active");
+      btn.setAttribute("aria-pressed", "false");
+      showToast("Sound is off — turn it on in Settings.");
+      return;
+    }
+    _modeCoachOn = !_modeCoachOn;
+    const btn = document.getElementById("btnModeListen");
+    btn.classList.toggle("active", _modeCoachOn);
+    btn.setAttribute("aria-pressed", _modeCoachOn ? "true" : "false");
+    // This control enables or disables coaching. The short intro belongs to
+    // Start, so a child never hears the same directions twice in succession.
+    if(!_modeCoachOn && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  });
+  document.getElementById("btnModeStart")?.addEventListener("click", ()=>{
+    clickSound("click");
+    if(_modeNarrationPending){
+      _modeNarrationPending = false;
+      _modeNarrationToken++;
+      if("speechSynthesis" in window) window.speechSynthesis.cancel();
+      startModeTimer();
+      return;
+    }
+    if(_modeTimerState === "idle") narrateModeThenStart(_openPlayMode);
+    else if(_modeTimerState === "running") pauseModeTimer();
+    else resumeModeTimer();
+  });
+  document.getElementById("btnModeAnother")?.addEventListener("click", ()=>{ clickSound("click"); closePlayMode(); });
+  document.getElementById("modeBackdrop")?.addEventListener("keydown", event=>handleDialogKeys(event, document.getElementById("modeBackdrop"), closePlayMode));
+  document.getElementById("btnMoreProductHelp")?.addEventListener("click", event=>{
+    event.preventDefault();
+    closeMission();
+    switchTab("profile");
+    const care = document.querySelector("#tabProfile .productCareSection");
+    if(care){ care.open = true; setTimeout(()=>care.scrollIntoView({block:"start",behavior:"smooth"}), 80); }
+  });
+});
 
 
 /** =======================
@@ -5345,10 +5870,8 @@ function initBottomNav(){
     beaconOnce("hub3d_shown", "hub3d", { step: "shown" });
   }
 
-  // Adventure Mode entry card (top of Today) — the discovery path for the
-  // hub: one tap flips the opt-in flag on permanently, reveals the nav tab,
-  // and jumps straight into the 3D Hub. Until the card is tapped, the bottom
-  // nav stays exactly as it always was.
+  // Adventure Mode entry card stays the one clear path into the optional 3D
+  // island. It no longer adds a sixth navigation tab on small phones.
   const advCard = document.getElementById("advModeCard");
   if(advCard){
     advCard.onclick = ()=>{

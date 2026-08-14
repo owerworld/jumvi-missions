@@ -3983,6 +3983,7 @@ html.theme--dark .storyBanner{ border-color: rgba(255,255,255,0.08); }
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+.timerCountdownLabel span{ display:block; margin-top:8px; font-size:13px; opacity:.78; }
 @media (prefers-reduced-motion: reduce){
   .timerCountdownNum.pop{ animation:none !important; }
 }
@@ -6702,6 +6703,7 @@ html.theme--dark .pathStep.done .pathStepNode::after{
    Her tab içinde 16px gap (mobil), 20px (geniş) */
 #tabToday,
 #tabBrowse,
+#tabModes,
 #tabStats,
 #tabProfile{
   display: flex !important;
@@ -6709,14 +6711,24 @@ html.theme--dark .pathStep.done .pathStepNode::after{
   gap: var(--sp-4) !important;
 }
 #tabBrowse > *,
+#tabModes > *,
 #tabStats > *,
 #tabProfile > *{ margin: 0 !important; }
 @media (min-width: 521px){
   #tabToday,
   #tabBrowse,
+  #tabModes,
   #tabStats,
   #tabProfile{ gap: var(--sp-5) !important; }
 }
+
+/* Five primary tabs: whichever tab body class is active is the only panel
+   exposed. The legacy four-tab selectors above predate Play Modes. */
+body.tab-today .tabPanel:not(#tabToday),
+body.tab-browse .tabPanel:not(#tabBrowse),
+body.tab-modes .tabPanel:not(#tabModes),
+body.tab-stats .tabPanel:not(#tabStats),
+body.tab-profile .tabPanel:not(#tabProfile){ display:none !important; }
 
 /* === TYPOGRAPHY HIERARCHY === */
 .tabHeading{
@@ -7881,23 +7893,44 @@ html.theme--light .hero{
   font-size:13px;
   white-space:nowrap;
 }
-.welcomePaddlePair{
+.welcomeProductVisual{
   position:relative;
   display:block;
-  width:62px;
-  height:48px;
+  flex:none;
+  width:50px;
+  height:50px;
 }
-.welcomePaddlePair img{
-  position:absolute;
-  top:1px;
-  width:46px;
-  height:46px;
+.welcomeProductVisual img{
+  width:100%;
+  height:100%;
   object-fit:contain;
+  filter:drop-shadow(0 3px 5px rgba(15,23,42,.14));
 }
-.welcomePaddlePair img:first-child{ left:0; transform:rotate(-8deg); }
-.welcomePaddlePair img:last-child{ right:0; transform:rotate(8deg); }
-.welcomeBall{ width:42px; height:42px; object-fit:contain; }
+.welcomeProductBall{ width:44px; height:44px; }
+.welcomeGearCount{
+  position:absolute;
+  right:-6px;
+  bottom:-3px;
+  min-width:25px;
+  padding:2px 5px;
+  border:2px solid #fff;
+  border-radius:999px;
+  background:var(--brand-blue-deep);
+  color:#fff;
+  font-size:11px;
+  font-weight:900;
+  line-height:1.2;
+  text-align:center;
+  box-shadow:0 2px 6px rgba(15,23,42,.18);
+}
 .welcomeGearPlus{ color:#93A4B7; font-size:20px; font-weight:800; }
+.welcomeFirstGame{
+  margin-top:-3px;
+  color:#526477;
+  font-size:11.5px;
+  font-weight:700;
+  line-height:1.25;
+}
 .welcomeNote{
   color:#526477;
   opacity:1;
@@ -8065,6 +8098,40 @@ html.theme--light .certBox{
 .productCareSection[open]{ padding-bottom:12px; }
 .productCareSummary{ min-height:48px; display:flex; align-items:center; gap:8px; }
 .productCareA{ color:#526477; }
+.productCareBody{ display:flex; flex-direction:column; gap:7px; }
+.productHelpItem{
+  overflow:hidden;
+  border:1px solid #DCE6EF;
+  border-radius:12px;
+  background:#F8FAFC;
+}
+.productHelpItem summary{
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 12px;
+  color:#26364A;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  list-style:none;
+}
+.productHelpItem summary::-webkit-details-marker{ display:none; }
+.productHelpItem summary::after{ content:'+'; color:var(--brand-blue-deep); font-size:19px; line-height:1; }
+.productHelpItem[open] summary::after{ content:'−'; }
+.productHelpItem p{
+  margin:0;
+  padding:0 12px 12px;
+  color:#526477;
+  font-size:13px;
+  font-weight:600;
+  line-height:1.45;
+}
+html.theme--dark .productHelpItem{ background:#172338; border-color:rgba(255,255,255,.11); }
+html.theme--dark .productHelpItem summary{ color:#E2E8F0; }
+html.theme--dark .productHelpItem p{ color:#B9C7D8; }
 .profileFooterInfo{ box-shadow:none !important; }
 .footer{ display:none !important; }
 
@@ -8131,6 +8198,217 @@ html.theme--light .certBox{
   border:1px solid #6FA500 !important;
   box-shadow:0 5px 14px rgba(111,165,0,.20) !important;
 }
+
+/* Repeatable Play Modes — deliberately separate from mission progress. */
+#tabModes{ gap:12px !important; }
+.modePlayerPicker{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+}
+.modeFilter{
+  min-height:48px;
+  padding:8px 5px;
+  border:1.5px solid #CFE0EE;
+  border-radius:13px;
+  background:#fff;
+  color:#4A5D70;
+  font-size:12.5px;
+  font-weight:800;
+  line-height:1.15;
+}
+.modeFilter.active{
+  border-color:var(--brand-blue-deep);
+  background:#EAF5FF;
+  color:#174F80;
+  box-shadow:0 0 0 2px rgba(29,111,181,.08);
+}
+.modeSafetyStrip{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  margin:0;
+  padding:10px 11px;
+  border:1px solid #F0D39E;
+  border-radius:13px;
+  background:#FFF8EC;
+  color:#714818;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.4;
+}
+.modeSafetyStrip i{ flex:none; font-size:19px; }
+.modeGrid{ display:grid; gap:10px; }
+.modeCard{
+  width:100%;
+  min-height:112px;
+  display:grid;
+  grid-template-columns:70px minmax(0,1fr) 22px;
+  align-items:center;
+  gap:11px;
+  padding:12px;
+  border:1px solid #DCE6EF;
+  border-radius:17px;
+  background:#fff;
+  color:#17243A;
+  text-align:left;
+  box-shadow:0 4px 12px rgba(15,23,42,.05);
+}
+.modeCard:active{ transform:scale(.985); }
+.modeCardVisual{
+  position:relative;
+  width:70px;
+  height:74px;
+}
+.modeCardPaddle{ width:66px; height:72px; object-fit:contain; filter:drop-shadow(0 4px 5px rgba(15,23,42,.13)); }
+.modeCardBall{ position:absolute; right:-2px; bottom:1px; width:30px; height:30px; object-fit:contain; filter:drop-shadow(0 2px 3px rgba(15,23,42,.16)); }
+.modeCardBody{ min-width:0; display:flex; flex-direction:column; gap:4px; }
+.modeCardKicker{ color:#2F77AA; font-size:10px; font-weight:900; letter-spacing:.55px; }
+.modeCardTitle{ font-family:var(--font-display); font-size:18px; font-weight:700; line-height:1.1; }
+.modeCardMeta{ color:#526477; font-size:12px; font-weight:700; line-height:1.3; }
+.modeCardGoal{ overflow:hidden; color:#34485C; font-size:12.5px; font-weight:600; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.modeCardArrow{ color:var(--brand-blue-deep); font-size:24px; font-weight:800; }
+.modeRepeatLabel{ margin-bottom:3px; color:#2F77AA; font-size:10px; font-weight:900; letter-spacing:.6px; }
+.modeProductHero{
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  margin:-4px 0 6px;
+  border:1px solid #DCE6EF;
+  border-radius:16px;
+  background:linear-gradient(145deg,#EEF8FF,#F8FBFD);
+  overflow:hidden;
+}
+.modeProductHero img:first-child{ width:118px; height:118px; object-fit:contain; transform:rotate(-5deg); }
+.modeProductHero img:last-child{ width:70px; height:70px; object-fit:contain; margin-left:-12px; filter:drop-shadow(0 4px 6px rgba(15,23,42,.17)); }
+.modeGearLine{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:10px;
+}
+.modeGearChip{
+  padding:6px 9px;
+  border:1px solid #D4E3EF;
+  border-radius:999px;
+  background:#F5F9FC;
+  color:#40566C;
+  font-size:12px;
+  font-weight:800;
+}
+.modeSheet .kvWin > div{ margin-top:8px; }
+.modeCoachChoice{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:10px 0;
+  padding:10px;
+  border:1px solid #CFE2F4;
+  border-radius:13px;
+  background:#F1F8FE;
+}
+.modeCoachChoice span{ color:#526477; font-size:11.5px; font-weight:650; line-height:1.3; }
+.modeListenBtn{
+  flex:none;
+  min-height:44px;
+  padding:9px 11px;
+  border:1px solid #8CBDE1;
+  border-radius:11px;
+  background:#fff;
+  color:#174F80;
+  font-size:12px;
+  font-weight:850;
+}
+.modeListenBtn.active{ background:#174F80; color:#fff; }
+.modeTimer{ margin:10px 0; padding:12px; border-radius:14px; background:#F6FAFD; text-align:center; }
+.modeTimer[hidden]{ display:none; }
+.modeTimer strong{ display:block; margin-bottom:7px; color:#174F80; font-size:28px; font-variant-numeric:tabular-nums; }
+.modeTimerBar{ height:8px; overflow:hidden; border-radius:999px; background:#DCEAF4; }
+.modeTimerBar span{ display:block; width:100%; height:100%; border-radius:inherit; background:var(--brand-blue); transform-origin:left; }
+.modeActions #btnModeStart{ min-height:52px; }
+.modeActions{ padding-bottom:max(14px,env(safe-area-inset-bottom)); }
+.modeBackdrop.show .modeSheet{
+  height:96vh;
+  height:min(96svh,780px);
+  max-height:calc(100svh - 10px) !important;
+  display:flex !important;
+  flex-direction:column !important;
+  overflow:hidden !important;
+}
+.modeSheet > .sheetHandle,
+.modeSheet > .sheetTop{ flex:0 0 auto; }
+.modeSheet > .modeSheetBody{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto !important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:12px;
+}
+.modeSheet > .modeActions{
+  flex:0 0 auto;
+  margin:0;
+  padding-top:9px;
+  padding-bottom:max(12px,env(safe-area-inset-bottom));
+  border-top:1px solid #DDE7EF;
+  background:linear-gradient(180deg,rgba(255,255,255,.94),#F7FAFC);
+}
+.strapFitPhoto{
+  float:left;
+  width:82px;
+  height:88px;
+  margin:10px 12px 4px 0;
+  object-fit:cover;
+  border:1px solid #D9E4EC;
+  border-radius:12px;
+  background:#F4F7F9;
+}
+.productHelpItem[open]::after{ content:""; display:block; clear:both; }
+.missionHelpMore{
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--brand-blue-deep);
+  font-size:12.5px;
+  font-weight:800;
+  text-decoration:none;
+  /* This is a <button> so it cannot navigate (see index.html). Buttons do not
+     inherit font-family and carry a UA background/border, so the link
+     appearance has to be restated rather than assumed. */
+  width:100%;
+  background:none;
+  border:0;
+  padding:0;
+  font-family:inherit;
+  cursor:pointer;
+}
+.modeFilter:focus-visible,
+.modeCard:focus-visible,
+.modeListenBtn:focus-visible,
+.missionHelpTrigger:focus-visible,
+.missionHelpOpt:focus-visible,
+.missionHelpMore:focus-visible{
+  outline:3px solid #FFD23F;
+  outline-offset:2px;
+}
+html.theme--dark .modeFilter,
+html.theme--dark .modeCard,
+html.theme--dark .modeProductHero,
+html.theme--dark .modeCoachChoice,
+html.theme--dark .modeTimer{ background:#172338; border-color:rgba(255,255,255,.11); }
+html.theme--dark .modeFilter{ color:#B9C7D8; }
+html.theme--dark .modeFilter.active{ background:#153654; color:#D6ECFF; border-color:#60A5FA; }
+html.theme--dark .modeCardTitle{ color:#F3F7FA; }
+html.theme--dark .modeCardMeta,
+html.theme--dark .modeCardGoal,
+html.theme--dark .modeCoachChoice span{ color:#B9C7D8; }
+html.theme--dark .modeSafetyStrip{ background:#302613; color:#FFE0AC; border-color:#675128; }
+html.theme--dark .modeGearChip{ background:#1E2D43; border-color:#354A64; color:#D4E1EC; }
+html.theme--dark .modeSheet > .modeActions{ background:#172338; border-color:rgba(255,255,255,.11); }
+html.theme--dark .strapFitPhoto{ border-color:rgba(255,255,255,.13); background:#111A2B; }
 html.theme--dark .screenSmartCue{
   background:#142A42;
   border-color:#31506D;
@@ -8153,6 +8431,7 @@ body.modalOpen #soundToggle{
   visibility:hidden;
 }
 body.modalOpen #backdrop,
+body.modalOpen #modeBackdrop,
 body.modalOpen #badgeUnlockModal{
   visibility:visible;
 }
@@ -8225,11 +8504,24 @@ button, a, input, textarea, select, label{ touch-action:manipulation; }
   .welcomeBrandLine .welcomeMascot{ width:58px; }
   .welcomeTagline{ font-size:23px; }
   .welcomeGear{ min-height:56px; padding:5px 10px; gap:8px; }
-  .welcomePaddlePair{ width:56px; height:42px; }
-  .welcomePaddlePair img{ width:41px; height:41px; }
-  .welcomeBall{ width:38px; height:38px; }
-  .ageBtn{ min-height:72px; padding:5px 2px; }
+  .welcomeProductVisual{ width:43px; height:43px; }
+  .welcomeProductBall{ width:39px; height:39px; }
+  .welcomeGearItem{ gap:4px; font-size:11.5px; }
+  .welcomeGearCount{ right:-5px; min-width:23px; font-size:10px; }
+  .welcomeFirstGame{ font-size:10.5px; }
+  .welcomeAges{ min-width:0; }
+  .ageBtn{ min-width:0; min-height:74px; padding:5px 2px; }
   .ageBtn .ageArt{ width:36px; height:36px; }
+  .ageBtn span{
+    min-height:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    white-space:normal;
+    font-size:10.5px;
+    line-height:1.05;
+    text-align:center;
+  }
   .welcomeMissionCount{ font-size:11.5px; }
   .welcomeStart{ font-size:14px !important; letter-spacing:0; white-space:nowrap; }
   #tabToday .h1Leo{ width:40px; height:40px; }
@@ -8239,4 +8531,10 @@ button, a, input, textarea, select, label{ touch-action:manipulation; }
   .dailyIconBig .missionArt{ width:49px; height:49px; }
   .dailyBox.dailyBoxPromoted .dailyName{ font-size:19px !important; }
   .dailyContent{ margin-bottom:9px; }
+  .navTabLabel{ font-size:10px !important; }
+  .modeFilter{ min-height:44px; padding:6px 3px; font-size:11.5px; }
+  .modeCard{ grid-template-columns:60px minmax(0,1fr) 18px; min-height:104px; padding:10px; gap:9px; }
+  .modeCardVisual{ width:60px; height:66px; }
+  .modeCardPaddle{ width:57px; height:64px; }
+  .modeCardBall{ width:27px; height:27px; }
 }

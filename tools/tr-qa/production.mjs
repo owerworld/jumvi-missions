@@ -20,6 +20,15 @@ try {
 }
 
 const BASE = process.env.BASE || "http://localhost:8787";
+
+/* Read the cache generation from service-worker.js rather than pinning it.
+ * A pinned name turns every future CACHE_NAME bump into a wall of failures
+ * that look like broken caching but are only a stale test — which is exactly
+ * what happened on the Play Modes branch. */
+const CACHE = (await import("node:fs")).readFileSync(
+  new URL("../../service-worker.js", import.meta.url), "utf8"
+).match(/CACHE_NAME\s*=\s*"([^"]+)"/)[1];
+console.log(`service worker kuşağı: ${CACHE}`);
 let pass = 0, fail = 0;
 const ok = (l, c, d = "") => { c ? (pass++, console.log(`  ok   ${l}`)) : (fail++, console.log(`  FAIL ${l}${d ? "\n         " + d : ""}`)); };
 const head = (t) => console.log(`\n${t}`);
@@ -129,7 +138,7 @@ head("Service worker kuşak değişimi (eski cache temizliği)");
   await p.evaluate(() => navigator.serviceWorker.ready);
   await p.waitForTimeout(2000);
   const names = await p.evaluate(() => caches.keys());
-  ok("v182 cache açıldı", names.includes("jumvi-missions-v185"), JSON.stringify(names));
+  ok(`${CACHE} cache açıldı`, names.includes(CACHE), JSON.stringify(names));
   ok("v181 cache silindi (activate temizliği)", !names.includes("jumvi-missions-v181"), JSON.stringify(names));
   await ctx.close();
 }
@@ -144,15 +153,15 @@ for (const order of [["/", "/tr"], ["/tr", "/"]]) {
     await p.evaluate(() => navigator.serviceWorker.ready);
     await p.waitForTimeout(1400);
   }
-  const bodies = await p.evaluate(async () => {
-    const c = await caches.open("jumvi-missions-v185");
+  const bodies = await p.evaluate(async (NAME) => {
+    const c = await caches.open(NAME);
     const read = async (k) => {
       const r = await c.match(k);
       if (!r) return null;
       return ((await r.text()).match(/<html[^>]*lang=["']([a-z-]+)["']/i) || [, "?"])[1];
     };
     return { en: await read("/index.html"), tr: await read("/tr/index.html") };
-  });
+  }, CACHE);
   ok("cache'te / İngilizce", bodies.en === "en", `lang=${bodies.en}`);
   ok("cache'te /tr Türkçe", bodies.tr === "tr", `lang=${bodies.tr}`);
 
