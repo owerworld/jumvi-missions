@@ -3,7 +3,8 @@
 // No network / ElevenLabs dependency — pure static verification that:
 //   - mission 13 (Silent Mode) has no prerecorded path
 //   - every other mission 1..36 has exactly one prerecorded path
-//   - all four Red Light / Green Light cue keys exist
+//   - all four Red Light / Green Light cue keys and the 10 generic/hub cue
+//     keys exist
 //   - every mapped file actually exists on disk
 import fs from "node:fs";
 import path from "node:path";
@@ -46,7 +47,11 @@ if(coachLeo){
 // keys exist and gives us the exact filenames to check on disk below.
 const source = fs.readFileSync("coach-leo-audio.js", "utf8");
 const missionFiles = [...source.matchAll(/^\s*\d+:\s*"([^"]+\.mp3)"/gm)].map(m => m[1]);
-const CUE_KEYS = ["green", "keepPlaying", "red", "greatJob"];
+const CUE_KEYS = [
+  "green", "keepPlaying", "red", "greatJob",
+  "keepGoing", "eyesOnTheBall", "softAndSteady", "niceCatch", "stayInControl",
+  "switchCue", "tenSeconds", "timesUpGreatJob", "hubWelcome", "hubFindGate"
+];
 const cueFiles = CUE_KEYS.map(key => {
   const m = source.match(new RegExp(`\\b${key}:\\s*"([^"]+\\.mp3)"`));
   return m ? m[1] : null;
@@ -70,4 +75,4 @@ if(failures){
   console.log(`\n❌ ${failures} Coach Leo audio contract failure(s).`);
   process.exit(1);
 }
-console.log("\n✅ Every mission (except 13) and all 4 RLGL cues map to a real file; nothing else changed.");
+console.log("\n✅ Every mission (except 13) and all 14 cues (4 RLGL + 10 generic/hub) map to a real file; nothing else changed.");

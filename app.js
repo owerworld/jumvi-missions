@@ -2500,6 +2500,14 @@ function setTimerButtonLabel(){
   }
 }
 
+function speakTimesUpFallback(){
+  if(_currentScore > 0){
+    coachSpeak(`Time's up! You got ${_currentScore}!`);
+  } else {
+    coachSpeak("Time's up! Great job!");
+  }
+}
+
 function resetTimerUI() {
   cancelTimerCountdown();
   if(timerInterval) clearInterval(timerInterval);
@@ -2540,13 +2548,17 @@ function updateTimerTick(){
     // Hub flow: soft "come back" whistle from the hub's toy-like sound
     // palette (the hub registers this hook only while the 3D flag is on).
     try{ if(window._hubMissionFlow && window._hub3dComeBack) window._hub3dComeBack(); }catch(_){ }
-    // Coach: time's up announcement
+    // Coach: time's up announcement. Prefer the prerecorded cue — the score
+    // itself stays visible in the UI, so there's no need to speak the number
+    // through browser TTS just to preserve it. Falls back to the existing
+    // TTS lines (including the dynamic score) if the MP3 can't play.
     if(_openMissionId !== 13){
-      if(_currentScore > 0){
-        coachSpeak(`Time's up! You got ${_currentScore}!`);
-      } else {
-        coachSpeak("Time's up! Great job!");
-      }
+      // CoachLeoAudio itself doesn't gate on soundOn (same convention as
+      // playMissionNarration below) — the caller always has to.
+      const playedMp3 = soundOn && window.CoachLeoAudio && window.CoachLeoAudio.playCue("timesUpGreatJob", {
+        onError: speakTimesUpFallback
+      });
+      if(!playedMp3) speakTimesUpFallback();
     }
     if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
       markMissionDone(lastOpenedId, "auto");

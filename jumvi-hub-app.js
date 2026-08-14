@@ -283,9 +283,33 @@ export function initHub3D(opts) {
     b.style.cssText = 'position:absolute;top:calc(112px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:80%;background:#ffffff;padding:12px 20px;border-radius:20px;font-size:17px;font-weight:800;color:#2c3a4d;z-index:13;pointer-events:none;box-shadow:0 10px 26px rgba(18,38,66,0.26),0 2px 6px rgba(18,38,66,0.14),inset 0 1px 0 rgba(255,255,255,0.95);border:1px solid rgba(120,150,180,0.18);text-align:center;transition:opacity 350ms ease;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;';
     b.textContent = text;
     container.appendChild(b);
-    if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak(text); } catch (e) {} }
+    speakBubble(text);
     setTimeout(function () { b.style.opacity = '0'; setTimeout(function () { b.remove(); }, 380); }, ms);
     return b;
+  }
+
+  // Prefers the matching prerecorded Coach Leo cue over opts.coachSpeak's raw
+  // speechSynthesis; falls back to it verbatim on /tr (CoachLeoAudio's own
+  // locale gate) or if the MP3 fails to play, so /tr's current behavior and
+  // any bubble text not covered by a prerecorded cue are unaffected.
+  var HUB_CUE_BY_TEXT = {
+    "Welcome to my island! Tap the ground and I'll walk there!": "hubWelcome",
+    "Great job! Now find a glowing gate": "hubFindGate"
+  };
+  function speakBubble(text) {
+    var cueKey = HUB_CUE_BY_TEXT[text];
+    var fallback = function () {
+      if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak(text); } catch (e) {} }
+    };
+    // CoachLeoAudio doesn't gate on the sound setting itself — same
+    // convention as app.js's other callers, so this checks it explicitly.
+    var soundOn = typeof opts.isSoundOn === 'function' ? opts.isSoundOn() : true;
+    if (cueKey && soundOn && window.CoachLeoAudio) {
+      var started = window.CoachLeoAudio.playCue(cueKey, { onError: fallback });
+      if (!started) fallback();
+    } else {
+      fallback();
+    }
   }
   // First-ever entry: a DETERMINISTIC 1-2-3 card instead of a timed bubble.
   // A parent scanning the QR lands here going "what is this?" — a 4s bubble is
@@ -311,7 +335,7 @@ export function initHub3D(opts) {
       '<button type="button" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:16px;font-weight:900;min-height:46px;padding:0 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;font-family:inherit;">Let’s go!</button>';
     wrap.appendChild(card);
     container.appendChild(wrap);
-    if (typeof opts.coachSpeak === 'function') { try { opts.coachSpeak("Welcome to my island! Tap the ground and I'll walk there!"); } catch (e) {} }
+    speakBubble("Welcome to my island! Tap the ground and I'll walk there!");
     card.querySelector('button').addEventListener('click', function () {
       wrap.style.transition = 'opacity 250ms ease';
       wrap.style.opacity = '0';
