@@ -2599,12 +2599,16 @@ function coachSpeak(text, opts={}){
   if(!("speechSynthesis" in window)) return;
   try{
     window.speechSynthesis.cancel();
+    window.JumviMusic?.unduck(); // cancel() above may orphan a previous utterance's onend
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-US';
     u.rate = opts.rate || 0.96;
     u.pitch = opts.pitch || 1.02;
     u.volume = 1;
     if(typeof kidVoice !== "undefined" && kidVoice) u.voice = kidVoice;
+    u.onstart = ()=> window.JumviMusic?.duck();
+    u.onend = ()=> window.JumviMusic?.unduck();
+    u.onerror = ()=> window.JumviMusic?.unduck();
     window.speechSynthesis.speak(u);
   }catch(_){}
 }

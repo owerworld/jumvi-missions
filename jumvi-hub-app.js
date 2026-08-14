@@ -3955,6 +3955,12 @@ export function initHub3D(opts) {
       if (completedCfg) track('Hub3D Zone Complete', { pack: completedCfg.packKey });
       showZoneCompleteCelebration(completedCfg);
       playSuccess();
+      // This gate-opening moment is detected by polling `done` every frame,
+      // independently of app.js's markMissionDone -> showPackCompleteCelebration
+      // flow (which already fires its own playZoneComplete when the LAST
+      // mission of the pack is marked done, whenever/wherever that happens).
+      // So the cue needs its own call here too, timed to the visible gate.
+      if (window.JumviMusic) { try { window.JumviMusic.cue('playZoneComplete'); } catch (e) {} }
       leoCelebrating = { startTime: performance.now(), baseFacingY: leo.group.rotation.y };
 
       var badge = badgeSlots[fw.zoneIndex + 1];
@@ -4291,7 +4297,12 @@ export function initHub3D(opts) {
     onResizeSoon();
     renderMuteButton(); // Settings may have changed while away
     clock.getDelta(); // discard time elapsed while paused, avoid a huge first delta
-    startBgMusic(); // gentle background loop plays only while the hub is active
+    // startBgMusic() intentionally NOT called: window.JumviMusic (fragments +
+    // procedural ambience, app.js) is now the single app-wide music source,
+    // including inside the hub — running this loop alongside it stacked two
+    // unrelated music layers with no shared gain awareness. The bell-pattern
+    // generator below is kept, just unused, in case the hub ever wants its
+    // own again once JumviMusic can be told to duck for it.
     // Paint the first useful frame immediately. Waiting for a whole-scene
     // compile here kept the friendly loader up for 10–13 seconds on some mobile
     // GPUs even though the first zone was already ready. Warm the remaining
@@ -4303,7 +4314,7 @@ export function initHub3D(opts) {
   function pause() {
     if (!running) return;
     running = false;
-    stopBgMusic();
+    // stopBgMusic() paired with the startBgMusic() call removed in resume() above.
 
     if (rafId != null) cancelAnimationFrame(rafId);
     rafId = null;
