@@ -1092,6 +1092,11 @@
 <!-- Prerecorded English Coach Leo narration (live pilot). Must load BEFORE
      jumvi-redlight.js and app.js — both call window.CoachLeoAudio. -->
 <script src="coach-leo-audio.js?v=20260814-1" defer></script>
+<!-- Ambient audio system: world-ambience MUST load before music-scheduler
+     (the scheduler looks up window.JumviWorldAmbience at start() time). -->
+<script src="jumvi-world-ambience.js?v=20260814-1" defer></script>
+<script src="jumvi-music-scheduler.js?v=20260814-1" defer></script>
+<script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
 <script src="app.js?v=20260814-5" defer></script>

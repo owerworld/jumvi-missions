@@ -110,6 +110,7 @@
       activeAudio.onended = null;
       activeAudio.onerror = null;
       activeAudio = null;
+      if (global.JumviMusic) { try { global.JumviMusic.unduck(); } catch (_) {} }
     }
   }
 
@@ -146,10 +147,15 @@
       clearTimeout(stallTimer);
       if (activeAudio === audio) activeAudio = null;
       try { audio.pause(); } catch (_) {}
+      if (global.JumviMusic) { try { global.JumviMusic.unduck(); } catch (_) {} }
       if (err) { if (onError) onError(); } else { if (onEnd) onEnd(); }
     }
 
-    audio.onplaying = function () { started = true; clearTimeout(stallTimer); };
+    audio.onplaying = function () {
+      started = true;
+      clearTimeout(stallTimer);
+      if (global.JumviMusic) { try { global.JumviMusic.duck(); } catch (_) {} }
+    };
     audio.onended = function () { finish(null); };
     audio.onerror = function () { finish(new Error("audio error")); };
 

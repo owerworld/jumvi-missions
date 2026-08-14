@@ -497,6 +497,56 @@ window.addEventListener("pointerdown", unlockAudioOnce, { passive:true });
 window.addEventListener("touchstart", unlockAudioOnce, { passive:true });
 
 /** =======================
+ * Background music + sonic reward cues
+ * (jumvi-world-ambience.js / jumvi-music-scheduler.js / jumvi-sonic-cues.js)
+ * ======================= */
+let jumviScheduler = null;
+let jumviCues = null;
+let _jumviMusicStarted = false;
+
+// jumviScheduler.start() replaces .ctx with a fresh AudioContext each time it
+// restarts (e.g. after Mission 2 pauses it), so cues must be rebuilt against
+// whichever context is current rather than cached once.
+function jumviCueFor(){
+  if(!jumviScheduler || !jumviScheduler.ctx) return null;
+  if(!jumviCues || jumviCues.ctx !== jumviScheduler.ctx){
+    jumviCues = new JumviSonicCues(jumviScheduler.ctx, jumviScheduler.musicBus, jumviScheduler);
+  }
+  return jumviCues;
+}
+
+function startJumviMusicOnce(){
+  if(_jumviMusicStarted || !soundOn) return;
+  if(typeof JumviMusicScheduler === "undefined") return;
+  _jumviMusicStarted = true;
+  jumviScheduler = new JumviMusicScheduler({
+    fragments: [
+      { id: "A", url: "assets/audio/music/JUMVI_FRAGMAN_A_mobil.opus", fallback: "assets/audio/music/JUMVI_FRAGMAN_A_mobil_EQ.mp3" },
+      { id: "B-alt", url: "assets/audio/music/JUMVI_FRAGMAN_B-alt_mobil.opus", fallback: "assets/audio/music/JUMVI_FRAGMAN_B-alt_mobil_EQ.mp3" },
+    ],
+  });
+  jumviScheduler.start();
+  jumviCueFor();
+}
+window.addEventListener("pointerdown", startJumviMusicOnce, { passive:true });
+window.addEventListener("touchstart", startJumviMusicOnce, { passive:true });
+
+// Bridge other files (coach-leo-audio.js, jumvi-redlight.js) call into
+// without needing to know whether the scheduler has started yet.
+window.JumviMusic = {
+  duck(){ jumviScheduler?.duck(); },
+  unduck(){ jumviScheduler?.unduck(); },
+  duckForSfx(ms){ jumviScheduler?.duckForSfx(ms); },
+  cue(name){ const c = jumviCueFor(); if(c && typeof c[name] === "function") c[name](); },
+  pauseForMinigame(){ jumviScheduler?.stop(); },
+  resumeAfterMinigame(){ if(soundOn) jumviScheduler?.start(); },
+  setEnabled(on){
+    if(!jumviScheduler){ if(on) startJumviMusicOnce(); return; }
+    if(on) jumviScheduler.start(); else jumviScheduler.stop();
+  }
+};
+
+/** =======================
  * Certificate helpers
  * (Note: CERT_ID_KEY and CERT_NAME_KEY are declared in the profile-aware
  *  constants block below — per-profile keys.)
@@ -2137,6 +2187,7 @@ function showBadgeUnlockModal(badge){
   if(!modal) return;
   // The badge id is a frozen 11-value enum (BADGES in data.js), never a name.
   beacon("badge_earned", { badge: badge.id });
+  window.JumviMusic?.cue("playBadge");
   const emojiEl = document.getElementById("badgeUnlockEmoji");
   const nameEl  = document.getElementById("badgeUnlockName");
   const reqEl   = document.getElementById("badgeUnlockReq");
@@ -2548,12 +2599,16 @@ function coachSpeak(text, opts={}){
   if(!("speechSynthesis" in window)) return;
   try{
     window.speechSynthesis.cancel();
+    window.JumviMusic?.unduck(); // cancel() above may orphan a previous utterance's onend
     const u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-US';
     u.rate = opts.rate || 0.96;
     u.pitch = opts.pitch || 1.02;
     u.volume = 1;
     if(typeof kidVoice !== "undefined" && kidVoice) u.voice = kidVoice;
+    u.onstart = ()=> window.JumviMusic?.duck();
+    u.onend = ()=> window.JumviMusic?.unduck();
+    u.onerror = ()=> window.JumviMusic?.unduck();
     window.speechSynthesis.speak(u);
   }catch(_){}
 }
@@ -3375,6 +3430,7 @@ function openCertificate(){
   // keystroke in the name field and on profile restore. The sheet opening is
   // the moment a certificate actually exists for the child.
   beaconOnce("certificate_made", "certificate_made");
+  window.JumviMusic?.cue("playCertificate");
   buildCertificate();
   certBackdrop.classList.add("show");
   const sheet = document.getElementById("certSheet");
@@ -3773,6 +3829,7 @@ function markMissionDone(id, source="manual"){
   }
   clickSound("success");
   celebrate();
+  window.JumviMusic?.cue("playMissionComplete");
   fireDoneBurst(document.getElementById("btnToggleDone"));
   // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
   if(source === "manual" || source === "auto") showUndoBar(id);
@@ -4743,6 +4800,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       renderSettingsRows();
       if(soundOn){ ensureAudio(); clickSound("click"); }
       else if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
+      window.JumviMusic?.setEnabled(soundOn);
       trackEvent("Sound Toggled");
     };
   }
@@ -5009,6 +5067,7 @@ function ensureHub3DLoaded(onProgress){
         soundOn = !!v;
         lsSet(SOUND_KEY, soundOn ? "1" : "0");
         if(!soundOn && window.CoachLeoAudio) window.CoachLeoAudio.stop();
+        window.JumviMusic?.setEnabled(soundOn);
       },
       // In-hub menu bridges — the hub menu opens the app's REAL panels
       // (it never reimplements them). navigate() leaves the hub for a normal
@@ -6211,6 +6270,7 @@ function showPackCompleteCelebration(packKey, packLabel){
     }
   }
   pathSound("trophy");
+  window.JumviMusic?.cue("playZoneComplete");
   showToast(`${packLabel} mastered! Pack complete!`);
   trackEvent("Pack Completed", { pack: packKey });
   beacon("pack_complete", { pack: packKey });
@@ -6762,6 +6822,7 @@ soundToggle.onclick = ()=>{
   } else if(window.CoachLeoAudio){
     window.CoachLeoAudio.stop();
   }
+  window.JumviMusic?.setEnabled(soundOn);
 };
 
 /** =======================
