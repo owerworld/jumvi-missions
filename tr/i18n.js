@@ -31,6 +31,72 @@
    * straight form, matching what the generated table already does: the source
    * files are inconsistent and a near-miss silently falls through to English. */
   const EXACT_EXTRA = {
+    // Full-set onboarding and repeatable Play Modes (2026-08-14)
+    "Full set: four paddles and four soft balls": "Tam set: dört paddle ve dört yumuşak top",
+    "4 paddles": "4 paddle",
+    "4 soft balls": "4 yumuşak top",
+    "First game: grab 2 paddles + 1 ball": "İlk oyun: 2 paddle + 1 top hazırla",
+    "Play Modes": "Oyun Modları",
+    "Adults": "Aile",
+    "Solo, 2-player, and group games": "Tek kişilik, 2 kişilik ve grup oyunları",
+    "Modes": "Modlar",
+    "Quick games for your full 4-paddle set. Repeat them anytime—they don’t change Mission progress.":
+      "4 paddle’lı tam setin için kısa oyunlar. İstediğin zaman tekrarla; Görev ilerlemesini değiştirmez.",
+    "How many are playing?": "Kaç kişi oynuyor?",
+    "Just me": "Tek başıma",
+    "2 players": "2 oyuncu",
+    "3–4 players": "3–4 oyuncu",
+    "Straps go on hands only · Clear the play area · Soft, underhand tosses · Never aim at faces":
+      "Kayışlar yalnız elde · Oyun alanını boşalt · Yumuşak, alttan atış yap · Asla yüze nişan alma",
+    "REPEAT ANYTIME": "İSTEDİĞİN ZAMAN TEKRARLA",
+    "REPEAT ANYTIME · NOT A MISSION": "İSTEDİĞİN ZAMAN TEKRARLA · GÖREV DEĞİL",
+    "Play Mode": "Oyun Modu",
+    "Close play mode": "Oyun modunu kapat",
+    "How to play": "Nasıl oynanır",
+    "Your challenge": "Hedefin",
+    "Hear how to play": "Nasıl oynandığını dinle",
+    "Leo gives short reminders while you play.": "Leo oynarken kısa hatırlatmalar yapar.",
+    "Choose another": "Başka bir tane seç",
+    "Steps": "Adımlar",
+    "Hear the steps read aloud": "Adımları sesli dinle",
+    "Tap Leo to hear the steps!": "Adımları dinlemek için Leo’ya dokun!",
+    "We finished this mission": "Bu görevi bitirdik",
+    "Skip & Play": "Atla ve Oyna",
+    "Skip narration and start timer": "Anlatımı atla ve süreyi başlat",
+    "Pause timer": "Süreyi duraklat",
+    "Resume timer": "Süreyi sürdür",
+    "Countdown in progress": "Geri sayım sürüyor",
+    "Cancel countdown": "Geri sayımı iptal et",
+    "Tap to cancel": "İptal etmek için dokun",
+
+    // Parent-facing Quick Help. The mode data carries its own Turkish copy.
+    "Need quick help?": "Hızlı yardım mı lazım?",
+    "The ball won’t stick": "Top yapışmıyor",
+    "The ball won't stick": "Top yapışmıyor",
+    "The ball is hard to remove": "Topu çıkarmak zor",
+    "The strap doesn’t feel right": "Kayış rahat değil",
+    "The strap doesn't feel right": "Kayış rahat değil",
+    "My child is missing most catches": "Çocuğum çoğu topu yakalayamıyor",
+    "More product help": "Daha fazla ürün yardımı",
+    "How should the hand strap fit?": "El kayışı nasıl ayarlanmalı?",
+    "Back of a JUMVI paddle showing the hand strap": "El kayışını gösteren JUMVI paddle arka yüzü",
+    "Can we play indoors?": "Evde oynayabilir miyiz?",
+    "How do I clean and store the set?": "Seti nasıl temizleyip saklamalıyım?",
+    "Something is damaged or missing": "Bir parça hasarlı veya eksik",
+    "Use the blue catching face. Remove visible lint, grass, or sand with a soft, dry brush; let every piece dry fully; then move closer and aim a soft toss at the center.":
+      "Mavi yakalama yüzünü kullanın. Görünen tüy, çim veya kumu yumuşak ve kuru bir fırçayla temizleyin; her parçanın tamamen kurumasını bekleyin; sonra yaklaşarak merkeze yumuşak bir atış yapın.",
+    "Peel it slowly from one edge instead of pulling straight up. Younger players may need a grown-up’s help. Don’t yank the ball or twist the paddle.":
+      "Topu dümdüz çekmek yerine bir kenarından yavaşça sıyırın. Küçük oyuncular bir yetişkinden yardım isteyebilir. Topu sertçe çekmeyin ve paddle’ı bükmeyin.",
+    "Loosen it first, slide your hand under the strap, then make it snug—not tight. It is a hand strap only; never attach it to furniture, a tree, a wall, or a person.":
+      "Önce kayışı gevşetin, elinizi altına geçirin ve rahat ama sıkmayacak şekilde ayarlayın. Bu yalnızca el kayışıdır; mobilyaya, ağaca, duvara veya bir kişiye asla bağlamayın.",
+    "Move to 3–4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.":
+      "Yaklaşık 1 metre arayla durun ve merkeze doğru yavaş, alttan atışlar yapın. Önce kolay bir yakalama yapın, sonra küçük bir adım geri çıkın.",
+    "Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.":
+      "Evet. Kırılabilir eşyaları kaldırın, yakın başlayın ve yüz hizasının altında yumuşakça atın. Hız veya mesafe eklemeden önce dışarı çıkın.",
+    "Use a soft, dry brush for dirt and lint. Wipe non-catching surfaces lightly, air-dry everything fully, then store all 4 paddles and 4 balls in the carry bag. Don’t machine wash or soak the set.":
+      "Kir ve tüy için yumuşak, kuru bir fırça kullanın. Yakalama dışındaki yüzeyleri hafifçe silin, her şeyi tamamen kurutun; ardından 4 paddle ve 4 topu taşıma çantasına koyun. Makinede yıkamayın veya suya bastırmayın.",
+    "Stop using any torn or cracked piece. Ask a grown-up to email support@jumvi.co with the order number and a photo.":
+      "Yırtılmış veya çatlamış parçayı kullanmayı bırakın. Bir yetişkin sipariş numarası ve fotoğrafla support@jumvi.co adresine e-posta göndersin.",
     // 3D Hub — HUB_TEXTS
     "Sound on/off": "Ses aç/kapat",
     "complete!": "tamamlandı!",
@@ -116,7 +182,7 @@
     "How many players": "Kaç oyuncu",
     "Reset progress": "İlerlemeyi sıfırla",
   };
-  Object.entries(EXACT_EXTRA).forEach(([k, v]) => { if (!EXACT.has(k)) EXACT.set(k, v); });
+  Object.entries(EXACT_EXTRA).forEach(([k, v]) => EXACT.set(k, v));
 
   function localizeData() {
     try {

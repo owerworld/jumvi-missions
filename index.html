@@ -73,7 +73,7 @@
        removes the swap flash on a cold visit. crossorigin is required on font
        preloads even same-origin, or the browser fetches it a second time. -->
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20260813-6">
+  <link rel="stylesheet" href="style.css?v=20260814-4">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260805-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -130,20 +130,24 @@
       </div>
       <div class="welcomeTagline">Ready to play?</div>
       <div class="welcomeSub">Grab your set. We&rsquo;ll pick a quick first game.</div>
-      <div class="welcomeGear" aria-label="Get two paddles and one ball ready">
+      <div class="welcomeGear" aria-label="Full set: four paddles and four soft balls">
         <div class="welcomeGearItem">
-          <span class="welcomePaddlePair" aria-hidden="true">
-            <img src="assets/equipment/jumvi-paddle-128.png" alt="" width="64" height="64">
-            <img src="assets/equipment/jumvi-paddle-128.png" alt="" width="64" height="64">
+          <span class="welcomeProductVisual" aria-hidden="true">
+            <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="80" height="80">
+            <span class="welcomeGearCount">×4</span>
           </span>
-          <strong>2 paddles</strong>
+          <strong>4 paddles</strong>
         </div>
         <span class="welcomeGearPlus" aria-hidden="true">+</span>
         <div class="welcomeGearItem">
-          <img class="welcomeBall" src="assets/equipment/jumvi-ball-128.png" alt="" width="56" height="56">
-          <strong>1 ball</strong>
+          <span class="welcomeProductVisual welcomeProductBall" aria-hidden="true">
+            <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="72" height="72">
+            <span class="welcomeGearCount">×4</span>
+          </span>
+          <strong>4 soft balls</strong>
         </div>
       </div>
+      <div class="welcomeFirstGame">First game: grab 2 paddles + 1 ball</div>
       <div class="welcomeNote"><i class="ico i-check" aria-hidden="true"></i> No app &nbsp;·&nbsp; No account &nbsp;·&nbsp; No ads</div>
       <div class="welcomeDivider" aria-hidden="true"></div>
       <div class="welcomeAgesHeading">Choose a play level</div>
@@ -343,6 +347,19 @@
         </div>
       </div>
 
+      <!-- ============== TAB: MODES (repeatable, never writes mission progress) ============== -->
+      <div class="tabPanel" id="tabModes" data-tab="modes" style="display:none">
+        <h2 class="tabHeading"><i class="ico i-dice" aria-hidden="true"></i> Play Modes</h2>
+        <p class="tabIntro">Quick games for your full 4-paddle set. Repeat them anytime&mdash;they don&rsquo;t change Mission progress.</p>
+        <div class="modePlayerPicker" id="modePlayerPicker" role="group" aria-label="How many are playing?">
+          <button class="modeFilter active" type="button" data-mode-group="solo" aria-pressed="true">Just me</button>
+          <button class="modeFilter" type="button" data-mode-group="duo" aria-pressed="false">2 players</button>
+          <button class="modeFilter" type="button" data-mode-group="group" aria-pressed="false">3&ndash;4 players</button>
+        </div>
+        <p class="modeSafetyStrip"><i class="jic jic-shield" aria-hidden="true"></i> Straps go on hands only · Clear the play area · Soft, underhand tosses · Never aim at faces</p>
+        <div class="modeGrid" id="modeGrid" aria-live="polite"></div>
+      </div>
+
       <!-- ============== TAB: STATS ============== -->
       <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
         <h2 class="tabHeading"><i class="ico i-chart" aria-hidden="true"></i> Your Progress</h2>
@@ -461,6 +478,14 @@
 
         <!-- Quick links -->
         <div class="profileQuickLinks">
+          <button class="profileQuickLink" data-go-tab="modes" type="button">
+            <span class="profileQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Play Modes</div>
+              <div class="profileQuickSub">Solo, 2-player, and group games</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
           <button class="profileQuickLink" data-go-tab="stats" type="button">
             <span class="profileQuickIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
@@ -492,20 +517,35 @@
           <div class="productCareBody">
             <h3 class="productCareTitle">Keeping your set working</h3>
 
-            <p class="productCareQ">The ball is hard to remove</p>
-            <p class="productCareA">Peel it from one edge instead of pulling straight up. A grown-up can show younger players the first time.</p>
-
-            <p class="productCareQ">The paddle is not gripping well</p>
-            <p class="productCareA">Brush away grass, sand, and lint with a dry hand or soft brush.</p>
-
-            <p class="productCareQ">Can I wash it?</p>
-            <p class="productCareA">Spot-clean with a damp cloth and air-dry. Don&rsquo;t machine wash or soak the set.</p>
-
-            <p class="productCareQ">Is it pool-safe?</p>
-            <p class="productCareA">Use it for dry play. Water on the ball stops it from sticking.</p>
-
-            <p class="productCareQ">Lost the QR card?</p>
-            <p class="productCareA">Bookmark qr.jumvi.co. Progress stays in this browser on this device.</p>
+            <details class="productHelpItem">
+              <summary>The ball won&rsquo;t stick</summary>
+              <p>Use the blue catching face. Remove visible lint, grass, or sand with a soft, dry brush; let every piece dry fully; then move closer and aim a soft toss at the center.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>The ball is hard to remove</summary>
+              <p>Peel it slowly from one edge instead of pulling straight up. Younger players may need a grown-up&rsquo;s help. Don&rsquo;t yank the ball or twist the paddle.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>How should the hand strap fit?</summary>
+              <img class="strapFitPhoto" src="assets/equipment/jumvi-paddle-back-real.webp" alt="Back of a JUMVI paddle showing the hand strap" width="160" height="174" loading="lazy">
+              <p>Loosen it first, slide your hand under the strap, then make it snug&mdash;not tight. It is a hand strap only; never attach it to furniture, a tree, a wall, or a person.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>My child is missing most catches</summary>
+              <p>Move to 3&ndash;4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>Can we play indoors?</summary>
+              <p>Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>How do I clean and store the set?</summary>
+              <p>Use a soft, dry brush for dirt and lint. Wipe non-catching surfaces lightly, air-dry everything fully, then store all 4 paddles and 4 balls in the carry bag. Don&rsquo;t machine wash or soak the set.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>Something is damaged or missing</summary>
+              <p>Stop using any torn or cracked piece. Ask a grown-up to email <a href="mailto:support@jumvi.co">support@jumvi.co</a> with the order number and a photo.</p>
+            </details>
           </div>
         </details>
 
@@ -667,22 +707,18 @@
         </div>
       </details>
 
-      <!-- Help — the six reasons are a FIXED enum (Faz 1 spec), never a free
-           text box: free text would be personal data we have no business
-           collecting. Each choice answers the kid on the spot, so this earns
-           its place in the UI rather than existing only to emit an event. -->
+      <!-- Mission help stays concise; full product care lives in Grown-ups. -->
       <div class="missionHelp">
         <button class="missionHelpTrigger" id="btnMissionHelp" type="button"
                 aria-expanded="false" aria-controls="missionHelpPanel">
-          <i class="jic jic-alert-triangle" aria-hidden="true"></i> Something not working?
+          <i class="jic jic-tool" aria-hidden="true"></i> Need quick help?
         </button>
         <div class="missionHelpPanel" id="missionHelpPanel" hidden>
-          <button class="missionHelpOpt" type="button" data-reason="ball_stuck">The ball gets stuck</button>
-          <button class="missionHelpOpt" type="button" data-reason="ball_hard_to_remove">The ball is hard to pull off</button>
-          <button class="missionHelpOpt" type="button" data-reason="strap_uncomfortable">The strap feels uncomfortable</button>
-          <button class="missionHelpOpt" type="button" data-reason="need_more_space">We need more space</button>
-          <button class="missionHelpOpt" type="button" data-reason="instructions_unclear">The instructions are unclear</button>
-          <button class="missionHelpOpt" type="button" data-reason="mission_too_hard">This mission is too hard</button>
+          <button class="missionHelpOpt" type="button" data-help-only="ball_wont_stick">The ball won&rsquo;t stick</button>
+          <button class="missionHelpOpt" type="button" data-reason="ball_hard_to_remove">The ball is hard to remove</button>
+          <button class="missionHelpOpt" type="button" data-reason="strap_uncomfortable">The strap doesn&rsquo;t feel right</button>
+          <button class="missionHelpOpt" type="button" data-reason="mission_too_hard">My child is missing most catches</button>
+          <a class="missionHelpMore" id="btnMoreProductHelp" href="#">More product help</a>
           <p class="missionHelpTip" id="missionHelpTip" role="status" hidden></p>
         </div>
       </div>
@@ -703,6 +739,43 @@
       <div class="small holdHint" id="holdHint" style="display:none">Hold "Mark as Done" to finish.</div>
 
       
+    </div>
+  </div>
+
+  <!-- Repeatable Play Mode detail. Separate from Missions and all progress state. -->
+  <div class="backdrop modeBackdrop" id="modeBackdrop" role="dialog" aria-modal="true" aria-labelledby="modeTitle" aria-hidden="true" inert>
+    <div class="sheet modeSheet" id="modeSheet">
+      <div class="sheetHandle" aria-hidden="true"></div>
+      <div class="sheetTop">
+        <div>
+          <div class="modeRepeatLabel">REPEAT ANYTIME · NOT A MISSION</div>
+          <div class="sheetTitle" id="modeTitle">Play Mode</div>
+          <div class="sheetMeta" id="modeMeta"></div>
+        </div>
+        <button class="close" id="btnModeClose" aria-label="Close play mode"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="sheetBody modeSheetBody" id="modeSheetBody">
+        <div class="modeProductHero" aria-hidden="true">
+          <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="160" height="160">
+          <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="112" height="112">
+        </div>
+        <div class="modeGearLine" id="modeGearLine"></div>
+        <div class="kv"><b>How to play</b><ol class="missionStepsList" id="modeSteps"></ol></div>
+        <div class="kv kvWin"><b><i class="jic jic-award" aria-hidden="true"></i> Your challenge</b><div id="modeGoal"></div></div>
+        <p class="missionSafetyLine" id="modeSafety"></p>
+        <div class="modeCoachChoice">
+          <button class="modeListenBtn" id="btnModeListen" type="button"><i class="jic jic-speakerphone" aria-hidden="true"></i> Hear how to play</button>
+          <span>Leo gives short reminders while you play.</span>
+        </div>
+        <div class="modeTimer" id="modeTimer" hidden>
+          <strong id="modeTimerDisplay">45s</strong>
+          <div class="modeTimerBar"><span id="modeTimerFill"></span></div>
+        </div>
+      </div>
+      <div class="sheetActions modeActions">
+        <button class="btn btnPrimary" id="btnModeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Start</button>
+        <button class="btn btnGhost" id="btnModeAnother" type="button">Choose another</button>
+      </div>
     </div>
   </div>
 
@@ -925,9 +998,9 @@
   </div>
 
   <!-- Timer Countdown Overlay (Ready, Set, GO!) -->
-  <div id="timerCountdown" class="timerCountdown" aria-hidden="true">
+  <div id="timerCountdown" class="timerCountdown" aria-hidden="true" tabindex="0" role="button" aria-label="Cancel countdown">
     <div class="timerCountdownNum">3</div>
-    <div class="timerCountdownLabel">Get ready!</div>
+    <div class="timerCountdownLabel">Get ready! <span>Tap to cancel</span></div>
   </div>
 
   <!-- Bottom Navigation -->
@@ -940,6 +1013,10 @@
       <span class="navTabIcon"><i class="ico i-target" aria-hidden="true"></i></span>
       <span class="navTabLabel">Missions</span>
     </button>
+    <button class="navTab" data-tab="modes" type="button">
+      <span class="navTabIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
+      <span class="navTabLabel">Modes</span>
+    </button>
     <button class="navTab" data-tab="stats" type="button">
       <span class="navTabIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
       <span class="navTabLabel">Progress</span>
@@ -947,14 +1024,6 @@
     <button class="navTab" data-tab="profile" type="button">
       <span class="navTabIcon"><i class="ico i-user" aria-hidden="true"></i></span>
       <span class="navTabLabel">Adults</span>
-    </button>
-    <!-- 3D Hub — opt-in experimental view, hidden unless jumvi_3d_hub_enabled=1 in localStorage -->
-    <!-- Label is parent/kid language on purpose: "3D Hub" meant nothing to a
-         first-time parent ("a 3D hub appeared… a what?"); Leo's Island says
-         exactly what's behind the tab. -->
-    <button class="navTab" data-tab="hub3d" id="navTabHub3D" type="button" style="display:none" aria-label="Leo's Island">
-      <span class="navTabIcon"><i class="jic jic-map" aria-hidden="true"></i></span>
-      <span class="navTabLabel">Leo's Island</span>
     </button>
   </nav>
 
@@ -1007,16 +1076,18 @@
 
 <script src="confetti.min.js?v=20260524-29" defer></script>
 <script src="data.js?v=20260805-1" defer></script>
+  <script src="play-modes.js?v=20260814-4" defer></script>
+  <script src="mission-coaching.js?v=20260814-4" defer></script>
 <script src="jumvi-mission-icons.js?v=20260805-1" defer></script>
-<script src="jumvi-redlight.js?v=20260805-1" defer></script>
+<script src="jumvi-redlight.js?v=20260814-4" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260813-9" defer></script>
+<script src="app.js?v=20260814-4" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-      navigator.serviceWorker.register("/service-worker.js?v=20260813-10")
+    navigator.serviceWorker.register("/service-worker.js?v=20260814-4")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
