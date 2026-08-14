@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v189";
+const CACHE_NAME = "jumvi-missions-v190";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -121,6 +121,7 @@ const CORE_ASSETS = [
   "/leo-tour.css",
   "/leo-tour.js",
   "/jumvi-redlight.js",
+  "/coach-leo-audio.js",
   "/manifest.json",
   // §2.4 — logo derivatives (originals moved to assets/logo/source/, off the critical path)
   "/assets/logo/jumvi_logo_dark-96.webp",

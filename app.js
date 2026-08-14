@@ -2614,18 +2614,23 @@ function stopMissionCoach(){
   _missionNarrationPending = false;
   _missionNarratedId = 0;
   _missionNarrationToken++;
+  if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
 }
 function prepareMissionCoach(ms){
   if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
   _missionNarrationWatchdog = null;
   _missionNarrationToken++;
   if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
   const meta = missionCoachingFor(ms);
   _missionCoachEnabled = !!(soundOn && ttsAuto() && meta && ms.id !== 2 && ms.id !== 13);
   _missionCoachReminders = meta && Array.isArray(meta.reminders) ? meta.reminders : [];
   _missionCoachFired = new Set();
   _missionNarrationPending = false;
   _missionNarratedId = 0;
+  // Warm the on-demand cache for this mission's prerecorded clip (English
+  // only; no-op on /tr and for mission 13, which has no file).
+  if(window.CoachLeoAudio) window.CoachLeoAudio.preload(ms.id);
 }
 function resolveMissionCoachReminder(ms, reminder){
   if(!ms || !reminder) return "";
@@ -2655,19 +2660,42 @@ function playMissionNarration(ms, onDone){
     btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Get ready…';
     onDone();
   };
-  _missionNarrationWatchdog = setTimeout(doneOnce, Math.min(26000, Math.max(10000, text.length * 75)));
-  try{
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "en-US";
-    utter.rate = 0.96;
-    utter.pitch = 1.02;
-    utter.volume = 1;
-    if(kidVoice) utter.voice = kidVoice;
-    utter.onend = ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(true); };
-    utter.onerror = ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(false); };
-    window.speechSynthesis.speak(utter);
-  }catch(_){ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(false); }
+  const speakWithTts = ()=>{
+    if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
+    _missionNarrationWatchdog = setTimeout(doneOnce, Math.min(26000, Math.max(10000, text.length * 75)));
+    try{
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-US";
+      utter.rate = 0.96;
+      utter.pitch = 1.02;
+      utter.volume = 1;
+      if(kidVoice) utter.voice = kidVoice;
+      utter.onend = ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(true); };
+      utter.onerror = ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(false); };
+      window.speechSynthesis.speak(utter);
+    }catch(_){ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(false); }
+  };
+  // Prerecorded Coach Leo only substitutes the FULL narration (first run, or
+  // a mission whose coaching metadata always replays "full") — a quick/recap
+  // replay intentionally stays on the shorter TTS path. English-only; /tr
+  // never sees hasMission() true (CoachLeoAudio is locale-gated), so the
+  // Turkish speechSynthesis path below is completely unaffected.
+  const meta = missionCoachingFor(ms);
+  const runs = missionCoachRuns();
+  const firstRun = Number(runs[ms.id] || 0) === 0;
+  const isFullNarration = firstRun || !meta || meta.replay === "full";
+  const useMp3 = isFullNarration && window.CoachLeoAudio && window.CoachLeoAudio.hasMission(ms.id);
+  if(useMp3){
+    _missionNarrationWatchdog = setTimeout(doneOnce, 26000);
+    const started = window.CoachLeoAudio.playMission(ms.id, {
+      onEnd: ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(true); },
+      onError: ()=> speakWithTts()
+    });
+    if(!started) speakWithTts();
+  } else {
+    speakWithTts();
+  }
   return true;
 }
 
@@ -2697,15 +2725,9 @@ function stopLeoSpeakSteps(){
   const btn = document.getElementById("leoSpeakBtn");
   if(btn) btn.classList.remove("speaking");
   if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
 }
-function toggleLeoSpeakSteps(ms){
-  if(_leoStepsSpeaking){ stopLeoSpeakSteps(); return; }
-  if(!soundOn){ showToast("Sound is off — turn it on in Settings."); return; }
-  if(!("speechSynthesis" in window)) { showToast("This device can't read aloud."); return; }
-  _leoStepsSpeaking = true;
-  const btn = document.getElementById("leoSpeakBtn");
-  if(btn) btn.classList.add("speaking");
-  trackEvent("Leo Steps Spoken", { missionId: ms.id });
+function speakLeoStepsWithTts(ms){
   try{
     window.speechSynthesis.cancel();
     const parts = missionCoachParts(ms, true).slice(1);
@@ -2717,6 +2739,27 @@ function toggleLeoSpeakSteps(ms){
       window.speechSynthesis.speak(u); // queued → natural pause between parts
     });
   }catch(_){ stopLeoSpeakSteps(); }
+}
+function toggleLeoSpeakSteps(ms){
+  if(_leoStepsSpeaking){ stopLeoSpeakSteps(); return; }
+  if(!soundOn){ showToast("Sound is off — turn it on in Settings."); return; }
+  if(!("speechSynthesis" in window)) { showToast("This device can't read aloud."); return; }
+  _leoStepsSpeaking = true;
+  const btn = document.getElementById("leoSpeakBtn");
+  if(btn) btn.classList.add("speaking");
+  trackEvent("Leo Steps Spoken", { missionId: ms.id });
+  // Manual "Hear the steps" is always the full read — prefer the prerecorded
+  // clip (English only; mission 13 has none, so it silently keeps whatever
+  // the existing TTS path already does for it) with TTS as the fallback.
+  if(window.CoachLeoAudio && window.CoachLeoAudio.hasMission(ms.id)){
+    const started = window.CoachLeoAudio.playMission(ms.id, {
+      onEnd: ()=>{ markMissionNarrationHeard(ms); stopLeoSpeakSteps(); },
+      onError: ()=> speakLeoStepsWithTts(ms)
+    });
+    if(!started) speakLeoStepsWithTts(ms);
+  } else {
+    speakLeoStepsWithTts(ms);
+  }
 }
 // One-time tooltip so parents discover the feature (first mission open only).
 function maybeShowLeoSpeakHint(btn){
@@ -3140,6 +3183,7 @@ function openMission(id){
         _missionNarrationPending = false;
         _missionNarrationToken++;
         if("speechSynthesis" in window) window.speechSynthesis.cancel();
+        if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
         btnStartTimer.disabled = true;
         btnStartTimer.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Get ready…';
         showCountdownThenStart(seconds);
@@ -3252,6 +3296,7 @@ function closeMission(){
   stopLeoSpeakSteps(); // clears the speaking state + cancels speech
   stopMissionCoach();
   if('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop talking on close
+  if(window.CoachLeoAudio) window.CoachLeoAudio.stop(); // Stop prerecorded clip on close
   // Score tracker temizle
   toggleScoreTracker(false);
   // Tear down Red Light / Green Light caller overlay if it was running (mission 2)
@@ -4697,6 +4742,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       renderSoundToggle();
       renderSettingsRows();
       if(soundOn){ ensureAudio(); clickSound("click"); }
+      else if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
       trackEvent("Sound Toggled");
     };
   }
@@ -4962,6 +5008,7 @@ function ensureHub3DLoaded(onProgress){
       setSoundOn(v){
         soundOn = !!v;
         lsSet(SOUND_KEY, soundOn ? "1" : "0");
+        if(!soundOn && window.CoachLeoAudio) window.CoachLeoAudio.stop();
       },
       // In-hub menu bridges — the hub menu opens the app's REAL panels
       // (it never reimplements them). navigate() leaves the hub for a normal
@@ -5393,6 +5440,7 @@ document.addEventListener("visibilitychange", ()=>{
       }
     }catch(_){ }
     if("speechSynthesis" in window) window.speechSynthesis.cancel();
+    if(window.CoachLeoAudio) window.CoachLeoAudio.stop();
   }
 });
 
@@ -6711,6 +6759,8 @@ soundToggle.onclick = ()=>{
   if(soundOn){
     ensureAudio();
     clickSound("click");
+  } else if(window.CoachLeoAudio){
+    window.CoachLeoAudio.stop();
   }
 };
 

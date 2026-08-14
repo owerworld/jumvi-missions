@@ -1089,9 +1089,12 @@
        sets, so these have to exist by then. -->
   <script src="play-mode-icons.js?v=20260814-5" defer></script>
 <script src="jumvi-mission-icons.js?v=20260814-5" defer></script>
-<script src="jumvi-redlight.js?v=20260814-4" defer></script>
+<!-- Prerecorded English Coach Leo narration (live pilot). Must load BEFORE
+     jumvi-redlight.js and app.js — both call window.CoachLeoAudio. -->
+<script src="coach-leo-audio.js?v=20260814-1" defer></script>
+<script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260814-4" defer></script>
+<script src="app.js?v=20260814-5" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
