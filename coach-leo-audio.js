@@ -18,7 +18,12 @@
  *   window.CoachLeoAudio.isAvailable()
  *   window.CoachLeoAudio.hasMission(id)
  *   window.CoachLeoAudio.playMission(id, { onEnd, onError })
- *   window.CoachLeoAudio.playCue('green'|'keepPlaying'|'red'|'greatJob', { onEnd, onError })
+ *   window.CoachLeoAudio.playCue(key, { onEnd, onError }) — key is one of:
+ *     RLGL caller cues:   'green' | 'keepPlaying' | 'red' | 'greatJob'
+ *     Generic gameplay:   'keepGoing' | 'eyesOnTheBall' | 'softAndSteady' |
+ *                         'niceCatch' | 'stayInControl' | 'switchCue' |
+ *                         'tenSeconds' | 'timesUpGreatJob'
+ *     3D Hub:             'hubWelcome' | 'hubFindGate'
  *   window.CoachLeoAudio.preload(id)
  *   window.CoachLeoAudio.preloadCues()
  *   window.CoachLeoAudio.unlock()   // call once inside a user gesture before
@@ -74,7 +79,24 @@
     green: "green-light-en.mp3",       // first GREEN of a run
     keepPlaying: "keep-playing-en.mp3", // every GREEN after the first
     red: "red-light-en.mp3",
-    greatJob: "great-job-en.mp3"        // round finished
+    greatJob: "great-job-en.mp3",       // RLGL round finished
+
+    // Generic gameplay cues (mission timer, semantically-safe mid-play
+    // moments). Distinct from the RLGL-specific keys above — e.g.
+    // timesUpGreatJob is the ordinary mission timer's own "time's up" line,
+    // not RLGL's "round finished" one.
+    keepGoing: "keep-going-en.mp3",
+    eyesOnTheBall: "eyes-on-the-ball-en.mp3",
+    softAndSteady: "soft-and-steady-en.mp3",
+    niceCatch: "nice-catch-en.mp3",           // positive feedback only — never a rule reminder
+    stayInControl: "stay-in-control-en.mp3",
+    switchCue: "switch-en.mp3",
+    tenSeconds: "ten-seconds-en.mp3",
+    timesUpGreatJob: "times-up-great-job-en.mp3",
+
+    // 3D Hub
+    hubWelcome: "hub-welcome-en.mp3",
+    hubFindGate: "hub-find-gate-en.mp3"
   };
 
   var STALL_MS = 4000; // no 'playing' event within this window => fall back to TTS
@@ -191,9 +213,17 @@
     } catch (_) {}
   }
 
-  function preloadCues() {
+  // RLGL's own preload call (no args) only warms its 4 caller cues — CUE_FILES
+  // now also holds generic gameplay + hub cues that RLGL never plays, and the
+  // whole point of NOT precaching them in the service worker is defeated if
+  // every RLGL round eagerly fetches them anyway. Pass an explicit key list
+  // to preload a different subset.
+  var RLGL_CUE_KEYS = ["green", "keepPlaying", "red", "greatJob"];
+
+  function preloadCues(keys) {
     if (!isAvailable()) return;
-    Object.keys(CUE_FILES).forEach(function (key) {
+    (keys || RLGL_CUE_KEYS).forEach(function (key) {
+      if (!CUE_FILES[key]) return;
       try {
         var a = new Audio();
         a.preload = "auto";
