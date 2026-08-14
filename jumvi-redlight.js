@@ -373,6 +373,9 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
     clearTimers();
     try { window.speechSynthesis.cancel(); } catch (e) {}
     try { if (global.CoachLeoAudio) global.CoachLeoAudio.stop(); } catch (e) {}
+    // Resume music now that the mission is done — no-op if it never paused
+    // (e.g. sound is off, or the scheduler hasn't started yet).
+    try { if (global.JumviMusic) global.JumviMusic.resumeAfterMinigame(); } catch (e) {}
     if (state.overlay && state.overlay.parentNode) state.overlay.parentNode.removeChild(state.overlay);
     state.active = false; state.overlay = null; state.dots = [];
     if (callEnd && typeof onEnd === 'function') { try { onEnd(); } catch (e) {} }
@@ -413,6 +416,9 @@ font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
 
   function start(opts) {
     if (state.active) return; // already running
+    // Music goes fully silent for this mission (not just ducked) — freezing
+    // on a beat cue only works if there's nothing else competing for ears.
+    try { if (global.JumviMusic) global.JumviMusic.pauseForMinigame(); } catch (e) {}
     injectCSS();
     state.opts = {
       duration: (opts && opts.duration) || 60,

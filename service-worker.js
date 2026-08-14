@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v190";
+const CACHE_NAME = "jumvi-missions-v191";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -122,6 +122,15 @@ const CORE_ASSETS = [
   "/leo-tour.js",
   "/jumvi-redlight.js",
   "/coach-leo-audio.js",
+  // §7 — ambient music system. world-ambience precedes music-scheduler so the
+  // dependency it looks up at start() (window.JumviWorldAmbience) exists.
+  // The opus/mp3 music fragments themselves are deliberately NOT precached
+  // here — same call as Coach Leo's narration mp3s below: they're fetched
+  // and cache-filled on first real use via the generic fetch handler, so a
+  // fresh install never blocks on ~1.3MB of audio nobody has heard yet.
+  "/jumvi-world-ambience.js",
+  "/jumvi-music-scheduler.js",
+  "/jumvi-sonic-cues.js",
   "/manifest.json",
   // §2.4 — logo derivatives (originals moved to assets/logo/source/, off the critical path)
   "/assets/logo/jumvi_logo_dark-96.webp",
