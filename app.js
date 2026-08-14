@@ -5514,10 +5514,7 @@ function renderPlayModes(){
   const modes = getPlayModes();
   grid.innerHTML = modes.map(mode=>`
     <button class="modeCard" type="button" data-mode-id="${escapeHtml(mode.id)}" aria-label="${escapeHtml(modeText(mode.title))}">
-      <span class="modeCardVisual" aria-hidden="true">
-        <img class="modeCardPaddle" src="assets/equipment/jumvi-paddle-real.webp" alt="" width="96" height="128" loading="lazy" decoding="async">
-        <img class="modeCardBall" src="assets/equipment/jumvi-ball-real.webp" alt="" width="48" height="48" loading="lazy" decoding="async">
-      </span>
+      <span class="modeCardVisual jmv" aria-hidden="true">${modeIcon(mode.id)}</span>
       <span class="modeCardBody">
         <span class="modeCardKicker">REPEAT ANYTIME</span>
         <span class="modeCardTitle">${escapeHtml(modeText(mode.title))}</span>
@@ -5534,6 +5531,14 @@ function renderPlayModes(){
   });
 }
 
+/* Every Play Mode card and sheet used to show the same two product photos, so
+ * nine different games looked identical. These are the per-mode motion
+ * diagrams from play-mode-icons.js, drawn in the same language as the mission
+ * diagrams. Returns "" when the file is absent so the card degrades to text
+ * rather than breaking. */
+function modeIcon(id){
+  return (window.JUMVI_PLAY_MODE_ICONS && window.JUMVI_PLAY_MODE_ICONS[id]) || "";
+}
 function modeGearLabel(mode){
   if(mode.gear && mode.gear.label) return modeText(mode.gear.label);
   const p = Number(mode.gear && mode.gear.paddles || 0);
@@ -5689,6 +5694,12 @@ function openPlayMode(mode, returnFocus){
   _openPlayMode = mode;
   _modeReturnFocus = returnFocus || document.activeElement;
   _modeCoachOn = !!soundOn;
+  const modeHero = document.getElementById("modeDiagram");
+  if(modeHero){
+    const art = modeIcon(mode.id);
+    modeHero.innerHTML = art;
+    modeHero.style.display = art ? "" : "none";
+  }
   document.getElementById("modeTitle").textContent = modeText(mode.title);
   document.getElementById("modeMeta").innerHTML = `<span class="tag">${escapeHtml(modeText(mode.players.label))}</span><span class="tag">${escapeHtml(modeText(mode.difficulty))}</span><span class="tag">${escapeHtml(modeDurationLabel(mode.seconds))}</span>`;
   document.getElementById("modeGearLine").innerHTML = `<span class="modeGearChip">${escapeHtml(modeGearLabel(mode))}</span><span class="modeGearChip">${escapeHtml(modeText(mode.space))}</span>`;

@@ -761,10 +761,10 @@
         <button class="close" id="btnModeClose" aria-label="Close play mode"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="sheetBody modeSheetBody" id="modeSheetBody">
-        <div class="modeProductHero" aria-hidden="true">
-          <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="160" height="160">
-          <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="112" height="112">
-        </div>
+        <!-- Filled per mode by openPlayMode(). This was two product photos,
+             identical on all nine sheets, which showed a parent the equipment
+             they already own instead of how the game is played. -->
+        <div class="modeDiagram jmv" id="modeDiagram" aria-hidden="true"></div>
         <div class="modeGearLine" id="modeGearLine"></div>
         <div class="kv"><b>How to play</b><ol class="missionStepsList" id="modeSteps"></ol></div>
         <div class="kv kvWin"><b><i class="jic jic-award" aria-hidden="true"></i> Your challenge</b><div id="modeGoal"></div></div>
@@ -1084,7 +1084,11 @@
 <script src="data.js?v=20260805-1" defer></script>
   <script src="play-modes.js?v=20260814-4" defer></script>
   <script src="mission-coaching.js?v=20260814-4" defer></script>
-<script src="jumvi-mission-icons.js?v=20260805-1" defer></script>
+  <!-- Must load BEFORE jumvi-mission-icons.js: that file's brandEquipment()
+       runs on execution and swaps the placeholder paddle/ball in both icon
+       sets, so these have to exist by then. -->
+  <script src="play-mode-icons.js?v=20260814-5" defer></script>
+<script src="jumvi-mission-icons.js?v=20260814-5" defer></script>
 <script src="jumvi-redlight.js?v=20260814-4" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
 <script src="app.js?v=20260814-4" defer></script>

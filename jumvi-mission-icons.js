@@ -1021,8 +1021,17 @@ const MISSION_ICONS = {
       '" width="' + size.toFixed(1) + '" height="' + size.toFixed(1) + '"' +
       (transform ? ' transform="' + transform + '"' : '') + '/>';
   }
-  Object.keys(MISSION_ICONS).forEach(function(id){
-    var src = MISSION_ICONS[id];
+  // The Play Mode diagrams (play-mode-icons.js) draw their paddle and ball with
+  // the same placeholder colours, so they get the same swap — the equipment
+  // stays photographic in both tabs and only the action is line art. Guarded on
+  // presence: mission icons must keep working if that file is not loaded.
+  var SETS = [MISSION_ICONS];
+  if (typeof window !== "undefined" && window.JUMVI_PLAY_MODE_ICONS) {
+    SETS.push(window.JUMVI_PLAY_MODE_ICONS);
+  }
+  SETS.forEach(function(ICONS){
+  Object.keys(ICONS).forEach(function(id){
+    var src = ICONS[id];
     if (src.indexOf("#85B7EB") < 0 && src.indexOf("#EF9F27") < 0) return;
 
     // Pass 1 — collect paddles (position + size) so balls can test proximity.
@@ -1060,7 +1069,8 @@ const MISSION_ICONS = {
       return useTag(p.isCatch ? "jmvEqCatch" : "jmvEqPaddle", p.cx, p.cy, p.ry * 2.7, p.transform);
     });
 
-    MISSION_ICONS[id] = out;
+    ICONS[id] = out;
+  });
   });
 })();
 
