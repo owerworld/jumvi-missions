@@ -73,9 +73,9 @@
        removes the swap flash on a cold visit. crossorigin is required on font
        preloads even same-origin, or the browser fetches it a second time. -->
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20260814-4">
+  <link rel="stylesheet" href="style.css?v=20260815-1">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
-  <link rel="stylesheet" href="jumvi-icons.css?v=20260805-1">
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260815-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
   <!-- §5.1 — Tabler icon-webfont CDN removed. The 3 glyphs used (chevron-right,
        hand-three-fingers, message-off) are now inline mask-image SVGs in
@@ -130,24 +130,30 @@
       </div>
       <div class="welcomeTagline">Ready to play?</div>
       <div class="welcomeSub">Grab your set. We&rsquo;ll pick a quick first game.</div>
-      <div class="welcomeGear" aria-label="Full set: four paddles and four soft balls">
+      <!-- This block answers ONE question: what do we pick up right now? It is
+           deliberately NOT a box-contents summary. It used to show ×4 / ×4 with
+           "First game: grab 2 paddles + 1 ball" directly underneath, which told
+           a parent two different numbers in the same glance. The set still ships
+           4 paddles and 4 balls — that inventory lives in Adults ▸ product care
+           and on the Quick Play screen, where it is the true answer. -->
+      <div class="welcomeGear" aria-label="For your first game: two paddles and one soft ball">
         <div class="welcomeGearItem">
           <span class="welcomeProductVisual" aria-hidden="true">
             <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="80" height="80">
-            <span class="welcomeGearCount">×4</span>
+            <span class="welcomeGearCount">×2</span>
           </span>
-          <strong>4 paddles</strong>
+          <strong>2 paddles</strong>
         </div>
         <span class="welcomeGearPlus" aria-hidden="true">+</span>
         <div class="welcomeGearItem">
           <span class="welcomeProductVisual welcomeProductBall" aria-hidden="true">
             <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="72" height="72">
-            <span class="welcomeGearCount">×4</span>
+            <span class="welcomeGearCount">×1</span>
           </span>
-          <strong>4 soft balls</strong>
+          <strong>1 soft ball</strong>
         </div>
       </div>
-      <div class="welcomeFirstGame">First game: grab 2 paddles + 1 ball</div>
+      <div class="welcomeFirstGame">That&rsquo;s all you need to start.</div>
       <div class="welcomeNote"><i class="ico i-check" aria-hidden="true"></i> No app &nbsp;·&nbsp; No account &nbsp;·&nbsp; No ads</div>
       <div class="welcomeDivider" aria-hidden="true"></div>
       <div class="welcomeAgesHeading">Choose a play level</div>
@@ -243,14 +249,41 @@
               <div class="dailyMeta" id="dailyMeta">—</div>
             </div>
           </div>
+          <!-- Shown only once this mission is finished. Progress is stated in
+               words, not colour, so it survives a sunlit screen and a
+               colour-blind reader. -->
+          <div class="dailyDoneNote" id="dailyDoneNote" style="display:none"><i class="jic jic-circle-check" aria-hidden="true"></i> Mission complete</div>
+          <!-- Order is the hierarchy: after a mission is done the primary
+               action moves the family through the 36, and replaying drops to
+               secondary. Before it is done there is only one action here. -->
           <div class="dailyActionsBig">
-            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" aria-label="Start this mission" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
+            <!-- No aria-label on purpose: this button's label changes with state
+                 ("Start Mission" → "Next: <mission>"), and a JS-set aria-label
+                 would (a) silently stay English on /tr, because the locale
+                 layer observes childList/characterData but not attributes, and
+                 (b) override the visible text, breaking WCAG 2.5.3 Label in
+                 Name. The visible label IS the accessible name. -->
+            <button class="btn btnPrimary dailyPlayBig" id="btnDailyPlay" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
+            <button class="dailyNewSmall" id="btnDailyReplay" type="button" style="display:none"><i class="jic jic-loop" aria-hidden="true"></i> Play Again</button>
             <button class="dailyNewSmall" id="btnDailyNew" aria-label="Choose another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Choose another</button>
           </div>
           <!-- Stub for backward JS compat -->
           <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
           <div class="dailyTitle" style="display:none">Today's Mission</div>
         </div>
+
+        <!-- Quick Play — the former "Modes" tab, surfaced where the decision is
+             actually made. Repeatable games, deliberately not part of the
+             36-mission journey; opening it goes through the same
+             switchTab("modes") the nav button used to call. -->
+        <button class="todayQuickAction quickPlayEntry" id="btnQuickPlay" data-go-tab="modes" type="button">
+          <span class="todayQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
+          <span class="todayQuickText">
+            Quick Play
+            <span class="todayQuickSub">Replayable games when you just want to start fast.</span>
+          </span>
+          <span class="todayQuickArrow" aria-hidden="true"><i class="jic jic-arrow-right"></i></span>
+        </button>
 
         <!-- Coach Leo's Smart Pick — recommendation card -->
         <div class="coachPick" id="coachPick" style="display:none">
@@ -347,9 +380,11 @@
         </div>
       </div>
 
-      <!-- ============== TAB: MODES (repeatable, never writes mission progress) ============== -->
+      <!-- ============== TAB: QUICK PLAY (repeatable, never writes mission progress) ============== -->
+      <!-- The panel id, data-tab value and every analytics name stay "modes" on
+           purpose: only the words the family reads changed. -->
       <div class="tabPanel" id="tabModes" data-tab="modes" style="display:none">
-        <h2 class="tabHeading"><i class="ico i-dice" aria-hidden="true"></i> Play Modes</h2>
+        <h2 class="tabHeading"><i class="ico i-dice" aria-hidden="true"></i> Quick Play</h2>
         <p class="tabIntro">Quick games for your full 4-paddle set. Repeat them anytime&mdash;they don&rsquo;t change Mission progress.</p>
         <div class="modePlayerPicker" id="modePlayerPicker" role="group" aria-label="How many are playing?">
           <button class="modeFilter active" type="button" data-mode-group="solo" aria-pressed="true">Just me</button>
@@ -481,7 +516,7 @@
           <button class="profileQuickLink" data-go-tab="modes" type="button">
             <span class="profileQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
-              <div class="profileQuickTitle">Play Modes</div>
+              <div class="profileQuickTitle">Quick Play</div>
               <div class="profileQuickSub">Solo, 2-player, and group games</div>
             </div>
             <span class="profileQuickArrow">›</span>
@@ -1019,10 +1054,13 @@
       <span class="navTabIcon"><i class="ico i-target" aria-hidden="true"></i></span>
       <span class="navTabLabel">Missions</span>
     </button>
-    <button class="navTab" data-tab="modes" type="button">
-      <span class="navTabIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
-      <span class="navTabLabel">Modes</span>
-    </button>
+    <!-- "Modes" was a fifth top-level tab here. It sat next to "Missions" with
+         no way to tell the two apart from the label alone, which is the one
+         question the bottom bar has to answer instantly. The feature is intact
+         and unchanged — the tab panel (#tabModes), its data and its separation
+         from mission progress all still exist; it is now reached as "Quick
+         Play" from the Play screen. switchTab("modes") and the analytics tab
+         name are deliberately untouched so event history stays continuous. -->
     <button class="navTab" data-tab="stats" type="button">
       <span class="navTabIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
       <span class="navTabLabel">Progress</span>
@@ -1091,7 +1129,7 @@
 <script src="jumvi-mission-icons.js?v=20260814-5" defer></script>
 <!-- Prerecorded English Coach Leo narration (live pilot). Must load BEFORE
      jumvi-redlight.js and app.js — both call window.CoachLeoAudio. -->
-<script src="coach-leo-audio.js?v=20260814-1" defer></script>
+<script src="coach-leo-audio.js?v=20260815-1" defer></script>
 <!-- Ambient audio system: world-ambience MUST load before music-scheduler
      (the scheduler looks up window.JumviWorldAmbience at start() time). -->
 <script src="jumvi-world-ambience.js?v=20260814-1" defer></script>
@@ -1099,7 +1137,7 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260814-5" defer></script>
+<script src="app.js?v=20260815-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

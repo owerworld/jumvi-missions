@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v193";
+const CACHE_NAME = "jumvi-missions-v194";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -209,7 +209,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cache-first for static assets
+  // Cache-first for static assets.
+  //
+  // Runtime-filled entries (Coach Leo's narration mp3s, the music fragments —
+  // everything deliberately left out of CORE_ASSETS) land in this SAME cache,
+  // keyed by CACHE_NAME. That is what makes replacing an audio file in place,
+  // at the same URL, safe: `activate` above deletes every cache whose key is
+  // not the current CACHE_NAME, so a version bump evicts the runtime-cached
+  // audio along with the precache and the next play refetches it. A returning
+  // iPhone cannot sit on a stale clip across a release — but only because the
+  // bump happens. Without it, cache-first means forever, for audio too.
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;

@@ -8537,3 +8537,168 @@ button, a, input, textarea, select, label{ touch-action:manipulation; }
   .modeCardVisual{ width:80px; }
   .modeCardVisual svg{ width:80px; height:40px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DARK THEME + CONTRAST PASS
+ *
+ * ROOT CAUSE, so the next person does not re-patch symptoms: the final
+ * product-hierarchy block above hard-codes light surfaces with !important
+ * (.statsCompact{background:#FFFFFF !important}, .continueHint{background:
+ * #FFF8EE !important}, .ageBtn{background:#F8FAFC}, .welcomeGear{...}). The
+ * html.theme--dark rules for those same elements sit ~3000 lines EARLIER and
+ * carry no !important, so specificity never got a say — !important won, and
+ * dark mode kept painting light cards while --text stayed near-white. That is
+ * why the failures clustered exactly on the Play screen and welcome overlay:
+ * white text on a white card (1.1–1.3:1), not a palette problem.
+ *
+ * The fix mirrors that block one-for-one, in the same place in the cascade,
+ * off four tokens instead of scattered hexes. Secondary text stays secondary —
+ * it is dimmer than primary, just never invisible. Measured, not eyeballed:
+ * tools/contrast-audit.js run over every tab in both themes.
+ * ═════════════════════════════════════════════════════════════════════════ */
+html.theme--dark{
+  --surface-card:        #172338;              /* raised card on the page bg */
+  --surface-card-2:      #141F33;              /* inset panel inside a card  */
+  --surface-card-border: rgba(255,255,255,.11);
+  --text-on-card:        #E2E8F0;              /* primary   — 12.8:1        */
+  --text-on-card-muted:  #B9C7D8;              /* secondary —  9.2:1        */
+}
+
+/* ── Welcome overlay ─────────────────────────────────────────────────────── */
+html.theme--dark .welcomeGear{
+  background: var(--surface-card-2);
+  border-color: var(--surface-card-border);
+}
+html.theme--dark .welcomeGearItem{ color: var(--text-on-card); }
+html.theme--dark .welcomeGearCount{ border-color: var(--surface-card-2); }
+html.theme--dark .welcomeFirstGame,
+html.theme--dark .welcomeNote{ color: var(--text-on-card-muted); }
+html.theme--dark .welcomeDivider{ background: rgba(255,255,255,.12); }
+/* .ageBtn set a light background and no colour at all, so the label fell back
+   to --text (#e8e8e8): white on #F8FAFC, 1.11:1 — the play-level buttons were
+   effectively blank in dark mode. */
+html.theme--dark .ageBtn{
+  background: var(--surface-card);
+  border-color: var(--surface-card-border);
+  color: var(--text-on-card);
+}
+html.theme--dark .ageBtn.selected{
+  background: #153654;
+  border-color: #60A5FA;
+  color: #D6ECFF;
+  box-shadow: 0 0 0 2px rgba(96,165,250,.18);
+}
+
+/* ── Play screen surfaces (the !important overrides above) ───────────────── */
+html.theme--dark .continueHint{
+  background: #2A2113 !important;
+  border-color: #5C4A22 !important;
+}
+html.theme--dark .continueHintText{ color: #F1F5F9 !important; }
+html.theme--dark .continueHintText b{ color: #FCD34D !important; }
+html.theme--dark .statsCompact{
+  background: var(--surface-card) !important;
+  border-color: var(--surface-card-border) !important;
+}
+html.theme--dark .statsCompactText{ color: var(--text-on-card) !important; }
+html.theme--dark .statsCompact .bar{ background: rgba(255,255,255,.12) !important; }
+html.theme--dark .dailyDoneNote{ color: var(--ink); }
+html.theme--dark .todayQuickSub{ color: var(--text-on-card-muted); }
+html.theme--dark .leoSpeakTip{
+  background: #142A42;
+  border-color: #31506D;
+  color: #D5E7F5;
+}
+
+/* ── Quick Play sheet leftovers the earlier dark block did not reach ─────── */
+html.theme--dark .modeCardKicker,
+html.theme--dark .modeRepeatLabel{ color: #7CC4FF; }
+html.theme--dark .modeCardArrow{ color: #93C5FD; }
+html.theme--dark .modeListenBtn{
+  background: var(--surface-card-2);
+  border-color: #3F6288;
+  color: #CFE6FF;
+}
+html.theme--dark .modeListenBtn.active{ background: #2C6EA8; color: #fff; }
+html.theme--dark .modeTimer strong{ color: #9FD2FF; }
+html.theme--dark .modeTimerBar{ background: rgba(255,255,255,.14); }
+html.theme--dark .productHelpItem summary::after{ color: #7CC4FF; }
+html.theme--dark .productCareA{ color: var(--text-on-card-muted); }
+
+/* ── Contrast fixes that apply in BOTH themes ───────────────────────────────
+ * Each of these measured below 3:1 for body-size text before the change; the
+ * hue is kept, only the lightness moves far enough to be readable outdoors. */
+.btnResetFooter{ color: #64748B; }                    /* was #90A4AE — 2.59:1 */
+html.theme--dark .btnResetFooter{ color: #94A3B8; }   /* was #64748b — 2.69:1 */
+/* The blanket `html.theme--dark .dashCard *{color:inherit}` rule near the top
+   of this file tints everything inside a card to #e5e7eb, including labels
+   sitting on a saturated fill. Where that fill is the point (a WhatsApp green,
+   a status pill), the label has to be re-stated as pure white. */
+.dashShareWA{ background: #0E7A41; }                  /* was #25D366 — 1.98:1 */
+html.theme--dark .dashShareWA{ color: #fff !important; }
+.pathStepStatusDaily{ background: #B34A00; }          /* was #D95A00 — 3.88:1 */
+html.theme--dark .pathStepStatus{ color: #fff !important; }
+.dashShareCopy{ color: #155E9E; }                     /* was #1976D2 — 3.87:1 */
+html.theme--dark .dashShareCopy{ color: #BFDBFE; }    /* was #93C5FD — 4.10:1 */
+.badge.unlocked .badgeProgress{
+  background: linear-gradient(135deg, #2E7D32, #1B5E20); /* "Earned" was 2.36:1 */
+}
+.certBtn{ color: #4B5563; }                           /* locked label was 2.46:1 */
+.certBtn.locked{ opacity: .85; }
+/* The pack colour is the identity here, but it is a mid-tone brand hue and it
+   was being used as the DIGITS on a near-white pill (2.25:1). Keep the pack
+   colour as the ring; give the count an ink that can actually be read. */
+.pathSectionProgress{
+  color: #334155;
+  border-color: var(--pack-color);
+}
+html.theme--dark .pathSectionProgress{ color: var(--text-on-card); }
+/* Traffic-light gradient kept, every stop deepened one step: white "Start
+   Caller" measured 1.67:1 across the amber middle (#fbbf24) and 3.30:1 across
+   the green (#16a34a). Same green→amber→red story, now 5:1 end to end. */
+.btnPrimary.btnStartCaller{
+  background: linear-gradient(135deg, #15803D 0%, #B45309 50%, #B91C1C 100%) !important;
+}
+/* Dark "We Finished!" / "Mark as Not Done": mint on deep green measured 4.49:1,
+   a hair under AA at 15px. Same pairing, one step lighter. */
+html.theme--dark .sheetActions .holdBtn.btnPrimary{ color:#E6FBEA !important; }
+a[href^="mailto:"]{ color: var(--brand-blue-deep); }
+html.theme--dark a[href^="mailto:"]{ color: #7CC4FF; }
+.welcomeGearPlus{ color: #64748B; }                   /* was #93A4B7 — 2.43:1 */
+html.theme--dark .welcomeGearPlus{ color: #94A3B8; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Quick Play entry + completion hierarchy (new components)
+ * ═════════════════════════════════════════════════════════════════════════ */
+/* #tabToday is a flex column with its own gap, so this card carries no margins
+   of its own. .todayQuickAction's stock 14px/32px margins come from its
+   original home in the Browse tab and would open a hole twice the size of every
+   other gap on the Play screen. Matches the specificity of
+   `#tabToday .todayQuickAction{margin:4px 0 32px 0 !important}` above and wins
+   on source order. */
+#tabToday .quickPlayEntry{ margin: 0 !important; }
+.todayQuickSub{
+  display: block;
+  margin-top: 2px;
+  color: var(--muted-on-light);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.todayQuickArrow{ flex: none; display: inline-flex; font-size: 18px; opacity: .75; }
+/* "Next: <mission>" can be long, and a 360px phone is the narrow case. The
+   label truncates rather than wrapping the button into two lines or pushing the
+   arrow icon off the edge. */
+.dailyPlayLabel{
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.dailyDoneNote{
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-size: var(--fs-meta);
+  font-weight: 800;
+  opacity: .85;
+}

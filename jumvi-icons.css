@@ -166,3 +166,11 @@ i.jic-play{ --jic:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg
 i.jic-pause{ --jic:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 5h4v14h-4z'/><path d='M14 5h4v14h-4z'/></svg>"); }
 i.jic-dice{ --jic:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2z'/><path d='M8 8h.01'/><path d='M16 8h.01'/><path d='M12 12h.01'/><path d='M8 16h.01'/><path d='M16 16h.01'/></svg>"); }
 i.jic-menu{ --jic:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6h16'/><path d='M4 12h16'/><path d='M4 18h16'/></svg>"); }
+/* "Play Again" on the Picked-for-You card asked for jic-loop, which was never
+   defined here. An undefined --jic makes mask-image invalid at computed-value
+   time, so the mask falls back to `none` — and because i.jic paints
+   background-color:currentColor across its whole 1em box, the icon rendered as
+   a SOLID SQUARE inside the primary button on every browser. The class needed a
+   glyph, not the button needed an icon removed. tools/check-icon-glyphs.mjs now
+   fails if any other jic- or i- icon class is used without a definition. */
+i.jic-loop{ --jic:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4'/><path d='M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4'/></svg>"); }

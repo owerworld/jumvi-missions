@@ -19,8 +19,11 @@
  *   window.CoachLeoAudio.hasMission(id)
  *   window.CoachLeoAudio.playMission(id, { onEnd, onError })
  *   window.CoachLeoAudio.playCue('green'|'keepPlaying'|'red'|'greatJob', { onEnd, onError })
+ *   window.CoachLeoAudio.hasCountdown('3'|'2'|'1'|'go')
+ *   window.CoachLeoAudio.playCountdown('3'|'2'|'1'|'go', { onEnd, onError })
  *   window.CoachLeoAudio.preload(id)
  *   window.CoachLeoAudio.preloadCues()
+ *   window.CoachLeoAudio.preloadCountdown()
  *   window.CoachLeoAudio.unlock()   // call once inside a user gesture before
  *                                    // async playback (e.g. RLGL's 3-2-1 countdown)
  *   window.CoachLeoAudio.stop()
@@ -77,6 +80,31 @@
     greatJob: "great-job-en.mp3"        // round finished
   };
 
+  /* ── 3 · 2 · 1 · GO start sequence ─────────────────────────────────────────
+   * The mission-start countdown is Coach Leo speaking, so it belongs to THIS
+   * system — it does not belong to app.js's speechSynthesis helper, which is
+   * where it used to live. Reaching that helper meant an English family heard
+   * Leo's recorded voice read the mission and then the phone's built-in en-US
+   * TTS voice count them in: two different Coach Leos, back to back.
+   *
+   * The map is intentionally EMPTY until the ElevenLabs countdown renders
+   * exist on disk. While it is empty, English gets the visual countdown plus
+   * the existing tick (app.js clickSound) and NO voice — a quiet, correct
+   * start beats re-exposing the voice this change removes. Turkish is
+   * untouched either way: isAvailable() is false on /tr, so app.js keeps using
+   * its speechSynthesis path there, which tr/i18n.js re-speaks in tr-TR.
+   *
+   * TO ENABLE: drop the four clips into assets/audio/coach-leo/en/game-cues/
+   * and fill in the keys below. They are runtime-cached by the service worker
+   * like every other narration mp3 — nothing else needs to change, and
+   * tools/check-coach-leo-audio.mjs will start asserting the files exist. */
+  var COUNTDOWN_FILES = {
+    // "3": "countdown-3-en.mp3",
+    // "2": "countdown-2-en.mp3",
+    // "1": "countdown-1-en.mp3",
+    // go:  "countdown-go-en.mp3"
+  };
+
   var STALL_MS = 4000; // no 'playing' event within this window => fall back to TTS
 
   var activeAudio = null;
@@ -100,6 +128,15 @@
 
   function cueSrc(key) {
     return CUE_FILES[key] ? BASE + "game-cues/" + CUE_FILES[key] : null;
+  }
+
+  function hasCountdown(step) {
+    return isAvailable() && Object.prototype.hasOwnProperty.call(COUNTDOWN_FILES, String(step));
+  }
+
+  function countdownSrc(step) {
+    var f = COUNTDOWN_FILES[String(step)];
+    return f ? BASE + "game-cues/" + f : null;
   }
 
   function stop() {
@@ -181,6 +218,13 @@
     return playSrc(cueSrc(key), cb);
   }
 
+  // One step of the 3-2-1-GO sequence. Returns false when no clip is mapped,
+  // which the caller must treat as "stay silent", NOT as "use the old TTS".
+  function playCountdown(step, cb) {
+    if (!hasCountdown(step)) return false;
+    return playSrc(countdownSrc(step), cb);
+  }
+
   function preload(id) {
     if (!hasMission(id)) return;
     try {
@@ -198,6 +242,22 @@
         var a = new Audio();
         a.preload = "auto";
         a.src = cueSrc(key);
+        a.load();
+      } catch (_) {}
+    });
+  }
+
+  // Warms only the four countdown clips (no-op while COUNTDOWN_FILES is
+  // empty). Deliberately separate from preloadCues(): the RLGL caller cues are
+  // irrelevant to a plain timer mission, and §19 says do not pull audio nobody
+  // is about to hear.
+  function preloadCountdown() {
+    if (!isAvailable()) return;
+    Object.keys(COUNTDOWN_FILES).forEach(function (step) {
+      try {
+        var a = new Audio();
+        a.preload = "auto";
+        a.src = countdownSrc(step);
         a.load();
       } catch (_) {}
     });
@@ -226,8 +286,11 @@
     hasMission: hasMission,
     playMission: playMission,
     playCue: playCue,
+    hasCountdown: hasCountdown,
+    playCountdown: playCountdown,
     preload: preload,
     preloadCues: preloadCues,
+    preloadCountdown: preloadCountdown,
     unlock: unlock,
     stop: stop,
     isPlaying: isPlaying
