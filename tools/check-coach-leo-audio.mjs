@@ -66,6 +66,29 @@ for(const f of cueFiles){
   check(`on disk: assets/audio/coach-leo/en/game-cues/${f}`, fs.existsSync(path.join("assets/audio/coach-leo/en/game-cues", f)));
 }
 
+/* 3-2-1-GO start sequence. The map may legitimately be empty (English then
+ * counts down silently over the visual overlay), but it must never be HALF
+ * filled and it must never be possible for English to fall through to the
+ * device TTS voice again — that regression is invisible on desktop Chrome and
+ * only shows up on a real phone, which is how it shipped the first time. */
+const countdownBlock = source.slice(source.indexOf("var COUNTDOWN_FILES"), source.indexOf("var STALL_MS"));
+const countdownEntries = [...countdownBlock.matchAll(/^\s*(?:"(\d)"|(go)):\s*"([^"]+\.mp3)"/gm)]
+  .map(m => ({ key: m[1] || m[2], file: m[3] }));
+check("countdown map is all-or-nothing (0 or 4 clips)", countdownEntries.length === 0 || countdownEntries.length === 4, `${countdownEntries.length} mapped`);
+for(const { key, file } of countdownEntries){
+  check(`countdown "${key}" on disk: ${file}`, fs.existsSync(path.join("assets/audio/coach-leo/en/game-cues", file)));
+}
+if(countdownEntries.length === 0){
+  console.log("  note countdown clips not shipped yet — English counts down silently by design");
+}
+
+const appSrc = fs.readFileSync("app.js", "utf8");
+const announceBlock = appSrc.slice(appSrc.indexOf("function showCountdownThenStart"), appSrc.indexOf("function startTimer"));
+check("countdown never calls coachSpeak() directly", !announceBlock.includes("coachSpeak("));
+check("countdown routes through speakCountdownStep()", announceBlock.includes("speakCountdownStep("));
+const routerBlock = appSrc.slice(appSrc.indexOf("function speakCountdownStep"), appSrc.indexOf("/* Visual countdown"));
+check("English countdown never falls back to speechSynthesis", /isAvailable\(\)[\s\S]*return;/.test(routerBlock));
+
 if(failures){
   console.log(`\n❌ ${failures} Coach Leo audio contract failure(s).`);
   process.exit(1);

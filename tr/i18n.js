@@ -31,15 +31,30 @@
    * straight form, matching what the generated table already does: the source
    * files are inconsistent and a near-miss silently falls through to English. */
   const EXACT_EXTRA = {
-    // Full-set onboarding and repeatable Play Modes (2026-08-14)
-    "Full set: four paddles and four soft balls": "Tam set: dört paddle ve dört yumuşak top",
-    "4 paddles": "4 paddle",
-    "4 soft balls": "4 yumuşak top",
-    "First game: grab 2 paddles + 1 ball": "İlk oyun: 2 paddle + 1 top hazırla",
-    "Play Modes": "Oyun Modları",
+    /* First-mission gear. The welcome overlay answers "what do we pick up
+     * now?", not "what is in the box" — so it names 2 paddles + 1 ball and the
+     * ×4 inventory lives on the Quick Play and product-care copy instead. The
+     * old ×4 keys are gone with the markup that carried them. */
+    "For your first game: two paddles and one soft ball": "İlk oyunun için: iki paddle ve bir yumuşak top",
+    "2 paddles": "2 paddle",
+    "1 soft ball": "1 yumuşak top",
+    "That’s all you need to start.": "Başlamak için bu kadarı yeterli.",
+    "That's all you need to start.": "Başlamak için bu kadarı yeterli.",
+    /* "Play Modes" / the "Modes" nav tab are now called Quick Play, and the
+     * entry point moved from the bottom bar onto the Play screen. The panel id,
+     * the data-tab value and every analytics name still say "modes" — only the
+     * words a family reads changed, so only these keys did. */
+    "Quick Play": "Hızlı Oyun",
+    "Replayable games when you just want to start fast.":
+      "Hemen başlamak istediğinde tekrar tekrar oynanan oyunlar.",
+
+    /* Picked-for-You card once its mission is finished: the primary action
+     * leads to the next mission and replay drops to secondary. The mission NAME
+     * inside "Next: …" is already Turkish (localizeData rewrites the mission
+     * table), so only the prefix needs a rule — see translateCore below. */
+    "Mission complete": "Görev tamamlandı",
     "Adults": "Aile",
     "Solo, 2-player, and group games": "Tek kişilik, 2 kişilik ve grup oyunları",
-    "Modes": "Modlar",
     "Quick games for your full 4-paddle set. Repeat them anytime—they don’t change Mission progress.":
       "4 paddle’lı tam setin için kısa oyunlar. İstediğin zaman tekrarla; Görev ilerlemesini değiştirmez.",
     "How many are playing?": "Kaç kişi oynuyor?",
@@ -250,6 +265,10 @@
     if ((m = norm.match(/^(\d+) day legend!$/i))) return `${m[1]} günlük efsane!`;
     if ((m = norm.match(/^Family streak: (\d+) days?$/i))) return `Aile serisi: ${m[1]} gün`;
     if ((m = norm.match(/^Mission (\d+) of (\d+)$/i))) return `Görev ${m[1]}/${m[2]}`;
+    // Picked-for-You "next mission" CTA. The captured half is a mission title,
+    // which localizeData() has already replaced with its Turkish name, so it is
+    // passed straight through rather than looked up a second time.
+    if ((m = norm.match(/^Next:\s*(.+)$/))) return `Sıradaki: ${m[1]}`;
     // Coach Leo's guided tour counter (leo-tour.js) — same shape as the line
     // above, different noun, and it was reaching the screen in English.
     if ((m = norm.match(/^Step (\d+) of (\d+)$/i))) return `Adım ${m[1]}/${m[2]}`;

@@ -1008,7 +1008,11 @@ const dailyIcon = document.getElementById("dailyIcon");
 const dailyName = document.getElementById("dailyName");
 const dailyMeta = document.getElementById("dailyMeta");
 const btnDailyPlay = document.getElementById("btnDailyPlay");
+const btnDailyReplay = document.getElementById("btnDailyReplay");
 const btnDailyNew = document.getElementById("btnDailyNew");
+// Mission the Picked-for-You card's primary action leads to once the featured
+// mission is done (0 = the card is still offering the featured mission).
+let _dailyNextId = 0;
 
 const a2hsBanner = document.getElementById("a2hsBanner");
 const a2hsHint = document.getElementById("a2hsHint");
@@ -1745,11 +1749,41 @@ function renderDailyUI(){
       <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
     `;
   }
+  /* Completion hierarchy. A finished mission used to leave "Play Again" as the
+   * single, full-width, high-contrast action — so the obvious next tap was to
+   * repeat the game the family just played, and the other 35 stayed invisible.
+   * Replay is still one tap away; it is just no longer the loudest thing on the
+   * screen. Reads existing state only — nothing here writes progress. */
+  const nextPick = doneToday ? getNextRecommendedMission(ms.id) : null;
+  _dailyNextId = nextPick ? nextPick.id : 0;
   if(btnDailyPlay){
-    btnDailyPlay.innerHTML = doneToday
-      ? '<i class="jic jic-loop" aria-hidden="true"></i> Play Again'
-      : '<i class="jic jic-play" aria-hidden="true"></i> Start Mission';
+    // Label only — see index.html for why this button carries no aria-label.
+    if(nextPick){
+      btnDailyPlay.innerHTML = `<i class="jic jic-arrow-right" aria-hidden="true"></i> <span class="dailyPlayLabel">Next: ${escapeHtml(nextPick.title)}</span>`;
+    }else if(doneToday){
+      // Every mission is done — replay is genuinely the only thing left.
+      btnDailyPlay.innerHTML = '<i class="jic jic-loop" aria-hidden="true"></i> Play Again';
+    }else{
+      btnDailyPlay.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Start Mission';
+    }
   }
+  if(btnDailyReplay) btnDailyReplay.style.display = nextPick ? "" : "none";
+  // States this mission's own status in words, not just the green check icon.
+  // The running "N of 36 missions complete" count deliberately stays in the
+  // progress strip directly below rather than being repeated here.
+  const doneNote = document.getElementById("dailyDoneNote");
+  if(doneNote) doneNote.style.display = doneToday ? "" : "none";
+}
+
+/* The mission to offer after this one is finished. Deliberately reuses the
+ * existing recommendation engine (getCoachPick: least-finished pack first, an
+ * Easy mission within it, deterministic per day) instead of introducing a
+ * second, competing notion of "next". Read-only. */
+function getNextRecommendedMission(afterId){
+  const pick = getCoachPick();
+  if(pick && pick.mission && pick.mission.id !== afterId) return pick.mission;
+  const pool = ageEligibleMissions().filter(m => !done.has(m.id) && m.id !== afterId);
+  return pool.length ? pool[0] : null;
 }
 
 /* ===== A2HS helper ===== */
@@ -2830,6 +2864,40 @@ function maybeShowLeoSpeakHint(btn){
 
 let _midplayAnnounced = false; // retained for state compatibility; no generic praise is spoken
 
+/* One spoken step of the 3-2-1-GO start sequence.
+ *
+ * This used to be a bare coachSpeak() call, i.e. speechSynthesis with the
+ * device's built-in en-US voice, unconditionally. Every other English Coach
+ * Leo line moved to the prerecorded set months ago, so the real-device
+ * experience was: Leo reads the mission in his recorded voice, then a
+ * completely different robotic voice counts the kid in. That mismatch is the
+ * "old voice on the countdown" report — nothing was failing over, the
+ * countdown simply never asked CoachLeoAudio in the first place.
+ *
+ * Routing, deliberately asymmetric:
+ *   • English  → CoachLeoAudio only. If a prerecorded countdown clip is not
+ *     mapped (it isn't yet), the sequence stays SILENT and keeps the visual
+ *     count + the tick below. Falling back to speechSynthesis here would
+ *     re-introduce exactly the voice this change removes, so it is not a
+ *     fallback — it is the bug.
+ *   • Turkish  → unchanged. CoachLeoAudio.isAvailable() is false on /tr, and
+ *     tr/i18n.js re-speaks every utterance in tr-TR, so speechSynthesis is
+ *     the intended path there and stays wired up.
+ * The global speechSynthesis system is untouched everywhere else. */
+function speakCountdownStep(value){
+  // Same mute guard every other voice path uses — coachSpeak() checked soundOn
+  // itself, so the check has to move up here now that it is not always the one
+  // doing the talking.
+  if(!soundOn) return;
+  const leo = window.CoachLeoAudio;
+  if(leo && leo.isAvailable()){
+    const key = value === "GO!" ? "go" : String(value);
+    if(leo.hasCountdown(key)) leo.playCountdown(key);
+    return;
+  }
+  coachSpeak(value === "GO!" ? "Go!" : String(value), { rate: 1.1, pitch: 1.3 });
+}
+
 /* Visual countdown 3-2-1-GO before timer starts */
 function showCountdownThenStart(durationSeconds){
   cancelTimerCountdown();
@@ -2857,7 +2925,7 @@ function showCountdownThenStart(durationSeconds){
       display.classList.add("pop");
     }
     if(countdownMissionId !== 13){
-      coachSpeak(val === "GO!" ? "Go!" : String(val), { rate: 1.1, pitch: 1.3 });
+      speakCountdownStep(val);
       clickSound("click");
     }
   };
@@ -3232,6 +3300,17 @@ function openMission(id){
     }
     btnStartTimer.onclick = () => {
       if(timerHoldResetArmed) return; // ignore click right after a hold-reset
+      // iOS Safari only allows playback that a gesture started. The countdown's
+      // "2", "1" and "GO!" fire from setInterval, well outside this tap, so
+      // claim permission now — same trick jumvi-redlight.js uses for its caller
+      // cues. Gated on a clip actually being mapped so nothing is fetched for a
+      // countdown that is currently silent (and it is a no-op on /tr anyway).
+      if(timerState === "idle" && soundOn && window.CoachLeoAudio && window.CoachLeoAudio.hasCountdown("go")){
+        try{
+          window.CoachLeoAudio.unlock();
+          window.CoachLeoAudio.preloadCountdown();
+        }catch(_){ }
+      }
       if(timerState === "idle" && _missionNarrationPending){
         if(_missionNarrationWatchdog) clearTimeout(_missionNarrationWatchdog);
         _missionNarrationWatchdog = null;
@@ -4343,6 +4422,19 @@ if(btnKidsMode){
 /* Daily mission buttons */
 if(btnDailyPlay){
   btnDailyPlay.onclick = ()=>{
+    clickSound("click");
+    ensureDailyMission();
+    // Once the featured mission is done this button leads onward instead of
+    // replaying; renderDailyUI() is what decided that, and it stored the id.
+    if(_dailyNextId && done.has(dailyIdStored)){
+      openMission(_dailyNextId);
+      return;
+    }
+    openMission(dailyIdStored);
+  };
+}
+if(btnDailyReplay){
+  btnDailyReplay.onclick = ()=>{
     clickSound("click");
     ensureDailyMission();
     openMission(dailyIdStored);
