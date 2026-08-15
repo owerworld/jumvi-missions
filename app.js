@@ -816,23 +816,68 @@ const TEAM_PARTNER_KEYS = Object.freeze(["dad","mom","sibling","grandma","grandp
 const TEAM_LIST_KEY = _PP + "teams_v1";
 const ACTIVE_TEAM_KEY = _PP + "active_team_v1";
 
-function getJumviTeams(){
-  const raw = lsGetJSON(TEAM_LIST_KEY, []);
+/* Team identity rule (Phase 2D):
+ *   adult/friend team = active child profile + one relationship
+ *   sibling team      = canonical pair of two saved child profile ids
+ *
+ * One child + the same partner can NEVER create a second team. Selecting the
+ * same combination simply re-activates the existing journey.
+ */
+const TEAM_SETUP_REOPEN_KEY = "jumvi_team_setup_resume_v1"; // sessionStorage only
+const TEAM_PROGRESS_SUFFIXES = Object.freeze([
+  "missions_done_v3",
+  "streak_count_v1",
+  "streak_best_v1",
+  "streak_last_v1",
+  "badges_unlocked_v1",
+  "streak_freeze_v1",
+  "daily_challenge_v1"
+]);
+
+function teamListKeyForProfile(profileId){
+  return "jumvi_" + String(profileId || "") + "_teams_v1";
+}
+function normalizeJumviTeams(raw){
   if(!Array.isArray(raw)) return [];
-  return raw.filter(t =>
-    t && /^t\d+$/.test(String(t.id || "")) &&
-    TEAM_PARTNER_KEYS.includes(String(t.partner || ""))
-  ).map(t => ({ id:String(t.id), partner:String(t.partner), createdAt:String(t.createdAt || "") }));
+  return raw.filter(t => {
+    if(!t || !TEAM_PARTNER_KEYS.includes(String(t.partner || ""))) return false;
+    const id = String(t.id || "");
+    return /^t\d+$/.test(id) || /^s_p\d+_p\d+$/.test(id);
+  }).map(t => ({
+    id:String(t.id),
+    partner:String(t.partner),
+    partnerProfileId:t.partnerProfileId ? String(t.partnerProfileId) : "",
+    createdAt:String(t.createdAt || "")
+  }));
+}
+function getJumviTeamsForProfile(profileId){
+  return normalizeJumviTeams(lsGetJSON(teamListKeyForProfile(profileId), []));
+}
+function saveJumviTeamsForProfile(profileId, teams){
+  try { lsSet(teamListKeyForProfile(profileId), JSON.stringify(teams || [])); } catch(_){}
+}
+function getJumviTeams(){
+  return getJumviTeamsForProfile(getActiveProfileId());
 }
 function saveJumviTeams(teams){
-  try { lsSet(TEAM_LIST_KEY, JSON.stringify(teams || [])); } catch(_){}
+  saveJumviTeamsForProfile(getActiveProfileId(), teams);
 }
 function getActiveJumviTeam(){
   const id = lsGet(ACTIVE_TEAM_KEY, "");
   if(!id) return null;
   return getJumviTeams().find(t => t.id === id) || null;
 }
+function canonicalSiblingTeamId(profileA, profileB){
+  const pair = [String(profileA || ""), String(profileB || "")].sort();
+  if(pair.length !== 2 || !/^p\d+$/.test(pair[0]) || !/^p\d+$/.test(pair[1]) || pair[0] === pair[1]) return "";
+  return "s_" + pair[0] + "_" + pair[1];
+}
+function isSharedSiblingTeamId(teamId){
+  return /^s_p\d+_p\d+$/.test(String(teamId || ""));
+}
 function teamProgressPrefix(teamId){
+  // Sibling pairs must resolve to ONE shared journey whichever child is active.
+  if(isSharedSiblingTeamId(teamId)) return "jumvi_team_" + String(teamId) + "_";
   return _PP + "team_" + String(teamId || "") + "_";
 }
 function nextJumviTeamId(teams){
@@ -840,8 +885,18 @@ function nextJumviTeamId(teams){
   while((teams || []).some(t => t.id === ("t" + n))) n++;
   return "t" + n;
 }
+function copyProgressPrefix(sourcePrefix, destPrefix){
+  TEAM_PROGRESS_SUFFIXES.forEach(suffix => {
+    const value = lsGet(sourcePrefix + suffix, null);
+    if(value !== null && lsGet(destPrefix + suffix, null) === null){
+      try { lsSet(destPrefix + suffix, value); } catch(_){}
+    }
+  });
+}
 function copyPersonalProgressIntoFirstTeam(teamId){
-  const dst = teamProgressPrefix(teamId);
+  // Keep this literal list inside this exact function. check-tr-invariants.mjs
+  // intentionally parses it to prove pre-Team-XP personal progress remains
+  // readable/migratable after architecture changes.
   const suffixes = [
     "missions_done_v3",
     "streak_count_v1",
@@ -851,35 +906,98 @@ function copyPersonalProgressIntoFirstTeam(teamId){
     "streak_freeze_v1",
     "daily_challenge_v1"
   ];
+  const dst = teamProgressPrefix(teamId);
   suffixes.forEach(suffix => {
-    const sourceKey = _PP + suffix;
-    const destKey = dst + suffix;
-    const value = lsGet(sourceKey, null);
-    if(value !== null && lsGet(destKey, null) === null){
-      try { lsSet(destKey, value); } catch(_){}
+    const value = lsGet(_PP + suffix, null);
+    if(value !== null && lsGet(dst + suffix, null) === null){
+      try { lsSet(dst + suffix, value); } catch(_){}
     }
   });
 }
+function setTeamActiveAndReturnToPlay(teamId){
+  if(!teamId) return;
+  lsSet(ACTIVE_TEAM_KEY, teamId);
+  // A setup flow ends in PLAY, not back on the setup/standings screen.
+  lsSet("jumvi_active_tab_v1", "today");
+  window.location.reload();
+}
 function chooseOrCreateJumviTeam(partner){
-  if(!TEAM_PARTNER_KEYS.includes(partner)) return;
+  // Generic sibling creation is intentionally forbidden from now on:
+  // sibling teams must name the actual second saved child.
+  if(!TEAM_PARTNER_KEYS.includes(partner) || partner === "sibling") return;
   const teams = getJumviTeams();
-  let team = teams.find(t => t.partner === partner) || null;
+  let team = teams.find(t => t.partner === partner && !t.partnerProfileId) || null;
   if(!team){
     const wasFirstTeam = teams.length === 0;
     team = {
       id: nextJumviTeamId(teams),
       partner,
+      partnerProfileId:"",
       createdAt: new Date().toISOString()
     };
     teams.push(team);
     saveJumviTeams(teams);
     if(wasFirstTeam) copyPersonalProgressIntoFirstTeam(team.id);
   }
-  lsSet(ACTIVE_TEAM_KEY, team.id);
-  window.location.reload();
+  // Duplicate combination => use the existing team. Never create #2.
+  setTeamActiveAndReturnToPlay(team.id);
+}
+function chooseOrCreateSiblingTeam(otherProfileId){
+  const activeId = getActiveProfileId();
+  const other = getProfiles().find(p => p.id === otherProfileId) || null;
+  if(!other || other.id === activeId) return;
+
+  const siblingId = canonicalSiblingTeamId(activeId, other.id);
+  if(!siblingId) return;
+
+  const teams = getJumviTeams();
+  let team = teams.find(t => t.id === siblingId) || null;
+  const wasFirstTeam = teams.length === 0;
+
+  if(!team){
+    // Upgrade one old generic "Sibling" team if it exists. Copy its journey to
+    // the new canonical shared prefix so a previous family's progress is kept.
+    const legacy = teams.find(t => t.partner === "sibling" && !t.partnerProfileId && /^t\d+$/.test(t.id)) || null;
+    if(legacy){
+      copyProgressPrefix(_PP + "team_" + legacy.id + "_", "jumvi_team_" + siblingId + "_");
+      const legacyIndex = teams.findIndex(t => t.id === legacy.id);
+      if(legacyIndex >= 0) teams.splice(legacyIndex, 1);
+    }
+
+    team = {
+      id:siblingId,
+      partner:"sibling",
+      partnerProfileId:other.id,
+      createdAt:new Date().toISOString()
+    };
+    teams.push(team);
+    saveJumviTeams(teams);
+
+    // The same canonical team reference is written into the other child's
+    // team list. Both directions therefore open the SAME progress prefix.
+    const otherTeams = getJumviTeamsForProfile(other.id);
+    if(!otherTeams.some(t => t.id === siblingId)){
+      otherTeams.push({
+        id:siblingId,
+        partner:"sibling",
+        partnerProfileId:activeId,
+        createdAt:team.createdAt
+      });
+      saveJumviTeamsForProfile(other.id, otherTeams);
+    }
+
+    if(wasFirstTeam && !lsGet("jumvi_team_" + siblingId + "_missions_done_v3", null)){
+      copyPersonalProgressIntoFirstTeam(siblingId);
+    }
+  }
+
+  setTeamActiveAndReturnToPlay(team.id);
 }
 function choosePersonalJumviProgress(){
+  // Backward-compatibility escape hatch only. There is no visible Personal XP
+  // control in the product UI.
   lsSet(ACTIVE_TEAM_KEY, "");
+  lsSet("jumvi_active_tab_v1", "today");
   window.location.reload();
 }
 
@@ -1411,7 +1529,9 @@ const TEAM_COPY = Object.freeze({
     firstTeam:"Choose your first team",
     firstTeamSub:"Your current mission progress will carry into the first team you create.",
     grownupsIntro:"Names, avatars, app settings, product care, privacy, and support.",
-    navTeams:"Teams"
+    navTeams:"Teams",
+    setupStep:"STEP 2 OF 2", playingAs:"PLAYING AS", changeKid:"Change / add child",
+    whoWith:"Who is playing with", useExisting:"Already created · tap to use", newTeam:"New team"
   },
   tr: {
     dad:"Baba", mom:"Anne", sibling:"Kardeş",
@@ -1432,7 +1552,9 @@ const TEAM_COPY = Object.freeze({
     firstTeam:"İlk takımını seç",
     firstTeamSub:"Mevcut görev ilerlemen oluşturduğun ilk takıma aktarılacak.",
     grownupsIntro:"İsimler, avatarlar, uygulama ayarları, ürün bakımı, gizlilik ve destek.",
-    navTeams:"Takımlar"
+    navTeams:"Takımlar",
+    setupStep:"2 / 2. ADIM", playingAs:"OYNUYOR", changeKid:"Çocuğu değiştir / ekle",
+    whoWith:"Kiminle oynuyor", useExisting:"Takım hazır · kullanmak için dokun", newTeam:"Yeni takım"
   }
 });
 function teamCopy(){
@@ -1452,17 +1574,42 @@ function activeChildName(){
   if(!raw || raw.toLowerCase() === "player") return "";
   return raw;
 }
+function childNameByProfileId(profileId){
+  const p = getProfiles().find(x => x.id === profileId);
+  const raw = String((p && p.name) || "").trim();
+  return (!raw || raw.toLowerCase() === "player") ? "" : raw;
+}
 function teamDisplayName(team){
   if(!team) return "";
-  const child = activeChildName();
-  const partner = teamPartnerLabel(team.partner);
-  return child ? `${child} + ${partner}` : `${isTurkishUI() ? "Çocuk" : "Kid"} + ${partner}`;
+  const child = activeChildName() || (isTurkishUI() ? "Çocuk" : "Kid");
+  if(team.partner === "sibling" && team.partnerProfileId){
+    const siblingName = childNameByProfileId(team.partnerProfileId);
+    if(siblingName) return `${child} + ${siblingName}`;
+  }
+  return `${child} + ${teamPartnerLabel(team.partner)}`;
 }
+
+let _teamSetupResumeAfterIdentity = false;
+let _teamSetupSelectingChild = false;
+
 function openChildIdentitySetup(){
+  _teamSetupResumeAfterIdentity = true;
   openProfileSheet();
   setTimeout(()=>{
-    try { openProfileEdit(getActiveProfileId()); } catch(_){}
+    try {
+      openProfileEdit(getActiveProfileId());
+      const title = document.getElementById("profileEditTitle");
+      const save = document.getElementById("btnProfileEditSave");
+      if(title) title.innerHTML = `<i class="jic jic-pencil" aria-hidden="true"></i> ${isTurkishUI() ? "1 / 2. ADIM · Çocuk" : "STEP 1 OF 2 · CHILD"}`;
+      if(save) save.textContent = isTurkishUI() ? "Kaydet ve Devam Et" : "Save & Continue";
+    } catch(_){}
   }, 40);
+}
+function openTeamSetupChildChooser(){
+  _teamSetupSelectingChild = true;
+  try { sessionStorage.setItem(TEAM_SETUP_REOPEN_KEY, "1"); } catch(_){}
+  closeTeamXpPicker();
+  openProfileSheet();
 }
 function teamDoneSet(team){
   if(!team) return new Set();
@@ -1524,10 +1671,12 @@ function renderTeamsHub(){
   const teams = getJumviTeams();
   const ranked = teams.map((team, index)=>{
     const progress = progressPreview(teamDoneSet(team));
-    return { team, progress, index };
+    const streak = Math.max(0, Number(lsGet(teamProgressPrefix(team.id) + "streak_count_v1", "0")) || 0);
+    return { team, progress, streak, index };
   }).sort((a,b)=>
     b.progress.xp - a.progress.xp ||
     b.progress.missions - a.progress.missions ||
+    b.streak - a.streak ||
     a.index - b.index
   );
 
@@ -1567,7 +1716,7 @@ function renderTeamsHub(){
       <span class="teamsRankEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[entry.team.partner] || "👥"}</span>
       <span class="teamsRankMain">
         <strong>${escapeHtml(teamDisplayName(entry.team))}</strong>
-        <small>${escapeHtml(c.level)} ${entry.progress.level} · ${entry.progress.missions}/36 ${escapeHtml(c.missions)}</small>
+        <small>${escapeHtml(c.level)} ${entry.progress.level} · ${entry.progress.missions}/36 ${escapeHtml(c.missions)}${entry.streak ? ` · 🔥 ${entry.streak}` : ""}</small>
       </span>
       <span class="teamsRankScore">
         <strong>${entry.progress.xp}</strong>
@@ -1622,73 +1771,98 @@ function renderTeamXpPicker(){
   const existingList = document.getElementById("teamXpExistingList");
   const createTitle = document.getElementById("teamXpCreateTitle");
   const partnerGrid = document.getElementById("teamXpPartnerGrid");
-  const personalTitle = document.getElementById("teamXpPersonalTitle");
-  const personalSub = document.getElementById("teamXpPersonalSub");
 
   if(!backdrop || !existingList || !partnerGrid) return;
 
+  const child = activeChildName();
+  if(!child) return;
+
+  const activeProfile = getActiveProfile();
   const teams = getJumviTeams();
-  if(title) title.textContent = ACTIVE_JUMVI_TEAM ? c.switchTitle : c.chooseTitle;
-  if(sub) sub.textContent = c.sub;
-  if(existingTitle) existingTitle.textContent = c.yourTeams;
-  if(createTitle) createTitle.textContent = c.playWith;
-  if(personalTitle) personalTitle.textContent = c.personal;
-  if(personalSub) personalSub.textContent = c.personalSub;
 
+  if(title) title.textContent = `${c.setupStep} · ${c.createTeam}`;
+  if(sub) sub.textContent = `${c.whoWith} ${child}?`;
+  if(existingTitle) existingTitle.textContent = c.playingAs;
+  if(createTitle) createTitle.textContent = `${c.whoWith} ${child}?`;
+  if(existingSection) existingSection.hidden = false;
+
+  // Step 2 starts by making the selected child unmistakable. Tapping this row
+  // opens the existing Kids & Settings sheet; switching/adding a child resumes
+  // Team Setup automatically after the reload.
   existingList.innerHTML = "";
-  if(existingSection) existingSection.hidden = teams.length === 0;
-
-  teams.forEach(team => {
-    const p = progressPreview(teamDoneSet(team));
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "teamXpExisting" + (ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id ? " active" : "");
-    btn.innerHTML = `
-      <span class="teamXpExistingIcon" aria-hidden="true">${TEAM_PARTNER_EMOJI[team.partner] || "👥"}</span>
-      <span class="teamXpExistingCopy">
-        <strong>${escapeHtml(teamDisplayName(team))}</strong>
-        <small>${c.level} ${p.level} · ${p.xp} XP · ${p.missions}/36 ${c.missions}</small>
-      </span>
-      <span class="teamXpExistingCheck">${ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id
-        ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
-        : '<i class="jic jic-arrow-right" aria-hidden="true"></i>'}</span>
-    `;
-    btn.onclick = ()=>{
-      if(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id){ closeTeamXpPicker(); return; }
-      clickSound("click");
-      lsSet(ACTIVE_TEAM_KEY, team.id);
-      window.location.reload();
-    };
-    existingList.appendChild(btn);
-  });
+  const childBtn = document.createElement("button");
+  childBtn.type = "button";
+  childBtn.className = "teamSetupChildCard";
+  childBtn.innerHTML = `
+    <span class="teamSetupChildAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(activeProfile?.avatar || "monkey"), "avatarArt", "", true)}</span>
+    <span class="teamSetupChildCopy">
+      <strong>${escapeHtml(child)}</strong>
+      <small>${escapeHtml(c.changeKid)}</small>
+    </span>
+    <i class="jic jic-arrow-right" aria-hidden="true"></i>
+  `;
+  childBtn.onclick = ()=>{ clickSound("click"); openTeamSetupChildChooser(); };
+  existingList.appendChild(childBtn);
 
   partnerGrid.innerHTML = "";
-  TEAM_PARTNER_KEYS.forEach(partner => {
-    const exists = teams.some(t => t.partner === partner);
+
+  // Adult/friend relationships: uniqueness is active child + relationship.
+  ["dad","mom","grandma","grandpa","friend"].forEach(partner => {
+    const existing = teams.find(t => t.partner === partner && !t.partnerProfileId) || null;
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "teamXpPartner";
-    btn.disabled = exists;
-    btn.innerHTML = `<span class="teamXpPartnerEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[partner] || "👥"}</span><span>${escapeHtml(teamPartnerLabel(partner))}</span>`;
-    if(exists) btn.setAttribute("aria-label", `${teamPartnerLabel(partner)} — ${isTurkishUI() ? "takım zaten var" : "team already exists"}`);
+    btn.className = "teamXpPartner teamSetupPartner" + (existing ? " exists" : "");
+    const preview = `${child} + ${teamPartnerLabel(partner)}`;
+    btn.innerHTML = `
+      <span class="teamXpPartnerEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[partner] || "👥"}</span>
+      <span class="teamSetupPartnerCopy">
+        <strong>${escapeHtml(preview)}</strong>
+        <small>${escapeHtml(existing ? c.useExisting : c.newTeam)}</small>
+      </span>
+      <i class="jic ${existing ? "jic-circle-check" : "jic-arrow-right"}" aria-hidden="true"></i>
+    `;
     btn.onclick = ()=>{
-      if(exists) return;
       clickSound("click");
       chooseOrCreateJumviTeam(partner);
     };
     partnerGrid.appendChild(btn);
   });
 
-  const personal = document.getElementById("teamXpPersonal");
-  if(personal){
-    const p = progressPreview(personalDoneSet());
-    const suffix = `${c.level} ${p.level} · ${p.xp} XP · ${p.missions}/36 ${c.missions}`;
-    if(personalSub) personalSub.textContent = ACTIVE_JUMVI_TEAM ? `${c.personalSub} · ${suffix}` : suffix;
-    personal.classList.toggle("active", !ACTIVE_JUMVI_TEAM);
-  }
+  // Sibling is never generic now. Every named second child gets an exact,
+  // canonical shared pair such as Ece + Ali.
+  getProfiles()
+    .filter(p => p.id !== getActiveProfileId())
+    .filter(p => {
+      const name = String(p.name || "").trim();
+      return name && name.toLowerCase() !== "player";
+    })
+    .forEach(other => {
+      const siblingId = canonicalSiblingTeamId(getActiveProfileId(), other.id);
+      const existing = teams.find(t => t.id === siblingId) || null;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "teamXpPartner teamSetupPartner sibling" + (existing ? " exists" : "");
+      btn.innerHTML = `
+        <span class="teamSetupSiblingAvatar" aria-hidden="true">${JUMVI_ART.img(JUMVI_ART.avatar(other.avatar || "monkey"), "avatarArt", "", true)}</span>
+        <span class="teamSetupPartnerCopy">
+          <strong>${escapeHtml(child + " + " + other.name)}</strong>
+          <small>${escapeHtml(existing ? c.useExisting : c.newTeam)}</small>
+        </span>
+        <i class="jic ${existing ? "jic-circle-check" : "jic-arrow-right"}" aria-hidden="true"></i>
+      `;
+      btn.onclick = ()=>{
+        clickSound("click");
+        chooseOrCreateSiblingTeam(other.id);
+      };
+      partnerGrid.appendChild(btn);
+    });
 }
 
 function openTeamXpPicker(){
+  if(!activeChildName()){
+    openChildIdentitySetup();
+    return;
+  }
   const backdrop = document.getElementById("teamXpBackdrop");
   if(!backdrop) return;
   _teamXpReturnFocus = document.activeElement;
@@ -1705,6 +1879,23 @@ function openTeamXpPicker(){
   });
 }
 
+
+/* Team Setup child-switch resume: session-only; never persisted as identity. */
+document.addEventListener("DOMContentLoaded", ()=>{
+  let resume = false;
+  try {
+    resume = sessionStorage.getItem(TEAM_SETUP_REOPEN_KEY) === "1";
+    if(resume) sessionStorage.removeItem(TEAM_SETUP_REOPEN_KEY);
+  } catch(_){}
+  if(!resume) return;
+  setTimeout(()=>{
+    try {
+      switchTab("modes");
+      openTeamXpPicker();
+    } catch(_){}
+  }, 180);
+});
+
 (function wireTeamXpPicker(){
   const open = document.getElementById("xpTeamPicker");
   const close = document.getElementById("teamXpClose");
@@ -1714,10 +1905,6 @@ function openTeamXpPicker(){
 
   if(teamsCreate) teamsCreate.addEventListener("click", ()=>{
     clickSound("click");
-    if(!activeChildName()){
-      openChildIdentitySetup();
-      return;
-    }
     openTeamXpPicker();
   });
   if(open) open.addEventListener("click", ()=>{ clickSound("click"); switchTab("modes"); renderTeamsHub(); });
@@ -5075,6 +5262,16 @@ function closeProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
   if(!bk) return;
   bk.classList.remove("show");
+
+  if(_teamSetupSelectingChild){
+    _teamSetupSelectingChild = false;
+    try { sessionStorage.removeItem(TEAM_SETUP_REOPEN_KEY); } catch(_){}
+  }
+  if(_teamSetupResumeAfterIdentity){
+    _teamSetupResumeAfterIdentity = false;
+    const editSave = document.getElementById("btnProfileEditSave");
+    if(editSave) editSave.textContent = isTurkishUI() ? "Kaydet" : "Save";
+  }
 }
 function renderProfileList(){
   const list = document.getElementById("profileList");
@@ -5196,7 +5393,19 @@ function saveProfileEdit(){
   if(_profileEditingId === getActiveProfileId()){
     renderAvatar();
   }
-  showToast("Profile updated.");
+
+  const continueTeamSetup = _teamSetupResumeAfterIdentity && _profileEditingId === getActiveProfileId();
+  _teamSetupResumeAfterIdentity = false;
+  const editSave = document.getElementById("btnProfileEditSave");
+  if(editSave) editSave.textContent = isTurkishUI() ? "Kaydet" : "Save";
+
+  showToast(isTurkishUI() ? "Çocuk bilgileri kaydedildi." : "Child saved.");
+
+  if(continueTeamSetup){
+    closeProfileSheet();
+    switchTab("modes");
+    setTimeout(()=> openTeamXpPicker(), 80);
+  }
 }
 function deleteProfile(){
   const id = _profileEditingId;

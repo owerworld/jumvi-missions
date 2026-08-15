@@ -713,8 +713,8 @@
       <div class="teamXpHandle" aria-hidden="true"></div>
       <div class="teamXpHead">
         <div>
-          <h2 id="teamXpTitle">Choose your team</h2>
-          <p id="teamXpSub">JUMVI remembers this choice for the next mission.</p>
+          <h2 id="teamXpTitle">Create a Team</h2>
+          <p id="teamXpSub">Choose who is playing together.</p>
         </div>
         <button class="teamXpClose" id="teamXpClose" type="button" aria-label="Close">
           <i class="ico i-x" aria-hidden="true"></i>
@@ -722,12 +722,12 @@
       </div>
 
       <div class="teamXpSection" id="teamXpExistingSection" hidden>
-        <div class="teamXpSectionTitle" id="teamXpExistingTitle">Your teams</div>
+        <div class="teamXpSectionTitle" id="teamXpExistingTitle">Playing as</div>
         <div class="teamXpExistingList" id="teamXpExistingList"></div>
       </div>
 
       <div class="teamXpSection">
-        <div class="teamXpSectionTitle" id="teamXpCreateTitle">Play with…</div>
+        <div class="teamXpSectionTitle" id="teamXpCreateTitle">Who is playing together?</div>
         <div class="teamXpPartnerGrid" id="teamXpPartnerGrid"></div>
       </div>
     </div>
@@ -1244,13 +1244,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260816-3" defer></script>
+<script src="app.js?v=20260816-4" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260816-3")
+    navigator.serviceWorker.register("/service-worker.js?v=20260816-4")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }

@@ -1697,3 +1697,125 @@ html.theme--dark .teamXpPartnerEmoji{
 .profileQuickLink[data-go-tab="modes"]{
   display:none !important;
 }
+
+/* ==========================================================================
+ * JUMVI Team Setup Math Phase 2D — 2026-08-16
+ * Step 1 child identity → Step 2 exact partner → one persistent team journey.
+ * ========================================================================== */
+
+.teamSetupChildCard{
+  width:100%;
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--soft);
+  color:var(--text);
+  text-align:left;
+  font:inherit;
+}
+.teamSetupChildAvatar,
+.teamSetupSiblingAvatar{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  border-radius:13px;
+  background:rgba(47,182,232,.08);
+}
+.teamSetupChildAvatar .avatarArt,
+.teamSetupSiblingAvatar .avatarArt{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.teamSetupChildCopy{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.teamSetupChildCopy strong{
+  overflow:hidden;
+  color:var(--text);
+  font-size:14px;
+  line-height:1.2;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.teamSetupChildCopy small{
+  color:var(--muted);
+  font-size:10.8px;
+  line-height:1.2;
+  font-weight:750;
+}
+.teamSetupChildCard > .jic{
+  color:var(--muted);
+  font-size:15px;
+}
+
+.teamXpPartnerGrid{
+  grid-template-columns:1fr !important;
+}
+.teamXpPartner.teamSetupPartner{
+  min-height:56px;
+  justify-content:flex-start;
+  gap:10px;
+  padding:9px 10px;
+}
+.teamSetupPartnerCopy{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  text-align:left;
+}
+.teamSetupPartnerCopy strong{
+  overflow:hidden;
+  color:var(--text);
+  font-size:13.5px;
+  line-height:1.2;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.teamSetupPartnerCopy small{
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.2;
+  font-weight:750;
+}
+.teamXpPartner.teamSetupPartner > .jic:last-child{
+  flex:0 0 auto;
+  color:var(--muted);
+  font-size:16px;
+}
+.teamXpPartner.teamSetupPartner.exists{
+  border-color:rgba(109,190,69,.28);
+  background:#F0F7EB;
+}
+html.theme--dark .teamXpPartner.teamSetupPartner.exists{
+  border-color:rgba(109,190,69,.22);
+  background:#1D3829;
+}
+.teamXpPartner.teamSetupPartner.exists > .jic:last-child{
+  color:#6DBE45;
+}
+
+/* The setup step uses the existing JUMVI child-avatar system. Nothing here
+   introduces account/profile language or a second avatar implementation. */
+#profileEditSection .profileEditSaveBtn{
+  min-height:46px;
+}
+
+@media (max-width:380px){
+  .teamSetupPartnerCopy strong{font-size:12.8px;}
+}
