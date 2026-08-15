@@ -602,3 +602,131 @@ html.theme--dark #sheet .sheetActions #btnNext.btnNextHighlight{
     font-size:12px !important;
   }
 }
+
+/* ==========================================================================
+ * JUMVI Warm Toy Phase 1.2 residual polish — 2026-08-15
+ * Screenshot fixes only:
+ * - dark hero seam alignment
+ * - completed-daily "Next: ..." text contrast
+ * - mission metadata chip separation
+ * No JS/data/progress/analytics changes.
+ * ========================================================================== */
+
+/* DARK HERO
+   The dark source is portrait. With contain inside a 78%-wide element, the
+   actual bitmap began far to the right of the element's mask, so the bitmap's
+   left edge remained fully opaque and produced the vertical seam.
+   Size the element to the rendered bitmap instead, then feather its true edge. */
+html.theme--dark #tabToday .todayHeroArt{
+  width:min(48%,350px) !important;
+  height:100% !important;
+  right:0 !important;
+  bottom:0 !important;
+  background-size:100% auto !important;
+  background-position:right bottom !important;
+  background-repeat:no-repeat !important;
+  -webkit-mask-image:linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,0,0,.12) 7%,
+    rgba(0,0,0,.48) 18%,
+    rgba(0,0,0,.82) 30%,
+    #000 43%
+  ) !important;
+  mask-image:linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,0,0,.12) 7%,
+    rgba(0,0,0,.48) 18%,
+    rgba(0,0,0,.82) 30%,
+    #000 43%
+  ) !important;
+}
+html.theme--dark #tabToday .todayHeroStage::after{
+  background:linear-gradient(
+    90deg,
+    #171C3C 0%,
+    rgba(23,28,60,.98) 34%,
+    rgba(23,28,60,.68) 52%,
+    rgba(23,28,60,.18) 70%,
+    transparent 84%
+  ) !important;
+}
+
+/* COMPLETED DAILY CTA
+   JS wraps only the completed-state label in .dailyPlayLabel. Explicitly
+   inherit the intended white CTA text instead of relying on WebKit inheritance. */
+#tabToday .dailyPlayBig .dailyPlayLabel,
+#tabToday .dailyBox.dailyBoxPromoted .dailyPlayBig .dailyPlayLabel{
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+
+/* DAILY META
+   Target direct tag children only. The prior broad descendant selector also
+   touched the users icon and made the visual grouping less predictable. */
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  gap:6px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta > .tag{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:5px !important;
+  width:auto !important;
+  min-height:30px !important;
+  padding:6px 10px !important;
+  margin:0 !important;
+  border:1px solid rgba(87,67,42,.11) !important;
+  border-radius:999px !important;
+  background:#F3EEE6 !important;
+  color:#62584F !important;
+  font-size:12.5px !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  white-space:nowrap !important;
+  box-shadow:none !important;
+}
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta > .tag .jic,
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta > .tag .ico{
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  color:inherit !important;
+  box-shadow:none !important;
+}
+html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyMeta > .tag{
+  border-color:rgba(255,255,255,.08) !important;
+  background:#203448 !important;
+  color:#D7E0E8 !important;
+}
+
+/* Keep mission card vertically tighter after the metadata separates. */
+#tabToday .dailyDoneNote{
+  margin-top:12px !important;
+  margin-bottom:10px !important;
+}
+#tabToday .dailyActionsBig{
+  margin-top:0 !important;
+}
+
+@media (max-width:390px){
+  html.theme--dark #tabToday .todayHeroArt{
+    width:min(50%,338px) !important;
+  }
+  #tabToday .dailyBox.dailyBoxPromoted .dailyMeta > .tag{
+    padding:6px 8px !important;
+    font-size:12px !important;
+  }
+}
