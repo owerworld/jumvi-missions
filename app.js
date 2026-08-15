@@ -1393,24 +1393,46 @@ function isTurkishUI(){
  */
 const TEAM_COPY = Object.freeze({
   en: {
-    dad:"Dad", mom:"Mom", sibling:"Sibling", grandma:"Grandma", grandpa:"Grandpa", friend:"Friend",
-    choose:"Choose team", optional:"Optional · JUMVI remembers",
+    dad:"Dad + Kid", mom:"Mom + Kid", sibling:"Siblings",
+    grandma:"Grandma + Kid", grandpa:"Grandpa + Kid", friend:"Friends",
+    choose:"Choose a team", optional:"Who are you playing with?",
     teamXp:"Team XP", teamProgress:"Team Progress",
-    chooseTitle:"Choose your team", switchTitle:"Switch team",
-    sub:"JUMVI remembers this choice for the next mission.",
-    yourTeams:"Your teams", playWith:"Play with…",
-    personal:"Personal progress", personalSub:"Use this player's own progress",
-    level:"Level", missions:"missions"
+    chooseTitle:"Choose a team", switchTitle:"Switch team",
+    sub:"Pick a family team. JUMVI remembers it for the next mission.",
+    yourTeams:"Your teams", playWith:"Create a team",
+    level:"Level", missions:"missions",
+    hubKicker:"FAMILY CHALLENGE",
+    hubTitle:"Family Teams",
+    hubIntro:"Complete missions together. Every team has its own XP, level, and streak.",
+    standings:"Team Standings",
+    standingsSub:"Who is climbing the JUMVI levels?",
+    createTeam:"Create a Team",
+    playingNow:"PLAYING NOW",
+    firstTeam:"Choose your first team",
+    firstTeamSub:"Your current mission progress will carry into the first team you create.",
+    grownupsIntro:"Settings, product care, privacy, and support.",
+    navTeams:"Teams"
   },
   tr: {
-    dad:"Baba", mom:"Anne", sibling:"Kardeş", grandma:"Büyükanne", grandpa:"Büyükbaba", friend:"Arkadaş",
-    choose:"Takım seç", optional:"İsteğe bağlı · JUMVI hatırlar",
+    dad:"Baba + Çocuk", mom:"Anne + Çocuk", sibling:"Kardeşler",
+    grandma:"Büyükanne + Çocuk", grandpa:"Büyükbaba + Çocuk", friend:"Arkadaşlar",
+    choose:"Takım seç", optional:"Kimler birlikte oynuyor?",
     teamXp:"Takım XP", teamProgress:"Takım İlerlemesi",
-    chooseTitle:"Takımını seç", switchTitle:"Takımı değiştir",
-    sub:"JUMVI bu seçimi sonraki görev için hatırlar.",
-    yourTeams:"Takımların", playWith:"Birlikte oyna…",
-    personal:"Kişisel ilerleme", personalSub:"Bu oyuncunun kendi ilerlemesini kullan",
-    level:"Seviye", missions:"görev"
+    chooseTitle:"Takım seç", switchTitle:"Takımı değiştir",
+    sub:"Bir aile takımı seç. JUMVI sonraki görev için bunu hatırlar.",
+    yourTeams:"Takımların", playWith:"Takım oluştur",
+    level:"Seviye", missions:"görev",
+    hubKicker:"AİLE KAPIŞMASI",
+    hubTitle:"Aile Takımları",
+    hubIntro:"Görevleri birlikte tamamlayın. Her takımın kendi XP'si, seviyesi ve serisi vardır.",
+    standings:"Takım Sıralaması",
+    standingsSub:"JUMVI seviyelerinde kim önde?",
+    createTeam:"Takım Oluştur",
+    playingNow:"ŞİMDİ OYNUYOR",
+    firstTeam:"İlk takımını seç",
+    firstTeamSub:"Mevcut görev ilerlemen oluşturduğun ilk takıma aktarılacak.",
+    grownupsIntro:"Ayarlar, ürün bakımı, gizlilik ve destek.",
+    navTeams:"Takımlar"
   }
 });
 function teamCopy(){
@@ -1421,9 +1443,7 @@ function teamPartnerLabel(partner){
   return c[partner] || partner;
 }
 function teamDisplayName(team){
-  const profile = getActiveProfile();
-  const player = (profile && profile.name ? profile.name : (isTurkishUI() ? "Oyuncu" : "Player")).trim();
-  return `${player} + ${teamPartnerLabel(team.partner)}`;
+  return team ? teamPartnerLabel(team.partner) : "";
 }
 function teamDoneSet(team){
   if(!team) return new Set();
@@ -1444,16 +1464,111 @@ function renderTeamProgressChrome(){
   const pickerLabel = document.getElementById("xpTeamPickerLabel");
   const pickerSub = document.getElementById("xpTeamPickerSub");
   const cardTitle = document.getElementById("xpCardTitle");
+  const card = document.getElementById("xpProgressCard");
+
+  if(cardTitle) cardTitle.textContent = c.teamProgress;
+  if(card) card.classList.toggle("needsTeam", !ACTIVE_JUMVI_TEAM);
 
   if(ACTIVE_JUMVI_TEAM){
-    if(cardTitle) cardTitle.textContent = c.teamProgress;
     if(pickerLabel) pickerLabel.textContent = teamDisplayName(ACTIVE_JUMVI_TEAM);
     if(pickerSub) pickerSub.textContent = c.teamXp;
   }else{
-    if(cardTitle) cardTitle.textContent = isTurkishUI() ? "İlerlemen" : "Your Progress";
     if(pickerLabel) pickerLabel.textContent = c.choose;
     if(pickerSub) pickerSub.textContent = c.optional;
   }
+
+  const navTeamsLabel = document.getElementById("navTeamsLabel");
+  const grownupsIntro = document.getElementById("grownupsIntro");
+  if(navTeamsLabel) navTeamsLabel.textContent = c.navTeams;
+  if(grownupsIntro) grownupsIntro.textContent = c.grownupsIntro;
+}
+
+function renderTeamsHub(){
+  const list = document.getElementById("teamsHubList");
+  const now = document.getElementById("teamsNowCard");
+  const standingsHead = document.getElementById("teamsStandingsHead");
+  if(!list || !now) return;
+
+  const c = teamCopy();
+  const setText = (id, text)=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+  };
+  setText("teamsHubKicker", c.hubKicker);
+  setText("teamsHubTitle", c.hubTitle);
+  setText("teamsHubIntro", c.hubIntro);
+  setText("teamsStandingsTitle", c.standings);
+  setText("teamsStandingsSub", c.standingsSub);
+  setText("btnTeamsCreateLabel", c.createTeam);
+  setText("navTeamsLabel", c.navTeams);
+
+  const teams = getJumviTeams();
+  const ranked = teams.map((team, index)=>{
+    const progress = progressPreview(teamDoneSet(team));
+    return { team, progress, index };
+  }).sort((a,b)=>
+    b.progress.xp - a.progress.xp ||
+    b.progress.missions - a.progress.missions ||
+    a.index - b.index
+  );
+
+  list.innerHTML = "";
+
+  if(ACTIVE_JUMVI_TEAM){
+    const p = progressPreview(teamDoneSet(ACTIVE_JUMVI_TEAM));
+    now.classList.remove("empty");
+    now.innerHTML = `
+      <div class="teamsNowTop">
+        <span class="teamsNowEyebrow"><i class="jic jic-circle-check" aria-hidden="true"></i> ${escapeHtml(c.playingNow)}</span>
+        <span class="teamsNowLevel">${escapeHtml(c.level)} ${p.level}</span>
+      </div>
+      <div class="teamsNowName">${escapeHtml(teamDisplayName(ACTIVE_JUMVI_TEAM))}</div>
+      <div class="teamsNowMeta"><strong>${p.xp} XP</strong><span>${p.missions}/36 ${escapeHtml(c.missions)}</span></div>
+    `;
+  }else{
+    now.classList.add("empty");
+    now.innerHTML = `
+      <div class="teamsEmptyIcon"><i class="jic jic-users" aria-hidden="true"></i></div>
+      <div class="teamsEmptyCopy">
+        <strong>${escapeHtml(c.firstTeam)}</strong>
+        <span>${escapeHtml(c.firstTeamSub)}</span>
+      </div>
+    `;
+  }
+
+  if(standingsHead) standingsHead.hidden = ranked.length === 0;
+
+  ranked.forEach((entry, idx)=>{
+    const isActive = !!(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === entry.team.id);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "teamsRankRow" + (isActive ? " active" : "");
+    btn.innerHTML = `
+      <span class="teamsRankNo">${idx + 1}</span>
+      <span class="teamsRankMain">
+        <strong>${escapeHtml(teamDisplayName(entry.team))}</strong>
+        <small>${escapeHtml(c.level)} ${entry.progress.level} · ${entry.progress.missions}/36 ${escapeHtml(c.missions)}</small>
+      </span>
+      <span class="teamsRankScore">
+        <strong>${entry.progress.xp}</strong>
+        <small>XP</small>
+      </span>
+      <span class="teamsRankAction">${isActive
+        ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
+        : '<i class="jic jic-arrow-right" aria-hidden="true"></i>'}</span>
+    `;
+    btn.setAttribute(
+      "aria-label",
+      `${teamDisplayName(entry.team)}, ${entry.progress.xp} XP, ${c.level} ${entry.progress.level}`
+    );
+    btn.onclick = ()=>{
+      if(isActive) return;
+      clickSound("click");
+      lsSet(ACTIVE_TEAM_KEY, entry.team.id);
+      window.location.reload();
+    };
+    list.appendChild(btn);
+  });
 }
 
 let _teamXpReturnFocus = null;
@@ -1575,8 +1690,10 @@ function openTeamXpPicker(){
   const close = document.getElementById("teamXpClose");
   const backdrop = document.getElementById("teamXpBackdrop");
   const personal = document.getElementById("teamXpPersonal");
+  const teamsCreate = document.getElementById("btnTeamsCreate");
 
-  if(open) open.addEventListener("click", ()=>{ clickSound("click"); openTeamXpPicker(); });
+  if(teamsCreate) teamsCreate.addEventListener("click", ()=>{ clickSound("click"); openTeamXpPicker(); });
+  if(open) open.addEventListener("click", ()=>{ clickSound("click"); switchTab("modes"); renderTeamsHub(); });
   if(close) close.addEventListener("click", ()=>{ clickSound("click"); closeTeamXpPicker(); });
   if(personal) personal.addEventListener("click", ()=>{
     if(!ACTIVE_JUMVI_TEAM){ closeTeamXpPicker(); return; }
@@ -2781,6 +2898,7 @@ function renderXpUI(){
   if(!card) return;
 
   renderTeamProgressChrome();
+  renderTeamsHub();
   const info = xpLevelInfo(xpFromDoneSet(done));
   const tr = isTurkishUI();
 

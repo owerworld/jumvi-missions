@@ -429,25 +429,49 @@
           <div id="filterDifficulty" style="display:none"></div>
         </div>
       </div>
-
-      <!-- ============== TAB: QUICK PLAY (repeatable, never writes mission progress) ============== -->
-      <!-- The panel id, data-tab value and every analytics name stay "modes" on
-           purpose: only the words the family reads changed. -->
-      <div class="tabPanel" id="tabModes" data-tab="modes" style="display:none">
-        <h2 class="tabHeading"><i class="ico i-dice" aria-hidden="true"></i> Quick Play</h2>
-        <p class="tabIntro">Quick games for your full 4-paddle set. Repeat them anytime&mdash;they don&rsquo;t change Mission progress.</p>
-        <div class="modePlayerPicker" id="modePlayerPicker" role="group" aria-label="How many are playing?">
-          <button class="modeFilter active" type="button" data-mode-group="solo" aria-pressed="true">Just me</button>
-          <button class="modeFilter" type="button" data-mode-group="duo" aria-pressed="false">2 players</button>
-          <button class="modeFilter" type="button" data-mode-group="group" aria-pressed="false">3&ndash;4 players</button>
+      <!-- ============== TAB: TEAMS ==============
+           Internal route remains "modes" for backward compatibility only.
+           Quick Play is no longer a user-facing feature. -->
+      <div class="tabPanel teamsHub" id="tabModes" data-tab="modes" style="display:none">
+        <div class="teamsHubHeader">
+          <div class="teamsHubKicker"><i class="jic jic-users" aria-hidden="true"></i> <span id="teamsHubKicker">FAMILY CHALLENGE</span></div>
+          <h2 class="tabHeading teamsHubTitle" id="teamsHubTitle">Family Teams</h2>
+          <p class="tabIntro teamsHubIntro" id="teamsHubIntro">Complete missions together. Every team has its own XP, level, and streak.</p>
         </div>
-        <p class="modeSafetyStrip"><i class="jic jic-shield" aria-hidden="true"></i> Straps go on hands only · Clear the play area · Soft, underhand tosses · Never aim at faces</p>
-        <div class="modeGrid" id="modeGrid" aria-live="polite"></div>
+
+        <section class="teamsNowCard" id="teamsNowCard" aria-live="polite"></section>
+
+        <div class="teamsStandingsHead" id="teamsStandingsHead" hidden>
+          <div>
+            <div class="teamsStandingsTitle" id="teamsStandingsTitle">Team Standings</div>
+            <div class="teamsStandingsSub" id="teamsStandingsSub">Who is climbing the JUMVI levels?</div>
+          </div>
+          <i class="ico i-trophy" aria-hidden="true"></i>
+        </div>
+        <div class="teamsHubList" id="teamsHubList"></div>
+
+        <button class="btn btnPrimary teamsCreateBtn" id="btnTeamsCreate" type="button">
+          <i class="jic jic-users" aria-hidden="true"></i>
+          <span id="btnTeamsCreateLabel">Create a Team</span>
+        </button>
+
+        <!-- Dormant compatibility DOM for play-modes.js.
+             Hidden and unreachable: Quick Play is removed from the product UI. -->
+        <div class="quickPlayCompat" hidden aria-hidden="true">
+          <div class="modePlayerPicker" id="modePlayerPicker" role="group" aria-label="Compatibility">
+            <button class="modeFilter active" type="button" data-mode-group="solo" aria-pressed="true">1</button>
+            <button class="modeFilter" type="button" data-mode-group="duo" aria-pressed="false">2</button>
+            <button class="modeFilter" type="button" data-mode-group="group" aria-pressed="false">3-4</button>
+          </div>
+          <div class="modeGrid" id="modeGrid" aria-live="off"></div>
+        </div>
       </div>
+
+
 
       <!-- ============== TAB: STATS ============== -->
       <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
-        <h2 class="tabHeading"><i class="ico i-chart" aria-hidden="true"></i> Your Progress</h2>
+        <h2 class="tabHeading"><i class="ico i-chart" aria-hidden="true"></i> Progress</h2>
 
         <!-- Family Insights — sadece >1 profil varsa görünür -->
         <div class="familyInsights" id="familyInsights" style="display:none">
@@ -491,7 +515,7 @@
 
         <!-- Badges section -->
         <div class="statsBadgesSection">
-          <h3 class="statsSectionTitle"><i class="ico i-medal" aria-hidden="true"></i> Your Badges</h3>
+          <h3 class="statsSectionTitle"><i class="ico i-medal" aria-hidden="true"></i> Badges</h3>
           <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
           <div class="badgesHint" id="badgesHint">Swipe to see all badges →</div>
         </div>
@@ -545,7 +569,7 @@
       <!-- ============== TAB: PROFILE ============== -->
       <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
         <h2 class="tabHeading">For Grown-ups</h2>
-        <p class="tabIntro">Players, settings, product care, privacy, and support.</p>
+        <p class="tabIntro" id="grownupsIntro">Settings, product care, privacy, and support.</p>
 
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
@@ -706,15 +730,6 @@
         <div class="teamXpSectionTitle" id="teamXpCreateTitle">Play with…</div>
         <div class="teamXpPartnerGrid" id="teamXpPartnerGrid"></div>
       </div>
-
-      <button class="teamXpPersonal" id="teamXpPersonal" type="button">
-        <span><i class="jic jic-user" aria-hidden="true"></i></span>
-        <span class="teamXpPersonalCopy">
-          <strong id="teamXpPersonalTitle">Personal progress</strong>
-          <small id="teamXpPersonalSub">Use this player's own progress</small>
-        </span>
-        <i class="jic jic-arrow-right" aria-hidden="true"></i>
-      </button>
     </div>
   </div>
 
@@ -1148,7 +1163,11 @@
          from mission progress all still exist; it is now reached as "Quick
          Play" from the Play screen. switchTab("modes") and the analytics tab
          name are deliberately untouched so event history stays continuous. -->
-    <button class="navTab" data-tab="stats" type="button">
+    <button class="navTab" data-tab="modes" type="button">
+      <span class="navTabIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+      <span class="navTabLabel"><span id="navTeamsLabel">Teams</span></span>
+    </button>
+<button class="navTab" data-tab="stats" type="button">
       <span class="navTabIcon"><i class="ico i-chart" aria-hidden="true"></i></span>
       <span class="navTabLabel">Progress</span>
     </button>
@@ -1224,13 +1243,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260816-1" defer></script>
+<script src="app.js?v=20260816-2" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260816-1")
+    navigator.serviceWorker.register("/service-worker.js?v=20260816-2")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
