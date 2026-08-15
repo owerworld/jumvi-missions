@@ -730,3 +730,315 @@ html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyMeta > .tag{
     font-size:12px !important;
   }
 }
+
+/* ==========================================================================
+ * JUMVI XP Progress Phase 2A — 2026-08-15
+ * Derived XP only. Warm Toy presentation; no casino/neon treatment.
+ * ========================================================================== */
+
+#tabToday .xpProgressCard{
+  display:block !important;
+  margin:0 0 14px !important;
+  padding:15px !important;
+  border:1px solid var(--border) !important;
+  border-radius:22px !important;
+  background:var(--glass) !important;
+  box-shadow:var(--shadow-soft) !important;
+}
+
+#tabToday .xpCardHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+#tabToday .xpCardEyebrow{
+  color:var(--text);
+  font-size:12px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.75px;
+  text-transform:uppercase;
+}
+#tabToday .xpProgressCard .todayGoalBadge{
+  display:inline-flex !important;
+  align-items:center;
+  gap:5px;
+  margin:0 !important;
+  padding:5px 8px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:#FFF4E7 !important;
+  color:#9A4D18 !important;
+  box-shadow:none !important;
+  font-size:11.5px !important;
+  font-weight:850 !important;
+}
+html.theme--dark #tabToday .xpProgressCard .todayGoalBadge{
+  background:#342A23 !important;
+  color:#F2B181 !important;
+}
+#tabToday .xpProgressCard .todayGoalBadge.completed{
+  background:#EDF6E8 !important;
+  color:#397B2B !important;
+}
+html.theme--dark #tabToday .xpProgressCard .todayGoalBadge.completed{
+  background:#1B3426 !important;
+  color:#A5DB90 !important;
+}
+
+#tabToday .xpLevelRow{
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr) auto;
+  align-items:center;
+  gap:11px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:#F7F2E9;
+}
+html.theme--dark #tabToday .xpLevelRow{
+  background:#1B3042;
+}
+
+#tabToday .xpLevelEmblem{
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:#E7F4DF;
+  color:#4E8F30;
+  font-size:23px;
+  box-shadow:inset 0 0 0 1px rgba(109,190,69,.18);
+}
+html.theme--dark #tabToday .xpLevelEmblem{
+  background:#213C31;
+  color:#9BD67C;
+}
+#tabToday .xpProgressCard[data-level="7"] .xpLevelEmblem{
+  background:#FFF0C7;
+  color:#9A6515;
+}
+html.theme--dark #tabToday .xpProgressCard[data-level="7"] .xpLevelEmblem{
+  background:#473A1E;
+  color:#FFD57A;
+}
+
+#tabToday .xpLevelMain{min-width:0;}
+#tabToday .xpLevelCopy{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin-bottom:7px;
+}
+#tabToday .xpLevelLabel{
+  color:var(--text);
+  font-size:14px;
+  line-height:1.1;
+  font-weight:950;
+}
+#tabToday .xpLevelName{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.15;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#tabToday .xpValue{
+  align-self:center;
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+#tabToday .xpBar{
+  width:100%;
+  height:8px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(20,32,51,.09);
+}
+html.theme--dark #tabToday .xpBar{background:rgba(255,255,255,.09);}
+#tabToday .xpBarFill{
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#6DBE45,#82C95E);
+  transition:width .35s ease;
+}
+
+#tabToday .xpMissionProgress{
+  margin:11px 2px 0;
+  padding:0 2px;
+}
+#tabToday .xpMissionProgressTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+#tabToday .xpMissionProgress .statsCompactText{
+  color:var(--text) !important;
+  font-size:12.5px !important;
+  font-weight:850 !important;
+}
+#tabToday .xpMissionProgress .bar{
+  width:100%;
+  height:5px !important;
+  overflow:hidden;
+  border:0 !important;
+  border-radius:999px;
+  background:rgba(20,32,51,.07) !important;
+  box-shadow:none !important;
+}
+html.theme--dark #tabToday .xpMissionProgress .bar{
+  background:rgba(255,255,255,.07) !important;
+}
+#tabToday .xpMissionProgress .bar > div{
+  height:100%;
+  border-radius:inherit;
+  background:#6DBE45 !important;
+  box-shadow:none !important;
+}
+
+#tabToday .xpMiniGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:12px;
+}
+#tabToday .xpMiniCard{
+  min-width:0;
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#FFFDF8;
+  color:var(--text);
+  box-shadow:none;
+  text-align:left;
+  font:inherit;
+}
+html.theme--dark #tabToday .xpMiniCard{
+  background:#1B3042;
+}
+#tabToday button.xpMiniCard{
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#tabToday button.xpMiniCard:active{transform:scale(.98);}
+#tabToday .xpMiniIcon{
+  width:35px;
+  height:35px;
+  flex:0 0 35px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(47,182,232,.09);
+  color:#1577B1;
+  font-size:19px;
+}
+html.theme--dark #tabToday .xpMiniIcon{
+  background:rgba(47,182,232,.08);
+  color:#73CAE7;
+}
+#tabToday .xpMiniStreak .xpMiniIcon{
+  background:#FFF0E4;
+  color:#C35F20;
+}
+html.theme--dark #tabToday .xpMiniStreak .xpMiniIcon{
+  background:#3A2B24;
+  color:#F2A06C;
+}
+#tabToday .xpMiniBody{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+#tabToday .xpMiniLabel{
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1;
+  font-weight:800;
+}
+#tabToday .xpMiniStreakLabel::before{content:"Streak";}
+html[lang="tr"] #tabToday .xpMiniStreakLabel::before{content:"Seri";}
+
+#tabToday .xpProgressCard #streakPill{
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  color:var(--text) !important;
+  box-shadow:none !important;
+  filter:none !important;
+  opacity:1 !important;
+  font-size:13.5px !important;
+  line-height:1.15;
+  font-weight:950 !important;
+}
+#tabToday .xpProgressCard #streakPill .streakIcon{
+  display:none !important;
+}
+#tabToday .xpBadgeCount{
+  color:var(--text);
+  font-size:14px;
+  line-height:1.15;
+  font-weight:950;
+}
+#tabToday .xpMiniArrow{
+  margin-left:auto;
+  color:var(--muted);
+  font-size:15px;
+  opacity:.65;
+}
+
+/* Mission XP chips — reward value, not another CTA. */
+#tabToday .dailyMeta > .xpTag,
+#sheet .sheetMeta .xpTag{
+  border-color:rgba(109,190,69,.22) !important;
+  background:#EDF6E8 !important;
+  color:#397B2B !important;
+  font-weight:950 !important;
+}
+html.theme--dark #tabToday .dailyMeta > .xpTag,
+html.theme--dark #sheet .sheetMeta .xpTag{
+  border-color:rgba(109,190,69,.20) !important;
+  background:#1C3828 !important;
+  color:#A7DD91 !important;
+}
+
+@media (max-width:390px){
+  #tabToday .xpProgressCard{padding:13px !important;}
+  #tabToday .xpLevelRow{
+    grid-template-columns:44px minmax(0,1fr);
+    gap:9px;
+  }
+  #tabToday .xpLevelEmblem{
+    width:42px;height:42px;
+  }
+  #tabToday .xpValue{
+    grid-column:2;
+    justify-self:start;
+    margin-top:-3px;
+  }
+  #tabToday .xpMiniCard{
+    padding:9px;
+    gap:7px;
+  }
+  #tabToday .xpMiniIcon{
+    width:32px;height:32px;flex-basis:32px;
+  }
+}

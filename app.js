@@ -1247,6 +1247,57 @@ function diffLabel(d){
   return "Hard";
 }
 
+/* ===== XP + Levels — derived from unique mission completions ==============
+ * There is deliberately NO XP localStorage key.
+ * `done` is already per-profile and is the source of truth, so:
+ *   - existing families receive the correct XP immediately after this update,
+ *   - replaying a completed mission cannot farm XP,
+ *   - Undo / Mark as Not Done removes the XP automatically,
+ *   - backup/restore and progress reset need no new migration path.
+ * Quick Play remains repeatable and does NOT award Mission XP.
+ */
+const XP_BY_DIFFICULTY = Object.freeze({ 1: 10, 2: 20, 3: 30 });
+const XP_LEVELS = Object.freeze([
+  { level:1, min:0,   en:"Rookie Player",    tr:"Yeni Oyuncu" },
+  { level:2, min:80,  en:"Quick Catcher",    tr:"Hızlı Yakalayıcı" },
+  { level:3, min:170, en:"Rally Builder",    tr:"Seri Ustası" },
+  { level:4, min:270, en:"Skill Star",       tr:"Beceri Yıldızı" },
+  { level:5, min:370, en:"All-Star",         tr:"Süper Yıldız" },
+  { level:6, min:470, en:"JUMVI Pro",        tr:"JUMVI Pro" },
+  { level:7, min:550, en:"JUMVI Champion",   tr:"JUMVI Şampiyonu" }
+]);
+const XP_MAX = XP_LEVELS[XP_LEVELS.length - 1].min;
+
+function missionXp(ms){
+  if(!ms) return 0;
+  return XP_BY_DIFFICULTY[Number(ms.difficulty)] || 0;
+}
+function xpFromDoneSet(doneSet){
+  let total = 0;
+  if(!doneSet || typeof doneSet[Symbol.iterator] !== "function") return 0;
+  for(const id of doneSet){
+    total += missionXp(missions.find(m => m.id === Number(id)));
+  }
+  return Math.min(XP_MAX, total);
+}
+function xpLevelInfo(xpValue){
+  const xp = Math.max(0, Math.min(XP_MAX, Number(xpValue) || 0));
+  let index = 0;
+  for(let i=0; i<XP_LEVELS.length; i++){
+    if(xp >= XP_LEVELS[i].min) index = i;
+    else break;
+  }
+  const current = XP_LEVELS[index];
+  const next = XP_LEVELS[index + 1] || current;
+  const isMax = index === XP_LEVELS.length - 1;
+  const span = Math.max(1, next.min - current.min);
+  const pct = isMax ? 100 : Math.max(0, Math.min(100, Math.round(((xp - current.min) / span) * 100)));
+  return { xp, current, next, isMax, pct };
+}
+function isTurkishUI(){
+  return window.__JUMVI_LOCALE === "tr-TR" || document.documentElement.lang === "tr";
+}
+
 function pickByKey(key, list){
   if(!list || list.length === 0) return "";
   const h = hashFNV1a(String(key));
@@ -1777,6 +1828,7 @@ function renderDailyUI(){
       <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
       <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
+      <span class="tag xpTag">+${missionXp(ms)} XP</span>
     `;
   }
   /* Completion hierarchy. A finished mission used to leave "Play Again" as the
@@ -2432,6 +2484,44 @@ function updateBadges(){
   }
 }
 
+
+function renderXpUI(){
+  const card = document.getElementById("xpProgressCard");
+  if(!card) return;
+
+  const info = xpLevelInfo(xpFromDoneSet(done));
+  const tr = isTurkishUI();
+
+  const levelLabel = document.getElementById("xpLevelLabel");
+  const levelName = document.getElementById("xpLevelName");
+  const xpValue = document.getElementById("xpValue");
+  const xpBar = document.getElementById("xpBar");
+  const xpFill = document.getElementById("xpBarFill");
+  const badgeCount = document.getElementById("xpBadgeCount");
+
+  card.dataset.level = String(info.current.level);
+
+  if(levelLabel) levelLabel.textContent = `${tr ? "Seviye" : "Level"} ${info.current.level}`;
+  if(levelName) levelName.textContent = tr ? info.current.tr : info.current.en;
+  if(xpValue) xpValue.textContent = `${info.xp} / ${info.isMax ? XP_MAX : info.next.min} XP`;
+
+  if(xpFill) xpFill.style.width = info.pct + "%";
+  if(xpBar){
+    xpBar.setAttribute("aria-valuemin", String(info.current.min));
+    xpBar.setAttribute("aria-valuenow", String(info.xp));
+    xpBar.setAttribute("aria-valuemax", String(info.isMax ? XP_MAX : info.next.min));
+    xpBar.setAttribute("aria-valuetext",
+      `${tr ? "Seviye" : "Level"} ${info.current.level}, ${info.xp} XP`);
+  }
+
+  const ctx = { streakCount, bestStreak };
+  const earnable = BADGES.filter(b => b.id !== "zippy");
+  const earned = earnable.filter(b => {
+    try { return !!b.check(done, ctx); } catch(_) { return false; }
+  }).length;
+  if(badgeCount) badgeCount.textContent = `${earned} / ${earnable.length}`;
+}
+
 function updateProgress(options = {}){
   const deferStats = !!options.deferStats;
   const total = missions.length;
@@ -2440,6 +2530,7 @@ function updateProgress(options = {}){
   const pct = Math.round((completed/total)*100);
   progressFill.style.width = pct + "%";
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
+  renderXpUI();
 
   if(completed>=total){
     progressSub.textContent = "All missions completed! Certificate unlocked.";
@@ -3226,6 +3317,7 @@ function openMission(id){
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
+    <span class="tag xpTag">+${missionXp(ms)} XP</span>
   `;
 
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];

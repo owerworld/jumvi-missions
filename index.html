@@ -278,6 +278,56 @@
           <div class="dailyTitle" style="display:none">Today's Mission</div>
         </div>
 
+        <!-- Your Progress — derived XP, no separate XP storage.
+             Existing progress/streak IDs stay intact for backward JS compatibility. -->
+        <section class="statsCompact xpProgressCard" id="xpProgressCard" aria-labelledby="xpCardTitle">
+          <div class="xpCardHeader">
+            <div class="xpCardEyebrow" id="xpCardTitle">Your Progress</div>
+            <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
+          </div>
+
+          <div class="xpLevelRow">
+            <div class="xpLevelEmblem" aria-hidden="true"><i class="jic jic-star"></i></div>
+            <div class="xpLevelMain">
+              <div class="xpLevelCopy">
+                <span class="xpLevelLabel" id="xpLevelLabel">Level 1</span>
+                <span class="xpLevelName" id="xpLevelName">Rookie Player</span>
+              </div>
+              <div class="xpBar" id="xpBar" role="progressbar" aria-labelledby="xpLevelLabel xpValue" aria-valuemin="0" aria-valuemax="80" aria-valuenow="0">
+                <div class="xpBarFill" id="xpBarFill"></div>
+              </div>
+            </div>
+            <div class="xpValue" id="xpValue">0 / 80 XP</div>
+          </div>
+
+          <div class="xpMissionProgress">
+            <div class="xpMissionProgressTop">
+              <span class="statsCompactText" id="progressText">0 of 36 missions complete</span>
+            </div>
+            <div class="bar" role="progressbar" aria-labelledby="progressText" aria-valuemin="0" aria-valuemax="36">
+              <div id="progressBarFill"></div>
+            </div>
+          </div>
+
+          <div class="xpMiniGrid">
+            <div class="xpMiniCard xpMiniStreak">
+              <span class="xpMiniIcon"><i class="jic jic-flame" aria-hidden="true"></i></span>
+              <span class="xpMiniBody">
+                <span class="xpMiniLabel xpMiniStreakLabel" aria-hidden="true"></span>
+                <span class="streakPill" id="streakPill"><i class="jic jic-star" aria-hidden="true"></i> 0</span>
+              </span>
+            </div>
+            <button class="xpMiniCard xpMiniBadges" type="button" data-go-tab="stats">
+              <span class="xpMiniIcon"><i class="ico i-medal" aria-hidden="true"></i></span>
+              <span class="xpMiniBody">
+                <span class="xpMiniLabel">Badges</span>
+                <strong class="xpBadgeCount" id="xpBadgeCount">0 / 10</strong>
+              </span>
+              <i class="jic jic-arrow-right xpMiniArrow" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+
         <!-- Quick Play — the former "Modes" tab, surfaced where the decision is
              actually made. Repeatable games, deliberately not part of the
              36-mission journey; opening it goes through the same
@@ -323,21 +373,6 @@
           <div class="dailyChallengeReward" id="dailyChallengeReward">Play 1 mission → earn the Daily Champion star</div>
         </div>
 
-        <!-- Compact stats: progress + today goal + streak (tek satır) -->
-        <div class="statsCompact" aria-label="progress">
-          <div class="statsCompactLeft">
-            <div class="statsCompactRow">
-              <span class="statsCompactText" id="progressText">0 of 36 missions complete</span>
-              <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
-            </div>
-            <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="36">
-              <div id="progressBarFill"></div>
-            </div>
-          </div>
-          <div class="streakBox" aria-label="streak">
-            <div class="streakPill" id="streakPill"><i class="jic jic-flame" aria-hidden="true"></i> 0</div>
-          </div>
-        </div>
         <!-- Hidden helpers for JS backward compatibility -->
         <div class="pSubBox" style="display:none">
           <div class="pSub" id="progressSub"></div>
@@ -1143,13 +1178,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260815-2" defer></script>
+<script src="app.js?v=20260815-3" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260815-5")
+    navigator.serviceWorker.register("/service-worker.js?v=20260815-6")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
