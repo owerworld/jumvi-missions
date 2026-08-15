@@ -988,6 +988,13 @@ html[lang="tr"] #tabToday .xpMiniStreakLabel::before{content:"Seri";}
   font-size:13.5px !important;
   line-height:1.15;
   font-weight:950 !important;
+  /* The base .streakPill is nowrap for the roomier stats-screen pill. In this
+     mini-card the zero-streak copy ("Start your streak!" / TR equivalent) is
+     the longest string this pill ever shows, and the card is only ~half the
+     xpMiniGrid column wide — nowrap clipped it past the card edge on a
+     390px phone. Wrapping to 2 lines fits inside the card's min-height. */
+  white-space:normal !important;
+  overflow-wrap:break-word;
 }
 #tabToday .xpProgressCard #streakPill .streakIcon{
   display:none !important;
