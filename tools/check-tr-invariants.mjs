@@ -66,13 +66,18 @@ const setOf = (name) => {
   return (m[1].match(/"[^"]*"|\b\d+\b/g) || []).map(x => x.replace(/"/g, ""));
 };
 
+/* Bu liste DONDURULMUŞ: bir adı DEĞİŞTİRMEK geçmiş veriyi ikiye böler ve
+ * Analytics Engine geriye dönük doldurma yapamaz. Ada EKLEMEK güvenlidir ve
+ * listeyi burada genişletmek gerekir. quickplay_start ve welcome_complete
+ * 2026-08-15 QA turunda eklendi; mevcut adların hiçbiri değişmedi. */
 check("olay adları", [...worker.matchAll(/case "([a-z_0-9]+)":/g)].map(m => m[1]).sort(), [
   "app_first_open", "app_open", "badge_earned", "certificate_made",
   "daily_pick_tap", "dashboard_open", "help_open", "hub3d",
   "mission_complete", "mission_start", "missionbook_get", "pack_complete",
   "pack_view", "player_count", "profile_add", "progress_reset",
-  "return_visit", "score_saved", "share_tap", "speak_on", "timer_start",
-]);
+  "quickplay_start", "return_visit", "score_saved", "speak_on", "share_tap",
+  "timer_start", "welcome_complete",
+].sort());
 check("HELP_REASONS", setOf("HELP_REASONS"), [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
   "need_more_space", "instructions_unclear", "mission_too_hard",
@@ -91,6 +96,13 @@ check("HUB3D_STEPS", setOf("HUB3D_STEPS"), [
   "shown", "entered", "ready", "moved", "mission", "failed", "escaped",
 ]);
 check("RETURN_VISITS", setOf("RETURN_VISITS"), ["2", "3", "5", "10"]);
+/* quickplay_start'ın tek boyutu. play-modes.js ile senkron kalmalı —
+ * check-play-modes.mjs orada 9 mod olduğunu ayrıca doğruluyor. */
+check("PLAY_MODE_IDS", setOf("PLAY_MODE_IDS"), [
+  "pop-and-stick", "quick-drop", "floor-target-four",
+  "free-rally", "copycat-pops", "four-ball-round",
+  "sync-pop", "loop-rally", "twin-lane-rally",
+]);
 check("MISSION_ID_MAX", worker.match(/MISSION_ID_MAX = (\d+)/)?.[1], "200");
 
 /* ── localStorage anahtarları ─────────────────────────────────────────────────

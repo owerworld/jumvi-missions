@@ -36,6 +36,17 @@ for(const forbidden of ["markMissionDone(", "done.add(", "persist(", "beacon(\"m
 check("mode runtime reads separate data", runtime.includes("window.JUMVI_PLAY_MODES"));
 check("mode detail says not a mission", fs.readFileSync("index.html","utf8").includes("NOT A MISSION"));
 
+/* quickplay_start carries the mode id, and src/worker.js drops any id not on
+ * its own allowlist. If the two lists drift, the event silently stops being
+ * recorded for that mode — no error, just a category that quietly reads zero
+ * forever. Assert them equal here rather than trusting a comment. */
+const workerIds = (fs.readFileSync("src/worker.js","utf8")
+  .match(/const PLAY_MODE_IDS = new Set\(\[([\s\S]*?)\]\)/)?.[1] || "")
+  .match(/"[^"]+"/g)?.map(s => s.replace(/"/g,"")).sort() || [];
+check("worker PLAY_MODE_IDS matches play-modes.js",
+  JSON.stringify(workerIds) === JSON.stringify(modes.map(m=>m.id).sort()),
+  `worker=${workerIds.length} data=${modes.length}`);
+
 if(failures){
   console.log(`\n❌ ${failures} Play Modes contract failure(s).`);
   process.exit(1);

@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════════
  * JUMVI beacon — Faz 1, Görev 1.2 (5 events) + Faz 2, Görev 2.1 (16 more)
+ *                + activation/Quick Play follow-up (2 more)
  *
- * THE RULE: this Worker writes EXACTLY twenty-one event names and nothing else.
+ * THE RULE: this Worker writes EXACTLY twenty-three event names and nothing else.
  * Anything not on the allowlist below is dropped silently (204, no write).
  * The endpoint is public, so the allowlist is the only thing standing between
  * a bored stranger and a polluted dataset — treat it as load-bearing.
@@ -147,6 +148,17 @@ const HUB3D_STEPS = new Set([
  *  in between stay on the device. */
 const RETURN_VISITS = new Set([2, 3, 5, 10]);
 
+/** JUMVI_PLAY_MODES ids in play-modes.js. Nine, fixed, and deliberately the
+ *  only dimension quickplay_start carries: each mode already belongs to one
+ *  player group (solo / duo / group), so the group breakdown is derivable
+ *  offline and does not need a second column. Keep in sync with play-modes.js;
+ *  tools/check-play-modes.mjs asserts the count there. */
+const PLAY_MODE_IDS = new Set([
+  "pop-and-stick", "quick-drop", "floor-target-four",
+  "free-rally", "copycat-pops", "four-ball-round",
+  "sync-pop", "loop-rally", "twin-lane-rally",
+]);
+
 /** Mission ids are integers 1..36 (data.js). The ceiling is deliberately
  *  generous for future packs but bounded — an unbounded id would let anyone
  *  blow up blob2 cardinality. */
@@ -211,6 +223,23 @@ export function buildDataPoint(payload) {
 
     case "return_visit":
       return RETURN_VISITS.has(payload.n) ? point("", [payload.n]) : null;
+
+    /* ── Activation funnel + Quick Play ────────────────────────────────────
+     * welcome_complete closes the gap between app_first_open ("a device
+     * arrived") and timer_start ("play actually began"): without it there is
+     * no way to tell a family who bounced off the welcome screen from one who
+     * never scanned at all. Carries no prop — it is a milestone, not a
+     * measurement, and the age band chosen on that screen is deliberately NOT
+     * sent (that is a separate, unapproved decision).
+     *
+     * quickplay_start carries the mode id so we can see WHICH repeatable game
+     * a family reaches for. It is emitted by the Quick Play runtime, which
+     * writes no mission progress — the two funnels stay separate on purpose. */
+    case "welcome_complete":
+      return point("", []);
+
+    case "quickplay_start":
+      return PLAY_MODE_IDS.has(payload.mode) ? point(payload.mode, []) : null;
 
     // Events with no prop at all. Anything extra the client sends is dropped
     // on the floor here — the column layout is built from this file, not from
@@ -303,7 +332,7 @@ async function handleTurkishApp(request, env) {
 
   // Deferred scripts preserve source order. data.js defines mission/pack data;
   // locale layer mutates display strings; app.js then renders Turkish.
-  const localeScript = '<script src="/tr/i18n.js?v=20260815-1" defer></script>';
+  const localeScript = '<script src="/tr/i18n.js?v=20260815-2" defer></script>';
   if (!html.includes('/tr/i18n.js')) {
     const dataTag = /(<script\s+src=["']data\.js[^"']*["'][^>]*><\/script>)/i;
     if (dataTag.test(html)) {

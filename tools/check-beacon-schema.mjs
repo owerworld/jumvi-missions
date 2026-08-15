@@ -71,6 +71,13 @@ check("return_visit", buildDataPoint({ e: "return_visit", n: 5 }), {
 check("app_first_open", buildDataPoint({ e: "app_first_open" }), {
   blobs: ["app_first_open", ""], doubles: [], indexes: ["app_first_open"],
 });
+// Activation funnel + Quick Play.
+check("welcome_complete", buildDataPoint({ e: "welcome_complete" }), {
+  blobs: ["welcome_complete", ""], doubles: [], indexes: ["welcome_complete"],
+});
+check("quickplay_start", buildDataPoint({ e: "quickplay_start", mode: "free-rally" }), {
+  blobs: ["quickplay_start", "free-rally"], doubles: [], indexes: ["quickplay_start"],
+});
 
 console.log("\nAll six pack keys accepted:");
 for (const k of ["Aim Master", "Focus Control", "Team Duo",
@@ -82,6 +89,13 @@ console.log("\nAll eleven badge ids accepted:");
 for (const b of ["first", "aim", "zen", "team", "indoor", "outdoor", "reflex",
                  "streak3", "streak7", "champ", "zippy"]) {
   check(b, buildDataPoint({ e: "badge_earned", badge: b })?.blobs[1], b);
+}
+
+console.log("\nAll nine Quick Play mode ids accepted:");
+for (const m of ["pop-and-stick", "quick-drop", "floor-target-four",
+                 "free-rally", "copycat-pops", "four-ball-round",
+                 "sync-pop", "loop-rally", "twin-lane-rally"]) {
+  check(m, buildDataPoint({ e: "quickplay_start", mode: m })?.blobs[1], m);
 }
 
 console.log("\nAll seven hub3d steps accepted:");
@@ -102,6 +116,9 @@ check("profile_add carrying a child name",
 check("app_open carrying an id",
   buildDataPoint({ e: "app_open", uid: "abc-123" }),
   { blobs: ["app_open", ""], doubles: [], indexes: ["app_open"] });
+check("welcome_complete carrying the chosen age band",
+  buildDataPoint({ e: "welcome_complete", band: "just-starting", diff: "Easy" }),
+  { blobs: ["welcome_complete", ""], doubles: [], indexes: ["welcome_complete"] });
 
 console.log("\nRejected (must all be null):");
 const rejects = [
@@ -112,6 +129,9 @@ const rejects = [
   ["badge id not in enum", { e: "badge_earned", badge: "streak30" }],
   ["share channel not in enum", { e: "share_tap", channel: "email" }],
   ["hub3d step not in enum", { e: "hub3d", step: "exited" }],
+  ["quickplay mode not in enum", { e: "quickplay_start", mode: "made-up-mode" }],
+  ["quickplay with no mode", { e: "quickplay_start" }],
+  ["quickplay carrying a mission id", { e: "quickplay_start", mode: 1 }],
   ["hub3d with no step", { e: "hub3d" }],
   ["timer_start out of range", { e: "timer_start", id: 0 }],
   ["timer_start as string", { e: "timer_start", id: "12" }],

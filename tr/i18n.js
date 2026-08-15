@@ -198,6 +198,81 @@
     "with the order number and a photo.":
       "adresine e-posta göndersin.",
 
+
+    /* ── Görev ekranındaki üretilen güvenlik ve çocuk ipucu metinleri ────────
+     * app.js'teki getSafetyText() ve getKidsTip() her görev için sabit bir
+     * İngilizce havuzdan cümle seçer; bu cümleler mission tablosunun parçası
+     * olmadığı için localizeData() onlara hiç dokunmuyordu. Sonuç: /tr'de 36
+     * görevin 36'sında Güvenlik satırı İngilizce başlıyordu — bir çocuk
+     * ürününde ebeveynin okuması gereken tek cümle. residual-english.mjs bunu
+     * kaçırdı çünkü görev detay ekranını hiç açmıyor.
+     *
+     * Anahtarlar app.js'ten birebir kopyalandı (tipografik tırnak ve
+     * kesme işaretleri dahil); İngilizce kaynak değiştirilmedi. */
+    "Throw softly below face level. Stay 1–3 m apart. Adult supervision required.":
+      "Topu yüz hizasının altında, yumuşakça atın. Aranızda 1–3 metre olsun. Bir yetişkin mutlaka yanınızda olsun.",
+    "Adult supervision required. Keep throws gentle and below face level. Stay 1–3 m apart.":
+      "Bir yetişkin mutlaka yanınızda olsun. Atışları yumuşak ve yüz hizasının altında tutun. Aranızda 1–3 metre olsun.",
+    "Soft tosses only. Keep 1–3 m distance and aim below face level. Play with an adult nearby.":
+      "Sadece yumuşak atışlar. Aranızda 1–3 metre bırakın ve yüz hizasının altına nişan alın. Yanınızda bir yetişkin olsun.",
+    "Stay 1–3 m apart. Throw gently and below face level. An adult should be nearby.":
+      "Aranızda 1–3 metre olsun. Yumuşakça ve yüz hizasının altında atın. Yakınınızda bir yetişkin bulunsun.",
+    "Keep it gentle: soft throws, below face level, 1–3 m apart, adult supervision.":
+      "Nazik olun: yumuşak atışlar, yüz hizasının altında, 1–3 metre arayla, yetişkin gözetiminde.",
+    "Focus on control: soft throws below face level, 1–3 m apart, adult nearby.":
+      "Kontrole odaklanın: yüz hizasının altında yumuşak atışlar, 1–3 metre arayla, yakında bir yetişkin.",
+    "Quick does not mean hard: gentle throws below face level, 1–3 m apart, adult supervision.":
+      "Hızlı olmak sert olmak değildir: yüz hizasının altında yumuşak atışlar, 1–3 metre arayla, yetişkin gözetiminde.",
+    "Aim first, then throw soft: below face level, 1–3 m apart, adult nearby.":
+      "Önce nişan alın, sonra yumuşakça atın: yüz hizasının altında, 1–3 metre arayla, yakında bir yetişkin.",
+    "Keep targets close: 1–3 m apart, soft throws below face level, adult supervision.":
+      "Hedefleri yakın tutun: 1–3 metre arayla, yüz hizasının altında yumuşak atışlar, yetişkin gözetiminde.",
+    "Slow and steady: soft throws below face level, 1–3 m apart, adult nearby.":
+      "Yavaş ve sakin: yüz hizasının altında yumuşak atışlar, 1–3 metre arayla, yakında bir yetişkin.",
+    "Stay calm and safe: gentle throws below face level, 1–3 m apart, adult supervision.":
+      "Sakin ve güvende kalın: yüz hizasının altında yumuşak atışlar, 1–3 metre arayla, yetişkin gözetiminde.",
+    "Give each player space: 1–3 m apart, soft throws below face level, adult supervision.":
+      "Herkese yer açın: 1–3 metre arayla, yüz hizasının altında yumuşak atışlar, yetişkin gözetiminde.",
+    "Team safety: gentle throws, below face level, 1–3 m apart, adult nearby.":
+      "Takım güvenliği: yumuşak atışlar, yüz hizasının altında, 1–3 metre arayla, yakında bir yetişkin.",
+    "Indoor safe play: soft throws below face level, 1–3 m apart, adult supervision. Clear area from breakables.":
+      "Evde güvenli oyun: yüz hizasının altında yumuşak atışlar, 1–3 metre arayla, yetişkin gözetiminde. Kırılabilecek eşyaları ortadan kaldırın.",
+    "Small space rules: gentle throws below face level, 1–3 m apart, adult nearby. Clear area from breakables.":
+      "Dar alan kuralları: yüz hizasının altında yumuşak atışlar, 1–3 metre arayla, yakında bir yetişkin. Kırılabilecek eşyaları ortadan kaldırın.",
+
+    "Try a small step back only after 3 clean catches.":
+      "Arka arkaya 3 temiz yakalama yaptıktan sonra bir adım geri git.",
+    "Keep your elbows close to your body.":
+      "Dirseklerini vücuduna yakın tut.",
+    "Watch the ball all the way into your hands.":
+      "Topu eline girene kadar gözünle takip et.",
+    "Point your belly button at the target.":
+      "Göbeğini hedefe doğru çevir.",
+    "Use two hands to aim, then one to throw.":
+      "Nişan alırken iki elini, atarken tek elini kullan.",
+    "Say “target” out loud before you throw.":
+      "Atmadan önce yüksek sesle “hedef” de.",
+    "Breathe slowly and count in your head.":
+      "Yavaşça nefes al ve içinden say.",
+    "Freeze your feet like statues before each throw.":
+      "Her atıştan önce ayaklarını heykel gibi sabitle.",
+    "Use a quiet voice to stay calm.":
+      "Sakin kalmak için sesini alçalt.",
+    "Call your partner’s name before you throw.":
+      "Atmadan önce arkadaşının adını söyle.",
+    "Take turns and cheer for each other.":
+      "Sırayla oynayın ve birbirinizi alkışlayın.",
+    "If someone drops, give a friendly high‑five.":
+      "Biri topu düşürürse dostça bir çak yapın.",
+    "Use short, easy throws in small spaces.":
+      "Dar alanlarda kısa ve kolay atışlar yap.",
+    "Stand on a small floor mark to stay steady.":
+      "Dengede kalmak için yere koyduğun küçük bir işaretin üzerinde dur.",
+    "Keep throws low and slow indoors.":
+      "Evde atışlarını alçak ve yavaş tut.",
+    "Watch the ball and use two hands if needed.":
+      "Topu gözünle takip et, gerekirse iki elini kullan.",
+
     // index.html aria-labels / alt text
     "missions": "görevler",
     "progress": "ilerleme",
@@ -209,6 +284,18 @@
     "Reset progress": "İlerlemeyi sıfırla",
   };
   Object.entries(EXACT_EXTRA).forEach(([k, v]) => EXACT.set(k, v));
+
+  /* getSafetyText() in app.js does not always hand the DOM one of its pool
+   * sentences on its own — when a mission carries its own extra safety line it
+   * returns "<generated base> <mission-specific extra>". The extra half is
+   * already Turkish (localizeData rewrote the mission table), so the composite
+   * string matches no EXACT key and the whole line fell through to English.
+   * These are the same entries added above, indexed for prefix matching, so
+   * both shapes resolve from one list. Longest first: two of the sentences end
+   * in a second clause and must not be shadowed by a shorter prefix. */
+  const SAFETY_BASES = [...EXACT.entries()]
+    .filter(([k]) => /\b1[–-]3 m\b/.test(k))
+    .sort((a, b) => b[0].length - a[0].length);
 
   function localizeData() {
     try {
@@ -250,6 +337,15 @@
     const norm = normalized(raw);
     if (!norm) return raw;
     if (EXACT.has(norm)) return EXACT.get(norm);
+
+    // Composed safety line — see SAFETY_BASES above. Gated on a cheap test so
+    // the loop never runs for the thousands of unrelated text nodes the
+    // MutationObserver walks.
+    if (/\b1[–-]3 m\b/.test(norm)) {
+      for (const [en, tr] of SAFETY_BASES) {
+        if (norm.startsWith(en + " ")) return tr + norm.slice(en.length);
+      }
+    }
 
     let m;
     if ((m = norm.match(/^(\d+) of 36 missions complete$/i))) return `${m[1]} / 36 görev tamamlandı`;

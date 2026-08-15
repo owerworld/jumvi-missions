@@ -66,11 +66,19 @@ const storageAvailable = (()=>{
 })();
 
 /* ===== Privacy-friendly analytics helper =====
- * DORMANT. Plausible was removed in Faz 0 (privacy), so every trackEvent()
- * call in this file is currently a no-op. They are left in place as markers
- * of what was once measured — do NOT wire this to the beacon below. The
- * beacon ships exactly five events; routing these ~45 legacy names into it
- * would blow past that on day one and burn WAE's cardinality budget. */
+ * DORMANT — and verified still dormant (QA pass, 2026-08-15). Plausible was
+ * removed in Faz 0 (privacy): no script tag loads it anywhere, _headers' CSP
+ * script-src would not permit it, window.plausible is only ever READ and never
+ * assigned, no caller uses the return value, and no test depends on it. So all
+ * 48 trackEvent() call sites in this file — plus the hub's track() bridge —
+ * are no-ops today.
+ *
+ * They are left in place ON PURPOSE, as markers of what was once measured.
+ * Do NOT wire this to the beacon below: the beacon ships a deliberately small,
+ * server-enforced allowlist (23 events as of this writing, see src/worker.js),
+ * and routing ~48 legacy names into it would blow past that on day one and
+ * burn WAE's cardinality budget. The count in this note was stale ("exactly
+ * five events") and is corrected here; the dormant-marker decision is not. */
 function trackEvent(name, props){
   try{
     if(typeof window.plausible === "function"){
@@ -116,6 +124,27 @@ function trackEvent(name, props){
  *   app_first_open                once per device, forever (jumvi_seen)
  *   return_visit      { n }       only on visit 2, 3, 5, 10 (jumvi_visits)
  *
+ * ACTIVATION FUNNEL + QUICK PLAY
+ *   welcome_complete              once per device, forever. Closes the gap
+ *                                 between app_first_open ("a device arrived")
+ *                                 and timer_start ("play actually began") —
+ *                                 without it, a family who bounced off the
+ *                                 welcome screen is indistinguishable from one
+ *                                 who never scanned. De-duped on the SAME
+ *                                 jumvi_onboarded_v2 flag the overlay already
+ *                                 uses, so no new key and no new identifier.
+ *                                 The age band chosen on that screen is
+ *                                 deliberately NOT sent.
+ *   quickplay_start   { mode }    9-value enum, on every real activity start.
+ *                                 Emitted from the Quick Play runtime, which
+ *                                 writes no mission progress — deliberately a
+ *                                 separate funnel from mission_start.
+ *
+ * READING app_first_open: it is an approximate activation INDICATOR, not a
+ * count of physical units in use. One box can be opened on several phones,
+ * one phone can be cleared and look new. Never divide it by units sold and
+ * present the result as an activation rate.
+ *
  * NEVER add a user id, device id, or anything fingerprint-shaped to props.
  * Fire-and-forget: failures are swallowed. A metric must never break play.
  * ═══════════════════════════════════════════════════════════════════════════ */
@@ -126,6 +155,7 @@ const BEACON_EVENTS = new Set([
   "certificate_made", "share_tap", "speak_on", "timer_start", "score_saved",
   "dashboard_open", "missionbook_get", "profile_add", "progress_reset",
   "hub3d", "app_first_open", "return_visit",
+  "welcome_complete", "quickplay_start",
 ]);
 const HELP_REASONS = [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
@@ -5061,8 +5091,12 @@ function showWelcomeOverlay(){
       const firstMissionId = pickFirstMissionForNewUser(selectedDiff);
       // Close first so the mission hand-off feels immediate and never stacks.
       clickSound("success");
-      // Persist selection
-      try { lsSet(ONBOARD_KEY, "1"); } catch(e){}
+      // Persist selection. Read the flag BEFORE writing it so welcome_complete
+      // can fire exactly once per device: this overlay early-returns when the
+      // flag is already "1", and a double tap before it hides sees the flag
+      // it just set. Same shape as app_first_open — no new storage key, no id.
+      let firstOnboard = false;
+      try { firstOnboard = lsGet(ONBOARD_KEY, "0") !== "1"; lsSet(ONBOARD_KEY, "1"); } catch(e){}
       try { lsSet(AGE_KEY, selectedDiff); } catch(e){}
       // Apply the cumulative age ceiling app-wide (§1.1). ALWAYS set it (even
       // for the "all" bands) so a re-onboard can't leave a stale narrower
@@ -5088,6 +5122,10 @@ function showWelcomeOverlay(){
       overlay.style.display = "none";
       overlay.setAttribute("aria-hidden", "true");
       isolateWelcome(false);
+      // Onboarding is genuinely finished at this point — level chosen, overlay
+      // gone. Fired here rather than on render, so it means "the family got
+      // through the welcome screen", not "the welcome screen was drawn".
+      if(firstOnboard) beacon("welcome_complete");
       if(firstMissionId) openMission(firstMissionId);
     });
   }
@@ -5826,6 +5864,14 @@ function startModeTimer(){
   }
   updateModeStartLabel();
   requestWakeLock();
+  // The single point where a Quick Play activity actually begins. Pause and
+  // Resume have their own functions, and the Start handler only reaches
+  // narrateModeThenStart() while the timer is idle — so one real start emits
+  // one event, and a double tap during narration lands on the skip branch,
+  // which calls this once. Records the mode id only; nothing here touches
+  // `done`, badges, streaks or the certificate, and check-play-modes.mjs
+  // keeps it that way.
+  beacon("quickplay_start", { mode: mode.id });
   _modeTimerInterval = setInterval(tickModeTimer, 200);
 }
 function narrateModeThenStart(mode){
