@@ -77,6 +77,7 @@
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260815-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
+  <link rel="stylesheet" href="warm-toy.css">
   <!-- §5.1 — Tabler icon-webfont CDN removed. The 3 glyphs used (chevron-right,
        hand-three-fingers, message-off) are now inline mask-image SVGs in
        jumvi-icons.css, so mission icons render offline with no third-party font. -->
@@ -222,11 +223,16 @@
 
       <!-- ============== TAB: TODAY ============== -->
       <div class="tabPanel" id="tabToday" data-tab="today">
-        <div class="h1Row">
-          <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
-          <h1 class="h1">Ready to play?</h1>
+        <div class="todayHeroStage">
+          <div class="todayHeroCopy">
+            <div class="h1Row">
+              <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
+              <h1 class="h1">Ready to play?</h1>
+            </div>
+            <p class="sub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
+          </div>
+          <div class="todayHeroArt" aria-hidden="true"></div>
         </div>
-        <p class="sub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
 
         <!-- §4.1 — the Leo's Island card moved BELOW #dailyBox (was above it,
              so a 5-year-old tapped a 9.4 MB silent wall before the mission).
@@ -1143,7 +1149,7 @@
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260814-4")
+    navigator.serviceWorker.register("/service-worker.js?v=20260815-3")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
