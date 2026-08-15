@@ -286,6 +286,15 @@
             <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
           </div>
 
+          <button class="xpTeamPicker" id="xpTeamPicker" type="button">
+            <span class="xpTeamPickerIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+            <span class="xpTeamPickerCopy">
+              <strong id="xpTeamPickerLabel">Choose team</strong>
+              <small id="xpTeamPickerSub">Optional · JUMVI remembers</small>
+            </span>
+            <i class="jic jic-arrow-right xpTeamPickerArrow" aria-hidden="true"></i>
+          </button>
+
           <div class="xpLevelRow">
             <div class="xpLevelEmblem" aria-hidden="true"><i class="jic jic-star"></i></div>
             <div class="xpLevelMain">
@@ -670,6 +679,43 @@
       </div>
       <div class="copyrightLine">© 2026 SAY23 LLC · JUMVI® and Coach Leo are trademarks of SAY23 LLC. All mission content is protected by copyright.</div>
     </section>
+  </div>
+
+  <!-- Team XP picker — optional, remembered; never shown before every mission. -->
+  <div class="teamXpBackdrop" id="teamXpBackdrop" role="dialog" aria-modal="true"
+       aria-labelledby="teamXpTitle" aria-describedby="teamXpSub"
+       aria-hidden="true" inert hidden>
+    <div class="teamXpSheet" role="document">
+      <div class="teamXpHandle" aria-hidden="true"></div>
+      <div class="teamXpHead">
+        <div>
+          <h2 id="teamXpTitle">Choose your team</h2>
+          <p id="teamXpSub">JUMVI remembers this choice for the next mission.</p>
+        </div>
+        <button class="teamXpClose" id="teamXpClose" type="button" aria-label="Close">
+          <i class="ico i-x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="teamXpSection" id="teamXpExistingSection" hidden>
+        <div class="teamXpSectionTitle" id="teamXpExistingTitle">Your teams</div>
+        <div class="teamXpExistingList" id="teamXpExistingList"></div>
+      </div>
+
+      <div class="teamXpSection">
+        <div class="teamXpSectionTitle" id="teamXpCreateTitle">Play with…</div>
+        <div class="teamXpPartnerGrid" id="teamXpPartnerGrid"></div>
+      </div>
+
+      <button class="teamXpPersonal" id="teamXpPersonal" type="button">
+        <span><i class="jic jic-user" aria-hidden="true"></i></span>
+        <span class="teamXpPersonalCopy">
+          <strong id="teamXpPersonalTitle">Personal progress</strong>
+          <small id="teamXpPersonalSub">Use this player's own progress</small>
+        </span>
+        <i class="jic jic-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
   </div>
 
   <!-- Mission Modal -->
@@ -1178,13 +1224,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260815-3" defer></script>
+<script src="app.js?v=20260816-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260815-6")
+    navigator.serviceWorker.register("/service-worker.js?v=20260816-1")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }

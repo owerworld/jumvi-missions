@@ -800,22 +800,111 @@ function nextProfileId(){
 const _PP = "jumvi_" + getActiveProfileId() + "_"; // profile prefix
 
 /** =======================
+ * Team XP — remembered pair/family team, optional
+ *
+ * Important:
+ * - No team is forced. With no active team the app behaves exactly as before.
+ * - Team choice is per active player profile.
+ * - A team's mission progress is the normal JUMVI 36-mission progress, stored
+ *   under that team's progress prefix.
+ * - First team only inherits the player's existing progress so nobody loses
+ *   the XP/progress already earned before Team XP shipped.
+ * - Later teams start fresh.
+ * - Switching team reloads once; missions never ask who is playing again.
+ * ======================= */
+const TEAM_PARTNER_KEYS = Object.freeze(["dad","mom","sibling","grandma","grandpa","friend"]);
+const TEAM_LIST_KEY = _PP + "teams_v1";
+const ACTIVE_TEAM_KEY = _PP + "active_team_v1";
+
+function getJumviTeams(){
+  const raw = lsGetJSON(TEAM_LIST_KEY, []);
+  if(!Array.isArray(raw)) return [];
+  return raw.filter(t =>
+    t && /^t\d+$/.test(String(t.id || "")) &&
+    TEAM_PARTNER_KEYS.includes(String(t.partner || ""))
+  ).map(t => ({ id:String(t.id), partner:String(t.partner), createdAt:String(t.createdAt || "") }));
+}
+function saveJumviTeams(teams){
+  try { lsSet(TEAM_LIST_KEY, JSON.stringify(teams || [])); } catch(_){}
+}
+function getActiveJumviTeam(){
+  const id = lsGet(ACTIVE_TEAM_KEY, "");
+  if(!id) return null;
+  return getJumviTeams().find(t => t.id === id) || null;
+}
+function teamProgressPrefix(teamId){
+  return _PP + "team_" + String(teamId || "") + "_";
+}
+function nextJumviTeamId(teams){
+  let n = 1;
+  while((teams || []).some(t => t.id === ("t" + n))) n++;
+  return "t" + n;
+}
+function copyPersonalProgressIntoFirstTeam(teamId){
+  const dst = teamProgressPrefix(teamId);
+  const suffixes = [
+    "missions_done_v3",
+    "streak_count_v1",
+    "streak_best_v1",
+    "streak_last_v1",
+    "badges_unlocked_v1",
+    "streak_freeze_v1",
+    "daily_challenge_v1"
+  ];
+  suffixes.forEach(suffix => {
+    const sourceKey = _PP + suffix;
+    const destKey = dst + suffix;
+    const value = lsGet(sourceKey, null);
+    if(value !== null && lsGet(destKey, null) === null){
+      try { lsSet(destKey, value); } catch(_){}
+    }
+  });
+}
+function chooseOrCreateJumviTeam(partner){
+  if(!TEAM_PARTNER_KEYS.includes(partner)) return;
+  const teams = getJumviTeams();
+  let team = teams.find(t => t.partner === partner) || null;
+  if(!team){
+    const wasFirstTeam = teams.length === 0;
+    team = {
+      id: nextJumviTeamId(teams),
+      partner,
+      createdAt: new Date().toISOString()
+    };
+    teams.push(team);
+    saveJumviTeams(teams);
+    if(wasFirstTeam) copyPersonalProgressIntoFirstTeam(team.id);
+  }
+  lsSet(ACTIVE_TEAM_KEY, team.id);
+  window.location.reload();
+}
+function choosePersonalJumviProgress(){
+  lsSet(ACTIVE_TEAM_KEY, "");
+  window.location.reload();
+}
+
+const ACTIVE_JUMVI_TEAM = getActiveJumviTeam();
+const _PROGRESS_PREFIX = ACTIVE_JUMVI_TEAM
+  ? teamProgressPrefix(ACTIVE_JUMVI_TEAM.id)
+  : _PP;
+
+/** =======================
  * State
  * ======================= */
-const LS_KEY = _PP + "missions_done_v3";
+const LS_KEY = _PROGRESS_PREFIX + "missions_done_v3";
 const ONLY_KEY = "jumvi_only_unfinished_v1";
 
-/* UI + persistence (per-profile) */
-const STREAK_COUNT_KEY  = _PP + "streak_count_v1";
-const STREAK_BEST_KEY   = _PP + "streak_best_v1";
-const STREAK_LAST_KEY   = _PP + "streak_last_v1";
+/* Core journey persistence: team-scoped when a team is active. */
+const STREAK_COUNT_KEY  = _PROGRESS_PREFIX + "streak_count_v1";
+const STREAK_BEST_KEY   = _PROGRESS_PREFIX + "streak_best_v1";
+const STREAK_LAST_KEY   = _PROGRESS_PREFIX + "streak_last_v1";
 const DAILY_DATE_KEY    = _PP + "daily_date_v1";
 const DAILY_ID_KEY      = _PP + "daily_id_v1";
 const DAILY_N_KEY       = _PP + "daily_n_v1";
 const AGE_KEY           = _PP + "age_v2";
 const ATTEMPTS_KEY      = _PP + "attempts_v1";
 const SKIPS_KEY         = _PP + "skips_v1";
-const BADGES_UNLOCKED_KEY = _PP + "badges_unlocked_v1";
+const BADGES_UNLOCKED_KEY = _PROGRESS_PREFIX + "badges_unlocked_v1";
 const AVATAR_KEY        = _PP + "avatar_v1";
 const CERT_ID_KEY       = _PP + "cert_id_v1";
 const CERT_NAME_KEY     = _PP + "cert_name_v1";
@@ -1298,6 +1387,208 @@ function isTurkishUI(){
   return window.__JUMVI_LOCALE === "tr-TR" || document.documentElement.lang === "tr";
 }
 
+
+/* ===== Team XP UI =========================================================
+ * One compact picker on Home. No pre-mission prompt.
+ */
+const TEAM_COPY = Object.freeze({
+  en: {
+    dad:"Dad", mom:"Mom", sibling:"Sibling", grandma:"Grandma", grandpa:"Grandpa", friend:"Friend",
+    choose:"Choose team", optional:"Optional · JUMVI remembers",
+    teamXp:"Team XP", teamProgress:"Team Progress",
+    chooseTitle:"Choose your team", switchTitle:"Switch team",
+    sub:"JUMVI remembers this choice for the next mission.",
+    yourTeams:"Your teams", playWith:"Play with…",
+    personal:"Personal progress", personalSub:"Use this player's own progress",
+    level:"Level", missions:"missions"
+  },
+  tr: {
+    dad:"Baba", mom:"Anne", sibling:"Kardeş", grandma:"Büyükanne", grandpa:"Büyükbaba", friend:"Arkadaş",
+    choose:"Takım seç", optional:"İsteğe bağlı · JUMVI hatırlar",
+    teamXp:"Takım XP", teamProgress:"Takım İlerlemesi",
+    chooseTitle:"Takımını seç", switchTitle:"Takımı değiştir",
+    sub:"JUMVI bu seçimi sonraki görev için hatırlar.",
+    yourTeams:"Takımların", playWith:"Birlikte oyna…",
+    personal:"Kişisel ilerleme", personalSub:"Bu oyuncunun kendi ilerlemesini kullan",
+    level:"Seviye", missions:"görev"
+  }
+});
+function teamCopy(){
+  return isTurkishUI() ? TEAM_COPY.tr : TEAM_COPY.en;
+}
+function teamPartnerLabel(partner){
+  const c = teamCopy();
+  return c[partner] || partner;
+}
+function teamDisplayName(team){
+  const profile = getActiveProfile();
+  const player = (profile && profile.name ? profile.name : (isTurkishUI() ? "Oyuncu" : "Player")).trim();
+  return `${player} + ${teamPartnerLabel(team.partner)}`;
+}
+function teamDoneSet(team){
+  if(!team) return new Set();
+  const raw = lsGetJSON(teamProgressPrefix(team.id) + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+function personalDoneSet(){
+  const raw = lsGetJSON(_PP + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+function progressPreview(doneSet){
+  const xp = xpFromDoneSet(doneSet);
+  const info = xpLevelInfo(xp);
+  return { xp, level:info.current.level, missions:doneSet.size };
+}
+function renderTeamProgressChrome(){
+  const c = teamCopy();
+  const pickerLabel = document.getElementById("xpTeamPickerLabel");
+  const pickerSub = document.getElementById("xpTeamPickerSub");
+  const cardTitle = document.getElementById("xpCardTitle");
+
+  if(ACTIVE_JUMVI_TEAM){
+    if(cardTitle) cardTitle.textContent = c.teamProgress;
+    if(pickerLabel) pickerLabel.textContent = teamDisplayName(ACTIVE_JUMVI_TEAM);
+    if(pickerSub) pickerSub.textContent = c.teamXp;
+  }else{
+    if(cardTitle) cardTitle.textContent = isTurkishUI() ? "İlerlemen" : "Your Progress";
+    if(pickerLabel) pickerLabel.textContent = c.choose;
+    if(pickerSub) pickerSub.textContent = c.optional;
+  }
+}
+
+let _teamXpReturnFocus = null;
+
+function closeTeamXpPicker(){
+  const backdrop = document.getElementById("teamXpBackdrop");
+  if(!backdrop) return;
+  backdrop.classList.remove("show");
+  backdrop.setAttribute("aria-hidden","true");
+  backdrop.inert = true;
+  backdrop.setAttribute("inert","");
+  document.body.classList.remove("modalOpen");
+  setMissionBackgroundIsolation(false);
+  const returnTo = _teamXpReturnFocus;
+  _teamXpReturnFocus = null;
+  setTimeout(()=>{
+    if(!backdrop.classList.contains("show")) backdrop.hidden = true;
+    if(returnTo && returnTo.isConnected){
+      try { returnTo.focus({preventScroll:true}); } catch(_){ try{returnTo.focus();}catch(__){} }
+    }
+  }, 220);
+}
+
+function renderTeamXpPicker(){
+  const c = teamCopy();
+  const backdrop = document.getElementById("teamXpBackdrop");
+  const title = document.getElementById("teamXpTitle");
+  const sub = document.getElementById("teamXpSub");
+  const existingSection = document.getElementById("teamXpExistingSection");
+  const existingTitle = document.getElementById("teamXpExistingTitle");
+  const existingList = document.getElementById("teamXpExistingList");
+  const createTitle = document.getElementById("teamXpCreateTitle");
+  const partnerGrid = document.getElementById("teamXpPartnerGrid");
+  const personalTitle = document.getElementById("teamXpPersonalTitle");
+  const personalSub = document.getElementById("teamXpPersonalSub");
+
+  if(!backdrop || !existingList || !partnerGrid) return;
+
+  const teams = getJumviTeams();
+  if(title) title.textContent = ACTIVE_JUMVI_TEAM ? c.switchTitle : c.chooseTitle;
+  if(sub) sub.textContent = c.sub;
+  if(existingTitle) existingTitle.textContent = c.yourTeams;
+  if(createTitle) createTitle.textContent = c.playWith;
+  if(personalTitle) personalTitle.textContent = c.personal;
+  if(personalSub) personalSub.textContent = c.personalSub;
+
+  existingList.innerHTML = "";
+  if(existingSection) existingSection.hidden = teams.length === 0;
+
+  teams.forEach(team => {
+    const p = progressPreview(teamDoneSet(team));
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "teamXpExisting" + (ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id ? " active" : "");
+    btn.innerHTML = `
+      <span class="teamXpExistingIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+      <span class="teamXpExistingCopy">
+        <strong>${escapeHtml(teamDisplayName(team))}</strong>
+        <small>${c.level} ${p.level} · ${p.xp} XP · ${p.missions}/36 ${c.missions}</small>
+      </span>
+      <span class="teamXpExistingCheck">${ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id
+        ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
+        : '<i class="jic jic-arrow-right" aria-hidden="true"></i>'}</span>
+    `;
+    btn.onclick = ()=>{
+      if(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id){ closeTeamXpPicker(); return; }
+      clickSound("click");
+      lsSet(ACTIVE_TEAM_KEY, team.id);
+      window.location.reload();
+    };
+    existingList.appendChild(btn);
+  });
+
+  partnerGrid.innerHTML = "";
+  TEAM_PARTNER_KEYS.forEach(partner => {
+    const exists = teams.some(t => t.partner === partner);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "teamXpPartner";
+    btn.disabled = exists;
+    btn.innerHTML = `<i class="jic jic-users" aria-hidden="true"></i><span>${escapeHtml(teamPartnerLabel(partner))}</span>`;
+    if(exists) btn.setAttribute("aria-label", `${teamPartnerLabel(partner)} — ${isTurkishUI() ? "takım zaten var" : "team already exists"}`);
+    btn.onclick = ()=>{
+      if(exists) return;
+      clickSound("click");
+      chooseOrCreateJumviTeam(partner);
+    };
+    partnerGrid.appendChild(btn);
+  });
+
+  const personal = document.getElementById("teamXpPersonal");
+  if(personal){
+    const p = progressPreview(personalDoneSet());
+    const suffix = `${c.level} ${p.level} · ${p.xp} XP · ${p.missions}/36 ${c.missions}`;
+    if(personalSub) personalSub.textContent = ACTIVE_JUMVI_TEAM ? `${c.personalSub} · ${suffix}` : suffix;
+    personal.classList.toggle("active", !ACTIVE_JUMVI_TEAM);
+  }
+}
+
+function openTeamXpPicker(){
+  const backdrop = document.getElementById("teamXpBackdrop");
+  if(!backdrop) return;
+  _teamXpReturnFocus = document.activeElement;
+  renderTeamXpPicker();
+  backdrop.hidden = false;
+  backdrop.inert = false;
+  backdrop.removeAttribute("inert");
+  backdrop.setAttribute("aria-hidden","false");
+  document.body.classList.add("modalOpen");
+  setMissionBackgroundIsolation(true);
+  requestAnimationFrame(()=>{
+    backdrop.classList.add("show");
+    try { document.getElementById("teamXpClose")?.focus({preventScroll:true}); } catch(_){}
+  });
+}
+
+(function wireTeamXpPicker(){
+  const open = document.getElementById("xpTeamPicker");
+  const close = document.getElementById("teamXpClose");
+  const backdrop = document.getElementById("teamXpBackdrop");
+  const personal = document.getElementById("teamXpPersonal");
+
+  if(open) open.addEventListener("click", ()=>{ clickSound("click"); openTeamXpPicker(); });
+  if(close) close.addEventListener("click", ()=>{ clickSound("click"); closeTeamXpPicker(); });
+  if(personal) personal.addEventListener("click", ()=>{
+    if(!ACTIVE_JUMVI_TEAM){ closeTeamXpPicker(); return; }
+    clickSound("click");
+    choosePersonalJumviProgress();
+  });
+  if(backdrop){
+    backdrop.addEventListener("click", e=>{ if(e.target === backdrop) closeTeamXpPicker(); });
+    backdrop.addEventListener("keydown", e=>handleDialogKeys(e, backdrop, closeTeamXpPicker));
+  }
+})();
+
 function pickByKey(key, list){
   if(!list || list.length === 0) return "";
   const h = hashFNV1a(String(key));
@@ -1626,7 +1917,7 @@ function persistStreak(){
 }
 
 /* ===== Streak Freeze (haftada 1 koruma) ===== */
-const STREAK_FREEZE_KEY = _PP + "streak_freeze_v1";
+const STREAK_FREEZE_KEY = _PROGRESS_PREFIX + "streak_freeze_v1";
 // State: { available:bool, lastReplenishIso:"YYYY-MM-DD", lastUsedIso:"YYYY-MM-DD" }
 
 function getFreezeState(){
@@ -2489,6 +2780,7 @@ function renderXpUI(){
   const card = document.getElementById("xpProgressCard");
   if(!card) return;
 
+  renderTeamProgressChrome();
   const info = xpLevelInfo(xpFromDoneSet(done));
   const tr = isTurkishUI();
 
@@ -6131,6 +6423,11 @@ function renderFamilyInsights(){
   const fStreakEl = document.getElementById("familyStreak");
   if(!wrap || !grid) return;
 
+  if(ACTIVE_JUMVI_TEAM){
+    wrap.style.display = "none";
+    return;
+  }
+
   const profiles = getProfiles();
   // Sadece 2+ profil varsa göster (tek profilde anlamı yok)
   if(profiles.length < 2){
@@ -6325,7 +6622,7 @@ function initBottomNav(){
 /** =======================
  * Daily Mini-Challenge — bugün 1 mission tamamla = one daily point
  * ======================= */
-const DAILY_CHALLENGE_KEY = _PP + "daily_challenge_v1"; // { iso, count, reward }
+const DAILY_CHALLENGE_KEY = _PROGRESS_PREFIX + "daily_challenge_v1"; // { iso, count, reward }
 
 function getDailyChallengeState(){
   const today = isoLocalDate();

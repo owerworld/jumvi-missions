@@ -122,12 +122,43 @@ const found = new Set([
   ...[...appJs.matchAll(/_PP \+ "([a-zA-Z0-9_]+)"/g)].map(m => "<pp>" + m[1]),
 ]);
 
+/* Team XP (2026-08-16) adds one intentional storage indirection:
+ * _PROGRESS_PREFIX is either the active profile prefix or that profile's
+ * active team prefix. The checker must NOT bless arbitrary new keys:
+ * the exact progression suffix set remains frozen below.
+ *
+ * The same suffixes must remain in copyPersonalProgressIntoFirstTeam(),
+ * proving that pre-Team-XP personal progress is still readable/migratable. */
+const TEAM_PROGRESS_SUFFIXES = [
+  "badges_unlocked_v1",
+  "daily_challenge_v1",
+  "missions_done_v3",
+  "streak_best_v1",
+  "streak_count_v1",
+  "streak_freeze_v1",
+  "streak_last_v1",
+].sort();
+
+const progressScoped = [...new Set(
+  [...appJs.matchAll(/_PROGRESS_PREFIX \+ "([a-zA-Z0-9_]+)"/g)].map(m => m[1])
+)].sort();
+check("team/progress scoped anahtarları", progressScoped, TEAM_PROGRESS_SUFFIXES);
+
+const compatBlock = appJs.match(
+  /function copyPersonalProgressIntoFirstTeam[\s\S]*?const suffixes = \[([\s\S]*?)\];/
+);
+const compatSuffixes = compatBlock
+  ? (compatBlock[1].match(/"([a-zA-Z0-9_]+)"/g) || [])
+      .map(x => x.replace(/"/g, ""))
+      .sort()
+  : null;
+check("eski kişisel ilerleme okunabilir", compatSuffixes, TEAM_PROGRESS_SUFFIXES);
+
 const REQUIRED = [
-  "<pp>age_v2", "<pp>attempts_v1", "<pp>avatar_v1", "<pp>badges_unlocked_v1",
-  "<pp>cert_id_v1", "<pp>cert_name_v1", "<pp>daily_challenge_v1", "<pp>daily_date_v1",
+  "<pp>active_team_v1", "<pp>age_v2", "<pp>attempts_v1", "<pp>avatar_v1",
+  "<pp>cert_id_v1", "<pp>cert_name_v1", "<pp>daily_date_v1",
   "<pp>daily_id_v1", "<pp>daily_n_v1", "<pp>high_scores_v1", "<pp>missions_done_v3",
-  "<pp>skips_v1", "<pp>streak_best_v1", "<pp>streak_count_v1", "<pp>streak_freeze_v1",
-  "<pp>streak_last_v1", "<pp>today_done_ids_v1",
+  "<pp>skips_v1", "<pp>teams_v1", "<pp>today_done_ids_v1",
   "jumvi_3d_hub_enabled", "jumvi_a2hs_dismiss_v1", "jumvi_active_profile_v1",
   "jumvi_active_tab_v1", "jumvi_auto_done_v1", "jumvi_avatar_v1", "jumvi_beacon_visit",
   "jumvi_current_pack_v1", "jumvi_first_visit_v1", "jumvi_hub3d_unsupported_v1",

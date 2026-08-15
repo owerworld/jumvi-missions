@@ -1042,3 +1042,302 @@ html.theme--dark #sheet .sheetMeta .xpTag{
     width:32px;height:32px;flex-basis:32px;
   }
 }
+
+/* ==========================================================================
+ * JUMVI Team XP Phase 2B — 2026-08-16
+ * One remembered team selector; no per-mission player prompt.
+ * ========================================================================== */
+
+#tabToday .xpTeamPicker{
+  width:100%;
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:-2px 0 11px;
+  padding:9px 11px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#FFFDF8;
+  color:var(--text);
+  box-shadow:none;
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+html.theme--dark #tabToday .xpTeamPicker{background:#1B3042;}
+#tabToday .xpTeamPicker:active{transform:scale(.99);}
+#tabToday .xpTeamPickerIcon{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(47,182,232,.10);
+  color:#1577B1;
+  font-size:18px;
+}
+html.theme--dark #tabToday .xpTeamPickerIcon{
+  background:rgba(47,182,232,.09);
+  color:#73CAE7;
+}
+#tabToday .xpTeamPickerCopy{
+  min-width:0;
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:2px;
+}
+#tabToday .xpTeamPickerCopy strong{
+  overflow:hidden;
+  color:var(--text);
+  font-size:13.5px;
+  line-height:1.2;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+#tabToday .xpTeamPickerCopy small{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.15;
+  font-weight:750;
+}
+#tabToday .xpTeamPickerArrow{
+  color:var(--muted);
+  font-size:15px;
+  opacity:.65;
+}
+
+.teamXpBackdrop{
+  position:fixed;
+  inset:0;
+  z-index:9500;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:16px 12px max(12px, env(safe-area-inset-bottom));
+  background:rgba(11,20,31,.42);
+  opacity:0;
+  transition:opacity .2s ease;
+}
+.teamXpBackdrop[hidden]{display:none !important;}
+.teamXpBackdrop.show{opacity:1;}
+.teamXpSheet{
+  width:min(100%,480px);
+  max-height:min(82vh,680px);
+  overflow:auto;
+  padding:8px 16px 18px;
+  border:1px solid rgba(87,67,42,.10);
+  border-radius:24px 24px 20px 20px;
+  background:#FFFDF8;
+  box-shadow:0 20px 60px rgba(23,28,60,.18);
+  transform:translateY(14px);
+  transition:transform .2s ease;
+}
+.teamXpBackdrop.show .teamXpSheet{transform:translateY(0);}
+html.theme--dark .teamXpSheet{
+  border-color:rgba(255,255,255,.08);
+  background:#17283A;
+  box-shadow:0 20px 60px rgba(0,0,0,.34);
+}
+.teamXpHandle{
+  width:38px;
+  height:4px;
+  margin:2px auto 12px;
+  border-radius:999px;
+  background:rgba(20,32,51,.14);
+}
+html.theme--dark .teamXpHandle{background:rgba(255,255,255,.16);}
+.teamXpHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+.teamXpHead h2{
+  margin:0;
+  color:var(--text);
+  font-size:21px;
+  line-height:1.2;
+  font-weight:950;
+}
+.teamXpHead p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.4;
+  font-weight:700;
+}
+.teamXpClose{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--soft);
+  color:var(--text);
+  font-size:18px;
+}
+.teamXpSection{margin-top:15px;}
+.teamXpSectionTitle{
+  margin-bottom:8px;
+  color:var(--muted);
+  font-size:11.5px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.55px;
+  text-transform:uppercase;
+}
+.teamXpExistingList{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.teamXpExisting{
+  width:100%;
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#F7F2E9;
+  color:var(--text);
+  text-align:left;
+  font:inherit;
+}
+.teamXpExisting.active{
+  border-color:rgba(21,119,177,.26);
+  background:#EDF7FC;
+}
+html.theme--dark .teamXpExisting{background:#1B3042;}
+html.theme--dark .teamXpExisting.active{
+  border-color:rgba(115,202,231,.24);
+  background:#193649;
+}
+.teamXpExistingIcon{
+  width:35px;
+  height:35px;
+  flex:0 0 35px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(47,182,232,.10);
+  color:#1577B1;
+}
+html.theme--dark .teamXpExistingIcon{color:#73CAE7;}
+.teamXpExistingCopy{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.teamXpExistingCopy strong{
+  overflow:hidden;
+  font-size:13.5px;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.teamXpExistingCopy small{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:750;
+}
+.teamXpExistingCheck{
+  color:#1577B1;
+  font-size:18px;
+}
+html.theme--dark .teamXpExistingCheck{color:#73CAE7;}
+
+.teamXpPartnerGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.teamXpPartner{
+  min-height:46px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  padding:9px 11px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#FFFDF8;
+  color:var(--text);
+  font:inherit;
+  font-size:12.5px;
+  font-weight:900;
+}
+html.theme--dark .teamXpPartner{background:#1B3042;}
+.teamXpPartner .jic{color:#1577B1;}
+html.theme--dark .teamXpPartner .jic{color:#73CAE7;}
+.teamXpPartner:disabled{
+  opacity:.38;
+  cursor:default;
+}
+
+.teamXpPersonal{
+  width:100%;
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:16px;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--soft);
+  color:var(--text);
+  text-align:left;
+  font:inherit;
+}
+.teamXpPersonal.active{
+  border-color:rgba(109,190,69,.24);
+  background:#EDF6E8;
+}
+html.theme--dark .teamXpPersonal.active{
+  border-color:rgba(109,190,69,.20);
+  background:#1C3828;
+}
+.teamXpPersonal > span:first-child{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:rgba(20,32,51,.06);
+  color:var(--muted);
+}
+html.theme--dark .teamXpPersonal > span:first-child{background:rgba(255,255,255,.06);}
+.teamXpPersonalCopy{
+  min-width:0;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.teamXpPersonalCopy strong{
+  font-size:13px;
+  font-weight:900;
+}
+.teamXpPersonalCopy small{
+  color:var(--muted);
+  font-size:10.8px;
+  line-height:1.25;
+  font-weight:700;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .teamXpBackdrop,.teamXpSheet{transition:none !important;}
+}
