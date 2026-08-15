@@ -33,7 +33,8 @@ class JumviMusicScheduler {
   constructor({
     fragments,
     musicGainDb = -23,      // fragmanlarin hedef seviyesi (LUFS'a yakin bir gain proxy'si)
-    ambienceGainDb = -38,   // muzigin ~15 dB altinda, "sinirda bilinc" seviyesi
+    ambienceGainDb = -52,   // dusuruldu (-38 -> -52) — gercek cihazda "TV statigi" gibi
+                             // algilanan gurultuyu gidermek icin (bkz. iPhone geri bildirimi)
     speechDuckDb = -7,
     sfxDuckDb = -4,
     useAmbience = true,     // JumviWorldAmbience yuklu ise procedurel dunya sesi calsin mi
