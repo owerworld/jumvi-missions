@@ -1393,8 +1393,8 @@ function isTurkishUI(){
  */
 const TEAM_COPY = Object.freeze({
   en: {
-    dad:"Dad + Kid", mom:"Mom + Kid", sibling:"Siblings",
-    grandma:"Grandma + Kid", grandpa:"Grandpa + Kid", friend:"Friends",
+    dad:"Dad", mom:"Mom", sibling:"Sibling",
+    grandma:"Grandma", grandpa:"Grandpa", friend:"Friend",
     choose:"Choose a team", optional:"Who are you playing with?",
     teamXp:"Team XP", teamProgress:"Team Progress",
     chooseTitle:"Choose a team", switchTitle:"Switch team",
@@ -1410,12 +1410,12 @@ const TEAM_COPY = Object.freeze({
     playingNow:"PLAYING NOW",
     firstTeam:"Choose your first team",
     firstTeamSub:"Your current mission progress will carry into the first team you create.",
-    grownupsIntro:"Settings, product care, privacy, and support.",
+    grownupsIntro:"Names, avatars, app settings, product care, privacy, and support.",
     navTeams:"Teams"
   },
   tr: {
-    dad:"Baba + Çocuk", mom:"Anne + Çocuk", sibling:"Kardeşler",
-    grandma:"Büyükanne + Çocuk", grandpa:"Büyükbaba + Çocuk", friend:"Arkadaşlar",
+    dad:"Baba", mom:"Anne", sibling:"Kardeş",
+    grandma:"Büyükanne", grandpa:"Büyükbaba", friend:"Arkadaş",
     choose:"Takım seç", optional:"Kimler birlikte oynuyor?",
     teamXp:"Takım XP", teamProgress:"Takım İlerlemesi",
     chooseTitle:"Takım seç", switchTitle:"Takımı değiştir",
@@ -1431,19 +1431,38 @@ const TEAM_COPY = Object.freeze({
     playingNow:"ŞİMDİ OYNUYOR",
     firstTeam:"İlk takımını seç",
     firstTeamSub:"Mevcut görev ilerlemen oluşturduğun ilk takıma aktarılacak.",
-    grownupsIntro:"Ayarlar, ürün bakımı, gizlilik ve destek.",
+    grownupsIntro:"İsimler, avatarlar, uygulama ayarları, ürün bakımı, gizlilik ve destek.",
     navTeams:"Takımlar"
   }
 });
 function teamCopy(){
   return isTurkishUI() ? TEAM_COPY.tr : TEAM_COPY.en;
 }
+const TEAM_PARTNER_EMOJI = Object.freeze({
+  dad:"👨", mom:"👩", sibling:"🧒", grandma:"👵", grandpa:"👴", friend:"🧑‍🤝‍🧑"
+});
+
 function teamPartnerLabel(partner){
   const c = teamCopy();
   return c[partner] || partner;
 }
+function activeChildName(){
+  const p = getActiveProfile();
+  const raw = String((p && p.name) || "").trim();
+  if(!raw || raw.toLowerCase() === "player") return "";
+  return raw;
+}
 function teamDisplayName(team){
-  return team ? teamPartnerLabel(team.partner) : "";
+  if(!team) return "";
+  const child = activeChildName();
+  const partner = teamPartnerLabel(team.partner);
+  return child ? `${child} + ${partner}` : `${isTurkishUI() ? "Çocuk" : "Kid"} + ${partner}`;
+}
+function openChildIdentitySetup(){
+  openProfileSheet();
+  setTimeout(()=>{
+    try { openProfileEdit(getActiveProfileId()); } catch(_){}
+  }, 40);
 }
 function teamDoneSet(team){
   if(!team) return new Set();
@@ -1545,6 +1564,7 @@ function renderTeamsHub(){
     btn.className = "teamsRankRow" + (isActive ? " active" : "");
     btn.innerHTML = `
       <span class="teamsRankNo">${idx + 1}</span>
+      <span class="teamsRankEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[entry.team.partner] || "👥"}</span>
       <span class="teamsRankMain">
         <strong>${escapeHtml(teamDisplayName(entry.team))}</strong>
         <small>${escapeHtml(c.level)} ${entry.progress.level} · ${entry.progress.missions}/36 ${escapeHtml(c.missions)}</small>
@@ -1624,7 +1644,7 @@ function renderTeamXpPicker(){
     btn.type = "button";
     btn.className = "teamXpExisting" + (ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === team.id ? " active" : "");
     btn.innerHTML = `
-      <span class="teamXpExistingIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+      <span class="teamXpExistingIcon" aria-hidden="true">${TEAM_PARTNER_EMOJI[team.partner] || "👥"}</span>
       <span class="teamXpExistingCopy">
         <strong>${escapeHtml(teamDisplayName(team))}</strong>
         <small>${c.level} ${p.level} · ${p.xp} XP · ${p.missions}/36 ${c.missions}</small>
@@ -1649,7 +1669,7 @@ function renderTeamXpPicker(){
     btn.type = "button";
     btn.className = "teamXpPartner";
     btn.disabled = exists;
-    btn.innerHTML = `<i class="jic jic-users" aria-hidden="true"></i><span>${escapeHtml(teamPartnerLabel(partner))}</span>`;
+    btn.innerHTML = `<span class="teamXpPartnerEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[partner] || "👥"}</span><span>${escapeHtml(teamPartnerLabel(partner))}</span>`;
     if(exists) btn.setAttribute("aria-label", `${teamPartnerLabel(partner)} — ${isTurkishUI() ? "takım zaten var" : "team already exists"}`);
     btn.onclick = ()=>{
       if(exists) return;
@@ -1692,7 +1712,14 @@ function openTeamXpPicker(){
   const personal = document.getElementById("teamXpPersonal");
   const teamsCreate = document.getElementById("btnTeamsCreate");
 
-  if(teamsCreate) teamsCreate.addEventListener("click", ()=>{ clickSound("click"); openTeamXpPicker(); });
+  if(teamsCreate) teamsCreate.addEventListener("click", ()=>{
+    clickSound("click");
+    if(!activeChildName()){
+      openChildIdentitySetup();
+      return;
+    }
+    openTeamXpPicker();
+  });
   if(open) open.addEventListener("click", ()=>{ clickSound("click"); switchTab("modes"); renderTeamsHub(); });
   if(close) close.addEventListener("click", ()=>{ clickSound("click"); closeTeamXpPicker(); });
   if(personal) personal.addEventListener("click", ()=>{
@@ -6205,10 +6232,18 @@ function renderProfileTab(){
   const nameEl   = document.getElementById("profileCardName");
   const statsEl  = document.getElementById("profileCardStats");
   if(avatarEl) avatarEl.innerHTML = JUMVI_ART.img(JUMVI_ART.avatar(ap.avatar), "avatarArt", "", true);
-  if(nameEl)   nameEl.textContent   = ap.name   || "Player";
+  if(nameEl){
+    const shownName = activeChildName();
+    nameEl.textContent = shownName || (isTurkishUI() ? "Çocuk adı ekle" : "Add child name");
+  }
   if(statsEl){
-    const total = done.size;
-    statsEl.textContent = `${total} mission${total===1?"":"s"} complete`;
+    if(ACTIVE_JUMVI_TEAM){
+      statsEl.textContent = `${teamDisplayName(ACTIVE_JUMVI_TEAM)} · ${done.size}/36 ${isTurkishUI() ? "görev" : "missions"}`;
+    }else{
+      statsEl.textContent = isTurkishUI()
+        ? "İsim ve avatar seç, sonra bir takım oluştur"
+        : "Choose a name and avatar, then create a team";
+    }
   }
   // Daily reminder kaldirildi
 }

@@ -1624,3 +1624,76 @@ html.theme--dark .teamsRankScore strong{color:#73CAE7;}
     padding-right:9px;
   }
 }
+
+/* ==========================================================================
+ * JUMVI Child Identity Recovery Phase 2C.1 — 2026-08-16
+ * Restore useful personalization/settings without restoring Personal XP.
+ * ========================================================================== */
+
+/* Phase 2C hid these together with old Profile complexity. Bring back only
+   the useful identity/settings entry points. Quick Play remains hidden. */
+#avatarBtn{
+  display:inline-flex !important;
+}
+#profileCard{
+  display:flex !important;
+}
+#btnOpenProfileFromTab{
+  display:flex !important;
+}
+
+/* Make the Adults CTA read like personalization/settings, not account admin. */
+#btnOpenProfileFromTab{
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+/* Existing profile sheet avatars remain the source of truth. */
+.profileSettingsHint{
+  margin:-2px 0 10px;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.4;
+  font-weight:700;
+}
+
+/* Relationship choice is intentionally visual and fast. */
+.teamXpPartnerEmoji{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:rgba(47,182,232,.09);
+  font-size:19px;
+  line-height:1;
+}
+html.theme--dark .teamXpPartnerEmoji{
+  background:rgba(115,202,231,.08);
+}
+.teamXpExistingIcon{
+  font-size:20px;
+  line-height:1;
+}
+
+/* Teams standings: show who the partner is without another text label. */
+.teamsRankEmoji{
+  width:29px;
+  height:29px;
+  flex:0 0 29px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:var(--soft);
+  font-size:18px;
+  line-height:1;
+}
+
+/* Keep Quick Play removed. These intentionally remain hidden after restoring
+   child identity/settings. */
+#btnQuickPlay,
+.profileQuickLink[data-go-tab="modes"]{
+  display:none !important;
+}

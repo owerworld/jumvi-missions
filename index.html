@@ -569,20 +569,20 @@
       <!-- ============== TAB: PROFILE ============== -->
       <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
         <h2 class="tabHeading">For Grown-ups</h2>
-        <p class="tabIntro" id="grownupsIntro">Settings, product care, privacy, and support.</p>
+        <p class="tabIntro" id="grownupsIntro">Names, avatars, app settings, product care, privacy, and support.</p>
 
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
           <div class="profileCardAvatar" id="profileCardAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></div>
           <div class="profileCardBody">
-            <div class="profileCardName" id="profileCardName">Player</div>
-            <div class="profileCardStats" id="profileCardStats">0 missions complete</div>
+            <div class="profileCardName" id="profileCardName">Kid</div>
+            <div class="profileCardStats" id="profileCardStats">Set a name and choose an avatar</div>
           </div>
         </div>
 
         <!-- Primary action: switch/manage profiles -->
         <button class="profileTabOpenBtn btn btnPrimary" id="btnOpenProfileFromTab" type="button">
-          <i class="jic jic-users" aria-hidden="true"></i> Players &amp; Settings
+          <i class="jic jic-users" aria-hidden="true"></i> Names, Avatars &amp; Settings
         </button>
 
         <!-- Quick links -->
@@ -1055,27 +1055,27 @@
 
 
   <!-- Profile Sheet (multi-child) -->
-  <div class="backdrop" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Choose player">
+  <div class="backdrop" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Kids and settings">
     <div class="sheet">
       <div class="sheetTop">
         <div>
-          <div class="sheetTitle"><i class="jic jic-users" aria-hidden="true"></i> Choose Player</div>
-          <div class="small">Each child has their own progress, streak & badges.</div>
+          <div class="sheetTitle"><i class="jic jic-users" aria-hidden="true"></i> Kids &amp; Settings</div>
+          <div class="small">Add a name and avatar for each child. Team XP stays with family teams.</div>
         </div>
-        <button class="close" id="btnProfileClose" aria-label="Close player picker"><i class="ico i-x" aria-hidden="true"></i></button>
+        <button class="close" id="btnProfileClose" aria-label="Close kids and settings"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="profileList" id="profileList"></div>
 
       <!-- Edit panel (shown when editing a profile) -->
       <div class="profileEditSection" id="profileEditSection" style="display:none">
-        <div class="profileSectionTitle" id="profileEditTitle"><i class="jic jic-pencil" aria-hidden="true"></i> Edit profile</div>
+        <div class="profileSectionTitle" id="profileEditTitle"><i class="jic jic-pencil" aria-hidden="true"></i> Edit child</div>
         <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20" autocomplete="off" />
         <div class="profileAvatarPicker" id="profileEditAvatarPicker"></div>
         <div class="profileEditActions">
           <button class="btn btnGhost profileEditCancelBtn" id="btnProfileEditCancel" type="button">Cancel</button>
           <button class="btn btnPrimary profileEditSaveBtn" id="btnProfileEditSave" type="button">Save</button>
         </div>
-        <button class="profileDeleteBtn" id="btnProfileDelete" type="button"><i class="jic jic-trash" aria-hidden="true"></i> Delete this profile</button>
+        <button class="profileDeleteBtn" id="btnProfileDelete" type="button"><i class="jic jic-trash" aria-hidden="true"></i> Delete this child</button>
       </div>
 
       <div class="profileAddSection" id="profileAddSection">
@@ -1087,6 +1087,7 @@
 
       <!-- Settings section -->
       <div class="profileSettingsSection">
+        <div class="profileSettingsHint">These settings apply to the whole JUMVI app on this device.</div>
         <div class="profileSectionTitle"><i class="jic jic-settings" aria-hidden="true"></i> Settings</div>
         <button class="profileSettingRow" id="profileThemeBtn" type="button">
           <span class="profileSettingLabel">
@@ -1243,13 +1244,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260816-2" defer></script>
+<script src="app.js?v=20260816-3" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260816-2")
+    navigator.serviceWorker.register("/service-worker.js?v=20260816-3")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
