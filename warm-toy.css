@@ -374,3 +374,231 @@ html.theme--dark .navTab.active{color:#73CAE7 !important;}
 @media (prefers-reduced-motion:reduce){
   #tabToday .dailyBox.dailyBoxPromoted,#tabToday .dailyPlayBig{transition:none !important;}
 }
+
+/* ==========================================================================
+ * JUMVI Warm Toy Phase 1.1 polish — 2026-08-15
+ * Screenshot-driven production polish only. No JS/mission/progress/analytics
+ * logic changes. Fixes: header brand scale, dark-hero seam, Today card/CTA
+ * hierarchy, and mission-sheet action hierarchy.
+ * ========================================================================== */
+
+/* 1) HEADER — real logo was visually undersized because the source lives on a
+      square canvas. Keep the same asset/semantics and scale only its rendering. */
+.topbar{
+  min-height:64px !important;
+  padding-top:9px !important;
+  padding-bottom:9px !important;
+}
+.topbar .logoWrap{
+  width:104px !important;
+  height:46px !important;
+}
+.topbar .logoImg{
+  transform:scale(1.38);
+  transform-origin:center;
+}
+
+/* 2) DARK HERO — the night artwork itself has the correct #171C3C background,
+      but using a portrait image as a contained right-hand block exposed a hard
+      vertical edge. Feather only that edge; do not redraw/recolour the product. */
+html.theme--dark #tabToday .todayHeroStage{
+  background:#171C3C !important;
+}
+html.theme--dark #tabToday .todayHeroArt{
+  width:min(78%,470px) !important;
+  height:100% !important;
+  right:-2% !important;
+  bottom:0 !important;
+  background-position:right bottom !important;
+  background-size:contain !important;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.18) 9%,rgba(0,0,0,.72) 24%,#000 38%);
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.18) 9%,rgba(0,0,0,.72) 24%,#000 38%);
+}
+html.theme--dark #tabToday .todayHeroStage::after{
+  background:linear-gradient(90deg,
+    #171C3C 0%,
+    rgba(23,28,60,.98) 33%,
+    rgba(23,28,60,.72) 49%,
+    rgba(23,28,60,.24) 66%,
+    transparent 82%) !important;
+}
+
+/* 3) TODAY'S MISSION — tighten hierarchy and turn metadata back into three
+      readable chips instead of one long undifferentiated bar. */
+#tabToday .dailyBox.dailyBoxPromoted{
+  padding:18px 18px 16px !important;
+}
+#tabToday .dailyContent{
+  display:grid !important;
+  grid-template-columns:64px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:14px !important;
+  margin-bottom:14px !important;
+}
+#tabToday .dailyIconBig{
+  width:64px !important;
+  height:64px !important;
+  flex-basis:64px !important;
+  border-radius:18px !important;
+}
+#tabToday .dailyText{min-width:0 !important;}
+#tabToday .dailyBox.dailyBoxPromoted .dailyName{
+  margin:0 0 9px !important;
+  font-size:23px !important;
+  line-height:1.08 !important;
+}
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta{
+  display:flex !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:6px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta .tag,
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta *{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:5px !important;
+  width:auto !important;
+  min-height:30px !important;
+  margin:0 !important;
+  padding:6px 9px !important;
+  border:1px solid rgba(87,67,42,.09) !important;
+  border-radius:999px !important;
+  background:#F3EEE6 !important;
+  color:#62584F !important;
+  box-shadow:none !important;
+  font-size:12.5px !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  white-space:nowrap !important;
+}
+html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyMeta .tag,
+html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyMeta *{
+  border-color:rgba(255,255,255,.07) !important;
+  background:#203448 !important;
+  color:#D2DCE6 !important;
+}
+#tabToday .dailyActionsBig{
+  gap:5px !important;
+  margin-top:2px !important;
+}
+#tabToday .dailyPlayBig,
+#tabToday .dailyBox.dailyBoxPromoted .dailyPlayBig,
+#tabToday .dailyBox.dailyBoxPromoted .dailyPlayBig.btnPrimary{
+  min-height:56px !important;
+  border:0 !important;
+  border-radius:17px !important;
+  background:linear-gradient(180deg,#218ECC 0%,#1577B1 100%) !important;
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  text-shadow:none !important;
+  box-shadow:0 8px 18px rgba(21,119,177,.20) !important;
+}
+#tabToday .dailyPlayBig .ico,
+#tabToday .dailyPlayBig .jic{
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+}
+#tabToday .dailyNewSmall{
+  min-height:40px !important;
+  margin-top:4px !important;
+  padding:7px 10px !important;
+  font-size:14px !important;
+}
+
+/* 4) MISSION SHEET — one obvious primary action at a time.
+      START = strong brand blue.
+      FINISHED = quiet success surface.
+      NEXT = neutral until the existing JS adds btnNextHighlight. */
+#sheet > .sheetActions{
+  gap:9px !important;
+}
+#sheet .sheetActions .missionStartBtn,
+#sheet .sheetActions .missionStartBtn.btnPrimary{
+  min-height:58px !important;
+  border:0 !important;
+  border-radius:17px !important;
+  background:linear-gradient(180deg,#218ECC 0%,#1577B1 100%) !important;
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  box-shadow:0 8px 20px rgba(21,119,177,.20) !important;
+  font-size:17px !important;
+  font-weight:950 !important;
+}
+#sheet .sheetActions .missionStartBtn .ico,
+#sheet .sheetActions .missionStartBtn .jic{
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+}
+#sheet .sheetActions .holdBtn.btnPrimary{
+  min-height:50px !important;
+  border:1.5px solid #79A982 !important;
+  border-radius:16px !important;
+  background:#EEF8EF !important;
+  color:#174B24 !important;
+  -webkit-text-fill-color:#174B24 !important;
+  box-shadow:none !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+}
+html.theme--dark #sheet .sheetActions .holdBtn.btnPrimary{
+  border-color:#4F8A5D !important;
+  background:#162D22 !important;
+  color:#DDF6E3 !important;
+  -webkit-text-fill-color:#DDF6E3 !important;
+}
+#sheet .sheetActions #btnNext{
+  min-height:46px !important;
+  border:1px solid rgba(20,32,51,.08) !important;
+  border-radius:15px !important;
+  background:#F3F0EA !important;
+  color:#66707A !important;
+  -webkit-text-fill-color:#66707A !important;
+  box-shadow:none !important;
+  opacity:1 !important;
+  font-size:14px !important;
+  font-weight:850 !important;
+}
+html.theme--dark #sheet .sheetActions #btnNext{
+  border-color:rgba(255,255,255,.07) !important;
+  background:#1C2B39 !important;
+  color:#A9B5C1 !important;
+  -webkit-text-fill-color:#A9B5C1 !important;
+}
+#sheet .sheetActions #btnNext.btnNextHighlight{
+  min-height:52px !important;
+  border-color:#75A667 !important;
+  background:#DFF1D7 !important;
+  color:#173F21 !important;
+  -webkit-text-fill-color:#173F21 !important;
+  font-size:16px !important;
+}
+html.theme--dark #sheet .sheetActions #btnNext.btnNextHighlight{
+  border-color:#5C965E !important;
+  background:#234A2D !important;
+  color:#E7F8E9 !important;
+  -webkit-text-fill-color:#E7F8E9 !important;
+}
+
+@media (max-width:390px){
+  .topbar .logoImg{transform:scale(1.32);}
+  #tabToday .dailyContent{
+    grid-template-columns:58px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+  #tabToday .dailyIconBig{
+    width:58px !important;
+    height:58px !important;
+    flex-basis:58px !important;
+  }
+  #tabToday .dailyBox.dailyBoxPromoted .dailyMeta .tag,
+  #tabToday .dailyBox.dailyBoxPromoted .dailyMeta *{
+    padding:6px 8px !important;
+    font-size:12px !important;
+  }
+}
