@@ -67,8 +67,14 @@ class JumviWorldAmbience {
     // Bandpass: ruzgarin "hus" karakteri icin dar bant, yavas LFO ile suzuluyor
     const filter = ctx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.value = 600;
-    filter.Q.value = 0.7;
+    filter.frequency.value = 500;
+    filter.Q.value = 2.8; // daraltildi (0.7 -> 2.8) — genis bantli "statik" hissi azaltir
+
+    // Ek lowpass: bandpass'in ust ucundaki sizinti (sibilan/hissy karakter) icin
+    const softener = ctx.createBiquadFilter();
+    softener.type = 'lowpass';
+    softener.frequency.value = 1100;
+    softener.Q.value = 0.5;
 
     // LFO: filtre merkez frekansini 300-900 Hz arasinda çok yavaş gezdir (ruzgarin "gelip gitmesi")
     const lfo = ctx.createOscillator();
@@ -80,23 +86,24 @@ class JumviWorldAmbience {
     lfo.start();
 
     // Ikinci, daha yumusak LFO: genel seviyeyi hafif nefes aldirir
+    // Modulasyon araligi daraltildi: 0.3-1.0 -> 0.15-0.45 (sabit "orada olma" hissini azaltir)
     const breathLfo = ctx.createOscillator();
     breathLfo.frequency.value = 0.05;
     const breathGain = ctx.createGain();
-    breathGain.gain.value = this.baseGain;
     const breathDepth = ctx.createGain();
-    breathDepth.gain.value = this.baseGain * 0.35;
+    breathDepth.gain.value = this.baseGain * 0.15;
     breathLfo.connect(breathDepth);
     breathDepth.connect(breathGain.gain);
-    breathGain.gain.value = this.baseGain * 0.65; // taban seviye + LFO'nun ustune binecek
+    breathGain.gain.value = this.baseGain * 0.30; // taban seviye + LFO'nun ustune binecek
     breathLfo.start();
 
     noiseSource.connect(filter);
-    filter.connect(breathGain);
+    filter.connect(softener);
+    softener.connect(breathGain);
     breathGain.connect(this.destination);
     noiseSource.start();
 
-    this._nodes.push(noiseSource, filter, lfo, lfoGain, breathLfo, breathGain, breathDepth);
+    this._nodes.push(noiseSource, filter, softener, lfo, lfoGain, breathLfo, breathGain, breathDepth);
   }
 
   _fillPinkNoise(data) {
@@ -112,7 +119,7 @@ class JumviWorldAmbience {
       b5 = -0.7616 * b5 - white * 0.0168980;
       const pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
       b6 = white * 0.115926;
-      data[i] = pink * 0.11; // normalize, klip yapmaz
+      data[i] = pink * 0.045; // normalize, klip yapmaz — dusuruldu (0.11 -> 0.045)
     }
   }
 
