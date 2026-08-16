@@ -1501,6 +1501,101 @@ function xpLevelInfo(xpValue){
   const pct = isMax ? 100 : Math.max(0, Math.min(100, Math.round(((xp - current.min) / span) * 100)));
   return { xp, current, next, isMax, pct };
 }
+/* ===== Mission-complete Team XP reward — Phase 2E =========================
+ * Presentation only. XP still comes ONLY from xpFromDoneSet(done).
+ * No XP key, multiplier, bonus, replay reward, analytics event or migration.
+ */
+let _missionXpRewardMissionId = 0;
+
+function hideMissionXpReward(){
+  const card = document.getElementById("missionXpReward");
+  if(!card) return;
+  card.hidden = true;
+  card.classList.remove("show", "levelUp", "noTeam");
+  _missionXpRewardMissionId = 0;
+}
+
+function showMissionXpReward(payload){
+  const card = document.getElementById("missionXpReward");
+  if(!card || !payload || !payload.id) return;
+
+  const tr = isTurkishUI();
+  const kicker = document.getElementById("missionXpRewardKicker");
+  const team = document.getElementById("missionXpRewardTeam");
+  const gain = document.getElementById("missionXpRewardGain");
+  const math = document.getElementById("missionXpRewardMath");
+  const progress = document.getElementById("missionXpRewardProgress");
+  const bar = document.getElementById("missionXpRewardBar");
+  const fill = document.getElementById("missionXpRewardBarFill");
+  const next = document.getElementById("missionXpRewardNext");
+  const rule = document.getElementById("missionXpRewardRule");
+
+  _missionXpRewardMissionId = Number(payload.id);
+  card.classList.remove("show", "levelUp", "noTeam");
+
+  if(kicker) kicker.textContent = tr ? "GÖREV TAMAMLANDI" : "MISSION COMPLETE";
+
+  if(!ACTIVE_JUMVI_TEAM){
+    card.classList.add("noTeam");
+    if(team) team.textContent = tr ? "Harika iş!" : "Great job!";
+    if(gain) gain.textContent = tr ? "✓ Kaydedildi" : "✓ Saved";
+    if(math) math.textContent = tr
+      ? "Görev ilerlemen bu cihazda kaydedildi."
+      : "Your mission progress is saved on this device.";
+    if(progress) progress.hidden = true;
+    if(rule) rule.textContent = tr
+      ? "İlk aile takımını oluşturduğunda bu ilerleme yanında gelir."
+      : "When you create your first family Team, this progress comes with you.";
+  }else{
+    const beforeInfo = payload.beforeInfo;
+    const afterInfo = payload.afterInfo;
+    const levelUp = beforeInfo && afterInfo &&
+      beforeInfo.current.level !== afterInfo.current.level;
+
+    card.classList.toggle("levelUp", !!levelUp);
+
+    if(team) team.textContent = teamDisplayName(ACTIVE_JUMVI_TEAM);
+    if(gain) gain.textContent = `+${payload.gained} ${tr ? "Takım XP" : "Team XP"}`;
+    if(math) math.textContent = `${payload.beforeXp} → ${payload.afterXp} XP`;
+    if(progress) progress.hidden = false;
+
+    if(fill && afterInfo) fill.style.width = afterInfo.pct + "%";
+    if(bar && afterInfo){
+      const max = afterInfo.isMax ? XP_MAX : afterInfo.next.min;
+      bar.setAttribute("aria-valuemin", String(afterInfo.current.min));
+      bar.setAttribute("aria-valuemax", String(max));
+      bar.setAttribute("aria-valuenow", String(afterInfo.xp));
+      bar.setAttribute(
+        "aria-label",
+        tr ? "Takım XP seviye ilerlemesi" : "Team XP level progress"
+      );
+    }
+
+    if(next && afterInfo){
+      const title = tr ? afterInfo.current.tr : afterInfo.current.en;
+      if(levelUp){
+        next.textContent = tr
+          ? `SEVİYE ATLADI! Seviye ${afterInfo.current.level} · ${title}`
+          : `LEVEL UP! Level ${afterInfo.current.level} · ${title}`;
+      }else if(afterInfo.isMax){
+        next.textContent = `${tr ? "Seviye" : "Level"} ${afterInfo.current.level} · ${title}`;
+      }else{
+        const remaining = Math.max(0, afterInfo.next.min - afterInfo.xp);
+        next.textContent = tr
+          ? `Seviye ${afterInfo.next.level} için ${remaining} XP kaldı`
+          : `${remaining} XP to Level ${afterInfo.next.level}`;
+      }
+    }
+
+    if(rule) rule.textContent = tr
+      ? "Takım XP her görevde yalnızca bir kez kazanılır."
+      : "Team XP is earned once per mission.";
+  }
+
+  card.hidden = false;
+  requestAnimationFrame(()=> card.classList.add("show"));
+}
+
 function isTurkishUI(){
   return window.__JUMVI_LOCALE === "tr-TR" || document.documentElement.lang === "tr";
 }
@@ -3847,6 +3942,9 @@ let _openMissionId = 0;
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
+  if(_missionXpRewardMissionId && _missionXpRewardMissionId !== Number(id)){
+    hideMissionXpReward();
+  }
   const missionWasOpen = backdrop.classList.contains("show");
   if(!missionWasOpen){
     _missionReturnFocus = document.activeElement && document.activeElement !== document.body
@@ -4157,6 +4255,7 @@ if(btnSpeak){
 }
 
 function closeMission(){
+  hideMissionXpReward();
   // Hub flow ends when the mission view closes — the hub tab is still the
   // active tab underneath, so the user lands right back on the island.
   const wasHubMission = !!window._hubMissionFlow;
@@ -4608,6 +4707,7 @@ function showUndoBar(id){
     bar.hidden = true;
     if(done.has(id)){
       done.delete(id);
+      if(_missionXpRewardMissionId === Number(id)) hideMissionXpReward();
       bumpDoneVersion();
       persist();
       renderList();
@@ -4627,8 +4727,15 @@ function markMissionDone(id, source="manual"){
   const packKey = ms ? ms.pack : null;
   const packBefore = packKey ? missions.filter(m=>m.pack===packKey && done.has(m.id)).length : 0;
 
+  // Reward math is derived from the exact same unique-completion set as Home XP.
+  const xpBefore = xpFromDoneSet(done);
+  const levelBefore = xpLevelInfo(xpBefore);
+
   done.add(id);
   bumpDoneVersion();
+
+  const xpAfter = xpFromDoneSet(done);
+  const levelAfter = xpLevelInfo(xpAfter);
 
   // Beacon 3/5 — no de-dupe needed: the guard at the top of this function
   // already returns early for a mission that is already done.
@@ -4656,6 +4763,18 @@ function markMissionDone(id, source="manual"){
   celebrate();
   window.JumviMusic?.cue("playMissionComplete");
   fireDoneBurst(document.getElementById("btnToggleDone"));
+
+  if(source === "manual" || source === "auto"){
+    showMissionXpReward({
+      id,
+      beforeXp: xpBefore,
+      afterXp: xpAfter,
+      gained: Math.max(0, xpAfter - xpBefore),
+      beforeInfo: levelBefore,
+      afterInfo: levelAfter
+    });
+  }
+
   // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
   if(source === "manual" || source === "auto") showUndoBar(id);
   // Score özeti — eğer tracker açıksa ve skor varsa
@@ -4777,6 +4896,7 @@ if(btnToggleDone){
     const wasDone = done.has(lastOpenedId);
     if(wasDone){
       done.delete(lastOpenedId);
+      if(_missionXpRewardMissionId === Number(lastOpenedId)) hideMissionXpReward();
       bumpDoneVersion();
       persist();
       renderList();

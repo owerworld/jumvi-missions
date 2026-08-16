@@ -1826,3 +1826,155 @@ html.theme--dark .teamXpPartner.teamSetupPartner.exists{
 @media (max-width:380px){
   .teamSetupPartnerCopy strong{font-size:12.8px;}
 }
+
+/* ==========================================================================
+ * JUMVI Mission Complete Team XP Reward Phase 2E — 2026-08-16
+ * Inline reward moment: teaches Team XP without introducing another modal.
+ * ========================================================================== */
+
+.missionXpReward{
+  margin:14px 0 12px;
+  padding:14px;
+  border:1px solid rgba(109,190,69,.30);
+  border-radius:20px;
+  background:#F0F7EB;
+  color:var(--text);
+  box-shadow:0 10px 24px rgba(20,32,51,.07);
+  opacity:0;
+  transform:translateY(5px) scale(.985);
+}
+.missionXpReward[hidden]{ display:none !important; }
+.missionXpReward.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  transition:opacity .22s ease, transform .22s ease;
+}
+html.theme--dark .missionXpReward{
+  border-color:rgba(109,190,69,.24);
+  background:#1D3829;
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+}
+
+.missionXpRewardTop{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+.missionXpRewardIcon{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:rgba(109,190,69,.14);
+  color:#4F9A2D;
+  font-size:20px;
+}
+html.theme--dark .missionXpRewardIcon{
+  background:rgba(109,190,69,.13);
+  color:#91D66D;
+}
+.missionXpReward.levelUp .missionXpRewardIcon{
+  background:#FFF1C7;
+  color:#8B6412;
+}
+html.theme--dark .missionXpReward.levelUp .missionXpRewardIcon{
+  background:#40351D;
+  color:#F0CA67;
+}
+
+.missionXpRewardHeading{
+  min-width:0;
+  flex:1;
+}
+.missionXpRewardKicker{
+  margin-bottom:3px;
+  color:#4F9A2D;
+  font-size:9.5px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.7px;
+}
+html.theme--dark .missionXpRewardKicker{ color:#91D66D; }
+.missionXpRewardTeam{
+  overflow:hidden;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.15;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.missionXpRewardGain{
+  flex:0 0 auto;
+  color:#1577B1;
+  font-size:15px;
+  line-height:1;
+  font-weight:950;
+  text-align:right;
+}
+html.theme--dark .missionXpRewardGain{ color:#73CAE7; }
+
+.missionXpRewardMath{
+  margin:11px 0 8px;
+  color:var(--text);
+  font-size:13px;
+  font-weight:900;
+}
+.missionXpRewardBar{
+  width:100%;
+  height:8px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(20,32,51,.09);
+}
+html.theme--dark .missionXpRewardBar{ background:rgba(255,255,255,.10); }
+.missionXpRewardBarFill{
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:#6DBE45;
+  transition:width .35s ease .06s;
+}
+.missionXpRewardNext{
+  margin-top:7px;
+  color:var(--text);
+  font-size:11.5px;
+  line-height:1.25;
+  font-weight:900;
+}
+.missionXpReward.levelUp .missionXpRewardNext{ color:#8B6412; }
+html.theme--dark .missionXpReward.levelUp .missionXpRewardNext{ color:#F0CA67; }
+.missionXpRewardRule{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.35;
+  font-weight:700;
+}
+
+.missionXpReward.noTeam{
+  border-color:rgba(21,119,177,.16);
+  background:#EDF7FC;
+}
+html.theme--dark .missionXpReward.noTeam{
+  border-color:rgba(115,202,231,.16);
+  background:#193649;
+}
+.missionXpReward.noTeam .missionXpRewardIcon{
+  background:rgba(47,182,232,.10);
+  color:#1577B1;
+}
+html.theme--dark .missionXpReward.noTeam .missionXpRewardIcon{ color:#73CAE7; }
+.missionXpReward.noTeam .missionXpRewardKicker{ color:#1577B1; }
+html.theme--dark .missionXpReward.noTeam .missionXpRewardKicker{ color:#73CAE7; }
+
+@media (prefers-reduced-motion: reduce){
+  .missionXpReward,
+  .missionXpReward.show,
+  .missionXpRewardBarFill{
+    transition:none !important;
+    transform:none !important;
+  }
+}

@@ -869,6 +869,28 @@
       <div class="small" id="mSmall"></div>
       </div>
 
+      <!-- Phase 2E: completion reward stays inline in the mission sheet.
+           It is NOT a second modal, so badge/score celebrations can coexist. -->
+      <section class="missionXpReward" id="missionXpReward" hidden aria-live="polite">
+        <div class="missionXpRewardTop">
+          <div class="missionXpRewardIcon" aria-hidden="true"><i class="jic jic-award"></i></div>
+          <div class="missionXpRewardHeading">
+            <div class="missionXpRewardKicker" id="missionXpRewardKicker">MISSION COMPLETE</div>
+            <div class="missionXpRewardTeam" id="missionXpRewardTeam">Great job!</div>
+          </div>
+          <div class="missionXpRewardGain" id="missionXpRewardGain">+20 Team XP</div>
+        </div>
+        <div class="missionXpRewardMath" id="missionXpRewardMath">120 → 140 XP</div>
+        <div class="missionXpRewardProgress" id="missionXpRewardProgress">
+          <div class="missionXpRewardBar" id="missionXpRewardBar" role="progressbar"
+               aria-label="Team XP level progress" aria-valuemin="0" aria-valuemax="80" aria-valuenow="0">
+            <div class="missionXpRewardBarFill" id="missionXpRewardBarFill"></div>
+          </div>
+          <div class="missionXpRewardNext" id="missionXpRewardNext">40 XP to Level 2</div>
+        </div>
+        <div class="missionXpRewardRule" id="missionXpRewardRule">Team XP is earned once per mission.</div>
+      </section>
+
       <div class="sheetActions">
         <div class="missionPrimary">
           <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
@@ -1244,13 +1266,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260816-4" defer></script>
+<script src="app.js?v=20260816-5" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260816-4")
+    navigator.serviceWorker.register("/service-worker.js?v=20260816-5")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
