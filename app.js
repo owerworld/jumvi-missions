@@ -1909,6 +1909,20 @@ function closeTeamXpPicker(){
   }, 220);
 }
 
+/* "Dad also plays with Ece" — names the children this partner already has a
+ * team with, so a parent can see the family already has a journey under that
+ * name before adding a second one. */
+function teamAlsoPlaysWith(partner, names){
+  const label = teamPartnerLabel(partner);
+  const tr = isTurkishUI();
+  const list = names.length === 1
+    ? names[0]
+    : names.slice(0, -1).join(", ") + (tr ? " ve " : " and ") + names[names.length - 1];
+  return tr
+    ? `${label} ayrıca ${list} ile oynuyor · yeni takım`
+    : `${label} also plays with ${list} · new team`;
+}
+
 function renderTeamXpPicker(){
   const c = teamCopy();
   const backdrop = document.getElementById("teamXpBackdrop");
@@ -1955,17 +1969,33 @@ function renderTeamXpPicker(){
   partnerGrid.innerHTML = "";
 
   // Adult/friend relationships: uniqueness is active child + relationship.
+  //
+  // Dad is one person but he really does play with each child separately, so a
+  // second child is never blocked from pairing with him — blocking would mean
+  // Ali simply cannot record the games he actually played. What was wrong is
+  // that the row said "New team" as though Dad were free, hiding the fact that
+  // the family already has a Dad journey under another child. It now says so.
   ["dad","mom","grandma","grandpa","friend"].forEach(partner => {
     const existing = teams.find(t => t.partner === partner && !t.partnerProfileId) || null;
+    const alsoWith = existing ? [] : getProfiles()
+      .filter(pr => pr.id !== getActiveProfileId())
+      .filter(pr => getJumviTeamsForProfile(pr.id)
+        .some(t => t.partner === partner && !t.partnerProfileId))
+      .map(pr => String(pr.name || "").trim())
+      .filter(Boolean);
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "teamXpPartner teamSetupPartner" + (existing ? " exists" : "");
+    btn.className = "teamXpPartner teamSetupPartner" + (existing ? " exists" : "") +
+      (alsoWith.length ? " sharedPartner" : "");
     const preview = `${child} + ${teamPartnerLabel(partner)}`;
+    const note = existing
+      ? c.useExisting
+      : (alsoWith.length ? teamAlsoPlaysWith(partner, alsoWith) : c.newTeam);
     btn.innerHTML = `
       <span class="teamXpPartnerEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[partner] || "👥"}</span>
       <span class="teamSetupPartnerCopy">
         <strong>${escapeHtml(preview)}</strong>
-        <small>${escapeHtml(existing ? c.useExisting : c.newTeam)}</small>
+        <small>${escapeHtml(note)}</small>
       </span>
       <i class="jic ${existing ? "jic-circle-check" : "jic-arrow-right"}" aria-hidden="true"></i>
     `;

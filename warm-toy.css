@@ -2047,3 +2047,14 @@ html.theme--dark #tabToday .advCard{
   background:rgba(255,255,255,.04) !important;
   border-color:rgba(255,255,255,.14) !important;
 }
+
+/* A partner the family already has a team with under another child. Not a
+   warning and not disabled — the pairing is real and allowed — just visibly
+   different from a genuinely free row. */
+#teamXpPartnerGrid .teamSetupPartner.sharedPartner .teamSetupPartnerCopy small{
+  color:#1577B1;
+  font-weight:800;
+}
+html.theme--dark #teamXpPartnerGrid .teamSetupPartner.sharedPartner .teamSetupPartnerCopy small{
+  color:#73CAE7;
+}
