@@ -4,7 +4,15 @@
 <head>
   <meta charset="utf-8" />
   <!-- §2.5 — pinch-zoom ENABLED (WCAG 1.4.4); notch safe area kept -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- maximum-scale/user-scalable back up the JS pinch + double-tap guards that
+       already exist in app.js: on a toy the phone is held one-handed, often on
+       grass, and an accidental pinch that leaves the page zoomed makes every
+       screen scroll sideways. interactive-widget keeps the layout viewport from
+       being resized out from under the app when the keyboard opens for the
+       child-name field. Note iOS Safari deliberately ignores the scale hints
+       for accessibility, so the real defence there is the 16px minimum on every
+       input — see .profileNameInput in style.css. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>JUMVI Missions — Toss, Catch &amp; Keep Playing</title>
   <meta name="description" content="Quick, active games for the JUMVI Toss & Catch Paddle Set. Pick a play level, read the steps, then put the phone down and play. No app, account, or ads." />
   <meta name="keywords" content="JUMVI, paddle set, toss and catch, active kids games, paddle ball, kids missions, family games" />
@@ -1275,13 +1283,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260817-4" defer></script>
+<script src="app.js?v=20260817-5" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260817-4")
+    navigator.serviceWorker.register("/service-worker.js?v=20260817-5")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }

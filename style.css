@@ -2174,7 +2174,7 @@ html.theme--dark .toast{
       color: #333;
       padding:12px 12px;
       font-weight:850;
-      font-size:13px;
+      font-size:16px; /* iOS: below 16px focusing this zooms the page in */
       line-height:1.45;
       min-height: 96px;
       outline:0;
@@ -4205,7 +4205,14 @@ html.theme--dark .profileAddSection{ border-top-color: rgba(255,255,255,0.1); }
   border-radius:14px;
   border:1.5px solid rgba(0,0,0,0.12);
   background: #fff;
-  font-size:15px; font-weight:700;
+  /* 16px is not a taste choice. Below it, iOS Safari zooms the whole page in
+     when the field takes focus and never zooms back out — the header slides
+     off-centre, the avatar and the bottom nav get clipped, and every screen
+     after it is scrolled sideways. openProfileEdit() focuses this field
+     automatically, so Team setup STEP 1 ("add child name") triggered it
+     without the family tapping anything. .certNameInput already carried this
+     exact fix and its comment; this field was missed. */
+  font-size:16px; font-weight:700;
   color: var(--text);
   margin-bottom:10px;
 }
