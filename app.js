@@ -1194,6 +1194,41 @@ const MISSION_BACKGROUND_SELECTORS = [
   "#bottomNav",
   "#soundToggle"
 ];
+/* ── Background scroll lock ───────────────────────────────────────────────
+ *
+ * The document is the scroll port now (so Safari will collapse its toolbar),
+ * which means an open mission sheet has a live, scrollable page behind it.
+ * Locking it used to be one line — #app-wrapper's overflow — but a pinned
+ * body loses its scroll offset, so the offset has to be carried by hand or
+ * closing a mission would dump the family back at the top of the list they
+ * had scrolled halfway down.
+ *
+ * Nothing here runs per frame and no scroll listener is added: two class
+ * toggles and one remembered number, on open and on close. */
+let _scrollLockY = 0;
+let _scrollLocked = false;
+
+function lockBackgroundScroll(){
+  if(_scrollLocked) return;
+  _scrollLocked = true;
+  _scrollLockY = window.scrollY || document.documentElement.scrollTop || 0;
+  // Pinning the body collapses it to the viewport; shifting it up by the
+  // current offset keeps the same pixels on screen, so the lock is invisible.
+  document.body.style.top = (-_scrollLockY) + "px";
+  document.body.classList.add("scrollLocked");
+}
+
+function unlockBackgroundScroll(){
+  if(!_scrollLocked) return;
+  _scrollLocked = false;
+  document.body.classList.remove("scrollLocked");
+  document.body.style.top = "";
+  /* Restore before paint, and without smooth behaviour — a smooth scroll here
+   * would animate the page back into place after the sheet has already gone,
+   * which reads as the jump this is meant to prevent. */
+  window.scrollTo(0, _scrollLockY);
+}
+
 function setMissionBackgroundIsolation(active){
   if(active){
     if(_missionBackgroundRestore) return;
@@ -4647,9 +4682,7 @@ if(btnSpeak){
   toggleScoreTracker(false);
   resetScore();
   renderScoreTracker();
-  // Lock background scroll while modal is open
-  const _aw = document.getElementById("app-wrapper");
-  if(_aw) _aw.style.overflowY = "hidden";
+  lockBackgroundScroll();
   requestAnimationFrame(()=>{ try{ btnClose.focus({ preventScroll:true }); }catch(_){ btnClose.focus(); } });
 }
 
@@ -4731,9 +4764,7 @@ function closeMission(opts){
       _hub3dInstance.onMissionClosed(hubMissionCompleted);
     }
   }
-  // Restore background scroll
-  const _aw = document.getElementById("app-wrapper");
-  if(_aw) _aw.style.overflowY = "";
+  unlockBackgroundScroll();
   setMissionBackgroundIsolation(false);
   const returnFocus = _missionReturnFocus;
   _missionReturnFocus = null;
@@ -7236,8 +7267,8 @@ function switchTab(tabName){
 
   // Tab değişince scroll'u en üste al
   try {
-    const wrap = document.getElementById("app-wrapper");
-    if(wrap) wrap.scrollTop = 0;
+    // The document is the scroll port; #app-wrapper no longer scrolls, so
+    // there is nothing to reset on it.
     window.scrollTo({ top: 0, behavior: "auto" });
     // The header hides itself on downward scroll; a tab switch lands at the top
     // so it must come back even when no scroll event fires.
@@ -8461,9 +8492,12 @@ function init(){
 
 // Hide header on scroll down (iOS Safari friendly)
 (function hideHeaderOnScroll(){
-  const wrap = document.getElementById("app-wrapper");
   const sticky = document.querySelector(".sticky");
-  if(!wrap || !sticky) return;
+  if(!sticky) return;
+  /* Reads the DOCUMENT offset, because the document is the scroll port now.
+   * This used to watch #app-wrapper.scrollTop, which is permanently 0 under
+   * the current architecture — the header would simply never hide again. */
+  const scrollY = () => window.scrollY || document.documentElement.scrollTop || 0;
 
   /* Switching child or team ends in location.reload(), and the browser restores
    * the previous scroll offset of #app-wrapper across that reload. Seeding
@@ -8474,18 +8508,18 @@ function init(){
    * first delta against where the page actually is. */
   try { if("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch(_){}
 
-  /* history.scrollRestoration governs the DOCUMENT scroll; the panel that
-   * actually scrolls here is a DIV, and Safari restores that on its own. So
-   * the offset is also cleared directly, and any scroll churn during the first
-   * moments after load is treated as settling rather than as the family
-   * scrolling down — otherwise the restore itself hides the header. */
+  /* history.scrollRestoration governs the DOCUMENT scroll, which is now the
+   * one that matters, so the manual setting above does the whole job. The
+   * settle window stays: a bfcache restore still replays an offset, and any
+   * churn in the first moments after load must not read as the family
+   * scrolling down or the restore itself hides the header. */
   const settleUntil = () => { booting = true; setTimeout(()=>{ booting = false; }, 600); };
   let booting = false;
   let last = 0;
   let ticking = false;
 
   function resetToTop(){
-    if(wrap.scrollTop !== 0) wrap.scrollTop = 0;
+    if(scrollY() !== 0) window.scrollTo(0, 0);
     sticky.classList.remove("hidden");
     last = 0;
     settleUntil();
@@ -8499,7 +8533,7 @@ function init(){
     if(ticking) return;
     ticking = true;
     requestAnimationFrame(()=>{
-      const y = wrap.scrollTop;
+      const y = scrollY();
       if(booting){
         // Absorb the restore without letting it read as a downward scroll.
         last = y;
@@ -8512,11 +8546,11 @@ function init(){
       ticking = false;
     });
   };
-  wrap.addEventListener("scroll", onScroll, { passive:true });
+  window.addEventListener("scroll", onScroll, { passive:true });
 
   /* Programmatic jumps to the top (tab switches) must also bring the header
-   * back. Setting scrollTop on an already-unscrolled panel fires no scroll
-   * event, so the class would otherwise stay stuck from the previous tab. */
+   * back. Scrolling an already-unscrolled document fires no scroll event, so
+   * the class would otherwise stay stuck from the previous tab. */
   window.__jumviRevealHeader = ()=>{
     sticky.classList.remove("hidden");
     last = 0;

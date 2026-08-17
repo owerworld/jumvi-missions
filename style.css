@@ -2703,22 +2703,70 @@ html.theme--dark .sheet .kv{
 .btn{ min-height:44px; }
 
 
-/* FIX: prevent background/page scroll in all themes */
-html, body {
-  overflow: hidden !important;
-  position: fixed !important;
+/* ═══════════════════════════════════════════════════════════════════════════
+ * THE DOCUMENT OWNS VERTICAL SCROLL.
+ *
+ * Safari on iOS only minimises its own bottom toolbar while the DOCUMENT is
+ * the scroll port. Confirmed on iPhone 15 hardware, not assumed: releasing the
+ * root position lock alone did nothing, releasing the root overflow lock alone
+ * did nothing, and taking scroll away from #app-wrapper while the root stayed
+ * locked simply made the page unscrollable. Only once the document itself
+ * scrolled did the toolbar start collapsing on the way down and expanding on
+ * the way back up.
+ *
+ * This block used to do the opposite — it pinned html/body and handed vertical
+ * scrolling to #app-wrapper, which is why the toolbar stayed at full height
+ * for the whole session. It is the last of three layers that said so; the
+ * earlier two (:2649 and the base rules at :6-16) are weaker and are now
+ * overridden here, and the dormant block at :2585 that first attempted body
+ * scrolling finally agrees with what ships.
+ *
+ * overflow-x stays hidden on the ROOT only. It must NOT go back on
+ * #app-wrapper: when one axis is hidden and the other visible, the visible one
+ * computes to auto, #app-wrapper becomes a scroll container again, and the
+ * sticky header latches onto it instead of the viewport — which is exactly the
+ * header-scrolls-away symptom the live prototype showed.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+html {
+  position: static !important;
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+}
+body {
+  position: static !important;
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
+  min-height: 100dvh !important;
+  overflow: visible !important;
 }
 
 #app-wrapper {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  height: auto !important;
+  min-height: 100dvh !important;
+  /* Both axes visible on purpose — see the note above. */
+  overflow: visible !important;
+}
+
+/* Background scroll lock for the mission sheet.
+ *
+ * With the document scrolling, an open sheet would otherwise let the page
+ * behind it move under the finger. Pinning the body is the standard answer;
+ * the offset it was pinned at is written inline by app.js and restored on
+ * close, so closing lands exactly where the family left off with no jump to
+ * the top. Declared after the block above so it outranks position:static. */
+body.scrollLocked {
   position: fixed !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
 }
 
 
