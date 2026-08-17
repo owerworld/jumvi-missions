@@ -1978,3 +1978,22 @@ html.theme--dark .missionXpReward.noTeam .missionXpRewardKicker{ color:#73CAE7; 
     transform:none !important;
   }
 }
+
+/* ==========================================================================
+ * "We Finished!" play gate — 2026-08-17
+ * While the gate is closed the primary action stays present and tappable
+ * (tapping explains why) but stops reading as the ready next step, so a child
+ * cannot tap straight through 36 missions without playing them.
+ * ========================================================================== */
+#btnToggleDone.btnGateWait{
+  background:var(--card, #FFFFFF) !important;
+  border:2px dashed rgba(20,32,51,.22) !important;
+  color:var(--muted) !important;
+  box-shadow:none !important;
+  font-weight:900;
+}
+#btnToggleDone.btnGateWait:active{ transform:scale(.99); }
+html.theme--dark #btnToggleDone.btnGateWait{
+  background:rgba(255,255,255,.04) !important;
+  border-color:rgba(255,255,255,.20) !important;
+}

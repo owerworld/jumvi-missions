@@ -77,6 +77,9 @@ check("olay adları", [...worker.matchAll(/case "([a-z_0-9]+)":/g)].map(m => m[1
   "pack_view", "player_count", "profile_add", "progress_reset",
   "quickplay_start", "return_visit", "score_saved", "speak_on", "share_tap",
   "timer_start", "welcome_complete",
+  /* Faz 2F — the family layer (Teams, the XP ladder, the accidental-tap net).
+   * Added, never renamed: every name above still means what it always meant. */
+  "team_create", "team_switch", "profile_delete", "mission_undo", "level_up",
 ].sort());
 check("HELP_REASONS", setOf("HELP_REASONS"), [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
@@ -98,6 +101,8 @@ check("HUB3D_STEPS", setOf("HUB3D_STEPS"), [
 check("RETURN_VISITS", setOf("RETURN_VISITS"), ["2", "3", "5", "10"]);
 /* quickplay_start'ın tek boyutu. play-modes.js ile senkron kalmalı —
  * check-play-modes.mjs orada 9 mod olduğunu ayrıca doğruluyor. */
+check("TEAM_KINDS", setOf("TEAM_KINDS"), ["adult", "sibling"]);
+check("XP_LEVEL_VALUES", setOf("XP_LEVEL_VALUES"), ["2", "3", "4", "5", "6", "7"]);
 check("PLAY_MODE_IDS", setOf("PLAY_MODE_IDS"), [
   "pop-and-stick", "quick-drop", "floor-target-four",
   "free-rally", "copycat-pops", "four-ball-round",

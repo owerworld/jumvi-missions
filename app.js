@@ -140,6 +140,19 @@ function trackEvent(name, props){
  *                                 writes no mission progress — deliberately a
  *                                 separate funnel from mission_start.
  *
+ * FAZ 2F — the family layer. Teams, the XP ladder and the accidental-tap net
+ * all shipped without a single counter behind them, so the questions they were
+ * built to answer ("do families actually pair up?", "does anyone reach level
+ * 2?", "how often is a completion a misfire?") had no data at all. Each of
+ * these is a shape already used above: an event name plus at most one value
+ * from a closed enum. No team name, child name, profile id or team id — the
+ * team KIND, never the pair.
+ *   team_create       { kind }    adult | sibling
+ *   team_switch                   an existing team was made active again
+ *   profile_delete                the EVENT only, mirroring profile_add
+ *   mission_undo                  the 5s Undo was used on a completion
+ *   level_up          { level }   2..7, the ladder in XP_LEVELS
+ *
  * READING app_first_open: it is an approximate activation INDICATOR, not a
  * count of physical units in use. One box can be opened on several phones,
  * one phone can be cleared and look new. Never divide it by units sold and
@@ -156,7 +169,9 @@ const BEACON_EVENTS = new Set([
   "dashboard_open", "missionbook_get", "profile_add", "progress_reset",
   "hub3d", "app_first_open", "return_visit",
   "welcome_complete", "quickplay_start",
+  "team_create", "team_switch", "profile_delete", "mission_undo", "level_up",
 ]);
+const TEAM_KINDS = ["adult", "sibling"];
 const HELP_REASONS = [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
   "need_more_space", "instructions_unclear", "mission_too_hard",
@@ -963,6 +978,10 @@ function chooseOrCreateJumviTeam(partner){
     teams.push(team);
     saveJumviTeams(teams);
     if(wasFirstTeam) copyPersonalProgressIntoFirstTeam(team.id);
+    // The KIND of team only. Never the relationship, the child or the team id.
+    beacon("team_create", { kind: "adult" });
+  }else{
+    beacon("team_switch");
   }
   // Duplicate combination => use the existing team. Never create #2.
   setTeamActiveAndReturnToPlay(team.id);
@@ -1014,6 +1033,10 @@ function chooseOrCreateSiblingTeam(otherProfileId){
     if(wasFirstTeam && !lsGet("jumvi_team_" + siblingId + "_missions_done_v3", null)){
       copyPersonalProgressIntoFirstTeam(siblingId);
     }
+    // The KIND of team only — never which two children were paired.
+    beacon("team_create", { kind: "sibling" });
+  }else{
+    beacon("team_switch");
   }
 
   setTeamActiveAndReturnToPlay(team.id);
@@ -3355,6 +3378,47 @@ let timerEndAt = 0;
 let timerHoldResetArmed = false;
 let timerHoldResetT = null;
 let missionOpenedAt = 0;
+
+/* ===== "We Finished!" play gate ==========================================
+ * A mission could be marked complete the instant it opened, so a child could
+ * tap through all 36 in well under a minute and collect the XP, the badges and
+ * the certificate without ever picking up a paddle. That makes every family
+ * number meaningless and hands out the reward the product exists to earn.
+ *
+ * The gate is deliberately NOT "you must use the timer": the whole design says
+ * eyes on the ball, not the screen, and plenty of families play with the phone
+ * face-down. It accepts EITHER signal that real play happened —
+ *   · the mission's own timer ran to Time's Up, or
+ *   · the mission sheet has simply been open long enough to have played it.
+ * A family who read the steps and went outside passes on time alone. Only the
+ * tap-through case is stopped. In-memory by design: a reload restarts the
+ * clock (stricter, never looser) and no new storage key is introduced. */
+const MISSION_GATE_CAP_S = 45;
+const _timerFinishedFor = new Set();
+// Declared here, beside the rest of the gate state, because closeMission() —
+// defined earlier in this file — clears it.
+let _gateUiTimer = null;
+
+function missionTimeSeconds(ms){
+  const raw = String((ms && ms.time) || "");
+  const m = /^(\d+)\s*(s|sec|min|m)?/i.exec(raw.trim());
+  if(!m) return 0;
+  const n = Number(m[1]) || 0;
+  return /^m/i.test(m[2] || "s") ? n * 60 : n;
+}
+function missionGateMsFor(id){
+  const ms = missions.find(x => x.id === id);
+  const secs = missionTimeSeconds(ms) || MISSION_GATE_CAP_S;
+  return Math.min(secs, MISSION_GATE_CAP_S) * 1000;
+}
+// Returns 0 when the mission may be completed, otherwise the ms still to wait.
+function missionGateRemainingMs(id){
+  if(id == null) return 0;
+  if(done.has(id)) return 0;              // undo/redo of an earned completion
+  if(_timerFinishedFor.has(id)) return 0; // the timer already ran out
+  const openFor = Date.now() - (missionOpenedAt || 0);
+  return Math.max(0, missionGateMsFor(id) - openFor);
+}
 let timerCountdownInterval = null;
 let timerCountdownTimeout = null;
 let timerCountdownToken = 0;
@@ -3447,10 +3511,14 @@ function updateTimerTick(){
         coachSpeak("Time's up! Great job!");
       }
     }
+    // A timer that reached Time's Up is proof this mission was actually played,
+    // so it satisfies the "We Finished!" gate outright.
+    if(lastOpenedId != null) _timerFinishedFor.add(lastOpenedId);
     if(autoDoneOnEnd && lastOpenedId != null && !done.has(lastOpenedId)){
       markMissionDone(lastOpenedId, "auto");
     }else if(lastOpenedId != null && !done.has(lastOpenedId)){
       incAttempt(lastOpenedId);
+      updateToggleDoneGateUI();
     }
     return;
   }
@@ -4112,6 +4180,8 @@ function openMission(id){
   btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> We Finished!';
   btnToggleDone.setAttribute("aria-label", isDone ? "Mark mission as not done" : "We finished this mission");
   btnToggleDone.classList.toggle("btnDone", isDone);
+  // Re-label to "After you play" while the play gate is still closed.
+  updateToggleDoneGateUI();
   // After completing: promote "Next" as the clear CTA
   btnNext.innerHTML = isDone ? '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission!' : '<i class="jic jic-arrow-right" aria-hidden="true"></i> Next';
   btnNext.classList.toggle("btnNextHighlight", isDone);
@@ -4281,6 +4351,7 @@ if(btnSpeak){
 
 function closeMission(){
   hideMissionXpReward();
+  if(_gateUiTimer){ clearTimeout(_gateUiTimer); _gateUiTimer = null; }
   // Hub flow ends when the mission view closes — the hub tab is still the
   // active tab underneath, so the user lands right back on the island.
   const wasHubMission = !!window._hubMissionFlow;
@@ -4782,6 +4853,9 @@ function showUndoBar(id, journeySnapshot){
       if(lastOpenedId === id) openMission(id);
       showToast("Marked as not done");
       trackEvent("Mission Undone", { id: id });
+      // How often a completion was a misfire. The event only — no mission id,
+      // so this can never become a per-mission behaviour profile.
+      beacon("mission_undo");
     }
   };
 }
@@ -4806,6 +4880,14 @@ function markMissionDone(id, source="manual"){
 
   const xpAfter = xpFromDoneSet(done);
   const levelAfter = xpLevelInfo(xpAfter);
+
+  // Crossing a rung of the ladder, emitted from the state transition rather
+  // than the reward card — the card is presentation only and stays analytics
+  // free. The level number is a closed 2..7 enum; nothing about the team goes
+  // with it.
+  if(levelAfter.current.level > levelBefore.current.level){
+    beacon("level_up", { level: levelAfter.current.level });
+  }
 
   // Beacon 3/5 — no de-dupe needed: the guard at the top of this function
   // already returns early for a mission that is already done.
@@ -4974,8 +5056,46 @@ if(btnToggleDone){
       openMission(lastOpenedId);
       return;
     }
+    const waitMs = missionGateRemainingMs(lastOpenedId);
+    if(waitMs > 0){
+      // Not a scold and not a lockout — the button simply is not the next step
+      // yet. Naming the seconds keeps it honest instead of feeling broken.
+      const secs = Math.ceil(waitMs / 1000);
+      showToast(isTurkishUI()
+        ? `Önce oynayın! ${secs} saniye sonra tamamlayabilirsiniz.`
+        : `Play it first! You can finish in ${secs}s.`);
+      if(navigator.vibrate) try { navigator.vibrate(20); } catch(_){}
+      clickSound("click");
+      updateToggleDoneGateUI();
+      return;
+    }
     markMissionDone(lastOpenedId, "manual");
   };
+}
+
+/* Keeps the button honest while the gate is still closed: it stays visible and
+ * tappable (tapping explains why), but reads as not-yet rather than ready. */
+function updateToggleDoneGateUI(){
+  if(!btnToggleDone) return;
+  if(_gateUiTimer){ clearTimeout(_gateUiTimer); _gateUiTimer = null; }
+  const id = lastOpenedId;
+  if(id == null || done.has(id)){
+    btnToggleDone.classList.remove("btnGateWait");
+    return;
+  }
+  const waitMs = missionGateRemainingMs(id);
+  const tr = isTurkishUI();
+  if(waitMs > 0){
+    btnToggleDone.classList.add("btnGateWait");
+    const secs = Math.ceil(waitMs / 1000);
+    btnToggleDone.innerHTML = `<i class="jic jic-play" aria-hidden="true"></i> ${
+      tr ? `Oynadıktan sonra (${secs}s)` : `After you play (${secs}s)`}`;
+    _gateUiTimer = setTimeout(updateToggleDoneGateUI, 1000);
+  }else{
+    btnToggleDone.classList.remove("btnGateWait");
+    btnToggleDone.innerHTML = '<i class="jic jic-circle-check" aria-hidden="true"></i> ' +
+      (tr ? "Bitirdik!" : "We Finished!");
+  }
 }
 
 function pickSmartNextMission(currentId){
@@ -5700,6 +5820,8 @@ function deleteProfile(){
   const filtered = remainingProfiles;
   saveProfiles(filtered);
   trackEvent("Profile Deleted");
+  // Mirrors profile_add: the event only, never a name, avatar or id.
+  beacon("profile_delete");
   // Eğer aktif profil silindiyse, ilk kalan profile geç (reload tetiklenir)
   if(getActiveProfileId() === id){
     lsSet(ACTIVE_PROFILE_KEY, filtered[0].id);
@@ -6697,6 +6819,9 @@ function switchTab(tabName){
     const wrap = document.getElementById("app-wrapper");
     if(wrap) wrap.scrollTop = 0;
     window.scrollTo({ top: 0, behavior: "auto" });
+    // The header hides itself on downward scroll; a tab switch lands at the top
+    // so it must come back even when no scroll event fires.
+    if(typeof window.__jumviRevealHeader === "function") window.__jumviRevealHeader();
   } catch(_){}
 
   // The island is a temporary bonus view, never the QR return destination.
@@ -8111,13 +8236,48 @@ function init(){
   const wrap = document.getElementById("app-wrapper");
   const sticky = document.querySelector(".sticky");
   if(!wrap || !sticky) return;
+
+  /* Switching child or team ends in location.reload(), and the browser restores
+   * the previous scroll offset of #app-wrapper across that reload. Seeding
+   * `last` at 0 made the restored offset read as a DOWNWARD scroll on the very
+   * first event, so the header slid up the instant the new player's app
+   * appeared and stayed up until someone happened to scroll back. Two changes
+   * close it: never inherit a scroll position across a reload, and measure the
+   * first delta against where the page actually is. */
+  try { if("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch(_){}
+
+  /* history.scrollRestoration governs the DOCUMENT scroll; the panel that
+   * actually scrolls here is a DIV, and Safari restores that on its own. So
+   * the offset is also cleared directly, and any scroll churn during the first
+   * moments after load is treated as settling rather than as the family
+   * scrolling down — otherwise the restore itself hides the header. */
+  const settleUntil = () => { booting = true; setTimeout(()=>{ booting = false; }, 600); };
+  let booting = false;
   let last = 0;
   let ticking = false;
+
+  function resetToTop(){
+    if(wrap.scrollTop !== 0) wrap.scrollTop = 0;
+    sticky.classList.remove("hidden");
+    last = 0;
+    settleUntil();
+  }
+  resetToTop();
+  // Fires for a normal load AND for a bfcache restore, which is the path that
+  // reinstates a stale scroll offset after switching child or team.
+  window.addEventListener("pageshow", resetToTop);
+
   const onScroll = ()=>{
     if(ticking) return;
     ticking = true;
     requestAnimationFrame(()=>{
       const y = wrap.scrollTop;
+      if(booting){
+        // Absorb the restore without letting it read as a downward scroll.
+        last = y;
+        ticking = false;
+        return;
+      }
       const goingDown = y > last && y > 8;
       sticky.classList.toggle("hidden", goingDown);
       last = y;
@@ -8125,6 +8285,14 @@ function init(){
     });
   };
   wrap.addEventListener("scroll", onScroll, { passive:true });
+
+  /* Programmatic jumps to the top (tab switches) must also bring the header
+   * back. Setting scrollTop on an already-unscrolled panel fires no scroll
+   * event, so the class would otherwise stay stuck from the previous tab. */
+  window.__jumviRevealHeader = ()=>{
+    sticky.classList.remove("hidden");
+    last = 0;
+  };
 })();
 
 init();

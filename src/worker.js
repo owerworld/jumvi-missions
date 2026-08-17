@@ -162,6 +162,15 @@ const PLAY_MODE_IDS = new Set([
 /** Mission ids are integers 1..36 (data.js). The ceiling is deliberately
  *  generous for future packs but bounded — an unbounded id would let anyone
  *  blow up blob2 cardinality. */
+/* Faz 2F — the family layer. TEAM_KINDS carries the SHAPE of a pairing, never
+ * the pairing itself: "adult" covers dad/mom/grandma/grandpa/friend, "sibling"
+ * covers a named second child. Neither the relationship, the child names, the
+ * profile ids nor the team id ever leave the device. XP_LEVEL_VALUES mirrors
+ * XP_LEVELS in app.js — level 1 is the floor everyone starts on, so only 2..7
+ * can ever be crossed INTO. */
+const TEAM_KINDS = new Set(["adult", "sibling"]);
+const XP_LEVEL_VALUES = new Set([2, 3, 4, 5, 6, 7]);
+
 const MISSION_ID_MAX = 200;
 
 function isMissionId(v) {
@@ -244,6 +253,12 @@ export function buildDataPoint(payload) {
     // Events with no prop at all. Anything extra the client sends is dropped
     // on the floor here — the column layout is built from this file, not from
     // the payload.
+    case "team_create":
+      return TEAM_KINDS.has(payload.kind) ? point(payload.kind, []) : null;
+
+    case "level_up":
+      return XP_LEVEL_VALUES.has(payload.level) ? point("", [payload.level]) : null;
+
     case "daily_pick_tap":
     case "certificate_made":
     case "speak_on":
@@ -253,6 +268,9 @@ export function buildDataPoint(payload) {
     case "profile_add":
     case "progress_reset":
     case "app_first_open":
+    case "team_switch":
+    case "profile_delete":
+    case "mission_undo":
       return point("", []);
 
     default:

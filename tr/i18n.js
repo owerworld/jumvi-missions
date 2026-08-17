@@ -31,6 +31,14 @@
    * straight form, matching what the generated table already does: the source
    * files are inconsistent and a near-miss silently falls through to English. */
   const EXACT_EXTRA = {
+    /* Faz 2F — the two help reasons that had a tip and a schema slot but no
+     * way to be picked. Added to the in-mission panel, so /tr needs them too. */
+    "We don’t have enough space": "Yeterli alanımız yok",
+    "We don't have enough space": "Yeterli alanımız yok",
+    "The steps aren’t clear": "Adımlar net değil",
+    "The steps aren't clear": "Adımlar net değil",
+    "Clear breakables, stand closer, and use soft underhand tosses below face level.": "Kırılabilecek eşyaları kaldırın, birbirinize yaklaşın ve yüz hizasının altından yumuşak alttan atışlar yapın.",
+    "Tap the speaker icon to hear the steps read aloud, or open “More tips & safety”.": "Adımları sesli dinlemek için hoparlör simgesine dokunun veya “Daha fazla ipucu ve güvenlik” bölümünü açın.",
     /* First-mission gear. The welcome overlay answers "what do we pick up
      * now?", not "what is in the box" — so it names 2 paddles + 1 ball and the
      * ×4 inventory lives on the Quick Play and product-care copy instead. The

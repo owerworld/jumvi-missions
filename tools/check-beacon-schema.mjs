@@ -192,6 +192,17 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
     '{"e":"progress_reset"}',
     // Writes, but the name and age must not survive into any column.
     '{"e":"profile_add","name":"Ada","age":6}',
+    /* Faz 2F — the family layer. team_create carries the KIND of pairing only;
+     * a team name, child name or team id must never reach a column. */
+    '{"e":"team_create","kind":"adult"}',
+    '{"e":"team_create","kind":"sibling"}',
+    '{"e":"team_switch"}',
+    '{"e":"profile_delete"}',
+    '{"e":"mission_undo"}',
+    '{"e":"level_up","level":2}',
+    '{"e":"level_up","level":7}',
+    // Writes, but the team name must not survive into any column.
+    '{"e":"team_create","kind":"sibling","team":"Ada + Ali"}',
   ];
   const invalid = [
     '{"e":"Mission Completed","id":1}',
@@ -203,6 +214,13 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
     '{"e":"return_visit","n":4}',
     "not json",
     `{"e":"app_open","pad":"${"x".repeat(600)}"}`, // over MAX_BODY_BYTES
+    // Faz 2F rejections: the enums are closed, and level 1 is the floor
+    // nobody can cross INTO, so it is not a valid level_up value.
+    '{"e":"team_create","kind":"cousin"}',
+    '{"e":"team_create"}',
+    '{"e":"level_up","level":1}',
+    '{"e":"level_up","level":9}',
+    '{"e":"level_up"}',
   ];
 
   for (const b of [...valid, ...invalid]) check(`204 for ${b.slice(0, 34)}`, (await post(b)).status, 204);
@@ -212,6 +230,7 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
   // anywhere contains a value the payloads tried to smuggle in.
   const cells = writes.flatMap(w => [...w.blobs, ...w.doubles.map(String), ...w.indexes]);
   check("no child name reached any column", cells.some(c => /Ada/i.test(c)), false);
+  check("no team name reached any column", cells.some(c => /Ali|\+/.test(c)), false);
   check("no age reached any column", writes.some(w => w.blobs[0] === "profile_add" && w.doubles.length), false);
 
   check("GET /api/beacon rejected", (await worker.fetch(new Request("https://jumvi.co/api/beacon"), env)).status, 405);

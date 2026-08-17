@@ -855,6 +855,12 @@
           <button class="missionHelpOpt" type="button" data-reason="ball_hard_to_remove">The ball is hard to remove</button>
           <button class="missionHelpOpt" type="button" data-reason="strap_uncomfortable">The strap doesn&rsquo;t feel right</button>
           <button class="missionHelpOpt" type="button" data-reason="mission_too_hard">My child is missing most catches</button>
+          <!-- These two carry tips and a schema slot since Faz 1 but had no way
+               to be picked, so "we need more room" and "the steps aren't clear"
+               could never show up in the data. They are the two most
+               actionable product signals in the enum. -->
+          <button class="missionHelpOpt" type="button" data-reason="need_more_space">We don&rsquo;t have enough space</button>
+          <button class="missionHelpOpt" type="button" data-reason="instructions_unclear">The steps aren&rsquo;t clear</button>
           <!-- A button, not an anchor with a bare "#": the click handler
                already cancels the navigation, but /tr is served with a base
                element pointing at the root, so "#" resolves to the ENGLISH
@@ -1266,13 +1272,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260817-1" defer></script>
+<script src="app.js?v=20260817-2" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260817-1")
+    navigator.serviceWorker.register("/service-worker.js?v=20260817-2")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
