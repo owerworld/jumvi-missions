@@ -99,8 +99,9 @@ check("HUB3D_STEPS", setOf("HUB3D_STEPS"), [
   "shown", "entered", "ready", "moved", "mission", "failed", "escaped",
 ]);
 check("RETURN_VISITS", setOf("RETURN_VISITS"), ["2", "3", "5", "10"]);
-/* quickplay_start'ın tek boyutu. play-modes.js ile senkron kalmalı —
- * check-play-modes.mjs orada 9 mod olduğunu ayrıca doğruluyor. */
+/* quickplay_start'ın tek boyutu. Quick Play ürün tarafından kaldırıldı
+ * (play-modes.js ve çalışma zamanı silindi); bu isimler DONDURULMUŞ şemanın
+ * parçası olduğu için Worker'da kalıyor, artık hiçbir yerden yayılmıyor. */
 check("TEAM_KINDS", setOf("TEAM_KINDS"), ["adult", "sibling"]);
 check("XP_LEVEL_VALUES", setOf("XP_LEVEL_VALUES"), ["2", "3", "4", "5", "6", "7"]);
 check("PLAY_MODE_IDS", setOf("PLAY_MODE_IDS"), [

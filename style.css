@@ -8208,28 +8208,6 @@ html.theme--dark .productHelpItem p{ color:#B9C7D8; }
 
 /* Repeatable Play Modes — deliberately separate from mission progress. */
 #tabModes{ gap:12px !important; }
-.modePlayerPicker{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:7px;
-}
-.modeFilter{
-  min-height:48px;
-  padding:8px 5px;
-  border:1.5px solid #CFE0EE;
-  border-radius:13px;
-  background:#fff;
-  color:#4A5D70;
-  font-size:12.5px;
-  font-weight:800;
-  line-height:1.15;
-}
-.modeFilter.active{
-  border-color:var(--brand-blue-deep);
-  background:#EAF5FF;
-  color:#174F80;
-  box-shadow:0 0 0 2px rgba(29,111,181,.08);
-}
 .modeSafetyStrip{
   display:flex;
   align-items:flex-start;
@@ -8245,67 +8223,6 @@ html.theme--dark .productHelpItem p{ color:#B9C7D8; }
   line-height:1.4;
 }
 .modeSafetyStrip i{ flex:none; font-size:19px; }
-.modeGrid{ display:grid; gap:10px; }
-.modeCard{
-  width:100%;
-  min-height:112px;
-  display:grid;
-  grid-template-columns:96px minmax(0,1fr) 22px;
-  align-items:center;
-  gap:11px;
-  padding:12px;
-  border:1px solid #DCE6EF;
-  border-radius:17px;
-  background:#fff;
-  color:#17243A;
-  text-align:left;
-  box-shadow:0 4px 12px rgba(15,23,42,.05);
-}
-.modeCard:active{ transform:scale(.985); }
-/* Holds the per-mode motion diagram (play-mode-icons.js), which is drawn on a
-   2:1 canvas — the old slot was a 70px square sized for two product photos. */
-.modeCardVisual{
-  width:96px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.modeCardVisual svg{ width:96px; height:48px; }
-.modeCardBody{ min-width:0; display:flex; flex-direction:column; gap:4px; }
-.modeCardKicker{ color:#2F77AA; font-size:10px; font-weight:900; letter-spacing:.55px; }
-.modeCardTitle{ font-family:var(--font-display); font-size:18px; font-weight:700; line-height:1.1; }
-.modeCardMeta{ color:#526477; font-size:12px; font-weight:700; line-height:1.3; }
-.modeCardGoal{ overflow:hidden; color:#34485C; font-size:12.5px; font-weight:600; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
-.modeCardArrow{ color:var(--brand-blue-deep); font-size:24px; font-weight:800; }
-.modeRepeatLabel{ margin-bottom:3px; color:#2F77AA; font-size:10px; font-weight:900; letter-spacing:.6px; }
-.modeDiagram{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px 12px;
-  margin:-4px 0 6px;
-  border:1px solid #DCE6EF;
-  border-radius:16px;
-  background:linear-gradient(145deg,#EEF8FF,#F8FBFD);
-  overflow:hidden;
-}
-.modeDiagram svg{ width:100%; max-width:320px; height:auto; }
-.modeGearLine{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-bottom:10px;
-}
-.modeGearChip{
-  padding:6px 9px;
-  border:1px solid #D4E3EF;
-  border-radius:999px;
-  background:#F5F9FC;
-  color:#40566C;
-  font-size:12px;
-  font-weight:800;
-}
-.modeSheet .kvWin > div{ margin-top:8px; }
 .modeCoachChoice{
   display:flex;
   align-items:center;
@@ -8329,39 +8246,8 @@ html.theme--dark .productHelpItem p{ color:#B9C7D8; }
   font-weight:850;
 }
 .modeListenBtn.active{ background:#174F80; color:#fff; }
-.modeTimer{ margin:10px 0; padding:12px; border-radius:14px; background:#F6FAFD; text-align:center; }
-.modeTimer[hidden]{ display:none; }
-.modeTimer strong{ display:block; margin-bottom:7px; color:#174F80; font-size:28px; font-variant-numeric:tabular-nums; }
-.modeTimerBar{ height:8px; overflow:hidden; border-radius:999px; background:#DCEAF4; }
-.modeTimerBar span{ display:block; width:100%; height:100%; border-radius:inherit; background:var(--brand-blue); transform-origin:left; }
-.modeActions #btnModeStart{ min-height:52px; }
 .modeActions{ padding-bottom:max(14px,env(safe-area-inset-bottom)); }
-.modeBackdrop.show .modeSheet{
-  height:96vh;
-  height:min(96svh,780px);
-  max-height:calc(100svh - 10px) !important;
-  display:flex !important;
-  flex-direction:column !important;
-  overflow:hidden !important;
-}
 .modeSheet > .sheetHandle,
-.modeSheet > .sheetTop{ flex:0 0 auto; }
-.modeSheet > .modeSheetBody{
-  flex:1 1 auto;
-  min-height:0;
-  overflow-y:auto !important;
-  overscroll-behavior:contain;
-  -webkit-overflow-scrolling:touch;
-  padding-bottom:12px;
-}
-.modeSheet > .modeActions{
-  flex:0 0 auto;
-  margin:0;
-  padding-top:9px;
-  padding-bottom:max(12px,env(safe-area-inset-bottom));
-  border-top:1px solid #DDE7EF;
-  background:linear-gradient(180deg,rgba(255,255,255,.94),#F7FAFC);
-}
 .strapFitPhoto{
   float:left;
   width:82px;
@@ -8405,16 +8291,10 @@ html.theme--dark .modeFilter,
 html.theme--dark .modeCard,
 html.theme--dark .modeDiagram,
 html.theme--dark .modeCoachChoice,
-html.theme--dark .modeTimer{ background:#172338; border-color:rgba(255,255,255,.11); }
-html.theme--dark .modeFilter{ color:#B9C7D8; }
-html.theme--dark .modeFilter.active{ background:#153654; color:#D6ECFF; border-color:#60A5FA; }
-html.theme--dark .modeCardTitle{ color:#F3F7FA; }
 html.theme--dark .modeCardMeta,
 html.theme--dark .modeCardGoal,
 html.theme--dark .modeCoachChoice span{ color:#B9C7D8; }
 html.theme--dark .modeSafetyStrip{ background:#302613; color:#FFE0AC; border-color:#675128; }
-html.theme--dark .modeGearChip{ background:#1E2D43; border-color:#354A64; color:#D4E1EC; }
-html.theme--dark .modeSheet > .modeActions{ background:#172338; border-color:rgba(255,255,255,.11); }
 html.theme--dark .strapFitPhoto{ border-color:rgba(255,255,255,.13); background:#111A2B; }
 html.theme--dark .screenSmartCue{
   background:#142A42;
@@ -8438,7 +8318,6 @@ body.modalOpen #soundToggle{
   visibility:hidden;
 }
 body.modalOpen #backdrop,
-body.modalOpen #modeBackdrop,
 body.modalOpen #badgeUnlockModal{
   visibility:visible;
 }
@@ -8539,10 +8418,6 @@ button, a, input, textarea, select, label{ touch-action:manipulation; }
   .dailyBox.dailyBoxPromoted .dailyName{ font-size:19px !important; }
   .dailyContent{ margin-bottom:9px; }
   .navTabLabel{ font-size:10px !important; }
-  .modeFilter{ min-height:44px; padding:6px 3px; font-size:11.5px; }
-  .modeCard{ grid-template-columns:80px minmax(0,1fr) 18px; min-height:104px; padding:10px; gap:9px; }
-  .modeCardVisual{ width:80px; }
-  .modeCardVisual svg{ width:80px; height:40px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -8619,16 +8494,12 @@ html.theme--dark .leoSpeakTip{
 
 /* ── Quick Play sheet leftovers the earlier dark block did not reach ─────── */
 html.theme--dark .modeCardKicker,
-html.theme--dark .modeRepeatLabel{ color: #7CC4FF; }
-html.theme--dark .modeCardArrow{ color: #93C5FD; }
 html.theme--dark .modeListenBtn{
   background: var(--surface-card-2);
   border-color: #3F6288;
   color: #CFE6FF;
 }
 html.theme--dark .modeListenBtn.active{ background: #2C6EA8; color: #fff; }
-html.theme--dark .modeTimer strong{ color: #9FD2FF; }
-html.theme--dark .modeTimerBar{ background: rgba(255,255,255,.14); }
 html.theme--dark .productHelpItem summary::after{ color: #7CC4FF; }
 html.theme--dark .productCareA{ color: var(--text-on-card-muted); }
 
@@ -8677,13 +8548,6 @@ html.theme--dark .welcomeGearPlus{ color: #94A3B8; }
 /* ═══════════════════════════════════════════════════════════════════════════
  * Quick Play entry + completion hierarchy (new components)
  * ═════════════════════════════════════════════════════════════════════════ */
-/* #tabToday is a flex column with its own gap, so this card carries no margins
-   of its own. .todayQuickAction's stock 14px/32px margins come from its
-   original home in the Browse tab and would open a hole twice the size of every
-   other gap on the Play screen. Matches the specificity of
-   `#tabToday .todayQuickAction{margin:4px 0 32px 0 !important}` above and wins
-   on source order. */
-#tabToday .quickPlayEntry{ margin: 0 !important; }
 .todayQuickSub{
   display: block;
   margin-top: 2px;

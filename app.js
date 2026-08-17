@@ -1676,6 +1676,7 @@ const TEAM_COPY = Object.freeze({
     boardTapHint:"Tap a faded one to play it",
     boardFirstBy:"first played by",
     games:"games",
+    soloPlayer:"Playing solo",
     createTeam:"Create a Team",
     playingNow:"PLAYING NOW",
     firstTeam:"Choose your first team",
@@ -1705,6 +1706,7 @@ const TEAM_COPY = Object.freeze({
     boardTapHint:"Soluk olana dokunup oynayın",
     boardFirstBy:"ilk oynayan",
     games:"oyun",
+    soloPlayer:"Tek başına",
     createTeam:"Takım Oluştur",
     playingNow:"ŞİMDİ OYNUYOR",
     firstTeam:"İlk takımını seç",
@@ -1819,6 +1821,24 @@ function familyTeamEntries(){
         createdAt: String(team.createdAt || "")
       });
     });
+
+    /* A child who has never opened Team setup still plays, and their board
+     * belongs to the family just as much. Without this the whole tab collapsed
+     * to a "create your first team" invitation — which is the state MOST
+     * households are in, so the fifth nav slot was empty for the majority.
+     * The journey is the child's own progress; no team is invented for them. */
+    if(getJumviTeamsForProfile(pr.id).length === 0){
+      const solo = lsGetJSON("jumvi_" + pr.id + "_missions_done_v3", []);
+      out.push({
+        team: null,
+        ownerId: pr.id,
+        ownerName: String(pr.name || "").trim(),
+        ownerAvatar: pr.avatar || "monkey",
+        players: [{ ownerId:pr.id, ownerName:String(pr.name || "").trim(), ownerAvatar:pr.avatar || "monkey" }],
+        done: new Set(Array.isArray(solo) ? solo.map(Number).filter(Number.isFinite) : []),
+        createdAt: String(pr.createdAt || "")
+      });
+    }
   });
   return out;
 }
@@ -1964,13 +1984,20 @@ function renderTeamsHub(){
   // Creation order, so a card never moves because someone else scored.
   entries.slice().sort((a,b)=> String(a.createdAt).localeCompare(String(b.createdAt)))
     .forEach(entry=>{
-      const isActive = !!(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === entry.team.id &&
-        (isSharedSiblingTeamId(entry.team.id) || entry.ownerId === getActiveProfileId()));
-      const mine = entry.ownerId === getActiveProfileId() || isSharedSiblingTeamId(entry.team.id);
+      // entry.team is null for a child who plays without ever making a team.
+      const solo = !entry.team;
+      const isActive = solo
+        ? (!ACTIVE_JUMVI_TEAM && entry.ownerId === getActiveProfileId())
+        : !!(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === entry.team.id &&
+            (isSharedSiblingTeamId(entry.team.id) || entry.ownerId === getActiveProfileId()));
+      const mine = entry.ownerId === getActiveProfileId() ||
+        (!solo && isSharedSiblingTeamId(entry.team.id));
       const p = progressPreview(entry.done);
-      const name = isSharedSiblingTeamId(entry.team.id)
-        ? `${entry.ownerName} + ${childNameByProfileId(entry.team.partnerProfileId) || teamPartnerLabel("sibling")}`
-        : `${entry.ownerName} + ${teamPartnerLabel(entry.team.partner)}`;
+      const name = solo
+        ? (entry.ownerName || teamCopy().soloPlayer)
+        : (isSharedSiblingTeamId(entry.team.id)
+            ? `${entry.ownerName} + ${childNameByProfileId(entry.team.partnerProfileId) || teamPartnerLabel("sibling")}`
+            : `${entry.ownerName} + ${teamPartnerLabel(entry.team.partner)}`);
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "teamsRankRow familyTeamRow" + (isActive ? " active" : "") + (mine ? "" : " otherChild");
@@ -1989,10 +2016,13 @@ function renderTeamsHub(){
       btn.onclick = ()=>{
         if(isActive) return;
         clickSound("click");
-        // Switching to another child's team means switching child too.
+        // Switching to another child's journey means switching child too.
         if(!mine) lsSet(ACTIVE_PROFILE_KEY, entry.ownerId);
-        lsSet("jumvi_" + entry.ownerId + "_active_team_v1", entry.team.id);
-        beacon("team_switch");
+        if(solo) lsSet("jumvi_" + entry.ownerId + "_active_team_v1", "");
+        else {
+          lsSet("jumvi_" + entry.ownerId + "_active_team_v1", entry.team.id);
+          beacon("team_switch");
+        }
         window.location.reload();
       };
       list.appendChild(btn);
@@ -3562,14 +3592,23 @@ let missionOpenedAt = 0;
  * A family who read the steps and went outside passes on time alone. Only the
  * tap-through case is stopped. In-memory by design: a reload restarts the
  * clock (stricter, never looser) and no new storage key is introduced. */
-// The gate now waits exactly as long as the mission itself says it takes, so
-// the number on the button and the "Easy • 90s" chip above it are the same
-// number. A cap of 45s made them disagree — the sheet promised 90 seconds of
-// play and the button unlocked at 44 — which read as two different answers to
-// "how long is this?". Running the mission timer still opens the gate the
-// moment it reaches Time's Up, so a family that uses the timer never waits
-// twice; the dwell path only covers families who play with the phone down.
-const MISSION_GATE_MIN_S = 45;   // floor for the shortest sprint missions
+/* How long the dwell path waits.
+ *
+ * This tracked the mission's full stated time for a while, so the button and
+ * the "Medium - 210s" chip agreed. They agreed on the wrong thing: the gate
+ * exists to stop a child tapping through 36 missions in 30 seconds, not to
+ * hold a family hostage to a suggested duration. Four kids who really do hit
+ * 40 team catches in 90 seconds were told "After you play (210s)" and made to
+ * stand there for another two minutes — the gate punishing exactly the
+ * behaviour it was built to reward.
+ *
+ * So the wait is now the SHORTER of the mission's own time and a ceiling.
+ * Beyond about a minute the anti-tap-through signal is already conclusive:
+ * 36 missions can no longer be farmed in under half an hour, which is all the
+ * gate ever needed to prove. Running the timer still opens it instantly at
+ * Time's Up, so a family using the timer never waits twice. */
+const MISSION_GATE_MIN_S = 45;    // floor, for the 45s sprint missions
+const MISSION_GATE_CEIL_S = 75;   // ceiling, so a long game never over-holds
 const _timerFinishedFor = new Set();
 // Declared here, beside the rest of the gate state, because closeMission() —
 // defined earlier in this file — clears it.
@@ -3585,7 +3624,7 @@ function missionTimeSeconds(ms){
 function missionGateMsFor(id){
   const ms = missions.find(x => x.id === id);
   const secs = missionTimeSeconds(ms) || MISSION_GATE_MIN_S;
-  return Math.max(secs, MISSION_GATE_MIN_S) * 1000;
+  return Math.min(Math.max(secs, MISSION_GATE_MIN_S), MISSION_GATE_CEIL_S) * 1000;
 }
 // Returns 0 when the mission may be completed, otherwise the ms still to wait.
 function missionGateRemainingMs(id){
@@ -7011,14 +7050,8 @@ document.addEventListener("visibilitychange", ()=>{
     _missionNarrationToken++;
     _missionNarrationPending = false;
     _missionNarratedId = 0;
-    if(_modeNarrationWatchdog) clearTimeout(_modeNarrationWatchdog);
-    _modeNarrationWatchdog = null;
-    _modeNarrationToken++;
-    _modeNarrationPending = false;
-    updateModeStartLabel();
     if(timerState === "idle") setTimerButtonLabel();
     if(timerState === "running") pauseTimer();
-    if(_modeTimerState === "running") pauseModeTimer();
     try{
       if(window.JumviRedLight && typeof window.JumviRedLight.isActive === "function" && window.JumviRedLight.isActive()){
         window.JumviRedLight.stop();
@@ -7075,7 +7108,6 @@ function switchTab(tabName){
         renderMissionPath();
       }
     }
-    if(tabName === "modes" && typeof renderPlayModes === "function") renderPlayModes();
   } catch(e) {
     console.warn("Tab render error:", e);
   }
@@ -7119,315 +7151,22 @@ function renderProfileTab(){
   // Daily reminder kaldirildi
 }
 
-/** =======================
- * Repeatable Play Modes
- * Separate data, separate dialog, and intentionally no writes to `done`,
- * badges, streaks, certificates, or the mission analytics funnel.
- * ======================= */
-let _playModeGroup = "solo";
-let _openPlayMode = null;
-let _modeReturnFocus = null;
-let _modeTimerInterval = null;
-let _modeTimerState = "idle";
-let _modeTimerLeft = 0;
-let _modeTimerEndAt = 0;
-let _modeCoachOn = true;
-let _modeCueFired = new Set();
-let _modeNarrationPending = false;
-let _modeNarrationToken = 0;
-let _modeNarrationWatchdog = null;
-
-function playModeLocale(){ return window.__JUMVI_LOCALE === "tr-TR" ? "tr" : "en"; }
-function modeText(value){
-  if(value == null) return "";
-  if(typeof value === "string") return value;
-  const locale = playModeLocale();
-  return value[locale] || value.en || value.tr || "";
-}
-function getPlayModes(group=_playModeGroup){
-  const all = Array.isArray(window.JUMVI_PLAY_MODES) ? window.JUMVI_PLAY_MODES : [];
-  return all.filter(mode=>mode && mode.group === group);
-}
-function renderPlayModes(){
-  const grid = document.getElementById("modeGrid");
-  if(!grid) return;
-  document.querySelectorAll(".modeFilter").forEach(btn=>{
-    const active = btn.dataset.modeGroup === _playModeGroup;
-    btn.classList.toggle("active", active);
-    btn.setAttribute("aria-pressed", active ? "true" : "false");
-  });
-  const modes = getPlayModes();
-  grid.innerHTML = modes.map(mode=>`
-    <button class="modeCard" type="button" data-mode-id="${escapeHtml(mode.id)}" aria-label="${escapeHtml(modeText(mode.title))}">
-      <span class="modeCardVisual jmv" aria-hidden="true">${modeIcon(mode.id)}</span>
-      <span class="modeCardBody">
-        <span class="modeCardKicker">REPEAT ANYTIME</span>
-        <span class="modeCardTitle">${escapeHtml(modeText(mode.title))}</span>
-        <span class="modeCardMeta">${escapeHtml(modeText(mode.players.label))} · ${escapeHtml(modeGearLabel(mode))} · ${escapeHtml(modeDurationLabel(mode.seconds))}</span>
-        <span class="modeCardGoal">${escapeHtml(modeText(mode.goal))}</span>
-      </span>
-      <span class="modeCardArrow" aria-hidden="true">›</span>
-    </button>`).join("");
-  grid.querySelectorAll(".modeCard").forEach(card=>{
-    card.addEventListener("click", ()=>{
-      const mode = (window.JUMVI_PLAY_MODES || []).find(x=>x.id === card.dataset.modeId);
-      if(mode){ clickSound("click"); openPlayMode(mode, card); }
-    });
-  });
-}
-
-/* Every Play Mode card and sheet used to show the same two product photos, so
- * nine different games looked identical. These are the per-mode motion
- * diagrams from play-mode-icons.js, drawn in the same language as the mission
- * diagrams. Returns "" when the file is absent so the card degrades to text
- * rather than breaking. */
-function modeIcon(id){
-  return (window.JUMVI_PLAY_MODE_ICONS && window.JUMVI_PLAY_MODE_ICONS[id]) || "";
-}
-function modeGearLabel(mode){
-  if(mode.gear && mode.gear.label) return modeText(mode.gear.label);
-  const p = Number(mode.gear && mode.gear.paddles || 0);
-  const b = Number(mode.gear && mode.gear.balls || 0);
-  if(playModeLocale() === "tr") return `${p} paddle + ${b} top`;
-  return `${p} paddle${p===1?"":"s"} + ${b} ball${b===1?"":"s"}`;
-}
-function modeDurationLabel(seconds){ return playModeLocale() === "tr" ? `${seconds}sn` : `${seconds}s`; }
-function updateModeStartLabel(){
-  const btn = document.getElementById("btnModeStart");
-  if(!btn) return;
-  const icon = _modeTimerState === "running" ? "jic-pause" : "jic-play";
-  const label = _modeTimerState === "running" ? "Pause" : (_modeTimerState === "paused" ? "Resume" : "Start");
-  btn.innerHTML = `<i class="jic ${icon}" aria-hidden="true"></i> ${label}`;
-}
-function cancelModeTimer({reset=true}={}){
-  if(_modeNarrationWatchdog) clearTimeout(_modeNarrationWatchdog);
-  _modeNarrationWatchdog = null;
-  if(_modeTimerInterval) clearInterval(_modeTimerInterval);
-  _modeTimerInterval = null;
-  _modeNarrationPending = false;
-  _modeNarrationToken++;
-  releaseWakeLock();
-  if(reset){
-    _modeTimerState = "idle";
-    _modeTimerLeft = _openPlayMode ? _openPlayMode.seconds : 0;
-    _modeTimerEndAt = 0;
-    _modeCueFired = new Set();
-    const timer = document.getElementById("modeTimer");
-    const display = document.getElementById("modeTimerDisplay");
-    const fill = document.getElementById("modeTimerFill");
-    if(timer) timer.hidden = true;
-    if(display) display.textContent = modeDurationLabel(_modeTimerLeft || 0);
-    if(fill){ fill.style.transition = "none"; fill.style.width = "100%"; }
-  }
-  updateModeStartLabel();
-}
-function speakModeCue(value){
-  const text = modeText(value);
-  if(_modeCoachOn && text && !document.hidden) coachSpeak(text, { rate:0.96, pitch:1.02 });
-}
-function modeElapsedSeconds(mode){ return Math.max(0, mode.seconds - _modeTimerLeft); }
-function tickModeTimer(){
-  if(_modeTimerState !== "running" || !_openPlayMode) return;
-  const mode = _openPlayMode;
-  _modeTimerLeft = Math.max(0, Math.ceil((_modeTimerEndAt - Date.now()) / 1000));
-  const display = document.getElementById("modeTimerDisplay");
-  if(display) display.textContent = _modeTimerLeft > 0 ? modeDurationLabel(_modeTimerLeft) : (playModeLocale() === "tr" ? "Süre doldu!" : "Time's up!");
-  const elapsed = modeElapsedSeconds(mode);
-  const voice = mode.voice || {};
-  const cues = [];
-  if(voice.mid && Number.isFinite(Number(voice.mid.at))) cues.push({ key:"mid", at:Number(voice.mid.at), text:voice.mid.text });
-  if(voice.final && Number.isFinite(Number(voice.final.remaining))) cues.push({ key:"final", at:mode.seconds - Number(voice.final.remaining), text:voice.final.text });
-  (voice.orchestratedCues || []).forEach((cue,index)=>cues.push({ key:`cue-${index}`, at:Number(cue.at), text:cue.text }));
-  cues.sort((a,b)=>a.at-b.at).forEach(cue=>{
-    if(_modeCueFired.has(cue.key) || elapsed < cue.at) return;
-    _modeCueFired.add(cue.key);
-    speakModeCue(cue.text);
-  });
-  if(_modeTimerLeft <= 0){
-    if(_modeTimerInterval) clearInterval(_modeTimerInterval);
-    _modeTimerInterval = null;
-    _modeTimerState = "idle";
-    releaseWakeLock();
-    updateModeStartLabel();
-  }
-}
-function startModeTimer(){
-  const modeBackdropEl = document.getElementById("modeBackdrop");
-  if(!_openPlayMode || !modeBackdropEl?.classList.contains("show") || document.hidden) return;
-  const mode = _openPlayMode;
-  const timer = document.getElementById("modeTimer");
-  const fill = document.getElementById("modeTimerFill");
-  if(timer) timer.hidden = false;
-  _modeTimerState = "running";
-  _modeNarrationPending = false;
-  _modeTimerLeft = mode.seconds;
-  _modeTimerEndAt = Date.now() + mode.seconds * 1000;
-  _modeCueFired = new Set();
-  if(fill){
-    fill.style.transition = "none";
-    fill.style.width = "100%";
-    void fill.offsetWidth;
-    fill.style.transition = `width ${mode.seconds}s linear`;
-    fill.style.width = "0%";
-  }
-  updateModeStartLabel();
-  requestWakeLock();
-  // The single point where a Quick Play activity actually begins. Pause and
-  // Resume have their own functions, and the Start handler only reaches
-  // narrateModeThenStart() while the timer is idle — so one real start emits
-  // one event, and a double tap during narration lands on the skip branch,
-  // which calls this once. Records the mode id only; nothing here touches
-  // `done`, badges, streaks or the certificate, and check-play-modes.mjs
-  // keeps it that way.
-  beacon("quickplay_start", { mode: mode.id });
-  _modeTimerInterval = setInterval(tickModeTimer, 200);
-}
-function narrateModeThenStart(mode){
-  const intro = modeText(mode && mode.voice && mode.voice.intro);
-  if(!_modeCoachOn || !soundOn || !intro || !("speechSynthesis" in window)){
-    startModeTimer();
-    return;
-  }
-  const btn = document.getElementById("btnModeStart");
-  if(btn) btn.innerHTML = '<i class="jic jic-play" aria-hidden="true"></i> Skip & Play';
-  _modeNarrationPending = true;
-  const token = ++_modeNarrationToken;
-  let finished = false;
-  const doneOnce = ()=>{
-    if(finished || token !== _modeNarrationToken) return;
-    finished = true;
-    _modeNarrationPending = false;
-    startModeTimer();
-  };
-  _modeNarrationWatchdog = setTimeout(doneOnce, Math.min(18000, Math.max(8000, intro.length * 75)));
-  try{
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(intro);
-    utter.lang = "en-US"; utter.rate = 0.96; utter.pitch = 1.02; utter.volume = 1;
-    if(kidVoice) utter.voice = kidVoice;
-    utter.onend = ()=>{ clearTimeout(_modeNarrationWatchdog); _modeNarrationWatchdog = null; doneOnce(); };
-    utter.onerror = ()=>{ clearTimeout(_modeNarrationWatchdog); _modeNarrationWatchdog = null; doneOnce(); };
-    window.speechSynthesis.speak(utter);
-  }catch(_){ clearTimeout(_modeNarrationWatchdog); _modeNarrationWatchdog = null; doneOnce(); }
-}
-function pauseModeTimer(){
-  if(_modeTimerState !== "running") return;
-  _modeTimerLeft = Math.max(0, Math.ceil((_modeTimerEndAt - Date.now()) / 1000));
-  if(_modeTimerInterval) clearInterval(_modeTimerInterval);
-  _modeTimerInterval = null;
-  _modeTimerState = "paused";
-  releaseWakeLock();
-  if("speechSynthesis" in window) window.speechSynthesis.cancel();
-  const fill = document.getElementById("modeTimerFill");
-  if(fill && _openPlayMode){
-    fill.style.transition = "none";
-    fill.style.width = `${Math.max(0,(_modeTimerLeft/_openPlayMode.seconds)*100)}%`;
-  }
-  updateModeStartLabel();
-}
-function resumeModeTimer(){
-  if(_modeTimerState !== "paused" || !_openPlayMode) return;
-  _modeTimerState = "running";
-  _modeTimerEndAt = Date.now() + _modeTimerLeft * 1000;
-  const fill = document.getElementById("modeTimerFill");
-  if(fill){
-    fill.style.transition = "none";
-    fill.style.width = `${Math.max(0,(_modeTimerLeft/_openPlayMode.seconds)*100)}%`;
-    void fill.offsetWidth;
-    fill.style.transition = `width ${_modeTimerLeft}s linear`;
-    fill.style.width = "0%";
-  }
-  updateModeStartLabel();
-  requestWakeLock();
-  _modeTimerInterval = setInterval(tickModeTimer, 200);
-}
-function openPlayMode(mode, returnFocus){
-  const backdropEl = document.getElementById("modeBackdrop");
-  if(!backdropEl || !mode) return;
-  _openPlayMode = mode;
-  _modeReturnFocus = returnFocus || document.activeElement;
-  _modeCoachOn = !!soundOn;
-  const modeHero = document.getElementById("modeDiagram");
-  if(modeHero){
-    const art = modeIcon(mode.id);
-    modeHero.innerHTML = art;
-    modeHero.style.display = art ? "" : "none";
-  }
-  document.getElementById("modeTitle").textContent = modeText(mode.title);
-  document.getElementById("modeMeta").innerHTML = `<span class="tag">${escapeHtml(modeText(mode.players.label))}</span><span class="tag">${escapeHtml(modeText(mode.difficulty))}</span><span class="tag">${escapeHtml(modeDurationLabel(mode.seconds))}</span>`;
-  document.getElementById("modeGearLine").innerHTML = `<span class="modeGearChip">${escapeHtml(modeGearLabel(mode))}</span><span class="modeGearChip">${escapeHtml(modeText(mode.space))}</span>`;
-  document.getElementById("modeSteps").innerHTML = (mode.steps || []).map(step=>`<li>${escapeHtml(modeText(step))}</li>`).join("");
-  document.getElementById("modeGoal").textContent = modeText(mode.goal);
-  document.getElementById("modeSafety").textContent = modeText(mode.safety);
-  const listen = document.getElementById("btnModeListen");
-  if(listen){ listen.classList.toggle("active", _modeCoachOn); listen.setAttribute("aria-pressed", _modeCoachOn ? "true" : "false"); }
-  cancelModeTimer({reset:true});
-  backdropEl.inert = false;
-  backdropEl.removeAttribute("inert");
-  backdropEl.setAttribute("aria-hidden","false");
-  backdropEl.classList.add("show");
-  document.body.classList.add("modalOpen");
-  setMissionBackgroundIsolation(true);
-  requestAnimationFrame(()=>document.getElementById("btnModeClose")?.focus({preventScroll:true}));
-}
-function closePlayMode(){
-  const backdropEl = document.getElementById("modeBackdrop");
-  cancelModeTimer({reset:true});
-  if("speechSynthesis" in window) window.speechSynthesis.cancel();
-  if(backdropEl){
-    backdropEl.classList.remove("show");
-    backdropEl.setAttribute("aria-hidden","true");
-    backdropEl.inert = true;
-    backdropEl.setAttribute("inert","");
-  }
-  document.body.classList.remove("modalOpen");
-  setMissionBackgroundIsolation(false);
-  _openPlayMode = null;
-  const focus = _modeReturnFocus;
-  _modeReturnFocus = null;
-  if(focus && focus.isConnected) requestAnimationFrame(()=>focus.focus({preventScroll:true}));
-}
+/* Repeatable Play Modes (Quick Play) lived here.
+ *
+ * The feature was switched off in the product long ago — the entry button was
+ * hidden with display:none and its nav slot was reused by Teams — but the
+ * runtime stayed: two data files totalling ~31 KB were still fetched and
+ * PRECACHED on every visit, a dormant dialog sat in the markup, and the hidden
+ * button still pointed at switchTab("modes"), which now opens the Family
+ * Board. A hidden feature that still costs every family bandwidth and can
+ * misroute anyone who reaches its button is not dormant, it is debt.
+ * Removed here along with play-modes.js, play-mode-icons.js and their markup.
+ *
+ * The frozen analytics schema keeps quickplay_start and PLAY_MODE_IDS on the
+ * Worker side on purpose: those names are part of a append-only contract, and
+ * nothing emits them any more. */
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  document.querySelectorAll(".modeFilter").forEach(btn=>btn.addEventListener("click", ()=>{
-    _playModeGroup = btn.dataset.modeGroup || "solo";
-    clickSound("click");
-    renderPlayModes();
-  }));
-  document.getElementById("btnModeClose")?.addEventListener("click", ()=>{ clickSound("click"); closePlayMode(); });
-  document.getElementById("modeBackdrop")?.addEventListener("click", event=>{ if(event.target === event.currentTarget) closePlayMode(); });
-  document.getElementById("btnModeListen")?.addEventListener("click", ()=>{
-    if(!soundOn){
-      _modeCoachOn = false;
-      const btn = document.getElementById("btnModeListen");
-      btn.classList.remove("active");
-      btn.setAttribute("aria-pressed", "false");
-      showToast("Sound is off — turn it on in Settings.");
-      return;
-    }
-    _modeCoachOn = !_modeCoachOn;
-    const btn = document.getElementById("btnModeListen");
-    btn.classList.toggle("active", _modeCoachOn);
-    btn.setAttribute("aria-pressed", _modeCoachOn ? "true" : "false");
-    // This control enables or disables coaching. The short intro belongs to
-    // Start, so a child never hears the same directions twice in succession.
-    if(!_modeCoachOn && "speechSynthesis" in window) window.speechSynthesis.cancel();
-  });
-  document.getElementById("btnModeStart")?.addEventListener("click", ()=>{
-    clickSound("click");
-    if(_modeNarrationPending){
-      _modeNarrationPending = false;
-      _modeNarrationToken++;
-      if("speechSynthesis" in window) window.speechSynthesis.cancel();
-      startModeTimer();
-      return;
-    }
-    if(_modeTimerState === "idle") narrateModeThenStart(_openPlayMode);
-    else if(_modeTimerState === "running") pauseModeTimer();
-    else resumeModeTimer();
-  });
-  document.getElementById("btnModeAnother")?.addEventListener("click", ()=>{ clickSound("click"); closePlayMode(); });
-  document.getElementById("modeBackdrop")?.addEventListener("keydown", event=>handleDialogKeys(event, document.getElementById("modeBackdrop"), closePlayMode));
   document.getElementById("btnMoreProductHelp")?.addEventListener("click", event=>{
     event.preventDefault();
     closeMission();
@@ -7909,6 +7648,11 @@ function findNextMissionForUser(){
  * iPhone SE → iPhone Pro Max + tüm Android'lerde sorunsuz çalışır
  * Standart CSS only (no color-mix, no :has, no experimental)
  * ============================================ */
+/* Which packs the family has opened on the Missions tab. Session-only on
+ * purpose: no new storage key, and a fresh visit always reopens whichever pack
+ * holds the next mission, which is the useful default. */
+const _openPathPacks = new Set();
+
 function renderMissionPath(){
   const container = document.getElementById("missionPath");
   if(!container || typeof SKILL_PACKS === "undefined") return;
@@ -7928,21 +7672,50 @@ function renderMissionPath(){
     const section = document.createElement("div");
     section.className = "pathSection";
     if(allDone) section.classList.add("allDone");
+    // Collapsed by default. Laid out flat, the six packs ran 6951px — about
+    // eight phone screens — so reaching the last pack meant scrolling past 30
+    // missions nobody asked to see, and the tab answered "here is everything"
+    // instead of "what should we play?". Only the pack holding the next
+    // mission opens itself; the rest are one tap away and still show, in the
+    // header, exactly how far the family has got.
+    const holdsNext = packMissions.some(m => m.id === nextId && !done.has(m.id));
+    const expanded = _openPathPacks.has(pack.key) ||
+      (_openPathPacks.size === 0 && holdsNext);
+    section.classList.toggle("collapsed", !expanded);
     section.style.setProperty("--pack-color", pack.color);
     const slug = "pack--" + pack.key.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
     section.classList.add(slug);
 
     // Pack header
-    const header = document.createElement("div");
+    const header = document.createElement("button");
+    header.type = "button";
     header.className = "pathSectionHeader";
+    const dots = packMissions
+      .map(m => '<span class="packDot' + (done.has(m.id) ? " on" : "") +
+                (m.id === nextId && !done.has(m.id) ? " next" : "") + '"></span>')
+      .join("");
     header.innerHTML =
       '<div class="pathSectionIcon">' + JUMVI_ART.img(JUMVI_ART.pack(pack.key), "packArt", "", true) + '</div>' +
       '<div class="pathSectionInfo">' +
         '<div class="pathSectionName">' + escapeHtml(pack.label) + '</div>' +
-        '<div class="pathSectionMeta">Pack ' + (SKILL_PACKS.indexOf(pack)+1) + ' of ' + SKILL_PACKS.length + ' · ' + doneCount + '/' + total + '</div>' +
+        '<div class="packDots" aria-hidden="true">' + dots + '</div>' +
       '</div>' +
-      '<div class="pathSectionProgress">' + doneCount + '/' + total + '</div>';
+      '<div class="pathSectionProgress">' + doneCount + '/' + total + '</div>' +
+      '<i class="jic jic-arrow-right pathSectionChevron" aria-hidden="true"></i>';
     header.dataset.packKey = pack.key;
+    header.setAttribute("aria-expanded", expanded ? "true" : "false");
+    header.setAttribute("aria-label",
+      pack.label + " — " + doneCount + " / " + total + (allDone ? ", complete" : ""));
+    header.addEventListener("click", ()=>{
+      clickSound("click");
+      // First tap anywhere makes the choice explicit, so the auto-opened pack
+      // stops being special and the family's own selection sticks.
+      if(_openPathPacks.size === 0 && holdsNext) _openPathPacks.add(pack.key);
+      if(_openPathPacks.has(pack.key)) _openPathPacks.delete(pack.key);
+      else _openPathPacks.add(pack.key);
+      if(_openPathPacks.size === 0) _openPathPacks.add("__none__");
+      renderMissionPath();
+    });
     packViewObserver().observe(header);
     section.appendChild(header);
 

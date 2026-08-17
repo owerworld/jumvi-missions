@@ -1359,9 +1359,6 @@ html.theme--dark .teamXpPersonal > span:first-child{background:rgba(255,255,255,
 #profileCard,
 #btnOpenProfileFromTab,
 .profileQuickLink[data-go-tab="modes"],
-#btnQuickPlay{
-  display:none !important;
-}
 
 /* Progress belongs to the family, not to the Team feature.
  *
@@ -1717,9 +1714,8 @@ html.theme--dark .teamXpPartnerEmoji{
   line-height:1;
 }
 
-/* Keep Quick Play removed. These intentionally remain hidden after restoring
-   child identity/settings. */
-#btnQuickPlay,
+/* The Grown-ups quick link that pointed at the old Modes route. Quick Play and
+   its runtime are gone; this row would now open the Family Board. */
 .profileQuickLink[data-go-tab="modes"]{
   display:none !important;
 }
@@ -2154,3 +2150,50 @@ html.theme--dark .familyRowNow{ color:#91D66D; }
   .familyBoardGrid{ gap:5px; }
   .familyBoardCount strong{ font-size:26px; }
 }
+
+/* ==========================================================================
+ * Missions tab — packs collapse, 2026-08-17
+ * Flat, the six packs measured 6951px: eight screens to reach the last one.
+ * Collapsed, the whole library is one screen and the header still shows the
+ * per-mission dots, so nothing has to be opened just to see where you are.
+ * ========================================================================== */
+.pathSectionHeader{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  text-align:left;
+  background:none;
+  border:0;
+  font-family:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.pathSectionHeader:active{ transform:scale(.995); }
+.packDots{
+  display:flex;
+  gap:4px;
+  margin-top:5px;
+}
+.packDot{
+  width:9px; height:9px;
+  border-radius:50%;
+  background:rgba(20,32,51,.14);
+}
+html.theme--dark .packDot{ background:rgba(255,255,255,.16); }
+.packDot.on{ background:#6DBE45; }
+.packDot.next{
+  background:transparent;
+  box-shadow:inset 0 0 0 2px #1577B1;
+}
+html.theme--dark .packDot.next{ box-shadow:inset 0 0 0 2px #73CAE7; }
+.pathSectionChevron{
+  margin-left:2px;
+  color:var(--muted);
+  font-size:16px;
+  transform:rotate(90deg);
+  transition:transform .18s ease;
+}
+.pathSection.collapsed .pathSectionChevron{ transform:rotate(0deg); }
+.pathSection.collapsed .pathSteps{ display:none; }
+.pathSection.collapsed{ padding-bottom:14px; }
