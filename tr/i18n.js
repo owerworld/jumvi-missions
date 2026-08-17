@@ -363,8 +363,20 @@
     if ((m = norm.match(/^(\d+) missions? to go$/i))) return `${m[1]} görev kaldı`;
     if ((m = norm.match(/^(\d+)\/([\d]+) complete!?$/i))) return `${m[1]}/${m[2]} tamamlandı${norm.endsWith('!') ? '!' : ''}`;
     if ((m = norm.match(/^Pack (\d+) of (\d+) · (\d+)\/(\d+)$/i))) return `Paket ${m[1]}/${m[2]} · ${m[3]}/${m[4]}`;
+    // The welcome band line no longer names a match count; keep the old
+    // pattern so a cached English shell still translates, and add the new one.
     if ((m = norm.match(/^(\d+) matched missions · all 36 always available$/i))) return `${m[1]} eşleşen görev · 36 görevin tamamı her zaman açık`;
+    if (/^36 games included · we'll start with an easy one$/i.test(norm)) return '36 oyun dahil · kolay bir tanesiyle başlayacağız';
+    if (/^36 games included · we’ll start with an easy one$/i.test(norm)) return '36 oyun dahil · kolay bir tanesiyle başlayacağız';
+    if (/^All 36 games included$/i.test(norm)) return '36 oyunun tamamı dahil';
     if ((m = norm.match(/^(\d+) day streak!$/i))) return `${m[1]} günlük seri!`;
+    // The 1-2 day and 3-6 day rungs of renderStreakUI had no pattern here, so a
+    // Turkish family read "2 days" in English. Invisible until the streak moved
+    // onto the home screen for households without a Team; now it is the first
+    // number they see.
+    if ((m = norm.match(/^(\d+) day streak$/i))) return `${m[1]} günlük seri`;
+    if ((m = norm.match(/^(\d+) days$/i))) return `${m[1]} gün`;
+    if ((m = norm.match(/^(\d+) day$/i))) return `${m[1]} gün`;
     if ((m = norm.match(/^(\d+) days? on fire!$/i))) return `${m[1]} gündür harikasın!`;
     if ((m = norm.match(/^(\d+) day legend!$/i))) return `${m[1]} günlük efsane!`;
     if ((m = norm.match(/^Family streak: (\d+) days?$/i))) return `Aile serisi: ${m[1]} gün`;

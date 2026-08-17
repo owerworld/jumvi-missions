@@ -1363,14 +1363,33 @@ html.theme--dark .teamXpPersonal > span:first-child{background:rgba(255,255,255,
   display:none !important;
 }
 
-#tabToday #xpProgressCard.needsTeam .xpLevelRow,
-#tabToday #xpProgressCard.needsTeam .xpMissionProgress,
-#tabToday #xpProgressCard.needsTeam .xpMiniGrid,
-#tabToday #xpProgressCard.needsTeam #todayGoalBadge{
-  display:none !important;
+/* Progress belongs to the family, not to the Team feature.
+ *
+ * This block used to hide the level row, the 36-mission bar, the streak and
+ * the daily goal whenever no Team existed — which is the default state for
+ * every household that never opens Team setup. The whole progression system
+ * was therefore invisible to most customers, and the only way to reveal it
+ * was to complete an optional setup nobody had a reason to do. A single
+ * child playing alone still earns missions, still builds a streak, and must
+ * see it. Teams now only CHANGES which journey is displayed; it no longer
+ * decides whether progress is displayed at all.
+ *
+ * The team picker keeps its place inside the card as a quiet secondary row.
+ * The card is display:block by default, so it becomes a flex column only in
+ * this state — that is what lets the picker move below the progress it used
+ * to sit on top of, without reordering markup shared with /tr. */
+#tabToday #xpProgressCard.needsTeam{
+  display:flex !important;
+  flex-direction:column;
 }
-#tabToday #xpProgressCard.needsTeam{padding-bottom:12px;}
-#tabToday #xpProgressCard.needsTeam .xpTeamPicker{margin-bottom:0;}
+#tabToday #xpProgressCard.needsTeam .xpCardHeader{ order:1; }
+#tabToday #xpProgressCard.needsTeam .xpLevelRow{ order:2; }
+#tabToday #xpProgressCard.needsTeam .xpMissionProgress{ order:3; }
+#tabToday #xpProgressCard.needsTeam .xpMiniGrid{ order:4; }
+#tabToday #xpProgressCard.needsTeam .xpTeamPicker{
+  order:5;
+  margin:13px 0 0;
+}
 
 .bottomNav{
   grid-template-columns:repeat(5,minmax(0,1fr)) !important;
@@ -1996,4 +2015,35 @@ html.theme--dark .missionXpReward.noTeam .missionXpRewardKicker{ color:#73CAE7; 
 html.theme--dark #btnToggleDone.btnGateWait{
   background:rgba(255,255,255,.04) !important;
   border-color:rgba(255,255,255,.20) !important;
+}
+
+/* ==========================================================================
+ * Play tab hierarchy — the physical mission outranks the 3D bonus
+ * 2026-08-17
+ *
+ * On a returning family's home screen the island promo measured 338×70, i.e.
+ * LARGER than "Start Mission" (300×56), so the loudest thing on the screen of
+ * a physical-play product was an invitation to look at the screen. The island
+ * stays — 6–8 year olds genuinely like it, and it is deliberately hidden until
+ * the first mission is finished — but on this tab it now reads as the optional
+ * bonus it is: a quiet row, not a glowing banner.
+ * ========================================================================== */
+#tabToday .advCard{
+  padding:10px 12px !important;
+  border:1px solid var(--border) !important;
+  border-radius:16px !important;
+  background:var(--glass) !important;
+  color:var(--text) !important;
+  box-shadow:none !important;
+  animation:none !important;
+  opacity:.92;
+}
+#tabToday .advCardEmoji{ width:32px !important; height:32px !important; }
+#tabToday .advCardEmoji img{ width:32px; height:32px; }
+#tabToday .advCardTitle{ font-size:13.5px !important; font-weight:900; }
+#tabToday .advCardSub{ font-size:11.5px !important; color:var(--muted) !important; opacity:1; }
+#tabToday .advCardArrow{ color:var(--muted); font-size:15px; }
+html.theme--dark #tabToday .advCard{
+  background:rgba(255,255,255,.04) !important;
+  border-color:rgba(255,255,255,.14) !important;
 }

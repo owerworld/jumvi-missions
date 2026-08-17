@@ -1583,62 +1583,65 @@ function showMissionXpReward(payload){
 
   if(kicker) kicker.textContent = tr ? "GÖREV TAMAMLANDI" : "MISSION COMPLETE";
 
+  // With or without a Team the child has a real, visible XP journey now, so
+  // the celebration shows the SAME honest math either way. It used to pitch
+  // Team setup here instead — introducing a brand-new concept at the exact
+  // moment the child was being congratulated for playing.
+  const beforeInfo = payload.beforeInfo;
+  const afterInfo = payload.afterInfo;
+  const levelUp = beforeInfo && afterInfo &&
+    beforeInfo.current.level !== afterInfo.current.level;
+
   if(!ACTIVE_JUMVI_TEAM){
     card.classList.add("noTeam");
     if(team) team.textContent = tr ? "Harika iş!" : "Great job!";
-    if(gain) gain.textContent = tr ? "✓ Kaydedildi" : "✓ Saved";
-    if(math) math.textContent = tr
-      ? "Görev ilerlemen bu cihazda kaydedildi."
-      : "Your mission progress is saved on this device.";
-    if(progress) progress.hidden = true;
-    if(rule) rule.textContent = tr
-      ? "İlk aile takımını oluşturduğunda bu ilerleme yanında gelir."
-      : "When you create your first family Team, this progress comes with you.";
   }else{
-    const beforeInfo = payload.beforeInfo;
-    const afterInfo = payload.afterInfo;
-    const levelUp = beforeInfo && afterInfo &&
-      beforeInfo.current.level !== afterInfo.current.level;
-
-    card.classList.toggle("levelUp", !!levelUp);
-
     if(team) team.textContent = teamDisplayName(ACTIVE_JUMVI_TEAM);
-    if(gain) gain.textContent = `+${payload.gained} ${tr ? "Takım XP" : "Team XP"}`;
-    if(math) math.textContent = `${payload.beforeXp} → ${payload.afterXp} XP`;
-    if(progress) progress.hidden = false;
-
-    if(fill && afterInfo) fill.style.width = afterInfo.pct + "%";
-    if(bar && afterInfo){
-      const max = afterInfo.isMax ? XP_MAX : afterInfo.next.min;
-      bar.setAttribute("aria-valuemin", String(afterInfo.current.min));
-      bar.setAttribute("aria-valuemax", String(max));
-      bar.setAttribute("aria-valuenow", String(afterInfo.xp));
-      bar.setAttribute(
-        "aria-label",
-        tr ? "Takım XP seviye ilerlemesi" : "Team XP level progress"
-      );
-    }
-
-    if(next && afterInfo){
-      const title = tr ? afterInfo.current.tr : afterInfo.current.en;
-      if(levelUp){
-        next.textContent = tr
-          ? `SEVİYE ATLADI! Seviye ${afterInfo.current.level} · ${title}`
-          : `LEVEL UP! Level ${afterInfo.current.level} · ${title}`;
-      }else if(afterInfo.isMax){
-        next.textContent = `${tr ? "Seviye" : "Level"} ${afterInfo.current.level} · ${title}`;
-      }else{
-        const remaining = Math.max(0, afterInfo.next.min - afterInfo.xp);
-        next.textContent = tr
-          ? `Seviye ${afterInfo.next.level} için ${remaining} XP kaldı`
-          : `${remaining} XP to Level ${afterInfo.next.level}`;
-      }
-    }
-
-    if(rule) rule.textContent = tr
-      ? "Takım XP her görevde yalnızca bir kez kazanılır."
-      : "Team XP is earned once per mission.";
   }
+
+  card.classList.toggle("levelUp", !!levelUp);
+
+  if(gain) gain.textContent = ACTIVE_JUMVI_TEAM
+    ? `+${payload.gained} ${tr ? "Takım XP" : "Team XP"}`
+    : `+${payload.gained} XP`;
+  if(math) math.textContent = `${payload.beforeXp} → ${payload.afterXp} XP`;
+  if(progress) progress.hidden = false;
+
+  if(fill && afterInfo) fill.style.width = afterInfo.pct + "%";
+  if(bar && afterInfo){
+    const max = afterInfo.isMax ? XP_MAX : afterInfo.next.min;
+    bar.setAttribute("aria-valuemin", String(afterInfo.current.min));
+    bar.setAttribute("aria-valuemax", String(max));
+    bar.setAttribute("aria-valuenow", String(afterInfo.xp));
+    bar.setAttribute(
+      "aria-label",
+      ACTIVE_JUMVI_TEAM
+        ? (tr ? "Takım XP seviye ilerlemesi" : "Team XP level progress")
+        : (tr ? "XP seviye ilerlemesi" : "XP level progress")
+    );
+  }
+
+  if(next && afterInfo){
+    const title = tr ? afterInfo.current.tr : afterInfo.current.en;
+    if(levelUp){
+      next.textContent = tr
+        ? `SEVİYE ATLADI! Seviye ${afterInfo.current.level} · ${title}`
+        : `LEVEL UP! Level ${afterInfo.current.level} · ${title}`;
+    }else if(afterInfo.isMax){
+      next.textContent = `${tr ? "Seviye" : "Level"} ${afterInfo.current.level} · ${title}`;
+    }else{
+      const remaining = Math.max(0, afterInfo.next.min - afterInfo.xp);
+      next.textContent = tr
+        ? `Seviye ${afterInfo.next.level} için ${remaining} XP kaldı`
+        : `${remaining} XP to Level ${afterInfo.next.level}`;
+    }
+  }
+
+  if(rule) rule.textContent = ACTIVE_JUMVI_TEAM
+    ? (tr ? "Takım XP her görevde yalnızca bir kez kazanılır."
+          : "Team XP is earned once per mission.")
+    : (tr ? "XP her görevde yalnızca bir kez kazanılır."
+          : "XP is earned once per mission.");
 
   card.hidden = false;
   requestAnimationFrame(()=> card.classList.add("show"));
@@ -1656,8 +1659,8 @@ const TEAM_COPY = Object.freeze({
   en: {
     dad:"Dad", mom:"Mom", sibling:"Sibling",
     grandma:"Grandma", grandpa:"Grandpa", friend:"Friend",
-    choose:"Choose a team", optional:"Who are you playing with?",
-    teamXp:"Team XP", teamProgress:"Team Progress",
+    choose:"Play as a team", optional:"Optional — for two kids or a grown-up pair",
+    teamXp:"Team XP", teamProgress:"Team Progress", ownProgress:"Your Progress",
     chooseTitle:"Choose a team", switchTitle:"Switch team",
     sub:"Pick a family team. JUMVI remembers it for the next mission.",
     yourTeams:"Your teams", playWith:"Create a team",
@@ -1679,8 +1682,8 @@ const TEAM_COPY = Object.freeze({
   tr: {
     dad:"Baba", mom:"Anne", sibling:"Kardeş",
     grandma:"Büyükanne", grandpa:"Büyükbaba", friend:"Arkadaş",
-    choose:"Takım seç", optional:"Kimler birlikte oynuyor?",
-    teamXp:"Takım XP", teamProgress:"Takım İlerlemesi",
+    choose:"Takım olarak oyna", optional:"İsteğe bağlı — iki çocuk ya da bir yetişkinle",
+    teamXp:"Takım XP", teamProgress:"Takım İlerlemesi", ownProgress:"İlerlemen",
     chooseTitle:"Takım seç", switchTitle:"Takımı değiştir",
     sub:"Bir aile takımı seç. JUMVI sonraki görev için bunu hatırlar.",
     yourTeams:"Takımların", playWith:"Takım oluştur",
@@ -1775,7 +1778,9 @@ function renderTeamProgressChrome(){
   const cardTitle = document.getElementById("xpCardTitle");
   const card = document.getElementById("xpProgressCard");
 
-  if(cardTitle) cardTitle.textContent = c.teamProgress;
+  // Without a team the card shows this child's own journey, so it must not
+  // claim to be a Team's. Same numbers, honest label.
+  if(cardTitle) cardTitle.textContent = ACTIVE_JUMVI_TEAM ? c.teamProgress : c.ownProgress;
   if(card) card.classList.toggle("needsTeam", !ACTIVE_JUMVI_TEAM);
 
   if(ACTIVE_JUMVI_TEAM){
@@ -3244,8 +3249,14 @@ function updateBadges(){
 
   // Yeni badge kutlaması (sadece gerçekten yeni unlock'larda)
   if(newlyUnlocked.length > 0 && done.size > 0){
-    // Birden fazla unlock varsa en son kazanılanı göster
-    setTimeout(()=> showBadgeUnlockModal(newlyUnlocked[newlyUnlocked.length - 1]), 800);
+    // Birden fazla unlock varsa en son kazanılanı göster.
+    //
+    // The delay is the point. At 800ms this blocking modal landed on top of
+    // the inline XP reward before anyone had read it, so on the completion
+    // that matters most — the first one, which is also the one that unlocks
+    // "First Steps" — the XP card was never actually seen. Confetti and the
+    // reward card get the first beat; the badge takes the stage after.
+    setTimeout(()=> showBadgeUnlockModal(newlyUnlocked[newlyUnlocked.length - 1]), 2600);
   }
 }
 
@@ -3312,6 +3323,7 @@ function updateProgress(options = {}){
 
   renderStreakUI();
   renderDailyUI();
+  renderTodayContinuity();
   if(!deferStats) updateBadges();
   if(document.body.classList.contains("tab-stats")) renderParentDashboard();
 
@@ -4427,6 +4439,7 @@ function closeMission(){
   }
   // Continue hint güncelle (last opened değişti)
   renderContinueHint();
+  renderTodayContinuity();
   // Browse tab'daysak path'i de yenile — done state guncel olsun
   if(document.body.classList.contains("tab-browse") && typeof renderMissionPath === "function"){
     try { renderMissionPath(); } catch(_){}
@@ -6176,10 +6189,16 @@ if(btnA2hsClose){
 const TOTAL_MISSIONS = 36;
 function renderMissionCount(bandLabel, n){
   // Every mission stays available; the selected band only tunes the first pick.
+  //
+  // This line used to read "17 matched missions · all 36 always available".
+  // Two numbers, on the very first screen, to someone who has not played once
+  // and can act on neither — it described the matching engine rather than
+  // answering anything the family was asking. What the band actually promises
+  // is simpler, so say only that.
   if(n >= TOTAL_MISSIONS){
-    return `All ${TOTAL_MISSIONS} missions available`;
+    return `All ${TOTAL_MISSIONS} games included`;
   }
-  return `${n} matched missions · all ${TOTAL_MISSIONS} always available`;
+  return `${TOTAL_MISSIONS} games included · we'll start with an easy one`;
 }
 function showWelcomeOverlay(){
   const overlay = document.getElementById("welcomeOverlay");
@@ -6823,6 +6842,7 @@ function switchTab(tabName){
     if(tabName === "profile") renderProfileTab();
     if(tabName === "today") {
       renderContinueHint();
+      renderTodayContinuity();
       renderDailyChallenge();
       renderCoachPick();
     }
@@ -7469,6 +7489,70 @@ function renderDailyChallenge(){
  * Continue where you left off
  * ======================= */
 const LAST_OPENED_KEY = "jumvi_last_opened_id_v1";
+
+/* The hero line a RETURNING family sees.
+ *
+ * On day two the home screen used to be indistinguishable from day one:
+ * the same "Ready to play?" and the same generic instruction, with no sign
+ * that three missions had already been finished. Nothing said where the
+ * family had got to, so nothing invited them back in.
+ *
+ * Deliberately written as a fact, not a nudge. Research on children's apps
+ * is blunt about how common the opposite is — streak-loss warnings, urgency
+ * copy, FOMO framing — and JUMVI's whole promise is a toy that helps a family
+ * play, not an app that pressures them to open it. So: no countdowns, no
+ * "don't lose it", no exclamation marks on the number. One short sentence
+ * that answers "where were we?" and names the nearest real goal, which is
+ * the pack badge — the strongest motivator the product already has.
+ */
+function nearestPackGoal(){
+  // The pack with real progress that is closest to earning its badge.
+  const packs = (typeof PACKS !== "undefined" ? PACKS : []).filter(p => p.key !== "all");
+  let best = null;
+  packs.forEach(p => {
+    const inPack = missions.filter(m => m.pack === p.key);
+    if(!inPack.length) return;
+    const doneCount = inPack.filter(m => done.has(m.id)).length;
+    if(doneCount === 0 || doneCount >= inPack.length) return; // untouched or already earned
+    const left = inPack.length - doneCount;
+    if(!best || left < best.left) best = { name:p.name || p.key, doneCount, total:inPack.length, left };
+  });
+  return best;
+}
+
+function renderTodayContinuity(){
+  const titleEl = document.getElementById("todayHeroTitle");
+  const subEl = document.getElementById("todayHeroSub");
+  if(!subEl) return;
+  const tr = isTurkishUI();
+  const total = missions.length;
+  const doneCount = done.size;
+
+  if(doneCount === 0) return;              // first visit keeps the markup default
+
+  if(titleEl) titleEl.textContent = tr ? "Tekrar hoş geldiniz!" : "Welcome back!";
+
+  if(doneCount >= total){
+    subEl.textContent = tr
+      ? `36 görevin hepsi tamam. İstediğinizi tekrar oynayın.`
+      : `All ${total} missions done. Play any of them again.`;
+    return;
+  }
+
+  // Deliberately short: the "N of 36" total already sits in the progress card
+  // directly below, so repeating it here only made the hero taller. This line
+  // carries the one thing that card does not — the nearest reachable goal.
+  const goal = nearestPackGoal();
+  if(goal){
+    subEl.textContent = tr
+      ? `${goal.name} ${goal.doneCount}/${goal.total} — rozet için ${goal.left} görev kaldı.`
+      : `${goal.name} ${goal.doneCount}/${goal.total} — ${goal.left} more for the badge.`;
+  }else{
+    subEl.textContent = tr
+      ? `${doneCount}/${total} tamam. Bugün için bir görev seçtik.`
+      : `${doneCount} of ${total} done. Here is one for today.`;
+  }
+}
 
 function renderContinueHint(){
   const hint = document.getElementById("continueHint");
@@ -8242,6 +8326,7 @@ function init(){
   initBottomNav();
   renderDailyChallenge();
   renderContinueHint();
+  renderTodayContinuity();
   renderCoachPick();
   // Tutorial spotlight kaldırıldı — yeni today-first UI self-explanatory.
   // Var olan kullanıcılar için TUTORIAL_KEY işaretle ki bir daha çıkmasın

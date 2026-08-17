@@ -227,9 +227,12 @@
           <div class="todayHeroCopy">
             <div class="h1Row">
               <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
-              <h1 class="h1">Ready to play?</h1>
+              <h1 class="h1" id="todayHeroTitle">Ready to play?</h1>
             </div>
-            <p class="sub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
+            <!-- A returning family gets this line rewritten by
+                 renderTodayContinuity() with where they actually left off.
+                 The first-visit wording stays here as the default. -->
+            <p class="sub" id="todayHeroSub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
           </div>
           <div class="todayHeroArt" aria-hidden="true"></div>
         </div>
@@ -1272,13 +1275,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260817-3" defer></script>
+<script src="app.js?v=20260817-4" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260817-3")
+    navigator.serviceWorker.register("/service-worker.js?v=20260817-4")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
