@@ -2425,6 +2425,32 @@ body{
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
+  /* The home-indicator inset is reserved ONCE, by .sheetActions.
+   *
+   * .sheet (the shared modal rule) also carries
+   *     padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 20px))
+   * and .sheetActions carries
+   *     padding-bottom: calc(12px + env(safe-area-inset-bottom))
+   * Both comments say they exist to clear the home indicator, and on the
+   * mission sheet both applied: measured on a real iPhone 15, 54px + 46px =
+   * 100px reserved below the NEXT button where 34px of indicator plus a little
+   * breathing room is all that is needed. The 34px inset was simply counted
+   * twice, and the sheet's half sat BELOW the action bar as a visible dead
+   * band — the gap reported from hardware (GAP_actions_to_sheetBottom = 55px).
+   *
+   * It never showed up in testing because every emulator resolves env() to 0,
+   * which collapses the two rules to 28px and 12px and makes the duplication
+   * literally invisible. Only a device with a real inset can see it.
+   *
+   * .sheetActions is the last rendered child (#holdHint is only ever set to
+   * display:none, #missionXpReward sits above it), so it can own the bottom
+   * outright: NEXT ends 46px above the screen edge — 12px of breathing room
+   * over the 34px indicator — and the 54px goes back to mission content.
+   *
+   * Scoped to #sheet on purpose. The other five modals that share .sheet
+   * (badges, seasonal, privacy, certificate, profile) have no actions row and
+   * still need .sheet's own inset, so their rule is untouched. */
+  padding-bottom: 0;
 }
 #sheetBody{
   overflow: auto !important;
