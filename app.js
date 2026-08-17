@@ -1857,6 +1857,15 @@ function familyMissionMap(entries){
   return map;
 }
 
+/* Has ANYONE in this household finished a mission — this child, a sibling, or
+ * any remembered team? Cheap enough to call from updateProgress(): it reads a
+ * handful of localStorage keys and stops at the first non-empty one. */
+function familyHasPlayed(){
+  try{
+    return familyTeamEntries().some(e => e.done && e.done.size > 0);
+  }catch(_){ return false; }
+}
+
 function personalDoneSet(){
   const raw = lsGetJSON(_PP + "missions_done_v3", []);
   return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
@@ -3537,10 +3546,19 @@ function updateProgress(options = {}){
   // Stats tab empty state — yeni kullanıcı için davet
   const emptyState = document.getElementById("statsEmptyState");
   if(emptyState) emptyState.style.display = isFresh ? "" : "none";
-  // The 3D island is a bonus after physical play, never a gate before it.
+  /* The 3D island is a bonus after physical play, never a gate before it — but
+   * "has played" is a question about the FAMILY, not about whichever child is
+   * active right now. advModeCard is the only door into the island, so keying
+   * it on the active child's own progress meant adding a second child made the
+   * island vanish for the whole household: the new profile starts at zero, and
+   * a zero profile got display:none. The parent who had unlocked it an hour
+   * earlier now had no entry point at all until the new child finished a
+   * mission. Family-wide is the honest reading of the original rule, and it
+   * still holds a genuinely first-time household back from a 9.4 MB download
+   * before anyone has thrown a ball. */
   const islandCard = document.getElementById("advModeCard");
   if(islandCard && lsGet(HUB3D_UNSUPPORTED_KEY, "0") !== "1"){
-    islandCard.style.display = isFresh ? "none" : "";
+    islandCard.style.display = (isFresh && !familyHasPlayed()) ? "none" : "";
   }
 }
 
