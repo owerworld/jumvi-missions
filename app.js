@@ -5367,7 +5367,7 @@ function updateToggleDoneGateUI(){
     btnToggleDone.classList.add("btnGateWait");
     const secs = Math.ceil(waitMs / 1000);
     btnToggleDone.innerHTML = `<i class="jic jic-play" aria-hidden="true"></i> ${
-      tr ? `Oynadıktan sonra (${secs}s)` : `After you play (${secs}s)`}`;
+      tr ? `Oynadıktan sonra (${secs}sn)` : `After you play (${secs}s)`}`;
     _gateUiTimer = setTimeout(updateToggleDoneGateUI, 1000);
   }else{
     btnToggleDone.classList.remove("btnGateWait");

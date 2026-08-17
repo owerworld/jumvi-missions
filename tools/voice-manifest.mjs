@@ -26,10 +26,11 @@ const missingOnly = args.has("--missing");
 const ctx = vm.createContext({ window: {}, document: {}, self: {} });
 vm.runInContext(fs.readFileSync("data.js", "utf8") + "\n;__d={missions};", ctx);
 vm.runInContext(fs.readFileSync("mission-coaching.js", "utf8"), ctx);
-vm.runInContext(fs.readFileSync("play-modes.js", "utf8"), ctx);
+// Quick Play and its 9 modes were removed from the product; the spoken cues
+// they carried went with them.
 const missions = ctx.__d.missions;
 const coaching = ctx.window.JUMVI_MISSION_COACHING || {};
-const playModes = ctx.window.JUMVI_PLAY_MODES || [];
+const playModes = [];
 
 const appJs = fs.readFileSync("app.js", "utf8");
 const hubJs = fs.existsSync("jumvi-hub-app.js") ? fs.readFileSync("jumvi-hub-app.js", "utf8") : "";
