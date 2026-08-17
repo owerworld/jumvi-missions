@@ -487,13 +487,20 @@ html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyMeta *{
   gap:5px !important;
   margin-top:2px !important;
 }
+/* The two primary CTAs — "Start Mission" on Today and "Start" in the mission
+   sheet — share one gradient. Its light stop was #218ECC, which puts white
+   text at 3.62:1: fine on a desk, not fine in a driveway at noon, which is
+   exactly where this button gets tapped. Both stops now clear 4.5:1 (4.62 top,
+   5.87 bottom) with the same hue, the same 180deg direction and the same
+   depth of shading, so the button reads as the same JUMVI blue and simply
+   survives sunlight. */
 #tabToday .dailyPlayBig,
 #tabToday .dailyBox.dailyBoxPromoted .dailyPlayBig,
 #tabToday .dailyBox.dailyBoxPromoted .dailyPlayBig.btnPrimary{
   min-height:56px !important;
   border:0 !important;
   border-radius:17px !important;
-  background:linear-gradient(180deg,#218ECC 0%,#1577B1 100%) !important;
+  background:linear-gradient(180deg,#177BB6 0%,#0F6A9E 100%) !important;
   color:#FFFFFF !important;
   -webkit-text-fill-color:#FFFFFF !important;
   text-shadow:none !important;
@@ -523,7 +530,7 @@ html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyMeta *{
   min-height:58px !important;
   border:0 !important;
   border-radius:17px !important;
-  background:linear-gradient(180deg,#218ECC 0%,#1577B1 100%) !important;
+  background:linear-gradient(180deg,#177BB6 0%,#0F6A9E 100%) !important;
   color:#FFFFFF !important;
   -webkit-text-fill-color:#FFFFFF !important;
   box-shadow:0 8px 20px rgba(21,119,177,.20) !important;
@@ -557,8 +564,10 @@ html.theme--dark #sheet .sheetActions .holdBtn.btnPrimary{
   border:1px solid rgba(20,32,51,.08) !important;
   border-radius:15px !important;
   background:#F3F0EA !important;
-  color:#66707A !important;
-  -webkit-text-fill-color:#66707A !important;
+  /* #66707A on #F3F0EA is 4.43:1 — a hair under the 4.5 needed at 14px, and
+     this is the control someone uses when they opened the wrong game. */
+  color:#626C76 !important;
+  -webkit-text-fill-color:#626C76 !important;
   box-shadow:none !important;
   opacity:1 !important;
   font-size:14px !important;
@@ -1108,7 +1117,9 @@ html.theme--dark #tabToday .xpTeamPickerIcon{
 }
 #tabToday .xpTeamPickerCopy small{
   color:var(--muted);
-  font-size:11px;
+  /* Instructional copy, not a decorative caption — it is the line that tells a
+     parent what a team is for, so it does not belong at 11px. */
+  font-size:12px;
   line-height:1.15;
   font-weight:750;
 }
@@ -1640,7 +1651,12 @@ html.theme--dark .teamsRankScore strong{color:#73CAE7;}
     padding-left:2px !important;
     padding-right:2px !important;
   }
-  .bottomNav button span{font-size:9.5px;}
+  /* 9.5px was below the point where a parent can read a nav label at arm's
+     length outdoors, and this rule applies to exactly the two Tier-1 device
+     classes with the least room: 360px Galaxy A and 375px iPhone SE. Five
+     tabs across 360px leaves ~68px each, which fits the longest label at
+     11px, so the size goes up and the layout does not change. */
+  .bottomNav button span{font-size:11px;}
   .teamsRankRow{
     gap:7px;
     padding-left:9px;
@@ -2225,12 +2241,20 @@ html.theme--dark #sheet .tag.bestTag{
 /* "Next Mission" before this one has been played. Still reachable — a family
    that opened the wrong game must be able to leave — but it stops competing
    with Start for the tap. */
+/* De-emphasised, not dimmed. opacity:.5 fades the label toward the card
+   behind it, which dropped this control to ~1.9:1 — legible on a desk, gone
+   in sunlight, and it is still a real button a lost child needs to find. The
+   quiet comes from size and weight instead, with a colour that holds 4.7:1. */
 #btnNext.actionMuted{
-  opacity:.5;
+  color:#626C76 !important;
+  -webkit-text-fill-color:#626C76 !important;
   font-size:13px !important;
+  font-weight:800 !important;
   min-height:38px !important;
   padding:8px 12px !important;
 }
+#btnNext.actionMuted .ico,
+#btnNext.actionMuted .jic{ color:#626C76 !important; -webkit-text-fill-color:#626C76 !important; }
 
 /* ==========================================================================
  * Outdoor reach — 2026-08-17
@@ -2282,4 +2306,39 @@ html.theme--dark #tabToday .dailyEyebrow{
 html.theme--dark .teamsHubKicker,
 html.theme--dark #teamsHubKicker{
   color:#8FD3F0;
+}
+
+/* ==========================================================================
+ * US mobile pass — touch targets, 2026-08-17
+ *
+ * JUMVI is tapped one-handed, outdoors, by someone whose other hand is
+ * holding a paddle. 44px is the floor, and these three controls sat just
+ * under it on every device class in tools/mobile-matrix.mjs. Each is fixed by
+ * growing the HIT AREA, never by scaling the artwork up — the board and the
+ * accordions are supposed to look exactly as they do now.
+ * ========================================================================== */
+
+/* The two mission-sheet accordions measured 40px tall. Both are full-width
+   rows, so height is the only missing dimension. */
+#sheet .moreInfoDetails > summary,
+#sheet .safetyDetails > summary{
+  min-height:44px !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:8px;
+}
+
+/* The Family Board is 6 tiles across because the 6 packs read as rows — that
+   stays. In the narrowest layouts a tile lands at 41–43px, just under the
+   floor, so the tile keeps its size and a centred 44×44 pseudo-element carries
+   the tap. Column pitch is at least 41+5=46px, so neighbouring hit areas
+   still cannot overlap, and the element is transparent — nothing moves. */
+.familyTile::after{
+  content:"";
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  min-width:44px; min-height:44px;
+  width:100%; height:100%;
+  border-radius:12px;
 }

@@ -3,7 +3,13 @@ set -eu
 
 BASE_URL="${1:-https://qr.jumvi.co}"
 BASE_URL=${BASE_URL%/}
-EXPECTED_COUNT=72
+# Bumped 72 → 74 on 2026-08-17. The two Warm Toy hero images (assets/ui/hero/
+# home-hero-{light,dark}.webp) shipped in 16750e6 and are precached and
+# referenced by warm-toy.css, but this constant was never updated — so the
+# check had been failing on the count line and never actually verifying that
+# any of the 74 assets serve real image bytes in production. A guard that
+# always fails is a guard nobody reads.
+EXPECTED_COUNT=74
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "FAIL: curl is required." >&2

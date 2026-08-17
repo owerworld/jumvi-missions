@@ -1956,9 +1956,16 @@ function renderTeamsHub(){
     const left = total - playedCount;
     const tiles = missions.map(ms => {
       const who = playedBy.get(ms.id);
-      const art = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "familyTileArt", ms.title, true);
+      /* Lazy, deliberately. The board is 36 tiles and it is built at boot on a
+       * tab that is display:none — eager loading meant every QR scan pulled 36
+       * mission thumbnails (~364 KB, 36 requests) before the family had even
+       * left the welcome screen, on a phone that is very often on cellular in
+       * a driveway. Lazy images inside a hidden subtree never approach the
+       * viewport, so they cost nothing until the Teams tab is actually opened,
+       * and even then only the rows in view. */
+      const art = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "familyTileArt", ms.title);
       const stamp = who && who.length
-        ? `<span class="familyTileWho">${JUMVI_ART.img(JUMVI_ART.avatar(who[0].ownerAvatar), "familyTileAvatar", "", true)}</span>`
+        ? `<span class="familyTileWho">${JUMVI_ART.img(JUMVI_ART.avatar(who[0].ownerAvatar), "familyTileAvatar", "")}</span>`
         : "";
       const label = who && who.length
         ? `${ms.title} — ${c.boardFirstBy} ${who.map(w=>w.ownerName).join(", ")}`
@@ -2894,7 +2901,20 @@ function disableOptionalLink(el, label){
   el.removeAttribute("target");
   el.removeAttribute("rel");
 }
+/* Runs once, and not until the tab that owns these links is actually opened.
+ *
+ * It used to run from the boot sequence, which put a no-store HEAD for the
+ * Mission Book PDF on the critical path of the QR landing page — an extra
+ * round trip, uncacheable by the service worker, competing with the assets of
+ * the first screen, for a link that lives on the Profile tab and that most
+ * families never reach. On slow 4G that is a real cost paid by everyone to
+ * answer a question almost nobody asks. The check is worth keeping (it turns
+ * a dead download into "Coming soon" instead of a broken tap); it is just
+ * worth keeping where the link is. */
+let _optionalDownloadsChecked = false;
 async function checkOptionalDownloads(){
+  if(_optionalDownloadsChecked) return;
+  _optionalDownloadsChecked = true;
   const links = Array.from(document.querySelectorAll("[data-optional-file]"));
   if(!links.length) return;
   for(const link of links){
@@ -4308,6 +4328,9 @@ function openMission(id){
     _missionReturnFocus = document.activeElement && document.activeElement !== document.body
       ? document.activeElement
       : btnDailyPlay;
+    // Only on the transition into the sheet — mission→mission ("Next") keeps
+    // the single entry, so one Back always means "leave the mission view".
+    pushSheetHistory();
   }
   // Opening a new mission invalidates narration/countdown callbacks owned by
   // the previous sheet before the new mission id becomes current.
@@ -4630,7 +4653,46 @@ if(btnSpeak){
   requestAnimationFrame(()=>{ try{ btnClose.focus({ preventScroll:true }); }catch(_){ btnClose.focus(); } });
 }
 
-function closeMission(){
+/* ── Back closes the mission, it does not leave JUMVI ─────────────────────
+ *
+ * The app had no history handling at all, so from an open mission the browser
+ * Back gesture walked straight out of the site. On Android that gesture is the
+ * system back — the thing people press instead of hunting for an X — and on a
+ * page reached by scanning a QR code there is nothing behind it to go back to.
+ * A parent closing a mission the "obvious" way lost the app.
+ *
+ * One entry is pushed when the sheet opens, at the SAME url: nothing about
+ * routing, deep links or the Worker-composed /tr shell changes, and a reload
+ * still lands on a normal JUMVI page. Popping it closes the sheet instead of
+ * unloading. Closing by X or backdrop consumes the entry so Back never has to
+ * be pressed twice to get anywhere. */
+let _sheetHistoryOpen = false;   // we own exactly one pushed entry while true
+let _suppressNextPop = false;    // our own history.back() is about to fire popstate
+
+function pushSheetHistory(){
+  if(_sheetHistoryOpen) return;
+  try{
+    history.pushState({ jumviSheet: true }, "");
+    _sheetHistoryOpen = true;
+  }catch(_){ /* history unavailable — Back simply behaves as it did before */ }
+}
+
+window.addEventListener("popstate", ()=>{
+  if(_suppressNextPop){ _suppressNextPop = false; return; }
+  if(!_sheetHistoryOpen) return;
+  _sheetHistoryOpen = false;          // the entry we pushed is the one that popped
+  closeMission({ fromHistory: true });
+});
+
+function closeMission(opts){
+  const fromHistory = !!(opts && opts.fromHistory);
+  /* Closing any other way must also drop the entry we pushed, or Back would
+   * land on a stale sheet state and appear to do nothing. */
+  if(!fromHistory && _sheetHistoryOpen){
+    _sheetHistoryOpen = false;
+    _suppressNextPop = true;
+    try{ history.back(); }catch(_){ _suppressNextPop = false; }
+  }
   hideMissionXpReward();
   if(_gateUiTimer){ clearTimeout(_gateUiTimer); _gateUiTimer = null; }
   // Hub flow ends when the mission view closes — the hub tab is still the
@@ -7145,7 +7207,12 @@ function switchTab(tabName){
 
   // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
   try {
-    if(tabName === "profile") renderProfileTab();
+    if(tabName === "profile"){
+      renderProfileTab();
+      // Both [data-optional-file] links live on this tab, so this is the first
+      // moment the check can matter — and it stays off the landing path.
+      checkOptionalDownloads();
+    }
     if(tabName === "today") {
       renderContinueHint();
       renderTodayContinuity();
@@ -8379,7 +8446,9 @@ function init(){
   try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
   // Delay A2HS banner — don't interrupt the first impression
   setTimeout(maybeShowA2HS, 60000);
-  checkOptionalDownloads();
+  // checkOptionalDownloads() deliberately NOT called here — it now runs the
+  // first time the Profile tab is opened, which is where its links are. See
+  // the note on the function itself.
 
   // restore certificate name (optional)
   if(certNameInput){

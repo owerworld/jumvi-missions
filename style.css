@@ -2918,7 +2918,8 @@ html.theme--light .welcomePanel{
   font-size:var(--fs-caption);
   line-height:1.5;
   color:var(--color-text-secondary,var(--muted,#7a8aa0));
-  opacity:0.75;
+  /* was opacity:0.75 → 3.27:1. Trademark and company line; small is fine,
+     unreadable is not. */
 }
 
 /* theme toggling for welcome logos */
@@ -5299,7 +5300,11 @@ button, a, .navTab, .quickChip, .profilePill, .dailyPlayBig,
 .navTab .navTabLabel{
   font-size: var(--fs-caption) !important;
   font-weight: 700 !important;
-  opacity: 0.8;
+  /* No opacity here. --muted (#70665D) is a 5.51:1 label on the nav surface,
+     but at 0.8 it composites down to 3.61:1 — and this is the bottom
+     navigation, the control a parent uses most and reads in sunlight. The
+     active tab is already distinguished by colour, weight 950 and a 1.3x icon,
+     so dimming the inactive ones bought hierarchy that was already there. */
   transition: all 0.25s ease;
   position: relative;
   z-index: 2;
@@ -8094,7 +8099,10 @@ html.theme--light .certBox{
   opacity:1;
 }
 .profileResetLink{
-  opacity:.78;
+  /* was opacity:.78, which dimmed the whole row — including the subtitle
+     "Press and hold to clear this device" — to 3.5:1. This is the safety
+     instruction on a destructive control; it has to be readable. The row
+     still reads as secondary through its red-tinted icon and quiet copy. */
   box-shadow:none !important;
 }
 .profileResetLink .profileQuickIcon{
@@ -8355,7 +8363,9 @@ body.modalOpen #badgeUnlockModal{
   padding:4px 9px;
   border-radius:999px;
   color:#fff;
-  font-size:10px;
+  /* "NEXT" is the one word that tells a child where they are in the path;
+     10px is too small for that job on a 360px phone held at arm's length. */
+  font-size:11px;
   font-weight:950;
   letter-spacing:.5px;
   line-height:1.2;
@@ -8540,7 +8550,11 @@ html.theme--dark .pathSectionProgress{ color: var(--text-on-card); }
 /* Dark "We Finished!" / "Mark as Not Done": mint on deep green measured 4.49:1,
    a hair under AA at 15px. Same pairing, one step lighter. */
 html.theme--dark .sheetActions .holdBtn.btnPrimary{ color:#E6FBEA !important; }
-a[href^="mailto:"]{ color: var(--brand-blue-deep); }
+/* brand-blue-deep is tuned for WHITE TEXT ON blue (4.84:1). Used the other way
+   round — blue text on a tinted card — it measured 4.44:1 in the Product Care
+   panel. This is the support address a parent reads when something is broken,
+   so it uses the deeper link blue already established for .dashShareCopy. */
+a[href^="mailto:"]{ color: #155E9E; }
 html.theme--dark a[href^="mailto:"]{ color: #7CC4FF; }
 .welcomeGearPlus{ color: #64748B; }                   /* was #93A4B7 — 2.43:1 */
 html.theme--dark .welcomeGearPlus{ color: #94A3B8; }
