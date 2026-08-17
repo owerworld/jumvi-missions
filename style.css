@@ -24,13 +24,32 @@ body::before {
   background-color: var(--page-bg);
   z-index: -2;
 }
-/* Scrollable app container */
+/* Scrollable app container.
+ *
+ * NO -webkit-overflow-scrolling: touch here. That property was momentum
+ * scrolling for iOS 12 and earlier; since iOS 13 momentum is the default and
+ * the declaration buys nothing. What it still does is make this element the
+ * CONTAINING BLOCK for its position:fixed descendants on iOS — and #backdrop,
+ * #sheet and .bottomNav are all descendants of #app-wrapper. Their inset:0 /
+ * bottom:0 then resolve against this scrolling box instead of the screen.
+ *
+ * This is not a theory about iOS; this codebase has already been bitten by it
+ * on this exact element. jumvi-hub-app.js documents the 3D overlay resolving
+ * "against a box ~73px shorter than the screen in standalone", and worked
+ * around it in JS by pinning to window.innerHeight. The mission sheet had no
+ * such workaround, which is the most likely reason a standalone PWA shows dead
+ * space below NEXT while Safari — where the offset is masked by the browser
+ * chrome occupying that band anyway — looks fine.
+ *
+ * Removing the declaration removes the quirk at the source, for every fixed
+ * descendant at once, and costs nothing on any iOS version still in use.
+ * NOTE: emulators do not implement this WebKit behaviour, so this fix is
+ * reasoned and safe but can only be CONFIRMED on real hardware. */
 #app-wrapper {
   position: absolute;
   inset: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
   /* pan-y: browser handles vertical scroll immediately without waiting for JS */
   touch-action: pan-y;
 }
@@ -39,7 +58,6 @@ body::before {
   min-height: 100svh;
   min-height: 100dvh;   /* dvh, not -webkit-fill-available — see the note on html above */
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
   position: relative;
   background-color: var(--page-bg);
@@ -2546,7 +2564,6 @@ html {
 body {
   height: 100%;
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: none;
   position: static;
 }
@@ -2617,7 +2634,6 @@ html, body {
   bottom: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
 }
 
 .bgLayer{
@@ -2677,7 +2693,6 @@ html, body {
   bottom: 0;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  -webkit-overflow-scrolling: touch;
 }
 
 
@@ -6209,10 +6224,14 @@ img{
   transform: translateZ(0);
   will-change: transform;
 }
-/* Browse tab'inde ekstra padding-bottom — path uzun olsa bile son node bar arkasinda kalmasin */
-body.tab-browse .app-shell{
-  padding-bottom: calc(200px + env(safe-area-inset-bottom)) !important;
-}
+/* The Browse tab used to reserve 200px here so a long mission path could clear
+   the nav. The rule has not applied for some time — #app-wrapper IS .app-shell,
+   and the ID+!important rule above sets padding-bottom to --bottom-nav-clearance
+   (80px + inset), which outranks this class selector. Measured: the shell
+   resolves to 80px, not 200px. Left in place it is a trap: anyone "fixing" the
+   specificity would silently add 200px of dead space to the bottom of the
+   mission list — a quarter of a phone screen — so it goes rather than lingering
+   as a rule that looks active and is not. Nav clearance is unchanged. */
 .missionPath{
   padding-bottom: 32px !important;
 }
