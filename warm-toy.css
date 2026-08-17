@@ -2058,3 +2058,99 @@ html.theme--dark #tabToday .advCard{
 html.theme--dark #teamXpPartnerGrid .teamSetupPartner.sharedPartner .teamSetupPartnerCopy small{
   color:#73CAE7;
 }
+
+/* ==========================================================================
+ * FAMILY BOARD — the Teams tab, 2026-08-17
+ * One shared board of 36 games. Deliberately not a leaderboard: no rank
+ * numbers, no trophy, no ordering by score. In a mixed-age family an XP race
+ * is one the youngest child loses every time by construction, and cooperative
+ * framing is what 4–6 year olds actually prefer.
+ * ========================================================================== */
+#teamsNowCard:not(.empty){
+  display:block;
+  padding:16px 14px 14px;
+  border:1px solid var(--border);
+  border-radius:22px;
+  background:var(--glass);
+  box-shadow:var(--shadow-soft);
+}
+.familyBoardCount{
+  display:flex; align-items:baseline; gap:7px;
+  margin-bottom:12px;
+}
+.familyBoardCount strong{
+  color:#4F9A2D;
+  font-size:30px; line-height:1; font-weight:950;
+}
+html.theme--dark .familyBoardCount strong{ color:#91D66D; }
+.familyBoardCount span{
+  color:var(--muted); font-size:13px; font-weight:850;
+}
+
+/* 6 across = the 6 skill packs read as rows, which is why it is not 4 or 5. */
+.familyBoardGrid{
+  display:grid;
+  grid-template-columns:repeat(6, minmax(0,1fr));
+  gap:6px;
+}
+.familyTile{
+  position:relative;
+  aspect-ratio:1;
+  padding:3px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--card, #fff);
+  cursor:pointer;
+  opacity:.34;
+  filter:grayscale(1);
+  transition:opacity .18s ease, filter .18s ease, transform .12s ease;
+}
+.familyTile.done{
+  opacity:1;
+  filter:none;
+  border-color:rgba(109,190,69,.45);
+  background:#F2F8ED;
+}
+html.theme--dark .familyTile.done{ background:#1F3A2A; border-color:rgba(109,190,69,.3); }
+.familyTile:active{ transform:scale(.94); }
+.familyTile .familyTileArt{ width:100%; height:100%; object-fit:contain; display:block; }
+.familyTileWho{
+  position:absolute; right:-3px; bottom:-3px;
+  width:17px; height:17px;
+  border-radius:50%;
+  overflow:hidden;
+  border:1.5px solid var(--card, #fff);
+  background:var(--card, #fff);
+}
+.familyTileWho .familyTileAvatar{ width:100%; height:100%; object-fit:cover; display:block; }
+.familyBoardFoot{
+  margin-top:11px;
+  color:var(--muted);
+  font-size:11.5px; line-height:1.35; font-weight:800;
+}
+.familyBoardFoot strong{ color:var(--text); }
+
+/* Team rows: a contribution bar, never a position. */
+.familyTeamRow{ align-items:center; gap:10px; }
+.familyRowAvatar{
+  width:34px; height:34px; flex:0 0 34px;
+  border-radius:50%; overflow:hidden;
+}
+.familyRowAvatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+.familyRowBar{
+  width:52px; height:6px; flex:0 0 52px;
+  border-radius:999px;
+  background:rgba(20,32,51,.10);
+  overflow:hidden;
+}
+html.theme--dark .familyRowBar{ background:rgba(255,255,255,.12); }
+.familyRowBarFill{ display:block; height:100%; border-radius:inherit; background:#6DBE45; }
+.familyRowNow{ color:#4F9A2D; font-size:17px; }
+html.theme--dark .familyRowNow{ color:#91D66D; }
+.familyTeamRow.otherChild .teamsRankMain strong{ font-weight:900; }
+.familyTeamRow.otherChild{ opacity:.9; }
+
+@media (max-width:360px){
+  .familyBoardGrid{ gap:5px; }
+  .familyBoardCount strong{ font-size:26px; }
+}

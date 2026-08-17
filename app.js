@@ -1665,11 +1665,17 @@ const TEAM_COPY = Object.freeze({
     sub:"Pick a family team. JUMVI remembers it for the next mission.",
     yourTeams:"Your teams", playWith:"Create a team",
     level:"Level", missions:"missions",
-    hubKicker:"FAMILY CHALLENGE",
-    hubTitle:"Family Teams",
-    hubIntro:"Complete missions together. Every team has its own XP, level, and streak.",
-    standings:"Team Standings",
-    standingsSub:"Who is climbing the JUMVI levels?",
+    hubKicker:"FAMILY BOARD",
+    hubTitle:"Our Family Board",
+    hubIntro:"Every game anyone plays fills in the board. 36 to collect together.",
+    standings:"Who's playing",
+    standingsSub:"Everyone adds to the same board",
+    boardDone:"games your family has played",
+    boardLeft:"nobody has tried yet",
+    boardAllDone:"Every game played. Play any of them again!",
+    boardTapHint:"Tap a faded one to play it",
+    boardFirstBy:"first played by",
+    games:"games",
     createTeam:"Create a Team",
     playingNow:"PLAYING NOW",
     firstTeam:"Choose your first team",
@@ -1688,11 +1694,17 @@ const TEAM_COPY = Object.freeze({
     sub:"Bir aile takımı seç. JUMVI sonraki görev için bunu hatırlar.",
     yourTeams:"Takımların", playWith:"Takım oluştur",
     level:"Seviye", missions:"görev",
-    hubKicker:"AİLE KAPIŞMASI",
-    hubTitle:"Aile Takımları",
-    hubIntro:"Görevleri birlikte tamamlayın. Her takımın kendi XP'si, seviyesi ve serisi vardır.",
-    standings:"Takım Sıralaması",
-    standingsSub:"JUMVI seviyelerinde kim önde?",
+    hubKicker:"AİLE PANOSU",
+    hubTitle:"Aile Panomuz",
+    hubIntro:"Kim oynarsa oynasın pano doluyor. Birlikte toplanacak 36 oyun.",
+    standings:"Kimler oynuyor",
+    standingsSub:"Herkes aynı panoya ekliyor",
+    boardDone:"oyunu ailen oynadı",
+    boardLeft:"oyuna henüz kimse dokunmadı",
+    boardAllDone:"Bütün oyunlar oynandı. İstediğinizi tekrar oynayın!",
+    boardTapHint:"Soluk olana dokunup oynayın",
+    boardFirstBy:"ilk oynayan",
+    games:"oyun",
     createTeam:"Takım Oluştur",
     playingNow:"ŞİMDİ OYNUYOR",
     firstTeam:"İlk takımını seç",
@@ -1762,6 +1774,69 @@ function teamDoneSet(team){
   const raw = lsGetJSON(teamProgressPrefix(team.id) + "missions_done_v3", []);
   return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
 }
+/* ===== Family-wide reads =================================================
+ * teamProgressPrefix() resolves an adult/friend team against the ACTIVE child,
+ * so it cannot answer "what has my brother's team done?" — which is why the
+ * Teams tab only ever showed the current child and a sibling's card appeared
+ * empty. These read any child's journey explicitly.
+ *
+ * A canonical sibling team (s_pX_pY) is stored in BOTH children's lists and
+ * shares one progress prefix, so the family view must de-duplicate it or the
+ * same journey would be counted twice.
+ */
+function teamProgressPrefixFor(profileId, teamId){
+  if(isSharedSiblingTeamId(teamId)) return "jumvi_team_" + String(teamId) + "_";
+  return "jumvi_" + String(profileId || "") + "_team_" + String(teamId || "") + "_";
+}
+function teamDoneSetFor(profileId, teamId){
+  const raw = lsGetJSON(teamProgressPrefixFor(profileId, teamId) + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+function familyTeamEntries(){
+  const seen = new Set();
+  const out = [];
+  getProfiles().forEach(pr => {
+    getJumviTeamsForProfile(pr.id).forEach(team => {
+      // One shared sibling journey, listed once, under whichever child comes first.
+      const key = isSharedSiblingTeamId(team.id) ? team.id : pr.id + "/" + team.id;
+      if(seen.has(key)) return;
+      seen.add(key);
+      // A sibling pair is genuinely both children's work, so it is credited to
+      // both on the board rather than to whichever profile happened to be
+      // iterated first.
+      const players = [{ ownerId:pr.id, ownerName:String(pr.name || "").trim(), ownerAvatar:pr.avatar || "monkey" }];
+      if(isSharedSiblingTeamId(team.id)){
+        const mate = getProfiles().find(x => x.id === team.partnerProfileId);
+        if(mate) players.push({ ownerId:mate.id, ownerName:String(mate.name || "").trim(), ownerAvatar:mate.avatar || "monkey" });
+      }
+      out.push({
+        team,
+        ownerId: pr.id,
+        ownerName: String(pr.name || "").trim(),
+        ownerAvatar: pr.avatar || "monkey",
+        players,
+        done: teamDoneSetFor(pr.id, team.id),
+        createdAt: String(team.createdAt || "")
+      });
+    });
+  });
+  return out;
+}
+// Which missions the family has finished, and who finished each one first.
+function familyMissionMap(entries){
+  const map = new Map();
+  entries.forEach(e => {
+    e.done.forEach(id => {
+      if(!map.has(id)) map.set(id, []);
+      const who = map.get(id);
+      (e.players || []).forEach(pl => {
+        if(!who.some(w => w.ownerId === pl.ownerId)) who.push(pl);
+      });
+    });
+  });
+  return map;
+}
+
 function personalDoneSet(){
   const raw = lsGetJSON(_PP + "missions_done_v3", []);
   return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
@@ -1797,6 +1872,23 @@ function renderTeamProgressChrome(){
   if(grownupsIntro) grownupsIntro.textContent = c.grownupsIntro;
 }
 
+/* The Teams tab as a shared family board, not a scoreboard.
+ *
+ * It used to rank every team by XP under "Team Standings — who is climbing the
+ * JUMVI levels?", and it only ever read the ACTIVE child's teams, so a brother
+ * opening it saw his sister's journeys nowhere and his own at the top of a
+ * league table. Both halves were wrong.
+ *
+ * Sibling rivalry is not a neutral motivator — it tracks with lower self-esteem,
+ * and in a mixed-age family the younger child loses a like-for-like XP race
+ * every single time, by construction. The research that matters here is the
+ * other half: 4–6 year olds enjoy cooperative framing MORE than competitive,
+ * and nobody has to go easy on the youngest when everyone is filling the same
+ * board. So the tab now answers "what has our family played?" — one board of
+ * 36, every team contributing to it, no ranks, no trophy, no leader.
+ *
+ * Each team still keeps its own journey; this is a view over them, not a merge.
+ */
 function renderTeamsHub(){
   const list = document.getElementById("teamsHubList");
   const now = document.getElementById("teamsNowCard");
@@ -1806,7 +1898,7 @@ function renderTeamsHub(){
   const c = teamCopy();
   const setText = (id, text)=>{
     const el = document.getElementById(id);
-    if(el) el.textContent = text;
+    if(el && text != null) el.textContent = text;
   };
   setText("teamsHubKicker", c.hubKicker);
   setText("teamsHubTitle", c.hubTitle);
@@ -1816,33 +1908,14 @@ function renderTeamsHub(){
   setText("btnTeamsCreateLabel", c.createTeam);
   setText("navTeamsLabel", c.navTeams);
 
-  const teams = getJumviTeams();
-  const ranked = teams.map((team, index)=>{
-    const progress = progressPreview(teamDoneSet(team));
-    const streak = Math.max(0, Number(lsGet(teamProgressPrefix(team.id) + "streak_count_v1", "0")) || 0);
-    return { team, progress, streak, index };
-  }).sort((a,b)=>
-    b.progress.xp - a.progress.xp ||
-    b.progress.missions - a.progress.missions ||
-    b.streak - a.streak ||
-    a.index - b.index
-  );
+  const entries = familyTeamEntries();
+  const playedBy = familyMissionMap(entries);
+  const total = missions.length;
+  const playedCount = playedBy.size;
 
-  list.innerHTML = "";
-
-  if(ACTIVE_JUMVI_TEAM){
-    const p = progressPreview(teamDoneSet(ACTIVE_JUMVI_TEAM));
-    now.classList.remove("empty");
-    now.innerHTML = `
-      <div class="teamsNowTop">
-        <span class="teamsNowEyebrow"><i class="jic jic-circle-check" aria-hidden="true"></i> ${escapeHtml(c.playingNow)}</span>
-        <span class="teamsNowLevel">${escapeHtml(c.level)} ${p.level}</span>
-      </div>
-      <div class="teamsNowName">${escapeHtml(teamDisplayName(ACTIVE_JUMVI_TEAM))}</div>
-      <div class="teamsNowMeta"><strong>${p.xp} XP</strong><span>${p.missions}/36 ${escapeHtml(c.missions)}</span></div>
-    `;
-  }else{
-    now.classList.add("empty");
+  /* ── the board itself ─────────────────────────────────────────────────── */
+  now.classList.toggle("empty", entries.length === 0);
+  if(entries.length === 0){
     now.innerHTML = `
       <div class="teamsEmptyIcon"><i class="jic jic-users" aria-hidden="true"></i></div>
       <div class="teamsEmptyCopy">
@@ -1850,42 +1923,80 @@ function renderTeamsHub(){
         <span>${escapeHtml(c.firstTeamSub)}</span>
       </div>
     `;
+  }else{
+    const left = total - playedCount;
+    const tiles = missions.map(ms => {
+      const who = playedBy.get(ms.id);
+      const art = JUMVI_ART.img(JUMVI_ART.mission(ms.id), "familyTileArt", ms.title, true);
+      const stamp = who && who.length
+        ? `<span class="familyTileWho">${JUMVI_ART.img(JUMVI_ART.avatar(who[0].ownerAvatar), "familyTileAvatar", "", true)}</span>`
+        : "";
+      const label = who && who.length
+        ? `${ms.title} — ${c.boardFirstBy} ${who.map(w=>w.ownerName).join(", ")}`
+        : ms.title;
+      return `<button type="button" class="familyTile${who ? " done" : ""}" data-mission="${ms.id}" aria-label="${escapeHtml(label)}">${art}${stamp}</button>`;
+    }).join("");
+
+    now.innerHTML = `
+      <div class="familyBoardCount">
+        <strong>${playedCount}</strong><span>/ ${total} ${escapeHtml(c.boardDone)}</span>
+      </div>
+      <div class="familyBoardGrid">${tiles}</div>
+      <div class="familyBoardFoot">${
+        left === 0
+          ? escapeHtml(c.boardAllDone)
+          : `<strong>${left}</strong> ${escapeHtml(c.boardLeft)} · ${escapeHtml(c.boardTapHint)}`
+      }</div>
+    `;
+    now.querySelectorAll(".familyTile").forEach(t=>{
+      t.onclick = ()=>{
+        clickSound("click");
+        switchTab("today");
+        setTimeout(()=> openMission(Number(t.dataset.mission)), 60);
+      };
+    });
   }
 
-  if(standingsHead) standingsHead.hidden = ranked.length === 0;
+  /* ── who is playing — listed, never ranked ────────────────────────────── */
+  if(standingsHead) standingsHead.hidden = entries.length === 0;
+  list.innerHTML = "";
 
-  ranked.forEach((entry, idx)=>{
-    const isActive = !!(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === entry.team.id);
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "teamsRankRow" + (isActive ? " active" : "");
-    btn.innerHTML = `
-      <span class="teamsRankNo">${idx + 1}</span>
-      <span class="teamsRankEmoji" aria-hidden="true">${TEAM_PARTNER_EMOJI[entry.team.partner] || "👥"}</span>
-      <span class="teamsRankMain">
-        <strong>${escapeHtml(teamDisplayName(entry.team))}</strong>
-        <small>${escapeHtml(c.level)} ${entry.progress.level} · ${entry.progress.missions}/36 ${escapeHtml(c.missions)}${entry.streak ? ` · 🔥 ${entry.streak}` : ""}</small>
-      </span>
-      <span class="teamsRankScore">
-        <strong>${entry.progress.xp}</strong>
-        <small>XP</small>
-      </span>
-      <span class="teamsRankAction">${isActive
-        ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
-        : '<i class="jic jic-arrow-right" aria-hidden="true"></i>'}</span>
-    `;
-    btn.setAttribute(
-      "aria-label",
-      `${teamDisplayName(entry.team)}, ${entry.progress.xp} XP, ${c.level} ${entry.progress.level}`
-    );
-    btn.onclick = ()=>{
-      if(isActive) return;
-      clickSound("click");
-      lsSet(ACTIVE_TEAM_KEY, entry.team.id);
-      window.location.reload();
-    };
-    list.appendChild(btn);
-  });
+  // Creation order, so a card never moves because someone else scored.
+  entries.slice().sort((a,b)=> String(a.createdAt).localeCompare(String(b.createdAt)))
+    .forEach(entry=>{
+      const isActive = !!(ACTIVE_JUMVI_TEAM && ACTIVE_JUMVI_TEAM.id === entry.team.id &&
+        (isSharedSiblingTeamId(entry.team.id) || entry.ownerId === getActiveProfileId()));
+      const mine = entry.ownerId === getActiveProfileId() || isSharedSiblingTeamId(entry.team.id);
+      const p = progressPreview(entry.done);
+      const name = isSharedSiblingTeamId(entry.team.id)
+        ? `${entry.ownerName} + ${childNameByProfileId(entry.team.partnerProfileId) || teamPartnerLabel("sibling")}`
+        : `${entry.ownerName} + ${teamPartnerLabel(entry.team.partner)}`;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "teamsRankRow familyTeamRow" + (isActive ? " active" : "") + (mine ? "" : " otherChild");
+      btn.innerHTML = `
+        <span class="familyRowAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(entry.ownerAvatar), "avatarArt", "", true)}</span>
+        <span class="teamsRankMain">
+          <strong>${escapeHtml(name)}</strong>
+          <small>${p.missions} ${escapeHtml(c.games)} · ${escapeHtml(c.level)} ${p.level}</small>
+        </span>
+        <span class="familyRowBar" aria-hidden="true">
+          <span class="familyRowBarFill" style="width:${Math.round((p.missions/total)*100)}%"></span>
+        </span>
+        ${isActive ? '<i class="jic jic-circle-check familyRowNow" aria-hidden="true"></i>' : ""}
+      `;
+      btn.setAttribute("aria-label", `${name}, ${p.missions} / ${total}`);
+      btn.onclick = ()=>{
+        if(isActive) return;
+        clickSound("click");
+        // Switching to another child's team means switching child too.
+        if(!mine) lsSet(ACTIVE_PROFILE_KEY, entry.ownerId);
+        lsSet("jumvi_" + entry.ownerId + "_active_team_v1", entry.team.id);
+        beacon("team_switch");
+        window.location.reload();
+      };
+      list.appendChild(btn);
+    });
 }
 
 let _teamXpReturnFocus = null;
