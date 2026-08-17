@@ -990,8 +990,8 @@
           No login, no password, no email required. Just open and play.
         </div>
         <div>
-          <b><i class="jic jic-lock" aria-hidden="true"></i> No personal information collected.</b><br/>
-          We never ask for or collect your child's name, email, address, phone number, photos, or location.
+          <b><i class="jic jic-lock" aria-hidden="true"></i> Child names stay on this device.</b><br/>
+          If you choose to add a child name or avatar, it is stored only in this browser on this device. It is not uploaded to JUMVI. We do not ask for an email address, phone number, photos, or location.
         </div>
         <div>
           <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on your device.</b><br/>
@@ -1266,13 +1266,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260816-5" defer></script>
+<script src="app.js?v=20260817-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260816-5")
+    navigator.serviceWorker.register("/service-worker.js?v=20260817-1")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }

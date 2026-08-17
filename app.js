@@ -258,6 +258,16 @@ function lsSetDebounced(key, value, delay=500){
   const t = setTimeout(()=>{ lsSet(key, value); }, delay);
   _lsDebounceTimers.set(key, t);
 }
+// Cancels a pending debounced write without replacing it. Needed wherever a
+// direct (non-debounced) write must win over an in-flight debounced one from
+// an earlier action on the SAME key — e.g. the 5s Undo restoring a streak key
+// that recordActivityToday() already queued a debounced write for.
+function cancelLsDebounced(key){
+  if(_lsDebounceTimers.has(key)){
+    clearTimeout(_lsDebounceTimers.get(key));
+    _lsDebounceTimers.delete(key);
+  }
+}
 
 /** =======================
  * Disable zoom — kapsamlı (iOS + Android + desktop)
@@ -747,11 +757,26 @@ function getActiveProfile(){
 function saveProfiles(arr){
   try { lsSet(PROFILES_KEY, JSON.stringify(arr)); } catch(_){}
 }
+// Local-only monotonic sequence (Phase 2F fix 3): never send through
+// analytics, never expose in the UI. Without it, deleting p2 and adding a
+// new child hands that new child the freed "p2" id — any orphaned p2 state
+// a cleanup pass missed would silently attach to the wrong kid.
+const PROFILE_SEQ_KEY = "jumvi_profile_seq_v1";
 function nextProfileId(){
   const ps = getProfiles();
-  let n = 1;
-  while(ps.find(p => p.id === ("p"+n))) n++;
-  return "p"+n;
+  let seq = Number(lsGet(PROFILE_SEQ_KEY, "0")) || 0;
+  // Seed from the highest existing pN so a save from before this key existed
+  // still hands out a truly unused id on its first call.
+  ps.forEach(p => {
+    const m = /^p(\d+)$/.exec(String(p.id || ""));
+    if(m){
+      const n = Number(m[1]);
+      if(n > seq) seq = n;
+    }
+  });
+  seq += 1;
+  lsSet(PROFILE_SEQ_KEY, String(seq));
+  return "p" + seq;
 }
 
 /* Migration: tek kullanıcı → "Default" profile */
@@ -4691,11 +4716,50 @@ btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
 backdrop.addEventListener("keydown",(e)=> handleDialogKeys(e, backdrop, closeMission));
 
-// §3.2 — 5-second Undo bar shown after an interactive completion. Reverts the
-// done state (the accidental-tap net that replaced hold-to-finish). Streak/daily
-// counters aren't rewound — a rare edge for an undo inside 5s; flagged in report.
+// §3.2 / Phase 2F fix 5 — 5-second Undo bar shown after an interactive
+// completion. This exists specifically for an accidental tap, so it must be a
+// TRUE transactional undo: everything the completion mutated (streak, best
+// streak, last-active date, badges, streak freeze, daily challenge) gets
+// rolled back exactly, not just the mission id. "Mark as Not Done" (used
+// later, outside this 5s window) intentionally does NOT rewind a historical
+// day's streak — only this immediate net does.
+function captureJourneySnapshot(){
+  return {
+    streakCount, bestStreak, lastActiveIso,
+    streak_count_v1: lsGet(STREAK_COUNT_KEY, null),
+    streak_best_v1: lsGet(STREAK_BEST_KEY, null),
+    streak_last_v1: lsGet(STREAK_LAST_KEY, null),
+    badges_unlocked_v1: lsGet(BADGES_UNLOCKED_KEY, null),
+    streak_freeze_v1: lsGet(STREAK_FREEZE_KEY, null),
+    daily_challenge_v1: lsGet(DAILY_CHALLENGE_KEY, null)
+  };
+}
+function restoreLsRaw(key, raw){
+  // A direct write must win over any debounced write still in flight from
+  // the completion this snapshot is rolling back (persistStreak() etc.) —
+  // otherwise that late write lands after the restore and reintroduces the
+  // very state the undo just erased.
+  cancelLsDebounced(key);
+  try{
+    if(raw === null) localStorage.removeItem(key);
+    else localStorage.setItem(key, raw);
+  }catch(_){}
+}
+function restoreJourneySnapshot(snap){
+  if(!snap) return;
+  streakCount = setState("streakCount", snap.streakCount);
+  bestStreak = setState("bestStreak", snap.bestStreak);
+  lastActiveIso = setState("lastActiveIso", snap.lastActiveIso);
+  restoreLsRaw(STREAK_COUNT_KEY, snap.streak_count_v1);
+  restoreLsRaw(STREAK_BEST_KEY, snap.streak_best_v1);
+  restoreLsRaw(STREAK_LAST_KEY, snap.streak_last_v1);
+  restoreLsRaw(BADGES_UNLOCKED_KEY, snap.badges_unlocked_v1);
+  restoreLsRaw(STREAK_FREEZE_KEY, snap.streak_freeze_v1);
+  restoreLsRaw(DAILY_CHALLENGE_KEY, snap.daily_challenge_v1);
+}
+
 let _undoTimer = null;
-function showUndoBar(id){
+function showUndoBar(id, journeySnapshot){
   const bar = document.getElementById("undoBar");
   const btn = document.getElementById("undoBtn");
   if(!bar || !btn) return;
@@ -4709,8 +4773,10 @@ function showUndoBar(id){
       done.delete(id);
       if(_missionXpRewardMissionId === Number(id)) hideMissionXpReward();
       bumpDoneVersion();
+      restoreJourneySnapshot(journeySnapshot);
       persist();
       renderList();
+      renderDailyChallenge();
       if(typeof renderMissionPath === "function"){ try{ renderMissionPath(); }catch(_){} }
       clickSound("click");
       if(lastOpenedId === id) openMission(id);
@@ -4730,6 +4796,10 @@ function markMissionDone(id, source="manual"){
   // Reward math is derived from the exact same unique-completion set as Home XP.
   const xpBefore = xpFromDoneSet(done);
   const levelBefore = xpLevelInfo(xpBefore);
+
+  // Phase 2F fix 5 — captured BEFORE this completion mutates streak/badges/
+  // daily state, so a 5s Undo can roll every side effect back exactly.
+  const journeySnapshot = captureJourneySnapshot();
 
   done.add(id);
   bumpDoneVersion();
@@ -4776,7 +4846,7 @@ function markMissionDone(id, source="manual"){
   }
 
   // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
-  if(source === "manual" || source === "auto") showUndoBar(id);
+  if(source === "manual" || source === "auto") showUndoBar(id, journeySnapshot);
   // Score özeti — eğer tracker açıksa ve skor varsa
   if(_scoreTrackerOpen && _currentScore > 0){
     showScoreSummary(id);
@@ -5008,8 +5078,28 @@ document.getElementById("btnRandomAll").onclick = ()=>{
   function doReset(){
     setDoneFromArray([]);
     unlockedBefore = setState("unlockedBefore", false);
+
+    // Phase 2F fix 6 — Reset must clear the WHOLE active journey (Team-scoped
+    // when a Team is active, personal otherwise), not just the mission set,
+    // so every visible surface agrees immediately: 0/36, 0 XP (derived — no
+    // separate storage to reset), Level 1, 0 streak, no earned badges, a
+    // fresh daily goal. Removing rather than rewriting lets each feature's
+    // own getter recreate its normal fresh-state shape on next read.
+    streakCount = setState("streakCount", 0);
+    bestStreak = setState("bestStreak", 0);
+    lastActiveIso = setState("lastActiveIso", "");
+    cancelLsDebounced(STREAK_COUNT_KEY);
+    cancelLsDebounced(STREAK_BEST_KEY);
+    cancelLsDebounced(STREAK_LAST_KEY);
+    persistStreak();
+    try { localStorage.removeItem(BADGES_UNLOCKED_KEY); } catch(_){}
+    try { localStorage.removeItem(STREAK_FREEZE_KEY); } catch(_){}
+    try { localStorage.removeItem(DAILY_CHALLENGE_KEY); } catch(_){}
+
+    hideMissionXpReward();
     persist();
     renderList();
+    renderDailyChallenge();
     closeMission();
     closeCertificate();
     showToast("Progress reset");
@@ -5401,16 +5491,16 @@ function renderProfileList(){
   list.innerHTML = "";
   profiles.forEach(p => {
     const isActive = p.id === activeId;
-    const doneRaw = lsGetJSON("jumvi_" + p.id + "_missions_done_v3", []);
-    const doneCount = Array.isArray(doneRaw) ? doneRaw.length : 0;
-    const streak = Number(lsGet("jumvi_" + p.id + "_streak_count_v1", "0")) || 0;
     const item = document.createElement("div");
     item.className = "profileItem" + (isActive ? " active" : "");
+    // Phase 2F fix 7 — Kids & Settings is an identity/settings surface, not a
+    // progress dashboard. X/36 · streak here could conflict with Team-scoped
+    // progress (a child's own count is no longer necessarily what they see in
+    // Play). Progress belongs in Teams / Progress.
     item.innerHTML = `
       <div class="profileItemAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(p.avatar), "avatarArt", "", true)}</div>
       <div class="profileItemBody">
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
-        <div class="profileItemMeta">${doneCount}/36 missions · <i class="jic jic-flame" aria-hidden="true"></i> ${streak} day${streak===1?"":"s"}</div>
       </div>
       <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button"><i class="jic jic-pencil" aria-hidden="true"></i></button>
       ${isActive ? '<div class="profileItemActive"><i class="jic jic-circle-check" aria-hidden="true"></i></div>' : ""}
@@ -5503,6 +5593,14 @@ function saveProfileEdit(){
   const profiles = getProfiles();
   const idx = profiles.findIndex(x => x.id === _profileEditingId);
   if(idx === -1) return;
+
+  // Capture BEFORE closeProfileEdit() clears _profileEditingId — otherwise
+  // every check below reads null and both the header refresh and Team Setup
+  // STEP 2 continuation silently break.
+  const editingId = _profileEditingId;
+  const editedActiveChild = editingId === getActiveProfileId();
+  const continueTeamSetup = _teamSetupResumeAfterIdentity && editedActiveChild;
+
   profiles[idx].name = newName;
   profiles[idx].avatar = _profileEditingAvatar;
   saveProfiles(profiles);
@@ -5510,11 +5608,10 @@ function saveProfileEdit(){
   closeProfileEdit();
   renderProfileList();
   // Aktif profil düzenlendiyse header avatarını da yenile
-  if(_profileEditingId === getActiveProfileId()){
+  if(editedActiveChild){
     renderAvatar();
   }
 
-  const continueTeamSetup = _teamSetupResumeAfterIdentity && _profileEditingId === getActiveProfileId();
   _teamSetupResumeAfterIdentity = false;
   const editSave = document.getElementById("btnProfileEditSave");
   if(editSave) editSave.textContent = isTurkishUI() ? "Kaydet" : "Save";
@@ -5545,8 +5642,62 @@ function deleteProfile(){
   keysToRemove.forEach(k => {
     try { localStorage.removeItem("jumvi_" + id + "_" + k); } catch(_){}
   });
+
+  // Team architecture cascade (Phase 2F fix 2). Read this child's OWN team
+  // list before anything is deleted — it is the only place that names every
+  // sibling pair this child ever belonged to.
+  const ownTeams = getJumviTeamsForProfile(id);
+  ownTeams.forEach(t => {
+    if(/^t\d+$/.test(t.id)){
+      // Adult/friend team (and any un-upgraded legacy generic "sibling" team)
+      // — progress lives ONLY under this child's own prefix.
+      const prefix = "jumvi_" + id + "_team_" + t.id + "_";
+      TEAM_PROGRESS_SUFFIXES.forEach(suffix => {
+        try { localStorage.removeItem(prefix + suffix); } catch(_){}
+      });
+    }
+    // Canonical sibling teams (s_pX_pY) are cleaned up as a shared namespace
+    // below, since that progress belongs to the PAIR, not to either child.
+  });
+  try { localStorage.removeItem(teamListKeyForProfile(id)); } catch(_){}
+  try { localStorage.removeItem("jumvi_" + id + "_active_team_v1"); } catch(_){}
+
+  const siblingIdsInvolvingThisChild = ownTeams
+    .filter(t => isSharedSiblingTeamId(t.id))
+    .map(t => t.id);
+
+  // Scrub every OTHER child's team list of a reference to the deleted child,
+  // and clear their active Team if it pointed at one of the removed teams —
+  // an orphan Team reference must never remain visible or selectable.
+  const remainingProfiles = profiles.filter(p => p.id !== id);
+  remainingProfiles.forEach(p => {
+    const theirTeams = getJumviTeamsForProfile(p.id);
+    const kept = theirTeams.filter(t => {
+      if(t.partnerProfileId === id) return false;
+      if(isSharedSiblingTeamId(t.id) && siblingIdsInvolvingThisChild.includes(t.id)) return false;
+      return true;
+    });
+    if(kept.length !== theirTeams.length){
+      saveJumviTeamsForProfile(p.id, kept);
+      const theirActiveKey = "jumvi_" + p.id + "_active_team_v1";
+      const theirActiveId = lsGet(theirActiveKey, "");
+      if(theirActiveId && !kept.some(t => t.id === theirActiveId)){
+        try { localStorage.removeItem(theirActiveKey); } catch(_){}
+      }
+    }
+  });
+
+  // The shared sibling progress namespace itself belongs to the pair, not
+  // either child individually — wipe it once here.
+  siblingIdsInvolvingThisChild.forEach(siblingId => {
+    const prefix = "jumvi_team_" + siblingId + "_";
+    TEAM_PROGRESS_SUFFIXES.forEach(suffix => {
+      try { localStorage.removeItem(prefix + suffix); } catch(_){}
+    });
+  });
+
   // Profile listesinden çıkar
-  const filtered = profiles.filter(p => p.id !== id);
+  const filtered = remainingProfiles;
   saveProfiles(filtered);
   trackEvent("Profile Deleted");
   // Eğer aktif profil silindiyse, ilk kalan profile geç (reload tetiklenir)
