@@ -1978,11 +1978,27 @@ function renderTeamXpPicker(){
 
   // Sibling is never generic now. Every named second child gets an exact,
   // canonical shared pair such as Ece + Ali.
+  // Names are blocked from colliding at the point they are typed, but a device
+  // that already saved a clashing pair before that check existed must not be
+  // shown two rows it cannot tell apart. Keep the first of any duplicate name,
+  // and never offer a sibling whose name reads the same as the active child or
+  // as one of the relationship rows printed above.
+  const activeName = String(activeChildName() || "").toLocaleLowerCase("tr");
+  const relationNames = new Set(
+    ["dad","mom","grandma","grandpa","friend"].map(k => teamPartnerLabel(k).toLocaleLowerCase("tr"))
+  );
+  const seenSiblingNames = new Set();
   getProfiles()
     .filter(p => p.id !== getActiveProfileId())
     .filter(p => {
       const name = String(p.name || "").trim();
-      return name && name.toLowerCase() !== "player";
+      if(!name || name.toLowerCase() === "player") return false;
+      const key = name.toLocaleLowerCase("tr");
+      if(key === activeName) return false;      // would read "Ece + Ece"
+      if(relationNames.has(key)) return false;  // would read like the adult row
+      if(seenSiblingNames.has(key)) return false;
+      seenSiblingNames.add(key);
+      return true;
     })
     .forEach(other => {
       const siblingId = canonicalSiblingTeamId(getActiveProfileId(), other.id);
@@ -3405,7 +3421,14 @@ let missionOpenedAt = 0;
  * A family who read the steps and went outside passes on time alone. Only the
  * tap-through case is stopped. In-memory by design: a reload restarts the
  * clock (stricter, never looser) and no new storage key is introduced. */
-const MISSION_GATE_CAP_S = 45;
+// The gate now waits exactly as long as the mission itself says it takes, so
+// the number on the button and the "Easy • 90s" chip above it are the same
+// number. A cap of 45s made them disagree — the sheet promised 90 seconds of
+// play and the button unlocked at 44 — which read as two different answers to
+// "how long is this?". Running the mission timer still opens the gate the
+// moment it reaches Time's Up, so a family that uses the timer never waits
+// twice; the dwell path only covers families who play with the phone down.
+const MISSION_GATE_MIN_S = 45;   // floor for the shortest sprint missions
 const _timerFinishedFor = new Set();
 // Declared here, beside the rest of the gate state, because closeMission() —
 // defined earlier in this file — clears it.
@@ -3420,8 +3443,8 @@ function missionTimeSeconds(ms){
 }
 function missionGateMsFor(id){
   const ms = missions.find(x => x.id === id);
-  const secs = missionTimeSeconds(ms) || MISSION_GATE_CAP_S;
-  return Math.min(secs, MISSION_GATE_CAP_S) * 1000;
+  const secs = missionTimeSeconds(ms) || MISSION_GATE_MIN_S;
+  return Math.max(secs, MISSION_GATE_MIN_S) * 1000;
 }
 // Returns 0 when the mission may be completed, otherwise the ms still to wait.
 function missionGateRemainingMs(id){
@@ -5748,6 +5771,12 @@ function saveProfileEdit(){
     if(nameEl) nameEl.focus();
     return;
   }
+  const renameConflict = childNameConflict(newName, _profileEditingId);
+  if(renameConflict){
+    showToast(renameConflict);
+    if(nameEl) nameEl.focus();
+    return;
+  }
   const profiles = getProfiles();
   const idx = profiles.findIndex(x => x.id === _profileEditingId);
   if(idx === -1) return;
@@ -5928,12 +5957,60 @@ function switchProfile(id){
   showToast("Switching player...");
   setTimeout(()=>{ location.reload(); }, 350);
 }
+/* A child's name is the only thing the Team picker can show, so two people who
+ * READ the same are the same person as far as a family is concerned. The picker
+ * de-duplicates by profile id, which the customer never sees, so three things
+ * used to slip through and all of them looked like "I can pick the same person
+ * twice":
+ *   · two children saved with the same name  → "Ece + Ali" listed twice
+ *   · a child named after a relationship      → "Ece + Dad" as adult AND sibling
+ *   · a second child named like the first     → literally "Ece + Ece"
+ * Blocking the collision while the parent is typing is the only place it can be
+ * fixed clearly; by the time two teams exist there is no honest way to label
+ * them apart. Returns a ready-to-show message, or "" when the name is fine. */
+function childNameConflict(name, exceptId){
+  const clean = String(name || "").trim();
+  if(!clean) return "";
+  const tr = isTurkishUI();
+  const key = clean.toLocaleLowerCase("tr");
+
+  // Every relationship word the picker can print, in both languages, so the
+  // check does not depend on which locale the parent happens to be using.
+  const relationWords = new Set();
+  ["en","tr"].forEach(loc => {
+    TEAM_PARTNER_KEYS.forEach(k => {
+      const w = TEAM_COPY[loc] && TEAM_COPY[loc][k];
+      if(w) relationWords.add(String(w).toLocaleLowerCase("tr"));
+    });
+  });
+  if(relationWords.has(key)){
+    return tr
+      ? `"${clean}" takım kurarken bir yakınlık adı olarak kullanılıyor. Lütfen çocuğun kendi adını yazın.`
+      : `"${clean}" is used as a relationship in Team setup. Please use the child's own name.`;
+  }
+
+  const clash = getProfiles().some(pr => pr.id !== exceptId &&
+    String(pr.name || "").trim().toLocaleLowerCase("tr") === key);
+  if(clash){
+    return tr
+      ? `Zaten "${clean}" adında bir çocuk var. Ayırt etmek için bir harf ekleyin (örn. ${clean} K.).`
+      : `There is already a child called "${clean}". Add an initial to tell them apart (e.g. ${clean} B.).`;
+  }
+  return "";
+}
+
 function addNewChildProfile(){
   const nameInput = document.getElementById("profileNewName");
   if(!nameInput) return;
   const name = (nameInput.value || "").trim().slice(0, 20);
   if(!name){
     showToast("Please enter a name first.");
+    nameInput.focus();
+    return;
+  }
+  const conflict = childNameConflict(name, null);
+  if(conflict){
+    showToast(conflict);
     nameInput.focus();
     return;
   }
