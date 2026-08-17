@@ -3520,7 +3520,14 @@ function updateProgress(options = {}){
   if(dash) dash.style.display = isFresh ? "none" : "";
   // Sertifika sadece ≥3 görev tamamlanınca göster (motivasyon için)
   const cert = document.getElementById("certBox");
-  if(cert) cert.style.display = done.size >= 3 ? "" : "none";
+  /* The certificate is the single strongest thing JUMVI can put in front of a
+   * parent — a printable end state the child earns — and it was hidden until
+   * three missions were done, on a tab most families reach late. So the prize
+   * that justifies the whole 36-mission journey was invisible for exactly the
+   * period when a family is deciding whether the journey is worth starting.
+   * It shows from the first completion, with the bar making the distance
+   * honest rather than hiding it. */
+  if(cert) cert.style.display = done.size >= 1 ? "" : "none";
   // Where to Play sadece progress varsa (artık kart gizli zaten - geriye uyum)
   const seasonal = document.getElementById("seasonalCard");
   if(seasonal && seasonal.dataset.deprecated !== "1"){ seasonal.style.display = isFresh ? "none" : ""; }
@@ -4368,11 +4375,27 @@ function openMission(id){
   }
 
   mTitle.textContent = ms.title;
+  /* Personal best.
+   *
+   * The app has recorded a best catch count per mission all along, and showed
+   * it nowhere except inside the score tracker a family had to open first.
+   * That left the one number in the product that measures ACTUAL physical
+   * skill invisible, while XP — which only rewards opening a harder-labelled
+   * mission — sat on the card in green. An 11-year-old has nothing to chase in
+   * "Level 2"; "your best here is 14" is a real target, and beating it means
+   * catching better, not tapping more. Only rendered once a record exists, so
+   * a 4-year-old's card is unchanged. */
+  const best = getMissionBest(ms.id);
+  const bestChip = best > 0
+    ? `<span class="tag bestTag"><i class="jic jic-award" aria-hidden="true"></i> ${
+        isTurkishUI() ? "Rekor" : "Best"} ${best}</span>`
+    : "";
   mMeta.innerHTML = `
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
     <span class="tag xpTag">+${missionXp(ms)} XP</span>
+    ${bestChip}
   `;
 
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
@@ -5316,8 +5339,22 @@ if(btnToggleDone){
 
 /* Keeps the button honest while the gate is still closed: it stays visible and
  * tappable (tapping explains why), but reads as not-yet rather than ready. */
+/* Three actions sat at the bottom of an unplayed mission with near-equal
+ * weight: Start, the completion button (also .btnPrimary), and Next Mission.
+ * At the exact moment a family should be starting THIS game, one of the three
+ * offers was to skip it. Prominence now follows state — before play, Start is
+ * the only loud thing; after play, finishing and moving on are. */
+function updateMissionActionHierarchy(){
+  const next = document.getElementById("btnNext");
+  if(next == null || lastOpenedId == null) return;
+  const isDone = done.has(lastOpenedId);
+  const gateOpen = missionGateRemainingMs(lastOpenedId) === 0;
+  next.classList.toggle("actionMuted", !isDone && !gateOpen);
+}
+
 function updateToggleDoneGateUI(){
   if(!btnToggleDone) return;
+  updateMissionActionHierarchy();
   if(_gateUiTimer){ clearTimeout(_gateUiTimer); _gateUiTimer = null; }
   const id = lastOpenedId;
   if(id == null || done.has(id)){

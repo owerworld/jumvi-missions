@@ -31,6 +31,9 @@
    * straight form, matching what the generated table already does: the source
    * files are inconsistent and a near-miss silently falls through to English. */
   const EXACT_EXTRA = {
+    /* Leo's one job, named on the card he already powered. */
+    "LEO’S PICK": "LEO SEÇTİ",
+    "LEO'S PICK": "LEO SEÇTİ",
     /* Faz 2F — the two help reasons that had a tip and a schema slot but no
      * way to be picked. Added to the in-mission panel, so /tr needs them too. */
     "We don’t have enough space": "Yeterli alanımız yok",

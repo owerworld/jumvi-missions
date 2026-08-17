@@ -2197,3 +2197,89 @@ html.theme--dark .packDot.next{ box-shadow:inset 0 0 0 2px #73CAE7; }
 .pathSection.collapsed .pathSectionChevron{ transform:rotate(0deg); }
 .pathSection.collapsed .pathSteps{ display:none; }
 .pathSection.collapsed{ padding-bottom:14px; }
+
+/* Leo fronts the two moments that are actually his: choosing the next game,
+   and saying well done. Nowhere else — he is a coach, not a narrator. */
+.dailyEyebrow .eyebrowLeo{
+  width:20px; height:20px;
+  vertical-align:-4px;
+  margin-right:2px;
+}
+.missionXpRewardIcon .rewardLeo{
+  width:30px; height:30px;
+  display:block;
+}
+
+/* Personal best — the only number in the product that tracks real catching
+   skill. Warm, not green: it is a record to beat, not progress banked. */
+#sheet .tag.bestTag{
+  background:#FFF3D6 !important;
+  color:#8B6412 !important;
+  font-weight:900;
+}
+html.theme--dark #sheet .tag.bestTag{
+  background:#40351D !important;
+  color:#F0CA67 !important;
+}
+
+/* "Next Mission" before this one has been played. Still reachable — a family
+   that opened the wrong game must be able to leave — but it stops competing
+   with Start for the tap. */
+#btnNext.actionMuted{
+  opacity:.5;
+  font-size:13px !important;
+  min-height:38px !important;
+  padding:8px 12px !important;
+}
+
+/* ==========================================================================
+ * Outdoor reach — 2026-08-17
+ * Measured on the live build: the profile button was 42x42, "Choose another"
+ * 40px tall and the share row 36px. All under the 44px minimum, on a product
+ * used one-handed, standing, often with a ball in the other hand. The gaps
+ * were small enough to close without changing any layout.
+ * ========================================================================== */
+.topbar .profilePill,
+#btnOpenProfile,
+.profileAvatarBtn{
+  min-width:44px !important;
+  min-height:44px !important;
+}
+/* An earlier pass set this to 40px inside #tabToday, which outranks a plain
+   id selector here; match that specificity so the 44px minimum actually wins. */
+#tabToday #btnDailyReplay.dailyNewSmall,
+#tabToday #btnDailyNew.dailyNewSmall{
+  min-height:44px !important;
+  padding:11px 12px !important;
+}
+/* The eyebrow that now carries Leo's name measured 4.37:1 against its own
+   tinted pill — just under the 4.5 a 12px label needs. */
+#tabToday .dailyBox.dailyBoxPromoted .dailyEyebrow,
+#tabToday .dailyEyebrow{
+  color:#0F5C8A !important;
+}
+html.theme--dark #tabToday .dailyBox.dailyBoxPromoted .dailyEyebrow,
+html.theme--dark #tabToday .dailyEyebrow{
+  color:#9FDCF5 !important;
+}
+.dashShareBtn{
+  min-height:44px !important;
+}
+/* The path checkmark: white on #43A047 measures 3.30:1, under the 4.5 a 14px
+   glyph needs — and it is the one mark that tells a child "you did this one".
+   Darkening the disc keeps the green reading while clearing the bar. */
+.pathStepDoneMark{
+  background:#2E7D32 !important;
+  color:#FFFFFF !important;
+  font-weight:950;
+}
+/* 10.5px eyebrows measured 4.44:1, just under the 4.5 needed at that size. */
+.teamsHubKicker,
+#teamsHubKicker,
+.familyBoardFoot{
+  color:#12608F;
+}
+html.theme--dark .teamsHubKicker,
+html.theme--dark #teamsHubKicker{
+  color:#8FD3F0;
+}

@@ -258,7 +258,11 @@
 
         <!-- TODAY'S MISSION — promoted, fully tappable card -->
         <div class="dailyBox dailyBoxPromoted" id="dailyBox">
-          <div class="dailyEyebrow"><i class="ico i-target" aria-hidden="true"></i> PICKED FOR YOU</div>
+          <!-- Leo picks. He had no job before: a face on the welcome screen and
+               a speaker button, but the thing he is actually for — knowing what
+               to play next — was labelled with a generic target and credited to
+               nobody. This is that job, named. -->
+          <div class="dailyEyebrow"><img class="eyebrowLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" decoding="async"> <span id="dailyEyebrowText">LEO&rsquo;S PICK</span></div>
           <div class="dailyContent">
             <div class="dailyIconBig" id="dailyIcon"></div>
             <div class="dailyText">
@@ -869,7 +873,7 @@
            It is NOT a second modal, so badge/score celebrations can coexist. -->
       <section class="missionXpReward" id="missionXpReward" hidden aria-live="polite">
         <div class="missionXpRewardTop">
-          <div class="missionXpRewardIcon" aria-hidden="true"><i class="jic jic-award"></i></div>
+          <div class="missionXpRewardIcon" aria-hidden="true"><img class="rewardLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="30" height="30" alt="" decoding="async"></div>
           <div class="missionXpRewardHeading">
             <div class="missionXpRewardKicker" id="missionXpRewardKicker">MISSION COMPLETE</div>
             <div class="missionXpRewardTeam" id="missionXpRewardTeam">Great job!</div>
@@ -1225,13 +1229,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260814-5" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260817-9" defer></script>
+<script src="app.js?v=20260817-10" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260817-9")
+    navigator.serviceWorker.register("/service-worker.js?v=20260817-10")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
