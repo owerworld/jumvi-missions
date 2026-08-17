@@ -105,6 +105,42 @@
     // go:  "countdown-go-en.mp3"
   };
 
+  /* ── Fixed spoken lines that are NOT mission narration ─────────────────────
+   * Leo's island greeting and the timer's "Time's up" were still reaching
+   * window.speechSynthesis, i.e. the phone's own default en-US voice. A child
+   * heard Leo read the mission in his recorded voice and then a different
+   * person greet them on the island — the same mismatch the countdown had.
+   *
+   * Same all-or-nothing contract as COUNTDOWN_FILES: the map stays EMPTY until
+   * the renders exist, and while it is empty English stays SILENT on these
+   * lines. That is safe here and only here, because every one of them is also
+   * on screen — the island greeting is a speech bubble, "Time's up!" is the
+   * timer display. Nothing is lost but the duplicate voice.
+   *
+   * Deliberately NOT routed through here: the mid-mission reminders and the
+   * Quick Play cues. Those play while the phone is on the floor and the child
+   * is looking at the ball, so they have no visual twin — silence there would
+   * delete the coaching, not de-duplicate it. They keep speaking through TTS
+   * until a recorded set exists.
+   *
+   * TO ENABLE: drop the clips in and fill the keys below. tools/check-coach-
+   * leo-audio.mjs starts asserting they exist; tools/voice-manifest.mjs lists
+   * every line still waiting for a render. */
+  var LINE_FILES = {
+    // "hub-greeting-1": "hub/hub-greeting-1-en.mp3",
+    // "hub-bubble-1":   "hub/hub-bubble-1-en.mp3",
+    // "times-up":       "system/times-up-en.mp3"
+  };
+
+  /* Callers that only hold the sentence (the 3D hub passes text, not a key)
+   * resolve it here. Keys must match the text in jumvi-hub-app.js / app.js
+   * exactly; a miss simply means "no clip", never a wrong clip. */
+  var LINE_TEXT = {
+    "Welcome to my island! Tap the ground and I'll walk there!": "hub-greeting-1",
+    "Great job! Now find a glowing gate": "hub-bubble-1",
+    "Time's up! Great job!": "times-up"
+  };
+
   var STALL_MS = 4000; // no 'playing' event within this window => fall back to TTS
 
   var activeAudio = null;
@@ -137,6 +173,21 @@
   function countdownSrc(step) {
     var f = COUNTDOWN_FILES[String(step)];
     return f ? BASE + "game-cues/" + f : null;
+  }
+
+  function hasLine(key) {
+    return isAvailable() && Object.prototype.hasOwnProperty.call(LINE_FILES, String(key));
+  }
+
+  function lineSrc(key) {
+    var f = LINE_FILES[String(key)];
+    return f ? BASE + f : null;
+  }
+
+  // Returns the clip key for a sentence, or "" when that sentence has no clip.
+  function lineKeyForText(text) {
+    var t = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
+    return Object.prototype.hasOwnProperty.call(LINE_TEXT, t) ? LINE_TEXT[t] : "";
   }
 
   function stop() {
@@ -281,9 +332,18 @@
     } catch (_) {}
   }
 
+  function playLine(key, cb) {
+    var src = lineSrc(key);
+    if (!src) return false;
+    return playSrc(src, cb);
+  }
+
   global.CoachLeoAudio = {
     isAvailable: isAvailable,
     hasMission: hasMission,
+    hasLine: hasLine,
+    playLine: playLine,
+    lineKeyForText: lineKeyForText,
     playMission: playMission,
     playCue: playCue,
     hasCountdown: hasCountdown,

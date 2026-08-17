@@ -3506,9 +3506,11 @@ function updateTimerTick(){
     // Coach: time's up announcement
     if(_openMissionId !== 13){
       if(_currentScore > 0){
+        // Carries a number that cannot be prerecorded, so this one stays on
+        // TTS in English until a score-free variant is agreed.
         coachSpeak(`Time's up! You got ${_currentScore}!`);
       } else {
-        coachSpeak("Time's up! Great job!");
+        speakLeoLine("Time's up! Great job!");
       }
     }
     // A timer that reached Time's Up is proof this mission was actually played,
@@ -3578,6 +3580,29 @@ function coachSpeak(text, opts={}){
     u.onerror = ()=> window.JumviMusic?.unduck();
     window.speechSynthesis.speak(u);
   }catch(_){}
+}
+
+/* A fixed Coach Leo line that also exists on screen (the island's speech
+ * bubble, the timer's "Time's Up!"). English prefers the recorded clip and,
+ * when none is mapped yet, stays SILENT rather than handing the line to the
+ * phone's own voice mid-experience — the same call speakCountdownStep()
+ * documents at length. Turkish is untouched: CoachLeoAudio.isAvailable() is
+ * false on /tr and tr/i18n.js re-speaks everything in tr-TR, so TTS is the
+ * intended path there and stays wired up.
+ *
+ * Only for lines with a visible twin. Mid-mission reminders and Quick Play
+ * cues deliberately keep calling coachSpeak() directly: nothing on screen
+ * carries them, so silence would delete the coaching instead of removing a
+ * duplicate voice. */
+function speakLeoLine(text, opts={}){
+  if(!soundOn) return;
+  const leo = window.CoachLeoAudio;
+  if(leo && leo.isAvailable()){
+    const key = leo.lineKeyForText(text);
+    if(key && leo.hasLine(key)) leo.playLine(key);
+    return;
+  }
+  coachSpeak(text, opts);
 }
 
 // §3.1 — auto read-aloud for the 3–5 band (they can't read the steps). Device
@@ -6306,7 +6331,10 @@ function ensureHub3DLoaded(onProgress){
       // Task 3 — one-time Coach Leo greeting. The hub owns the bubbles (anchored
       // to Leo, tied to the first walk); app.js only lends the Web Speech util
       // and the persisted intro flag (via lsGet/lsSet).
-      coachSpeak,
+      // Leo's island speaks through the recorded-first router: its lines are
+      // all rendered in a speech bubble, so English never falls back to the
+      // device voice for them.
+      coachSpeak: speakLeoLine,
       hubIntroDone(){ return lsGet(HUB_INTRO_KEY, "0") === "1"; },
       markHubIntroDone(){ lsSet(HUB_INTRO_KEY, "1"); },
       // Hub stars: the hub owns the gameplay, app.js owns the key — same split

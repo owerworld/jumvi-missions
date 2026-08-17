@@ -71,7 +71,7 @@ for(const f of cueFiles){
  * filled and it must never be possible for English to fall through to the
  * device TTS voice again — that regression is invisible on desktop Chrome and
  * only shows up on a real phone, which is how it shipped the first time. */
-const countdownBlock = source.slice(source.indexOf("var COUNTDOWN_FILES"), source.indexOf("var STALL_MS"));
+const countdownBlock = source.slice(source.indexOf("var COUNTDOWN_FILES"), source.indexOf("var LINE_FILES"));
 const countdownEntries = [...countdownBlock.matchAll(/^\s*(?:"(\d)"|(go)):\s*"([^"]+\.mp3)"/gm)]
   .map(m => ({ key: m[1] || m[2], file: m[3] }));
 check("countdown map is all-or-nothing (0 or 4 clips)", countdownEntries.length === 0 || countdownEntries.length === 4, `${countdownEntries.length} mapped`);
@@ -82,7 +82,34 @@ if(countdownEntries.length === 0){
   console.log("  note countdown clips not shipped yet — English counts down silently by design");
 }
 
+/* LINE_FILES — the fixed lines that also appear on screen (island greeting,
+ * "Time's up"). Same contract as the countdown: empty is fine and means
+ * English stays silent on them, but a mapped clip must exist on disk, and the
+ * router must never let English fall through to the device voice. */
+const lineBlock = source.slice(source.indexOf("var LINE_FILES"), source.indexOf("var LINE_TEXT"));
+const lineEntries = [...lineBlock.matchAll(/^\s*"([\w-]+)":\s*"([^"]+\.mp3)"/gm)]
+  .map(m => ({ key: m[1], file: m[2] }));
+for(const { key, file } of lineEntries){
+  check(`line "${key}" on disk: ${file}`, fs.existsSync(path.join("assets/audio/coach-leo/en", file)));
+}
+if(lineEntries.length === 0){
+  console.log("  note island/system clips not shipped yet — English stays silent on them by design");
+}
+// Every sentence the text→key table can resolve must have a key that either is
+// mapped or is knowingly absent; a typo here would silently mean "no clip".
+const textBlock = source.slice(source.indexOf("var LINE_TEXT"), source.indexOf("var STALL_MS"));
+const textKeys = [...textBlock.matchAll(/:\s*"([\w-]+)"/g)].map(m => m[1]);
+check("every LINE_TEXT key is unique", new Set(textKeys).size === textKeys.length);
+check("every mapped LINE_FILES key is reachable from LINE_TEXT",
+  lineEntries.every(e => textKeys.includes(e.key)), lineEntries.map(e => e.key).join(",") || "none mapped");
+
 const appSrc = fs.readFileSync("app.js", "utf8");
+const lineRouter = appSrc.slice(appSrc.indexOf("function speakLeoLine"), appSrc.indexOf("// §3.1"));
+check("English island/system lines never fall back to speechSynthesis",
+  /isAvailable\(\)[\s\S]*?return;\n\s*\}/.test(lineRouter));
+check("the 3D hub speaks through the recorded-first router",
+  appSrc.includes("coachSpeak: speakLeoLine"));
+
 const announceBlock = appSrc.slice(appSrc.indexOf("function showCountdownThenStart"), appSrc.indexOf("function startTimer"));
 check("countdown never calls coachSpeak() directly", !announceBlock.includes("coachSpeak("));
 check("countdown routes through speakCountdownStep()", announceBlock.includes("speakCountdownStep("));
