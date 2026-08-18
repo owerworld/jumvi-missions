@@ -2352,6 +2352,18 @@ html.theme--dark #teamsHubKicker{
  * reuses .profileQuickLink as-is.
  * ========================================================================== */
 
+/* The `hidden` attribute is only a UA-stylesheet `display:none`, so ANY author
+   `display` beats it — and both of these surfaces set one (.keepCard below,
+   .profileQuickLink for the Adults row). Without these two companion rules the
+   attribute is inert: the nudge renders before a family has finished anything,
+   and the Adults row renders in standalone and on platforms with no install
+   path at all — the dead CTA this feature exists to avoid. Every other hidden
+   element in JUMVI carries the same pairing (.offlineBanner[hidden],
+   .undoBar[hidden], .missionXpReward[hidden], .installDlg[hidden] …); these
+   two were simply missed. */
+.keepCard[hidden],
+#btnKeepOnPhone[hidden]{ display:none !important; }
+
 /* Surface B — the inline nudge on Play. In normal document flow, never fixed,
    never a toast: it scrolls away with the page like any other card. */
 .keepCard{
