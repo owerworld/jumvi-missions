@@ -1334,9 +1334,6 @@ const btnDailyNew = document.getElementById("btnDailyNew");
 // mission is done (0 = the card is still offering the featured mission).
 let _dailyNextId = 0;
 
-const a2hsBanner = document.getElementById("a2hsBanner");
-const a2hsHint = document.getElementById("a2hsHint");
-const btnA2hsClose = document.getElementById("btnA2hsClose");
 
 const backupBackdrop = document.getElementById("backupBackdrop");
 const btnBackupClose = document.getElementById("btnBackupClose");
@@ -2876,54 +2873,142 @@ function getNextRecommendedMission(afterId){
   return pool.length ? pool[0] : null;
 }
 
-/* ===== A2HS helper ===== */
-function isIOSWeb(){
+/* ═══════════════════════════════════════════════════════════════════════════
+ * "Keep JUMVI on this phone" — Add to Home Screen
+ *
+ * Adding a website to the Home Screen is not an App Store download, so nothing
+ * here says "get the app": the promise on the welcome screen is still
+ * "No app · No account · No ads" and this has to reinforce that, not contradict
+ * it. Two surfaces, both optional, neither competing with play:
+ *
+ *   A. a quiet permanent row in Adults → Quick Links
+ *   B. one inline card on Play, eligible only AFTER a first mission is done
+ *
+ * The old implementation was a viewport-attached banner shown on a 30s/60s
+ * timer — an ad-shaped interruption for a family that had not yet played, and
+ * in practice barely reachable: style.css hid .a2hs on the today, stats and
+ * profile tabs, so it could only ever appear on Browse and Modes.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* iPadOS 13+ reports itself as a Mac, so the touch check is what identifies it. */
+function isIOSDevice(){
   const ua = navigator.userAgent || "";
-  const isIOS = /iPad|iPhone|iPod/i.test(ua);
-  const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/i.test(ua);
-  return isIOS && isSafari;
+  if(/iPad|iPhone|iPod/i.test(ua)) return true;
+  return /Mac/i.test(navigator.platform || "") && (navigator.maxTouchPoints || 0) > 1;
 }
 function isStandalone(){
-  return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
+  return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || !!window.navigator.standalone;
 }
 
-// Android Add to Home Screen prompt
 let deferredInstallPrompt = null;
-const btnA2hsInstall = document.getElementById("btnA2hsInstall");
+let _installedThisSession = false;
+
+/* One classification instead of a thicket of UA branches. The question is not
+ * "which browser is this" but "what can this family actually DO here":
+ *
+ *   standalone  → already installed; every surface disappears
+ *   prompt      → beforeinstallprompt fired; the browser installs it for us
+ *   ios-manual  → iOS of any browser; only the user can add it, via Share
+ *   none        → no honest path; show nothing rather than a dead button
+ *
+ * iOS deliberately is NOT narrowed to Safari. The old isIOSWeb() excluded
+ * CriOS/FxiOS/EdgiOS, which meant iOS Chrome, Firefox and Edge users — who
+ * have a perfectly good Share → Add to Home Screen — were told nothing at all.
+ */
+function installState(){
+  if(isStandalone() || _installedThisSession) return "standalone";
+  if(deferredInstallPrompt) return "prompt";
+  if(isIOSDevice()) return "ios-manual";
+  return "none";
+}
+
 window.addEventListener("beforeinstallprompt", (e)=>{
+  // Keep it for a real user gesture. Nothing is auto-shown because of this.
   e.preventDefault();
   deferredInstallPrompt = e;
-  // Delay Android A2HS banner too — same 30s rule
-  setTimeout(()=>{
-    if(a2hsBanner && !isStandalone()) {
-      if(a2hsHint) a2hsHint.textContent = "Install JUMVI for quick access.";
-      const steps = document.getElementById("a2hsSteps");
-      if(steps) steps.textContent = "Tap Install";
-      a2hsBanner.style.display = "flex";
-    }
-  }, 30000);
+  renderInstallSurfaces();
 });
-if(btnA2hsInstall){
-  btnA2hsInstall.onclick = async ()=>{
-    if(!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    try{ await deferredInstallPrompt.userChoice; }catch(_){ }
+
+/* Fires when the install actually completes (Android/Chromium). Both surfaces
+ * go immediately — no reload, no stale "add me" row on an installed app. */
+window.addEventListener("appinstalled", ()=>{
+  _installedThisSession = true;
+  deferredInstallPrompt = null;
+  renderInstallSurfaces();
+});
+
+/* The only place an install is triggered, and always straight from a tap. */
+async function runInstallAction(){
+  const state = installState();
+  if(state === "prompt"){
+    const p = deferredInstallPrompt;
+    // Cleared before awaiting: the event is single-use, and a second tap while
+    // the sheet is up must not call prompt() on a spent event.
     deferredInstallPrompt = null;
-    if(a2hsBanner) a2hsBanner.style.display = "none";
-  };
+    try{
+      p.prompt();
+      const choice = await p.userChoice;
+      if(choice && choice.outcome === "accepted") _installedThisSession = true;
+    }catch(_){ /* dismissed or already consumed — nothing to recover */ }
+    renderInstallSurfaces();
+    return;
+  }
+  if(state === "ios-manual"){ openInstallDialog(); return; }
+  // "none"/"standalone" never expose an action, so this is unreachable by tap.
 }
 
-function maybeShowA2HS(){
-  if(!a2hsBanner) return;
-  if(!isIOSWeb()) return;
-  const dismissed = (lsGet(A2HS_DISMISS_KEY, "0")) === "1";
-  if(dismissed || isStandalone()) return;
-  if(a2hsHint) a2hsHint.textContent = "Full screen + offline support";
-  const steps = document.getElementById("a2hsSteps");
-  if(steps) steps.innerHTML = "Tap <b>Share</b> → <b>Add to Home Screen</b>";
-  // Hide the Install button on iOS (beforeinstallprompt doesn't fire on iOS Safari)
-  if(btnA2hsInstall) btnA2hsInstall.style.display = "none";
-  a2hsBanner.style.display = "flex";
+/* ── the guidance dialog ──────────────────────────────────────────────────
+ * Separate from the mission sheet on purpose — see the note in index.html. */
+function openInstallDialog(){
+  const dlg = document.getElementById("installDlg");
+  if(!dlg) return;
+  _installDlgReturnFocus = document.activeElement;
+  dlg.hidden = false;
+  lockBackgroundScroll();
+  document.addEventListener("keydown", _installDlgKeydown, true);
+  const btn = document.getElementById("btnInstallDlgClose");
+  if(btn) requestAnimationFrame(()=>{ try{ btn.focus({ preventScroll:true }); }catch(_){ btn.focus(); } });
+}
+let _installDlgReturnFocus = null;
+function closeInstallDialog(){
+  const dlg = document.getElementById("installDlg");
+  if(!dlg || dlg.hidden) return;
+  dlg.hidden = true;
+  unlockBackgroundScroll();
+  document.removeEventListener("keydown", _installDlgKeydown, true);
+  const back = _installDlgReturnFocus;
+  _installDlgReturnFocus = null;
+  if(back && back.isConnected && back.getClientRects().length){
+    try{ back.focus({ preventScroll:true }); }catch(_){ back.focus(); }
+  }
+}
+function _installDlgKeydown(e){
+  if(e.key === "Escape"){ e.preventDefault(); closeInstallDialog(); return; }
+  if(e.key !== "Tab") return;
+  // Only one control in the panel, so focus simply stays on it.
+  const btn = document.getElementById("btnInstallDlgClose");
+  if(btn){ e.preventDefault(); btn.focus(); }
+}
+
+/* ── eligibility for the inline nudge ─────────────────────────────────────
+ * Value first: a family that has not finished a mission is never asked. */
+function keepNudgeEligible(){
+  if(installState() === "standalone" || installState() === "none") return false;
+  if(lsGet(A2HS_DISMISS_KEY, "0") === "1") return false;   // "Maybe later" is permanent
+  if(done.size < 1) return false;                          // first completion is the gate
+  if(document.body.classList.contains("modalOpen")) return false;
+  if(document.querySelector(".backdrop.show")) return false;
+  return document.body.classList.contains("tab-today");
+}
+
+/* Single place that decides what either surface shows. Safe to call often. */
+function renderInstallSurfaces(){
+  const state = installState();
+  const row = document.getElementById("btnKeepOnPhone");
+  if(row) row.hidden = (state === "standalone" || state === "none");
+  const card = document.getElementById("keepCard");
+  if(card) card.hidden = !keepNudgeEligible();
+  if(state === "standalone") closeInstallDialog();
 }
 
 /* ===== Optional downloads ===== */
@@ -4683,6 +4768,9 @@ if(btnSpeak){
   resetScore();
   renderScoreTracker();
   lockBackgroundScroll();
+  // Placed after modalOpen is applied, so eligibility can see it: the
+  // install nudge must never sit behind an open sheet.
+  renderInstallSurfaces();
   requestAnimationFrame(()=>{ try{ btnClose.focus({ preventScroll:true }); }catch(_){ btnClose.focus(); } });
 }
 
@@ -4765,6 +4853,11 @@ function closeMission(opts){
     }
   }
   unlockBackgroundScroll();
+  /* Checked here rather than at completion time: the celebration, reward card
+   * and badge modal own that moment, and the nudge must not appear behind or
+   * on top of them. By the time the sheet is closing the family is back on a
+   * normal, non-modal screen — which is exactly when it becomes eligible. */
+  setTimeout(renderInstallSurfaces, 0);
   setMissionBackgroundIsolation(false);
   const returnFocus = _missionReturnFocus;
   _missionReturnFocus = null;
@@ -6577,14 +6670,33 @@ if(btnRestore){
   };
 }
 
-/* A2HS banner */
-if(btnA2hsClose){
-  btnA2hsClose.onclick = ()=>{
+/* "Keep JUMVI on this phone" — the two surfaces and the guidance dialog.
+ *
+ * A2HS_DISMISS_KEY now means one thing only: "the family said no to the inline
+ * nudge". It deliberately does NOT hide the Adults row, so a parent who waved
+ * the card away can still choose to add JUMVI later. Anyone who dismissed the
+ * old banner inherits that as a no to the nudge, which is the respectful read
+ * of the same answer. */
+(function initInstallSurfaces(){
+  const row   = document.getElementById("btnKeepOnPhone");
+  const add   = document.getElementById("btnKeepAdd");
+  const later = document.getElementById("btnKeepLater");
+  const close = document.getElementById("btnInstallDlgClose");
+  const dlg   = document.getElementById("installDlg");
+
+  if(row)   row.addEventListener("click", ()=>{ clickSound("click"); runInstallAction(); });
+  if(add)   add.addEventListener("click", ()=>{ clickSound("click"); runInstallAction(); });
+  if(later) later.addEventListener("click", ()=>{
     clickSound("click");
-    lsSet(A2HS_DISMISS_KEY, "1");
-    if(a2hsBanner) a2hsBanner.style.display = "none";
-  };
-}
+    try{ lsSet(A2HS_DISMISS_KEY, "1"); }catch(_){}
+    renderInstallSurfaces();
+  });
+  if(close) close.addEventListener("click", ()=>{ clickSound("click"); closeInstallDialog(); });
+  // Tapping the dimmed area closes it, same as every other JUMVI overlay.
+  if(dlg) dlg.addEventListener("click", (e)=>{ if(e.target === dlg) closeInstallDialog(); });
+
+  renderInstallSurfaces();
+})();
 
 /** =======================
  * Welcome Overlay (first-time onboarding)
@@ -7250,6 +7362,9 @@ function switchTab(tabName){
       renderDailyChallenge();
       renderCoachPick();
     }
+    // The nudge lives on Today and hides behind modals, so its eligibility is
+    // re-checked whenever the visible surface changes.
+    renderInstallSurfaces();
     if(tabName === "stats") {
       // Badge, dashboard and progress render only when this tab is opened.
       if(typeof updateProgress === "function") updateProgress();
@@ -8475,8 +8590,10 @@ function init(){
   // Tutorial spotlight kaldırıldı — yeni today-first UI self-explanatory.
   // Var olan kullanıcılar için TUTORIAL_KEY işaretle ki bir daha çıkmasın
   try { lsSet(TUTORIAL_KEY, "1"); } catch(_){}
-  // Delay A2HS banner — don't interrupt the first impression
-  setTimeout(maybeShowA2HS, 60000);
+  /* No timed install banner. The nudge is earned by finishing a mission, not
+   * by a clock running out, and renderInstallSurfaces() decides on tab change
+   * and on completion instead. */
+  renderInstallSurfaces();
   // checkOptionalDownloads() deliberately NOT called here — it now runs the
   // first time the Profile tab is opened, which is where its links are. See
   // the note on the function itself.

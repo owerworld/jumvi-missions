@@ -557,21 +557,6 @@ html.theme--dark .pill{
   background: rgba(15,23,42,0.65);
 }
 
-/* A2HS banner dark mode */
-html.theme--dark .a2hs{
-  background: rgba(15,23,42,0.9);
-  border: 1px solid rgba(255,255,255,0.25);
-}
-html.theme--dark .a2hsText,
-html.theme--dark #a2hsHint,
-html.theme--dark #a2hsSteps{
-  color:#e5e7eb !important;
-}
-html.theme--dark .a2hsClose{
-  background: rgba(255,255,255,0.08);
-  color:#e5e7eb;
-  border-color: rgba(255,255,255,0.2);
-}
 
 /* Ensure key labels in dark mode are readable */
 html.theme--dark .mTitle,
@@ -2019,37 +2004,6 @@ html.theme--dark .toast{
     }
 
     /* A2HS banner */
-    .a2hs{
-      margin-top:16px;
-      border:1px solid #FFF;
-      background: #FFF;
-      border-radius:22px;
-      padding:16px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      box-shadow: var(--shadow);
-    }
-    .a2hsText b{ font-weight:950; color: var(--blue); }
-    .a2hsText div{
-      color: rgba(6,19,38,0.72);
-      font-size:var(--fs-meta);
-      font-weight:850;
-      margin-top:4px;
-      line-height:1.35;
-    }
-    .a2hsClose{
-      border:1px solid #EEE;
-      background: #F5F5F5;
-      color: #999;
-      border-radius:14px;
-      padding:10px 12px;
-      font-weight:950;
-      cursor:pointer;
-      min-height:44px;
-      flex:0 0 auto;
-    }
 
     /* Progress: streak */
     .streakBox{
@@ -5316,14 +5270,6 @@ body.modalOpen .app-shell{
 #tabToday .sub{ margin-bottom: 14px !important; }
 
 /* 14) A2HS banner — daha hafif, sadece browse tab'inde göster */
-body.tab-today .a2hs,
-body.tab-stats .a2hs,
-body.tab-profile .a2hs{ display: none !important; }
-.a2hs{
-  margin-bottom: 14px;
-  padding: 12px;
-  border-radius: 14px;
-}
 
 /* 15) Continue hint + Daily card daha rahat ayrılsın */
 .continueHint{ margin-bottom: 14px !important; }
@@ -7265,9 +7211,6 @@ body.modalOpen .app-shell{
 
 /* B. A2HS BANNER — agresif gizleme her durumda
    Çok dengesiz duruyordu, yeni layout'la uyumsuz */
-.a2hs{
-  display: none !important;
-}
 
 /* C. BADGES SECTION — JS hides the entire section for a fresh player. */
 body.tab-stats #badgesRow{

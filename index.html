@@ -218,17 +218,6 @@
 
   <div class="wrap">
     <section class="hero">
-      <!-- A2HS banner stays at top regardless of tab -->
-      <div class="a2hs" id="a2hsBanner" style="display:none;">
-        <div class="a2hsText">
-          <b><i class="jic jic-device-mobile-down" aria-hidden="true"></i> Add to Home Screen</b>
-          <div id="a2hsHint">Use JUMVI like an app — no download needed.</div>
-          <div id="a2hsSteps">Share → Add to Home Screen</div>
-        </div>
-        <button class="btn btnPrimary" id="btnA2hsInstall" type="button" style="min-height:36px; padding:8px 12px;">Install</button>
-        <button class="a2hsClose" id="btnA2hsClose" aria-label="Close add to home screen" type="button"><i class="ico i-x" aria-hidden="true"></i></button>
-      </div>
-
       <!-- ============== TAB: TODAY ============== -->
       <div class="tabPanel" id="tabToday" data-tab="today">
         <div class="todayHeroStage">
@@ -400,6 +389,25 @@
           </span>
           <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
         </button>
+
+        <!-- One-time engagement nudge. Inline and in normal flow on purpose:
+             not a modal, not a toast, not viewport-attached. It sits after the
+             island card so it is below every play CTA in the hierarchy, and it
+             only becomes eligible once a family has actually finished a
+             mission. -->
+        <section class="keepCard" id="keepCard" hidden aria-labelledby="keepCardTitle">
+          <div class="keepCardBody">
+            <span class="keepCardIcon"><i class="jic jic-device-mobile-down" aria-hidden="true"></i></span>
+            <div class="keepCardCopy">
+              <div class="keepCardTitle" id="keepCardTitle">Keep JUMVI one tap away</div>
+              <div class="keepCardSub">Add it to your Home Screen for full-screen play.</div>
+            </div>
+          </div>
+          <div class="keepCardActions">
+            <button class="btn keepCardAdd" id="btnKeepAdd" type="button">Add to Home Screen</button>
+            <button class="btn keepCardLater" id="btnKeepLater" type="button">Maybe later</button>
+          </div>
+        </section>
 
         <!-- §3.4 — "Surprise me" moved to Browse (it duplicated "Pick another"
              on Today and encouraged card-spinning over playing). -->
@@ -594,6 +602,19 @@
             <div class="profileQuickInfo">
               <div class="profileQuickTitle">View Progress</div>
               <div class="profileQuickSub">Dashboard, badges & certificate</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+          <!-- Adding a site to the Home Screen is not an App Store download, so
+               this never says "install our app" — the product promise stays
+               "No app · No account · No ads". Hidden entirely when JUMVI is
+               already running standalone, or when the browser offers no real
+               path, so there is never a dead button here. -->
+          <button class="profileQuickLink" id="btnKeepOnPhone" type="button" hidden>
+            <span class="profileQuickIcon"><i class="jic jic-device-mobile-down" aria-hidden="true"></i></span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Keep JUMVI on this phone</div>
+              <div class="profileQuickSub">Full-screen play · One tap from your Home Screen</div>
             </div>
             <span class="profileQuickArrow">›</span>
           </button>
@@ -1190,6 +1211,27 @@
   </div>
 
   <!-- Fallback modal: image generation failed -->
+  <!-- Add-to-Home-Screen guidance.
+       A DELIBERATELY SEPARATE dialog, not the mission #sheet. The sheet's
+       scroll and safe-area ownership is settled and proven on hardware; this
+       feature has no business reaching into it. Own classes, own markup, and
+       it borrows only colour/border tokens. Generic wording on purpose —
+       the Share menu is worded differently across iOS browsers, so naming a
+       specific label would be wrong somewhere. -->
+  <div class="installDlg" id="installDlg" role="dialog" aria-modal="true" aria-labelledby="installDlgTitle" hidden>
+    <div class="installDlgPanel">
+      <div class="installDlgIcon"><i class="jic jic-device-mobile-down" aria-hidden="true"></i></div>
+      <h2 class="installDlgTitle" id="installDlgTitle">Add JUMVI to your Home Screen</h2>
+      <ol class="installDlgSteps">
+        <li>Tap <b>Share</b></li>
+        <li>Choose <b>Add to Home Screen</b></li>
+        <li>Tap <b>Add</b></li>
+      </ol>
+      <p class="installDlgFoot">It stays a website — no app store, no account.</p>
+      <button class="btn btnPrimary installDlgClose" id="btnInstallDlgClose" type="button">Got it</button>
+    </div>
+  </div>
+
   <div class="backdrop fallbackBackdrop" id="fallbackBackdrop" role="dialog" aria-modal="true" aria-label="Image generation failed">
     <div class="sheet fallbackSheet">
       <div class="fallbackIcon"><i class="jic jic-photo" aria-hidden="true"></i></div>

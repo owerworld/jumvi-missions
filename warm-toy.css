@@ -2342,3 +2342,114 @@ html.theme--dark #teamsHubKicker{
   width:100%; height:100%;
   border-radius:12px;
 }
+
+/* ==========================================================================
+ * "Keep JUMVI on this phone" — Add to Home Screen surfaces, 2026-08-18
+ *
+ * Optional, parent-facing, and deliberately quieter than anything to do with
+ * playing. No new palette: every colour below is an existing JUMVI token, so
+ * light and dark come for free. The Adults row needs no styling at all — it
+ * reuses .profileQuickLink as-is.
+ * ========================================================================== */
+
+/* Surface B — the inline nudge on Play. In normal document flow, never fixed,
+   never a toast: it scrolls away with the page like any other card. */
+.keepCard{
+  margin:14px 0 4px;
+  padding:13px 14px;
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  background:var(--glass);
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+}
+.keepCardBody{ display:flex; align-items:center; gap:11px; }
+.keepCardIcon{
+  flex:0 0 auto;
+  width:38px; height:38px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:11px;
+  background:var(--wt-cream-soft);
+  color:#12608F;
+  font-size:19px;
+}
+html.theme--dark .keepCardIcon{ background:var(--wt-dark-soft); color:#8FD3F0; }
+.keepCardCopy{ min-width:0; }
+.keepCardTitle{ font-size:15px; font-weight:900; color:var(--text); line-height:1.25; }
+.keepCardSub{ font-size:12.5px; font-weight:650; color:var(--muted); line-height:1.3; margin-top:2px; }
+
+/* Both actions are quiet. The primary action on this screen is playing, and
+   nothing here may out-shout Start / Next, so neither button uses the brand
+   gradient reserved for the play CTAs. */
+.keepCardActions{ display:flex; gap:9px; }
+.keepCardAdd,
+.keepCardLater{
+  flex:1 1 0;
+  min-height:44px;
+  border-radius:13px;
+  font-size:13.5px;
+  font-weight:850;
+}
+.keepCardAdd{
+  border:1px solid #12608F;
+  background:var(--wt-cream-soft);
+  color:#12608F;
+}
+.keepCardLater{
+  border:1px solid var(--border);
+  background:transparent;
+  color:#626C76;
+}
+html.theme--dark .keepCardAdd{ background:var(--wt-dark-soft); border-color:#8FD3F0; color:#8FD3F0; }
+html.theme--dark .keepCardLater{ color:var(--muted); }
+
+/* The guidance dialog. Its own element and its own classes — it must never
+   depend on #sheet, whose scroll and safe-area ownership is settled. */
+.installDlg{
+  position:fixed;
+  inset:0;
+  z-index:9500;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(20,32,51,.42);
+}
+.installDlg[hidden]{ display:none; }
+.installDlgPanel{
+  width:100%;
+  max-width:340px;
+  padding:22px 20px calc(18px + env(safe-area-inset-bottom));
+  border:1px solid var(--glass-border);
+  border-radius:22px;
+  background:var(--glass);
+  box-shadow:0 18px 44px rgba(20,32,51,.22);
+  text-align:center;
+}
+.installDlgIcon{
+  width:52px; height:52px; margin:0 auto 12px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:15px;
+  background:var(--wt-cream-soft);
+  color:#12608F;
+  font-size:26px;
+}
+html.theme--dark .installDlgIcon{ background:var(--wt-dark-soft); color:#8FD3F0; }
+.installDlgTitle{ font-size:18px; font-weight:950; color:var(--text); margin:0 0 12px; line-height:1.25; }
+.installDlgSteps{
+  margin:0 0 12px;
+  padding:0 0 0 20px;
+  text-align:left;
+  font-size:14px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.75;
+}
+.installDlgSteps b{ font-weight:950; }
+.installDlgFoot{ margin:0 0 16px; font-size:12.5px; font-weight:650; color:var(--muted); }
+.installDlgClose{ width:100%; min-height:46px; border-radius:14px; }
+
+@media (prefers-reduced-motion: reduce){
+  .keepCard, .installDlgPanel{ transition:none !important; animation:none !important; }
+}
