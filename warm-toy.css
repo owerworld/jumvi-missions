@@ -4426,3 +4426,173 @@ html.theme--dark #tabToday #xpProgressCard > .bar{ background:var(--jv-track) !i
    holds one line at 320px rather than wrapping over the close button. */
 .teamXpHead h2{ font-size:18px !important; line-height:1.2 !important; }
 .teamXpHead p{ font-size:13px !important; }
+
+/* ── Family: v32 composition ─────────────────────────────────────────────── */
+/* Roster is the tab's first block: one card per local player. */
+#tabModes #familyInsights{
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+#tabModes .familyInsightsHeader{ display:none !important; }
+#tabModes #familyInsights .familyStreak{ display:none !important; }
+#tabModes .familyInsightsGrid{
+  grid-template-columns:1fr !important;
+  gap:10px !important;
+  margin-bottom:0 !important;
+}
+#tabModes .familyMember{
+  align-items:center !important;
+  gap:12px !important;
+  padding:12px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+}
+#tabModes .familyMemberAvatar{
+  width:44px !important; height:44px !important; flex:0 0 44px !important;
+  border-radius:50% !important; background:transparent !important;
+}
+#tabModes .familyMemberLevel{
+  margin-top:1px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12px;
+  font-weight:750;
+}
+#tabModes .familyMemberBar{ margin:7px 0 5px !important; }
+#tabModes .familyMemberStats{
+  gap:8px !important;
+  font-size:12px !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+}
+.familyAddPlayer{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  width:100%;
+  min-height:44px;
+  margin:10px 0 0 !important;
+  border:0 !important;
+  background:none !important;
+  color:var(--jv-blue-strong,#1d6fb5) !important;
+  font-size:14.5px !important;
+  font-weight:900 !important;
+}
+/* Family progress: one restrained block of real aggregates. */
+.familyProgressCard{
+  margin-top:14px !important;
+  padding:14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+.familyProgressTitle{ display:block; font-size:15px; font-weight:950; color:var(--text); }
+.familyProgressLines{ display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+.familyProgressLine{
+  display:flex; align-items:center; gap:8px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:750;
+}
+.familyProgressLine .ico, .familyProgressLine .jic{ flex:0 0 auto; font-size:15px; }
+/* Teams preview row. */
+.familyTeamsPreview{
+  display:flex !important;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  margin-top:12px;
+  padding:12px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+}
+.familyTeamsIcon{
+  width:40px; height:40px; flex:0 0 40px;
+  display:grid; place-items:center;
+  border-radius:12px;
+  background:var(--jv-card,#fff);
+  color:var(--jv-text-3,var(--muted));
+  font-size:18px;
+}
+.familyTeamsCopy{ flex:1; min-width:0; display:block; }
+.familyTeamsTitle{ display:block; font-size:14.5px; font-weight:950; color:var(--text); }
+.familyTeamsSub{ display:block; margin-top:1px; font-size:12.5px; font-weight:750; color:var(--jv-text-2,var(--muted)); }
+.familyTeamsCta{
+  flex:0 0 auto;
+  padding:7px 13px;
+  border-radius:999px;
+  background:var(--jv-recommend-bg,#d6ecff);
+  color:var(--jv-recommend-fg,#0b4a78);
+  font-size:12.5px;
+  font-weight:900;
+  white-space:nowrap;
+}
+/* Achievements: heading + View all, then a 3-column badge preview grid. */
+.achievementsHead{
+  display:flex; align-items:baseline; justify-content:space-between;
+  margin:18px 2px 8px;
+}
+.achievementsTitle{ font-size:15px; font-weight:950; color:var(--text); }
+.achievementsHead .badgesHint{
+  padding:0 !important; border:0 !important; background:none !important;
+  color:var(--jv-blue-strong,#1d6fb5) !important;
+  font-size:12.5px !important; font-weight:850 !important;
+}
+#tabModes .statsBadgesSection{
+  margin:0 !important;
+  padding:13px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#tabModes #badgesRow{
+  display:grid !important;
+  grid-template-columns:repeat(3,1fr) !important;
+  gap:12px 10px !important;
+  overflow:visible !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+#tabModes #badgesRow .badge{
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  min-width:0 !important;
+  width:auto !important;
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+  opacity:1 !important;
+  filter:none !important;
+}
+#tabModes #badgesRow .badgeIcon{
+  width:52px !important; height:52px !important;
+  display:grid; place-items:center;
+  border-radius:14px !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+}
+#tabModes #badgesRow .badgeIcon img{ width:76%; height:76%; object-fit:contain; }
+#tabModes #badgesRow .badge:not(.unlocked) .badgeIcon img{ opacity:.35; filter:grayscale(1); }
+#tabModes #badgesRow .badgeName{
+  margin:0 !important;
+  font-size:10.5px !important;
+  line-height:1.2 !important;
+  font-weight:850 !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  text-align:center;
+}
+#tabModes #badgesRow .badge.unlocked .badgeName{ color:var(--text) !important; }
+#tabModes #badgesRow .badgeReq,
+#tabModes #badgesRow .badgeProgress{ display:none !important; }
+/* Production extras keep v32 card language but sit below the v32 blocks. */
+#tabModes #parentDashboard{ margin-top:16px !important; }

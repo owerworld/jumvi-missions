@@ -498,6 +498,31 @@
           <div class="familyStreak jv-helper" id="familyStreak"><i class="jic jic-flame" aria-hidden="true"></i> Family streak: 0 days</div>
         </div>
 
+        <!-- v32 puts "Add a player" directly under the roster. Opens the same
+             Kids & Settings sheet #avatarBtn does — no new surface. -->
+        <button class="familyAddPlayer jv-btn jv-btn--text" id="btnFamilyAddPlayer" type="button">
+          <i class="jic jic-plus" aria-hidden="true"></i> Add a player
+        </button>
+
+        <!-- v32 "Family progress": one restrained block of REAL aggregates,
+             filled by renderFamilyProgressCard() from the same per-profile
+             storage the roster uses. No invented family score. -->
+        <section class="familyProgressCard jv-card" id="familyProgressCard">
+          <span class="familyProgressTitle jv-card-title">Family progress</span>
+          <div class="familyProgressLines" id="familyProgressLines"></div>
+        </section>
+
+        <!-- v32 teams preview: compact overview row. The full team standings
+             and the family board stay further down, unchanged. -->
+        <button class="familyTeamsPreview jv-card-2" id="familyTeamsPreview" type="button">
+          <span class="familyTeamsIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+          <span class="familyTeamsCopy">
+            <span class="familyTeamsTitle" id="familyTeamsTitle">No team yet</span>
+            <span class="familyTeamsSub" id="familyTeamsSub">Play missions together</span>
+          </span>
+          <span class="familyTeamsCta" id="familyTeamsCta">Create a team</span>
+        </button>
+
         <!-- Empty state — moved from the old #tabStats -->
         <div class="emptyState jv-card" id="statsEmptyState" style="display:none">
           <div class="emptyStateIcon"><i class="ico i-chart" aria-hidden="true"></i></div>
@@ -506,7 +531,20 @@
           <button class="btn btnPrimary jv-btn jv-btn--primary emptyStateBtn" data-go-tab="today" type="button"><i class="ico i-play" aria-hidden="true"></i> Pick a Mission</button>
         </div>
 
-        <!-- Parent Dashboard — moved from the old #tabStats -->
+        <!-- v32 "Achievements": heading + View all, then a 3-column preview
+             grid of the REAL badges. Full detail still opens the existing
+             #badgesBackdrop modal via #btnBadgesRow. -->
+        <div class="achievementsHead">
+          <span class="achievementsTitle jv-card-title">Achievements</span>
+          <button class="badgesHint jv-btn jv-btn--text" id="btnBadgesRow" type="button">View all</button>
+        </div>
+        <div class="statsBadgesSection jv-card">
+          <h3 class="statsSectionTitle jv-section" hidden aria-hidden="true"><i class="ico i-medal" aria-hidden="true"></i> Badges</h3>
+          <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+        </div>
+
+        <!-- Parent Dashboard — real production surface with no v32 equivalent;
+             kept, but below the v32 blocks so the top of the tab matches. -->
         <div class="dashCard jv-card" id="parentDashboard" aria-label="This Week's Progress">
           <div class="dashHeader">
             <div class="dashTitle jv-card-title"><i class="ico i-chart" aria-hidden="true"></i> This Week's Progress</div>
@@ -526,14 +564,6 @@
             <!-- Eski print buton stub — JS uyumlulugu icin -->
             <button id="btnDashPrint" type="button" style="display:none" aria-hidden="true"></button>
           </div>
-        </div>
-
-        <!-- Badges preview — moved from the old #tabStats. Full detail stays
-             in the existing #badgesBackdrop modal (real BADGES data, unchanged). -->
-        <div class="statsBadgesSection jv-card-2">
-          <h3 class="statsSectionTitle jv-section"><i class="ico i-medal" aria-hidden="true"></i> Badges</h3>
-          <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
-          <button class="badgesHint jv-btn jv-btn--text" id="btnBadgesRow" type="button">See all badges <i class="jic jic-arrow-right" aria-hidden="true"></i></button>
         </div>
 
         <section class="teamsNowCard" id="teamsNowCard" aria-live="polite"></section>

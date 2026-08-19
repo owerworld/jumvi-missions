@@ -2280,6 +2280,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }, 180);
 });
 
+(function wireFamilyV32Controls(){
+  const addBtn = document.getElementById("btnFamilyAddPlayer");
+  if(addBtn) addBtn.addEventListener("click", ()=>{
+    clickSound("click");
+    // Same Kids & Settings sheet the header switcher opens.
+    const av = document.getElementById("avatarBtn");
+    if(av) av.click();
+  });
+  const teamsRow = document.getElementById("familyTeamsPreview");
+  if(teamsRow) teamsRow.addEventListener("click", ()=>{
+    clickSound("click");
+    openTeamXpPicker();
+  });
+})();
+
 (function wireTeamXpPicker(){
   const open = document.getElementById("xpTeamPicker");
   const close = document.getElementById("teamXpClose");
@@ -7492,6 +7507,8 @@ function switchTab(tabName){
       // opened — this used to be the "stats" tab's job (see the remap above).
       if(typeof updateProgress === "function") updateProgress();
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
+      if(typeof renderFamilyProgressCard === "function") renderFamilyProgressCard();
+      if(typeof renderFamilyTeamsPreview === "function") renderFamilyTeamsPreview();
       if(typeof renderTeamsHub === "function") renderTeamsHub();
     }
     if(tabName === "browse") {
@@ -7617,6 +7634,67 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 
+/* ===== v32 Family: progress summary + teams preview =======================
+ * Real aggregates only, read from the same per-profile storage the roster
+ * uses. Nothing here writes state or invents a "family score".
+ */
+/* A profile's level title from its own completed-mission count, using the
+ * existing XP model (no new storage, no second notion of level). */
+function levelNameFor(doneCount){
+  try{
+    const ids = [];
+    for(let i = 1; i <= doneCount; i++) ids.push(i);
+    const xp = typeof xpFromDoneSet === "function" ? xpFromDoneSet(new Set(ids)) : 0;
+    const info = typeof xpLevelInfo === "function" ? xpLevelInfo(xp) : null;
+    if(info && info.current) return isTurkishUI() ? info.current.tr : info.current.en;
+  }catch(_){}
+  return isTurkishUI() ? "Çaylak Oyuncu" : "Rookie Player";
+}
+
+function renderFamilyProgressCard(){
+  const lines = document.getElementById("familyProgressLines");
+  if(!lines) return;
+  const tr = isTurkishUI();
+  const profiles = getProfiles();
+  let combined = 0;
+  profiles.forEach(p => {
+    const raw = lsGetJSON("jumvi_" + p.id + "_missions_done_v3", []);
+    combined += Array.isArray(raw) ? raw.length : 0;
+  });
+  const active = getActiveProfile();
+  const activeName = (active && active.name) || (tr ? "Oyuncu" : "Player");
+  const activeStreak = Number(lsGet("jumvi_" + getActiveProfileId() + "_streak_count_v1", "0")) || 0;
+  let badgeCount = 0;
+  try { badgeCount = new Set(lsGetJSON(BADGES_UNLOCKED_KEY, [])).size; } catch(_){}
+
+  const missionWord = tr ? "görev" : ("mission" + (combined === 1 ? "" : "s"));
+  const badgeWord = tr ? "rozet" : ("badge" + (badgeCount === 1 ? "" : "s"));
+  lines.innerHTML =
+    '<span class="familyProgressLine"><i class="ico i-target" aria-hidden="true"></i> ' +
+      escapeHtml(`${combined} ${missionWord} ` + (tr ? "profillerde tamamlandı" : "completed across profiles")) + '</span>' +
+    '<span class="familyProgressLine"><i class="jic jic-flame" aria-hidden="true"></i> ' +
+      escapeHtml(tr ? `${activeName} serisi: ${activeStreak} gün` : `${activeName}'s streak: ${activeStreak} day${activeStreak === 1 ? "" : "s"}`) + '</span>' +
+    '<span class="familyProgressLine"><i class="ico i-medal" aria-hidden="true"></i> ' +
+      escapeHtml(`${badgeCount} ${badgeWord} ` + (tr ? "kazanıldı" : "earned")) + '</span>';
+}
+
+function renderFamilyTeamsPreview(){
+  const title = document.getElementById("familyTeamsTitle");
+  const sub = document.getElementById("familyTeamsSub");
+  const cta = document.getElementById("familyTeamsCta");
+  if(!title || !sub || !cta) return;
+  const tr = isTurkishUI();
+  if(ACTIVE_JUMVI_TEAM){
+    title.textContent = teamDisplayName(ACTIVE_JUMVI_TEAM);
+    sub.textContent = tr ? "Şu anki takım" : "Playing as this team";
+    cta.textContent = tr ? "Değiştir" : "Switch";
+  }else{
+    title.textContent = tr ? "Henüz takım yok" : "No team yet";
+    sub.textContent = tr ? "Görevleri birlikte oynayın" : "Play missions together";
+    cta.textContent = tr ? "Takım oluştur" : "Create a team";
+  }
+}
+
 /** =======================
  * Family Insights — Stats tab'da çoklu profil özeti
  * ======================= */
@@ -7626,14 +7704,10 @@ function renderFamilyInsights(){
   const fStreakEl = document.getElementById("familyStreak");
   if(!wrap || !grid) return;
 
-  if(ACTIVE_JUMVI_TEAM){
-    wrap.style.display = "none";
-    return;
-  }
-
   const profiles = getProfiles();
-  // Sadece 2+ profil varsa göster (tek profilde anlamı yok)
-  if(profiles.length < 2){
+  // v32 lists every local player, including a single-child household — the
+  // roster is the Family tab's primary block, not a multi-profile extra.
+  if(profiles.length < 1){
     wrap.style.display = "none";
     return;
   }
@@ -7664,9 +7738,10 @@ function renderFamilyInsights(){
           <span class="familyMemberName">${escapeHtml(it.p.name || "Player")}</span>
           ${isActive ? `<span class="familyMemberActive">${tr ? "Aktif" : "Active"}</span>` : ""}
         </div>
+        <div class="familyMemberLevel">${escapeHtml(levelNameFor(it.doneCount))}</div>
         <div class="familyMemberBar"><div class="familyMemberBarFill" style="width:${pct}%"></div></div>
         <div class="familyMemberStats">
-          <span class="familyMemberMissions">${it.doneCount}/36 ${tr ? "görev" : "missions"}</span>
+          <span class="familyMemberMissions">${it.doneCount} / 36 ${tr ? "görev" : "missions"}</span>
           <span class="familyMemberStreak"><i class="jic jic-flame" aria-hidden="true"></i> ${it.streak}</span>
         </div>
       </div>
