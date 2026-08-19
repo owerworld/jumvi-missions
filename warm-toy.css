@@ -2846,3 +2846,109 @@ html.theme--dark #tabToday .xpMiniCard{ background:none !important; }
     center/13px no-repeat;
 }
 html.theme--light #welcomeOverlay .ageBtn.selected::after{ border-color:#1d6fb5; background-color:#1d6fb5; }
+
+/* ==========================================================================
+   Mission Completed (Priority 3) — v0 v32 REAL visual parity pass.
+   v0's completed screen is a DEDICATED celebration view: mascot, "Mission
+   complete" chip, headline, +XP card, badge card, then a primary "Next"
+   CTA and a secondary "Back to Play". Production's previous pass only
+   styled the small #missionXpReward card while leaving the ENTIRE
+   pre-completion sheet (kit row, steps, safety line, player-count,
+   score tracker, more-tips accordion, help panel) visible underneath it,
+   which is explicitly not acceptable parity.
+
+   #missionXpReward.show already IS the one reliable, existing signal for
+   "this mission was just marked done in this sheet session" (app.js
+   toggles it via showMissionXpReward()/hideMissionXpReward() — no new
+   state, no new JS). :has() lets the sheet switch its visual composition
+   from that existing signal with CSS only: hide the pre-completion body,
+   let the reward card become the dedicated completion view, and re-rank
+   the action buttons so Next Mission reads as primary and Mark as Not
+   Done (the real "undo/back" control) reads as secondary — matching v0's
+   Next/Back-to-Play hierarchy with the actual runtime buttons, nothing
+   removed from the DOM. */
+#sheet:has(#missionXpReward.show) #sheetBody,
+#sheet:has(#missionXpReward.show) .sheetMeta,
+#sheet:has(#missionXpReward.show) .sheetActions .missionPrimary{
+  display:none !important;
+}
+
+/* Coach Leo celebration mascot, matching the wave art already used on the
+   First Open / welcome screen — no new asset. */
+#missionXpReward.show::before{
+  content:"";
+  display:block;
+  width:120px;
+  height:120px;
+  margin:4px auto 10px;
+  background:url("assets/leo/leo-wave-240.webp") center/contain no-repeat;
+}
+
+#sheet:has(#missionXpReward.show) .missionXpReward{
+  margin:6px 0 16px;
+  padding:20px 16px 18px;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  text-align:center;
+}
+html.theme--dark #sheet:has(#missionXpReward.show) .missionXpReward{ background:transparent; }
+
+#sheet:has(#missionXpReward.show) .missionXpRewardTop{
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardIcon{ display:none; }
+#sheet:has(#missionXpReward.show) .missionXpRewardKicker{
+  display:inline-block;
+  padding:5px 12px;
+  border-radius:999px;
+  background:rgba(109,190,69,.16);
+  font-size:11px;
+}
+html.theme--dark #sheet:has(#missionXpReward.show) .missionXpRewardKicker{ background:rgba(145,214,109,.14); }
+#sheet:has(#missionXpReward.show) .missionXpRewardTeam{
+  white-space:normal;
+  font-size:21px;
+  font-weight:950;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardGain{
+  margin-top:2px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:var(--jv-lime,#6DBE45);
+  color:var(--jv-on-lime,#0F2E06);
+  font-size:14px;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardMath,
+#sheet:has(#missionXpReward.show) .missionXpRewardNext{ text-align:center; }
+#sheet:has(#missionXpReward.show) .missionXpRewardRule{ text-align:center; }
+
+/* Next Mission = the v0 primary CTA; Mark as Not Done = the real "go back"
+   control, demoted to a plain secondary — same buttons, same handlers,
+   only rank/finish. */
+#sheet:has(#missionXpReward.show) .sheetActions{
+  flex-direction:column-reverse;
+}
+#sheet:has(#missionXpReward.show) .sheetActions #btnNext.btnNextHighlight{
+  order:-1;
+  min-height:56px !important;
+  border:0 !important;
+  border-radius:17px !important;
+  background:linear-gradient(180deg,#177BB6 0%,#0F6A9E 100%) !important;
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  box-shadow:0 8px 20px rgba(21,119,177,.20) !important;
+  font-size:16px !important;
+}
+#sheet:has(#missionXpReward.show) .sheetActions #btnNext.btnNextHighlight .jic{
+  color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important;
+}
+#sheet:has(#missionXpReward.show) .sheetActions .holdBtn.btnPrimary{
+  border:1.5px solid var(--border) !important;
+  background:transparent !important;
+  color:var(--text) !important;
+  -webkit-text-fill-color:var(--text) !important;
+  box-shadow:none !important;
+}
