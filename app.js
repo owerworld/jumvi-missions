@@ -7109,18 +7109,21 @@ function buildHubLoadingOverlay(container){
   if(_hubLoadingEl) return _hubLoadingEl;
   const el = document.createElement("div");
   el.id = "hub3dLoading";
-  el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#bfe3ff,#eaf7ff);transition:opacity 300ms ease;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
+  // v0 v32 visual skin — value-only (colors/font/radius); every id and click
+  // handler below is unchanged, see showHubLoadingFailure() and the retry/
+  // escape wiring further down.
+  el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#c9ecff,#eaf7ff);transition:opacity 300ms ease;font-family:var(--font-display,'Fredoka'),-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
   el.innerHTML =
     // §4.2 — escape hatch: leave the wait and go back to the missions. The load
     // keeps running (cached), so re-entry is instant.
-    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));min-height:44px;padding:9px 15px;border:none;border-radius:16px;background:rgba(255,255,255,0.9);color:#2a5a7a;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;">← Missions</button>' +
-    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
+    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));min-height:44px;padding:9px 15px;border:none;border-radius:16px;background:rgba(255,255,255,0.92);color:#0f5c8a;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.18);z-index:2;">← Missions</button>' +
+    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.2));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
       leoPictureHTML("encourage", 256, 96, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">Opening the first play zone…</div>' +
-    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:280px;opacity:0;transition:opacity 400ms ease;">Taking longer? Missions are always ready from the button above.</div>' +
-    '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.6);border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.12);">' +
-      '<div id="hub3dLoadBar" style="width:8%;height:100%;background:linear-gradient(90deg,#4fc46a,#35a04e);border-radius:6px;transition:width 350ms ease;"></div>' +
+    '<div style="font-size:21px;font-weight:700;color:#0f5c8a;">Opening the first play zone…</div>' +
+    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:600;color:#3d7ba0;max-width:280px;opacity:0;transition:opacity 400ms ease;">Taking longer? Missions are always ready from the button above.</div>' +
+    '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.65);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);">' +
+      '<div id="hub3dLoadBar" style="width:8%;height:100%;background:#97d700;border-radius:999px;transition:width 350ms ease;"></div>' +
     '</div>';
   if(!document.getElementById("hub3dLeoFloatStyle")){
     const s = document.createElement("style");
@@ -7157,15 +7160,16 @@ function showHubLoadingFailure(container, stage){
   if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
   const el = _hubLoadingEl || buildHubLoadingOverlay(container);
   el.style.opacity = "1";
+  const offline = !navigator.onLine;
   el.innerHTML =
-    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));">' +
+    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.2));">' +
       leoPictureHTML("gentle", 256, 92, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">The island got lost!</div>' +
-    '<div style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:260px;">Check your connection and try again.</div>' +
+    '<div style="font-size:21px;font-weight:700;color:#0f5c8a;">' + (offline ? "Island needs a connection." : "The island got lost!") + '</div>' +
+    '<div style="font-size:14px;font-weight:600;color:#3d7ba0;max-width:260px;">' + (offline ? "Your missions are still ready to play offline." : "Check your connection and try again.") + '</div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px;">' +
-      '<button id="hub3dRetryBtn" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:15px;font-weight:900;padding:11px 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;">Try again</button>' +
-      '<button id="hub3dBackBtn" style="border:none;border-radius:14px;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:15px;font-weight:800;padding:11px 18px;cursor:pointer;">Back to missions</button>' +
+      '<button id="hub3dRetryBtn" style="border:none;border-radius:16px;background:#97d700;color:#12240a;font-size:15px;font-weight:700;padding:11px 18px;cursor:pointer;box-shadow:0 3px 0 #6d9c00;">Try again</button>' +
+      '<button id="hub3dBackBtn" style="border:none;border-radius:16px;background:rgba(255,255,255,0.88);color:#0f5c8a;font-size:15px;font-weight:700;padding:11px 18px;cursor:pointer;">Back to missions</button>' +
     '</div>';
   const retry = document.getElementById("hub3dRetryBtn");
   if(retry) retry.onclick = ()=>{ _hub3dLoadPromise = null; if(_hubLoadingEl){ _hubLoadingEl.remove(); _hubLoadingEl = null; } showHub3D(); };
