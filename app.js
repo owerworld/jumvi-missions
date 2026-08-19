@@ -1714,7 +1714,7 @@ const TEAM_COPY = Object.freeze({
     firstTeam:"Choose your first team",
     firstTeamSub:"Your current mission progress will carry into the first team you create.",
     grownupsIntro:"Names, avatars, app settings, product care, privacy, and support.",
-    navTeams:"Teams",
+    navTeams:"Family",
     setupStep:"STEP 2 OF 2", playingAs:"PLAYING AS", changeKid:"Change / add child",
     whoWith:"Who is playing with", useExisting:"Already created · tap to use", newTeam:"New team"
   },
@@ -1744,7 +1744,7 @@ const TEAM_COPY = Object.freeze({
     firstTeam:"İlk takımını seç",
     firstTeamSub:"Mevcut görev ilerlemen oluşturduğun ilk takıma aktarılacak.",
     grownupsIntro:"İsimler, avatarlar, uygulama ayarları, ürün bakımı, gizlilik ve destek.",
-    navTeams:"Takımlar",
+    navTeams:"Aile",
     setupStep:"2 / 2. ADIM", playingAs:"OYNUYOR", changeKid:"Çocuğu değiştir / ekle",
     whoWith:"Kiminle oynuyor", useExisting:"Takım hazır · kullanmak için dokun", newTeam:"Yeni takım"
   }
@@ -3661,7 +3661,10 @@ function updateProgress(options = {}){
   renderDailyUI();
   renderTodayContinuity();
   if(!deferStats) updateBadges();
-  if(document.body.classList.contains("tab-stats")) renderParentDashboard();
+  // The parent dashboard now lives on the Family ("modes") tab, not the old
+  // (now nav-unreachable) "stats" tab — see the v0 v32 4-tab IA remap in
+  // switchTab().
+  if(document.body.classList.contains("tab-modes")) renderParentDashboard();
 
   // 0 progress'te boş kartları gizle (yeni kullanıcı için temiz arayüz)
   const isFresh = done.size === 0;
@@ -5740,6 +5743,14 @@ document.getElementById("btnBadges").onclick = ()=>{
   clickSound("click");
   badgesBackdrop.classList.add("show");
 };
+// Visible "See all badges" row on the Family tab (v0 v32) — same modal, same
+// real BADGES data, just a reachable trigger instead of the hidden stub above.
+const btnBadgesRow = document.getElementById("btnBadgesRow");
+if(btnBadgesRow) btnBadgesRow.onclick = ()=>{
+  clickSound("click");
+  if(typeof updateBadges === "function") updateBadges();
+  badgesBackdrop.classList.add("show");
+};
 
 btnBadgesClose.onclick = ()=>{ clickSound("click"); badgesBackdrop.classList.remove("show"); };
 badgesBackdrop.addEventListener("click",(e)=>{ if(e.target===badgesBackdrop){ clickSound("click"); badgesBackdrop.classList.remove("show"); } });
@@ -5763,6 +5774,29 @@ if(btnPrivacyClose){
 }
 if(privacyBackdrop){
   privacyBackdrop.addEventListener("click",(e)=>{ if(e.target===privacyBackdrop){ clickSound("click"); privacyBackdrop.classList.remove("show"); } });
+}
+
+// Help & Support modal (v0 v32 Grown-ups IA) — reuses the real guided tour
+// (window.leoTour, leo-tour.js) and the real support email; no new logic.
+const helpBackdrop = document.getElementById("helpBackdrop");
+const helpSupportLink = document.getElementById("helpSupportLink");
+const btnHelpClose = document.getElementById("btnHelpClose");
+const btnHelpReplayTour = document.getElementById("btnHelpReplayTour");
+if(helpSupportLink && helpBackdrop){
+  helpSupportLink.addEventListener("click",(e)=>{ e.preventDefault(); clickSound("click"); helpBackdrop.classList.add("show"); });
+}
+if(btnHelpClose){
+  btnHelpClose.onclick = ()=>{ clickSound("click"); helpBackdrop.classList.remove("show"); };
+}
+if(helpBackdrop){
+  helpBackdrop.addEventListener("click",(e)=>{ if(e.target===helpBackdrop){ clickSound("click"); helpBackdrop.classList.remove("show"); } });
+}
+if(btnHelpReplayTour){
+  btnHelpReplayTour.onclick = ()=>{
+    clickSound("click");
+    if(helpBackdrop) helpBackdrop.classList.remove("show");
+    if(window.leoTour && typeof window.leoTour.start === "function") window.leoTour.start();
+  };
 }
 if(btnSeasonalIndoor){
   btnSeasonalIndoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("indoor"); };
@@ -7324,8 +7358,13 @@ document.addEventListener("visibilitychange", ()=>{
 
 function switchTab(tabName){
   if(!tabName) tabName = "today";
+  // "stats" stays a legal internal tab (its panel/functions remain for
+  // compatibility, see #tabStats) but is no longer a bottom-nav destination —
+  // nothing in the UI navigates to it anymore. A legacy deep link or saved
+  // NAV_TAB_KEY value of "stats" is remapped to "modes" below and at boot.
   const validTabs = ["today","browse","modes","stats","profile"];
   if(isHub3DEnabled()) validTabs.push("hub3d");
+  if(tabName === "stats") tabName = "modes";
   if(!validTabs.includes(tabName)) tabName = "today";
 
   // Tab panel görünürlüğü
@@ -7338,8 +7377,8 @@ function switchTab(tabName){
     b.classList.toggle("active", b.dataset.tab === tabName);
   });
 
-  // The dashboard lives in the "stats" tab — the parent-facing view.
-  if(tabName === "stats") beaconOnce("dashboard_open", "dashboard_open");
+  // The parent dashboard now lives on the "modes" (Family) tab.
+  if(tabName === "modes") beaconOnce("dashboard_open", "dashboard_open");
 
   // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez
   if(tabName === "hub3d") showHub3D(); else hideHub3D();
@@ -7365,10 +7404,12 @@ function switchTab(tabName){
     // The nudge lives on Today and hides behind modals, so its eligibility is
     // re-checked whenever the visible surface changes.
     renderInstallSurfaces();
-    if(tabName === "stats") {
-      // Badge, dashboard and progress render only when this tab is opened.
+    if(tabName === "modes") {
+      // Badge, dashboard, progress and teams render only when this tab is
+      // opened — this used to be the "stats" tab's job (see the remap above).
       if(typeof updateProgress === "function") updateProgress();
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
+      if(typeof renderTeamsHub === "function") renderTeamsHub();
     }
     if(tabName === "browse") {
       // Path her zaman renderlanir (her tab acilis'ta done state guncel olsun)

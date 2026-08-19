@@ -2465,3 +2465,134 @@ html.theme--dark .installDlgIcon{ background:var(--wt-dark-soft); color:#8FD3F0;
 @media (prefers-reduced-motion: reduce){
   .keepCard, .installDlgPanel{ transition:none !important; animation:none !important; }
 }
+
+/* ==========================================================================
+   JUMVI v0 FINAL v32 — shared primitives
+   Ported from the approved v0 "Direction B" design source (app/jumvi.css).
+   Ties into the EXISTING html.theme--light/--dark tokens above — no parallel
+   theme system, no .jv-theme wrapper element (v0 scoped per-element for its
+   side-by-side gallery; production scopes on <html> and stays that way).
+   .jv-eyebrow is intentionally NOT reintroduced: the v0 export used it as an
+   undefined synonym for its own .jv-section — mapped to .jv-section here,
+   see docs/audits (v0 port manifest) for the full trace.
+   ========================================================================== */
+:root{
+  --jv-r-card:20px; --jv-r-compact:14px; --jv-r-button:16px; --jv-r-chip:999px;
+}
+html.theme--light{
+  --jv-card:var(--glass);
+  --jv-card-2:var(--wt-cream-soft);
+  --jv-panel:#12233b;
+  --jv-panel-fg:#ffffff;
+  --jv-panel-fg-2:#cbd5f5;
+  --jv-celebrate:#f3fbe0;
+  --jv-text:var(--text);
+  --jv-text-2:#47546a;
+  --jv-text-3:var(--muted);
+  --jv-line:var(--wt-border-light);
+  --jv-line-strong:rgba(20,32,51,.18);
+  --jv-blue-strong:var(--wt-blue);
+  --jv-on-blue:#ffffff;
+  --jv-lime:var(--wt-lime);
+  --jv-lime-strong:#4E8F30;
+  --jv-on-lime:#12240a;
+  --jv-orange:var(--wt-orange);
+  --jv-track:var(--wt-cream-soft);
+  --jv-success:#4d8300;
+  --jv-warning-fg:#92400e;
+  --jv-warning-bg:#fde9c8;
+  --jv-recommend-fg:#0b4a78;
+  --jv-recommend-bg:#d6ecff;
+  --jv-offline-fg:#475569;
+  --jv-offline-bg:#e2e8f0;
+  --jv-disabled-bg:#e2e8f0;
+  --jv-disabled-fg:#94a3b8;
+  --jv-destructive-fg:#b42318;
+  --jv-destructive-bg:#fdecea;
+  --jv-scrim:rgba(15,23,42,.45);
+}
+html.theme--dark{
+  --jv-card:var(--glass);
+  --jv-card-2:var(--wt-dark-soft);
+  --jv-panel:#060b16;
+  --jv-panel-fg:#ffffff;
+  --jv-panel-fg-2:#cbd5f5;
+  --jv-celebrate:#16261a;
+  --jv-text:var(--text);
+  --jv-text-2:#c3d0e6;
+  --jv-text-3:var(--muted);
+  --jv-line:var(--wt-border-dark);
+  --jv-line-strong:rgba(255,255,255,.22);
+  --jv-blue-strong:var(--wt-sky);
+  --jv-on-blue:#06172a;
+  --jv-lime:var(--wt-lime);
+  --jv-lime-strong:#b4e82e;
+  --jv-on-lime:#0f172a;
+  --jv-orange:var(--wt-orange);
+  --jv-track:var(--wt-dark-soft);
+  --jv-success:#b4e82e;
+  --jv-warning-fg:#1c1206;
+  --jv-warning-bg:#fbbf24;
+  --jv-recommend-fg:#062033;
+  --jv-recommend-bg:#7cc7ff;
+  --jv-offline-fg:#cbd5e1;
+  --jv-offline-bg:#263449;
+  --jv-disabled-bg:#1b2c44;
+  --jv-disabled-fg:#56657d;
+  --jv-destructive-fg:#ff9c93;
+  --jv-destructive-bg:#2a1512;
+  --jv-scrim:rgba(0,0,0,.62);
+}
+
+/* ---- Surfaces ---- */
+.jv-card{ background:var(--jv-card); border:1px solid var(--jv-line); border-radius:var(--jv-r-card); }
+.jv-card-2{ background:var(--jv-card-2); border-radius:var(--jv-r-compact); }
+.jv-panel{ background:var(--jv-panel); color:var(--jv-panel-fg); border-radius:var(--jv-r-card); }
+.jv-celebrate{ background:var(--jv-celebrate); color:var(--jv-text); }
+.jv-selected-ring{ box-shadow:0 0 0 2px var(--jv-ring-color, var(--jv-blue-strong)) inset; }
+
+/* ---- Typography ---- */
+.jv-title{ font-family:var(--font-display,inherit); font-weight:700; letter-spacing:-0.01em; line-height:1.1; color:var(--jv-text); }
+.jv-card-title{ font-weight:700; line-height:1.2; color:var(--jv-text); }
+.jv-section,.jv-eyebrow{ font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:11.5px; color:var(--jv-text-3); }
+.jv-body{ font-weight:500; line-height:1.5; color:var(--jv-text); }
+.jv-helper{ font-weight:600; line-height:1.45; color:var(--jv-text-2); }
+.jv-meta{ font-weight:700; color:var(--jv-text-3); }
+.jv-text-3{ color:var(--jv-text-3); }
+
+/* ---- Buttons ---- */
+.jv-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:48px; padding:0 20px; border-radius:var(--jv-r-button);
+  font-weight:700; font-size:15px; line-height:1; cursor:pointer;
+  border:1px solid transparent; user-select:none;
+  transition:transform .12s ease, filter .12s ease, background .12s ease;
+}
+.jv-btn:active{ transform:translateY(1px) scale(.99); }
+.jv-btn--play{ min-height:56px; font-size:17px; border-radius:18px; }
+.jv-btn--primary{ background:var(--jv-blue-strong); color:var(--jv-on-blue); box-shadow:var(--shadow-soft); }
+.jv-btn--secondary{ background:var(--jv-card); color:var(--jv-text); border-color:var(--jv-line-strong); }
+.jv-btn--ghost{ background:transparent; color:var(--jv-text); border-color:var(--jv-line-strong); }
+.jv-btn--icon{ min-height:44px; width:44px; padding:0; border-radius:12px; background:var(--jv-card); color:var(--jv-text); border-color:var(--jv-line); }
+.jv-btn--ready{ background:var(--jv-lime); color:var(--jv-on-lime); box-shadow:var(--shadow-soft); }
+.jv-btn--playing{ background:var(--jv-card-2); color:var(--jv-text-2); border-color:var(--jv-line); }
+.jv-btn:disabled,.jv-btn--disabled{ background:var(--jv-disabled-bg); color:var(--jv-disabled-fg); box-shadow:none; cursor:not-allowed; }
+
+/* ---- Chips ---- */
+.jv-chip{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:var(--jv-r-chip); font-weight:700; font-size:12px; line-height:1; white-space:nowrap; }
+.jv-chip--recommend,.jv-chip--progress{ background:var(--jv-recommend-bg); color:var(--jv-recommend-fg); }
+.jv-chip--complete,.jv-chip--success{ background:color-mix(in srgb, var(--jv-lime) 26%, var(--jv-card)); color:var(--jv-success); }
+.jv-chip--new{ background:color-mix(in srgb, var(--jv-orange) 20%, var(--jv-card)); color:var(--jv-orange); }
+.jv-chip--offline{ background:var(--jv-offline-bg); color:var(--jv-offline-fg); }
+.jv-chip--warning{ background:var(--jv-warning-bg); color:var(--jv-warning-fg); }
+.jv-chip--neutral{ background:var(--jv-card-2); color:var(--jv-text-2); }
+
+/* ---- Progress ---- */
+.jv-progress{ position:relative; height:9px; border-radius:999px; background:var(--jv-track); overflow:hidden; }
+.jv-progress__fill{ position:absolute; inset:0 auto 0 0; border-radius:999px; }
+.jv-progress__fill--lime{ background:var(--jv-lime); }
+.jv-progress__fill--blue{ background:var(--jv-blue-strong); }
+
+@media (prefers-reduced-motion: reduce){
+  .jv-btn{ transition:none !important; }
+}
