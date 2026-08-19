@@ -2952,3 +2952,118 @@ html.theme--dark #sheet:has(#missionXpReward.show) .missionXpRewardKicker{ backg
   -webkit-text-fill-color:var(--text) !important;
   box-shadow:none !important;
 }
+
+/* ==========================================================================
+   Family Overview (Priority 4) — v0 v32 REAL visual parity pass.
+   v0 shows each profile as its own full-width card: name (+ an "Active"
+   badge on the current player), a level/progress bar, and a mission-count
+   caption. Production rendered the same real per-profile data (doneCount,
+   streak) but as two-up compact mini-cards with no progress bar at all.
+   renderFamilyInsights() (app.js) now also emits a progress-bar element
+   and an Active badge from data it already computes (doneCount, the
+   already-known active profile id) -- no new state, no new storage key.
+   This block makes the cards read the way v0's roster does. */
+.familyInsights{
+  background:var(--jv-card,var(--card));
+  border:1px solid var(--jv-line,var(--border));
+  box-shadow:none;
+}
+html.theme--dark .familyInsights{
+  background:var(--jv-card,var(--card));
+  border-color:var(--jv-line,var(--border));
+}
+.familyInsightsGrid{
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.familyMember{
+  align-items:stretch;
+  padding:12px 14px;
+  background:var(--jv-card-2,var(--card));
+  border-color:var(--jv-line,var(--border));
+}
+html.theme--dark .familyMember{
+  background:var(--jv-card-2,var(--card));
+  border-color:var(--jv-line,var(--border));
+}
+.familyMemberAvatar{
+  width:44px; height:44px;
+  background:transparent;
+  border-radius:50%;
+  overflow:hidden;
+}
+html.theme--dark .familyMemberAvatar{ background:transparent; }
+.familyMemberNameRow{
+  display:flex; align-items:center; gap:7px;
+}
+.familyMemberName{ font-size:14.5px; font-weight:950; }
+.familyMemberActive{
+  padding:2px 8px;
+  border-radius:999px;
+  background:rgba(79,179,255,.16);
+  color:#1577B1;
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+}
+html.theme--dark .familyMemberActive{ background:rgba(115,202,231,.16); color:#73CAE7; }
+.familyMemberBar{
+  width:100%;
+  height:6px;
+  margin:7px 0 6px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(20,32,51,.09);
+}
+html.theme--dark .familyMemberBar{ background:rgba(255,255,255,.09); }
+.familyMemberBarFill{
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#6DBE45,#82C95E);
+}
+.familyMemberStats{ margin-top:0; }
+
+/* ==========================================================================
+   Badges (Priority 4) — v0 v32 REAL visual parity pass.
+   v0 leads the badges screen with a collection-total summary card before
+   the grid. updateBadges() (app.js) now also builds this card from counts
+   it already computes in that same function (nowUnlocked.size vs
+   BADGES.length) -- no new data. */
+.badgesCollectionSummary{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  grid-column:1 / -1;
+  padding:14px;
+  margin-bottom:2px;
+  border:1px solid var(--jv-line,var(--border));
+  border-radius:18px;
+  background:var(--jv-card-2,var(--card));
+}
+.badgesCollectionIcon{
+  width:40px; height:40px; flex:0 0 40px;
+  display:grid; place-items:center;
+  border-radius:13px;
+  background:#6DBE45;
+  color:#fff;
+  font-size:19px;
+}
+.badgesCollectionInfo{ flex:1; min-width:0; }
+.badgesCollectionLabel{ font-size:13px; font-weight:900; color:var(--text); margin-bottom:6px; }
+.badgesCollectionBar{
+  width:100%; height:6px;
+  overflow:hidden; border-radius:999px;
+  background:rgba(20,32,51,.09);
+}
+html.theme--dark .badgesCollectionBar{ background:rgba(255,255,255,.09); }
+.badgesCollectionBarFill{
+  height:100%; border-radius:inherit;
+  background:linear-gradient(90deg,#6DBE45,#82C95E);
+}
+.badgesCollectionCount{
+  flex:0 0 auto;
+  font-size:15px;
+  font-weight:950;
+  color:var(--text);
+}

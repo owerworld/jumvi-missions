@@ -3510,7 +3510,19 @@ function updateBadges(){
   }
 
   // Badges modal — 2 kolonlu grid (her badge için DOĞRU progress)
-  badgesList.innerHTML = BADGES.map(b=>{
+  const collectionTr = isTurkishUI();
+  const collectionPct = BADGES.length ? Math.round((nowUnlocked.size / BADGES.length) * 100) : 0;
+  const collectionSummary = `
+    <div class="badgesCollectionSummary">
+      <div class="badgesCollectionIcon"><i class="jic jic-award" aria-hidden="true"></i></div>
+      <div class="badgesCollectionInfo">
+        <div class="badgesCollectionLabel">${collectionTr ? "Koleksiyonun" : "Your collection"}</div>
+        <div class="badgesCollectionBar"><div class="badgesCollectionBarFill" style="width:${collectionPct}%"></div></div>
+      </div>
+      <div class="badgesCollectionCount">${nowUnlocked.size} / ${BADGES.length}</div>
+    </div>
+  `;
+  badgesList.innerHTML = collectionSummary + BADGES.map(b=>{
     const ok = !!b.check(done, badgeCtx);
     let toGo = "";
     if(!ok){
@@ -7522,16 +7534,24 @@ function renderFamilyInsights(){
   });
 
   // Render her profil için mini kart
+  const activeId = getActiveProfileId();
+  const tr = isTurkishUI();
   grid.innerHTML = "";
   items.forEach(it => {
     const card = document.createElement("div");
     card.className = "familyMember";
+    const pct = Math.max(0, Math.min(100, Math.round((it.doneCount / 36) * 100)));
+    const isActive = it.p.id === activeId;
     card.innerHTML = `
       <div class="familyMemberAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(it.p.avatar), "avatarArt", "", true)}</div>
       <div class="familyMemberInfo">
-        <div class="familyMemberName">${escapeHtml(it.p.name || "Player")}</div>
+        <div class="familyMemberNameRow">
+          <span class="familyMemberName">${escapeHtml(it.p.name || "Player")}</span>
+          ${isActive ? `<span class="familyMemberActive">${tr ? "Aktif" : "Active"}</span>` : ""}
+        </div>
+        <div class="familyMemberBar"><div class="familyMemberBarFill" style="width:${pct}%"></div></div>
         <div class="familyMemberStats">
-          <span class="familyMemberMissions">${it.doneCount}/36</span>
+          <span class="familyMemberMissions">${it.doneCount}/36 ${tr ? "görev" : "missions"}</span>
           <span class="familyMemberStreak"><i class="jic jic-flame" aria-hidden="true"></i> ${it.streak}</span>
         </div>
       </div>
