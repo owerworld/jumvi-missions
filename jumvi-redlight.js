@@ -23,28 +23,38 @@
 (function (global) {
   'use strict';
 
+  /* v0 v32 visual skin, same overlay/DOM/class contract as before (jrl-overlay,
+   * jrl-green/red/idle, jrl-top, jrl-close, jrl-light/jrl-dot, jrl-big/jrl-sub,
+   * jrl-end, jrl-hint) — only declaration values changed. No selector added or
+   * removed, so every classList.add/remove/className write in this file still
+   * targets a real rule. Colors are still the same green=go/red=freeze/dark=idle
+   * semantics, tuned for outdoor sunlight legibility; typography now uses the
+   * app's real Fredoka display face (falls back identically if unavailable). */
   var CSS = '\
 .jrl-overlay{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;\
 align-items:center;justify-content:center;color:#fff;text-align:center;\
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;\
-transition:background-color .12s ease;background:#0f172a;-webkit-user-select:none;user-select:none;\
+transition:background-color .15s ease;background:#0f172a;-webkit-user-select:none;user-select:none;\
 overscroll-behavior:contain;touch-action:none;}\
-.jrl-green{background:#16a34a}.jrl-red{background:#dc2626}.jrl-idle{background:#0f172a}\
+.jrl-green{background:#1f9d62}.jrl-red{background:#c63c43}.jrl-idle{background:#0f172a}\
 .jrl-top{position:absolute;top:max(16px,env(safe-area-inset-top));left:0;right:0;\
-display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:15px;font-weight:600;\
+display:flex;align-items:center;justify-content:space-between;padding:0 18px;font-size:15px;font-weight:700;\
 color:rgba(255,255,255,.92)}\
-.jrl-close{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;width:42px;height:42px;\
-border:0;background:rgba(0,0,0,.18);color:#fff;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;\
+.jrl-close{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;width:44px;height:44px;\
+border:0;background:rgba(0,0,0,.22);color:#fff;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;\
 display:flex;align-items:center;justify-content:center}\
-.jrl-light{display:flex;flex-direction:column;gap:9px;padding:9px;background:rgba(0,0,0,.22);\
-border-radius:14px;margin-bottom:22px}\
+.jrl-light{display:flex;flex-direction:column;gap:9px;padding:10px;background:rgba(0,0,0,.24);\
+border-radius:16px;margin-bottom:24px}\
 .jrl-dot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.22);transition:background-color .1s}\
 .jrl-dot.on-red{background:#fecaca}.jrl-dot.on-green{background:#bbf7d0}\
-.jrl-big{font-size:clamp(38px,11vw,76px);font-weight:800;letter-spacing:1px;margin:0;line-height:1.05}\
-.jrl-sub{font-size:clamp(18px,5vw,28px);font-weight:500;margin-top:8px;opacity:.95}\
-.jrl-end{font-size:clamp(30px,8vw,56px);font-weight:800}\
+.jrl-big{font-family:var(--font-display,"Fredoka",-apple-system,BlinkMacSystemFont,sans-serif);\
+font-size:clamp(40px,12vw,80px);font-weight:700;letter-spacing:.02em;margin:0;line-height:1.05}\
+.jrl-sub{font-family:var(--font-display,"Fredoka",-apple-system,BlinkMacSystemFont,sans-serif);\
+font-size:clamp(20px,6vw,32px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px;opacity:.96}\
+.jrl-end{font-family:var(--font-display,"Fredoka",-apple-system,BlinkMacSystemFont,sans-serif);\
+font-size:clamp(32px,9vw,58px);font-weight:700}\
 .jrl-hint{position:absolute;bottom:max(22px,env(safe-area-inset-bottom));left:0;right:0;\
-font-size:13px;color:rgba(255,255,255,.75);padding:0 24px}\
+font-size:13px;font-weight:600;color:rgba(255,255,255,.78);padding:0 24px}\
 ';
 
   var injected = false;

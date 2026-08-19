@@ -1714,7 +1714,7 @@ const TEAM_COPY = Object.freeze({
     firstTeam:"Choose your first team",
     firstTeamSub:"Your current mission progress will carry into the first team you create.",
     grownupsIntro:"Names, avatars, app settings, product care, privacy, and support.",
-    navTeams:"Teams",
+    navTeams:"Family",
     setupStep:"STEP 2 OF 2", playingAs:"PLAYING AS", changeKid:"Change / add child",
     whoWith:"Who is playing with", useExisting:"Already created · tap to use", newTeam:"New team"
   },
@@ -1744,7 +1744,7 @@ const TEAM_COPY = Object.freeze({
     firstTeam:"İlk takımını seç",
     firstTeamSub:"Mevcut görev ilerlemen oluşturduğun ilk takıma aktarılacak.",
     grownupsIntro:"İsimler, avatarlar, uygulama ayarları, ürün bakımı, gizlilik ve destek.",
-    navTeams:"Takımlar",
+    navTeams:"Aile",
     setupStep:"2 / 2. ADIM", playingAs:"OYNUYOR", changeKid:"Çocuğu değiştir / ekle",
     whoWith:"Kiminle oynuyor", useExisting:"Takım hazır · kullanmak için dokun", newTeam:"Yeni takım"
   }
@@ -2150,6 +2150,7 @@ function renderTeamXpPicker(){
       <strong>${escapeHtml(child)}</strong>
       <small>${escapeHtml(c.changeKid)}</small>
     </span>
+    <span class="teamSetupChildBadge">${escapeHtml(c.playingNow)}</span>
     <i class="jic jic-arrow-right" aria-hidden="true"></i>
   `;
   childBtn.onclick = ()=>{ clickSound("click"); openTeamSetupChildChooser(); };
@@ -3510,7 +3511,19 @@ function updateBadges(){
   }
 
   // Badges modal — 2 kolonlu grid (her badge için DOĞRU progress)
-  badgesList.innerHTML = BADGES.map(b=>{
+  const collectionTr = isTurkishUI();
+  const collectionPct = BADGES.length ? Math.round((nowUnlocked.size / BADGES.length) * 100) : 0;
+  const collectionSummary = `
+    <div class="badgesCollectionSummary">
+      <div class="badgesCollectionIcon"><i class="jic jic-award" aria-hidden="true"></i></div>
+      <div class="badgesCollectionInfo">
+        <div class="badgesCollectionLabel">${collectionTr ? "Koleksiyonun" : "Your collection"}</div>
+        <div class="badgesCollectionBar"><div class="badgesCollectionBarFill" style="width:${collectionPct}%"></div></div>
+      </div>
+      <div class="badgesCollectionCount">${nowUnlocked.size} / ${BADGES.length}</div>
+    </div>
+  `;
+  badgesList.innerHTML = collectionSummary + BADGES.map(b=>{
     const ok = !!b.check(done, badgeCtx);
     let toGo = "";
     if(!ok){
@@ -3661,7 +3674,10 @@ function updateProgress(options = {}){
   renderDailyUI();
   renderTodayContinuity();
   if(!deferStats) updateBadges();
-  if(document.body.classList.contains("tab-stats")) renderParentDashboard();
+  // The parent dashboard now lives on the Family ("modes") tab, not the old
+  // (now nav-unreachable) "stats" tab — see the v0 v32 4-tab IA remap in
+  // switchTab().
+  if(document.body.classList.contains("tab-modes")) renderParentDashboard();
 
   // 0 progress'te boş kartları gizle (yeni kullanıcı için temiz arayüz)
   const isFresh = done.size === 0;
@@ -5740,6 +5756,14 @@ document.getElementById("btnBadges").onclick = ()=>{
   clickSound("click");
   badgesBackdrop.classList.add("show");
 };
+// Visible "See all badges" row on the Family tab (v0 v32) — same modal, same
+// real BADGES data, just a reachable trigger instead of the hidden stub above.
+const btnBadgesRow = document.getElementById("btnBadgesRow");
+if(btnBadgesRow) btnBadgesRow.onclick = ()=>{
+  clickSound("click");
+  if(typeof updateBadges === "function") updateBadges();
+  badgesBackdrop.classList.add("show");
+};
 
 btnBadgesClose.onclick = ()=>{ clickSound("click"); badgesBackdrop.classList.remove("show"); };
 badgesBackdrop.addEventListener("click",(e)=>{ if(e.target===badgesBackdrop){ clickSound("click"); badgesBackdrop.classList.remove("show"); } });
@@ -5763,6 +5787,29 @@ if(btnPrivacyClose){
 }
 if(privacyBackdrop){
   privacyBackdrop.addEventListener("click",(e)=>{ if(e.target===privacyBackdrop){ clickSound("click"); privacyBackdrop.classList.remove("show"); } });
+}
+
+// Help & Support modal (v0 v32 Grown-ups IA) — reuses the real guided tour
+// (window.leoTour, leo-tour.js) and the real support email; no new logic.
+const helpBackdrop = document.getElementById("helpBackdrop");
+const helpSupportLink = document.getElementById("helpSupportLink");
+const btnHelpClose = document.getElementById("btnHelpClose");
+const btnHelpReplayTour = document.getElementById("btnHelpReplayTour");
+if(helpSupportLink && helpBackdrop){
+  helpSupportLink.addEventListener("click",(e)=>{ e.preventDefault(); clickSound("click"); helpBackdrop.classList.add("show"); });
+}
+if(btnHelpClose){
+  btnHelpClose.onclick = ()=>{ clickSound("click"); helpBackdrop.classList.remove("show"); };
+}
+if(helpBackdrop){
+  helpBackdrop.addEventListener("click",(e)=>{ if(e.target===helpBackdrop){ clickSound("click"); helpBackdrop.classList.remove("show"); } });
+}
+if(btnHelpReplayTour){
+  btnHelpReplayTour.onclick = ()=>{
+    clickSound("click");
+    if(helpBackdrop) helpBackdrop.classList.remove("show");
+    if(window.leoTour && typeof window.leoTour.start === "function") window.leoTour.start();
+  };
 }
 if(btnSeasonalIndoor){
   btnSeasonalIndoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("indoor"); };
@@ -7075,18 +7122,21 @@ function buildHubLoadingOverlay(container){
   if(_hubLoadingEl) return _hubLoadingEl;
   const el = document.createElement("div");
   el.id = "hub3dLoading";
-  el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#bfe3ff,#eaf7ff);transition:opacity 300ms ease;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
+  // v0 v32 visual skin — value-only (colors/font/radius); every id and click
+  // handler below is unchanged, see showHubLoadingFailure() and the retry/
+  // escape wiring further down.
+  el.style.cssText = "position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:linear-gradient(180deg,#c9ecff,#eaf7ff);transition:opacity 300ms ease;font-family:var(--font-display,'Fredoka'),-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;";
   el.innerHTML =
     // §4.2 — escape hatch: leave the wait and go back to the missions. The load
     // keeps running (cached), so re-entry is instant.
-    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));min-height:44px;padding:9px 15px;border:none;border-radius:16px;background:rgba(255,255,255,0.9);color:#2a5a7a;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.2);z-index:2;">← Missions</button>' +
-    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
+    '<button id="hub3dLoadEscape" type="button" aria-label="Back to missions" style="position:absolute;top:calc(12px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));min-height:44px;padding:9px 15px;border:none;border-radius:16px;background:rgba(255,255,255,0.92);color:#0f5c8a;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(20,60,90,0.18);z-index:2;">← Missions</button>' +
+    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.2));animation:hub3dLeoFloat 2.2s ease-in-out infinite;">' +
       leoPictureHTML("encourage", 256, 96, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">Opening the first play zone…</div>' +
-    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:280px;opacity:0;transition:opacity 400ms ease;">Taking longer? Missions are always ready from the button above.</div>' +
-    '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.6);border-radius:6px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.12);">' +
-      '<div id="hub3dLoadBar" style="width:8%;height:100%;background:linear-gradient(90deg,#4fc46a,#35a04e);border-radius:6px;transition:width 350ms ease;"></div>' +
+    '<div style="font-size:21px;font-weight:700;color:#0f5c8a;">Opening the first play zone…</div>' +
+    '<div id="hub3dLoadLine2" style="font-size:14px;font-weight:600;color:#3d7ba0;max-width:280px;opacity:0;transition:opacity 400ms ease;">Taking longer? Missions are always ready from the button above.</div>' +
+    '<div style="width:min(72%,260px);height:10px;background:rgba(255,255,255,0.65);border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);">' +
+      '<div id="hub3dLoadBar" style="width:8%;height:100%;background:#97d700;border-radius:999px;transition:width 350ms ease;"></div>' +
     '</div>';
   if(!document.getElementById("hub3dLeoFloatStyle")){
     const s = document.createElement("style");
@@ -7123,15 +7173,16 @@ function showHubLoadingFailure(container, stage){
   if(_hubLoadingLine2Timer){ clearTimeout(_hubLoadingLine2Timer); _hubLoadingLine2Timer = null; }
   const el = _hubLoadingEl || buildHubLoadingOverlay(container);
   el.style.opacity = "1";
+  const offline = !navigator.onLine;
   el.innerHTML =
-    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.22));">' +
+    '<div style="filter:drop-shadow(0 6px 12px rgba(20,60,90,0.2));">' +
       leoPictureHTML("gentle", 256, 92, "Coach Leo") +
     '</div>' +
-    '<div style="font-size:20px;font-weight:900;color:#2a5a7a;">The island got lost!</div>' +
-    '<div style="font-size:14px;font-weight:700;color:#4a7a9a;max-width:260px;">Check your connection and try again.</div>' +
+    '<div style="font-size:21px;font-weight:700;color:#0f5c8a;">' + (offline ? "Island needs a connection." : "The island got lost!") + '</div>' +
+    '<div style="font-size:14px;font-weight:600;color:#3d7ba0;max-width:260px;">' + (offline ? "Your missions are still ready to play offline." : "Check your connection and try again.") + '</div>' +
     '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px;">' +
-      '<button id="hub3dRetryBtn" style="border:none;border-radius:14px;background:linear-gradient(180deg,#4fc46a,#35a04e);color:#fff;font-size:15px;font-weight:900;padding:11px 18px;cursor:pointer;box-shadow:0 3px 0 #27793a;">Try again</button>' +
-      '<button id="hub3dBackBtn" style="border:none;border-radius:14px;background:rgba(255,255,255,0.85);color:#2a5a7a;font-size:15px;font-weight:800;padding:11px 18px;cursor:pointer;">Back to missions</button>' +
+      '<button id="hub3dRetryBtn" style="border:none;border-radius:16px;background:#97d700;color:#12240a;font-size:15px;font-weight:700;padding:11px 18px;cursor:pointer;box-shadow:0 3px 0 #6d9c00;">Try again</button>' +
+      '<button id="hub3dBackBtn" style="border:none;border-radius:16px;background:rgba(255,255,255,0.88);color:#0f5c8a;font-size:15px;font-weight:700;padding:11px 18px;cursor:pointer;">Back to missions</button>' +
     '</div>';
   const retry = document.getElementById("hub3dRetryBtn");
   if(retry) retry.onclick = ()=>{ _hub3dLoadPromise = null; if(_hubLoadingEl){ _hubLoadingEl.remove(); _hubLoadingEl = null; } showHub3D(); };
@@ -7324,8 +7375,13 @@ document.addEventListener("visibilitychange", ()=>{
 
 function switchTab(tabName){
   if(!tabName) tabName = "today";
+  // "stats" stays a legal internal tab (its panel/functions remain for
+  // compatibility, see #tabStats) but is no longer a bottom-nav destination —
+  // nothing in the UI navigates to it anymore. A legacy deep link or saved
+  // NAV_TAB_KEY value of "stats" is remapped to "modes" below and at boot.
   const validTabs = ["today","browse","modes","stats","profile"];
   if(isHub3DEnabled()) validTabs.push("hub3d");
+  if(tabName === "stats") tabName = "modes";
   if(!validTabs.includes(tabName)) tabName = "today";
 
   // Tab panel görünürlüğü
@@ -7338,8 +7394,8 @@ function switchTab(tabName){
     b.classList.toggle("active", b.dataset.tab === tabName);
   });
 
-  // The dashboard lives in the "stats" tab — the parent-facing view.
-  if(tabName === "stats") beaconOnce("dashboard_open", "dashboard_open");
+  // The parent dashboard now lives on the "modes" (Family) tab.
+  if(tabName === "modes") beaconOnce("dashboard_open", "dashboard_open");
 
   // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez
   if(tabName === "hub3d") showHub3D(); else hideHub3D();
@@ -7365,10 +7421,12 @@ function switchTab(tabName){
     // The nudge lives on Today and hides behind modals, so its eligibility is
     // re-checked whenever the visible surface changes.
     renderInstallSurfaces();
-    if(tabName === "stats") {
-      // Badge, dashboard and progress render only when this tab is opened.
+    if(tabName === "modes") {
+      // Badge, dashboard, progress and teams render only when this tab is
+      // opened — this used to be the "stats" tab's job (see the remap above).
       if(typeof updateProgress === "function") updateProgress();
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
+      if(typeof renderTeamsHub === "function") renderTeamsHub();
     }
     if(tabName === "browse") {
       // Path her zaman renderlanir (her tab acilis'ta done state guncel olsun)
@@ -7477,16 +7535,24 @@ function renderFamilyInsights(){
   });
 
   // Render her profil için mini kart
+  const activeId = getActiveProfileId();
+  const tr = isTurkishUI();
   grid.innerHTML = "";
   items.forEach(it => {
     const card = document.createElement("div");
     card.className = "familyMember";
+    const pct = Math.max(0, Math.min(100, Math.round((it.doneCount / 36) * 100)));
+    const isActive = it.p.id === activeId;
     card.innerHTML = `
       <div class="familyMemberAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(it.p.avatar), "avatarArt", "", true)}</div>
       <div class="familyMemberInfo">
-        <div class="familyMemberName">${escapeHtml(it.p.name || "Player")}</div>
+        <div class="familyMemberNameRow">
+          <span class="familyMemberName">${escapeHtml(it.p.name || "Player")}</span>
+          ${isActive ? `<span class="familyMemberActive">${tr ? "Aktif" : "Active"}</span>` : ""}
+        </div>
+        <div class="familyMemberBar"><div class="familyMemberBarFill" style="width:${pct}%"></div></div>
         <div class="familyMemberStats">
-          <span class="familyMemberMissions">${it.doneCount}/36</span>
+          <span class="familyMemberMissions">${it.doneCount}/36 ${tr ? "görev" : "missions"}</span>
           <span class="familyMemberStreak"><i class="jic jic-flame" aria-hidden="true"></i> ${it.streak}</span>
         </div>
       </div>

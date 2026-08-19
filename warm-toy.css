@@ -1369,7 +1369,9 @@ html.theme--dark .teamXpPersonal > span:first-child{background:rgba(255,255,255,
 #avatarBtn,
 #profileCard,
 #btnOpenProfileFromTab,
-.profileQuickLink[data-go-tab="modes"],
+.profileQuickLink[data-go-tab="modes"]{
+  display:flex !important;
+}
 
 /* Progress belongs to the family, not to the Team feature.
  *
@@ -2465,3 +2467,698 @@ html.theme--dark .installDlgIcon{ background:var(--wt-dark-soft); color:#8FD3F0;
 @media (prefers-reduced-motion: reduce){
   .keepCard, .installDlgPanel{ transition:none !important; animation:none !important; }
 }
+
+/* ==========================================================================
+   JUMVI v0 FINAL v32 — shared primitives
+   Ported from the approved v0 "Direction B" design source (app/jumvi.css).
+   Ties into the EXISTING html.theme--light/--dark tokens above — no parallel
+   theme system, no .jv-theme wrapper element (v0 scoped per-element for its
+   side-by-side gallery; production scopes on <html> and stays that way).
+   .jv-eyebrow is intentionally NOT reintroduced: the v0 export used it as an
+   undefined synonym for its own .jv-section — mapped to .jv-section here,
+   see docs/audits (v0 port manifest) for the full trace.
+   ========================================================================== */
+:root{
+  --jv-r-card:20px; --jv-r-compact:14px; --jv-r-button:16px; --jv-r-chip:999px;
+}
+html.theme--light{
+  --jv-card:var(--glass);
+  --jv-card-2:var(--wt-cream-soft);
+  --jv-panel:#12233b;
+  --jv-panel-fg:#ffffff;
+  --jv-panel-fg-2:#cbd5f5;
+  --jv-celebrate:#f3fbe0;
+  --jv-text:var(--text);
+  --jv-text-2:#47546a;
+  --jv-text-3:var(--muted);
+  --jv-line:var(--wt-border-light);
+  --jv-line-strong:rgba(20,32,51,.18);
+  --jv-blue-strong:var(--wt-blue);
+  --jv-on-blue:#ffffff;
+  --jv-lime:var(--wt-lime);
+  --jv-lime-strong:#4E8F30;
+  --jv-on-lime:#12240a;
+  --jv-orange:var(--wt-orange);
+  --jv-track:var(--wt-cream-soft);
+  --jv-success:#4d8300;
+  --jv-warning-fg:#92400e;
+  --jv-warning-bg:#fde9c8;
+  --jv-recommend-fg:#0b4a78;
+  --jv-recommend-bg:#d6ecff;
+  --jv-offline-fg:#475569;
+  --jv-offline-bg:#e2e8f0;
+  --jv-disabled-bg:#e2e8f0;
+  --jv-disabled-fg:#94a3b8;
+  --jv-destructive-fg:#b42318;
+  --jv-destructive-bg:#fdecea;
+  --jv-scrim:rgba(15,23,42,.45);
+}
+html.theme--dark{
+  --jv-card:var(--glass);
+  --jv-card-2:var(--wt-dark-soft);
+  --jv-panel:#060b16;
+  --jv-panel-fg:#ffffff;
+  --jv-panel-fg-2:#cbd5f5;
+  --jv-celebrate:#16261a;
+  --jv-text:var(--text);
+  --jv-text-2:#c3d0e6;
+  --jv-text-3:var(--muted);
+  --jv-line:var(--wt-border-dark);
+  --jv-line-strong:rgba(255,255,255,.22);
+  --jv-blue-strong:var(--wt-sky);
+  --jv-on-blue:#06172a;
+  --jv-lime:var(--wt-lime);
+  --jv-lime-strong:#b4e82e;
+  --jv-on-lime:#0f172a;
+  --jv-orange:var(--wt-orange);
+  --jv-track:var(--wt-dark-soft);
+  --jv-success:#b4e82e;
+  --jv-warning-fg:#1c1206;
+  --jv-warning-bg:#fbbf24;
+  --jv-recommend-fg:#062033;
+  --jv-recommend-bg:#7cc7ff;
+  --jv-offline-fg:#cbd5e1;
+  --jv-offline-bg:#263449;
+  --jv-disabled-bg:#1b2c44;
+  --jv-disabled-fg:#56657d;
+  --jv-destructive-fg:#ff9c93;
+  --jv-destructive-bg:#2a1512;
+  --jv-scrim:rgba(0,0,0,.62);
+}
+
+/* ---- Surfaces ---- */
+.jv-card{ background:var(--jv-card); border:1px solid var(--jv-line); border-radius:var(--jv-r-card); }
+.jv-card-2{ background:var(--jv-card-2); border-radius:var(--jv-r-compact); }
+.jv-panel{ background:var(--jv-panel); color:var(--jv-panel-fg); border-radius:var(--jv-r-card); }
+.jv-celebrate{ background:var(--jv-celebrate); color:var(--jv-text); }
+.jv-selected-ring{ box-shadow:0 0 0 2px var(--jv-ring-color, var(--jv-blue-strong)) inset; }
+
+/* ---- Typography ---- */
+.jv-title{ font-family:var(--font-display,inherit); font-weight:700; letter-spacing:-0.01em; line-height:1.1; color:var(--jv-text); }
+.jv-card-title{ font-weight:700; line-height:1.2; color:var(--jv-text); }
+.jv-section,.jv-eyebrow{ font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:11.5px; color:var(--jv-text-3); }
+.jv-body{ font-weight:500; line-height:1.5; color:var(--jv-text); }
+.jv-helper{ font-weight:600; line-height:1.45; color:var(--jv-text-2); }
+.jv-meta{ font-weight:700; color:var(--jv-text-3); }
+.jv-text-3{ color:var(--jv-text-3); }
+
+/* ---- Buttons ---- */
+.jv-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:48px; padding:0 20px; border-radius:var(--jv-r-button);
+  font-weight:700; font-size:15px; line-height:1; cursor:pointer;
+  border:1px solid transparent; user-select:none;
+  transition:transform .12s ease, filter .12s ease, background .12s ease;
+}
+.jv-btn:active{ transform:translateY(1px) scale(.99); }
+.jv-btn--play{ min-height:56px; font-size:17px; border-radius:18px; }
+.jv-btn--primary{ background:var(--jv-blue-strong); color:var(--jv-on-blue); box-shadow:var(--shadow-soft); }
+.jv-btn--secondary{ background:var(--jv-card); color:var(--jv-text); border-color:var(--jv-line-strong); }
+.jv-btn--ghost{ background:transparent; color:var(--jv-text); border-color:var(--jv-line-strong); }
+.jv-btn--icon{ min-height:44px; width:44px; padding:0; border-radius:12px; background:var(--jv-card); color:var(--jv-text); border-color:var(--jv-line); }
+.jv-btn--ready{ background:var(--jv-lime); color:var(--jv-on-lime); box-shadow:var(--shadow-soft); }
+.jv-btn--playing{ background:var(--jv-card-2); color:var(--jv-text-2); border-color:var(--jv-line); }
+.jv-btn:disabled,.jv-btn--disabled{ background:var(--jv-disabled-bg); color:var(--jv-disabled-fg); box-shadow:none; cursor:not-allowed; }
+
+/* ---- Chips ---- */
+.jv-chip{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:var(--jv-r-chip); font-weight:700; font-size:12px; line-height:1; white-space:nowrap; }
+.jv-chip--recommend,.jv-chip--progress{ background:var(--jv-recommend-bg); color:var(--jv-recommend-fg); }
+.jv-chip--complete,.jv-chip--success{ background:color-mix(in srgb, var(--jv-lime) 26%, var(--jv-card)); color:var(--jv-success); }
+.jv-chip--new{ background:color-mix(in srgb, var(--jv-orange) 20%, var(--jv-card)); color:var(--jv-orange); }
+.jv-chip--offline{ background:var(--jv-offline-bg); color:var(--jv-offline-fg); }
+.jv-chip--warning{ background:var(--jv-warning-bg); color:var(--jv-warning-fg); }
+.jv-chip--neutral{ background:var(--jv-card-2); color:var(--jv-text-2); }
+
+/* ---- Progress ---- */
+.jv-progress{ position:relative; height:9px; border-radius:999px; background:var(--jv-track); overflow:hidden; }
+.jv-progress__fill{ position:absolute; inset:0 auto 0 0; border-radius:999px; }
+.jv-progress__fill--lime{ background:var(--jv-lime); }
+.jv-progress__fill--blue{ background:var(--jv-blue-strong); }
+
+@media (prefers-reduced-motion: reduce){
+  .jv-btn{ transition:none !important; }
+}
+
+/* ==========================================================================
+   Missions (Browse) — v0 v32 visual pass over the EXISTING accordion.
+   renderMissionPath() (app.js) already implements the required behavior —
+   six pack sections, compact headers, per-mission progress dots, only the
+   pack holding the next mission expanded by default, user expand/collapse,
+   real mission icons and completion state. This only re-skins it; no markup
+   or JS changed.
+   ========================================================================== */
+#tabBrowse .todayQuickAction{
+  border-radius:var(--jv-r-button) !important;
+  border:1px solid var(--jv-line) !important;
+  background:var(--jv-card) !important;
+  box-shadow:none !important;
+}
+.pathSection{
+  border-radius:var(--jv-r-card) !important;
+  background:var(--jv-card) !important;
+  border:1px solid var(--jv-line) !important;
+  box-shadow:none !important;
+}
+.pathSection.allDone{
+  border-color:var(--jv-lime) !important;
+  background:color-mix(in srgb, var(--jv-lime) 10%, var(--jv-card)) !important;
+}
+.pathSectionProgress{
+  font-weight:700 !important;
+  background:var(--jv-card-2) !important;
+  border:none !important;
+  color:var(--pack-color) !important;
+}
+.pathSection.allDone .pathSectionProgress{
+  background:var(--jv-lime) !important;
+  color:var(--jv-on-lime) !important;
+}
+.pathSectionName{ font-family:var(--font-display,inherit) !important; }
+
+/* ==========================================================================
+   Mission sheet — v0 v32 visual pass. Purely additive/CSS: no change to
+   openMission(), the gate state machine, or markMissionDone().
+   ========================================================================== */
+
+/* "You need" kit row — new, static, no JS. */
+.missionKitRow{
+  display:flex; gap:8px; margin:10px 0 4px;
+}
+.missionKitChip{
+  flex:1; display:flex; align-items:center; gap:8px;
+  padding:10px 12px; border-radius:var(--jv-r-compact);
+}
+.missionKitChip img{ width:28px; height:28px; object-fit:contain; flex-shrink:0; }
+.missionKitChip .jv-card-title{ font-size:13px; }
+
+/* Sheet action buttons carry the v0 button language; #btnToggleDone.btnGateWait
+   (above, ID-scoped + !important) still wins while the gate is closed. */
+
+/* Mission Completed — STAYS the existing inline #missionXpReward section in
+   the SAME mission sheet (no second modal). Re-skinned only: celebratory
+   surface + XP chip, matching the v0 "Mission Completed" visual language. */
+.missionXpReward{
+  border-radius:var(--jv-r-card);
+  background:var(--jv-celebrate);
+  padding:14px;
+  margin-top:14px;
+}
+.missionXpRewardKicker{
+  font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  font-size:11px; color:var(--jv-success);
+}
+.missionXpRewardTeam{ font-family:var(--font-display,inherit); font-weight:700; color:var(--jv-text); }
+.missionXpRewardGain{
+  font-weight:700; padding:4px 10px; border-radius:var(--jv-r-chip);
+  background:var(--jv-lime); color:var(--jv-on-lime); font-size:13px;
+}
+.missionXpRewardBarFill{ background:var(--jv-blue-strong) !important; }
+
+/* ==========================================================================
+   Home / Play — v0 v32 REAL visual parity pass (not a skin-only tweak).
+   The v0 Home has no decorative hero illustration: it is a plain "Welcome
+   back / Let's play" text heading, ONE compact progress card, and Leo's
+   Pick as the dominant card with a large centered mission icon. Production
+   kept the older Warm-Toy hero-illustration + tall spread-out progress
+   card. This section removes the illustration and compacts the progress
+   card WITHOUT deleting any element app.js queries (#todayHeroTitle,
+   #todayHeroSub, #xpTeamPicker, #xpMiniGrid, #streakPill, #xpBadgeCount,
+   etc. all stay in the DOM — several are just visually de-emphasized or
+   hidden, never removed, so nothing app.js reads/writes breaks). Real
+   runtime data (mission title, XP, streak count, badge count, progress %)
+   is untouched -- only the layout carrying it changed.
+   ========================================================================== */
+
+/* Hero: drop the illustrated background art + the tall min-height it drove;
+   this becomes a plain two-line text heading, matching v0's "Welcome back /
+   Let's play" treatment. */
+#tabToday .todayHeroStage{
+  min-height:0 !important;
+  margin:0 0 14px !important;
+  padding:6px 0 0 !important;
+  background:none !important;
+}
+#tabToday .todayHeroArt{ display:none !important; }
+html.theme--dark #tabToday .todayHeroStage::after{ display:none !important; }
+#tabToday .todayHeroCopy{ max-width:100% !important; padding:0 !important; }
+
+/* Leo's Pick: the mission icon becomes the dominant visual element (large,
+   centered, full-width band) instead of a small icon beside the text —
+   matching v0's "real mission art with substantial visual weight". */
+#tabToday .dailyContent{
+  display:flex !important;
+  grid-template-columns:none !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  text-align:center !important;
+  gap:6px !important;
+}
+#tabToday .dailyIconBig{
+  width:112px !important; height:112px !important; flex:0 0 112px !important;
+  border-radius:22px !important;
+  margin-bottom:4px;
+}
+#tabToday .dailyText{ text-align:center !important; }
+#tabToday .dailyBox.dailyBoxPromoted .dailyMeta{ justify-content:center !important; }
+
+/* Progress card: compact the level/streak/today-goal/badges rows down to
+   the ~4-line density v0 uses. The team picker and badges mini-card stay
+   in the DOM (still tappable, still update from real state) but are no
+   longer full-width standalone rows on Home. */
+#tabToday .xpTeamPicker{
+  padding:6px 10px !important;
+  min-height:0 !important;
+  margin-bottom:8px !important;
+}
+#tabToday .xpTeamPickerSub{ display:none !important; }
+
+/* v0's progress card is ONE flat surface: the level row has no nested
+   card-within-a-card chrome (no separate background/border/padding block),
+   the emblem is smaller, and the streak/badges row is a plain inline line
+   of icons+text rather than two bordered boxes. Flattening these (values
+   only, same elements/IDs) is what actually closes the gap with v0 —
+   the previous pass only trimmed margins, which left the nested-card
+   look untouched. */
+#tabToday .xpLevelRow{
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+  margin-bottom:10px !important;
+  grid-template-columns:34px minmax(0,1fr) auto !important;
+  gap:8px !important;
+}
+html.theme--dark #tabToday .xpLevelRow{ background:none !important; }
+#tabToday .xpLevelEmblem{
+  width:34px !important; height:34px !important;
+  border-radius:11px !important;
+  font-size:17px !important;
+  box-shadow:none !important;
+}
+#tabToday .xpLevelCopy{ margin-bottom:5px !important; }
+
+#tabToday .xpMissionProgress{ margin:8px 0 10px !important; padding:0 !important; }
+
+#tabToday .xpMiniGrid{
+  display:flex !important;
+  gap:16px !important;
+  margin-top:0 !important;
+}
+#tabToday .xpMiniCard{
+  padding:0 !important;
+  min-height:0 !important;
+  border:0 !important;
+  background:none !important;
+  flex:0 0 auto !important;
+}
+html.theme--dark #tabToday .xpMiniCard{ background:none !important; }
+#tabToday .xpMiniCard.xpMiniBadges{ margin-left:auto !important; }
+#tabToday .xpMiniIcon{
+  width:22px !important; height:22px !important; min-width:0 !important;
+  font-size:14px !important;
+}
+#tabToday .xpMiniLabel{ font-size:11px !important; }
+#tabToday .xpMiniArrow{ display:none !important; }
+
+/* ==========================================================================
+   First Open (Priority 2) — v0 v32 REAL visual parity pass.
+   v0 renders this as a full-bleed screen (no floating card visible against
+   a contrasting background) with the three play levels as a full-width
+   stacked list (icon + label + selection dot) instead of a 3-column icon
+   grid. #welcomeOverlay/#welcomeAges/.ageBtn stay the exact same elements
+   with the exact same data-diff/data-band attributes and .selected class
+   toggling app.js already drives — only geometry changes. */
+#welcomeOverlay{
+  padding:0 !important;
+  background:var(--bg) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+#welcomeOverlay .welcomePanel{
+  max-width:100% !important;
+  width:100% !important;
+  min-height:100%;
+  margin:0 !important;
+  padding:28px 22px calc(22px + env(safe-area-inset-bottom)) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+  justify-content:center;
+}
+
+#welcomeOverlay .welcomeAges{
+  flex-direction:column !important;
+  gap:10px !important;
+}
+#welcomeOverlay .ageBtn{
+  position:relative;
+  flex-direction:row !important;
+  justify-content:flex-start !important;
+  width:100%;
+  min-height:0 !important;
+  padding:14px 46px 14px 14px !important;
+  gap:12px !important;
+  border-radius:16px !important;
+  border-width:2px !important;
+}
+#welcomeOverlay .ageBtn .ageArt{
+  width:38px !important; height:38px !important; flex:0 0 38px !important;
+}
+#welcomeOverlay .ageBtn span{
+  flex:1;
+  text-align:left !important;
+  white-space:normal !important;
+  font-size:15px !important;
+}
+/* Selection dot on the right, replacing the old scale-up+tint-only
+   selected state with the explicit radio v0 uses. */
+#welcomeOverlay .ageBtn::after{
+  content:"";
+  position:absolute;
+  right:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px;
+  border-radius:50%;
+  border:2px solid var(--border,rgba(255,255,255,.3));
+  background:transparent;
+}
+#welcomeOverlay .ageBtn.selected::after{
+  border-color:var(--blue,#4FB3FF);
+  background:var(--blue,#4FB3FF)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E")
+    center/13px no-repeat;
+}
+html.theme--light #welcomeOverlay .ageBtn.selected::after{ border-color:#1d6fb5; background-color:#1d6fb5; }
+
+/* ==========================================================================
+   Mission Completed (Priority 3) — v0 v32 REAL visual parity pass.
+   v0's completed screen is a DEDICATED celebration view: mascot, "Mission
+   complete" chip, headline, +XP card, badge card, then a primary "Next"
+   CTA and a secondary "Back to Play". Production's previous pass only
+   styled the small #missionXpReward card while leaving the ENTIRE
+   pre-completion sheet (kit row, steps, safety line, player-count,
+   score tracker, more-tips accordion, help panel) visible underneath it,
+   which is explicitly not acceptable parity.
+
+   #missionXpReward.show already IS the one reliable, existing signal for
+   "this mission was just marked done in this sheet session" (app.js
+   toggles it via showMissionXpReward()/hideMissionXpReward() — no new
+   state, no new JS). :has() lets the sheet switch its visual composition
+   from that existing signal with CSS only: hide the pre-completion body,
+   let the reward card become the dedicated completion view, and re-rank
+   the action buttons so Next Mission reads as primary and Mark as Not
+   Done (the real "undo/back" control) reads as secondary — matching v0's
+   Next/Back-to-Play hierarchy with the actual runtime buttons, nothing
+   removed from the DOM. */
+#sheet:has(#missionXpReward.show) #sheetBody,
+#sheet:has(#missionXpReward.show) .sheetMeta,
+#sheet:has(#missionXpReward.show) .sheetActions .missionPrimary{
+  display:none !important;
+}
+
+/* Coach Leo celebration mascot, matching the wave art already used on the
+   First Open / welcome screen — no new asset. */
+#missionXpReward.show::before{
+  content:"";
+  display:block;
+  width:120px;
+  height:120px;
+  margin:4px auto 10px;
+  background:url("assets/leo/leo-wave-240.webp") center/contain no-repeat;
+}
+
+#sheet:has(#missionXpReward.show) .missionXpReward{
+  margin:6px 0 16px;
+  padding:20px 16px 18px;
+  border:0;
+  background:transparent;
+  box-shadow:none;
+  text-align:center;
+}
+html.theme--dark #sheet:has(#missionXpReward.show) .missionXpReward{ background:transparent; }
+
+#sheet:has(#missionXpReward.show) .missionXpRewardTop{
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardIcon{ display:none; }
+#sheet:has(#missionXpReward.show) .missionXpRewardKicker{
+  display:inline-block;
+  padding:5px 12px;
+  border-radius:999px;
+  background:rgba(109,190,69,.16);
+  font-size:11px;
+}
+html.theme--dark #sheet:has(#missionXpReward.show) .missionXpRewardKicker{ background:rgba(145,214,109,.14); }
+#sheet:has(#missionXpReward.show) .missionXpRewardTeam{
+  white-space:normal;
+  font-size:21px;
+  font-weight:950;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardGain{
+  margin-top:2px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:var(--jv-lime,#6DBE45);
+  color:var(--jv-on-lime,#0F2E06);
+  font-size:14px;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardMath,
+#sheet:has(#missionXpReward.show) .missionXpRewardNext{ text-align:center; }
+#sheet:has(#missionXpReward.show) .missionXpRewardRule{ text-align:center; }
+
+/* Next Mission = the v0 primary CTA; Mark as Not Done = the real "go back"
+   control, demoted to a plain secondary — same buttons, same handlers,
+   only rank/finish. */
+#sheet:has(#missionXpReward.show) .sheetActions{
+  flex-direction:column-reverse;
+}
+#sheet:has(#missionXpReward.show) .sheetActions #btnNext.btnNextHighlight{
+  order:-1;
+  min-height:56px !important;
+  border:0 !important;
+  border-radius:17px !important;
+  background:linear-gradient(180deg,#177BB6 0%,#0F6A9E 100%) !important;
+  color:#FFFFFF !important;
+  -webkit-text-fill-color:#FFFFFF !important;
+  box-shadow:0 8px 20px rgba(21,119,177,.20) !important;
+  font-size:16px !important;
+}
+#sheet:has(#missionXpReward.show) .sheetActions #btnNext.btnNextHighlight .jic{
+  color:#FFFFFF !important; -webkit-text-fill-color:#FFFFFF !important;
+}
+#sheet:has(#missionXpReward.show) .sheetActions .holdBtn.btnPrimary{
+  border:1.5px solid var(--border) !important;
+  background:transparent !important;
+  color:var(--text) !important;
+  -webkit-text-fill-color:var(--text) !important;
+  box-shadow:none !important;
+}
+
+/* ==========================================================================
+   Family Overview (Priority 4) — v0 v32 REAL visual parity pass.
+   v0 shows each profile as its own full-width card: name (+ an "Active"
+   badge on the current player), a level/progress bar, and a mission-count
+   caption. Production rendered the same real per-profile data (doneCount,
+   streak) but as two-up compact mini-cards with no progress bar at all.
+   renderFamilyInsights() (app.js) now also emits a progress-bar element
+   and an Active badge from data it already computes (doneCount, the
+   already-known active profile id) -- no new state, no new storage key.
+   This block makes the cards read the way v0's roster does. */
+.familyInsights{
+  background:var(--jv-card,var(--card));
+  border:1px solid var(--jv-line,var(--border));
+  box-shadow:none;
+}
+html.theme--dark .familyInsights{
+  background:var(--jv-card,var(--card));
+  border-color:var(--jv-line,var(--border));
+}
+.familyInsightsGrid{
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.familyMember{
+  align-items:stretch;
+  padding:12px 14px;
+  background:var(--jv-card-2,var(--card));
+  border-color:var(--jv-line,var(--border));
+}
+html.theme--dark .familyMember{
+  background:var(--jv-card-2,var(--card));
+  border-color:var(--jv-line,var(--border));
+}
+.familyMemberAvatar{
+  width:44px; height:44px;
+  background:transparent;
+  border-radius:50%;
+  overflow:hidden;
+}
+html.theme--dark .familyMemberAvatar{ background:transparent; }
+.familyMemberNameRow{
+  display:flex; align-items:center; gap:7px;
+}
+.familyMemberName{ font-size:14.5px; font-weight:950; }
+.familyMemberActive{
+  padding:2px 8px;
+  border-radius:999px;
+  background:rgba(79,179,255,.16);
+  color:#1577B1;
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+}
+html.theme--dark .familyMemberActive{ background:rgba(115,202,231,.16); color:#73CAE7; }
+.familyMemberBar{
+  width:100%;
+  height:6px;
+  margin:7px 0 6px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(20,32,51,.09);
+}
+html.theme--dark .familyMemberBar{ background:rgba(255,255,255,.09); }
+.familyMemberBarFill{
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#6DBE45,#82C95E);
+}
+.familyMemberStats{ margin-top:0; }
+
+/* ==========================================================================
+   Badges (Priority 4) — v0 v32 REAL visual parity pass.
+   v0 leads the badges screen with a collection-total summary card before
+   the grid. updateBadges() (app.js) now also builds this card from counts
+   it already computes in that same function (nowUnlocked.size vs
+   BADGES.length) -- no new data. */
+.badgesCollectionSummary{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  grid-column:1 / -1;
+  padding:14px;
+  margin-bottom:2px;
+  border:1px solid var(--jv-line,var(--border));
+  border-radius:18px;
+  background:var(--jv-card-2,var(--card));
+}
+.badgesCollectionIcon{
+  width:40px; height:40px; flex:0 0 40px;
+  display:grid; place-items:center;
+  border-radius:13px;
+  background:#6DBE45;
+  color:#fff;
+  font-size:19px;
+}
+.badgesCollectionInfo{ flex:1; min-width:0; }
+.badgesCollectionLabel{ font-size:13px; font-weight:900; color:var(--text); margin-bottom:6px; }
+.badgesCollectionBar{
+  width:100%; height:6px;
+  overflow:hidden; border-radius:999px;
+  background:rgba(20,32,51,.09);
+}
+html.theme--dark .badgesCollectionBar{ background:rgba(255,255,255,.09); }
+.badgesCollectionBarFill{
+  height:100%; border-radius:inherit;
+  background:linear-gradient(90deg,#6DBE45,#82C95E);
+}
+.badgesCollectionCount{
+  flex:0 0 auto;
+  font-size:15px;
+  font-weight:950;
+  color:var(--text);
+}
+
+/* ==========================================================================
+   Teams / Team Setup + Profile Add/Edit/Switch — v0 v32 MICRO parity pass.
+
+   Team Setup: v0's partner picker is a compact 2-up chip grid with a
+   "Playing" badge on the child card. "JUMVI Team Setup Math Phase 2D"
+   (above) deliberately forced the grid to a single column of full-width
+   rows for its own reasons; this section overrides that specifically for
+   v0 parity, restoring the 2-column geometry the base .teamXpPartnerGrid
+   rule (much earlier in this file) already defined. teamSetupChildBadge
+   is a new element (app.js) using the existing, previously-unused
+   TEAM_COPY.playingNow string -- real, already-translated copy, not new.
+   No selection/creation logic changed: every button here still calls the
+   same chooseOrCreateJumviTeam()/chooseOrCreateSiblingTeam() handlers.
+
+   Profile Add/Edit/Switch: v0 uses a bigger, cleaner avatar grid with a
+   lime selection ring, and a lime ring (not blue) for the active profile
+   row -- consistent with the lime "selected/earned" language already
+   used for badges/XP elsewhere in the port. Still all 12 real
+   PROFILE_AVATARS, still the same add/edit/switch/delete handlers. */
+
+.teamXpPartnerGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+}
+.teamXpPartner.teamSetupPartner{
+  flex-direction:column;
+  align-items:flex-start;
+  min-height:74px;
+}
+.teamXpPartner.teamSetupPartner .teamXpPartnerEmoji,
+.teamXpPartner.teamSetupPartner .teamSetupSiblingAvatar{
+  margin-bottom:2px;
+}
+.teamXpPartner.teamSetupPartner > .jic:last-child{
+  position:absolute;
+  top:9px; right:9px;
+}
+.teamXpPartner.teamSetupPartner{ position:relative; padding-right:30px; }
+.teamSetupPartnerCopy{ width:100%; }
+.teamSetupPartnerCopy strong{ white-space:normal; }
+
+.teamSetupChildCard{
+  position:relative;
+  padding-right:14px;
+}
+.teamSetupChildBadge{
+  flex:0 0 auto;
+  padding:4px 10px;
+  border-radius:999px;
+  background:var(--jv-lime,#6DBE45);
+  color:var(--jv-on-lime,#0F2E06);
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* Profile avatar grid: bigger tiles, lime selection ring (matches v0's
+   avatar-picker language) instead of the blue gradient fill. */
+.profileAvatarPicker{
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+.profileAvatarOption{
+  aspect-ratio:1;
+  padding:0;
+  border-radius:16px;
+  border-width:2.5px;
+  background:var(--jv-card-2,var(--card));
+}
+.profileAvatarOption.selected{
+  border-color:var(--jv-lime,#6DBE45);
+  background:var(--jv-card-2,var(--card));
+  box-shadow:0 0 0 2px rgba(109,190,69,.18);
+}
+html.theme--dark .profileAvatarOption.selected{
+  background:var(--jv-card-2,var(--card));
+}
+
+/* Profile switch rows: lime ring for the active player, matching the
+   avatar-selection ring language instead of the blue gradient card. */
+.profileItem.active{
+  border-color:var(--jv-lime,#6DBE45);
+  background:var(--jv-card-2,var(--card));
+  box-shadow:0 0 0 2px rgba(109,190,69,.14);
+}
+html.theme--dark .profileItem.active{
+  background:var(--jv-card-2,var(--card));
+  border-color:var(--jv-lime,#6DBE45);
+}
+.profileItemActive{ color:var(--jv-lime-strong,#4E8F30); }
+html.theme--dark .profileItemActive{ color:var(--jv-lime,#91D66D); }
