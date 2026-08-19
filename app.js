@@ -4353,6 +4353,9 @@ function startTimer(durationSeconds) {
 
   // Update text smoothly (and accurate if tab is throttled)
   timerInterval = setInterval(updateTimerTick, 200);
+  // The v32 play panel keys off "timer started"; refresh now so it appears on
+  // the tap rather than on the next 1s gate tick.
+  try { updateToggleDoneGateUI(); } catch(_){}
 }
 
 function pauseTimer(){
@@ -4403,6 +4406,9 @@ function resumeTimer(){
   requestWakeLock();
 
   timerInterval = setInterval(updateTimerTick, 200);
+  // The v32 play panel keys off "timer started"; refresh now so it appears on
+  // the tap rather than on the next 1s gate tick.
+  try { updateToggleDoneGateUI(); } catch(_){}
 }
 
 function toggleTimer(durationSeconds){
@@ -5590,6 +5596,40 @@ function updateMissionActionHierarchy(){
   next.classList.toggle("actionMuted", !isDone && !gateOpen);
 }
 
+/* v32 shows a dedicated "playing" panel between Start and the finish tap.
+ * Presentation only — it reads the gate state that already exists and never
+ * changes it. Visible once the child has actually started play (the timer is
+ * running, or already ran out for this mission) and until the mission is
+ * marked done. */
+function renderMissionPlayPanel(id, waitMs){
+  const panel = document.getElementById("missionPlayPanel");
+  if(!panel) return;
+  const sheetEl = document.getElementById("sheet");
+  const started = (timerInterval !== null) || _timerFinishedFor.has(id);
+  const show = started && id != null && !done.has(id);
+  panel.hidden = !show;
+  if(sheetEl) sheetEl.classList.toggle("isPlaying", show);
+  if(!show) return;
+
+  const tr = isTurkishUI();
+  const gateOpen = waitMs <= 0;
+  panel.classList.toggle("gateOpen", gateOpen);
+
+  const chip = document.getElementById("playPanelChip");
+  const dial = document.getElementById("playPanelDial");
+  const stateText = document.getElementById("playPanelStateText");
+  if(chip) chip.textContent = gateOpen
+    ? (tr ? "Aşama tamam" : "Gate complete")
+    : (tr ? "Şimdi oynuyor" : "Playing now");
+  if(dial){
+    dial.textContent = gateOpen ? "" : String(Math.ceil(waitMs / 1000)) + "s";
+    dial.classList.toggle("done", gateOpen);
+  }
+  if(stateText) stateText.textContent = gateOpen
+    ? (tr ? "Süre doldu! Harika oynadınız." : "Time's up! Great rallying.")
+    : (tr ? "Leo sayıyor — oynamaya devam." : "Leo is counting the rally — keep playing.");
+}
+
 function updateToggleDoneGateUI(){
   if(!btnToggleDone) return;
   updateMissionActionHierarchy();
@@ -5597,10 +5637,12 @@ function updateToggleDoneGateUI(){
   const id = lastOpenedId;
   if(id == null || done.has(id)){
     btnToggleDone.classList.remove("btnGateWait");
+    try { renderMissionPlayPanel(id, 0); } catch(_){}
     return;
   }
   const waitMs = missionGateRemainingMs(id);
   const tr = isTurkishUI();
+  try { renderMissionPlayPanel(id, waitMs); } catch(_){}
   if(waitMs > 0){
     btnToggleDone.classList.add("btnGateWait");
     const secs = Math.ceil(waitMs / 1000);

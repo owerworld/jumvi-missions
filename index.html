@@ -959,6 +959,24 @@
       <div class="small" id="mSmall"></div>
       </div>
 
+      <!-- FINAL v32 "playing" / "gate complete" panel. Purely presentational:
+           it is driven by updateToggleDoneGateUI() from the SAME gate state
+           the completion button already uses (missionGateRemainingMs plus
+           whether the timer was actually started), and it changes no timing,
+           no thresholds and no handlers. The real flow is untouched:
+           Start -> physical play -> gate opens -> one tap "We Finished!"
+           (#btnToggleDone) -> 5s undo bar. There is no hold-to-finish. -->
+      <section class="missionPlayPanel" id="missionPlayPanel" hidden aria-live="polite">
+        <span class="playPanelChip" id="playPanelChip"></span>
+        <img class="playPanelLeo" src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" width="120" height="120" alt="" aria-hidden="true" decoding="async">
+        <div class="playPanelTitle" id="playPanelTitle">Eyes on the ball!</div>
+        <div class="playPanelSub" id="playPanelSub">Put the phone down &mdash; Leo will let you know.</div>
+        <div class="playPanelStateRow">
+          <span class="playPanelDial" id="playPanelDial"></span>
+          <span class="playPanelStateText" id="playPanelStateText"></span>
+        </div>
+      </section>
+
       <!-- Phase 2E: completion reward stays inline in the mission sheet.
            It is NOT a second modal, so badge/score celebrations can coexist. -->
       <section class="missionXpReward" id="missionXpReward" hidden aria-live="polite">
