@@ -3069,3 +3069,96 @@ html.theme--dark .badgesCollectionBar{ background:rgba(255,255,255,.09); }
   font-weight:950;
   color:var(--text);
 }
+
+/* ==========================================================================
+   Teams / Team Setup + Profile Add/Edit/Switch — v0 v32 MICRO parity pass.
+
+   Team Setup: v0's partner picker is a compact 2-up chip grid with a
+   "Playing" badge on the child card. "JUMVI Team Setup Math Phase 2D"
+   (above) deliberately forced the grid to a single column of full-width
+   rows for its own reasons; this section overrides that specifically for
+   v0 parity, restoring the 2-column geometry the base .teamXpPartnerGrid
+   rule (much earlier in this file) already defined. teamSetupChildBadge
+   is a new element (app.js) using the existing, previously-unused
+   TEAM_COPY.playingNow string -- real, already-translated copy, not new.
+   No selection/creation logic changed: every button here still calls the
+   same chooseOrCreateJumviTeam()/chooseOrCreateSiblingTeam() handlers.
+
+   Profile Add/Edit/Switch: v0 uses a bigger, cleaner avatar grid with a
+   lime selection ring, and a lime ring (not blue) for the active profile
+   row -- consistent with the lime "selected/earned" language already
+   used for badges/XP elsewhere in the port. Still all 12 real
+   PROFILE_AVATARS, still the same add/edit/switch/delete handlers. */
+
+.teamXpPartnerGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+}
+.teamXpPartner.teamSetupPartner{
+  flex-direction:column;
+  align-items:flex-start;
+  min-height:74px;
+}
+.teamXpPartner.teamSetupPartner .teamXpPartnerEmoji,
+.teamXpPartner.teamSetupPartner .teamSetupSiblingAvatar{
+  margin-bottom:2px;
+}
+.teamXpPartner.teamSetupPartner > .jic:last-child{
+  position:absolute;
+  top:9px; right:9px;
+}
+.teamXpPartner.teamSetupPartner{ position:relative; padding-right:30px; }
+.teamSetupPartnerCopy{ width:100%; }
+.teamSetupPartnerCopy strong{ white-space:normal; }
+
+.teamSetupChildCard{
+  position:relative;
+  padding-right:14px;
+}
+.teamSetupChildBadge{
+  flex:0 0 auto;
+  padding:4px 10px;
+  border-radius:999px;
+  background:var(--jv-lime,#6DBE45);
+  color:var(--jv-on-lime,#0F2E06);
+  font-size:10px;
+  font-weight:950;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* Profile avatar grid: bigger tiles, lime selection ring (matches v0's
+   avatar-picker language) instead of the blue gradient fill. */
+.profileAvatarPicker{
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+.profileAvatarOption{
+  aspect-ratio:1;
+  padding:0;
+  border-radius:16px;
+  border-width:2.5px;
+  background:var(--jv-card-2,var(--card));
+}
+.profileAvatarOption.selected{
+  border-color:var(--jv-lime,#6DBE45);
+  background:var(--jv-card-2,var(--card));
+  box-shadow:0 0 0 2px rgba(109,190,69,.18);
+}
+html.theme--dark .profileAvatarOption.selected{
+  background:var(--jv-card-2,var(--card));
+}
+
+/* Profile switch rows: lime ring for the active player, matching the
+   avatar-selection ring language instead of the blue gradient card. */
+.profileItem.active{
+  border-color:var(--jv-lime,#6DBE45);
+  background:var(--jv-card-2,var(--card));
+  box-shadow:0 0 0 2px rgba(109,190,69,.14);
+}
+html.theme--dark .profileItem.active{
+  background:var(--jv-card-2,var(--card));
+  border-color:var(--jv-lime,#6DBE45);
+}
+.profileItemActive{ color:var(--jv-lime-strong,#4E8F30); }
+html.theme--dark .profileItemActive{ color:var(--jv-lime,#91D66D); }

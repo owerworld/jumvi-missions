@@ -2150,6 +2150,7 @@ function renderTeamXpPicker(){
       <strong>${escapeHtml(child)}</strong>
       <small>${escapeHtml(c.changeKid)}</small>
     </span>
+    <span class="teamSetupChildBadge">${escapeHtml(c.playingNow)}</span>
     <i class="jic jic-arrow-right" aria-hidden="true"></i>
   `;
   childBtn.onclick = ()=>{ clickSound("click"); openTeamSetupChildChooser(); };
