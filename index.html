@@ -193,9 +193,15 @@
     <button class="undoBarBtn" id="undoBtn" type="button">Undo</button>
   </div>
 
+  <!-- v32 app header. The FINAL v32 design has no logo/brand bar: every tab
+       leads with its own title and keeps the player switcher on the same
+       row, right-aligned. The brand marks stay in the DOM (hidden) because
+       the install/A2HS and tour code reads them, and the logo still ships
+       via the manifest/icons. #avatarBtn is the SAME element and handler as
+       before — only its container changed. -->
   <div class="sticky">
-    <div class="topbar">
-      <div class="brand">
+    <div class="topbar appHead">
+      <div class="brand" hidden aria-hidden="true">
         <div class="logoWrap" title="JUMVI">
           <img class="logoImg logoLight" src="assets/logo/jumvi_logo_dark-96.webp" srcset="assets/logo/jumvi_logo_dark-96.webp 1x, assets/logo/jumvi_logo_dark-192.webp 2x" width="36" height="36" alt="JUMVI logo" decoding="async" fetchpriority="high" />
           <img class="logoImg logoDark" src="assets/logo/jumvi_logo_light-96.webp" srcset="assets/logo/jumvi_logo_light-96.webp 1x, assets/logo/jumvi_logo_light-192.webp 2x" width="36" height="36" alt="" decoding="async" aria-hidden="true" />
@@ -204,6 +210,11 @@
           <div class="brandTitle">JUMVI</div>
           <div class="brandSub">Missions</div>
         </div>
+      </div>
+      <div class="appHeadCopy">
+        <p class="appHeadOver" id="appHeadOver">Welcome back</p>
+        <h1 class="appHeadTitle" id="appHeadTitle">Let&rsquo;s play</h1>
+        <p class="appHeadSub" id="appHeadSub" hidden></p>
       </div>
       <div class="topbarActions">
         <button class="tourHelpBtn" id="btnTourHelp" type="button" aria-label="How to play — start the guided tour">?</button>
@@ -220,15 +231,17 @@
     <section class="hero">
       <!-- ============== TAB: TODAY ============== -->
       <div class="tabPanel" id="tabToday" data-tab="today">
-        <div class="todayHeroStage">
+        <!-- Legacy Today hero. FINAL v32 carries the greeting in the app
+             header instead, so this is hidden — but it stays in the DOM
+             because renderTodayContinuity() writes the live continuity copy
+             into #todayHeroTitle/#todayHeroSub and the /tr locale layer
+             observes them. Nothing that reads or writes these IDs changed. -->
+        <div class="todayHeroStage" hidden aria-hidden="true">
           <div class="todayHeroCopy">
             <div class="h1Row">
               <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
               <h1 class="h1" id="todayHeroTitle">Ready to play?</h1>
             </div>
-            <!-- A returning family gets this line rewritten by
-                 renderTodayContinuity() with where they actually left off.
-                 The first-visit wording stays here as the default. -->
             <p class="sub" id="todayHeroSub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
           </div>
           <div class="todayHeroArt" aria-hidden="true"></div>
@@ -244,51 +257,53 @@
              information hierarchy shows the compact progress summary before
              the mission-of-the-day card. Pure DOM position move — no ID or
              logic changes; nothing depends on source order here. -->
-        <section class="statsCompact xpProgressCard" id="xpProgressCard" aria-labelledby="xpCardTitle">
-          <div class="xpCardHeader">
-            <div class="xpCardEyebrow" id="xpCardTitle">Your Progress</div>
+        <!-- FINAL v32 progress: ONE compact card — a single "Level N · Title"
+             line with the mission count opposite it, the 36-mission bar, and
+             two quiet facts (streak, today's goal). Production's richer XP
+             bar, badge tile and team picker stay in the DOM below (hidden) so
+             updateProgress(), renderTeamXpPicker() and the level/XP writers
+             all keep their targets — v32 simply doesn't surface raw XP or the
+             team picker on Home; teams live on the Family tab. -->
+        <section class="statsCompact xpProgressCard" id="xpProgressCard" aria-labelledby="xpLevelLabel">
+          <div class="xpTopRow">
+            <span class="xpLevelCopy">
+              <span class="xpLevelLabel" id="xpLevelLabel">Level 1</span>
+              <span class="xpLevelDot" aria-hidden="true">&middot;</span>
+              <span class="xpLevelName" id="xpLevelName">Rookie Player</span>
+            </span>
+            <span class="xpMissionCount" id="xpMissionCount">0 / 36 missions</span>
+          </div>
+
+          <div class="bar" role="progressbar" aria-labelledby="progressText" aria-valuemin="0" aria-valuemax="36">
+            <div id="progressBarFill"></div>
+          </div>
+
+          <div class="xpFactRow">
+            <span class="xpFact xpFactStreak">
+              <i class="jic jic-flame" aria-hidden="true"></i>
+              <span class="streakPill" id="streakPill">0</span>
+            </span>
             <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
           </div>
 
-          <button class="xpTeamPicker" id="xpTeamPicker" type="button">
-            <span class="xpTeamPickerIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
-            <span class="xpTeamPickerCopy">
-              <strong id="xpTeamPickerLabel">Choose team</strong>
-              <small id="xpTeamPickerSub">Optional · JUMVI remembers</small>
-            </span>
-            <i class="jic jic-arrow-right xpTeamPickerArrow" aria-hidden="true"></i>
-          </button>
-
-          <div class="xpLevelRow">
-            <div class="xpLevelEmblem" aria-hidden="true"><i class="jic jic-star"></i></div>
-            <div class="xpLevelMain">
-              <div class="xpLevelCopy">
-                <span class="xpLevelLabel" id="xpLevelLabel">Level 1</span>
-                <span class="xpLevelName" id="xpLevelName">Rookie Player</span>
-              </div>
+          <!-- Runtime-compat block: hidden on Home per v32, never removed. -->
+          <div class="xpLegacyCompat" hidden aria-hidden="true">
+            <div class="xpCardEyebrow" id="xpCardTitle">Your Progress</div>
+            <span class="statsCompactText" id="progressText">0 of 36 missions complete</span>
+            <button class="xpTeamPicker" id="xpTeamPicker" type="button">
+              <span class="xpTeamPickerIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+              <span class="xpTeamPickerCopy">
+                <strong id="xpTeamPickerLabel">Choose team</strong>
+                <small id="xpTeamPickerSub">Optional &middot; JUMVI remembers</small>
+              </span>
+              <i class="jic jic-arrow-right xpTeamPickerArrow" aria-hidden="true"></i>
+            </button>
+            <div class="xpLevelRow">
+              <div class="xpLevelEmblem" aria-hidden="true"><i class="jic jic-star"></i></div>
               <div class="xpBar" id="xpBar" role="progressbar" aria-labelledby="xpLevelLabel xpValue" aria-valuemin="0" aria-valuemax="80" aria-valuenow="0">
                 <div class="xpBarFill" id="xpBarFill"></div>
               </div>
-            </div>
-            <div class="xpValue" id="xpValue">0 / 80 XP</div>
-          </div>
-
-          <div class="xpMissionProgress">
-            <div class="xpMissionProgressTop">
-              <span class="statsCompactText" id="progressText">0 of 36 missions complete</span>
-            </div>
-            <div class="bar" role="progressbar" aria-labelledby="progressText" aria-valuemin="0" aria-valuemax="36">
-              <div id="progressBarFill"></div>
-            </div>
-          </div>
-
-          <div class="xpMiniGrid">
-            <div class="xpMiniCard xpMiniStreak">
-              <span class="xpMiniIcon"><i class="jic jic-flame" aria-hidden="true"></i></span>
-              <span class="xpMiniBody">
-                <span class="xpMiniLabel xpMiniStreakLabel" aria-hidden="true"></span>
-                <span class="streakPill" id="streakPill"><i class="jic jic-star" aria-hidden="true"></i> 0</span>
-              </span>
+              <div class="xpValue" id="xpValue">0 / 80 XP</div>
             </div>
             <button class="xpMiniCard xpMiniBadges" type="button" data-go-tab="stats">
               <span class="xpMiniIcon"><i class="ico i-medal" aria-hidden="true"></i></span>
@@ -301,48 +316,58 @@
           </div>
         </section>
 
-        <!-- Continue where you left off (rendered by JS when applicable) -->
-        <div class="continueHint" id="continueHint" style="display:none">
-          <span class="continueHintIcon"><i class="jic jic-arrow-back-up" aria-hidden="true"></i></span>
-          <span class="continueHintText">Continue where you left off: <b id="continueHintName">—</b></span>
-          <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
+        <!-- FINAL v32 "Play now": the mission is a hero card — a full-bleed
+             tinted art band with the Leo's Pick chip overlaid on it and Coach
+             Leo peeking over its lower edge, then a left-aligned content block
+             (pack · title · win line · chips) and a two-button action row.
+             Every runtime ID is unchanged; #dailyPack and #dailyWin are new
+             presentation slots fed by renderDailyUI() from the same mission
+             record that already drove #dailyName/#dailyMeta. -->
+        <div class="jvSectionLabel" id="todayPlayNowLabel">Play now</div>
+        <div class="dailyBox dailyBoxPromoted" id="dailyBox">
+          <div class="dailyHeroBand">
+            <div class="dailyIconBig" id="dailyIcon"></div>
+            <!-- Leo picks. He had no job before: a face on the welcome screen
+                 and a speaker button, but the thing he is actually for —
+                 knowing what to play next — was credited to nobody. -->
+            <div class="dailyEyebrow"><img class="eyebrowLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" decoding="async"> <span id="dailyEyebrowText">LEO&rsquo;S PICK</span></div>
+            <img class="dailyHeroLeo" src="assets/leo/leo-point-160.webp" srcset="assets/leo/leo-point-160.webp 1x, assets/leo/leo-point-160@2x.webp 2x" width="54" height="54" alt="" aria-hidden="true" decoding="async">
+          </div>
+          <div class="dailyBody">
+            <div class="dailyPack" id="dailyPack"></div>
+            <div class="dailyName" id="dailyName">&mdash;</div>
+            <div class="dailyWin" id="dailyWin"></div>
+            <div class="dailyMeta" id="dailyMeta">&mdash;</div>
+            <!-- Shown only once this mission is finished. Progress is stated in
+                 words, not colour, so it survives a sunlit screen and a
+                 colour-blind reader. -->
+            <div class="dailyDoneNote" id="dailyDoneNote" style="display:none"><i class="jic jic-circle-check" aria-hidden="true"></i> Mission complete</div>
+            <!-- Order is the hierarchy: after a mission is done the primary
+                 action moves the family through the 36, and replaying drops to
+                 secondary. Before it is done there is only one action here. -->
+            <div class="dailyActionsBig">
+              <!-- No aria-label on purpose: this button's label changes with state
+                   ("Start Mission" → "Next: <mission>"), and a JS-set aria-label
+                   would (a) silently stay English on /tr, because the locale
+                   layer observes childList/characterData but not attributes, and
+                   (b) override the visible text, breaking WCAG 2.5.3 Label in
+                   Name. The visible label IS the accessible name. -->
+              <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play dailyPlayBig" id="btnDailyPlay" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
+              <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyReplay" type="button" style="display:none"><i class="jic jic-loop" aria-hidden="true"></i> Play Again</button>
+              <button class="dailyNewSmall jv-btn jv-btn--secondary" id="btnDailyNew" aria-label="Choose another mission" type="button">Choose another</button>
+            </div>
+            <!-- Stub for backward JS compat -->
+            <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
+            <div class="dailyTitle" style="display:none">Today's Mission</div>
+          </div>
         </div>
 
-        <!-- TODAY'S MISSION — promoted, fully tappable card -->
-        <div class="dailyBox dailyBoxPromoted" id="dailyBox">
-          <!-- Leo picks. He had no job before: a face on the welcome screen and
-               a speaker button, but the thing he is actually for — knowing what
-               to play next — was labelled with a generic target and credited to
-               nobody. This is that job, named. -->
-          <div class="dailyEyebrow"><img class="eyebrowLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" decoding="async"> <span id="dailyEyebrowText">LEO&rsquo;S PICK</span></div>
-          <div class="dailyContent">
-            <div class="dailyIconBig" id="dailyIcon"></div>
-            <div class="dailyText">
-              <div class="dailyName" id="dailyName">—</div>
-              <div class="dailyMeta" id="dailyMeta">—</div>
-            </div>
-          </div>
-          <!-- Shown only once this mission is finished. Progress is stated in
-               words, not colour, so it survives a sunlit screen and a
-               colour-blind reader. -->
-          <div class="dailyDoneNote" id="dailyDoneNote" style="display:none"><i class="jic jic-circle-check" aria-hidden="true"></i> Mission complete</div>
-          <!-- Order is the hierarchy: after a mission is done the primary
-               action moves the family through the 36, and replaying drops to
-               secondary. Before it is done there is only one action here. -->
-          <div class="dailyActionsBig">
-            <!-- No aria-label on purpose: this button's label changes with state
-                 ("Start Mission" → "Next: <mission>"), and a JS-set aria-label
-                 would (a) silently stay English on /tr, because the locale
-                 layer observes childList/characterData but not attributes, and
-                 (b) override the visible text, breaking WCAG 2.5.3 Label in
-                 Name. The visible label IS the accessible name. -->
-            <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play dailyPlayBig" id="btnDailyPlay" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
-            <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyReplay" type="button" style="display:none"><i class="jic jic-loop" aria-hidden="true"></i> Play Again</button>
-            <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyNew" aria-label="Choose another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Choose another</button>
-          </div>
-          <!-- Stub for backward JS compat -->
-          <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
-          <div class="dailyTitle" style="display:none">Today's Mission</div>
+        <!-- Continue where you left off (rendered by JS when applicable).
+             v32 places resume AFTER the hero, not before it. -->
+        <div class="continueHint" id="continueHint" style="display:none">
+          <span class="continueHintIcon"><i class="jic jic-arrow-back-up" aria-hidden="true"></i></span>
+          <span class="continueHintText">Continue where you left off: <b id="continueHintName">&mdash;</b></span>
+          <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
         </div>
 
 
@@ -385,6 +410,7 @@
         </div>
 
         <!-- Optional reward after real-world play; hidden until one mission is complete. -->
+        <div class="jvSectionLabel" id="todayExploreLabel">Explore</div>
         <button class="advCard" id="advModeCard" type="button" aria-label="Explore Leo's Island, an optional 3D adventure">
           <span class="advCardEmoji"><img class="specialArt" src="assets/ui/special/leo-island.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
           <span class="advCardText">
@@ -472,6 +498,31 @@
           <div class="familyStreak jv-helper" id="familyStreak"><i class="jic jic-flame" aria-hidden="true"></i> Family streak: 0 days</div>
         </div>
 
+        <!-- v32 puts "Add a player" directly under the roster. Opens the same
+             Kids & Settings sheet #avatarBtn does — no new surface. -->
+        <button class="familyAddPlayer jv-btn jv-btn--text" id="btnFamilyAddPlayer" type="button">
+          <i class="jic jic-plus" aria-hidden="true"></i> Add a player
+        </button>
+
+        <!-- v32 "Family progress": one restrained block of REAL aggregates,
+             filled by renderFamilyProgressCard() from the same per-profile
+             storage the roster uses. No invented family score. -->
+        <section class="familyProgressCard jv-card" id="familyProgressCard">
+          <span class="familyProgressTitle jv-card-title">Family progress</span>
+          <div class="familyProgressLines" id="familyProgressLines"></div>
+        </section>
+
+        <!-- v32 teams preview: compact overview row. The full team standings
+             and the family board stay further down, unchanged. -->
+        <button class="familyTeamsPreview jv-card-2" id="familyTeamsPreview" type="button">
+          <span class="familyTeamsIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+          <span class="familyTeamsCopy">
+            <span class="familyTeamsTitle" id="familyTeamsTitle">No team yet</span>
+            <span class="familyTeamsSub" id="familyTeamsSub">Play missions together</span>
+          </span>
+          <span class="familyTeamsCta" id="familyTeamsCta">Create a team</span>
+        </button>
+
         <!-- Empty state — moved from the old #tabStats -->
         <div class="emptyState jv-card" id="statsEmptyState" style="display:none">
           <div class="emptyStateIcon"><i class="ico i-chart" aria-hidden="true"></i></div>
@@ -480,7 +531,20 @@
           <button class="btn btnPrimary jv-btn jv-btn--primary emptyStateBtn" data-go-tab="today" type="button"><i class="ico i-play" aria-hidden="true"></i> Pick a Mission</button>
         </div>
 
-        <!-- Parent Dashboard — moved from the old #tabStats -->
+        <!-- v32 "Achievements": heading + View all, then a 3-column preview
+             grid of the REAL badges. Full detail still opens the existing
+             #badgesBackdrop modal via #btnBadgesRow. -->
+        <div class="achievementsHead">
+          <span class="achievementsTitle jv-card-title">Achievements</span>
+          <button class="badgesHint jv-btn jv-btn--text" id="btnBadgesRow" type="button">View all</button>
+        </div>
+        <div class="statsBadgesSection jv-card">
+          <h3 class="statsSectionTitle jv-section" hidden aria-hidden="true"><i class="ico i-medal" aria-hidden="true"></i> Badges</h3>
+          <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+        </div>
+
+        <!-- Parent Dashboard — real production surface with no v32 equivalent;
+             kept, but below the v32 blocks so the top of the tab matches. -->
         <div class="dashCard jv-card" id="parentDashboard" aria-label="This Week's Progress">
           <div class="dashHeader">
             <div class="dashTitle jv-card-title"><i class="ico i-chart" aria-hidden="true"></i> This Week's Progress</div>
@@ -500,14 +564,6 @@
             <!-- Eski print buton stub — JS uyumlulugu icin -->
             <button id="btnDashPrint" type="button" style="display:none" aria-hidden="true"></button>
           </div>
-        </div>
-
-        <!-- Badges preview — moved from the old #tabStats. Full detail stays
-             in the existing #badgesBackdrop modal (real BADGES data, unchanged). -->
-        <div class="statsBadgesSection jv-card-2">
-          <h3 class="statsSectionTitle jv-section"><i class="ico i-medal" aria-hidden="true"></i> Badges</h3>
-          <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
-          <button class="badgesHint jv-btn jv-btn--text" id="btnBadgesRow" type="button">See all badges <i class="jic jic-arrow-right" aria-hidden="true"></i></button>
         </div>
 
         <section class="teamsNowCard" id="teamsNowCard" aria-live="polite"></section>
@@ -575,6 +631,10 @@
         <h2 class="tabHeading">For Grown-ups</h2>
         <p class="tabIntro" id="grownupsIntro">Names, avatars, app settings, product care, privacy, and support.</p>
 
+        <!-- v32 groups the grown-up utilities under plain sentence-case
+             labels. The rows themselves are the existing runtime elements. -->
+        <div class="jvSectionLabel jvGroupLabel">Kids &amp; settings</div>
+
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
           <div class="profileCardAvatar" id="profileCardAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></div>
@@ -588,6 +648,8 @@
         <button class="profileTabOpenBtn btn btnPrimary jv-btn jv-btn--primary" id="btnOpenProfileFromTab" type="button">
           <i class="jic jic-users" aria-hidden="true"></i> Kids &amp; Settings
         </button>
+
+        <div class="jvSectionLabel jvGroupLabel">Progress &amp; play</div>
 
         <!-- Champion Certificate — moved here from the old #tabStats. Same
              IDs (#certBox/#certProgressFill/#certSub/#certBtn), same
@@ -630,6 +692,10 @@
             </div>
             <span class="profileQuickArrow">›</span>
           </a>
+        </div>
+
+        <div class="jvSectionLabel jvGroupLabel">Care &amp; trust</div>
+        <div class="profileQuickLinks">
           <button class="profileQuickLink" id="privacyLink" type="button">
             <span class="profileQuickIcon"><i class="ico i-lock" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
@@ -638,6 +704,10 @@
             </div>
             <span class="profileQuickArrow">›</span>
           </button>
+        </div>
+
+        <div class="jvSectionLabel jvGroupLabel">Need a hand?</div>
+        <div class="profileQuickLinks">
           <button class="profileQuickLink" id="helpSupportLink" type="button">
             <span class="profileQuickIcon" aria-hidden="true">?</span>
             <div class="profileQuickInfo">
@@ -766,6 +836,8 @@
       <div class="sheetHandle" aria-hidden="true"></div>
       <div class="sheetTop">
         <div>
+          <!-- v32 leads the sheet with the pack name above the mission title. -->
+          <div class="sheetPack" id="mPack"></div>
           <div class="sheetTitle" id="mTitle">Mission</div>
           <div class="sheetMeta" id="mMeta"></div>
         </div>
@@ -778,6 +850,7 @@
       <!-- "You need" kit row (v0 v32) — static, real product equipment art,
            same two pieces every mission (2 paddles + 1 ball); not tied to any
            per-mission state so it needs no JS. -->
+      <div class="mSectionLabel">You need</div>
       <div class="missionKitRow">
         <div class="missionKitChip jv-card-2">
           <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="34" height="34" loading="lazy">
@@ -915,6 +988,24 @@
 
       <div class="small" id="mSmall"></div>
       </div>
+
+      <!-- FINAL v32 "playing" / "gate complete" panel. Purely presentational:
+           it is driven by updateToggleDoneGateUI() from the SAME gate state
+           the completion button already uses (missionGateRemainingMs plus
+           whether the timer was actually started), and it changes no timing,
+           no thresholds and no handlers. The real flow is untouched:
+           Start -> physical play -> gate opens -> one tap "We Finished!"
+           (#btnToggleDone) -> 5s undo bar. There is no hold-to-finish. -->
+      <section class="missionPlayPanel" id="missionPlayPanel" hidden aria-live="polite">
+        <span class="playPanelChip" id="playPanelChip"></span>
+        <img class="playPanelLeo" src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" width="120" height="120" alt="" aria-hidden="true" decoding="async">
+        <div class="playPanelTitle" id="playPanelTitle">Eyes on the ball!</div>
+        <div class="playPanelSub" id="playPanelSub">Put the phone down &mdash; Leo will let you know.</div>
+        <div class="playPanelStateRow">
+          <span class="playPanelDial" id="playPanelDial"></span>
+          <span class="playPanelStateText" id="playPanelStateText"></span>
+        </div>
+      </section>
 
       <!-- Phase 2E: completion reward stays inline in the mission sheet.
            It is NOT a second modal, so badge/score celebrations can coexist. -->

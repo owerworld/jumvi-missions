@@ -2280,6 +2280,21 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }, 180);
 });
 
+(function wireFamilyV32Controls(){
+  const addBtn = document.getElementById("btnFamilyAddPlayer");
+  if(addBtn) addBtn.addEventListener("click", ()=>{
+    clickSound("click");
+    // Same Kids & Settings sheet the header switcher opens.
+    const av = document.getElementById("avatarBtn");
+    if(av) av.click();
+  });
+  const teamsRow = document.getElementById("familyTeamsPreview");
+  if(teamsRow) teamsRow.addEventListener("click", ()=>{
+    clickSound("click");
+    openTeamXpPicker();
+  });
+})();
+
 (function wireTeamXpPicker(){
   const open = document.getElementById("xpTeamPicker");
   const close = document.getElementById("teamXpClose");
@@ -2829,9 +2844,15 @@ function renderDailyUI(){
     ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
     : JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title, true);
   if(dailyName) dailyName.textContent = ms.title;
+  // v32 hero: the pack name is its own quiet line above the title and the win
+  // condition sits under it, so the chip row can stay short (players · time ·
+  // XP). Same mission record, same getPackName() — only the placement moved.
+  const dailyPackEl = document.getElementById("dailyPack");
+  if(dailyPackEl) dailyPackEl.textContent = getPackName(ms.pack);
+  const dailyWinEl = document.getElementById("dailyWin");
+  if(dailyWinEl) dailyWinEl.textContent = ms.win || "";
   if(dailyMeta){
     dailyMeta.innerHTML = `
-      <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
       <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
       <span class="tag xpTag">+${missionXp(ms)} XP</span>
@@ -3552,11 +3573,14 @@ function updateBadges(){
       extraClass = " " + slug;
     }
     return `
-      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}${extraClass}">
-        <div class="badgesListIcon">${JUMVI_ART.img(JUMVI_ART.badge(b.id), "badgeArt", b.name)}</div>
+      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}${extraClass}" title="${escapeHtml(b.req)}${ok ? "" : " — " + String(toGo).replace(/<[^>]*>/g, "").trim()}">
+        <div class="badgesListArtWrap">
+          <div class="badgesListIcon">${JUMVI_ART.img(JUMVI_ART.badge(b.id), "badgeArt", b.name)}</div>
+          <span class="badgesListMark" aria-hidden="true"><i class="jic ${ok ? "jic-circle-check" : "jic-lock"}"></i></span>
+        </div>
         <div class="badgesListName">${escapeHtml(b.name)}</div>
         <div class="badgesListReq">${escapeHtml(b.req)}</div>
-        <div class="badgesListStatus">${ok ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Earned' : toGo}</div>
+        <div class="badgesListStatus">${ok ? (collectionTr ? "Kazanıldı" : "Earned") : (collectionTr ? "Henüz kazanılmadı" : "Not yet earned")}</div>
       </div>
     `;
   }).join("");
@@ -3654,6 +3678,9 @@ function updateProgress(options = {}){
   const total = missions.length;
   const completed = done.size;
   progressText.textContent = `${completed} of ${total} missions complete`;
+  // v32 Home states the same count in its short form beside the level line.
+  const missionCountEl = document.getElementById("xpMissionCount");
+  if(missionCountEl) missionCountEl.textContent = `${completed} / ${total} missions`;
   const pct = Math.round((completed/total)*100);
   progressFill.style.width = pct + "%";
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
@@ -4344,6 +4371,9 @@ function startTimer(durationSeconds) {
 
   // Update text smoothly (and accurate if tab is throttled)
   timerInterval = setInterval(updateTimerTick, 200);
+  // The v32 play panel keys off "timer started"; refresh now so it appears on
+  // the tap rather than on the next 1s gate tick.
+  try { updateToggleDoneGateUI(); } catch(_){}
 }
 
 function pauseTimer(){
@@ -4394,6 +4424,9 @@ function resumeTimer(){
   requestWakeLock();
 
   timerInterval = setInterval(updateTimerTick, 200);
+  // The v32 play panel keys off "timer started"; refresh now so it appears on
+  // the tap rather than on the next 1s gate tick.
+  try { updateToggleDoneGateUI(); } catch(_){}
 }
 
 function toggleTimer(durationSeconds){
@@ -4552,6 +4585,9 @@ function openMission(id){
   }
 
   mTitle.textContent = ms.title;
+  // v32 pack eyebrow above the mission name (same getPackName source).
+  const mPackEl = document.getElementById("mPack");
+  if(mPackEl) mPackEl.textContent = getPackName(ms.pack);
   /* Personal best.
    *
    * The app has recorded a best catch count per mission all along, and showed
@@ -4578,7 +4614,9 @@ function openMission(id){
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
   // Guide Leo beside the STEPS header (Task 4b/c): decorative pointing pose,
   // but the 44px button wrapping him is tappable → speaks the steps aloud.
-  mSteps.innerHTML = `<div class="stepsHeadRow"><b>Steps</b>
+  // v32: "What to do" eyebrow, then each step as its own bordered row with a
+  // numbered blue disc. Same steps array, same read-aloud Leo button.
+  mSteps.innerHTML = `<div class="stepsHeadRow"><b class="mSectionLabel">What to do</b>
     <button type="button" class="leoSpeakBtn" id="leoSpeakBtn" aria-label="Hear the steps read aloud">
       <picture>
         <source srcset="assets/leo/leo-guide-256.webp?v=20260717-1" type="image/webp">
@@ -4586,7 +4624,7 @@ function openMission(id){
       </picture>
     </button>
   </div><ol class="missionStepsList">
-    ${steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
+    ${steps.map((s,i)=>`<li><span class="stepNum" aria-hidden="true">${i+1}</span><span class="stepText">${escapeHtml(s)}</span></li>`).join("")}
   </ol>`;
   const leoSpeakBtn = document.getElementById("leoSpeakBtn");
   if(leoSpeakBtn) leoSpeakBtn.onclick = ()=> toggleLeoSpeakSteps(ms);
@@ -4596,7 +4634,11 @@ function openMission(id){
   // not hear the first rule twice and the timer never runs under speech.
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
-  mWin.innerHTML = `<b><i class="jic jic-award" aria-hidden="true"></i> Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
+  // v32 states the win condition on a dark panel with a lime trophy disc —
+  // the single loudest thing on the sheet after the mission name.
+  mWin.innerHTML = `<span class="winTrophy" aria-hidden="true"><i class="jic jic-award"></i></span>` +
+    `<span class="winCopy"><span class="winLabel">You win when</span>` +
+    `<span class="winText">${escapeHtml(winText)}</span></span>`;
   mTip.innerHTML = `<b><i class="jic jic-users" aria-hidden="true"></i> Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   if(mKidsTip){
     mKidsTip.innerHTML = `<b><i class="jic jic-star" aria-hidden="true"></i> Kids Challenge</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;
@@ -5572,6 +5614,40 @@ function updateMissionActionHierarchy(){
   next.classList.toggle("actionMuted", !isDone && !gateOpen);
 }
 
+/* v32 shows a dedicated "playing" panel between Start and the finish tap.
+ * Presentation only — it reads the gate state that already exists and never
+ * changes it. Visible once the child has actually started play (the timer is
+ * running, or already ran out for this mission) and until the mission is
+ * marked done. */
+function renderMissionPlayPanel(id, waitMs){
+  const panel = document.getElementById("missionPlayPanel");
+  if(!panel) return;
+  const sheetEl = document.getElementById("sheet");
+  const started = (timerInterval !== null) || _timerFinishedFor.has(id);
+  const show = started && id != null && !done.has(id);
+  panel.hidden = !show;
+  if(sheetEl) sheetEl.classList.toggle("isPlaying", show);
+  if(!show) return;
+
+  const tr = isTurkishUI();
+  const gateOpen = waitMs <= 0;
+  panel.classList.toggle("gateOpen", gateOpen);
+
+  const chip = document.getElementById("playPanelChip");
+  const dial = document.getElementById("playPanelDial");
+  const stateText = document.getElementById("playPanelStateText");
+  if(chip) chip.textContent = gateOpen
+    ? (tr ? "Aşama tamam" : "Gate complete")
+    : (tr ? "Şimdi oynuyor" : "Playing now");
+  if(dial){
+    dial.textContent = gateOpen ? "" : String(Math.ceil(waitMs / 1000)) + "s";
+    dial.classList.toggle("done", gateOpen);
+  }
+  if(stateText) stateText.textContent = gateOpen
+    ? (tr ? "Süre doldu! Harika oynadınız." : "Time's up! Great rallying.")
+    : (tr ? "Leo sayıyor — oynamaya devam." : "Leo is counting the rally — keep playing.");
+}
+
 function updateToggleDoneGateUI(){
   if(!btnToggleDone) return;
   updateMissionActionHierarchy();
@@ -5579,10 +5655,12 @@ function updateToggleDoneGateUI(){
   const id = lastOpenedId;
   if(id == null || done.has(id)){
     btnToggleDone.classList.remove("btnGateWait");
+    try { renderMissionPlayPanel(id, 0); } catch(_){}
     return;
   }
   const waitMs = missionGateRemainingMs(id);
   const tr = isTurkishUI();
+  try { renderMissionPlayPanel(id, waitMs); } catch(_){}
   if(waitMs > 0){
     btnToggleDone.classList.add("btnGateWait");
     const secs = Math.ceil(waitMs / 1000);
@@ -6150,6 +6228,9 @@ function renderProfileList(){
       <div class="profileItemAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(p.avatar), "avatarArt", "", true)}</div>
       <div class="profileItemBody">
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
+        <div class="profileItemSub">${isActive
+          ? (isTurkishUI() ? "Şu an seçili" : "Currently selected")
+          : (isTurkishUI() ? "Bu cihazdaki oyuncu" : "Local player")}</div>
       </div>
       <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button"><i class="jic jic-pencil" aria-hidden="true"></i></button>
       ${isActive ? '<div class="profileItemActive"><i class="jic jic-circle-check" aria-hidden="true"></i></div>' : ""}
@@ -7426,6 +7507,8 @@ function switchTab(tabName){
       // opened — this used to be the "stats" tab's job (see the remap above).
       if(typeof updateProgress === "function") updateProgress();
       if(typeof renderFamilyInsights === "function") renderFamilyInsights();
+      if(typeof renderFamilyProgressCard === "function") renderFamilyProgressCard();
+      if(typeof renderFamilyTeamsPreview === "function") renderFamilyTeamsPreview();
       if(typeof renderTeamsHub === "function") renderTeamsHub();
     }
     if(tabName === "browse") {
@@ -7448,10 +7531,58 @@ function switchTab(tabName){
     if(typeof window.__jumviRevealHeader === "function") window.__jumviRevealHeader();
   } catch(_){}
 
+  // v32 app header follows the tab (title + optional overline/sub, switcher
+  // stays put). Defensive: a header failure must never break navigation.
+  try { renderAppHead(tabName); } catch(_){}
+
   // The island is a temporary bonus view, never the QR return destination.
   try { lsSet(NAV_TAB_KEY, tabName === "hub3d" ? "today" : tabName); } catch(_){}
 
   trackEvent("Tab Switched", { tab: tabName });
+}
+
+/* ===== v32 app header =====================================================
+ * FINAL v32 leads every tab with its own title on the same row as the player
+ * switcher, and drops the logo/brand bar entirely. The per-tab <h1>/intro
+ * elements stay in the DOM (hidden) so everything that writes to them —
+ * renderTodayContinuity(), renderTeamsHub()'s setText(), the /tr locale
+ * observer — keeps working untouched; this only mirrors them into the header.
+ */
+function renderAppHead(tabName){
+  const over  = document.getElementById("appHeadOver");
+  const title = document.getElementById("appHeadTitle");
+  const sub   = document.getElementById("appHeadSub");
+  if(!title) return;
+  const tr = isTurkishUI();
+  const txt = (id)=>{ const el = document.getElementById(id); return el ? (el.textContent || "").trim() : ""; };
+  const set = (el, value)=>{
+    if(!el) return;
+    const v = (value || "").trim();
+    el.textContent = v;
+    el.hidden = !v;
+  };
+
+  let o = "", t = "", s = "";
+  if(tabName === "browse"){
+    t = tr ? "36 Görev" : "36 Missions";
+    // Same real count as the Home card, in v32's Missions-header wording.
+    try { s = `${done.size} / ${missions.length} completed`; } catch(_){ s = ""; }
+  }else if(tabName === "modes"){
+    // v32 titles this tab plainly "Family"; the longer "Our Family Board"
+    // stays on #teamsHubTitle for the /tr layer and renderTeamsHub()'s setText.
+    t = tr ? "Aile" : "Family";
+    s = tr ? "Ailen nasıl gidiyor" : "How your crew is doing";
+  }else if(tabName === "profile"){
+    t = tr ? "Ebeveynler" : "Grown-ups";
+    s = tr ? "Çocuklar, ayarlar ve faydalı ekstralar" : "Kids, settings & useful extras";
+  }else{
+    // Home keeps the real, live greeting the runtime already computes.
+    o = tr ? "Tekrar hoş geldin" : "Welcome back";
+    t = tr ? "Hadi oynayalım" : "Let's play";
+  }
+  set(over, o);
+  set(title, t);
+  set(sub, s);
 }
 
 function renderProfileTab(){
@@ -7503,6 +7634,67 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 
 
+/* ===== v32 Family: progress summary + teams preview =======================
+ * Real aggregates only, read from the same per-profile storage the roster
+ * uses. Nothing here writes state or invents a "family score".
+ */
+/* A profile's level title from its own completed-mission count, using the
+ * existing XP model (no new storage, no second notion of level). */
+function levelNameFor(doneCount){
+  try{
+    const ids = [];
+    for(let i = 1; i <= doneCount; i++) ids.push(i);
+    const xp = typeof xpFromDoneSet === "function" ? xpFromDoneSet(new Set(ids)) : 0;
+    const info = typeof xpLevelInfo === "function" ? xpLevelInfo(xp) : null;
+    if(info && info.current) return isTurkishUI() ? info.current.tr : info.current.en;
+  }catch(_){}
+  return isTurkishUI() ? "Çaylak Oyuncu" : "Rookie Player";
+}
+
+function renderFamilyProgressCard(){
+  const lines = document.getElementById("familyProgressLines");
+  if(!lines) return;
+  const tr = isTurkishUI();
+  const profiles = getProfiles();
+  let combined = 0;
+  profiles.forEach(p => {
+    const raw = lsGetJSON("jumvi_" + p.id + "_missions_done_v3", []);
+    combined += Array.isArray(raw) ? raw.length : 0;
+  });
+  const active = getActiveProfile();
+  const activeName = (active && active.name) || (tr ? "Oyuncu" : "Player");
+  const activeStreak = Number(lsGet("jumvi_" + getActiveProfileId() + "_streak_count_v1", "0")) || 0;
+  let badgeCount = 0;
+  try { badgeCount = new Set(lsGetJSON(BADGES_UNLOCKED_KEY, [])).size; } catch(_){}
+
+  const missionWord = tr ? "görev" : ("mission" + (combined === 1 ? "" : "s"));
+  const badgeWord = tr ? "rozet" : ("badge" + (badgeCount === 1 ? "" : "s"));
+  lines.innerHTML =
+    '<span class="familyProgressLine"><i class="ico i-target" aria-hidden="true"></i> ' +
+      escapeHtml(`${combined} ${missionWord} ` + (tr ? "profillerde tamamlandı" : "completed across profiles")) + '</span>' +
+    '<span class="familyProgressLine"><i class="jic jic-flame" aria-hidden="true"></i> ' +
+      escapeHtml(tr ? `${activeName} serisi: ${activeStreak} gün` : `${activeName}'s streak: ${activeStreak} day${activeStreak === 1 ? "" : "s"}`) + '</span>' +
+    '<span class="familyProgressLine"><i class="ico i-medal" aria-hidden="true"></i> ' +
+      escapeHtml(`${badgeCount} ${badgeWord} ` + (tr ? "kazanıldı" : "earned")) + '</span>';
+}
+
+function renderFamilyTeamsPreview(){
+  const title = document.getElementById("familyTeamsTitle");
+  const sub = document.getElementById("familyTeamsSub");
+  const cta = document.getElementById("familyTeamsCta");
+  if(!title || !sub || !cta) return;
+  const tr = isTurkishUI();
+  if(ACTIVE_JUMVI_TEAM){
+    title.textContent = teamDisplayName(ACTIVE_JUMVI_TEAM);
+    sub.textContent = tr ? "Şu anki takım" : "Playing as this team";
+    cta.textContent = tr ? "Değiştir" : "Switch";
+  }else{
+    title.textContent = tr ? "Henüz takım yok" : "No team yet";
+    sub.textContent = tr ? "Görevleri birlikte oynayın" : "Play missions together";
+    cta.textContent = tr ? "Takım oluştur" : "Create a team";
+  }
+}
+
 /** =======================
  * Family Insights — Stats tab'da çoklu profil özeti
  * ======================= */
@@ -7512,14 +7704,10 @@ function renderFamilyInsights(){
   const fStreakEl = document.getElementById("familyStreak");
   if(!wrap || !grid) return;
 
-  if(ACTIVE_JUMVI_TEAM){
-    wrap.style.display = "none";
-    return;
-  }
-
   const profiles = getProfiles();
-  // Sadece 2+ profil varsa göster (tek profilde anlamı yok)
-  if(profiles.length < 2){
+  // v32 lists every local player, including a single-child household — the
+  // roster is the Family tab's primary block, not a multi-profile extra.
+  if(profiles.length < 1){
     wrap.style.display = "none";
     return;
   }
@@ -7550,9 +7738,10 @@ function renderFamilyInsights(){
           <span class="familyMemberName">${escapeHtml(it.p.name || "Player")}</span>
           ${isActive ? `<span class="familyMemberActive">${tr ? "Aktif" : "Active"}</span>` : ""}
         </div>
+        <div class="familyMemberLevel">${escapeHtml(levelNameFor(it.doneCount))}</div>
         <div class="familyMemberBar"><div class="familyMemberBarFill" style="width:${pct}%"></div></div>
         <div class="familyMemberStats">
-          <span class="familyMemberMissions">${it.doneCount}/36 ${tr ? "görev" : "missions"}</span>
+          <span class="familyMemberMissions">${it.doneCount} / 36 ${tr ? "görev" : "missions"}</span>
           <span class="familyMemberStreak"><i class="jic jic-flame" aria-hidden="true"></i> ${it.streak}</span>
         </div>
       </div>
@@ -7987,6 +8176,15 @@ function findNextMissionForUser(){
  * holds the next mission, which is the useful default. */
 const _openPathPacks = new Set();
 
+/* v32 mission rows read "2 players · 90s". The mission record stores just the
+ * count ("2", "4+"), so this only adds the noun — no data change. */
+function playersLabel(players){
+  const p = String(players == null ? "" : players).trim();
+  if(!p) return "";
+  if(/players?/i.test(p)) return p;
+  return isTurkishUI() ? `${p} oyuncu` : `${p} player${p === "1" ? "" : "s"}`;
+}
+
 function renderMissionPath(){
   const container = document.getElementById("missionPath");
   if(!container || typeof SKILL_PACKS === "undefined") return;
@@ -8063,32 +8261,39 @@ function renderMissionPath(){
       const isNext = m.id === nextId;
 
       const step = document.createElement("div");
-      step.className = "pathStep";
-      if(i > 0){
-        step.classList.add("hasLineAbove");
-        if(packMissions[i-1] && done.has(packMissions[i-1].id)){
-          step.classList.add("lineSolid");
-        }
-      }
+      /* FINAL v32 renders a pack as a compact LIST, not a vertical path of
+       * oversized circles: one tappable row per mission — art tile, title,
+       * "players · time", and a right-hand affordance (an "Up next" pill, a
+       * completed check, or a chevron). Deliberately new class names so none
+       * of the legacy .pathStep* circle/connector CSS can reach these rows.
+       * Same missions, same order, same openMission() + analytics call. */
+      step.className = "pathRow";
       if(isDone) step.classList.add("done");
       if(isNext && !isDone) step.classList.add("next");
       if(isDaily && !isDone) step.classList.add("daily");
 
       const node = document.createElement("button");
       node.type = "button";
-      node.className = "pathStepNode";
+      node.className = "pathRowBtn";
       const nodeState = isDone ? "completed" : (isDaily ? "today's pick" : (isNext ? "next mission" : ""));
       node.setAttribute("aria-label", m.title + " — " + pack.label + (nodeState ? " (" + nodeState + ")" : ""));
       node.setAttribute("data-mission-id", m.id);
       if(isNext) node.id = "pathNodeNext";
-      node.innerHTML = '<span class="pathStepIcon">' + JUMVI_ART.img(JUMVI_ART.mission(m.id), "missionArt", m.title) + '</span>';
+
+      let rightHtml;
       if(isDone){
-        const doneMark = document.createElement("span");
-        doneMark.className = "pathStepDoneMark";
-        doneMark.setAttribute("aria-hidden", "true");
-        doneMark.textContent = "✓";
-        node.appendChild(doneMark);
+        rightHtml = '<span class="pathRowCheck" aria-hidden="true"><i class="jic jic-circle-check"></i></span>';
+      }else if(isNext || isDaily){
+        rightHtml = '<span class="pathRowPill">' + (isDaily ? "Today" : "Up next") + '</span>';
+      }else{
+        rightHtml = '<i class="jic jic-arrow-right pathRowChevron" aria-hidden="true"></i>';
       }
+      node.innerHTML =
+        '<span class="pathRowIcon">' + JUMVI_ART.img(JUMVI_ART.mission(m.id), "missionArt", m.title) + '</span>' +
+        '<span class="pathRowCopy">' +
+          '<span class="pathRowName">' + escapeHtml(m.title) + '</span>' +
+          '<span class="pathRowMeta">' + escapeHtml(playersLabel(m.players)) + ' &middot; ' + escapeHtml(m.time) + '</span>' +
+        '</span>' + rightHtml;
 
       node.addEventListener("click", function(){
         try{ clickSound(isDone ? "success" : "click"); }catch(_){}
@@ -8097,19 +8302,7 @@ function renderMissionPath(){
         openMission(m.id);
       });
 
-      const label = document.createElement("div");
-      label.className = "pathStepLabel";
-      label.textContent = m.title;
-
       step.appendChild(node);
-      step.appendChild(label);
-      if(!isDone && (isDaily || isNext)){
-        const status = document.createElement("span");
-        status.className = "pathStepStatus " + (isDaily ? "pathStepStatusDaily" : "pathStepStatusNext");
-        status.setAttribute("aria-hidden", "true");
-        status.textContent = isDaily ? "TODAY" : "NEXT";
-        step.appendChild(status);
-      }
 
       // Just-done celebration
       if(window._justDoneMissionId === m.id){
