@@ -2596,3 +2596,39 @@ html.theme--dark{
 @media (prefers-reduced-motion: reduce){
   .jv-btn{ transition:none !important; }
 }
+
+/* ==========================================================================
+   Missions (Browse) — v0 v32 visual pass over the EXISTING accordion.
+   renderMissionPath() (app.js) already implements the required behavior —
+   six pack sections, compact headers, per-mission progress dots, only the
+   pack holding the next mission expanded by default, user expand/collapse,
+   real mission icons and completion state. This only re-skins it; no markup
+   or JS changed.
+   ========================================================================== */
+#tabBrowse .todayQuickAction{
+  border-radius:var(--jv-r-button) !important;
+  border:1px solid var(--jv-line) !important;
+  background:var(--jv-card) !important;
+  box-shadow:none !important;
+}
+.pathSection{
+  border-radius:var(--jv-r-card) !important;
+  background:var(--jv-card) !important;
+  border:1px solid var(--jv-line) !important;
+  box-shadow:none !important;
+}
+.pathSection.allDone{
+  border-color:var(--jv-lime) !important;
+  background:color-mix(in srgb, var(--jv-lime) 10%, var(--jv-card)) !important;
+}
+.pathSectionProgress{
+  font-weight:700 !important;
+  background:var(--jv-card-2) !important;
+  border:none !important;
+  color:var(--pack-color) !important;
+}
+.pathSection.allDone .pathSectionProgress{
+  background:var(--jv-lime) !important;
+  color:var(--jv-on-lime) !important;
+}
+.pathSectionName{ font-family:var(--font-display,inherit) !important; }
