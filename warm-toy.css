@@ -3162,3 +3162,632 @@ html.theme--dark .profileItem.active{
 }
 .profileItemActive{ color:var(--jv-lime-strong,#4E8F30); }
 html.theme--dark .profileItemActive{ color:var(--jv-lime,#91D66D); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FINAL v32 TRUE VISUAL PORT — 2026-08-19
+   ---------------------------------------------------------------------------
+   The earlier port re-skinned production's existing geometry and left the old
+   composition intact, so the live site still read as the old site. This
+   section replaces the *structure* of the high-traffic surfaces with the
+   approved v32 composition. It is intentionally assertive: it comes last in
+   the last-loaded stylesheet and overrides the earlier Warm-Toy blocks it
+   supersedes. Runtime hooks (IDs, handlers, state classes) are untouched.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── App header: title + player switcher on one row, no brand bar ────────── */
+.appHead{
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  padding:10px 16px 10px !important;
+  min-height:0 !important;
+}
+.appHead .brand{ display:none !important; }
+.appHeadCopy{ min-width:0; flex:1; }
+.appHeadOver{
+  margin:0 0 1px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:13px;
+  font-weight:800;
+  line-height:1.2;
+}
+.appHeadOver[hidden], .appHeadSub[hidden]{ display:none !important; }
+.appHeadTitle{
+  margin:0;
+  font-family:var(--font-display,inherit);
+  font-size:26px;
+  line-height:1.12;
+  font-weight:950;
+  letter-spacing:-.4px;
+  color:var(--text);
+}
+.appHeadSub{
+  margin:3px 0 0;
+  color:var(--jv-text-2,var(--muted));
+  font-size:13px;
+  font-weight:750;
+  line-height:1.3;
+}
+.appHead .topbarActions{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding-top:2px;
+}
+/* The tour "?" is a real runtime affordance but not v32 chrome — keep it
+   reachable and quiet rather than competing with the switcher. */
+.appHead .tourHelpBtn{
+  width:30px !important; height:30px !important;
+  font-size:13px !important;
+  opacity:.55;
+}
+/* Player switcher pill — v32 shape: avatar, name, chevron down. */
+.appHead .profilePill{
+  display:inline-flex !important;
+  align-items:center;
+  gap:7px;
+  padding:4px 10px 4px 4px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:999px !important;
+  background:var(--jv-card-2,var(--card)) !important;
+  box-shadow:none !important;
+  max-width:132px;
+}
+.appHead .profilePillAvatar{
+  width:28px !important; height:28px !important; flex:0 0 28px !important;
+  border-radius:50% !important; overflow:hidden;
+}
+.appHead .profilePillName{
+  overflow:hidden;
+  font-size:13px !important;
+  font-weight:900 !important;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  color:var(--text) !important;
+}
+.appHead .profilePillChevron{
+  flex:0 0 auto;
+  transform:rotate(90deg);
+  color:var(--jv-text-3,var(--muted)) !important;
+  font-size:13px;
+}
+html.theme--light .sticky, html.theme--dark .sticky{
+  background:var(--bg) !important;
+  border-bottom:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+
+/* ── Section eyebrow used between v32 blocks ─────────────────────────────── */
+.jvSectionLabel{
+  margin:18px 0 8px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:11.5px;
+  font-weight:950;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+  line-height:1;
+}
+#tabToday > .jvSectionLabel:first-of-type{ margin-top:16px; }
+
+/* ── Home: legacy hero is gone, header carries the greeting ──────────────── */
+#tabToday .todayHeroStage[hidden]{ display:none !important; }
+
+/* ── Home: ONE compact progress card ─────────────────────────────────────── */
+#tabToday .xpProgressCard{
+  margin:0 0 4px !important;
+  padding:14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+  display:block !important;
+}
+#tabToday .xpLegacyCompat[hidden]{ display:none !important; }
+#tabToday .xpTopRow{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+}
+#tabToday .xpLevelCopy{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:baseline;
+  gap:5px;
+  min-width:0;
+  margin:0 !important;
+}
+#tabToday .xpLevelLabel{ font-size:15px !important; font-weight:950 !important; color:var(--text) !important; }
+#tabToday .xpLevelDot{ color:var(--jv-text-3,var(--muted)); font-weight:900; }
+#tabToday .xpLevelName{
+  font-size:15px !important;
+  font-weight:950 !important;
+  color:var(--text) !important;
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+#tabToday .xpProgressCard .statsCompactText{
+  flex:0 0 auto;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+#tabToday #xpProgressCard > .bar{
+  width:100%;
+  height:8px !important;
+  margin:9px 0 0 !important;
+  overflow:hidden;
+  border:0 !important;
+  border-radius:999px !important;
+  background:rgba(20,32,51,.09) !important;
+  box-shadow:none !important;
+}
+html.theme--dark #tabToday #xpProgressCard > .bar{ background:rgba(255,255,255,.10) !important; }
+#tabToday #xpProgressCard > .bar > div{
+  height:100%;
+  border-radius:inherit;
+  background:var(--jv-lime,#6DBE45) !important;
+  box-shadow:none !important;
+}
+#tabToday .xpFactRow{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:10px;
+}
+#tabToday .xpFact{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12px;
+  font-weight:800;
+}
+#tabToday .xpFact .jic{ font-size:14px; color:var(--jv-text-2,var(--muted)); }
+#tabToday .xpProgressCard .streakPill{
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:none !important;
+  color:inherit !important;
+  font:inherit !important;
+  box-shadow:none !important;
+}
+#tabToday .xpProgressCard .todayGoalBadge{
+  display:inline-flex !important;
+  align-items:center;
+  gap:5px;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:none !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  box-shadow:none !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+html.theme--dark #tabToday .xpProgressCard .todayGoalBadge{ background:none !important; color:var(--jv-text-2,var(--muted)) !important; }
+
+/* ── Home: Leo's Pick hero card (art band + overlays + 2-button row) ─────── */
+#tabToday .dailyBox.dailyBoxPromoted{
+  display:block !important;
+  overflow:hidden !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#tabToday .dailyHeroBand{
+  position:relative;
+  display:grid;
+  place-items:center;
+  min-height:150px;
+  padding:18px 16px 14px;
+  background:var(--jv-card-2,#EAF1FA);
+}
+html.theme--dark #tabToday .dailyHeroBand{ background:var(--jv-card-2,#16283c); }
+#tabToday .dailyHeroBand .dailyIconBig{
+  width:132px !important; height:132px !important; flex:none !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+  display:grid !important;
+  place-items:center;
+}
+#tabToday .dailyHeroBand .dailyIconBig img{
+  width:100%; height:100%; object-fit:contain;
+  filter:drop-shadow(0 6px 12px rgba(20,40,70,.18));
+}
+#tabToday .dailyHeroBand .dailyIconBig .jic{ font-size:60px; color:var(--jv-lime-strong,#4E8F30); }
+/* Leo's Pick becomes a chip floating on the art band. */
+#tabToday .dailyBox .dailyEyebrow{
+  position:absolute;
+  left:12px; top:12px;
+  display:inline-flex !important;
+  align-items:center;
+  gap:6px;
+  margin:0 !important;
+  padding:5px 11px 5px 6px !important;
+  border-radius:999px !important;
+  background:var(--jv-card,#fff) !important;
+  color:var(--jv-blue-strong,#1577B1) !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+  box-shadow:0 2px 8px rgba(20,40,70,.10);
+}
+#tabToday .dailyBox .dailyEyebrow .eyebrowLeo{ width:18px; height:18px; border-radius:50%; }
+#tabToday .dailyHeroLeo{
+  position:absolute;
+  right:10px; bottom:-14px;
+  width:54px; height:54px;
+  object-fit:contain;
+  pointer-events:none;
+  filter:drop-shadow(0 5px 10px rgba(20,60,90,.20));
+}
+#tabToday .dailyBody{ padding:16px 16px 16px; }
+#tabToday .dailyPack{
+  color:var(--jv-text-2,var(--muted));
+  font-size:12px;
+  font-weight:850;
+  line-height:1.2;
+}
+#tabToday .dailyBox .dailyName{
+  margin:2px 0 0 !important;
+  text-align:left !important;
+  font-family:var(--font-display,inherit);
+  font-size:22px !important;
+  line-height:1.15 !important;
+  font-weight:950 !important;
+  color:var(--text) !important;
+}
+#tabToday .dailyWin{
+  margin-top:5px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:14px;
+  line-height:1.4;
+  font-weight:700;
+}
+#tabToday .dailyBox .dailyMeta{
+  display:flex !important;
+  flex-wrap:wrap;
+  justify-content:flex-start !important;
+  gap:7px !important;
+  margin-top:10px !important;
+}
+#tabToday .dailyBox .dailyMeta .tag{
+  padding:6px 11px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:var(--jv-card-2,#EEF3F8) !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:12.5px !important;
+  font-weight:850 !important;
+}
+#tabToday .dailyBox .dailyMeta .tag.xpTag{
+  background:rgba(109,190,69,.16) !important;
+  color:var(--jv-lime-strong,#4E8F30) !important;
+}
+#tabToday .dailyBox .dailyActionsBig{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:stretch;
+  gap:9px !important;
+  margin-top:15px !important;
+}
+#tabToday .dailyBox .dailyPlayBig{
+  flex:1 1 auto !important;
+  min-height:52px !important;
+  border:0 !important;
+  border-radius:var(--jv-r-button,16px) !important;
+  font-size:15.5px !important;
+  font-weight:950 !important;
+}
+#tabToday .dailyBox #btnDailyNew{
+  flex:0 0 auto !important;
+  min-height:52px !important;
+  padding:0 15px !important;
+  border:1.5px solid var(--jv-line-strong,var(--border)) !important;
+  border-radius:var(--jv-r-button,16px) !important;
+  background:transparent !important;
+  color:var(--text) !important;
+  -webkit-text-fill-color:var(--text) !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+}
+#tabToday .dailyBox #btnDailyReplay{
+  flex:0 0 auto !important;
+  min-height:52px !important;
+  padding:0 14px !important;
+}
+#tabToday .dailyBox .dailyDoneNote{
+  margin-top:10px !important;
+  color:var(--jv-lime-strong,#4E8F30) !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+}
+
+/* ── Home: Explore / Leo's Island as the v32 dark panel row ──────────────── */
+#tabToday #advModeCard{
+  display:flex !important;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  margin:0 !important;
+  padding:13px 14px !important;
+  border:0 !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-panel,#12233b) !important;
+  box-shadow:none !important;
+  text-align:left;
+}
+#tabToday #advModeCard .advCardEmoji{
+  width:44px !important; height:44px !important; flex:0 0 44px !important;
+  border-radius:0 !important; background:none !important;
+}
+#tabToday #advModeCard .advCardEmoji img{ width:100%; height:100%; object-fit:contain; }
+#tabToday #advModeCard .advCardText{ flex:1; min-width:0; display:block; }
+#tabToday #advModeCard .advCardTitle{
+  display:block;
+  color:var(--jv-panel-fg,#fff) !important;
+  font-size:15px !important;
+  font-weight:950 !important;
+}
+#tabToday #advModeCard .advCardSub{
+  display:block;
+  color:var(--jv-panel-fg-2,#cbd5f5) !important;
+  font-size:13px !important;
+  font-weight:750 !important;
+}
+#tabToday #advModeCard .advCardArrow{
+  flex:0 0 auto;
+  padding:5px 11px;
+  border-radius:999px;
+  background:rgba(109,190,69,.22);
+  color:#A9E77E !important;
+  font-size:13px;
+}
+
+/* Level line must stay on one line; the player title truncates, not wraps. */
+#tabToday .xpTopRow{ flex-wrap:nowrap; }
+#tabToday .xpLevelCopy{ white-space:nowrap; overflow:hidden; }
+#tabToday .xpLevelLabel{ flex:0 0 auto; white-space:nowrap; }
+#tabToday .xpMissionCount{
+  flex:0 0 auto;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* The legacy `.bar` cascade collapses this track to zero height; an id-scoped
+   rule (2 ids) outranks every class-level override that touches it. */
+#tabToday #xpProgressCard > .bar{ min-height:8px !important; height:8px !important; }
+#tabToday #xpProgressCard > .bar > #progressBarFill{ min-height:8px !important; height:8px !important; }
+
+/* ── FINAL v32 palette ───────────────────────────────────────────────────────
+   The port kept production's warm-cream Warm-Toy palette, which is a large
+   part of why the live site still read as the old site: FINAL v32 is a cool,
+   blue-tinted system. These are v32's exact token values. They are bound to
+   the --jv-* layer (what the v32 components consume) plus the page/canvas
+   background, so the ported surfaces re-tint together. Self-contained runtime
+   surfaces that inject their own CSS — Red Light Green Light and the Island
+   overlays — are deliberately not reached by this. */
+html.theme--light{
+  --jv-page:#eaf3fc;
+  --jv-card:#ffffff;
+  --jv-card-2:#dbe7f4;
+  --jv-sheet:#ffffff;
+  --jv-parent:#f4f7fb;
+  --jv-panel:#0f172a;
+  --jv-text-2:#47546a;
+  --jv-text-3:#64748b;
+  --jv-line:rgba(15,23,42,.10);
+  --jv-line-strong:rgba(15,23,42,.16);
+  --jv-blue-strong:#1d6fb5;
+  --jv-lime:#97d700;
+  --jv-lime-strong:#5a9600;
+  --jv-on-lime:#0f172a;
+  --jv-track:#dbe7f4;
+}
+html.theme--dark{
+  --jv-page:#0b1220;
+  --jv-card:#111c2e;
+  --jv-card-2:#17253a;
+  --jv-sheet:#1b2c44;
+  --jv-parent:#0f1b2c;
+  --jv-panel:#060b16;
+  --jv-text-2:#c3d0e6;
+  --jv-text-3:#93a4bd;
+  --jv-line:rgba(255,255,255,.12);
+  --jv-line-strong:rgba(255,255,255,.22);
+  --jv-blue-strong:#4fb3ff;
+  --jv-lime:#97d700;
+  --jv-lime-strong:#b4e82e;
+  --jv-on-lime:#0f172a;
+  --jv-track:#17253a;
+}
+/* Page canvas. The decorative Warm-Toy gradient layer is retired: v32 uses a
+   single flat page colour behind flat cards. */
+html.theme--light body, html.theme--dark body{ background:var(--jv-page) !important; }
+html.theme--light .bgLayer, html.theme--dark .bgLayer{ display:none !important; }
+html.theme--light .sticky, html.theme--dark .sticky{ background:var(--jv-page) !important; }
+html.theme--light .app-shell, html.theme--dark .app-shell{ background:transparent !important; }
+/* Bottom nav sits on the same flat canvas. */
+html.theme--light .bottomNav, html.theme--dark .bottomNav{
+  background:var(--jv-card) !important;
+  border-top:1px solid var(--jv-line) !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+}
+
+/* ── Missions: v32 compact pack list (replaces the vertical circle path) ─── */
+/* The tab heading + intro paragraph move into the app header. */
+#tabBrowse > .tabHeading, #tabBrowse > .tabIntro{ display:none !important; }
+#tabBrowse #btnRandomAll{
+  margin:0 0 14px !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  box-shadow:none !important;
+}
+#tabBrowse .pathSection{
+  margin:0 0 12px !important;
+  padding:8px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#tabBrowse .pathSectionHeader{
+  display:flex !important;
+  align-items:center;
+  gap:11px;
+  width:100%;
+  padding:7px 8px !important;
+  border:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+#tabBrowse .pathSectionIcon{
+  width:46px !important; height:46px !important; flex:0 0 46px !important;
+  display:grid; place-items:center;
+  border-radius:14px !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  overflow:hidden;
+}
+#tabBrowse .pathSectionIcon img{ width:82%; height:82%; object-fit:contain; }
+#tabBrowse .pathSectionInfo{ flex:1; min-width:0; text-align:left; }
+#tabBrowse .pathSectionName{
+  font-family:var(--font-display,inherit);
+  font-size:17px !important;
+  font-weight:950 !important;
+  color:var(--text) !important;
+  line-height:1.15;
+}
+#tabBrowse .packDots{ display:flex; gap:4px; margin-top:5px; }
+#tabBrowse .packDot{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--jv-track,#dbe7f4);
+}
+#tabBrowse .packDot.on{ background:var(--jv-lime,#97d700); }
+#tabBrowse .packDot.next{ background:var(--jv-blue-strong,#1d6fb5); }
+#tabBrowse .pathSectionProgress{
+  flex:0 0 auto;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  background:none !important;
+  border:0 !important;
+  padding:0 !important;
+}
+#tabBrowse .pathSectionChevron{
+  flex:0 0 auto;
+  color:var(--jv-text-3,var(--muted)) !important;
+  font-size:17px;
+  transform:rotate(90deg);
+  transition:transform .18s ease;
+}
+#tabBrowse .pathSection.collapsed .pathSectionChevron{ transform:rotate(0deg); }
+#tabBrowse .pathSection.collapsed .pathSteps{ display:none !important; }
+
+/* The rows themselves. */
+#tabBrowse .pathSteps{
+  display:flex !important;
+  flex-direction:column;
+  gap:6px;
+  margin:2px 0 0 !important;
+  padding:0 !important;
+}
+#tabBrowse .pathSteps::before, #tabBrowse .pathSteps::after{ display:none !important; }
+#tabBrowse .pathRow{
+  display:block !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+}
+#tabBrowse .pathRow::before, #tabBrowse .pathRow::after{ display:none !important; }
+#tabBrowse .pathRowBtn{
+  display:flex !important;
+  align-items:center;
+  gap:11px;
+  width:100%;
+  min-height:60px;
+  padding:8px 10px !important;
+  border:2px solid transparent !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  color:var(--text);
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#tabBrowse .pathRowBtn:active{ transform:scale(.99); }
+#tabBrowse .pathRowIcon{
+  width:46px !important; height:46px !important; flex:0 0 46px !important;
+  display:grid; place-items:center;
+  overflow:hidden;
+  border-radius:12px;
+  background:var(--jv-card,#fff);
+}
+#tabBrowse .pathRowIcon img{ width:84%; height:84%; object-fit:contain; }
+#tabBrowse .pathRowCopy{ flex:1; min-width:0; display:block; }
+#tabBrowse .pathRowName{
+  display:block;
+  font-family:var(--font-display,inherit);
+  font-size:15.5px;
+  font-weight:950;
+  line-height:1.2;
+  color:var(--text);
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+#tabBrowse .pathRowMeta{
+  display:block;
+  margin-top:2px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:750;
+}
+#tabBrowse .pathRowChevron{
+  flex:0 0 auto;
+  color:var(--jv-text-3,var(--muted));
+  font-size:17px;
+}
+#tabBrowse .pathRowPill{
+  flex:0 0 auto;
+  padding:6px 12px;
+  border-radius:999px;
+  background:var(--jv-card,#fff);
+  color:var(--jv-blue-strong,#1d6fb5);
+  font-size:12.5px;
+  font-weight:900;
+  white-space:nowrap;
+}
+#tabBrowse .pathRowCheck{
+  flex:0 0 auto;
+  color:var(--jv-lime-strong,#5a9600);
+  font-size:20px;
+}
+/* Up-next row is ringed, exactly as v32 marks it. */
+#tabBrowse .pathRow.next .pathRowBtn,
+#tabBrowse .pathRow.daily .pathRowBtn{
+  border-color:var(--jv-blue-strong,#1d6fb5) !important;
+  background:var(--jv-card,#fff) !important;
+}
+#tabBrowse .pathRow.done .pathRowName{ color:var(--jv-text-2,var(--muted)); }
+#tabBrowse .pathRow.done .pathRowIcon{ opacity:.72; }
+
+/* Legacy .pathSteps centres its children, which made the new full-width rows
+   shrink to content and stagger. Rows must stretch edge to edge. */
+#tabBrowse .pathSteps{ align-items:stretch !important; }
+#tabBrowse .pathRow{ width:100% !important; max-width:100% !important; }

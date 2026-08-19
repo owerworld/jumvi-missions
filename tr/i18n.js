@@ -359,6 +359,8 @@
     }
 
     let m;
+    if ((m = norm.match(/^(\d+) \/ (\d+) missions$/i))) return `${m[1]} / ${m[2]} görev`;
+    if ((m = norm.match(/^(\d+) \/ (\d+) completed$/i))) return `${m[1]} / ${m[2]} tamamlandı`;
     if ((m = norm.match(/^(\d+) of 36 missions complete$/i))) return `${m[1]} / 36 görev tamamlandı`;
     if ((m = norm.match(/^(\d+) of (\d+) missions complete$/i))) return `${m[1]} / ${m[2]} görev tamamlandı`;
     if ((m = norm.match(/^(\d+) missions? complete$/i))) return `${m[1]} görev tamamlandı`;

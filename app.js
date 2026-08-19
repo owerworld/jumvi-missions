@@ -2829,9 +2829,15 @@ function renderDailyUI(){
     ? '<i class="jic jic-circle-check" aria-hidden="true"></i>'
     : JUMVI_ART.img(JUMVI_ART.mission(ms.id), "missionArt", ms.title, true);
   if(dailyName) dailyName.textContent = ms.title;
+  // v32 hero: the pack name is its own quiet line above the title and the win
+  // condition sits under it, so the chip row can stay short (players · time ·
+  // XP). Same mission record, same getPackName() — only the placement moved.
+  const dailyPackEl = document.getElementById("dailyPack");
+  if(dailyPackEl) dailyPackEl.textContent = getPackName(ms.pack);
+  const dailyWinEl = document.getElementById("dailyWin");
+  if(dailyWinEl) dailyWinEl.textContent = ms.win || "";
   if(dailyMeta){
     dailyMeta.innerHTML = `
-      <span class="tag pack">${escapeHtml(getPackName(ms.pack))}</span>
       <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
       <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
       <span class="tag xpTag">+${missionXp(ms)} XP</span>
@@ -3654,6 +3660,9 @@ function updateProgress(options = {}){
   const total = missions.length;
   const completed = done.size;
   progressText.textContent = `${completed} of ${total} missions complete`;
+  // v32 Home states the same count in its short form beside the level line.
+  const missionCountEl = document.getElementById("xpMissionCount");
+  if(missionCountEl) missionCountEl.textContent = `${completed} / ${total} missions`;
   const pct = Math.round((completed/total)*100);
   progressFill.style.width = pct + "%";
   document.querySelector(".bar").setAttribute("aria-valuenow", String(completed));
@@ -7448,10 +7457,56 @@ function switchTab(tabName){
     if(typeof window.__jumviRevealHeader === "function") window.__jumviRevealHeader();
   } catch(_){}
 
+  // v32 app header follows the tab (title + optional overline/sub, switcher
+  // stays put). Defensive: a header failure must never break navigation.
+  try { renderAppHead(tabName); } catch(_){}
+
   // The island is a temporary bonus view, never the QR return destination.
   try { lsSet(NAV_TAB_KEY, tabName === "hub3d" ? "today" : tabName); } catch(_){}
 
   trackEvent("Tab Switched", { tab: tabName });
+}
+
+/* ===== v32 app header =====================================================
+ * FINAL v32 leads every tab with its own title on the same row as the player
+ * switcher, and drops the logo/brand bar entirely. The per-tab <h1>/intro
+ * elements stay in the DOM (hidden) so everything that writes to them —
+ * renderTodayContinuity(), renderTeamsHub()'s setText(), the /tr locale
+ * observer — keeps working untouched; this only mirrors them into the header.
+ */
+function renderAppHead(tabName){
+  const over  = document.getElementById("appHeadOver");
+  const title = document.getElementById("appHeadTitle");
+  const sub   = document.getElementById("appHeadSub");
+  if(!title) return;
+  const tr = isTurkishUI();
+  const txt = (id)=>{ const el = document.getElementById(id); return el ? (el.textContent || "").trim() : ""; };
+  const set = (el, value)=>{
+    if(!el) return;
+    const v = (value || "").trim();
+    el.textContent = v;
+    el.hidden = !v;
+  };
+
+  let o = "", t = "", s = "";
+  if(tabName === "browse"){
+    t = tr ? "36 Görev" : "36 Missions";
+    // Same real count as the Home card, in v32's Missions-header wording.
+    try { s = `${done.size} / ${missions.length} completed`; } catch(_){ s = ""; }
+  }else if(tabName === "modes"){
+    t = txt("teamsHubTitle") || (tr ? "Aile" : "Family");
+    s = tr ? "Ailen nasıl gidiyor" : "How your crew is doing";
+  }else if(tabName === "profile"){
+    t = tr ? "Ebeveynler" : "Grown-ups";
+    s = tr ? "Çocuklar, ayarlar ve faydalı ekstralar" : "Kids, settings & useful extras";
+  }else{
+    // Home keeps the real, live greeting the runtime already computes.
+    o = tr ? "Tekrar hoş geldin" : "Welcome back";
+    t = tr ? "Hadi oynayalım" : "Let's play";
+  }
+  set(over, o);
+  set(title, t);
+  set(sub, s);
 }
 
 function renderProfileTab(){
@@ -7987,6 +8042,15 @@ function findNextMissionForUser(){
  * holds the next mission, which is the useful default. */
 const _openPathPacks = new Set();
 
+/* v32 mission rows read "2 players · 90s". The mission record stores just the
+ * count ("2", "4+"), so this only adds the noun — no data change. */
+function playersLabel(players){
+  const p = String(players == null ? "" : players).trim();
+  if(!p) return "";
+  if(/players?/i.test(p)) return p;
+  return isTurkishUI() ? `${p} oyuncu` : `${p} player${p === "1" ? "" : "s"}`;
+}
+
 function renderMissionPath(){
   const container = document.getElementById("missionPath");
   if(!container || typeof SKILL_PACKS === "undefined") return;
@@ -8063,32 +8127,39 @@ function renderMissionPath(){
       const isNext = m.id === nextId;
 
       const step = document.createElement("div");
-      step.className = "pathStep";
-      if(i > 0){
-        step.classList.add("hasLineAbove");
-        if(packMissions[i-1] && done.has(packMissions[i-1].id)){
-          step.classList.add("lineSolid");
-        }
-      }
+      /* FINAL v32 renders a pack as a compact LIST, not a vertical path of
+       * oversized circles: one tappable row per mission — art tile, title,
+       * "players · time", and a right-hand affordance (an "Up next" pill, a
+       * completed check, or a chevron). Deliberately new class names so none
+       * of the legacy .pathStep* circle/connector CSS can reach these rows.
+       * Same missions, same order, same openMission() + analytics call. */
+      step.className = "pathRow";
       if(isDone) step.classList.add("done");
       if(isNext && !isDone) step.classList.add("next");
       if(isDaily && !isDone) step.classList.add("daily");
 
       const node = document.createElement("button");
       node.type = "button";
-      node.className = "pathStepNode";
+      node.className = "pathRowBtn";
       const nodeState = isDone ? "completed" : (isDaily ? "today's pick" : (isNext ? "next mission" : ""));
       node.setAttribute("aria-label", m.title + " — " + pack.label + (nodeState ? " (" + nodeState + ")" : ""));
       node.setAttribute("data-mission-id", m.id);
       if(isNext) node.id = "pathNodeNext";
-      node.innerHTML = '<span class="pathStepIcon">' + JUMVI_ART.img(JUMVI_ART.mission(m.id), "missionArt", m.title) + '</span>';
+
+      let rightHtml;
       if(isDone){
-        const doneMark = document.createElement("span");
-        doneMark.className = "pathStepDoneMark";
-        doneMark.setAttribute("aria-hidden", "true");
-        doneMark.textContent = "✓";
-        node.appendChild(doneMark);
+        rightHtml = '<span class="pathRowCheck" aria-hidden="true"><i class="jic jic-circle-check"></i></span>';
+      }else if(isNext || isDaily){
+        rightHtml = '<span class="pathRowPill">' + (isDaily ? "Today" : "Up next") + '</span>';
+      }else{
+        rightHtml = '<i class="jic jic-arrow-right pathRowChevron" aria-hidden="true"></i>';
       }
+      node.innerHTML =
+        '<span class="pathRowIcon">' + JUMVI_ART.img(JUMVI_ART.mission(m.id), "missionArt", m.title) + '</span>' +
+        '<span class="pathRowCopy">' +
+          '<span class="pathRowName">' + escapeHtml(m.title) + '</span>' +
+          '<span class="pathRowMeta">' + escapeHtml(playersLabel(m.players)) + ' &middot; ' + escapeHtml(m.time) + '</span>' +
+        '</span>' + rightHtml;
 
       node.addEventListener("click", function(){
         try{ clickSound(isDone ? "success" : "click"); }catch(_){}
@@ -8097,19 +8168,7 @@ function renderMissionPath(){
         openMission(m.id);
       });
 
-      const label = document.createElement("div");
-      label.className = "pathStepLabel";
-      label.textContent = m.title;
-
       step.appendChild(node);
-      step.appendChild(label);
-      if(!isDone && (isDaily || isNext)){
-        const status = document.createElement("span");
-        status.className = "pathStepStatus " + (isDaily ? "pathStepStatusDaily" : "pathStepStatusNext");
-        status.setAttribute("aria-hidden", "true");
-        status.textContent = isDaily ? "TODAY" : "NEXT";
-        step.appendChild(status);
-      }
 
       // Just-done celebration
       if(window._justDoneMissionId === m.id){
