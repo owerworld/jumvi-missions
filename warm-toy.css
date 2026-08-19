@@ -4225,3 +4225,204 @@ html.theme--dark .missionPlayPanel{ background:var(--jv-celebrate,#16261a); }
   color:var(--jv-on-lime,#0f172a) !important;
   -webkit-text-fill-color:var(--jv-on-lime,#0f172a) !important;
 }
+
+/* ── Badges: v32 compact centred tiles ───────────────────────────────────── */
+#badgesList .badgesListItem{
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:0 !important;
+  padding:14px 10px 12px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  box-shadow:none !important;
+}
+#badgesList .badgesListItem.badge-earned{
+  border-color:var(--jv-lime,#97d700) !important;
+  background:var(--jv-celebrate,#f3fbe0) !important;
+}
+.badgesListArtWrap{
+  position:relative;
+  width:74px; height:74px;
+  display:grid; place-items:center;
+  border-radius:18px;
+  background:var(--jv-card,#fff);
+}
+#badgesList .badgesListIcon{
+  width:56px !important; height:56px !important;
+  margin:0 !important;
+  display:grid; place-items:center;
+}
+#badgesList .badgesListIcon img{ width:100%; height:100%; object-fit:contain; }
+.badgesListMark{
+  position:absolute;
+  top:-6px; right:-6px;
+  width:24px; height:24px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  border:2px solid var(--jv-card,#fff);
+  background:var(--jv-track,#dbe7f4);
+  color:var(--jv-text-3,var(--muted));
+  font-size:12px;
+}
+.badge-earned .badgesListMark{
+  background:var(--jv-lime,#97d700);
+  color:var(--jv-on-lime,#0f172a);
+}
+#badgesList .badgesListName{
+  margin-top:10px !important;
+  font-size:14px !important;
+  font-weight:950 !important;
+  line-height:1.2 !important;
+  color:var(--text) !important;
+}
+/* v32's tile carries only a short status line; the full requirement stays in
+   the DOM (and in the tile's title attribute) but is not shown here. */
+#badgesList .badgesListReq{ display:none !important; }
+#badgesList .badgesListStatus{
+  margin-top:3px !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:none !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:12.5px !important;
+  font-weight:800 !important;
+}
+#badgesList .badge-earned .badgesListStatus{ color:var(--jv-lime-strong,#5a9600) !important; }
+
+/* ── P2 cleanup: warm remnants on Home ───────────────────────────────────── */
+/* The mission chips and the progress track still carried Warm-Toy cream/grey
+   under the v32 palette. Id-scoped so the legacy !important rules lose. */
+#tabToday #dailyBox .dailyMeta .tag{
+  background:var(--jv-card-2) !important;
+  color:var(--jv-text-2) !important;
+  border:0 !important;
+}
+#tabToday #dailyBox .dailyMeta .tag.xpTag{
+  background:rgba(151,215,0,.20) !important;
+  color:var(--jv-lime-strong) !important;
+}
+#tabToday #xpProgressCard > .bar{ background:var(--jv-track) !important; }
+html.theme--dark #tabToday #xpProgressCard > .bar{ background:var(--jv-track) !important; }
+
+/* ── Family: v32 card treatment ──────────────────────────────────────────── */
+#tabModes .familyInsights,
+#tabModes .dashCard,
+#tabModes .teamsNowCard,
+#tabModes .statsBadgesSection{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#tabModes .familyMember{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+}
+#tabModes .dashStats,
+#tabModes .dashStats > *{
+  border-color:var(--jv-line,var(--border)) !important;
+  background:transparent !important;
+}
+#tabModes .familyStreak{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+}
+#tabModes .teamsCreateBtn{
+  border-radius:var(--jv-r-button,16px) !important;
+  background:var(--jv-blue-strong,#1d6fb5) !important;
+  box-shadow:none !important;
+}
+
+/* ── Profiles (switch / add / edit): v32 rows and section labels ─────────── */
+#profileBackdrop .profileItem{
+  gap:12px !important;
+  padding:12px 14px !important;
+  border:2px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  box-shadow:none !important;
+}
+#profileBackdrop .profileItem.active{
+  border-color:var(--jv-lime,#97d700) !important;
+  background:var(--jv-celebrate,#f3fbe0) !important;
+  box-shadow:none !important;
+}
+#profileBackdrop .profileItemAvatar{
+  width:46px !important; height:46px !important; flex:0 0 46px !important;
+  border-radius:50% !important;
+  background:transparent !important;
+}
+#profileBackdrop .profileItemName{ font-size:15.5px !important; font-weight:950 !important; }
+.profileItemSub{
+  margin-top:2px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:750;
+}
+/* v32 uses quiet sentence-case group labels, not brown uppercase. */
+#profileBackdrop .profileSectionTitle{
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+  font-family:var(--font-display,inherit);
+}
+#profileBackdrop .profileNameInput{
+  border:1.5px solid var(--jv-line-strong,var(--border)) !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card,var(--card)) !important;
+}
+#profileBackdrop .profileAddBtn,
+#profileBackdrop .profileEditSaveBtn{
+  border-radius:var(--jv-r-button,16px) !important;
+  background:var(--jv-blue-strong,#1d6fb5) !important;
+  box-shadow:none !important;
+}
+#profileBackdrop .profileSettingRow{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+
+/* ── Team Setup: v32 chip grid + child card ──────────────────────────────── */
+.teamXpSheet{
+  border:0 !important;
+  border-radius:24px 24px 0 0 !important;
+  background:var(--jv-sheet,var(--card)) !important;
+}
+.teamXpHead h2{ font-size:22px !important; }
+.teamXpSectionTitle{
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:11.5px !important;
+  letter-spacing:.9px !important;
+}
+.teamSetupChildCard{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+}
+.teamXpPartner.teamSetupPartner{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card,var(--card)) !important;
+}
+.teamXpPartner.teamSetupPartner.exists{
+  border-color:var(--jv-lime,#97d700) !important;
+  background:var(--jv-celebrate,#f3fbe0) !important;
+}
+.teamXpClose{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:14px !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+}
+/* The two-step title is real runtime copy and longer than v32's; size it so it
+   holds one line at 320px rather than wrapping over the close button. */
+.teamXpHead h2{ font-size:18px !important; line-height:1.2 !important; }
+.teamXpHead p{ font-size:13px !important; }

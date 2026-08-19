@@ -3558,11 +3558,14 @@ function updateBadges(){
       extraClass = " " + slug;
     }
     return `
-      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}${extraClass}">
-        <div class="badgesListIcon">${JUMVI_ART.img(JUMVI_ART.badge(b.id), "badgeArt", b.name)}</div>
+      <div class="badgesListItem ${ok ? "badge-earned" : "badge-locked"}${extraClass}" title="${escapeHtml(b.req)}${ok ? "" : " — " + String(toGo).replace(/<[^>]*>/g, "").trim()}">
+        <div class="badgesListArtWrap">
+          <div class="badgesListIcon">${JUMVI_ART.img(JUMVI_ART.badge(b.id), "badgeArt", b.name)}</div>
+          <span class="badgesListMark" aria-hidden="true"><i class="jic ${ok ? "jic-circle-check" : "jic-lock"}"></i></span>
+        </div>
         <div class="badgesListName">${escapeHtml(b.name)}</div>
         <div class="badgesListReq">${escapeHtml(b.req)}</div>
-        <div class="badgesListStatus">${ok ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Earned' : toGo}</div>
+        <div class="badgesListStatus">${ok ? (collectionTr ? "Kazanıldı" : "Earned") : (collectionTr ? "Henüz kazanılmadı" : "Not yet earned")}</div>
       </div>
     `;
   }).join("");
@@ -6210,6 +6213,9 @@ function renderProfileList(){
       <div class="profileItemAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(p.avatar), "avatarArt", "", true)}</div>
       <div class="profileItemBody">
         <div class="profileItemName">${escapeHtml(p.name || "Player")}</div>
+        <div class="profileItemSub">${isActive
+          ? (isTurkishUI() ? "Şu an seçili" : "Currently selected")
+          : (isTurkishUI() ? "Bu cihazdaki oyuncu" : "Local player")}</div>
       </div>
       <button class="profileEditPencil" data-pid="${p.id}" aria-label="Edit profile" type="button"><i class="jic jic-pencil" aria-hidden="true"></i></button>
       ${isActive ? '<div class="profileItemActive"><i class="jic jic-circle-check" aria-hidden="true"></i></div>' : ""}
@@ -7545,7 +7551,9 @@ function renderAppHead(tabName){
     // Same real count as the Home card, in v32's Missions-header wording.
     try { s = `${done.size} / ${missions.length} completed`; } catch(_){ s = ""; }
   }else if(tabName === "modes"){
-    t = txt("teamsHubTitle") || (tr ? "Aile" : "Family");
+    // v32 titles this tab plainly "Family"; the longer "Our Family Board"
+    // stays on #teamsHubTitle for the /tr layer and renderTeamsHub()'s setText.
+    t = tr ? "Aile" : "Family";
     s = tr ? "Ailen nasıl gidiyor" : "How your crew is doing";
   }else if(tabName === "profile"){
     t = tr ? "Ebeveynler" : "Grown-ups";
