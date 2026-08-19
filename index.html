@@ -238,52 +238,12 @@
              so a 5-year-old tapped a 9.4 MB silent wall before the mission).
              The mission comes first now; the island is the reward after. -->
 
-        <!-- Continue where you left off (rendered by JS when applicable) -->
-        <div class="continueHint" id="continueHint" style="display:none">
-          <span class="continueHintIcon"><i class="jic jic-arrow-back-up" aria-hidden="true"></i></span>
-          <span class="continueHintText">Continue where you left off: <b id="continueHintName">—</b></span>
-          <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
-        </div>
-
-        <!-- TODAY'S MISSION — promoted, fully tappable card -->
-        <div class="dailyBox dailyBoxPromoted" id="dailyBox">
-          <!-- Leo picks. He had no job before: a face on the welcome screen and
-               a speaker button, but the thing he is actually for — knowing what
-               to play next — was labelled with a generic target and credited to
-               nobody. This is that job, named. -->
-          <div class="dailyEyebrow"><img class="eyebrowLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" decoding="async"> <span id="dailyEyebrowText">LEO&rsquo;S PICK</span></div>
-          <div class="dailyContent">
-            <div class="dailyIconBig" id="dailyIcon"></div>
-            <div class="dailyText">
-              <div class="dailyName" id="dailyName">—</div>
-              <div class="dailyMeta" id="dailyMeta">—</div>
-            </div>
-          </div>
-          <!-- Shown only once this mission is finished. Progress is stated in
-               words, not colour, so it survives a sunlit screen and a
-               colour-blind reader. -->
-          <div class="dailyDoneNote" id="dailyDoneNote" style="display:none"><i class="jic jic-circle-check" aria-hidden="true"></i> Mission complete</div>
-          <!-- Order is the hierarchy: after a mission is done the primary
-               action moves the family through the 36, and replaying drops to
-               secondary. Before it is done there is only one action here. -->
-          <div class="dailyActionsBig">
-            <!-- No aria-label on purpose: this button's label changes with state
-                 ("Start Mission" → "Next: <mission>"), and a JS-set aria-label
-                 would (a) silently stay English on /tr, because the locale
-                 layer observes childList/characterData but not attributes, and
-                 (b) override the visible text, breaking WCAG 2.5.3 Label in
-                 Name. The visible label IS the accessible name. -->
-            <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play dailyPlayBig" id="btnDailyPlay" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
-            <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyReplay" type="button" style="display:none"><i class="jic jic-loop" aria-hidden="true"></i> Play Again</button>
-            <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyNew" aria-label="Choose another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Choose another</button>
-          </div>
-          <!-- Stub for backward JS compat -->
-          <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
-          <div class="dailyTitle" style="display:none">Today's Mission</div>
-        </div>
-
         <!-- Your Progress — derived XP, no separate XP storage.
-             Existing progress/streak IDs stay intact for backward JS compatibility. -->
+             Existing progress/streak IDs stay intact for backward JS compatibility.
+             Moved above #continueHint/#dailyBox (v0 v32 parity pass): v0's
+             information hierarchy shows the compact progress summary before
+             the mission-of-the-day card. Pure DOM position move — no ID or
+             logic changes; nothing depends on source order here. -->
         <section class="statsCompact xpProgressCard" id="xpProgressCard" aria-labelledby="xpCardTitle">
           <div class="xpCardHeader">
             <div class="xpCardEyebrow" id="xpCardTitle">Your Progress</div>
@@ -340,6 +300,50 @@
             </button>
           </div>
         </section>
+
+        <!-- Continue where you left off (rendered by JS when applicable) -->
+        <div class="continueHint" id="continueHint" style="display:none">
+          <span class="continueHintIcon"><i class="jic jic-arrow-back-up" aria-hidden="true"></i></span>
+          <span class="continueHintText">Continue where you left off: <b id="continueHintName">—</b></span>
+          <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
+        </div>
+
+        <!-- TODAY'S MISSION — promoted, fully tappable card -->
+        <div class="dailyBox dailyBoxPromoted" id="dailyBox">
+          <!-- Leo picks. He had no job before: a face on the welcome screen and
+               a speaker button, but the thing he is actually for — knowing what
+               to play next — was labelled with a generic target and credited to
+               nobody. This is that job, named. -->
+          <div class="dailyEyebrow"><img class="eyebrowLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" decoding="async"> <span id="dailyEyebrowText">LEO&rsquo;S PICK</span></div>
+          <div class="dailyContent">
+            <div class="dailyIconBig" id="dailyIcon"></div>
+            <div class="dailyText">
+              <div class="dailyName" id="dailyName">—</div>
+              <div class="dailyMeta" id="dailyMeta">—</div>
+            </div>
+          </div>
+          <!-- Shown only once this mission is finished. Progress is stated in
+               words, not colour, so it survives a sunlit screen and a
+               colour-blind reader. -->
+          <div class="dailyDoneNote" id="dailyDoneNote" style="display:none"><i class="jic jic-circle-check" aria-hidden="true"></i> Mission complete</div>
+          <!-- Order is the hierarchy: after a mission is done the primary
+               action moves the family through the 36, and replaying drops to
+               secondary. Before it is done there is only one action here. -->
+          <div class="dailyActionsBig">
+            <!-- No aria-label on purpose: this button's label changes with state
+                 ("Start Mission" → "Next: <mission>"), and a JS-set aria-label
+                 would (a) silently stay English on /tr, because the locale
+                 layer observes childList/characterData but not attributes, and
+                 (b) override the visible text, breaking WCAG 2.5.3 Label in
+                 Name. The visible label IS the accessible name. -->
+            <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play dailyPlayBig" id="btnDailyPlay" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
+            <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyReplay" type="button" style="display:none"><i class="jic jic-loop" aria-hidden="true"></i> Play Again</button>
+            <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyNew" aria-label="Choose another mission" type="button"><i class="ico i-loop" aria-hidden="true"></i> Choose another</button>
+          </div>
+          <!-- Stub for backward JS compat -->
+          <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
+          <div class="dailyTitle" style="display:none">Today's Mission</div>
+        </div>
 
 
         <!-- Coach Leo's Smart Pick — recommendation card -->
