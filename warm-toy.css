@@ -2632,3 +2632,42 @@ html.theme--dark{
   color:var(--jv-on-lime) !important;
 }
 .pathSectionName{ font-family:var(--font-display,inherit) !important; }
+
+/* ==========================================================================
+   Mission sheet — v0 v32 visual pass. Purely additive/CSS: no change to
+   openMission(), the gate state machine, or markMissionDone().
+   ========================================================================== */
+
+/* "You need" kit row — new, static, no JS. */
+.missionKitRow{
+  display:flex; gap:8px; margin:10px 0 4px;
+}
+.missionKitChip{
+  flex:1; display:flex; align-items:center; gap:8px;
+  padding:10px 12px; border-radius:var(--jv-r-compact);
+}
+.missionKitChip img{ width:28px; height:28px; object-fit:contain; flex-shrink:0; }
+.missionKitChip .jv-card-title{ font-size:13px; }
+
+/* Sheet action buttons carry the v0 button language; #btnToggleDone.btnGateWait
+   (above, ID-scoped + !important) still wins while the gate is closed. */
+
+/* Mission Completed — STAYS the existing inline #missionXpReward section in
+   the SAME mission sheet (no second modal). Re-skinned only: celebratory
+   surface + XP chip, matching the v0 "Mission Completed" visual language. */
+.missionXpReward{
+  border-radius:var(--jv-r-card);
+  background:var(--jv-celebrate);
+  padding:14px;
+  margin-top:14px;
+}
+.missionXpRewardKicker{
+  font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  font-size:11px; color:var(--jv-success);
+}
+.missionXpRewardTeam{ font-family:var(--font-display,inherit); font-weight:700; color:var(--jv-text); }
+.missionXpRewardGain{
+  font-weight:700; padding:4px 10px; border-radius:var(--jv-r-chip);
+  background:var(--jv-lime); color:var(--jv-on-lime); font-size:13px;
+}
+.missionXpRewardBarFill{ background:var(--jv-blue-strong) !important; }

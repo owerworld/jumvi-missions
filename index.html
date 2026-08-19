@@ -771,6 +771,20 @@
       <!-- Mission motion-diagram icon (per-mission, populated in openMission) -->
       <div class="jmv missionIconWrap" id="missionIconWrap" aria-hidden="true"></div>
 
+      <!-- "You need" kit row (v0 v32) — static, real product equipment art,
+           same two pieces every mission (2 paddles + 1 ball); not tied to any
+           per-mission state so it needs no JS. -->
+      <div class="missionKitRow">
+        <div class="missionKitChip jv-card-2">
+          <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="34" height="34" loading="lazy">
+          <span class="jv-card-title">2 paddles</span>
+        </div>
+        <div class="missionKitChip jv-card-2">
+          <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="26" height="26" loading="lazy">
+          <span class="jv-card-title">1 soft ball</span>
+        </div>
+      </div>
+
       <!-- New: Timer UI (Hidden by default) -->
       <div id="timerUI">
         <div id="timerDisplay">60s</div>
@@ -922,11 +936,11 @@
 
       <div class="sheetActions">
         <div class="missionPrimary">
-          <button class="btn btnPrimary missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
-          <button class="missionIconBtn" id="btnScoreToggle" aria-label="Track catches" aria-pressed="false" title="Track catches"><i class="ico i-chart" aria-hidden="true"></i></button>
+          <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
+          <button class="missionIconBtn jv-btn jv-btn--icon" id="btnScoreToggle" aria-label="Track catches" aria-pressed="false" title="Track catches"><i class="ico i-chart" aria-hidden="true"></i></button>
         </div>
-        <button class="btn btnPrimary holdBtn" id="btnToggleDone" aria-label="Mark mission done"><i class="ico i-check" aria-hidden="true"></i> Mark as Done</button>
-        <button class="btn btnGhost" id="btnNext" aria-label="Next mission"><i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission</button>
+        <button class="btn btnPrimary jv-btn jv-btn--ready jv-btn--play holdBtn" id="btnToggleDone" aria-label="Mark mission done"><i class="ico i-check" aria-hidden="true"></i> Mark as Done</button>
+        <button class="btn btnGhost jv-btn jv-btn--ghost" id="btnNext" aria-label="Next mission"><i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission</button>
         <!-- "Random from Pack" gizli stub — JS uyumlulugu icin -->
         <button id="btnRandomPack" type="button" style="display:none" aria-hidden="true"></button>
       </div>
