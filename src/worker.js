@@ -350,7 +350,7 @@ async function handleTurkishApp(request, env) {
 
   // Deferred scripts preserve source order. data.js defines mission/pack data;
   // locale layer mutates display strings; app.js then renders Turkish.
-  const localeScript = '<script src="/tr/i18n.js?v=20260815-2" defer></script>';
+  const localeScript = '<script src="/tr/i18n.js?v=20260819-2" defer></script>';
   if (!html.includes('/tr/i18n.js')) {
     const dataTag = /(<script\s+src=["']data\.js[^"']*["'][^>]*><\/script>)/i;
     if (dataTag.test(html)) {
