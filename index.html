@@ -601,6 +601,10 @@
         <h2 class="tabHeading">For Grown-ups</h2>
         <p class="tabIntro" id="grownupsIntro">Names, avatars, app settings, product care, privacy, and support.</p>
 
+        <!-- v32 groups the grown-up utilities under plain sentence-case
+             labels. The rows themselves are the existing runtime elements. -->
+        <div class="jvSectionLabel jvGroupLabel">Kids &amp; settings</div>
+
         <!-- Active profile preview card -->
         <div class="profileCard" id="profileCard">
           <div class="profileCardAvatar" id="profileCardAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></div>
@@ -614,6 +618,8 @@
         <button class="profileTabOpenBtn btn btnPrimary jv-btn jv-btn--primary" id="btnOpenProfileFromTab" type="button">
           <i class="jic jic-users" aria-hidden="true"></i> Kids &amp; Settings
         </button>
+
+        <div class="jvSectionLabel jvGroupLabel">Progress &amp; play</div>
 
         <!-- Champion Certificate — moved here from the old #tabStats. Same
              IDs (#certBox/#certProgressFill/#certSub/#certBtn), same
@@ -656,6 +662,10 @@
             </div>
             <span class="profileQuickArrow">›</span>
           </a>
+        </div>
+
+        <div class="jvSectionLabel jvGroupLabel">Care &amp; trust</div>
+        <div class="profileQuickLinks">
           <button class="profileQuickLink" id="privacyLink" type="button">
             <span class="profileQuickIcon"><i class="ico i-lock" aria-hidden="true"></i></span>
             <div class="profileQuickInfo">
@@ -664,6 +674,10 @@
             </div>
             <span class="profileQuickArrow">›</span>
           </button>
+        </div>
+
+        <div class="jvSectionLabel jvGroupLabel">Need a hand?</div>
+        <div class="profileQuickLinks">
           <button class="profileQuickLink" id="helpSupportLink" type="button">
             <span class="profileQuickIcon" aria-hidden="true">?</span>
             <div class="profileQuickInfo">
@@ -792,6 +806,8 @@
       <div class="sheetHandle" aria-hidden="true"></div>
       <div class="sheetTop">
         <div>
+          <!-- v32 leads the sheet with the pack name above the mission title. -->
+          <div class="sheetPack" id="mPack"></div>
           <div class="sheetTitle" id="mTitle">Mission</div>
           <div class="sheetMeta" id="mMeta"></div>
         </div>
@@ -804,6 +820,7 @@
       <!-- "You need" kit row (v0 v32) — static, real product equipment art,
            same two pieces every mission (2 paddles + 1 ball); not tied to any
            per-mission state so it needs no JS. -->
+      <div class="mSectionLabel">You need</div>
       <div class="missionKitRow">
         <div class="missionKitChip jv-card-2">
           <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="34" height="34" loading="lazy">

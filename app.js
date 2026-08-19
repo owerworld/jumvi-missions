@@ -4561,6 +4561,9 @@ function openMission(id){
   }
 
   mTitle.textContent = ms.title;
+  // v32 pack eyebrow above the mission name (same getPackName source).
+  const mPackEl = document.getElementById("mPack");
+  if(mPackEl) mPackEl.textContent = getPackName(ms.pack);
   /* Personal best.
    *
    * The app has recorded a best catch count per mission all along, and showed
@@ -4587,7 +4590,9 @@ function openMission(id){
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
   // Guide Leo beside the STEPS header (Task 4b/c): decorative pointing pose,
   // but the 44px button wrapping him is tappable → speaks the steps aloud.
-  mSteps.innerHTML = `<div class="stepsHeadRow"><b>Steps</b>
+  // v32: "What to do" eyebrow, then each step as its own bordered row with a
+  // numbered blue disc. Same steps array, same read-aloud Leo button.
+  mSteps.innerHTML = `<div class="stepsHeadRow"><b class="mSectionLabel">What to do</b>
     <button type="button" class="leoSpeakBtn" id="leoSpeakBtn" aria-label="Hear the steps read aloud">
       <picture>
         <source srcset="assets/leo/leo-guide-256.webp?v=20260717-1" type="image/webp">
@@ -4595,7 +4600,7 @@ function openMission(id){
       </picture>
     </button>
   </div><ol class="missionStepsList">
-    ${steps.map(s=>`<li>${escapeHtml(s)}</li>`).join("")}
+    ${steps.map((s,i)=>`<li><span class="stepNum" aria-hidden="true">${i+1}</span><span class="stepText">${escapeHtml(s)}</span></li>`).join("")}
   </ol>`;
   const leoSpeakBtn = document.getElementById("leoSpeakBtn");
   if(leoSpeakBtn) leoSpeakBtn.onclick = ()=> toggleLeoSpeakSteps(ms);
@@ -4605,7 +4610,11 @@ function openMission(id){
   // not hear the first rule twice and the timer never runs under speech.
 
   const winText = ms.win ? String(ms.win) : "Win condition is coming soon.";
-  mWin.innerHTML = `<b><i class="jic jic-award" aria-hidden="true"></i> Win</b><br/><div style="margin-top:8px">${escapeHtml(winText)}</div>`;
+  // v32 states the win condition on a dark panel with a lime trophy disc —
+  // the single loudest thing on the sheet after the mission name.
+  mWin.innerHTML = `<span class="winTrophy" aria-hidden="true"><i class="jic jic-award"></i></span>` +
+    `<span class="winCopy"><span class="winLabel">You win when</span>` +
+    `<span class="winText">${escapeHtml(winText)}</span></span>`;
   mTip.innerHTML = `<b><i class="jic jic-users" aria-hidden="true"></i> Parent Tip</b><br/><div style="margin-top:8px">${escapeHtml(ms.tip)}</div>`;
   if(mKidsTip){
     mKidsTip.innerHTML = `<b><i class="jic jic-star" aria-hidden="true"></i> Kids Challenge</b><br/><div style="margin-top:8px">${escapeHtml(getKidsTip(ms))}</div>`;

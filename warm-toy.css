@@ -3791,3 +3791,286 @@ html.theme--light .bottomNav, html.theme--dark .bottomNav{
    shrink to content and stagger. Rows must stretch edge to edge. */
 #tabBrowse .pathSteps{ align-items:stretch !important; }
 #tabBrowse .pathRow{ width:100% !important; max-width:100% !important; }
+
+/* ── Mission detail sheet: v32 composition ───────────────────────────────── */
+#sheet .sheetPack{
+  color:var(--jv-text-2,var(--muted));
+  font-size:13px;
+  font-weight:850;
+  line-height:1.2;
+  margin-bottom:1px;
+}
+#sheet .sheetTitle{
+  font-family:var(--font-display,inherit);
+  font-size:24px !important;
+  line-height:1.12 !important;
+  font-weight:950 !important;
+}
+/* v32 keeps the sheet header clean — the chips move out of it. */
+#sheet .sheetMeta{ display:none !important; }
+.mSectionLabel{
+  margin:16px 0 8px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:11.5px;
+  font-weight:950;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+  line-height:1;
+  display:block;
+}
+/* Mission art sits on a tinted band, like the Home hero. */
+#sheet .missionIconWrap{
+  margin:2px 0 0 !important;
+  padding:14px !important;
+  border:0 !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  box-shadow:none !important;
+}
+#sheet .missionKitRow{ margin:0 !important; }
+#sheet .missionKitChip{
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card,var(--card)) !important;
+}
+/* Steps: eyebrow + one bordered row per step with a numbered disc. */
+#sheet #mSteps{
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+#sheet #mSteps .stepsHeadRow{ margin-bottom:0; }
+#sheet #mSteps .missionStepsList{
+  list-style:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+#sheet #mSteps .missionStepsList li{
+  display:flex !important;
+  align-items:center;
+  gap:12px;
+  margin:0 !important;
+  padding:12px 14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  list-style:none !important;
+}
+#sheet #mSteps .missionStepsList li::marker,
+#sheet #mSteps .missionStepsList li::before{ content:none !important; display:none !important; }
+#sheet .stepNum{
+  flex:0 0 auto;
+  width:30px; height:30px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:var(--jv-blue-strong,#1d6fb5);
+  color:#fff;
+  font-size:14px;
+  font-weight:950;
+}
+#sheet .stepText{
+  flex:1; min-width:0;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.35;
+  font-weight:750;
+}
+/* Win condition on the dark v32 panel. */
+#sheet #mWin.kvWin{
+  display:flex !important;
+  align-items:flex-start;
+  gap:12px;
+  margin:16px 0 0 !important;
+  padding:15px !important;
+  border:0 !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-panel,#0f172a) !important;
+  box-shadow:none !important;
+}
+#sheet .winTrophy{
+  flex:0 0 auto;
+  width:42px; height:42px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:var(--jv-lime,#97d700);
+  color:#0f172a;
+  font-size:20px;
+}
+#sheet .winCopy{ flex:1; min-width:0; display:block; }
+#sheet .winLabel{
+  display:block;
+  color:var(--jv-panel-fg-2,#cbd5f5) !important;
+  font-size:11.5px;
+  font-weight:950;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+}
+#sheet .winText{
+  display:block;
+  margin-top:4px;
+  color:var(--jv-panel-fg,#fff) !important;
+  font-size:16px;
+  line-height:1.35;
+  font-weight:900;
+}
+
+/* Sheet surfaces follow v32's sheet token, not the warm cream. */
+html.theme--light .sheet, html.theme--dark .sheet,
+html.theme--light #sheet, html.theme--dark #sheet{
+  background:var(--jv-sheet,var(--card)) !important;
+}
+html.theme--light .backdrop, html.theme--dark .backdrop{
+  background:var(--jv-scrim,rgba(15,23,42,.45)) !important;
+}
+/* v32's action footer is one clear primary. The gate ("After you play") and
+   Next stay — the completion flow is unchanged — but they read as secondary
+   so the footer is a single decision, not three competing ones. */
+#sheet > .sheetActions{
+  padding-top:10px !important;
+  gap:8px !important;
+  background:var(--jv-sheet,var(--card)) !important;
+  border-top:1px solid var(--jv-line,var(--border)) !important;
+}
+#sheet .sheetActions .missionStartBtn,
+#sheet .sheetActions .missionStartBtn.btnPrimary{
+  min-height:54px !important;
+  border-radius:var(--jv-r-button,16px) !important;
+  background:var(--jv-blue-strong,#1d6fb5) !important;
+  box-shadow:none !important;
+}
+#sheet .sheetActions .holdBtn.btnPrimary{
+  min-height:44px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:transparent !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  -webkit-text-fill-color:var(--jv-text-2,var(--muted)) !important;
+  font-size:14px !important;
+}
+#sheet .sheetActions #btnNext{
+  min-height:40px !important;
+  border:0 !important;
+  border-radius:var(--jv-r-compact,14px) !important;
+  background:transparent !important;
+  color:var(--jv-text-3,var(--muted)) !important;
+  -webkit-text-fill-color:var(--jv-text-3,var(--muted)) !important;
+  font-size:13.5px !important;
+}
+/* The read-aloud prompt is a quiet hint, not a full-width blue banner. */
+#sheet .leoSpeakTip{ font-size:12px; }
+
+/* ── Grown-ups + shared tab chrome: v32 grouped rows ─────────────────────── */
+/* The app header now carries every tab's title and intro, so the in-panel
+   duplicates go. They stay in the DOM for the /tr observer and renderTeamsHub's
+   setText() targets. */
+#tabProfile > .tabHeading, #tabProfile > .tabIntro,
+#tabModes .teamsHubHeader{ display:none !important; }
+
+.jvGroupLabel{
+  margin:20px 0 8px !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+  letter-spacing:-.1px !important;
+  text-transform:none !important;
+  font-family:var(--font-display,inherit);
+}
+#tabProfile .jvGroupLabel:first-of-type{ margin-top:6px !important; }
+
+/* Active-child row + its CTA read as one v32 group. */
+#tabProfile #profileCard{
+  margin:0 0 8px !important;
+  padding:13px 14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+  gap:12px !important;
+}
+#tabProfile .profileCardAvatar{
+  width:48px !important; height:48px !important; flex:0 0 48px !important;
+  border-radius:50% !important; background:transparent !important;
+}
+#tabProfile .profileCardName{ font-size:16px !important; }
+#tabProfile .profileCardStats{ font-size:13px !important; color:var(--jv-text-2,var(--muted)) !important; }
+/* The full-width blue button is not v32 chrome here — it becomes a row. */
+#tabProfile #btnOpenProfileFromTab{
+  width:100%;
+  justify-content:flex-start !important;
+  gap:10px !important;
+  min-height:52px !important;
+  margin:0 0 4px !important;
+  padding:13px 14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  color:var(--text) !important;
+  -webkit-text-fill-color:var(--text) !important;
+  box-shadow:none !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+}
+#tabProfile #btnOpenProfileFromTab .jic{ color:var(--jv-blue-strong,#1d6fb5) !important; }
+
+/* Quick-link rows. */
+#tabProfile .profileQuickLinks{ gap:8px !important; margin-bottom:0 !important; }
+#tabProfile .profileQuickLink{
+  padding:13px 14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#tabProfile .profileQuickIcon{
+  width:40px !important; height:40px !important; flex:0 0 40px !important;
+  border-radius:12px !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  color:var(--jv-blue-strong,#1d6fb5) !important;
+  font-size:19px !important;
+}
+#tabProfile .profileQuickTitle{ font-size:15px !important; font-weight:900 !important; }
+#tabProfile .profileQuickSub{ font-size:13px !important; color:var(--jv-text-2,var(--muted)) !important; }
+#tabProfile .profileQuickArrow{ color:var(--jv-text-3,var(--muted)) !important; font-size:19px; }
+#tabProfile .profileResetLink .profileQuickIcon{
+  background:rgba(180,35,24,.10) !important;
+  color:#b42318 !important;
+}
+/* Certificate row. */
+#tabProfile #certBox{
+  margin:0 !important;
+  padding:14px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#tabProfile .certIcon{
+  width:44px !important; height:44px !important; flex:0 0 44px !important;
+  display:grid; place-items:center;
+  border-radius:50% !important;
+  background:rgba(245,158,11,.16) !important;
+  color:#b45309 !important;
+  font-size:20px !important;
+}
+#tabProfile .certText b{ font-size:15px !important; font-weight:900 !important; }
+#tabProfile .certProgressText{ font-size:13px !important; color:var(--jv-text-2,var(--muted)) !important; }
+#tabProfile .certBtn{
+  border:0 !important;
+  border-radius:999px !important;
+  background:var(--jv-card-2,#dbe7f4) !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+}
+#tabProfile .productCareSection{
+  margin-top:8px !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
