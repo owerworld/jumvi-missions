@@ -2613,6 +2613,24 @@ html.theme--dark{
   background:var(--jv-card) !important;
   box-shadow:none !important;
 }
+.missionsBookLink{
+  align-self:flex-start;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:44px;
+  padding:10px 15px;
+  border:1px solid var(--jv-line);
+  border-radius:var(--jv-r-button);
+  background:var(--jv-card);
+  color:var(--jv-blue-strong);
+  font-size:var(--fs-meta);
+  font-weight:800;
+  line-height:1;
+  text-decoration:none;
+}
+.missionsBookLink:active{ transform:scale(.99); }
 .pathSection{
   border-radius:var(--jv-r-card) !important;
   background:var(--jv-card) !important;

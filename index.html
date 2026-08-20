@@ -459,6 +459,12 @@
           <span class="todayQuickText">Pick one for me</span>
         </button>
 
+        <a class="missionsBookLink" data-optional-file="mission-book.pdf" href="mission-book.pdf"
+           target="_blank" rel="noopener" aria-label="Open Mission Book PDF">
+          <i class="jic jic-book" aria-hidden="true"></i>
+          <span>Mission Book</span>
+        </a>
+
         <!-- Hidden stubs — JS uyumluluk icin (search/filter logic'i hayatta) -->
         <div id="searchToggleBtn" style="display:none" aria-hidden="true"></div>
         <div id="searchBox" style="display:none">
@@ -783,26 +789,6 @@
     <!-- Mission list — only shown when tab is browse -->
     <section class="list" id="list" aria-label="missions"></section>
 
-    <section class="footer" hidden aria-hidden="true">
-      <b>Extras</b><br/>
-            <div class="links">
-        <div class="linkGroup">
-          <a class="linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf" target="_blank" rel="noopener"><i class="jic jic-book" aria-hidden="true"></i> Mission Book</a>
-          <div class="linkDesc">Printable mission list for parents.</div>
-        </div>
-        <button class="linkBtn" id="btnShare" aria-label="Share progress"><i class="jic jic-share" aria-hidden="true"></i> Share</button>
-      </div>
-      <div class="small">Progress is saved on this device.</div>
-      <div class="small">Adult supervision required.</div>
-      <div class="small">
-        Support: <a href="mailto:support@jumvi.co">support@jumvi.co</a>
-      </div>
-      <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn btnResetFooter" id="btnResetBottom" aria-label="Reset progress"><i class="jic jic-trash" aria-hidden="true"></i> Reset Progress</button>
-        <button class="btn btnResetFooter" id="btnKidsMode" aria-label="Toggle kids mode" type="button"><i class="jic jic-users" aria-hidden="true"></i> Kids Mode</button>
-      </div>
-      <div class="copyrightLine">© 2026 SAY23 LLC · JUMVI® and Coach Leo are trademarks of SAY23 LLC. All mission content is protected by copyright.</div>
-    </section>
   </div>
 
   <!-- Team XP picker — optional, remembered; never shown before every mission. -->
