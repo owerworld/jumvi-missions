@@ -45,6 +45,16 @@ const mapKeys = (varName) => {
   return [...m[1].matchAll(/^\s*(?:"([^"]+)"|(\w+))\s*:\s*"([^"]+)"/gm)]
     .map((x) => ({ key: x[1] || x[2], file: x[3] }));
 };
+const coachingFiles = () => {
+  const start = leoJs.indexOf("var COACHING_FILES");
+  const end = leoJs.indexOf("var STALL_MS", start);
+  const block = start >= 0 && end >= 0 ? leoJs.slice(start, end) : "";
+  const entries = new Map();
+  for (const entry of block.matchAll(/(\d+)\s*:\s*(\[[^\]]+\]|"[^"]+\.mp3")/g)) {
+    entries.set(Number(entry[1]), [...entry[2].matchAll(/"([^"]+\.mp3)"/g)].map((m) => m[1]));
+  }
+  return entries;
+};
 
 const rows = [];
 const add = (family, key, text, file, where, recorded) =>
@@ -63,8 +73,7 @@ const missionFiles = mapKeys("MISSION_FILES");
 missions.forEach((ms) => {
   const entry = missionFiles.find((f) => Number(f.key) === ms.id);
   if (!entry) {
-    // Mission 13 is Silent Mode: a game played in total silence, so it has no
-    // narration on purpose. Not a gap.
+    // A mission without a file is deliberately silent by design.
     add("mission", String(ms.id), strip(ms.title), "—", "openMission → playMissionNarration", "n/a");
     return;
   }
@@ -94,28 +103,43 @@ const countdown = mapKeys("COUNTDOWN_FILES");
 });
 
 /* ── 4. Leo's island (the 3D hub) ─────────────────────────────────────────── */
+const lineFiles = mapKeys("LINE_FILES");
 [...hubJs.matchAll(/coachSpeak\(\s*"((?:[^"\\]|\\.)*)"\s*\)/g)].forEach((m, i) =>
-  add("hub", "greeting-" + (i + 1), m[1].replace(/\\'/g, "'"),
-      "hub/hub-greeting-" + (i + 1) + "-en.mp3", "jumvi-hub-app.js", "no"));
+  {
+    const key = "hub-greeting-" + (i + 1);
+    const entry = lineFiles.find((f) => f.key === key);
+    const file = entry ? entry.file : "hub/hub-greeting-" + (i + 1) + "-en.mp3";
+    add("hub", "greeting-" + (i + 1), m[1].replace(/\\'/g, "'"), file,
+        "jumvi-hub-app.js", entry && onDisk(file) ? "yes" : "no");
+  });
 [...hubJs.matchAll(/showLeoBubble\(\s*"((?:[^"\\]|\\.)*)"/g)].forEach((m, i) =>
-  add("hub", "bubble-" + (i + 1), m[1].replace(/\\'/g, "'"),
-      "hub/hub-bubble-" + (i + 1) + "-en.mp3", "jumvi-hub-app.js", "no"));
+  {
+    const key = "hub-bubble-" + (i + 1);
+    const entry = lineFiles.find((f) => f.key === key);
+    const file = entry ? entry.file : "hub/hub-bubble-" + (i + 1) + "-en.mp3";
+    add("hub", "bubble-" + (i + 1), m[1].replace(/\\'/g, "'"), file,
+        "jumvi-hub-app.js", entry && onDisk(file) ? "yes" : "no");
+  });
 
 /* ── 5. fixed system lines spoken from app.js ─────────────────────────────── */
-add("system", "times-up", "Time's up! Great job!", "system/times-up-en.mp3",
-    "timer reaches zero", "no");
+const timesUp = lineFiles.find((f) => f.key === "times-up");
+add("system", "times-up", "Time's up! Great job! Check the phone when you're ready.",
+    timesUp ? timesUp.file : "system/times-up-check-phone-en.mp3", "timer reaches zero",
+    timesUp && onDisk(timesUp.file) ? "yes" : "no");
 add("system", "times-up-score", "Time's up! You got {N}!", "system/— (dynamic number)",
-    "timer reaches zero with a score", "no");
+    "score remains visual in English; Turkish keeps its existing TTS", "n/a");
 
 /* ── 6. mid-mission voice reminders ───────────────────────────────────────── */
+const coachingMap = coachingFiles();
 Object.entries(coaching).forEach(([id, meta]) => {
   (meta.reminders || []).forEach((r, i) => {
     const ms = missions.find((m) => m.id === Number(id));
     if (!ms) return;
     const text = r.source === "safety" ? strip(ms.safety) : strip((ms.steps || [])[r.index]);
     if (!text) return;
-    add("reminder", `${id}-${i}`, text, `reminders/reminder-${String(id).padStart(2, "0")}-${i}-en.mp3`,
-        "half-way through the mission timer", "no");
+    const file = coachingMap.get(Number(id))?.[i];
+    add("reminder", `${id}-${i}`, text, file ? `mission-coaching/${file}` : `mission-coaching/MISSING-${id}-${i}.mp3`,
+        "during the mission timer", file && onDisk(`mission-coaching/${file}`) ? "yes" : "no");
   });
 });
 

@@ -34,7 +34,8 @@
 
   var BASE = "assets/audio/coach-leo/en/";
 
-  // Mission 13 (Silent Mode) is intentionally absent — no file, no key.
+  // Mission 13 is available only before play / from Hear the steps. app.js
+  // continues to suppress all of its during-play speech.
   var MISSION_FILES = {
     1: "01-speed-demon-en.mp3",
     2: "02-red-light-green-light-en.mp3",
@@ -48,6 +49,7 @@
     10: "10-power-step-en.mp3",
     11: "11-sky-floater-en.mp3",
     12: "12-heart-high-en.mp3",
+    13: "13-silent-mode-en.mp3",
     14: "14-tempo-master-en.mp3",
     15: "15-spotlight-eyes-en.mp3",
     16: "16-1-2-3-go-en.mp3",
@@ -99,10 +101,10 @@
    * like every other narration mp3 — nothing else needs to change, and
    * tools/check-coach-leo-audio.mjs will start asserting the files exist. */
   var COUNTDOWN_FILES = {
-    // "3": "countdown-3-en.mp3",
-    // "2": "countdown-2-en.mp3",
-    // "1": "countdown-1-en.mp3",
-    // go:  "countdown-go-en.mp3"
+    "3": "countdown-3-en.mp3",
+    "2": "countdown-2-en.mp3",
+    "1": "countdown-1-en.mp3",
+    go:  "countdown-go-en.mp3"
   };
 
   /* ── Fixed spoken lines that are NOT mission narration ─────────────────────
@@ -127,9 +129,9 @@
    * leo-audio.mjs starts asserting they exist; tools/voice-manifest.mjs lists
    * every line still waiting for a render. */
   var LINE_FILES = {
-    // "hub-greeting-1": "hub/hub-greeting-1-en.mp3",
-    // "hub-bubble-1":   "hub/hub-bubble-1-en.mp3",
-    // "times-up":       "system/times-up-en.mp3"
+    "hub-greeting-1": "hub/hub-greeting-1-en.mp3",
+    "hub-bubble-1": "hub/hub-bubble-1-en.mp3",
+    "times-up": "system/times-up-check-phone-en.mp3"
   };
 
   /* Callers that only hold the sentence (the 3D hub passes text, not a key)
@@ -138,7 +140,34 @@
   var LINE_TEXT = {
     "Welcome to my island! Tap the ground and I'll walk there!": "hub-greeting-1",
     "Great job! Now find a glowing gate": "hub-bubble-1",
-    "Time's up! Great job!": "times-up"
+    "Time's up! Great job! Check the phone when you're ready.": "times-up"
+  };
+
+  // Short mission-specific recordings for English quick/recap replays and
+  // in-play reminders. Missing IDs intentionally retain their TTS fallback.
+  var COACHING_FILES = {
+    1: "01-speed-demon-en.mp3", 3: "03-quick-slap-en.mp3",
+    4: "04-switcharoo-en.mp3", 5: "05-statue-mode-en.mp3",
+    6: "06-number-echo-en.mp3", 7: "07-rainbow-throws-en.mp3",
+    8: "08-the-landing-pad-en.mp3", 10: "10-power-step-en.mp3",
+    11: "11-sky-floater-en.mp3", 12: "12-heart-high-en.mp3",
+    14: "14-tempo-master-en.mp3", 15: "15-spotlight-eyes-en.mp3",
+    16: "16-1-2-3-go-en.mp3", 17: "17-mirror-mode-en.mp3",
+    18: "18-count-to-10-en.mp3", 25: "25-chill-catch-en.mp3",
+    26: "26-tiny-space-en.mp3", 27: "27-secret-signal-en.mp3",
+    29: "29-stuck-foot-catch-en.mp3", 30: "30-left-or-right-en.mp3",
+    31: "31-cloud-chaser-en.mp3", 32: "32-home-base-en.mp3",
+    34: "34-chase-the-ball-en.mp3", 35: "35-sky-high-jump-en.mp3",
+    36: "36-marathon-rally-en.mp3",
+    9: "09-step-back-challenge-en.mp3",
+    19: ["19-round-robin-a-en.mp3", "19-round-robin-b-en.mp3"],
+    20: ["20-crab-walk-relay-a-en.mp3", "20-crab-walk-relay-b-en.mp3"],
+    21: ["21-captain-says-a-en.mp3", "21-captain-says-b-en.mp3"],
+    22: ["22-spin-squad-a-en.mp3", "22-spin-squad-b-en.mp3"],
+    23: ["23-mix-it-up-a-en.mp3", "23-mix-it-up-b-en.mp3"],
+    24: ["24-2v2-squad-count-a-en.mp3", "24-2v2-squad-count-b-en.mp3"],
+    28: "28-mind-reader-en.mp3",
+    33: "33-how-far-can-you-throw-en.mp3"
   };
 
   var STALL_MS = 4000; // no 'playing' event within this window => fall back to TTS
@@ -182,6 +211,21 @@
   function lineSrc(key) {
     var f = LINE_FILES[String(key)];
     return f ? BASE + f : null;
+  }
+
+  function coachingFile(id, reminderIndex) {
+    var files = COACHING_FILES[id];
+    if (Array.isArray(files)) return files[Number(reminderIndex) || 0] || null;
+    return files || null;
+  }
+
+  function hasCoaching(id, reminderIndex) {
+    return isAvailable() && !!coachingFile(id, reminderIndex);
+  }
+
+  function coachingSrc(id, reminderIndex) {
+    var f = coachingFile(id, reminderIndex);
+    return f ? BASE + "mission-coaching/" + f : null;
   }
 
   // Returns the clip key for a sentence, or "" when that sentence has no clip.
@@ -264,6 +308,15 @@
     return playSrc(missionSrc(id), cb);
   }
 
+  function playCoaching(id, reminderIndex, cb) {
+    if (typeof reminderIndex === "object" || reminderIndex == null) {
+      cb = reminderIndex;
+      reminderIndex = undefined;
+    }
+    if (!hasCoaching(id, reminderIndex)) return false;
+    return playSrc(coachingSrc(id, reminderIndex), cb);
+  }
+
   function playCue(key, cb) {
     if (!isAvailable() || !CUE_FILES[key]) return false;
     return playSrc(cueSrc(key), cb);
@@ -341,6 +394,8 @@
   global.CoachLeoAudio = {
     isAvailable: isAvailable,
     hasMission: hasMission,
+    hasCoaching: hasCoaching,
+    playCoaching: playCoaching,
     hasLine: hasLine,
     playLine: playLine,
     lineKeyForText: lineKeyForText,
