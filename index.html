@@ -145,6 +145,7 @@
            a parent two different numbers in the same glance. The set still ships
            4 paddles and 4 balls — that inventory lives in Adults ▸ product care
            and on the Quick Play screen, where it is the true answer. -->
+      <div class="welcomeKitLabel">Grab your kit</div>
       <div class="welcomeGear" aria-label="For your first game: two paddles and one soft ball">
         <div class="welcomeGearItem">
           <span class="welcomeProductVisual" aria-hidden="true">
@@ -803,13 +804,14 @@
   </div>
 
   <!-- Team XP picker — optional, remembered; never shown before every mission. -->
-  <div class="teamXpBackdrop" id="teamXpBackdrop" role="dialog" aria-modal="true"
+  <div class="teamXpBackdrop jvFullSurface" id="teamXpBackdrop" role="dialog" aria-modal="true"
        aria-labelledby="teamXpTitle" aria-describedby="teamXpSub"
        aria-hidden="true" inert hidden>
     <div class="teamXpSheet" role="document">
       <div class="teamXpHandle" aria-hidden="true"></div>
       <div class="teamXpHead">
         <div>
+          <p class="teamXpEyebrow" id="teamXpEyebrow">Family &middot; Teams</p>
           <h2 id="teamXpTitle">Create a Team</h2>
           <p id="teamXpSub">Choose who is playing together.</p>
         </div>
@@ -1048,12 +1050,12 @@
   <!-- Repeatable Play Mode detail. Separate from Missions and all progress state. -->
 
   <!-- Badges Modal -->
-  <div class="backdrop" id="badgesBackdrop" role="dialog" aria-modal="true" aria-label="Badges">
+  <div class="backdrop jvFullSurface" id="badgesBackdrop" role="dialog" aria-modal="true" aria-label="Badges">
     <div class="sheet">
       <div class="sheetTop">
         <div>
           <div class="sheetTitle"><i class="ico i-medal" aria-hidden="true"></i> Badges</div>
-          <div class="small">Unlock badges by completing missions.</div>
+          <div class="small">Collect moments you earned</div>
         </div>
         <button class="close" id="btnBadgesClose" aria-label="Close badges"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
@@ -1211,7 +1213,7 @@
 
 
   <!-- Profile Sheet (multi-child) -->
-  <div class="backdrop" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Kids and settings">
+  <div class="backdrop jvFullSurface" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Kids and settings">
     <div class="sheet">
       <div class="sheetTop">
         <div>
