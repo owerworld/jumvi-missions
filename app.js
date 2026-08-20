@@ -4522,6 +4522,26 @@ let _firstMissionStartTracked = false;
  * a countdown callback that carries only a duration, so without this the
  * timer_start beacon would have no idea which mission it belongs to. */
 let _openMissionId = 0;
+
+function renderMissionEquipment(ms){
+  const row = document.getElementById("missionKitRow");
+  if(!row) return;
+  const equipment = ms && ms.equipment ? ms.equipment : {};
+  const paddles = formatEquipmentCount(equipment.paddles, "paddle", "paddles");
+  const balls = formatEquipmentCount(equipment.balls, "soft ball", "soft balls");
+  row.innerHTML = [
+    paddles ? `<div class="missionKitChip jv-card-2">
+      <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="34" height="34" loading="lazy">
+      <span class="jv-card-title">${escapeHtml(paddles)}</span>
+    </div>` : "",
+    balls ? `<div class="missionKitChip jv-card-2">
+      <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="26" height="26" loading="lazy">
+      <span class="jv-card-title">${escapeHtml(balls)}</span>
+    </div>` : "",
+  ].join("");
+  row.hidden = !row.childElementCount;
+}
+
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
@@ -4619,6 +4639,8 @@ function openMission(id){
     iconWrap.innerHTML = markup;
     iconWrap.style.display = markup ? "" : "none";
   }
+
+  renderMissionEquipment(ms);
 
   mTitle.textContent = ms.title;
   // v32 pack eyebrow above the mission name (same getPackName source).

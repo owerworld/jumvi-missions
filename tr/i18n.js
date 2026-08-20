@@ -401,7 +401,9 @@
     if ((m = norm.match(/^(.+) · (\d+)\/(\d+) complete!?$/i))) return `${translateCore(m[1])} · ${m[2]}/${m[3]} tamamlandı${norm.endsWith('!') ? '!' : ''}`;
     if ((m = norm.match(/^(\d+)\/1 today$/i))) return `${m[1]}/1 bugün`;
     if ((m = norm.match(/^Day (\d+)$/i))) return `${m[1]}. gün`;
-    if ((m = norm.match(/^(\d+) players?$/i))) return `${m[1]} oyuncu`;
+    if ((m = norm.match(/^(\d+(?:[–-]\d+)?) players?$/i))) return `${m[1]} oyuncu`;
+    if ((m = norm.match(/^(\d+(?:[–-]\d+)?) paddles?$/i))) return `${m[1]} raket`;
+    if ((m = norm.match(/^(\d+(?:[–-]\d+)?) soft balls?$/i))) return `${m[1]} yumuşak top`;
 
     /* Progress counters (app.js renderProgress / certificate subtitle). */
     if ((m = norm.match(/^(\d+)\/(\d+) · (\d+) to go$/i))) return `${m[1]}/${m[2]} · ${m[3]} kaldı`;

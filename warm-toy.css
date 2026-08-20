@@ -2658,16 +2658,17 @@ html.theme--dark{
    openMission(), the gate state machine, or markMissionDone().
    ========================================================================== */
 
-/* "You need" kit row — new, static, no JS. */
+/* "You need" kit row — populated from each mission's equipment metadata. */
 .missionKitRow{
   display:flex; gap:8px; margin:10px 0 4px;
 }
 .missionKitChip{
   flex:1; display:flex; align-items:center; gap:8px;
+  min-width:0;
   padding:10px 12px; border-radius:var(--jv-r-compact);
 }
 .missionKitChip img{ width:28px; height:28px; object-fit:contain; flex-shrink:0; }
-.missionKitChip .jv-card-title{ font-size:13px; }
+.missionKitChip .jv-card-title{ font-size:13px; line-height:1.15; }
 
 /* Sheet action buttons carry the v0 button language; #btnToggleDone.btnGateWait
    (above, ID-scoped + !important) still wins while the gate is closed. */
