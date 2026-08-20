@@ -33,7 +33,7 @@ const MISSION_NAMES = {
   "12": "Chest Target",
   "13": "Silent Mode",
   "14": "Tempo Master",
-  "15": "Saw It!",
+  "15": "Spotlight Eyes",
   "16": "1-2-3 Throw!",
   "17": "Mirror Mode",
   "18": "Count to 10",
@@ -396,22 +396,39 @@ const MISSION_ICONS = {
     </div>
 
   </div>`,
-  15: `<svg width="100%" viewBox="0 0 380 150" role="img"><title>Saw It!</title><desc>Saw It!</desc>
+  15: `<svg width="100%" viewBox="0 0 380 266" role="img"><title>Spotlight Eyes</title><desc>Step 1: the catcher calls I SEE IT while the thrower still holds the ball. Step 2: only then is the same ball thrown.</desc>
 <defs><marker id="g15ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-<line x1="50" y1="124" x2="330" y2="124" stroke="var(--b)" stroke-width="1"/>
+
+<!-- STATE 1 — the catcher calls out FIRST. The single ball is still in the thrower's hand: no trajectory yet. -->
+<circle cx="20" cy="20" r="11" fill="var(--bg2)" stroke="var(--b)" stroke-width="1.4"/><text class="th" x="20" y="25" text-anchor="middle">1</text>
+<line x1="44" y1="104" x2="356" y2="104" stroke="var(--b)" stroke-width="1"/>
 <g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="100" cy="54" r="9"/><line x1="100" y1="63" x2="100" y2="94"/><line x1="100" y1="94" x2="90" y2="120"/><line x1="100" y1="94" x2="110" y2="120"/><line x1="100" y1="68" x2="122" y2="50"/><line x1="100" y1="70" x2="86" y2="82"/><line x1="86" y1="82" x2="81" y2="92"/>
-<circle cx="282" cy="54" r="9"/><line x1="282" y1="63" x2="282" y2="94"/><line x1="282" y1="94" x2="272" y2="120"/><line x1="282" y1="94" x2="292" y2="120"/><line x1="282" y1="68" x2="264" y2="50"/><line x1="264" y1="50" x2="259" y2="42"/><line x1="282" y1="70" x2="296" y2="84"/></g>
-<ellipse cx="78" cy="98" rx="6" ry="8" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-<ellipse cx="256" cy="38" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-<circle cx="98" cy="52" r="1.3" fill="var(--s)"/><circle cx="102" cy="52" r="1.3" fill="var(--s)"/><path d="M97 58 Q100 60 103 58" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
-<circle cx="278" cy="52" r="1.5" fill="var(--s)"/><circle cx="283" cy="53" r="1.5" fill="var(--s)"/>
-<path d="M122 50 Q190 26 254 38" fill="none" stroke="#EF9F27" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round" marker-end="url(#g15ar)"/>
-<line x1="276" y1="50" x2="207" y2="34" stroke="var(--s)" stroke-width="1.3" stroke-dasharray="3 4" stroke-linecap="round" opacity="0.5"/>
-<circle cx="196" cy="31" r="11" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-dasharray="3 3" opacity="0.6"/>
-<circle cx="196" cy="31" r="6" fill="#EF9F27"/>
-<g><rect x="248" y="6" width="70" height="22" rx="7" fill="var(--bg2)" stroke="var(--s)" stroke-width="1.4"/><polygon points="270,28 282,28 280,40" fill="var(--bg2)" stroke="none"/><text class="th" x="283" y="21" text-anchor="middle">SAW IT!</text></g>
-<text class="ts" x="180" y="142" text-anchor="middle">Say 'SAW IT!' before catching — partner throws when they hear it</text>
+<circle cx="100" cy="42" r="9"/><line x1="100" y1="51" x2="100" y2="80"/><line x1="100" y1="80" x2="90" y2="104"/><line x1="100" y1="80" x2="110" y2="104"/><line x1="100" y1="60" x2="112" y2="66"/><line x1="100" y1="58" x2="84" y2="72"/><line x1="84" y1="72" x2="80" y2="82"/>
+<circle cx="290" cy="42" r="9"/><line x1="290" y1="51" x2="290" y2="80"/><line x1="290" y1="80" x2="280" y2="104"/><line x1="290" y1="80" x2="300" y2="104"/><line x1="290" y1="58" x2="304" y2="46"/><line x1="304" y1="46" x2="308" y2="38"/><line x1="290" y1="60" x2="274" y2="72"/>
+</g>
+<circle cx="97" cy="40" r="1.3" fill="var(--s)"/><circle cx="103" cy="40" r="1.3" fill="var(--s)"/><path d="M96 46 Q100 48 104 46" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+<circle cx="286" cy="40" r="1.6" fill="var(--s)"/><circle cx="294" cy="40" r="1.6" fill="var(--s)"/><path d="M285 47 Q290 50 295 47" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+<ellipse cx="77" cy="88" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+<ellipse cx="311" cy="32" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+<circle cx="120" cy="70" r="6" fill="#EF9F27"/>
+<g><rect x="164" y="8" width="108" height="26" rx="8" fill="var(--bg2)" stroke="#639922" stroke-width="1.6"/><polygon points="246,34 262,34 256,46" fill="var(--bg2)"/><text class="th" x="218" y="26" text-anchor="middle">I SEE IT!</text></g>
+<text class="ts" x="100" y="124" text-anchor="middle">Ball stays in the hand</text>
+<text class="ts" x="290" y="124" text-anchor="middle">Catcher calls out first</text>
+
+<!-- STATE 2 — same two children, same two paddles, the same one ball finally leaves the hand. -->
+<circle cx="20" cy="154" r="11" fill="var(--bg2)" stroke="var(--b)" stroke-width="1.4"/><text class="th" x="20" y="159" text-anchor="middle">2</text>
+<line x1="44" y1="238" x2="356" y2="238" stroke="var(--b)" stroke-width="1"/>
+<g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="100" cy="176" r="9"/><line x1="100" y1="185" x2="100" y2="214"/><line x1="100" y1="214" x2="90" y2="238"/><line x1="100" y1="214" x2="110" y2="238"/><line x1="100" y1="192" x2="122" y2="180"/><line x1="100" y1="192" x2="84" y2="206"/><line x1="84" y1="206" x2="80" y2="216"/>
+<circle cx="290" cy="176" r="9"/><line x1="290" y1="185" x2="290" y2="214"/><line x1="290" y1="214" x2="280" y2="238"/><line x1="290" y1="214" x2="300" y2="238"/><line x1="290" y1="192" x2="270" y2="182"/><line x1="270" y1="182" x2="262" y2="176"/><line x1="290" y1="194" x2="304" y2="206"/>
+</g>
+<circle cx="97" cy="174" r="1.3" fill="var(--s)"/><circle cx="103" cy="174" r="1.3" fill="var(--s)"/><path d="M96 180 Q100 182 104 180" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+<circle cx="286" cy="174" r="1.6" fill="var(--s)"/><circle cx="294" cy="174" r="1.6" fill="var(--s)"/><path d="M285 181 Q290 184 295 181" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+<ellipse cx="77" cy="222" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+<ellipse cx="254" cy="170" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+<path d="M136 172 Q190 146 242 164" fill="none" stroke="#EF9F27" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round" marker-end="url(#g15ar)"/>
+<circle cx="130" cy="174" r="6" fill="#EF9F27"/>
+<text class="ts" x="200" y="258" text-anchor="middle">Only after the call: soft throw, then swap roles</text>
 </svg>`,
   16: `<svg width="100%" viewBox="0 0 380 150" role="img"><title>1-2-3 Throw!</title><desc>1-2-3 Throw!</desc>
 <defs><marker id="g16b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
@@ -764,41 +781,91 @@ const MISSION_ICONS = {
   </div>
 
 </div>`,
-  28: `<h2 class="sr-only">Mind Reader</h2>
-<div style="display:flex;align-items:center;gap:6px">
+  /* Mission 28 is the one illustration in the set that is a sequence rather
+   * than a snapshot: the whole point is that the catcher commits BEFORE the
+   * ball moves, which a single frame cannot say. It therefore ships a
+   * three-slide swipe block instead of one SVG. The markup is inert on its
+   * own — app.js wires the dots and arrows by looking for [data-jv-carousel],
+   * so nothing here is keyed to a mission id, and the CSS scroll-snap track
+   * still swipes with JavaScript disabled. */
+  28: `<div class="jvCar" data-jv-carousel aria-roledescription="carousel" aria-label="Mind Reader — how to play, in three steps">
+  <h2 class="sr-only">Mind Reader</h2>
+  <div class="jvCarTrack" data-jv-car-track tabindex="0" role="group" aria-label="Mind Reader steps, use the left and right arrow keys">
 
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);padding:8px 4px">
-    <svg width="100%" viewBox="0 0 134 100" aria-hidden="true" style="max-width:150px">
-      <g fill="none" stroke="var(--color-text-secondary)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="34" cy="44" r="9"/><line x1="34" y1="53" x2="34" y2="76"/><line x1="34" y1="76" x2="26" y2="94"/><line x1="34" y1="76" x2="42" y2="94"/><line x1="34" y1="58" x2="52" y2="48"/><line x1="34" y1="60" x2="22" y2="70"/>
-      <circle cx="31" cy="42" r="1.3" fill="var(--color-text-secondary)"/><circle cx="37" cy="42" r="1.3" fill="var(--color-text-secondary)"/><path d="M30 48 Q34 50 38 48" stroke-width="1.3"/></g>
-      <circle cx="56" cy="46" r="5" fill="#EF9F27"/>
-      <ellipse cx="18" cy="74" rx="5" ry="7" fill="#85B7EB" stroke="#639922" stroke-width="2.2"/>
-      <circle cx="60" cy="50" r="2.5" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.2"/><circle cx="66" cy="56" r="1.6" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.2"/>
-      <rect x="64" y="6" width="64" height="38" rx="9" fill="var(--bg2)" stroke="var(--color-text-secondary)" stroke-width="1.4"/>
-      <text class="th" x="96" y="23" text-anchor="middle">?</text>
-      <text class="ts" x="96" y="38" text-anchor="middle">← ● →</text>
-    </svg>
-    <div style="font-size:12px;color:var(--color-text-secondary);text-align:center">1. Thrower secretly picks a side</div>
+    <div class="jvCarSlide" role="group" aria-roledescription="slide" aria-label="Step 1 of 3">
+      <svg width="100%" viewBox="0 0 380 160" role="img"><title>Step 1 — the thrower picks a direction in secret</title><desc>The thrower holds the one ball and thinks of left, centre or right. Nothing has been thrown yet.</desc>
+      <line x1="24" y1="150" x2="356" y2="150" stroke="var(--b)" stroke-width="1"/>
+      <g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="96" cy="74" r="9"/><line x1="96" y1="83" x2="96" y2="112"/><line x1="96" y1="112" x2="86" y2="150"/><line x1="96" y1="112" x2="106" y2="150"/><line x1="96" y1="92" x2="112" y2="96"/><line x1="96" y1="90" x2="82" y2="104"/><line x1="82" y1="104" x2="78" y2="114"/>
+      <circle cx="290" cy="74" r="9"/><line x1="290" y1="83" x2="290" y2="112"/><line x1="290" y1="112" x2="280" y2="150"/><line x1="290" y1="112" x2="300" y2="150"/><line x1="290" y1="92" x2="274" y2="100"/><line x1="274" y1="100" x2="266" y2="108"/><line x1="290" y1="94" x2="304" y2="106"/>
+      </g>
+      <circle cx="93" cy="72" r="1.3" fill="var(--s)"/><circle cx="99" cy="72" r="1.3" fill="var(--s)"/><path d="M92 78 Q96 80 100 78" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="287" cy="72" r="1.3" fill="var(--s)"/><circle cx="293" cy="72" r="1.3" fill="var(--s)"/><path d="M286 78 Q290 80 294 78" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+      <ellipse cx="75" cy="122" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+      <ellipse cx="260" cy="114" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+      <circle cx="120" cy="100" r="6" fill="#EF9F27"/>
+      <circle cx="118" cy="72" r="3.5" fill="var(--bg2)" stroke="var(--b)" stroke-width="1.4"/><circle cx="128" cy="64" r="5" fill="var(--bg2)" stroke="var(--b)" stroke-width="1.4"/>
+      <rect x="136" y="6" width="170" height="54" rx="12" fill="var(--bg2)" stroke="var(--b)" stroke-width="1.4" stroke-dasharray="5 4"/>
+      <text class="ts" x="221" y="26" text-anchor="middle">MY SECRET</text>
+      <rect x="144" y="34" width="44" height="20" rx="6" fill="#639922" fill-opacity="0.14" stroke="#639922" stroke-width="1.6"/><text class="ts" x="166" y="48" text-anchor="middle">LEFT</text>
+      <rect x="192" y="34" width="54" height="20" rx="6" fill="none" stroke="var(--b)" stroke-width="1.4"/><text class="ts" x="219" y="48" text-anchor="middle">CENTER</text>
+      <rect x="250" y="34" width="48" height="20" rx="6" fill="none" stroke="var(--b)" stroke-width="1.4"/><text class="ts" x="274" y="48" text-anchor="middle">RIGHT</text>
+      </svg>
+      <p class="jvCarCap">Step 1 — the thrower secretly picks LEFT, CENTER or RIGHT. The ball stays in the hand.</p>
+    </div>
+
+    <div class="jvCarSlide" role="group" aria-roledescription="slide" aria-label="Step 2 of 3">
+      <svg width="100%" viewBox="0 0 380 160" role="img"><title>Step 2 — the catcher commits the paddle before the throw</title><desc>After a three second pause the catcher moves their one paddle to the direction they predict. The ball has still not left the hand.</desc>
+      <line x1="24" y1="150" x2="356" y2="150" stroke="var(--b)" stroke-width="1"/>
+      <rect x="24" y="8" width="62" height="22" rx="8" fill="var(--bg2)" stroke="var(--b)" stroke-width="1.4"/><text class="ts" x="55" y="23" text-anchor="middle">3s pause</text>
+      <g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="96" cy="74" r="9"/><line x1="96" y1="83" x2="96" y2="112"/><line x1="96" y1="112" x2="86" y2="150"/><line x1="96" y1="112" x2="106" y2="150"/><line x1="96" y1="92" x2="112" y2="96"/><line x1="96" y1="90" x2="82" y2="104"/><line x1="82" y1="104" x2="78" y2="114"/>
+      <circle cx="290" cy="74" r="9"/><line x1="290" y1="83" x2="290" y2="112"/><line x1="290" y1="112" x2="280" y2="150"/><line x1="290" y1="112" x2="300" y2="150"/><line x1="290" y1="90" x2="272" y2="84"/><line x1="272" y1="84" x2="262" y2="78"/><line x1="290" y1="94" x2="304" y2="106"/>
+      </g>
+      <circle cx="93" cy="72" r="1.3" fill="var(--s)"/><circle cx="99" cy="72" r="1.3" fill="var(--s)"/><path d="M92 78 Q96 80 100 78" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="287" cy="72" r="1.3" fill="var(--s)"/><circle cx="293" cy="72" r="1.3" fill="var(--s)"/><path d="M286 78 Q290 80 294 78" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+      <ellipse cx="75" cy="122" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+      <ellipse cx="254" cy="74" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+      <circle cx="120" cy="100" r="6" fill="#EF9F27"/>
+      <rect x="150" y="6" width="160" height="26" rx="8" fill="var(--bg2)" stroke="#639922" stroke-width="1.6"/><polygon points="244,32 260,32 252,44" fill="var(--bg2)"/><text class="th" x="230" y="24" text-anchor="middle">MY GUESS: LEFT</text>
+      <path d="M252 46 L254 62" fill="none" stroke="var(--b)" stroke-width="1.4" stroke-dasharray="3 3"/>
+      </svg>
+      <p class="jvCarCap">Step 2 — after a 3-second pause the catcher moves the paddle to their guess. Still no throw.</p>
+    </div>
+
+    <div class="jvCarSlide" role="group" aria-roledescription="slide" aria-label="Step 3 of 3">
+      <svg width="100%" viewBox="0 0 380 160" role="img"><title>Step 3 — one throw reveals whether the guess was right</title><desc>The same single ball is thrown along one path. The paddle was already waiting there, so the guess was correct.</desc>
+      <defs><marker id="m28ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+      <line x1="24" y1="150" x2="356" y2="150" stroke="var(--b)" stroke-width="1"/>
+      <g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="96" cy="74" r="9"/><line x1="96" y1="83" x2="96" y2="112"/><line x1="96" y1="112" x2="86" y2="150"/><line x1="96" y1="112" x2="106" y2="150"/><line x1="96" y1="90" x2="118" y2="78"/><line x1="96" y1="92" x2="82" y2="106"/><line x1="82" y1="106" x2="78" y2="114"/>
+      <circle cx="290" cy="74" r="9"/><line x1="290" y1="83" x2="290" y2="112"/><line x1="290" y1="112" x2="280" y2="150"/><line x1="290" y1="112" x2="300" y2="150"/><line x1="290" y1="90" x2="272" y2="84"/><line x1="272" y1="84" x2="262" y2="78"/><line x1="290" y1="94" x2="304" y2="106"/>
+      </g>
+      <circle cx="93" cy="72" r="1.3" fill="var(--s)"/><circle cx="99" cy="72" r="1.3" fill="var(--s)"/><path d="M92 78 Q96 80 100 78" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="287" cy="72" r="1.3" fill="var(--s)"/><circle cx="293" cy="72" r="1.3" fill="var(--s)"/><path d="M286 78 Q290 80 294 78" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+      <ellipse cx="75" cy="122" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+      <ellipse cx="254" cy="74" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+      <path d="M136 72 Q192 52 246 68" fill="none" stroke="#EF9F27" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round" marker-end="url(#m28ar)"/>
+      <circle cx="128" cy="74" r="6" fill="#EF9F27"/>
+      <rect x="132" y="4" width="142" height="28" rx="9" fill="var(--bg2)" stroke="#639922" stroke-width="1.6"/>
+      <path d="M148 18 L154 25 L165 11" fill="none" stroke="#639922" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text class="th" x="222" y="23" text-anchor="middle">MIND READ!</text>
+      </svg>
+      <p class="jvCarCap">Step 3 — one throw, one ball. The paddle was already waiting: that is a mind read.</p>
+    </div>
+
   </div>
-
-  <i class="ti ti-chevron-right" style="flex:none;font-size:18px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
-
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);padding:8px 4px">
-    <svg width="100%" viewBox="0 0 134 100" aria-hidden="true" style="max-width:150px">
-      <text class="th" x="44" y="20" text-anchor="middle" fill="#EF9F27">←</text>
-      <circle cx="44" cy="15" r="10" fill="none" stroke="#EF9F27" stroke-width="1.6" stroke-dasharray="3 3"/>
-      <text class="ts" x="67" y="19" text-anchor="middle" opacity="0.4">●</text>
-      <text class="th" x="90" y="20" text-anchor="middle" opacity="0.4">→</text>
-      <g fill="none" stroke="var(--color-text-secondary)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="70" cy="40" r="9"/><line x1="70" y1="49" x2="70" y2="72"/><line x1="70" y1="72" x2="62" y2="92"/><line x1="70" y1="72" x2="78" y2="92"/><line x1="70" y1="54" x2="49" y2="62"/>
-      <circle cx="67" cy="38" r="1.3" fill="var(--color-text-secondary)"/><circle cx="73" cy="38" r="1.3" fill="var(--color-text-secondary)"/><path d="M66 44 Q70 46 74 44" stroke-width="1.3"/></g>
-      <line x1="49" y1="62" x2="42" y2="64" stroke="var(--color-text-secondary)" stroke-width="2.4" stroke-linecap="round"/>
-      <ellipse cx="37" cy="66" rx="6" ry="8" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-    </svg>
-    <div style="font-size:12px;color:var(--color-text-secondary);text-align:center">2. Guess — set the paddle that way BEFORE the throw</div>
+  <div class="jvCarBar">
+    <button type="button" class="jvCarNav" data-jv-car-prev aria-label="Previous step"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5 L8 12 L15 19"/></svg></button>
+    <div class="jvCarDots">
+      <button type="button" class="jvCarDot" data-jv-car-dot aria-label="Step 1 of 3"></button>
+      <button type="button" class="jvCarDot" data-jv-car-dot aria-label="Step 2 of 3"></button>
+      <button type="button" class="jvCarDot" data-jv-car-dot aria-label="Step 3 of 3"></button>
+    </div>
+    <button type="button" class="jvCarNav" data-jv-car-next aria-label="Next step"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5 L16 12 L9 19"/></svg></button>
+    <span class="jvCarCount" data-jv-car-count>1 / 3</span>
   </div>
-
+  <p class="sr-only" aria-live="polite" data-jv-car-live></p>
 </div>`,
   29: `<svg width="100%" viewBox="0 0 380 150" role="img"><title>Stuck-Foot Catch</title><desc>Stuck-Foot Catch</desc>
 <defs><marker id="g29ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
@@ -902,23 +969,38 @@ const MISSION_ICONS = {
 <g stroke="var(--s)" stroke-width="1.4" stroke-linecap="round" opacity="0.35"><line x1="280" y1="120" x2="288" y2="128"/><line x1="288" y1="120" x2="280" y2="128"/></g>
 <text class="ts" x="190" y="142" text-anchor="middle">Thrower tosses it ahead — catcher runs and catches before it lands</text>
 </svg>`,
-  35: `<svg width="100%" viewBox="0 0 380 164" role="img"><title>Sky High Jump</title><desc>Sky High Jump</desc>
+  35: `<svg width="100%" viewBox="0 0 380 176" role="img"><title>Sky High Jump</title><desc>The thrower stays on the ground and sends the one ball in a gentle arc just above normal standing reach. The catcher jumps, meets it with a raised paddle and lands on flat grass.</desc>
 <defs><marker id="g35ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-<line x1="30" y1="144" x2="350" y2="144" stroke="var(--b)" stroke-width="1"/>
-<ellipse cx="252" cy="144" rx="18" ry="4" fill="var(--s)" opacity="0.25"/>
+
+<!-- Flat, soft grass — the only surface this mission is safe on. -->
+<line x1="20" y1="152" x2="360" y2="152" stroke="var(--b)" stroke-width="1"/>
+<g stroke="var(--b)" stroke-width="1.4" stroke-linecap="round" opacity="0.8">
+<path d="M32 152 L30 145"/><path d="M36 152 L39 146"/><path d="M108 152 L106 145"/><path d="M112 152 L115 146"/><path d="M158 152 L156 146"/><path d="M186 152 L189 145"/><path d="M214 152 L212 146"/><path d="M242 152 L245 145"/><path d="M300 152 L298 145"/><path d="M304 152 L307 146"/><path d="M332 152 L330 146"/><path d="M336 152 L339 145"/>
+</g>
+
+<!-- THROWER — both feet on the ground, controlled underarm-height release, second paddle in the other hand. -->
 <g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="66" cy="76" r="9"/><line x1="66" y1="85" x2="66" y2="112"/><line x1="66" y1="112" x2="56" y2="142"/><line x1="66" y1="112" x2="76" y2="142"/><line x1="66" y1="88" x2="86" y2="72"/><line x1="66" y1="90" x2="52" y2="102"/>
-<circle cx="63" cy="74" r="1.3" fill="var(--s)"/><circle cx="69" cy="74" r="1.3" fill="var(--s)"/><path d="M62 80 Q66 83 70 80" stroke-width="1.3"/></g>
+<circle cx="80" cy="76" r="9"/><line x1="80" y1="85" x2="80" y2="114"/><line x1="80" y1="114" x2="70" y2="152"/><line x1="80" y1="114" x2="92" y2="152"/><line x1="80" y1="92" x2="100" y2="78"/><line x1="80" y1="94" x2="66" y2="106"/><line x1="66" y1="106" x2="60" y2="114"/>
+</g>
+<circle cx="77" cy="74" r="1.3" fill="var(--s)"/><circle cx="83" cy="74" r="1.3" fill="var(--s)"/><path d="M76 80 Q80 82 84 80" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+<ellipse cx="55" cy="122" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+
+<!-- The ball's one gentle arc: it peaks only a little over the dashed standing-reach line. -->
+<path d="M120 62 Q180 32 236 36" fill="none" stroke="#EF9F27" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round" marker-end="url(#g35ar)"/>
+<circle cx="110" cy="70" r="6" fill="#EF9F27"/>
+<g stroke="var(--s)" stroke-width="1.4" opacity="0.45"><path d="M120 58 L232 58" stroke-dasharray="4 4"/><path d="M120 52 L120 64"/><path d="M232 52 L232 64"/></g>
+<text class="ts" x="176" y="74" text-anchor="middle" opacity="0.6">normal reach</text>
+
+<!-- CATCHER — a small hop, knees soft for the landing, one raised paddle meeting the ball. -->
+<ellipse cx="278" cy="152" rx="18" ry="4" fill="var(--s)" opacity="0.22"/>
 <g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="252" cy="44" r="9"/><line x1="252" y1="53" x2="252" y2="80"/><line x1="252" y1="80" x2="242" y2="92"/><line x1="242" y1="92" x2="248" y2="102"/><line x1="252" y1="80" x2="262" y2="92"/><line x1="262" y1="92" x2="256" y2="102"/><line x1="252" y1="56" x2="266" y2="44"/><line x1="266" y1="44" x2="276" y2="34"/><line x1="252" y1="58" x2="242" y2="50"/>
-<circle cx="250" cy="42" r="1.3" fill="var(--s)"/><circle cx="256" cy="42" r="1.3" fill="var(--s)"/><path d="M249 48 Q253 50 257 48" stroke-width="1.3"/></g>
-<ellipse cx="286" cy="26" rx="6" ry="8" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-<g stroke="var(--s)" stroke-width="1.6" stroke-linecap="round" opacity="0.4"><line x1="244" y1="112" x2="244" y2="122"/><line x1="252" y1="114" x2="252" y2="126"/><line x1="260" y1="112" x2="260" y2="122"/></g>
-<path d="M236 56 L302 56" stroke="var(--s)" stroke-width="1.4" stroke-dasharray="4 4" opacity="0.45"/>
-<text class="ts" x="300" y="68" text-anchor="end" opacity="0.5">normal reach</text>
-<path d="M86 70 Q200 -4 286 22" fill="none" stroke="#EF9F27" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round" marker-end="url(#g35ar)"/>
-<circle cx="288" cy="20" r="6" fill="#EF9F27"/>
-<text class="ts" x="190" y="160" text-anchor="middle">Ball just above reach — jump and catch in the air!</text>
+<circle cx="278" cy="56" r="9"/><line x1="278" y1="65" x2="278" y2="92"/><line x1="278" y1="92" x2="265" y2="106"/><line x1="265" y1="106" x2="270" y2="121"/><line x1="278" y1="92" x2="291" y2="106"/><line x1="291" y1="106" x2="286" y2="121"/><line x1="278" y1="70" x2="266" y2="56"/><line x1="266" y1="56" x2="256" y2="44"/><line x1="278" y1="72" x2="294" y2="86"/>
+</g>
+<circle cx="275" cy="54" r="1.3" fill="var(--s)"/><circle cx="281" cy="54" r="1.3" fill="var(--s)"/><path d="M274 60 Q278 62 282 60" fill="none" stroke="var(--s)" stroke-width="1.3" stroke-linecap="round"/>
+<ellipse cx="247" cy="37" rx="7" ry="9" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
+<g stroke="var(--s)" stroke-width="1.6" stroke-linecap="round" opacity="0.35"><line x1="268" y1="132" x2="268" y2="142"/><line x1="278" y1="134" x2="278" y2="144"/><line x1="288" y1="132" x2="288" y2="142"/></g>
+
+<text class="ts" x="190" y="170" text-anchor="middle">Aim just above reach — one small jump, soft knees on landing</text>
 </svg>`,
   36: `<style>
 .jrw{display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-sans);padding:2px 0;}

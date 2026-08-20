@@ -4542,6 +4542,81 @@ function renderMissionEquipment(ms){
   row.hidden = !row.childElementCount;
 }
 
+/* ── Mission illustration carousel ───────────────────────────────────────────
+ * The gesture is pure CSS: .jvCarTrack is a scroll-snap strip, so swiping,
+ * trackpad scrolling and the scrollbar all work with this file absent. Nothing
+ * here captures touch, so a vertical drag still scrolls the sheet underneath.
+ *
+ * All this adds is the part CSS cannot do: mirroring the scroll position into
+ * the dots, the "2 / 3" counter, the arrow buttons and a live region, and
+ * moving the strip when one of those is activated. Wiring is by attribute, not
+ * by mission id, so a second sequenced illustration needs no code change here.
+ *
+ * Returns true when at least one carousel was found — openMission() uses that
+ * to decide whether the illustration wrapper may stay aria-hidden.
+ * ─────────────────────────────────────────────────────────────────────────── */
+function initMissionCarousels(root){
+  if(!root) return false;
+  const cars = root.querySelectorAll("[data-jv-carousel]");
+  if(!cars.length) return false;
+  const reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  cars.forEach((car)=>{
+    const track = car.querySelector("[data-jv-car-track]");
+    if(!track) return;
+    const slides = Array.prototype.slice.call(track.children);
+    if(!slides.length) return;
+    const dots  = Array.prototype.slice.call(car.querySelectorAll("[data-jv-car-dot]"));
+    const prev  = car.querySelector("[data-jv-car-prev]");
+    const next  = car.querySelector("[data-jv-car-next]");
+    const count = car.querySelector("[data-jv-car-count]");
+    const live  = car.querySelector("[data-jv-car-live]");
+    const last  = slides.length - 1;
+    let index = -1, settle = 0;
+
+    const clamp = (i)=> Math.max(0, Math.min(last, i));
+
+    function sync(){
+      // clientWidth is 0 while the sheet is still hidden; guard the divide.
+      const w = track.clientWidth || 1;
+      const i = clamp(Math.round(track.scrollLeft / w));
+      if(i === index) return;
+      index = i;
+      dots.forEach((d,n)=> d.setAttribute("aria-current", n === i ? "true" : "false"));
+      if(prev)  prev.disabled = (i === 0);
+      if(next)  next.disabled = (i === last);
+      if(count) count.textContent = (i + 1) + " / " + slides.length;
+      if(live)  live.textContent  = "Step " + (i + 1) + " of " + slides.length;
+    }
+
+    function go(i){
+      const target = slides[clamp(i)];
+      if(!target) return;
+      track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: reduceMotion ? "auto" : "smooth" });
+    }
+
+    track.addEventListener("scroll", ()=>{
+      clearTimeout(settle);
+      settle = setTimeout(sync, 60);
+    }, { passive:true });
+
+    dots.forEach((d,n)=> d.addEventListener("click", ()=> go(n)));
+    if(prev) prev.addEventListener("click", ()=> go(index - 1));
+    if(next) next.addEventListener("click", ()=> go(index + 1));
+
+    track.addEventListener("keydown", (e)=>{
+      if(e.key === "ArrowRight"){ e.preventDefault(); go(index + 1); }
+      else if(e.key === "ArrowLeft"){ e.preventDefault(); go(index - 1); }
+      else if(e.key === "Home"){ e.preventDefault(); go(0); }
+      else if(e.key === "End"){ e.preventDefault(); go(last); }
+    });
+
+    track.scrollLeft = 0;
+    sync();
+  });
+  return true;
+}
+
 function openMission(id){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
@@ -4638,6 +4713,17 @@ function openMission(id){
     const markup = (window.MISSION_ICONS && window.MISSION_ICONS[ms.id]) || "";
     iconWrap.innerHTML = markup;
     iconWrap.style.display = markup ? "" : "none";
+    /* Some illustrations are sequences, not snapshots, and ship a swipe track.
+     * Two consequences, both handled here rather than per mission id:
+     *   - the wrapper is aria-hidden by default (a static diagram adds nothing
+     *     a screen reader wants), but a subtree containing focusable buttons
+     *     must NOT be aria-hidden, so we lift it only when one is present;
+     *   - innerHTML is reassigned on every open, so the track is a brand new
+     *     element each time. Position therefore resets to the first slide by
+     *     construction — nothing is persisted, and nothing here touches
+     *     mission progress. */
+    if(initMissionCarousels(iconWrap)) iconWrap.removeAttribute("aria-hidden");
+    else iconWrap.setAttribute("aria-hidden","true");
   }
 
   renderMissionEquipment(ms);
