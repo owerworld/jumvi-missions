@@ -789,6 +789,16 @@
     <!-- Mission list — only shown when tab is browse -->
     <section class="list" id="list" aria-label="missions"></section>
 
+    <!-- Immutable-cache compatibility: an older app.js can remain in a
+         returning browser's HTTP cache while this new HTML arrives. Keep its
+         legacy footer bindings valid without putting those controls back into
+         the visible layout. -->
+    <div class="legacyFooterCompat" hidden aria-hidden="true" style="display:none !important">
+      <button id="btnShare" type="button" tabindex="-1"></button>
+      <button id="btnResetBottom" type="button" tabindex="-1"></button>
+      <button id="btnKidsMode" type="button" tabindex="-1"></button>
+    </div>
+
   </div>
 
   <!-- Team XP picker — optional, remembered; never shown before every mission. -->
