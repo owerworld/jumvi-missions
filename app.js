@@ -1186,11 +1186,12 @@ const sheet = document.getElementById("sheet");
 
 let _missionBackgroundRestore = null;
 let _missionReturnFocus = null;
+// #undoBar is intentionally excluded: it is hidden until completion, then it
+// must remain the one interactive safety action above the completion takeover.
 const MISSION_BACKGROUND_SELECTORS = [
   "#app-wrapper > .sticky",
   "#app-wrapper > .wrap",
   "#offlineBanner",
-  "#undoBar",
   "#bottomNav",
   "#soundToggle"
 ];
@@ -2894,6 +2895,9 @@ function renderDailyUI(){
     }
   }
   if(btnDailyReplay) btnDailyReplay.style.display = nextPick ? "" : "none";
+  // A completed hero has exactly two decisions: continue or replay. The
+  // browse/random control remains available before completion and on Browse.
+  if(btnDailyNew) btnDailyNew.style.display = doneToday && nextPick ? "none" : "";
   // States this mission's own status in words, not just the green check icon.
   // The running "N of 36 missions complete" count deliberately stays in the
   // progress strip directly below rather than being repeated here.
@@ -3443,6 +3447,8 @@ function remainingText(){
   return `${done} / ${missions.length} done — keep going!`;
 }
 
+let _badgeUnlockTimer = null;
+
 function showBadgeUnlockModal(badge){
   const modal = document.getElementById("badgeUnlockModal");
   if(!modal) return;
@@ -3650,12 +3656,14 @@ function updateBadges(){
   if(newlyUnlocked.length > 0 && done.size > 0){
     // Birden fazla unlock varsa en son kazanılanı göster.
     //
-    // The delay is the point. At 800ms this blocking modal landed on top of
-    // the inline XP reward before anyone had read it, so on the completion
-    // that matters most — the first one, which is also the one that unlocks
-    // "First Steps" — the XP card was never actually seen. Confetti and the
-    // reward card get the first beat; the badge takes the stage after.
-    setTimeout(()=> showBadgeUnlockModal(newlyUnlocked[newlyUnlocked.length - 1]), 2600);
+    // The 5-second Undo control must remain usable for its entire promise.
+    // Badge unlock is a blocking modal, so it takes the stage only after that
+    // window closes; an actual Undo cancels this pending announcement below.
+    if(_badgeUnlockTimer) clearTimeout(_badgeUnlockTimer);
+    _badgeUnlockTimer = setTimeout(()=>{
+      _badgeUnlockTimer = null;
+      showBadgeUnlockModal(newlyUnlocked[newlyUnlocked.length - 1]);
+    }, 5400);
   }
 }
 
@@ -3749,9 +3757,11 @@ function updateProgress(options = {}){
   // Where to Play sadece progress varsa (artık kart gizli zaten - geriye uyum)
   const seasonal = document.getElementById("seasonalCard");
   if(seasonal && seasonal.dataset.deprecated !== "1"){ seasonal.style.display = isFresh ? "none" : ""; }
-  // Badges section bütünüyle (heading dahil)
+  // v32 keeps the real badge journey visible from day one; locked progress is
+  // useful orientation, not an empty statistic. The invitation card remains
+  // directly below it for a genuinely fresh family.
   const badgesSection = document.querySelector(".statsBadgesSection");
-  if(badgesSection) badgesSection.style.display = isFresh ? "none" : "";
+  if(badgesSection) badgesSection.style.display = "";
   // Stats tab empty state — yeni kullanıcı için davet
   const emptyState = document.getElementById("statsEmptyState");
   if(emptyState) emptyState.style.display = isFresh ? "" : "none";
@@ -4685,6 +4695,7 @@ function openMission(id){
   }
 
   const isDone = done.has(ms.id);
+  sheet.classList.toggle("isComplete", isDone);
   btnToggleDone.innerHTML = isDone ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i> Mark as Not Done' : '<i class="jic jic-circle-check" aria-hidden="true"></i> We Finished!';
   btnToggleDone.setAttribute("aria-label", isDone ? "Mark mission as not done" : "We finished this mission");
   btnToggleDone.classList.toggle("btnDone", isDone);
@@ -5393,6 +5404,7 @@ function showUndoBar(id, journeySnapshot){
     clearTimeout(_undoTimer);
     bar.hidden = true;
     if(done.has(id)){
+      if(_badgeUnlockTimer){ clearTimeout(_badgeUnlockTimer); _badgeUnlockTimer = null; }
       done.delete(id);
       if(_missionXpRewardMissionId === Number(id)) hideMissionXpReward();
       bumpDoneVersion();
@@ -6186,10 +6198,54 @@ if(avatarBtn){
  * ======================= */
 let _profileSelectedAvatar = "monkey";
 
+function setProfileSurfaceMode(mode){
+  const bk = document.getElementById("profileBackdrop");
+  if(!bk) return;
+  const safeMode = ["switch", "add", "edit"].includes(mode) ? mode : "switch";
+  const tr = isTurkishUI();
+  const title = document.getElementById("profileSurfaceTitle");
+  const sub = document.getElementById("profileSurfaceSub");
+  const list = document.getElementById("profileList");
+  const openAdd = document.getElementById("btnProfileOpenAdd");
+  const editSelected = document.getElementById("btnProfileEditSelected");
+  const addSection = document.getElementById("profileAddSection");
+  const editSection = document.getElementById("profileEditSection");
+  const settings = bk.querySelector(".profileSettingsSection");
+  const closeBtn = document.getElementById("btnProfileClose");
+  const copy = {
+    switch: tr
+      ? ["Çocuk seç", "Bu cihazdaki yerel oyuncular."]
+      : ["Choose a child", "Local players on this device."],
+    add: tr
+      ? ["Çocuk ekle", "Bu cihaza kaydedilir."]
+      : ["Add a child", "Saved on this device."],
+    edit: tr
+      ? ["Çocuğu düzenle", "Bu cihaza kaydedilir."]
+      : ["Edit child", "Saved on this device."]
+  };
+  bk.dataset.mode = safeMode;
+  if(title) title.innerHTML = (safeMode === "switch" ? '<i class="jic jic-users" aria-hidden="true"></i> ' : "") + copy[safeMode][0];
+  if(sub) sub.textContent = copy[safeMode][1];
+  if(list) list.style.display = safeMode === "switch" ? "" : "none";
+  if(openAdd) openAdd.style.display = safeMode === "switch" ? "" : "none";
+  if(editSelected) editSelected.style.display = safeMode === "switch" ? "" : "none";
+  if(addSection) addSection.style.display = safeMode === "add" ? "" : "none";
+  if(editSection) editSection.style.display = safeMode === "edit" ? "" : "none";
+  if(settings) settings.style.display = safeMode === "switch" ? "" : "none";
+  if(closeBtn){
+    const isBack = safeMode !== "switch";
+    closeBtn.setAttribute("aria-label", isBack ? (tr ? "Çocuk seçimine dön" : "Back to child selection") : (tr ? "Çocuk seçimini kapat" : "Close child selection"));
+    closeBtn.innerHTML = isBack
+      ? '<i class="jic jic-arrow-back-up" aria-hidden="true"></i>'
+      : '<i class="ico i-x" aria-hidden="true"></i>';
+  }
+}
+
 function openProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
   if(!bk) return;
-  closeProfileEdit(); // edit paneli kapalı başlasın
+  _profileEditingId = null;
+  setProfileSurfaceMode("switch");
   renderProfileList();
   renderProfileAvatarPicker();
   renderSettingsRows();
@@ -6225,6 +6281,8 @@ function closeProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
   if(!bk) return;
   bk.classList.remove("show");
+  _profileEditingId = null;
+  setProfileSurfaceMode("switch");
 
   if(_teamSetupSelectingChild){
     _teamSetupSelectingChild = false;
@@ -6311,13 +6369,11 @@ function openProfileEdit(id){
   }
 
   renderProfileEditAvatarPicker();
+  setProfileSurfaceMode("edit");
 }
 function closeProfileEdit(){
   _profileEditingId = null;
-  const editSection = document.getElementById("profileEditSection");
-  const addSection  = document.getElementById("profileAddSection");
-  if(editSection) editSection.style.display = "none";
-  if(addSection)  addSection.style.display  = "";
+  setProfileSurfaceMode("switch");
 }
 function renderProfileEditAvatarPicker(){
   const picker = document.getElementById("profileEditAvatarPicker");
@@ -6362,6 +6418,11 @@ function saveProfileEdit(){
   const editingId = _profileEditingId;
   const editedActiveChild = editingId === getActiveProfileId();
   const continueTeamSetup = _teamSetupResumeAfterIdentity && editedActiveChild;
+  if(continueTeamSetup && newName.toLocaleLowerCase("tr") === "player"){
+    showToast(isTurkishUI() ? "Devam etmek için çocuğun adını yazın." : "Enter the child's name to continue.");
+    if(nameEl) nameEl.focus();
+    return;
+  }
 
   profiles[idx].name = newName;
   profiles[idx].avatar = _profileEditingAvatar;
@@ -6717,9 +6778,25 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 document.addEventListener("DOMContentLoaded", ()=>{
   const closeBtn = document.getElementById("btnProfileClose");
-  if(closeBtn) closeBtn.onclick = ()=>{ clickSound("click"); closeProfileSheet(); };
+  if(closeBtn) closeBtn.onclick = ()=>{
+    clickSound("click");
+    const bk = document.getElementById("profileBackdrop");
+    if(bk && bk.dataset.mode && bk.dataset.mode !== "switch") closeProfileEdit();
+    else closeProfileSheet();
+  };
   const bk = document.getElementById("profileBackdrop");
   if(bk) bk.addEventListener("click", (e)=>{ if(e.target === bk){ clickSound("click"); closeProfileSheet(); } });
+  const openAddBtn = document.getElementById("btnProfileOpenAdd");
+  if(openAddBtn) openAddBtn.onclick = ()=>{
+    clickSound("click");
+    setProfileSurfaceMode("add");
+    setTimeout(()=> document.getElementById("profileNewName")?.focus(), 0);
+  };
+  const editSelectedBtn = document.getElementById("btnProfileEditSelected");
+  if(editSelectedBtn) editSelectedBtn.onclick = ()=>{
+    clickSound("click");
+    openProfileEdit(getActiveProfileId());
+  };
   const addBtn = document.getElementById("btnProfileAdd");
   if(addBtn) addBtn.onclick = ()=>{ clickSound("click"); addNewChildProfile(); };
 
@@ -7650,6 +7727,12 @@ function renderProfileTab(){
  * nothing emits them any more. */
 
 document.addEventListener("DOMContentLoaded", ()=>{
+  // v32 groups Product Care with Privacy under Care & trust. Reuse the same
+  // live details element and handlers; only its position in the section moves.
+  const privacyGroup = document.getElementById("privacyLink")?.closest(".profileQuickLinks");
+  const care = document.querySelector("#tabProfile .productCareSection");
+  if(privacyGroup && care) privacyGroup.insertBefore(care, privacyGroup.firstChild);
+
   document.getElementById("btnMoreProductHelp")?.addEventListener("click", event=>{
     event.preventDefault();
     closeMission();

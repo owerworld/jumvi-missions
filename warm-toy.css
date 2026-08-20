@@ -4965,3 +4965,77 @@ html.theme--dark #backdrop:has(#missionXpReward.show) > #sheet{
    reopened — so it does not compete here. */
 #backdrop:has(#missionXpReward.show) .sheetActions .holdBtn.btnPrimary{ display:none !important; }
 #backdrop:has(#missionXpReward.show) .sheetTop{ margin-top:9px !important; }
+
+/* ── Independent v32 parity audit: targeted cascade/flow corrections ───── */
+/* The legacy compact-header rule is more specific than the v32 pill rules. */
+.topbar.appHead .profilePillName{ display:inline-block !important; }
+.topbar.appHead .profilePillChevron{ display:inline-flex !important; }
+
+/* Before real play starts, the footer is one decision. Existing completed
+   missions still expose their undo/next controls, and isPlaying owns the gate. */
+#sheet:not(.isPlaying):not(.isComplete) > .sheetActions > #btnToggleDone,
+#sheet:not(.isPlaying):not(.isComplete) > .sheetActions > #btnNext{
+  display:none !important;
+}
+
+/* On-colour tokens must win over high-specificity legacy text rules. */
+html.theme--light #sheet .stepNum{ color:#fff !important; -webkit-text-fill-color:#fff !important; }
+html.theme--dark #sheet .stepNum{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+html.theme--light #tabToday #dailyBox .dailyMeta .tag.xpTag,
+html.theme--light #sheet .tag.xpTag{ color:#365f00 !important; -webkit-text-fill-color:#365f00 !important; }
+html.theme--light #tabModes .familyMemberActive{ color:#0f6598 !important; -webkit-text-fill-color:#0f6598 !important; }
+#sheet #mWin.kvWin .winLabel{ color:var(--jv-panel-fg-2,#cbd5f5) !important; -webkit-text-fill-color:var(--jv-panel-fg-2,#cbd5f5) !important; }
+#sheet #mWin.kvWin .winText{ color:var(--jv-panel-fg,#fff) !important; -webkit-text-fill-color:var(--jv-panel-fg,#fff) !important; }
+html.theme--dark #sheet .sheetActions #btnStartTimer{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+html.theme--dark #statsEmptyState .emptyStateBtn{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+html.theme--dark #tabModes .familyTeamsCta{ color:var(--jv-recommend-fg,#0b4a78) !important; -webkit-text-fill-color:var(--jv-recommend-fg,#0b4a78) !important; }
+html.theme--dark #tabModes .teamsCreateBtn,
+html.theme--dark #tabModes .teamsCreateBtn *{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+#tabModes .achievementsHead .badgesHint{ opacity:1 !important; }
+
+/* The completion takeover sits at z-index 80; the promised 5-second safety
+   action must stay tappable above it until its timer ends. */
+#undoBar.undoBar{ z-index:9600 !important; }
+
+/* Profiles are separate switch/add/edit screens while retaining the existing
+   profile records, twelve-avatar product set, and save/delete handlers. */
+#profileBackdrop .profileModeRow{
+  width:100%; min-height:54px; margin-top:10px; padding:10px 14px;
+  display:flex; align-items:center; gap:12px;
+  border:1.5px dashed var(--jv-line-strong,var(--border));
+  border-radius:var(--jv-r-card,20px);
+  background:transparent; color:var(--text); font:inherit;
+  font-size:15px; font-weight:900; text-align:left; cursor:pointer;
+}
+#profileBackdrop .profileModeRow > span:nth-child(2){ flex:1; }
+#profileBackdrop .profileModeRowIcon{
+  width:36px; height:36px; display:grid; place-items:center;
+  border-radius:50%; background:var(--jv-card-2,var(--card));
+  color:var(--jv-blue-strong,#1d6fb5);
+}
+#profileBackdrop .profileEditSelectedBtn{
+  width:100%; min-height:44px; margin-top:8px;
+  border:0 !important; background:transparent !important;
+  color:var(--jv-blue-strong,#1d6fb5) !important;
+  -webkit-text-fill-color:var(--jv-blue-strong,#1d6fb5) !important;
+  box-shadow:none !important;
+}
+#profileBackdrop[data-mode="add"] .profileAddSection > .profileSectionTitle,
+#profileBackdrop[data-mode="edit"] .profileEditSection > .profileSectionTitle{
+  display:none !important;
+}
+#profileBackdrop[data-mode="add"] .profileAddSection,
+#profileBackdrop[data-mode="edit"] .profileEditSection{ margin-top:8px !important; }
+#profileBackdrop .profileAvatarPicker{
+  display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:10px !important;
+}
+
+@media (max-width:374px){
+  #tabToday .dailyBox .dailyActionsBig{ flex-direction:column !important; }
+  #tabToday .dailyBox .dailyPlayBig,
+  #tabToday .dailyBox #btnDailyReplay,
+  #tabToday .dailyBox #btnDailyNew{
+    width:100% !important; min-width:0 !important; flex:0 0 auto !important;
+  }
+}
