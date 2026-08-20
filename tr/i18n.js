@@ -293,6 +293,8 @@
     "Close privacy and safety": "Gizlilik ve güvenliği kapat",
     "How many players": "Kaç oyuncu",
     "Reset progress": "İlerlemeyi sıfırla",
+    "See what you've earned": "Kazandığın anları topla",
+    "Get help quickly.": "Hızlıca yardım al.",
   };
   Object.entries(EXACT_EXTRA).forEach(([k, v]) => EXACT.set(k, v));
 
