@@ -3936,6 +3936,90 @@ html.theme--dark .missionIconWrap{
 /* Panel-style missions (13,19,20,22,23,27,28) ship multi-block HTML — ensure they breathe */
 .missionIconWrap > div:not(.sr-only){ width: 100%; }
 
+/* ── Mission illustration carousel (currently only Mission 28) ───────────────
+ * A scroll-snap strip, not a widget: the swipe is the browser's own inertial
+ * horizontal scroll, so it costs no touch handlers and — because only overflow-x
+ * is enabled — a vertical drag still scrolls the mission sheet behind it.
+ * app.js only mirrors the position into the dots and the counter.
+ * ─────────────────────────────────────────────────────────────────────────── */
+.jvCar{ width: 100%; }
+.jvCarTrack{
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* Keep a swipe that runs past the last slide from being handed to the sheet
+     or the page — that is what would show up as horizontal page overflow. */
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  border-radius: 12px;
+}
+.jvCarTrack::-webkit-scrollbar{ display: none; }
+.jvCarTrack:focus-visible{ outline: 2px solid #639922; outline-offset: 3px; }
+.jvCarSlide{
+  /* 100% of the track, never of the content: min-width:0 is what stops a wide
+     caption from widening the strip at 320px. */
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.jvCarSlide > svg{ width: 100%; max-width: 340px; }
+.jvCarCap{
+  margin: 0;
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--color-text-secondary, #5b6573);
+}
+.jvCarBar{ display: flex; align-items: center; justify-content: center; gap: 2px; }
+.jvCarNav{
+  flex: none;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; border-radius: 50%;
+  background: none; color: var(--color-text-secondary, #5b6573);
+  cursor: pointer;
+}
+.jvCarNav > svg{ width: 18px; height: 18px; }
+.jvCarNav[disabled]{ opacity: 0.26; cursor: default; }
+.jvCarDots{ display: flex; align-items: center; }
+.jvCarDot{
+  width: 26px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; background: none; cursor: pointer;
+}
+/* Position is carried by SHAPE (the current dot stretches into a bar) as well
+   as colour, so it survives a colour-blind or high-contrast reading. */
+.jvCarDot::before{
+  content: "";
+  display: block;
+  width: 7px; height: 7px;
+  border-radius: 99px;
+  background: var(--color-text-tertiary, #9aa1ac);
+  transition: width 0.18s ease, background-color 0.18s ease;
+}
+.jvCarDot[aria-current="true"]::before{ width: 18px; background: #639922; }
+.jvCarCount{
+  flex: none;
+  min-width: 34px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--color-text-tertiary, #9aa1ac);
+}
+@media (prefers-reduced-motion: reduce){
+  .jvCarTrack{ scroll-behavior: auto; }
+  .jvCarDot::before{ transition: none; }
+}
+
 /* ============================================
  * Story Banner (hikaye katmanı — opsiyonel hayal katmanı)
  * Görevi BOZMAZ, sadece sahneyi kurar
