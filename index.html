@@ -849,20 +849,10 @@
       <!-- Mission motion-diagram icon (per-mission, populated in openMission) -->
       <div class="jmv missionIconWrap" id="missionIconWrap" aria-hidden="true"></div>
 
-      <!-- "You need" kit row (v0 v32) — static, real product equipment art,
-           same two pieces every mission (2 paddles + 1 ball); not tied to any
-           per-mission state so it needs no JS. -->
+      <!-- "You need" kit row — openMission renders the current mission's
+           equipment metadata while keeping the approved product artwork. -->
       <div class="mSectionLabel">You need</div>
-      <div class="missionKitRow">
-        <div class="missionKitChip jv-card-2">
-          <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="34" height="34" loading="lazy">
-          <span class="jv-card-title">2 paddles</span>
-        </div>
-        <div class="missionKitChip jv-card-2">
-          <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="26" height="26" loading="lazy">
-          <span class="jv-card-title">1 soft ball</span>
-        </div>
-      </div>
+      <div class="missionKitRow" id="missionKitRow"></div>
 
       <!-- New: Timer UI (Hidden by default) -->
       <div id="timerUI">
@@ -917,7 +907,7 @@
         <div class="playerCountOpts" role="group" aria-label="How many players">
           <button class="playerCountBtn" type="button" data-n="2">2</button>
           <button class="playerCountBtn" type="button" data-n="3">3</button>
-          <button class="playerCountBtn" type="button" data-n="4">4+</button>
+          <button class="playerCountBtn" type="button" data-n="4">4</button>
         </div>
       </div>
 
