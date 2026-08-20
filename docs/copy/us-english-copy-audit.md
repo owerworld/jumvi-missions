@@ -6,11 +6,11 @@ Baseline reviewed: `df189f3fa7c1be3f719e20399abdedd4573de532` (`jumvi-missions-v
 
 - **483** user-facing English strings reviewed: 180 mission fields and 303 UI,
   onboarding, family, grown-up, hub, install, error, and accessible-label strings.
-- **439 KEEP** — clear, natural, and appropriately warm.
-- **2 CHANGE-SAFE** — screen-only labels implemented below.
-- **22 DEFER-AUDIO** — wording can improve, but the screen text is coupled to
-  approved prerecorded Coach Leo audio. No audio was changed or generated.
-- **20 REVIEW-LATER** — subjective brand/competition choices, not defects.
+- **443 KEEP** — clear, natural, and appropriately warm.
+- **9 CHANGE-SAFE** — screen-only labels and tips implemented below.
+- **8 DEFER-AUDIO** — wording can improve, but a concrete narration/reminder
+  callsite speaks that exact field. No audio was changed or generated.
+- **23 REVIEW-LATER** — subjective brand/competition choices, not defects.
 
 Recurring opportunities are overuse of all-caps for ordinary actions, a few
 win conditions phrased as competition rather than completion, and tips that
@@ -40,32 +40,34 @@ used in the mission system.
 ## Mission Audit
 
 All 36 titles are **KEEP**. Every step, win, safety, and tip was reviewed for
-US naturalness, spoken comprehension, physical accuracy, and tone. All fields
-are `AUDIO_COUPLED_EXACT` or `MULTI_COUPLED`: full narration is prerecorded;
-several replay/reminder lines also use the new Coach Leo clips. Therefore the
-only changes recommended below are deliberately **not implemented**.
+US naturalness, spoken comprehension, physical accuracy, and tone. Concrete
+runtime classification: title, steps, and win are spoken by
+`missionCoachParts()` (`full_narration`); tips are rendered only in the Parent
+Tip panel (`none`); safety is `coaching_reminder` only for Mission 31 and is
+otherwise screen-only. The prerecorded file alone is not treated as proof that
+a field is spoken.
 
 | Mission | Steps | Win | Safety | Tip | Decision / rationale |
 | --- | --- | --- | --- | --- | --- |
-| 1 Speed Demon | KEEP | DEFER | KEEP | DEFER | “beat your best” is competitive; “Tiny humans?” is less natural than “Playing with a younger child?” |
+| 1 Speed Demon | KEEP | DEFER | KEEP | CHANGE-SAFE | Tip updated: “Playing with a younger child? Slow it down and keep it fun.” |
 | 2 Red Light, Green Light | KEEP | KEEP | KEEP | KEEP | Game signals are correctly emphatic; caller remains authoritative. |
 | 3 Quick Slap | KEEP | DEFER | KEEP | KEEP | “10 … wins” could become a completion target. |
 | 4 Switcharoo | KEEP | DEFER | KEEP | KEEP | “First to 12 … wins” is clear but needlessly competitive for a pair activity. |
 | 5 Statue Mode | KEEP | KEEP | KEEP | KEEP | Clear physical sequence; FREEZE is a game signal. |
-| 6 Number Echo | KEEP | KEEP | KEEP | DEFER | “Sneaky math” is cute but parent-directed and slightly wink-wink. |
+| 6 Number Echo | KEEP | KEEP | KEEP | CHANGE-SAFE | Tip updated: “Counting out loud is a fun way to practice numbers.” |
 | 7 Rainbow Throws | KEEP | KEEP | KEEP | KEEP | Arc, distance, and safety are all immediately clear. |
 | 8 The Landing Pad | KEEP | DEFER | KEEP | KEEP | “8 perfect landings wins” can become “Make 8 clean landings.” |
 | 9 Step-Back Challenge | KEEP | KEEP | KEEP | KEEP | Measurement and progression are clear. |
-| 10 Power Step | KEEP | KEEP | KEEP | DEFER | “real athlete/pro pitchers” is unnecessary status language. |
+| 10 Power Step | KEEP | KEEP | KEEP | CHANGE-SAFE | Tip updated with a useful reset cue rather than pro-athlete status language. |
 | 11 Sky Floater | KEEP | KEEP | KEEP | KEEP | Calm, clear, age-appropriate. |
 | 12 Heart-High | KEEP | KEEP | KEEP | KEEP | “Chest-height” is precise; safety correctly redirects aim to paddle. |
 | 13 Silent Mode | KEEP | KEEP | KEEP | KEEP | Preserve exactly: pre-play narration is approved and gameplay must stay silent. |
 | 14 Tempo Master | KEEP | KEEP | KEEP | KEEP | Clear count and movement limit. |
-| 15 Spotlight Eyes | KEEP | KEEP | KEEP | DEFER | “eyes lock on” is less natural than “keep your eyes on the ball.” |
-| 16 1 — 2 — 3 — GO! | DEFER | KEEP | KEEP | DEFER | “Ball flies on 3, exactly!” and “pro skill unlocked” are weaker US phrasing. |
+| 15 Spotlight Eyes | KEEP | KEEP | KEEP | CHANGE-SAFE | Tip updated: “Saying it out loud helps you keep your eyes on the ball.” |
+| 16 1 — 2 — 3 — GO! | DEFER | KEEP | KEEP | CHANGE-SAFE | Step remains deferred; tip updated to a useful timing cue. |
 | 17 Mirror Mode | KEEP | KEEP | KEEP | KEEP | Clear matching mechanic. |
-| 18 Count to 10 | KEEP | KEEP | KEEP | DEFER | “tiny humans” is less natural than “younger players.” |
-| 19 Round Robin | KEEP | DEFER | KEEP | DEFER | Record/party language is optional brand voice; no mechanics issue. |
+| 18 Count to 10 | KEEP | KEEP | KEEP | CHANGE-SAFE | Tip now addresses “younger players” naturally. |
+| 19 Round Robin | KEEP | DEFER | KEEP | CHANGE-SAFE | Tip keeps group-play energy without “ultimate party mode.” |
 | 20 Crab Walk Relay | KEEP | DEFER | KEEP | KEEP | “Both lines hit 20 passes together” can be “Reach 20 passes together.” |
 | 21 Captain Says | KEEP | KEEP | KEEP | KEEP | Team role and rotation are clear. |
 | 22 Spin Squad | KEEP | KEEP | KEEP | KEEP | “SPIN!” is a legitimate in-game cue. |
@@ -86,11 +88,11 @@ only changes recommended below are deliberately **not implemented**.
 
 ### Deferred audio recommendations
 
-These should be updated only in a coordinated script + audio re-record release:
+These should be updated only in a coordinated script + audio re-record release.
+Each is `SPOKEN_BY: full_narration`; Mission 16 step 2 is additionally
+`SPOKEN_BY: coaching_reminder`.
 
-- 1 tip: “Playing with a younger child? Slow it down and keep it fun.”
 - 8 win: “Make 8 clean landings.”
-- 15 tip: “Saying it out loud helps you keep your eyes on the ball.”
 - 16 step: “Throw on 3.”
 - 20 win: “Reach 20 passes together.”
 - 23 win: “Complete as many clean swap cycles as you can.”
@@ -114,6 +116,13 @@ review, but no scoring or progression labels were changed here. They are
 | --- | --- | --- | --- | --- |
 | Collect moments you earned | CHANGE-SAFE | See what you've earned | SCREEN_ONLY + LOCALIZATION_COUPLED | Existing Turkish text retained under new exact key. |
 | Get unstuck quickly. | CHANGE-SAFE | Get help quickly. | SCREEN_ONLY + LOCALIZATION_COUPLED | Existing Turkish text retained under new exact key. |
+
+### Implemented screen-only tips
+
+Mission 1, 6, 10, 15, 16, 18, and 19 tips are `SPOKEN_BY: none`. They are
+rendered only by the Parent Tip panel, are not returned by `missionCoachParts`,
+and are not valid `mission-coaching.js` reminder sources. Turkish mission tips
+remain the existing `missionTR` values.
 
 ## Coach Leo Voice Audit
 
