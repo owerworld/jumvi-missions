@@ -1404,7 +1404,7 @@
 <script src="jumvi-mission-icons.js?v=20260820-2" defer></script>
 <!-- Prerecorded English Coach Leo narration (live pilot). Must load BEFORE
      jumvi-redlight.js and app.js — both call window.CoachLeoAudio. -->
-<script src="coach-leo-audio.js?v=20260815-1" defer></script>
+<script src="coach-leo-audio.js?v=20260821-1" defer></script>
 <!-- Ambient audio system: world-ambience MUST load before music-scheduler
      (the scheduler looks up window.JumviWorldAmbience at start() time). -->
 <script src="jumvi-world-ambience.js?v=20260814-1" defer></script>
@@ -1412,13 +1412,13 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260819-1" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260820-2" defer></script>
+<script src="app.js?v=20260821-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260820-1")
+    navigator.serviceWorker.register("/service-worker.js?v=20260821-1")
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }

@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 // Deterministic contract check for the prerecorded English Coach Leo pilot.
 // No network / ElevenLabs dependency — pure static verification that:
-//   - mission 13 (Silent Mode) has no prerecorded path
-//   - every other mission 1..36 has exactly one prerecorded path
+//   - all 36 missions have a prerecorded path; mission 13's is pre-play only
 //   - all four Red Light / Green Light cue keys exist
 //   - every mapped file actually exists on disk
 import fs from "node:fs";
@@ -35,24 +34,28 @@ check("coach-leo-audio.js exposes window.CoachLeoAudio", !!coachLeo);
 if(coachLeo){
   // hasMission() is locale-gated; force English for this static contract check.
   context.window.__JUMVI_LOCALE = undefined;
-  check("mission 13 (Silent Mode) has no prerecorded path", !coachLeo.hasMission(13));
+  check("mission 13 (Silent Mode) has a pre-play/manual EN path", coachLeo.hasMission(13));
   for(const id of missionIds){
-    if(id === 13) continue;
     check(`mission ${id} has exactly one EN path`, coachLeo.hasMission(id));
+  }
+  for(const id of missionIds){
+    const reminders = coaching[id] && Array.isArray(coaching[id].reminders) ? coaching[id].reminders : [];
+    reminders.forEach((_, index) => check(`mission ${id} reminder ${index + 1} has an EN coaching clip`, coachLeo.hasCoaching(id, index)));
   }
 }
 
 // Extract the literal filename maps from source — verifies the four RLGL cue
 // keys exist and gives us the exact filenames to check on disk below.
 const source = fs.readFileSync("coach-leo-audio.js", "utf8");
-const missionFiles = [...source.matchAll(/^\s*\d+:\s*"([^"]+\.mp3)"/gm)].map(m => m[1]);
+const missionBlock = source.slice(source.indexOf("var MISSION_FILES"), source.indexOf("var CUE_FILES"));
+const missionFiles = [...missionBlock.matchAll(/^\s*\d+:\s*"([^"]+\.mp3)"/gm)].map(m => m[1]);
 const CUE_KEYS = ["green", "keepPlaying", "red", "greatJob"];
 const cueFiles = CUE_KEYS.map(key => {
   const m = source.match(new RegExp(`\\b${key}:\\s*"([^"]+\\.mp3)"`));
   return m ? m[1] : null;
 });
 
-check("35 mission mp3 filenames referenced (1-12, 14-36)", missionFiles.length === 35, `found ${missionFiles.length}`);
+check("36 mission mp3 filenames referenced (1-36)", missionFiles.length === 36, `found ${missionFiles.length}`);
 for(const key of CUE_KEYS){
   const idx = CUE_KEYS.indexOf(key);
   check(`cue "${key}" is mapped to a file`, !!cueFiles[idx]);
@@ -64,6 +67,13 @@ for(const f of missionFiles){
 for(const f of cueFiles){
   if(!f) continue;
   check(`on disk: assets/audio/coach-leo/en/game-cues/${f}`, fs.existsSync(path.join("assets/audio/coach-leo/en/game-cues", f)));
+}
+
+const coachingBlock = source.slice(source.indexOf("var COACHING_FILES"), source.indexOf("var STALL_MS"));
+const coachingFiles = [...coachingBlock.matchAll(/"([^"]+\.mp3)"/g)].map(m => m[1]);
+check("40 mission coaching mp3 filenames referenced", coachingFiles.length === 40, `found ${coachingFiles.length}`);
+for(const f of coachingFiles){
+  check(`on disk: assets/audio/coach-leo/en/mission-coaching/${f}`, fs.existsSync(path.join("assets/audio/coach-leo/en/mission-coaching", f)));
 }
 
 /* 3-2-1-GO start sequence. The map may legitimately be empty (English then
@@ -109,6 +119,8 @@ check("English island/system lines never fall back to speechSynthesis",
   /isAvailable\(\)[\s\S]*?return;\n\s*\}/.test(lineRouter));
 check("the 3D hub speaks through the recorded-first router",
   appSrc.includes("coachSpeak: speakLeoLine"));
+check("all reminder slots route through the data-driven coaching map",
+  appSrc.includes("leo.hasCoaching(ms.id, index)") && appSrc.includes("leo.playCoaching(ms.id, index)"));
 
 const announceBlock = appSrc.slice(appSrc.indexOf("function showCountdownThenStart"), appSrc.indexOf("function startTimer"));
 check("countdown never calls coachSpeak() directly", !announceBlock.includes("coachSpeak("));
@@ -120,4 +132,4 @@ if(failures){
   console.log(`\n❌ ${failures} Coach Leo audio contract failure(s).`);
   process.exit(1);
 }
-console.log("\n✅ Every mission (except 13) and all 4 RLGL cues map to a real file; nothing else changed.");
+console.log("\n✅ Every mission and all 4 RLGL cues map to a real file.");

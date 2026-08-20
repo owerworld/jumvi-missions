@@ -3964,12 +3964,13 @@ function updateTimerTick(){
     try{ if(window._hubMissionFlow && window._hub3dComeBack) window._hub3dComeBack(); }catch(_){ }
     // Coach: time's up announcement
     if(_openMissionId !== 13){
-      if(_currentScore > 0){
-        // Carries a number that cannot be prerecorded, so this one stays on
-        // TTS in English until a score-free variant is agreed.
-        coachSpeak(`Time's up! You got ${_currentScore}!`);
-      } else {
-        speakLeoLine("Time's up! Great job!");
+      // Preserve Turkish's established device-TTS copy; English uses the
+      // static prerecorded completion line and leaves score information visual.
+      if(window.__JUMVI_LOCALE === "tr-TR"){
+        if(_currentScore > 0) coachSpeak(`Time's up! You got ${_currentScore}!`);
+        else speakLeoLine("Time's up! Great job!");
+      }else{
+        speakLeoLine("Time's up! Great job! Check the phone when you're ready.");
       }
     }
     // A timer that reached Time's Up is proof this mission was actually played,
@@ -3993,7 +3994,9 @@ function updateTimerTick(){
       if(_missionCoachFired.has(index) || elapsedFraction < Number(reminder.fraction || 1)) return;
       _missionCoachFired.add(index); // mark before speaking so pause/resume cannot repeat it
       const line = resolveMissionCoachReminder(ms, reminder);
-      if(line) coachSpeak(line, { rate: 0.96, pitch: 1.02 });
+      const leo = window.CoachLeoAudio;
+      if(leo && leo.hasCoaching(ms.id, index)) leo.playCoaching(ms.id, index);
+      else if(line) coachSpeak(line, { rate: 0.96, pitch: 1.02 });
     });
   }
 
@@ -4191,10 +4194,19 @@ function playMissionNarration(ms, onDone){
   const runs = missionCoachRuns();
   const firstRun = Number(runs[ms.id] || 0) === 0;
   const isFullNarration = firstRun || !meta || meta.replay === "full";
-  const useMp3 = isFullNarration && window.CoachLeoAudio && window.CoachLeoAudio.hasMission(ms.id);
+  const leo = window.CoachLeoAudio;
+  const useMp3 = isFullNarration && leo && leo.hasMission(ms.id);
+  const useCoachingMp3 = !isFullNarration && leo && leo.hasCoaching(ms.id);
   if(useMp3){
     _missionNarrationWatchdog = setTimeout(doneOnce, 26000);
     const started = window.CoachLeoAudio.playMission(ms.id, {
+      onEnd: ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(true); },
+      onError: ()=> speakWithTts()
+    });
+    if(!started) speakWithTts();
+  } else if(useCoachingMp3) {
+    _missionNarrationWatchdog = setTimeout(doneOnce, 10000);
+    const started = leo.playCoaching(ms.id, {
       onEnd: ()=>{ clearTimeout(_missionNarrationWatchdog); _missionNarrationWatchdog = null; doneOnce(true); },
       onError: ()=> speakWithTts()
     });
