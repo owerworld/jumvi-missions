@@ -1593,6 +1593,11 @@ function hideMissionXpReward(){
   card.hidden = true;
   card.classList.remove("show", "levelUp", "noTeam");
   _missionXpRewardMissionId = 0;
+  const closeBtn = document.getElementById("btnClose");
+  if(closeBtn && closeBtn.classList.contains("asBackToPlay")){
+    closeBtn.classList.remove("asBackToPlay");
+    if(closeBtn.dataset.origHtml) closeBtn.innerHTML = closeBtn.dataset.origHtml;
+  }
 }
 
 function showMissionXpReward(payload){
@@ -1677,6 +1682,15 @@ function showMissionXpReward(payload){
 
   card.hidden = false;
   requestAnimationFrame(()=> card.classList.add("show"));
+
+  // v32's completion takeover offers "Back to Play" rather than a sheet close
+  // affordance. Same #btnClose element and handler — label and placement only.
+  const closeBtn = document.getElementById("btnClose");
+  if(closeBtn){
+    if(!closeBtn.dataset.origHtml) closeBtn.dataset.origHtml = closeBtn.innerHTML;
+    closeBtn.classList.add("asBackToPlay");
+    closeBtn.innerHTML = tr ? "Oyuna dön" : "Back to Play";
+  }
 }
 
 function isTurkishUI(){
@@ -2131,7 +2145,10 @@ function renderTeamXpPicker(){
   const activeProfile = getActiveProfile();
   const teams = getJumviTeams();
 
-  if(title) title.textContent = `${c.setupStep} · ${c.createTeam}`;
+  // v32 hierarchy: quiet eyebrow, then the big title, then the sub.
+  const eyebrow = document.getElementById("teamXpEyebrow");
+  if(eyebrow) eyebrow.textContent = c.setupStep;
+  if(title) title.textContent = c.createTeam;
   if(sub) sub.textContent = `${c.whoWith} ${child}?`;
   if(existingTitle) existingTitle.textContent = c.playingAs;
   if(createTitle) createTitle.textContent = `${c.whoWith} ${child}?`;
@@ -3429,6 +3446,15 @@ function remainingText(){
 function showBadgeUnlockModal(badge){
   const modal = document.getElementById("badgeUnlockModal");
   if(!modal) return;
+  /* The completion takeover and the badge unlock are two celebrations and must
+   * never be on screen together: Mission Completed closes first, then the badge
+   * is announced. If the takeover is still up, close it and re-enter here. */
+  const reward = document.getElementById("missionXpReward");
+  if(reward && !reward.hidden && reward.classList.contains("show")){
+    try { closeMission(); } catch(_){}
+    setTimeout(()=> showBadgeUnlockModal(badge), 260);
+    return;
+  }
   // The badge id is a frozen 11-value enum (BADGES in data.js), never a name.
   beacon("badge_earned", { badge: badge.id });
   window.JumviMusic?.cue("playBadge");

@@ -4596,3 +4596,372 @@ html.theme--dark #tabToday #xpProgressCard > .bar{ background:var(--jv-track) !i
 #tabModes #badgesRow .badgeProgress{ display:none !important; }
 /* Production extras keep v32 card language but sit below the v32 blocks. */
 #tabModes #parentDashboard{ margin-top:16px !important; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FINAL v32 — full-screen app surfaces (10/10 parity pass)
+   ---------------------------------------------------------------------------
+   In FINAL v32, Badges, Choose-a-child (profile switch/add/edit) and Team
+   Setup are not modal sheets over a dimmed page: they are full app screens
+   with their own title block, the page background, and the bottom navigation
+   still present. Production reached them through .backdrop/.teamXpBackdrop
+   dialogs, which is why they still read as legacy production chrome.
+
+   This converts the PRESENTATION only. Every dialog keeps its element, its
+   id, its .show toggle, its open/close handlers and its focus/ESC behaviour —
+   nothing about how they are opened or dismissed changes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.jvFullSurface{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9400 !important;
+  display:block !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  padding:0 !important;
+  background:var(--jv-page) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .18s ease;
+}
+.jvFullSurface.show{
+  opacity:1 !important;
+  visibility:visible !important;
+  pointer-events:auto !important;
+}
+.jvFullSurface[hidden]{ display:none !important; }
+/* The inner sheet stops being a sheet. */
+.jvFullSurface > .sheet,
+.jvFullSurface > .teamXpSheet{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:100% !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:14px 16px calc(96px + env(safe-area-inset-bottom)) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:var(--jv-page) !important;
+  box-shadow:none !important;
+  transform:none !important;
+  overflow:visible !important;
+}
+.jvFullSurface .sheetHandle,
+.jvFullSurface .teamXpHandle{ display:none !important; }
+
+/* v32 title block: big title, quiet sub, close as a round control on the right. */
+.jvFullSurface .sheetTop,
+.jvFullSurface .teamXpHead{
+  display:flex !important;
+  align-items:flex-start !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  margin:0 0 16px !important;
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+}
+.jvFullSurface .sheetTitle,
+.jvFullSurface .teamXpHead h2{
+  margin:0 !important;
+  font-family:var(--font-display,inherit);
+  font-size:26px !important;
+  line-height:1.12 !important;
+  font-weight:950 !important;
+  letter-spacing:-.4px !important;
+  color:var(--text) !important;
+}
+.jvFullSurface .sheetTitle .ico,
+.jvFullSurface .sheetTitle .jic{ display:none !important; }
+.jvFullSurface .sheetTop .small,
+.jvFullSurface .teamXpHead p{
+  margin:3px 0 0 !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+  font-weight:750 !important;
+}
+.jvFullSurface .close,
+.jvFullSurface .teamXpClose{
+  flex:0 0 auto !important;
+  width:40px !important; height:40px !important;
+  display:grid !important; place-items:center !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:50% !important;
+  background:var(--jv-card,var(--card)) !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  box-shadow:none !important;
+  font-size:16px !important;
+}
+/* The bottom navigation stays present on these screens, exactly as in v32.
+   Production's global rule hides the nav for ANY open .backdrop; these
+   surfaces are screens, not modals, so they opt back in. */
+body:has(.jvFullSurface.show) .bottomNav,
+body:has(.jvFullSurface.show) #bottomNav{
+  display:flex !important;
+  visibility:visible !important;
+}
+/* …and the page behind them must not be the thing that is visible. */
+body:has(.jvFullSurface.show) #app-wrapper > .sticky,
+body:has(.jvFullSurface.show) #app-wrapper > .wrap{ visibility:hidden; }
+
+/* Badges as a v32 screen. */
+#badgesBackdrop .kv{ border:0 !important; background:none !important; padding:0 !important; }
+#badgesBackdrop > .sheet > .small:last-child{ display:none !important; }
+#badgesBackdrop #badgesList{ margin-top:14px !important; }
+
+/* Profile screens: the settings block reads as its own grouped section. */
+#profileBackdrop .profileSettingsSection{ margin-top:22px !important; }
+#profileBackdrop .profileSettingsHint{
+  color:var(--jv-text-3,var(--muted)) !important;
+  font-size:12px !important;
+}
+
+/* Team setup as a v32 screen. */
+#teamXpBackdrop .teamXpSection{ margin-top:18px !important; }
+
+/* ── Global chrome: v32 shows no "?" control in the header ────────────────── */
+/* The Coach Leo tour itself is untouched and stays reachable from
+   Grown-ups → Help & Support → "Replay guided tour" (#btnHelpReplayTour). */
+.appHead .tourHelpBtn{ display:none !important; }
+.jvFullSurface .teamXpEyebrow{
+  margin:0 0 2px !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+}
+
+/* ── First Open: exact v32 geometry ──────────────────────────────────────── */
+#welcomeOverlay{ background:var(--jv-page) !important; }
+#welcomeOverlay .welcomePanel{ justify-content:flex-start !important; padding-top:22px !important; }
+/* v32 stacks the wordmark, then Coach Leo large and centred beneath it. */
+#welcomeOverlay .welcomeBrandLine{
+  flex-direction:column !important;
+  align-items:center !important;
+  height:auto !important;
+  gap:2px !important;
+}
+#welcomeOverlay .welcomeBrandLine .welcomeLogo{
+  width:64px !important; height:64px !important;
+  display:block !important;
+}
+html.theme--dark #welcomeOverlay .welcomeLogo.logoLight{ display:none !important; }
+html.theme--light #welcomeOverlay .welcomeLogo.logoDark{ display:none !important; }
+#welcomeOverlay .welcomeBrandLine .welcomeMascot{
+  width:112px !important;
+  margin:0 !important;
+}
+#welcomeOverlay .welcomeTagline{ font-size:30px !important; margin-top:6px !important; }
+#welcomeOverlay .welcomeSub{ max-width:310px !important; font-size:15px !important; }
+/* Kit block: v32 eyebrow + a card whose two items stack art over label. */
+.welcomeKitLabel{
+  width:100%;
+  margin:16px 0 8px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:11.5px;
+  font-weight:950;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+  text-align:left;
+}
+#welcomeOverlay .welcomeGear{
+  gap:10px !important;
+  padding:14px !important;
+  min-height:0 !important;
+  border:1px solid var(--jv-line,var(--border)) !important;
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+}
+#welcomeOverlay .welcomeGearItem{
+  flex:1 1 0;
+  flex-direction:column !important;
+  gap:8px !important;
+  padding:12px 8px !important;
+  border-radius:var(--jv-r-compact,14px);
+  background:var(--jv-card-2,#dbe7f4);
+  font-size:13.5px !important;
+  font-weight:900;
+}
+#welcomeOverlay .welcomeGearPlus{ flex:0 0 auto; color:var(--jv-text-3,var(--muted)) !important; }
+#welcomeOverlay .welcomeFirstGame{ display:none !important; }
+#welcomeOverlay .welcomeDivider{ display:none !important; }
+#welcomeOverlay .welcomeNote{
+  margin:12px 0 0 !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:13px !important;
+}
+/* v32 labels the level list with a left-aligned uppercase eyebrow. */
+#welcomeOverlay .welcomeAgesHeading{
+  width:100%;
+  margin:18px 0 8px !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:11.5px !important;
+  font-weight:950 !important;
+  letter-spacing:.9px !important;
+  text-transform:uppercase !important;
+  text-align:left !important;
+}
+#welcomeOverlay .ageBtn{
+  border-radius:var(--jv-r-card,20px) !important;
+  background:var(--jv-card,var(--card)) !important;
+  border-color:var(--jv-line,var(--border)) !important;
+}
+#welcomeOverlay .ageBtn.selected{
+  border-color:var(--jv-blue-strong,#1d6fb5) !important;
+  background:var(--jv-card,var(--card)) !important;
+  box-shadow:none !important;
+}
+#welcomeOverlay .welcomeMissionCount{
+  margin-top:12px !important;
+  color:var(--jv-text-2,var(--muted)) !important;
+  font-size:12.5px !important;
+}
+#welcomeOverlay .welcomeStart{
+  margin-top:12px !important;
+  border:0 !important;
+  border-radius:var(--jv-r-button,16px) !important;
+  background:var(--jv-blue-strong,#1d6fb5) !important;
+  box-shadow:none !important;
+  text-transform:none !important;
+  font-size:16px !important;
+}
+/* v32 keeps the first-run CTA reachable without scrolling: it sticks to the
+   bottom of the screen while the level list scrolls behind it. */
+#welcomeOverlay .welcomePanel{ padding-bottom:0 !important; }
+#welcomeOverlay .welcomeMissionCount{ margin-bottom:4px !important; }
+#welcomeOverlay .welcomeStart{
+  position:sticky;
+  bottom:0;
+  z-index:2;
+  margin-top:8px !important;
+  margin-bottom:calc(12px + env(safe-area-inset-bottom)) !important;
+}
+#welcomeOverlay .welcomeBrandLine{ margin-top:-4px; }
+#welcomeOverlay .welcomeBrandLine .welcomeMascot{ width:100px !important; }
+#welcomeOverlay .welcomeTagline{ font-size:28px !important; }
+#welcomeOverlay .welcomeGearItem{ padding:10px 8px !important; }
+
+/* ── Mission Completed: v32 full-screen celebration takeover ─────────────── */
+/* v32 does not show completion inside a bottom sheet over a dimmed page: it
+   is a lime-tinted takeover. Presentation only — #missionXpReward.show is the
+   same existing signal, and the runtime sequence (We Finished! -> celebration
+   -> 5s undo, badge unlock strictly after) is unchanged. */
+#backdrop:has(#missionXpReward.show){
+  padding:0 !important;
+  background:var(--jv-celebrate,#f3fbe0) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  align-items:stretch !important;
+}
+#backdrop:has(#missionXpReward.show) > #sheet{
+  width:100% !important;
+  max-width:100% !important;
+  height:100% !important;
+  max-height:100% !important;
+  margin:0 !important;
+  padding:20px 18px calc(20px + env(safe-area-inset-bottom)) !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:var(--jv-celebrate,#f3fbe0) !important;
+  box-shadow:none !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+}
+html.theme--dark #backdrop:has(#missionXpReward.show),
+html.theme--dark #backdrop:has(#missionXpReward.show) > #sheet{
+  background:var(--jv-celebrate,#16261a) !important;
+}
+/* The sheet's own chrome has no place on a takeover. */
+#backdrop:has(#missionXpReward.show) .sheetHandle,
+#backdrop:has(#missionXpReward.show) .sheetPack,
+#backdrop:has(#missionXpReward.show) .sheetTitle{ display:none !important; }
+#backdrop:has(#missionXpReward.show) .sheetTop{
+  order:3;
+  margin:10px 0 0 !important;
+  display:block !important;
+}
+/* The reward block itself becomes the centred celebration. */
+#sheet:has(#missionXpReward.show) .missionXpReward{
+  order:1;
+  margin:0 !important;
+  padding:0 !important;
+  background:transparent !important;
+}
+#backdrop:has(#missionXpReward.show) .sheetActions{
+  order:2;
+  margin-top:18px !important;
+  padding-top:0 !important;
+  border-top:0 !important;
+  background:transparent !important;
+}
+#sheet:has(#missionXpReward.show) #missionXpReward.show::before{
+  width:150px; height:150px; margin:0 auto 14px;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardTeam{ font-size:26px !important; }
+/* The XP block sits on its own white card, as v32 draws it. */
+#sheet:has(#missionXpReward.show) .missionXpRewardMath,
+#sheet:has(#missionXpReward.show) .missionXpRewardProgress,
+#sheet:has(#missionXpReward.show) .missionXpRewardRule{
+  background:var(--jv-card,#fff);
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardMath{
+  margin-top:16px !important;
+  padding:16px 16px 8px !important;
+  border-radius:var(--jv-r-card,20px) var(--jv-r-card,20px) 0 0;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardProgress{ padding:0 16px 8px; }
+#sheet:has(#missionXpReward.show) .missionXpRewardRule{
+  padding:0 16px 16px !important;
+  border-radius:0 0 var(--jv-r-card,20px) var(--jv-r-card,20px);
+}
+/* Close becomes v32's "Back to Play" secondary, sitting under the primary. */
+#backdrop:has(#missionXpReward.show) .close.asBackToPlay{
+  width:100% !important; height:auto !important;
+  min-height:50px !important;
+  display:flex !important;
+  align-items:center; justify-content:center;
+  border:1.5px solid var(--jv-line-strong,var(--border)) !important;
+  border-radius:var(--jv-r-button,16px) !important;
+  background:transparent !important;
+  color:var(--text) !important;
+  -webkit-text-fill-color:var(--text) !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+}
+/* Undo stays available via the 5s bar, so the sheet's undo drops to tertiary. */
+#backdrop:has(#missionXpReward.show) .sheetActions .holdBtn.btnPrimary{
+  min-height:36px !important;
+  border:0 !important;
+  background:transparent !important;
+  color:var(--jv-text-3,var(--muted)) !important;
+  -webkit-text-fill-color:var(--jv-text-3,var(--muted)) !important;
+  font-size:13px !important;
+}
+/* The XP block must read as ONE card, not three stacked slabs. */
+#sheet:has(#missionXpReward.show) .missionXpRewardMath{
+  margin:16px 0 0 !important;
+  padding:16px 16px 10px !important;
+  border-radius:var(--jv-r-card,20px) var(--jv-r-card,20px) 0 0 !important;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardProgress{
+  margin:0 !important;
+  padding:0 16px 10px !important;
+  border-radius:0 !important;
+}
+#sheet:has(#missionXpReward.show) .missionXpRewardRule{
+  margin:0 !important;
+  padding:0 16px 16px !important;
+  border-radius:0 0 var(--jv-r-card,20px) var(--jv-r-card,20px) !important;
+}
+/* v32's takeover offers exactly two actions. Undo is already served by the
+   5-second bar, and "Mark as Not Done" is still there whenever the mission is
+   reopened — so it does not compete here. */
+#backdrop:has(#missionXpReward.show) .sheetActions .holdBtn.btnPrimary{ display:none !important; }
+#backdrop:has(#missionXpReward.show) .sheetTop{ margin-top:9px !important; }
