@@ -8,9 +8,11 @@ Baseline reviewed: `df189f3fa7c1be3f719e20399abdedd4573de532` (`jumvi-missions-v
   onboarding, family, grown-up, hub, install, error, and accessible-label strings.
 - **443 KEEP** — clear, natural, and appropriately warm.
 - **9 CHANGE-SAFE** — screen-only labels and tips implemented below.
-- **8 DEFER-AUDIO** — wording can improve, but a concrete narration/reminder
+- **5 DEFER-AUDIO** — wording has a concrete clarity or grammar improvement,
+  but a concrete narration/reminder
   callsite speaks that exact field. No audio was changed or generated.
-- **23 REVIEW-LATER** — subjective brand/competition choices, not defects.
+- **26 REVIEW-LATER** — valid copy where a change would be a subjective
+  product-tone or competition-framing choice.
 
 Recurring opportunities are overuse of all-caps for ordinary actions, a few
 win conditions phrased as competition rather than completion, and tips that
@@ -49,10 +51,10 @@ a field is spoken.
 
 | Mission | Steps | Win | Safety | Tip | Decision / rationale |
 | --- | --- | --- | --- | --- | --- |
-| 1 Speed Demon | KEEP | DEFER | KEEP | CHANGE-SAFE | Tip updated: “Playing with a younger child? Slow it down and keep it fun.” |
+| 1 Speed Demon | KEEP | REVIEW-LATER | KEEP | CHANGE-SAFE | “beat your best” is valid; softer framing is a product-tone choice. |
 | 2 Red Light, Green Light | KEEP | KEEP | KEEP | KEEP | Game signals are correctly emphatic; caller remains authoritative. |
-| 3 Quick Slap | KEEP | DEFER | KEEP | KEEP | “10 … wins” could become a completion target. |
-| 4 Switcharoo | KEEP | DEFER | KEEP | KEEP | “First to 12 … wins” is clear but needlessly competitive for a pair activity. |
+| 3 Quick Slap | KEEP | REVIEW-LATER | KEEP | KEEP | “10 … wins” is valid; completion framing is optional. |
+| 4 Switcharoo | KEEP | REVIEW-LATER | KEEP | KEEP | “First to 12 … wins” is clear; softer framing is optional. |
 | 5 Statue Mode | KEEP | KEEP | KEEP | KEEP | Clear physical sequence; FREEZE is a game signal. |
 | 6 Number Echo | KEEP | KEEP | KEEP | CHANGE-SAFE | Tip updated: “Counting out loud is a fun way to practice numbers.” |
 | 7 Rainbow Throws | KEEP | KEEP | KEEP | KEEP | Arc, distance, and safety are all immediately clear. |
@@ -67,11 +69,11 @@ a field is spoken.
 | 16 1 — 2 — 3 — GO! | DEFER | KEEP | KEEP | CHANGE-SAFE | Step remains deferred; tip updated to a useful timing cue. |
 | 17 Mirror Mode | KEEP | KEEP | KEEP | KEEP | Clear matching mechanic. |
 | 18 Count to 10 | KEEP | KEEP | KEEP | CHANGE-SAFE | Tip now addresses “younger players” naturally. |
-| 19 Round Robin | KEEP | DEFER | KEEP | CHANGE-SAFE | Tip keeps group-play energy without “ultimate party mode.” |
+| 19 Round Robin | KEEP | REVIEW-LATER | KEEP | CHANGE-SAFE | “beat your record” is valid; softer framing is optional. |
 | 20 Crab Walk Relay | KEEP | DEFER | KEEP | KEEP | “Both lines hit 20 passes together” can be “Reach 20 passes together.” |
 | 21 Captain Says | KEEP | KEEP | KEEP | KEEP | Team role and rotation are clear. |
 | 22 Spin Squad | KEEP | KEEP | KEEP | KEEP | “SPIN!” is a legitimate in-game cue. |
-| 23 Mix It Up | KEEP | DEFER | KEEP | KEEP | “Most clean swap cycles wins” is grammatically weak; completion wording needs product decision. |
+| 23 Mix It Up | KEEP | DEFER | KEEP | KEEP | “Most clean swap cycles wins” is grammatically weak; the proposed completion wording is a clear correction. |
 | 24 2v2 Squad Count | KEEP | KEEP | KEEP | KEEP | Shared-total framing is strong and cooperative. |
 | 25 Chill Catch | KEEP | KEEP | KEEP | KEEP | Appropriate indoor safety and warmth. |
 | 26 Tiny Space | KEEP | KEEP | KEEP | KEEP | PLANTED is understandable here; core rule is clear. |
@@ -81,7 +83,7 @@ a field is spoken.
 | 30 Left or Right! | KEEP | KEEP | KEEP | KEEP | Direction and caller swap are clear. |
 | 31 Cloud Chaser | KEEP | KEEP | KEEP | KEEP | Outdoor direction and safety are unambiguous. |
 | 32 Home Base | KEEP | KEEP | KEEP | KEEP | Concrete examples make “base” clear. |
-| 33 How Far Can You Throw? | KEEP | DEFER | KEEP | KEEP | “Beat your previous distance record” is competitive but clear. |
+| 33 How Far Can You Throw? | KEEP | REVIEW-LATER | KEEP | KEEP | “Beat your previous distance record” is clear; softer framing is optional. |
 | 34 Chase the Ball! | KEEP | DEFER | KEEP | KEEP | “7 running catches wins” can become “Make 7 running catches.” |
 | 35 Sky High Jump | KEEP | KEEP | KEEP | KEEP | Timing and ground safety are clear. |
 | 36 Marathon Rally | KEEP | KEEP | KEEP | REVIEW-LATER | “beat your distance” is optional competitive framing, not a defect. |
