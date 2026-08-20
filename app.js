@@ -1319,7 +1319,6 @@ const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
 const soundToggle = document.getElementById("soundToggle");
 
 const btnSolidBg = document.getElementById("btnSolidBg");
-const btnKidsMode = document.getElementById("btnKidsMode");
 const btnBackup = document.getElementById("btnBackup");
 
 const streakPill = document.getElementById("streakPill");
@@ -1508,19 +1507,6 @@ function incSkip(id){
   persistSkips();
 }
 
-function topSkippedText(){
-  const entries = Object.entries(skips || {})
-    .map(([id,count])=>({ id:Number(id), count:Number(count)||0 }))
-    .filter(x=>x.count>0)
-    .sort((a,b)=>b.count - a.count)
-    .slice(0,3);
-  if(!entries.length) return "";
-  const names = entries
-    .map(e=>missions.find(m=>m.id===e.id)?.title)
-    .filter(Boolean);
-  if(!names.length) return "";
-  return `Top skipped missions: ${names.join(", ")}`;
-}
 function escapeHtml(str){
   return String(str)
     .replaceAll("&","&amp;")
@@ -2654,7 +2640,6 @@ function applyBodyClasses(){
 }
 function renderModeChips(){
   if(btnSolidBg) btnSolidBg.classList.toggle("active", !!solidBg);
-  if(btnKidsMode) btnKidsMode.classList.toggle("active", !!kidsMode);
 }
 
 /* ===== Streak ===== */
@@ -3069,11 +3054,9 @@ function disableOptionalLink(el, label){
  * It used to run from the boot sequence, which put a no-store HEAD for the
  * Mission Book PDF on the critical path of the QR landing page — an extra
  * round trip, uncacheable by the service worker, competing with the assets of
- * the first screen, for a link that lives on the Profile tab and that most
- * families never reach. On slow 4G that is a real cost paid by everyone to
- * answer a question almost nobody asks. The check is worth keeping (it turns
- * a dead download into "Coming soon" instead of a broken tap); it is just
- * worth keeping where the link is. */
+ * the first screen. The check is worth keeping (it turns a dead download into
+ * "Coming soon" instead of a broken tap); it now runs when either surface that
+ * links to the book is first opened. */
 let _optionalDownloadsChecked = false;
 async function checkOptionalDownloads(){
   if(_optionalDownloadsChecked) return;
@@ -5802,12 +5785,9 @@ document.getElementById("btnRandomAll").onclick = ()=>{
 
 // §3.2 — destructive reset now requires a deliberate press-and-hold (the guard
 // that left the reward moment lands here instead of a confirm() dialog). A plain
-// tap just hints. NOTE: there are two elements with id="btnReset" in the markup
-// (a dup-id bug — flagged in the report); bind both so neither is a live reset
-// without the hold.
+// tap just hints. Reset lives only on the Grown-ups surface.
 (function bindHoldToReset(){
-  // (btnReset = Profile quick-link; btnResetBottom = footer — both reset, one id each)
-  const btns = document.querySelectorAll('#btnReset, #btnResetBottom');
+  const btns = document.querySelectorAll('#btnReset');
   const HOLD_MS = 1200;
   function doReset(){
     setDoneFromArray([]);
@@ -6072,21 +6052,6 @@ document.getElementById("btnShareCopy").onclick = async ()=>{
   }catch(e){}
 };
 
-document.getElementById("btnShare").onclick = async ()=>{
-  clickSound("click");
-  const url = location.href;
-  const diag = topSkippedText();
-  const text = `JUMVI Missions progress: ${done.size}/${missions.length}${diag ? `\n${diag}` : ""}`;
-  try{
-    if(navigator.share){
-      await navigator.share({ title:"JUMVI Missions", text, url });
-    }else{
-      await navigator.clipboard.writeText(url);
-      alert("Link copied!");
-    }
-  }catch(e){}
-};
-
 // btnChoosePack removed from UI — pack filter row handles this directly
 
 searchInput.addEventListener("input", ()=>{
@@ -6129,17 +6094,6 @@ if(btnSolidBg){
     showToast(solidBg ? "Solid background ON" : "Solid background OFF");
   };
 }
-if(btnKidsMode){
-  btnKidsMode.onclick = ()=>{
-    clickSound("click");
-    kidsMode = setState("kidsMode", !kidsMode);
-    lsSet(KIDSMODE_KEY, kidsMode ? "1" : "0");
-    applyBodyClasses();
-    renderModeChips();
-    showToast(kidsMode ? "Kids Mode ON" : "Kids Mode OFF");
-  };
-}
-
 /* Daily mission buttons */
 if(btnDailyPlay){
   btnDailyPlay.onclick = ()=>{
@@ -7590,12 +7544,8 @@ function switchTab(tabName){
 
   // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
   try {
-    if(tabName === "profile"){
-      renderProfileTab();
-      // Both [data-optional-file] links live on this tab, so this is the first
-      // moment the check can matter — and it stays off the landing path.
-      checkOptionalDownloads();
-    }
+    if(tabName === "profile") renderProfileTab();
+    if(tabName === "profile" || tabName === "browse") checkOptionalDownloads();
     if(tabName === "today") {
       renderContinueHint();
       renderTodayContinuity();
