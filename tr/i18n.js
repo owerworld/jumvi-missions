@@ -313,7 +313,28 @@
   // Mission diagrams are shared English SVG/HTML strings. This deliberately
   // maps only their known reader-visible text; it never changes geometry.
   const ILLUSTRATION_TR = new Map(Object.entries({
+    "Speed Demon": "Hız Canavarı", "Throws by hand": "Elle at", "Catches with paddle": "Raketle yakala",
+    "Red Light Green Light": "Kırmızı Işık, Yeşil Işık", "Green light: everyone plays": "YEŞİL IŞIK: herkes oynar", "Red light: everyone FREEZES": "KIRMIZI IŞIK: herkes DONAR",
+    "Quick Hit": "Hızlı Dokun", "1. HIT": "1. DOKUN", "2. CATCH": "2. YAKALA",
+    "Switch Hands": "El Değiştir", "1. Catch with this hand": "1. Bu elinle yakala", "2. Switch to the other hand": "2. Diğer eline geçir",
+    "Statue Mode": "Heykel Modu", "1. CATCH": "1. YAKALA", "2. FREEZE 2 sec": "2. 2 sn DON",
+    "Number Echo": "Sayıyı Tekrarla", "Call a number → partner repeats it": "Bir sayı söyle → arkadaşın tekrarlasın",
+    "Rainbow Throws": "Gökkuşağı Atışları", "5 kid steps": "5 büyük adım",
+    "Landing Strip": "İniş Pisti", "Hold the paddle flat and still — the ball sticks itself": "Raketi düz ve sabit tut — top kendi yapışır",
+    "Distance Ladder": "Geri Adım Meydan Okuması", "3 catches per level, then step back a little": "Her seviyede 3 yakalama, sonra biraz geri git",
+    "Power Step": "Güç Adımı", "1. Ready, arm back": "1. Hazır ol, kolun geride", "2. Step forward and throw": "2. Öne adım at ve at",
+    "Sky Glide": "Gökyüzü Süzülüşü", "Throw high and slow — wait patiently": "Yüksek ve yavaş at — sabırla bekle",
+    "Chest Target": "Kalp Hizası", "Aim for chest height — high or low misses": "Göğüs hizasına nişan al — yüksek ya da alçak kaçırır",
+    "Ball stays in the hand": "Top elde kalır", "Catcher calls out first": "Önce yakalayan seslenir", "Only after the call: soft throw, then swap roles": "Çağrıdan sonra: yumuşak at, sonra rol değiştir",
+    "1-2-3 Throw!": "1-2-3 At!", "THROW!": "AT!", "Thrower counts 1·2·3 and throws on 3 — the catcher counts too on their turn": "Atan 1·2·3 diye sayar ve 3'te atar — yakalayan da kendi sırasında sayar",
+    "Mirror Mode": "Ayna Modu", "Copy the same pose — then throw": "Aynı pozu kopyala — sonra at",
+    "Count to 10": "10’a Kadar Say", "Count together to 10 — a drop resets to 1": "Birlikte 10’a sayın — top düşerse 1’den başlayın",
+    "Captain Says": "Kaptan Diyor ki", "Sam": "Sam", "SAM!": "SAM!", "Captain calls a name → throws the ball to that person": "Kaptan bir isim söyler → topu o kişiye atar",
+    "2v2 Shared Score": "2v2 Ortak Skor", "SHARED TOTAL": "ORTAK TOPLAM", "target 40": "hedef 40", "Two pairs take turns — points merge into ONE shared total": "İki çift sırayla oynar — puanlar TEK ortak toplamda birleşir",
+    "Easy Catch": "Sakin Yakala", "Play seated — short soft tosses, don't get up": "Oturarak oyna — kısa, yumuşak atışlar; ayağa kalkma",
+    "Tiny Space": "Mini Alan", "Just 1 step apart — feet planted, no stepping forward": "Sadece 1 adım arayla — ayaklar sabit, öne adım yok",
     "I SEE IT!": "GÖRDÜM!",
+    "Step 1: the catcher calls I SEE IT while the thrower still holds the ball. Step 2: only then is the same ball thrown.": "Adım 1: Yakalayan, atan kişi topu hâlâ tutarken GÖRDÜM! der. Adım 2: Aynı top ancak bundan sonra atılır.",
     "Mind Reader — how to play, in three steps": "Zihin Okuyucu — üç adımda nasıl oynanır",
     "Mind Reader steps, use the left and right arrow keys": "Zihin Okuyucu adımları; sol ve sağ ok tuşlarını kullan",
     "Step 1 — the thrower picks a direction in secret": "Adım 1 — atan kişi gizlice bir yön seçer",
@@ -330,16 +351,24 @@
     "Step 2 — after a 3-second pause the catcher moves the paddle to their guess. Still no throw.": "Adım 2 — 3 saniye sonra yakalayan raketi tahminine göre koyar. Hâlâ atış yok.",
     "Step 3 — one throw, one ball. The paddle was already waiting: that is a mind read.": "Adım 3 — tek atış, tek top. Raket zaten bekliyordu: işte zihin okuma bu.",
     "Previous step": "Önceki adım", "Next step": "Sonraki adım",
+    "Stuck-Foot Catch": "Ayaklar Sabit", "Feet glued to the spot — catch in place, no chasing": "Ayakların yerinde kalsın — yerinden yakala, topun peşinden koşma",
+    "Left or Right!": "Sol mu Sağ mı?", "Caller shouts a side — catcher (from behind) turns the paddle that way": "Seslenen bir yön söyler — yakalayan raketi o yöne çevirir",
+    "Cloud Chaser": "Bulut Avcısı", "Step 6 apart — throw it high, watch it down, catch with the paddle": "6 adım arayla durun — yükseğe at, inerken izle, raketle yakala",
+    "Home Base": "Ana Üs", "BASE": "ÜS", "Each stays on their BASE square — step off = miss": "Herkes ÜS karesinde kalır — dışarı adım = kaçtı",
+    "How Far Can You Throw?": "Ne Kadar Uzağa Atabilirsin?", "3 catches → both step back 2": "3 yakalama → ikiniz de 2 adım geri", "6 steps": "6 adım", "10 steps → how far can you go?": "10 adım → ne kadar uzağa gidebilirsin?",
+    "Chase the Ball!": "Topun Peşine!", "Thrower tosses it ahead — catcher runs and catches before it lands": "Atan topu öne atar — yakalayan koşar ve yere düşmeden yakalar",
+    "Sky High Jump": "Zıplayarak Yakala", "The thrower stays on the ground and sends the one ball in a gentle arc just above normal standing reach. The catcher jumps, meets it with a raised paddle and lands on flat grass.": "Atan yerde kalır ve tek topu normal erişimin biraz üstüne yumuşak bir yayla atar. Yakalayan zıplar, kaldırdığı raketle topu karşılar ve düz çime iner.", "normal reach": "normal erişim", "Aim just above reach — one small jump, soft knees on landing": "Erişimin biraz üstüne nişan al — küçük bir zıplama, inerken dizlerin yumuşak olsun",
+    "Marathon Rally": "Maraton Serisi", "1 step": "1 adım",
     "Spotlight Eyes": "Gözler Hedefte"
   }));
 
   const TIP_OVERRIDES = {
-    1: "Daha küçük bir çocukla oynuyorsanız yavaşlayın; önce eğlence.",
-    6: "Yüksek sesle saymak, sayıları pratik etmenin eğlenceli bir yoludur.",
-    10: "Atarken yumuşakça öne adım atın, sonra arkadaşınızın sırası için başlangıca dönün.",
-    15: "Yüksek sesle söylemek, gözlerinizi topta tutmanıza yardımcı olur.",
+    1: "Daha küçük bir çocukla oynuyorsan tempoyu düşür ve oyunu eğlenceli tut.",
+    6: "Yüksek sesle saymak, sayıları tekrar etmeyi eğlenceli hale getirir.",
+    10: "Atarken yumuşakça öne adım at, sonra arkadaşının sırası için başlangıç yerine dön.",
+    15: "“GÖRDÜM!” demek, gözünü topta tutmana yardımcı olur.",
     16: "Düzenli saymak zamanlamayı kolaylaştırır.",
-    18: "Daha küçük oyuncular için harika bir ilk görev; her yakalamada özgüven kazanırlar.",
+    18: "Daha küçük oyuncular için harika bir ilk görev; her yakalama özgüveni biraz daha artırır.",
     19: "Dört raket ve dört oyuncuyla keyifli bir grup oyunu olur."
   };
 
