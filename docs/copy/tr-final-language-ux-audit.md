@@ -51,11 +51,9 @@ the Worker path.
 ## Illustration Localization Audit
 
 **36/36 illustrations reviewed.** Geometry, equipment, ball count, and motion
-markup are unchanged. The `/tr` DOM map fully localizes the two instructional
-surfaces (Mission 15 and Mission 28) without changing English source drawings.
-Other static illustration labels remain a follow-up mapping task; this PR does
-not claim that all 141 extracted illustration text/accessibility tokens are
-localized.
+markup are unchanged. The `/tr` DOM map localizes all 99 language-bearing
+illustration tokens without changing English source drawings; the deterministic
+coverage check reports zero unmapped tokens.
 
 - Mission 15 bubble: `I SEE IT!` → `GÖRDÜM!`; its two-state physical sequence
   remains unchanged.
