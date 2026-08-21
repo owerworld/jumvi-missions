@@ -1418,7 +1418,44 @@
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260821-1")
+    navigator.serviceWorker.register("/service-worker.js?v=20260821-2")
+        .then((reg)=>{
+          // §5.4 — returning-browser freshness. skipWaiting()+clients.claim()
+          // in service-worker.js already hand a NEW worker control of every
+          // open tab the instant it installs — but the tab itself keeps
+          // running the OLD app.js/style.css it already loaded into memory.
+          // That mismatch (new network layer under old, already-executed
+          // JS) is what shows up on a family's phone as "old version, some
+          // buttons broken": the DOM the old script expects and the DOM/CSS
+          // a fresh release ships no longer agree. A full reload once
+          // control switches puts the tab back in sync with whatever it's
+          // actually being served — but only at a moment that won't cut off
+          // a child mid-mission, so it waits out any open sheet/modal.
+          let reloadArmed = false, reloaded = false, pollId = null;
+          function reloadWhenSafe(){
+            if(reloaded) return;
+            const busy = document.visibilityState === "visible" && document.querySelector(".backdrop.show");
+            if(busy) return;
+            reloaded = true;
+            if(pollId) clearInterval(pollId);
+            location.reload();
+          }
+          navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+            if(reloadArmed) return;
+            reloadArmed = true;
+            reloadWhenSafe();
+            document.addEventListener("visibilitychange", reloadWhenSafe);
+            pollId = setInterval(reloadWhenSafe, 4000);
+          }, { once:true });
+
+          // Browsers only check a service worker for updates on navigation.
+          // A phone that resumes the same tab from the home screen for days
+          // without a real reload can sit on a stale worker indefinitely —
+          // so nudge a check every time the app is actually looked at again.
+          document.addEventListener("visibilitychange", ()=>{
+            if(document.visibilityState === "visible") reg.update().catch(()=>{});
+          });
+        })
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
