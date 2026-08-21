@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v240";
+const CACHE_NAME = "jumvi-missions-v241";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -194,12 +194,26 @@ self.addEventListener("fetch", (event) => {
 
   // Network-first for HTML/navigation.
   // IMPORTANT: /tr must never overwrite the English /index.html cache.
+  //
+  // cache: "no-store" is load-bearing, not decoration. Re-issuing the
+  // intercepted event.request as-is (`fetch(req)`) lets this internal fetch
+  // fall back to the browser's ordinary HTTP cache heuristics, which have
+  // been observed (this is a known class of Chromium/WebKit SW behavior,
+  // not specific to this app) to serve an entry from a PRIOR navigation on
+  // that same URL even though the server sends must-revalidate — the
+  // fetch never leaves the device, so must-revalidate never gets the
+  // chance to matter. That is how a phone can hit "reload" and still get
+  // the release from before this file existed: every layer downstream
+  // (Cloudflare, must-revalidate, the CACHE_NAME bump) was doing its job
+  // and never even got asked. Forcing no-store makes every navigation a
+  // real round trip, every time, with nothing left for the local HTTP
+  // cache to intercept.
   if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
     const navCacheKey = /^\/tr(?:\/|$)/.test(url.pathname)
       ? "/tr/index.html"
       : "/index.html";
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: "no-store" })
         .then((res) => {
           const copy = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(navCacheKey, copy));
