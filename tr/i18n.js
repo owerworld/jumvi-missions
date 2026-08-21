@@ -293,7 +293,7 @@
     "Close privacy and safety": "Gizlilik ve güvenliği kapat",
     "How many players": "Kaç oyuncu",
     "Reset progress": "İlerlemeyi sıfırla",
-    "See what you've earned": "Kazandığın anları topla",
+    "See what you've earned": "Kazandıklarına göz at",
     "Get help quickly.": "Hızlıca yardım al.",
   };
   Object.entries(EXACT_EXTRA).forEach(([k, v]) => EXACT.set(k, v));
@@ -309,6 +309,39 @@
   const SAFETY_BASES = [...EXACT.entries()]
     .filter(([k]) => /\b1[–-]3 m\b/.test(k))
     .sort((a, b) => b[0].length - a[0].length);
+
+  // Mission diagrams are shared English SVG/HTML strings. This deliberately
+  // maps only their known reader-visible text; it never changes geometry.
+  const ILLUSTRATION_TR = new Map(Object.entries({
+    "I SEE IT!": "GÖRDÜM!",
+    "Mind Reader — how to play, in three steps": "Zihin Okuyucu — üç adımda nasıl oynanır",
+    "Mind Reader steps, use the left and right arrow keys": "Zihin Okuyucu adımları; sol ve sağ ok tuşlarını kullan",
+    "Step 1 — the thrower picks a direction in secret": "Adım 1 — atan kişi gizlice bir yön seçer",
+    "The thrower holds the one ball and thinks of left, centre or right. Nothing has been thrown yet.": "Atan kişi tek topu tutar ve sol, orta ya da sağı düşünür. Top henüz atılmadı.",
+    "Step 2 — the catcher commits the paddle before the throw": "Adım 2 — yakalayan, atıştan önce raketi seçtiği yöne koyar",
+    "After a three second pause the catcher moves their one paddle to the direction they predict. The ball has still not left the hand.": "Üç saniye sonra yakalayan tek raketini tahmin ettiği yöne koyar. Top hâlâ elde.",
+    "Step 3 — one throw reveals whether the guess was right": "Adım 3 — tek atış tahminin doğru olup olmadığını gösterir",
+    "The same single ball is thrown along one path. The paddle was already waiting there, so the guess was correct.": "Aynı tek top tek bir yoldan atılır. Raket zaten orada beklediği için tahmin doğrudur.",
+    "MY SECRET": "GİZLİ SEÇİMİM",
+    "LEFT": "SOL", "CENTER": "ORTA", "RIGHT": "SAĞ", "RIGHT!": "SAĞ!",
+    "MY GUESS: LEFT": "TAHMİNİM: SOL", "3s pause": "3 sn bekle",
+    "MIND READ!": "ZİHİNDEN OKU!",
+    "Step 1 — the thrower secretly picks LEFT, CENTER or RIGHT. The ball stays in the hand.": "Adım 1 — atan kişi gizlice SOL, ORTA ya da SAĞI seçer. Top elde kalır.",
+    "Step 2 — after a 3-second pause the catcher moves the paddle to their guess. Still no throw.": "Adım 2 — 3 saniye sonra yakalayan raketi tahminine göre koyar. Hâlâ atış yok.",
+    "Step 3 — one throw, one ball. The paddle was already waiting: that is a mind read.": "Adım 3 — tek atış, tek top. Raket zaten bekliyordu: işte zihin okuma bu.",
+    "Previous step": "Önceki adım", "Next step": "Sonraki adım",
+    "Spotlight Eyes": "Gözler Hedefte"
+  }));
+
+  const TIP_OVERRIDES = {
+    1: "Daha küçük bir çocukla oynuyorsanız yavaşlayın; önce eğlence.",
+    6: "Yüksek sesle saymak, sayıları pratik etmenin eğlenceli bir yoludur.",
+    10: "Atarken yumuşakça öne adım atın, sonra arkadaşınızın sırası için başlangıca dönün.",
+    15: "Yüksek sesle söylemek, gözlerinizi topta tutmanıza yardımcı olur.",
+    16: "Düzenli saymak zamanlamayı kolaylaştırır.",
+    18: "Daha küçük oyuncular için harika bir ilk görev; her yakalamada özgüven kazanırlar.",
+    19: "Dört raket ve dört oyuncuyla keyifli bir grup oyunu olur."
+  };
 
   function localizeData() {
     try {
@@ -327,6 +360,7 @@
         missions.forEach(m => {
           const tr = missionTR[m.id];
           if (tr) Object.assign(m, tr);
+          if (TIP_OVERRIDES[m.id]) m.tip = TIP_OVERRIDES[m.id];
         });
       }
       if (typeof BADGES !== 'undefined') {
@@ -350,6 +384,7 @@
     const norm = normalized(raw);
     if (!norm) return raw;
     if (EXACT.has(norm)) return EXACT.get(norm);
+    if (ILLUSTRATION_TR.has(norm)) return ILLUSTRATION_TR.get(norm);
 
     // Composed safety line — see SAFETY_BASES above. Gated on a cheap test so
     // the loop never runs for the thousands of unrelated text nodes the
