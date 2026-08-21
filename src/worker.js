@@ -369,6 +369,15 @@ async function handleTurkishApp(request, env) {
   headers.delete("etag");
   headers.set("content-type", "text/html; charset=utf-8");
   headers.set("content-language", "tr");
+  // `public, max-age=0, must-revalidate` (the asset layer's default for
+  // HTML) is a request to revalidate on every hit, not a request never to
+  // cache — and in practice we watched Cloudflare's edge hold onto a HIT for
+  // this exact document for extended periods regardless (2026-08-21 incident:
+  // Cf-Cache-Status: HIT serving a stale build to real devices with zero
+  // Cache Rules/Page Rules in play). `no-store` is the one directive no CDN
+  // tier is allowed to cache around — this document must always come from
+  // the Worker, never the edge.
+  headers.set("cache-control", "no-store");
 
   return new Response(html, {
     status: upstream.status,
@@ -433,6 +442,24 @@ export default {
     // existed. Assets that match are served by the platform without reaching
     // us at all (except the run_worker_first paths above, which always land
     // here first) — this covers the misses so 404 behaviour is unchanged.
-    return env.ASSETS.fetch(request);
+    const response = await env.ASSETS.fetch(request);
+
+    // The document shell only — never hashed/versioned assets (css/js/img),
+    // which should keep caching normally for performance. Same incident and
+    // same reasoning as handleTurkishApp's no-store above: this exact path
+    // was the one Cloudflare's edge held a stale HIT for on 2026-08-21 with
+    // no Cache Rule or Page Rule in sight to explain it. `max-age=0` asks the
+    // edge to revalidate; `no-store` is the directive it cannot cache around.
+    if (pathname === "/" || pathname === "/index.html") {
+      const headers = new Headers(response.headers);
+      headers.set("cache-control", "no-store");
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+
+    return response;
   },
 };
