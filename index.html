@@ -3,6 +3,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- Every script/link/img reference on this page is a relative path
+       ("app.js", not "/app.js"). That is fine while the URL bar reads
+       qr.jumvi.co/ or qr.jumvi.co/index.html — but this SAME markup is
+       also served, byte-identical, at /tr and /tr/ (the Worker only
+       injects one extra script tag; it does not rewrite paths). With a
+       trailing slash the browser's relative-URL base becomes .../tr/, so
+       "app.js" resolves to .../tr/app.js — a 404 — and so does every
+       other asset on the page: style.css, data.js, the logos, Coach
+       Leo's sprites, all of it. A family whose link or bookmark happens
+       to end in /tr/ would get a blank, non-functional app with no error
+       they could act on. This one tag fixes every relative reference at
+       once, for the ones already on the page and any added later, rather
+       than requiring the leading "/" to be remembered on each one by
+       hand. It must stay this early in <head>, before any element that
+       references a relative URL, or those elements resolve against the
+       page's own path anyway. -->
+  <base href="/">
   <!-- §2.5 — pinch-zoom ENABLED (WCAG 1.4.4); notch safe area kept -->
   <!-- maximum-scale/user-scalable back up the JS pinch + double-tap guards that
        already exist in app.js: on a toy the phone is held one-handed, often on
@@ -83,7 +100,7 @@
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css?v=20260820-2">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
-  <link rel="stylesheet" href="jumvi-icons.css?v=20260815-1">
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260821-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
   <link rel="stylesheet" href="warm-toy.css">
   <!-- §5.1 — Tabler icon-webfont CDN removed. The 3 glyphs used (chevron-right,
@@ -766,6 +783,19 @@
           </div>
         </details>
 
+        <!-- A device that never does a real reload/relaunch can sit on an old
+             build indefinitely — the service worker's own update check runs
+             on navigation, and this screen doesn't force one. This gives a
+             grown-up a direct, self-service way to trigger that check instead
+             of needing to know anything about caches or reinstalling. -->
+        <button class="profileQuickLink" id="btnCheckUpdate" type="button">
+          <span class="profileQuickIcon"><i class="jic jic-refresh" aria-hidden="true"></i></span>
+          <div class="profileQuickInfo">
+            <div class="profileQuickTitle" id="btnCheckUpdateTitle">Check for Updates</div>
+            <div class="profileQuickSub" id="btnCheckUpdateSub">Get the newest version of JUMVI</div>
+          </div>
+        </button>
+
         <button class="profileQuickLink profileResetLink" id="btnReset" type="button">
           <span class="profileQuickIcon"><i class="jic jic-trash" aria-hidden="true"></i></span>
           <div class="profileQuickInfo">
@@ -1412,7 +1442,7 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260819-1" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260821-1" defer></script>
+<script src="app.js?v=20260821-2" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>
@@ -1431,6 +1461,20 @@
           // control switches puts the tab back in sync with whatever it's
           // actually being served — but only at a moment that won't cut off
           // a child mid-mission, so it waits out any open sheet/modal.
+          // A brand new visitor's very first load has no controller yet —
+          // the worker that installs and calls clients.claim() a moment
+          // later is claiming this page for the FIRST time, not superseding
+          // an older one. That first claim also fires controllerchange (null
+          // -> a worker still counts as "changed"), so without this guard
+          // every first-time visitor got an unnecessary reload a second or
+          // two after landing — including anyone who had already tapped
+          // "Start My First Mission" in that window. Only a controller that
+          // was ALREADY set and then changes to a DIFFERENT one, at any
+          // point later in the session, is an actual new release taking
+          // over — so this tracks "have we been controlled at all yet"
+          // rather than a one-time snapshot, or a genuine update arriving
+          // later in a first-time visitor's own session would go uncaught.
+          let hasBeenControlled = !!navigator.serviceWorker.controller;
           let reloadArmed = false, reloaded = false, pollId = null;
           function reloadWhenSafe(){
             if(reloaded) return;
@@ -1441,12 +1485,13 @@
             location.reload();
           }
           navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+            if(!hasBeenControlled){ hasBeenControlled = true; return; }
             if(reloadArmed) return;
             reloadArmed = true;
             reloadWhenSafe();
             document.addEventListener("visibilitychange", reloadWhenSafe);
             pollId = setInterval(reloadWhenSafe, 4000);
-          }, { once:true });
+          });
 
           // Browsers only check a service worker for updates on navigation.
           // A phone that resumes the same tab from the home screen for days

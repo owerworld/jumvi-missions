@@ -6047,6 +6047,76 @@ if(btnHelpReplayTour){
     if(window.leoTour && typeof window.leoTour.start === "function") window.leoTour.start();
   };
 }
+
+/* "Check for Updates" — the self-service side of the returning-browser fix.
+ * A tab that never does a real reload/relaunch can sit on an old worker
+ * indefinitely; the browser only checks a service worker for updates on
+ * navigation, and nothing on this screen forces one otherwise. This gives a
+ * grown-up a direct button instead of "clear your browser data" — the two
+ * things a customer can never be asked to do. */
+(function bindCheckForUpdates(){
+  const btn = document.getElementById("btnCheckUpdate");
+  const sub = document.getElementById("btnCheckUpdateSub");
+  if(!btn || !("serviceWorker" in navigator)) return;
+  const subDefault = sub ? sub.textContent : "";
+  const L = (en, tr)=> isTurkishUI() ? tr : en;
+  let busy = false;
+
+  btn.addEventListener("click", async ()=>{
+    if(busy) return;
+    busy = true;
+    clickSound("click");
+
+    if(!navigator.onLine){
+      showToast(L("You're offline — can't check for updates right now.", "Çevrimdışısın — şu an güncelleme kontrol edilemiyor."));
+      busy = false;
+      return;
+    }
+
+    if(sub) sub.textContent = L("Checking…", "Kontrol ediliyor…");
+    btn.setAttribute("aria-busy", "true");
+    let navigatingAway = false;
+
+    try{
+      const reg = await navigator.serviceWorker.getRegistration();
+      if(!reg){
+        showToast(L("Couldn't check right now. Try again in a moment.", "Şu an kontrol edilemedi. Birazdan tekrar dene."));
+        return;
+      }
+
+      // If a check finds a new version, the SAME controllerchange-driven
+      // reload from index.html's registration code handles it — that path
+      // already guards against interrupting an open sheet. Here we only
+      // need to know whether one arrived, to reload right away (the grown-up
+      // just asked for this, so there's no "wait for a safe moment" to do).
+      const updated = await new Promise((resolve)=>{
+        let done = false;
+        const finish = (v)=>{ if(done) return; done = true; navigator.serviceWorker.removeEventListener("controllerchange", onChange); resolve(v); };
+        const onChange = ()=> finish(true);
+        navigator.serviceWorker.addEventListener("controllerchange", onChange);
+        reg.update().catch(()=> finish(false));
+        setTimeout(()=> finish(false), 8000);
+      });
+
+      if(updated){
+        navigatingAway = true;
+        if(sub) sub.textContent = L("Updating…", "Güncelleniyor…");
+        location.reload();
+        return;
+      }
+      showToast(L("You're already on the latest version!", "Zaten en güncel sürümdesin!"));
+    }catch(_){
+      showToast(L("Couldn't check right now. Try again in a moment.", "Şu an kontrol edilemedi. Birazdan tekrar dene."));
+    }finally{
+      // A page mid-reload doesn't need its own UI reset back to idle.
+      if(!navigatingAway){
+        btn.removeAttribute("aria-busy");
+        if(sub) sub.textContent = subDefault;
+        busy = false;
+      }
+    }
+  });
+})();
 if(btnSeasonalIndoor){
   btnSeasonalIndoor.onclick = ()=>{ clickSound("click"); renderSeasonalList("indoor"); };
 }
