@@ -285,35 +285,18 @@ function cancelLsDebounced(key){
 }
 
 /** =======================
- * Disable zoom — kapsamlı (iOS + Android + desktop)
- * Kazara pinch/double-tap/Cmd+scroll zoom = kullanıcı kaybı
+ * §1.2 — zoom guards removed (WCAG 2.2 SC 1.4.4 / 1.4.10)
+ * A disableZoom() block used to live here and cancel four things: double-tap
+ * (touchend within 300ms), iOS gesturestart/change/end, any touchstart with
+ * more than one finger, and ctrl/cmd+wheel. Together with maximum-scale=1 in
+ * the viewport meta that made the app unzoomable on every platform, including
+ * desktop. It is gone rather than narrowed: the tap-latency argument for the
+ * double-tap half is already covered by width=device-width plus
+ * touch-action:manipulation on controls (style.css), and the remaining
+ * argument — an accidental pinch while holding the phone one-handed outdoors —
+ * costs a sighted parent one pinch to undo and costs a low-vision parent the
+ * whole screen. Nothing replaces it; zoom is meant to work.
  * ======================= */
-(function disableZoom(){
-  // 1. Double-tap zoom (iOS)
-  let lastTouchEnd = 0;
-  document.addEventListener("touchend", function(e){
-    const now = Date.now();
-    if(now - lastTouchEnd <= 300){ e.preventDefault(); }
-    lastTouchEnd = now;
-  }, { passive:false });
-
-  // 2. Pinch zoom (iOS gestureXxx)
-  ["gesturestart","gesturechange","gestureend"].forEach(evt => {
-    document.addEventListener(evt, function(e){ e.preventDefault(); }, { passive:false });
-  });
-
-  // 3. Multi-touch zoom (Android Chrome)
-  document.addEventListener("touchstart", function(e){
-    if(e.touches && e.touches.length > 1){
-      e.preventDefault();
-    }
-  }, { passive:false });
-
-  // 4. Wheel zoom (desktop Cmd/Ctrl + scroll)
-  document.addEventListener("wheel", function(e){
-    if(e.ctrlKey || e.metaKey){ e.preventDefault(); }
-  }, { passive:false });
-})();
 
 /** =======================
  * Selection / context menu disable

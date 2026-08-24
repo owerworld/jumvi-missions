@@ -20,16 +20,19 @@
        references a relative URL, or those elements resolve against the
        page's own path anyway. -->
   <base href="/">
-  <!-- §2.5 — pinch-zoom ENABLED (WCAG 1.4.4); notch safe area kept -->
-  <!-- maximum-scale/user-scalable back up the JS pinch + double-tap guards that
-       already exist in app.js: on a toy the phone is held one-handed, often on
-       grass, and an accidental pinch that leaves the page zoomed makes every
-       screen scroll sideways. interactive-widget keeps the layout viewport from
-       being resized out from under the app when the keyboard opens for the
-       child-name field. Note iOS Safari deliberately ignores the scale hints
-       for accessibility, so the real defence there is the 16px minimum on every
-       input — see .profileNameInput in style.css. -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <!-- §1.2 — zoom is available (WCAG 2.2 SC 1.4.4). This tag used to carry
+       maximum-scale=1, user-scalable=no, backed by a disableZoom() guard in
+       app.js that cancelled pinch, double-tap and ctrl+wheel. The comment above
+       it said "pinch-zoom ENABLED" while the attributes said the opposite; the
+       stated reason was an accidental pinch on grass leaving the page zoomed.
+       That is a real annoyance, but the people it locks out — a parent who
+       needs to magnify a safety line, anyone with low vision — cannot work
+       around it, while an accidental zoom is undone with one pinch. Chrome and
+       Firefox on Android honour these hints, so this was a genuine block there,
+       not only on paper. viewport-fit keeps the notch safe area;
+       interactive-widget keeps the layout viewport from being resized out from
+       under the app when the keyboard opens for the child-name field. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>JUMVI Missions — Toss, Catch &amp; Keep Playing</title>
   <meta name="description" content="Quick, active games for the JUMVI Toss & Catch Paddle Set. Pick a play level, read the steps, then put the phone down and play. No app, account, or ads." />
   <meta name="keywords" content="JUMVI, paddle set, toss and catch, active kids games, paddle ball, kids missions, family games" />
@@ -147,6 +150,13 @@
   <!-- Welcome Overlay — shown once for new visitors -->
   <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
     <div class="welcomePanel">
+      <!-- §1.1 — Everything above the CTA lives in its own scroll region so the
+           Start button can be a real flex footer instead of a sticky overlay.
+           It used to be position:sticky, which pinned it over whatever content
+           happened to sit at the bottom of the viewport: the mission count at
+           390x844, the level labels at 320x568 and in landscape. A footer that
+           is a sibling of the scroller cannot cover it at any scroll offset. -->
+      <div class="welcomeScroll" id="welcomeScroll">
       <div class="welcomeBrandLine" aria-hidden="true">
         <img class="welcomeLogo logoLight" src="assets/logo/jumvi_logo_dark-192.webp" width="96" height="96" alt="" decoding="async" />
         <img class="welcomeLogo logoDark" src="assets/logo/jumvi_logo_light-192.webp" width="96" height="96" alt="" decoding="async" />
@@ -185,11 +195,12 @@
       <div class="welcomeDivider" aria-hidden="true"></div>
       <div class="welcomeAgesHeading">Choose a play level</div>
       <div class="welcomeAges" id="welcomeAges">
-        <button class="ageBtn" data-diff="Easy" data-band="just-starting" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span>Just starting</span></button>
-        <button class="ageBtn" data-diff="Medium" data-band="some-practice" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span>Some practice</span></button>
-        <button class="ageBtn" data-diff="all" data-band="any-challenge" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span>Any challenge</span></button>
+        <button class="ageBtn" data-diff="Easy" data-band="just-starting" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Just starting</span><span class="ageBtnHint">easy first games</span></span></button>
+        <button class="ageBtn" data-diff="Medium" data-band="some-practice" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Some practice</span><span class="ageBtnHint">a little more challenge</span></span></button>
+        <button class="ageBtn" data-diff="all" data-band="any-challenge" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Any challenge</span><span class="ageBtnHint">show me the full mix</span></span></button>
       </div>
       <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
+      </div><!-- /.welcomeScroll -->
       <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Start My First Mission</button>
     </div>
   </div>

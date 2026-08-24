@@ -4850,16 +4850,82 @@ html.theme--light #welcomeOverlay .welcomeLogo.logoDark{ display:none !important
   text-transform:none !important;
   font-size:16px !important;
 }
-/* v32 keeps the first-run CTA reachable without scrolling: it sticks to the
-   bottom of the screen while the level list scrolls behind it. */
-#welcomeOverlay .welcomePanel{ padding-bottom:0 !important; }
-#welcomeOverlay .welcomeMissionCount{ margin-bottom:4px !important; }
+/* §1.1 — v32 keeps the first-run CTA reachable without scrolling. It used to
+   do that with position:sticky, and a sticky footer cannot reserve its own
+   space: pinned at the viewport bottom it painted straight over whatever
+   content sat there. Measured at the default scroll offset, before any
+   interaction: the mission count lost 12px at 390x844, "Just starting" lost
+   22px at 320x568, "Any challenge" lost 9px at 568x320 and 18px at 844x390.
+   The panel is now a flex column exactly one viewport tall, the content above
+   the CTA is its own scroll region, and the CTA is that column's footer — a
+   sibling of the scroller, so no scroll offset can put content under it.
+   Nothing is clipped; the overflow moved into .welcomeScroll, which scrolls. */
+#welcomeOverlay{ overflow:hidden !important; }
+#welcomeOverlay .welcomePanel{
+  height:100vh;
+  height:100dvh;          /* follows the iOS URL bar; 100vh is the fallback */
+  max-height:100dvh;
+  min-height:0 !important;
+  padding-bottom:0 !important;
+  gap:0 !important;
+  justify-content:flex-start !important;
+}
+#welcomeOverlay .welcomeScroll{
+  flex:1 1 auto;
+  min-height:0;           /* without this a flex child refuses to scroll */
+  width:100%;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  /* .welcomePanel used to be the flex parent of this content and carried the
+     14px row gap; the scroller inherits that job along with the children. */
+  gap:14px;
+  /* Breathing room so the last line never sits flush against the CTA, and a
+     real measurable gap between helper text and the button. */
+  padding-bottom:12px;
+}
+/* A column flex container shrinks its children before it agrees to overflow.
+   That squashed the kit card to 30px around 86px of content, so the paddle and
+   ball tiles spilled out of the card and painted over the "Grab your kit"
+   eyebrow above it. Children keep their natural height; the scroller scrolls.
+   (Same guard .welcomePanel already carries for itself against the overlay.) */
+#welcomeOverlay .welcomeScroll > *{ flex:0 0 auto; }
+#welcomeOverlay .welcomeMissionCount{ margin-bottom:0 !important; }
 #welcomeOverlay .welcomeStart{
-  position:sticky;
-  bottom:0;
-  z-index:2;
-  margin-top:8px !important;
+  position:static;
+  flex:0 0 auto;
+  width:100%;
+  min-height:52px;        /* >= the 48px floor even before padding */
+  margin-top:0 !important;
   margin-bottom:calc(12px + env(safe-area-inset-bottom)) !important;
+}
+
+/* §1.3 — the level cards say what the level MEANS in play terms. No age
+   numbers: the data's age thresholds are per mission, not per band, so a
+   printed range here would be invented. */
+#welcomeOverlay .ageBtn{ align-items:center !important; }
+#welcomeOverlay .ageBtn .ageBtnText{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  text-align:left !important;
+  min-width:0;            /* let long hints wrap instead of pushing the radio */
+}
+#welcomeOverlay .ageBtn .ageBtnLabel{
+  font-size:15px !important;
+  font-weight:900;
+  line-height:1.25;
+}
+#welcomeOverlay .ageBtn .ageBtnHint{
+  margin-top:2px;
+  font-size:13px !important;
+  font-weight:600;
+  line-height:1.3;
+  color:var(--jv-text-2,var(--muted));
 }
 #welcomeOverlay .welcomeBrandLine{ margin-top:-4px; }
 #welcomeOverlay .welcomeBrandLine .welcomeMascot{ width:100px !important; }
