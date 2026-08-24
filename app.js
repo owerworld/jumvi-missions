@@ -3778,6 +3778,45 @@ function missionGateRemainingMs(id){
   const openFor = Date.now() - (missionOpenedAt || 0);
   return Math.max(0, missionGateMsFor(id) - openFor);
 }
+
+/* Read-only test seam for tools/check-mission-play-state.mjs.
+ *
+ * The play state lives in script-scope `let`s (timerState, timerLeft,
+ * timerEndAt, the gate sets), which a test driver cannot reach: top-level
+ * function declarations land on window, `let` bindings never do. Without this
+ * the only way to assert "exactly one timer interval" or "the gate is closed"
+ * is to read it back out of rendered text, which tests the wording rather than
+ * the state.
+ *
+ * It only reads. Nothing here can start, stop or complete anything, so it
+ * cannot become a back door into the progress state. It deliberately carries
+ * no child name, profile name, certificate name or device identifier — the
+ * whole point is that a play-state trace can be logged without carrying any of
+ * that with it. */
+window.__jumviPlayProbe = function(){
+  return {
+    missionId: (typeof _openMissionId !== "undefined" ? _openMissionId : null),
+    lastOpenedId: (typeof lastOpenedId !== "undefined" ? lastOpenedId : null),
+    timerState,
+    timerTotal,
+    timerLeft,
+    timerEndAt,
+    timerIntervalLive: timerInterval != null,
+    countdownLive: (timerCountdownInterval != null || timerCountdownTimeout != null),
+    countdownToken: timerCountdownToken,
+    timerFinishedFor: Array.from(_timerFinishedFor),
+    gateTotalMs: (lastOpenedId != null ? missionGateMsFor(lastOpenedId) : 0),
+    gateRemainingMs: missionGateRemainingMs(lastOpenedId),
+    missionOpenedAt,
+    doneSize: done.size,
+    doneIds: Array.from(done).sort((a,b)=>a-b),
+    xp: (typeof xpFromDoneSet === "function" ? xpFromDoneSet(done) : null),
+    streakCount, bestStreak, lastActiveIso,
+    autoDoneOnEnd,
+    narrationPending: (typeof _missionNarrationPending !== "undefined" ? _missionNarrationPending : null),
+    undoBarVisible: !(document.getElementById("undoBar")?.hidden ?? true)
+  };
+};
 let timerCountdownInterval = null;
 let timerCountdownTimeout = null;
 let timerCountdownToken = 0;
@@ -5413,16 +5452,36 @@ function restoreJourneySnapshot(snap){
 }
 
 let _undoTimer = null;
+/* Which completion the Undo button currently belongs to, or null when the
+ * offer has been used or has run out. The bar used to be closed by setting
+ * bar.hidden alone, which hides it (.undoBar[hidden]{display:none}) but leaves
+ * the click handler bound and the snapshot alive in its closure: the five
+ * second promise was about visibility, not about capability, and a programmatic
+ * click after the window still rolled a completion back. Nulling this is what
+ * actually ends the offer. */
+let _undoOffer = null;
+function endUndoOffer(){
+  clearTimeout(_undoTimer);
+  _undoTimer = null;
+  _undoOffer = null;
+  const bar = document.getElementById("undoBar");
+  if(bar) bar.hidden = true;
+}
 function showUndoBar(id, journeySnapshot){
   const bar = document.getElementById("undoBar");
   const btn = document.getElementById("undoBtn");
   if(!bar || !btn) return;
   bar.hidden = false;
   clearTimeout(_undoTimer);
-  _undoTimer = setTimeout(()=>{ bar.hidden = true; }, 5000);
+  // A new completion supersedes any older offer outright, so an expired or
+  // superseded snapshot can never be applied to the wrong mission.
+  _undoOffer = { id, snapshot: journeySnapshot };
+  _undoTimer = setTimeout(endUndoOffer, 5000);
   btn.onclick = ()=>{
-    clearTimeout(_undoTimer);
-    bar.hidden = true;
+    // Gone means gone: after the window, or after this offer has been used,
+    // there is nothing to undo even if something reaches the button.
+    if(!_undoOffer || _undoOffer.id !== id) return;
+    endUndoOffer();
     if(done.has(id)){
       if(_badgeUnlockTimer){ clearTimeout(_badgeUnlockTimer); _badgeUnlockTimer = null; }
       done.delete(id);
@@ -5722,8 +5781,16 @@ function updateToggleDoneGateUI(){
   if(waitMs > 0){
     btnToggleDone.classList.add("btnGateWait");
     const secs = Math.ceil(waitMs / 1000);
+    /* §4.6 — "After you play (68s)" put a second clock on a screen that already
+       has one, and never said which was which. On mission 24 the play ring
+       counts 207 seconds down while this read 68: the gate is a floor on real
+       play, not the length of the game, and a parent has no way to know that
+       from a bare number in brackets. Naming the action removes the collision —
+       the ring says how long the game runs, this says how much longer to play
+       before finishing is the next step. Turkish copy is deliberately
+       untouched; that route is out of scope for this round. */
     btnToggleDone.innerHTML = `<i class="jic jic-play" aria-hidden="true"></i> ${
-      tr ? `Oynadıktan sonra (${secs}sn)` : `After you play (${secs}s)`}`;
+      tr ? `Oynadıktan sonra (${secs}sn)` : `Play for about ${secs}s more`}`;
     _gateUiTimer = setTimeout(updateToggleDoneGateUI, 1000);
   }else{
     btnToggleDone.classList.remove("btnGateWait");
