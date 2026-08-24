@@ -495,18 +495,18 @@
           </a>
         </div>
 
-        <!-- Hidden stubs — JS uyumluluk icin (search/filter logic'i hayatta) -->
-        <div id="searchToggleBtn" style="display:none" aria-hidden="true"></div>
-        <div id="searchBox" style="display:none">
-          <input id="searchInput" type="text" style="display:none" />
-        </div>
-        <button id="btnOnlyUnfinished" type="button" style="display:none" aria-hidden="true"></button>
-        <button id="btnToggleFilters" type="button" style="display:none" aria-hidden="true"></button>
-        <div id="filters" style="display:none"></div>
-        <div id="filterGroups" style="display:none">
-          <div id="filterPlayers" style="display:none"></div>
-          <div id="filterDifficulty" style="display:none"></div>
-        </div>
+        <!-- §2.1 — the hidden search/filter stubs that used to sit here are
+             gone. They were eight display:none, 0x0, aria-hidden elements kept
+             "for JS compatibility": a search input nobody could type in, a
+             Filters toggle nobody could press, and chip rows rendered into
+             containers that are never displayed. v32 replaced the flat list
+             with the pack path above, and #list is display:none by design —
+             renderList() returns early on purpose, for the QR first-paint.
+             Making them visible would mean reinstating the retired list view,
+             which is a product decision, not a defect fix; so they are removed
+             instead, along with the bindings that could never fire. The state
+             they used to drive is handled where it is still read — see the
+             note on getVisibleMissions() in app.js. -->
       </div>
       <!-- ============== TAB: FAMILY ==============
            Internal route remains "modes" for backward compatibility (analytics,

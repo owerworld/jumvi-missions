@@ -1152,10 +1152,6 @@ function ageEligibleMissions(){
  * Refs
  * ======================= */
 const listEl = document.getElementById("list");
-const filtersEl = document.getElementById("filters");
-const filterCategoryEl = document.getElementById("filterCategory");
-const filterPlayersEl = document.getElementById("filterPlayers");
-const filterDifficultyEl = document.getElementById("filterDifficulty");
 const progressText = document.getElementById("progressText");
 const progressSub = document.getElementById("progressSub");
 const progressFill = document.getElementById("progressBarFill");
@@ -1297,8 +1293,6 @@ const badgesBackdrop = document.getElementById("badgesBackdrop");
 const btnBadgesClose = document.getElementById("btnBadgesClose");
 const badgesList = document.getElementById("badgesList");
 
-const searchInput = document.getElementById("searchInput");
-const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
 const soundToggle = document.getElementById("soundToggle");
 
 const btnSolidBg = document.getElementById("btnSolidBg");
@@ -3164,12 +3158,9 @@ function applyBackupPayload(p){
   }
 
   // refresh UI
-  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
   applyBodyClasses();
   renderModeChips();
   renderSoundToggle();
-  renderFilters();
-  renderFilterGroups();
   renderList();
   renderStreakUI();
   renderDailyUI();
@@ -3193,112 +3184,38 @@ function setDoneFromArray(arr){
   bumpDoneVersion();
 }
 
-function renderFilterGroups(){
-  if(filterCategoryEl){
-    filterCategoryEl.innerHTML = "";
-    CATEGORY_OPTIONS.forEach(opt=>{
-      const b = document.createElement("button");
-      b.className = "chip" + (opt===currentCategory ? " active" : "");
-      b.textContent = opt === "all" ? "All" : opt;
-      b.onclick = ()=>{
-        clickSound("click");
-        currentCategory = setState("currentCategory", opt);
-        renderFilterGroups();
-        renderList();
-      };
-      filterCategoryEl.appendChild(b);
-    });
-  }
-  if(filterPlayersEl){
-    filterPlayersEl.innerHTML = "";
-    PLAYERS_OPTIONS.forEach(opt=>{
-      const b = document.createElement("button");
-      b.className = "chip" + (opt===currentPlayers ? " active" : "");
-      b.textContent = opt === "all" ? "All" : opt;
-      b.onclick = ()=>{
-        clickSound("click");
-        currentPlayers = setState("currentPlayers", opt);
-        renderFilterGroups();
-        renderList();
-      };
-      filterPlayersEl.appendChild(b);
-    });
-  }
-  if(filterDifficultyEl){
-    filterDifficultyEl.innerHTML = "";
-    DIFFICULTY_OPTIONS.forEach(opt=>{
-      const b = document.createElement("button");
-      b.className = "chip" + (opt===currentDifficulty ? " active" : "");
-      b.textContent = opt === "all" ? "All" : opt;
-      b.onclick = ()=>{
-        clickSound("click");
-        currentDifficulty = setState("currentDifficulty", opt);
-        renderFilterGroups();
-        renderList();
-      };
-      filterDifficultyEl.appendChild(b);
-    });
-  }
-}
+// §2.1 — renderFilterGroups() and renderFilters() used to build category,
+// player, difficulty and pack chip rows here. Every container they wrote into
+// (#filterCategory, #filterPlayers, #filterDifficulty, #filters) was either
+// display:none or absent from the markup entirely, so the chips were created,
+// styled and wired on every call and shown to nobody. The comment on
+// pack_view above already said as much about the pack row. Removed with the
+// stubs; the pack path in the Missions tab is how packs are browsed.
 
-function renderFilters(){
-  filtersEl.innerHTML = "";
-  PACKS.forEach(p=>{
-    const b = document.createElement("button");
-    b.className = "chip" + (p.key===currentPack ? " active" : "");
-    b.textContent = p.name;
-    b.onclick = ()=>{
-      clickSound("click");
-      currentPack = setState("currentPack", p.key);
-      lsSet(PACK_KEY, currentPack);
-      renderFilters();
-      renderList();
-    };
-    filtersEl.appendChild(b);
-  });
-}
-
+/* The candidate set for "Pick one for me" and for "Next".
+ *
+ * §2.1 — this used to narrow by currentPack, currentCategory, currentPlayers,
+ * onlyUnfinished and searchQuery as well. Those were the flat list view's
+ * filters, and that view is retired; every control that could change them was
+ * a display:none stub. currentPack and onlyUnfinished are also persisted to
+ * localStorage, so a value left behind by an older build or restored from a
+ * backup kept narrowing this set forever with nothing on screen to show it or
+ * clear it. Measured on a seeded profile: with jumvi_current_pack_v1 set to
+ * "Beach/Park", twenty-five presses of "Pick one for me" could only ever reach
+ * three of the thirty-six missions.
+ *
+ * So the only filter left is the one the family actually chose and can still
+ * change — the onboarding play level. The variables stay: applyBackupPayload
+ * reads and writes them and the v1 backup format must keep round-tripping.
+ */
 function getVisibleMissions(){
-  const key = [
-    currentPack,
-    currentCategory,
-    currentPlayers,
-    currentDifficulty,
-    onlyUnfinished ? "1" : "0",
-    searchQuery || "",
-    String(_doneVersion)
-  ].join("|");
+  const key = [currentDifficulty, String(_doneVersion)].join("|");
   if(key === _visibleCacheKey) return _visibleCacheList;
 
   let list = missions;
 
-  if(currentPack !== "all"){
-    list = list.filter(x=>x.pack===currentPack);
-  }
-
-  if(currentCategory !== "all"){
-    list = list.filter(x=>mapPackToCategory(x.pack) === currentCategory);
-  }
-
-  if(currentPlayers !== "all"){
-    list = list.filter(x=>normalizePlayers(x.players) === currentPlayers);
-  }
-
   if(currentDifficulty !== "all"){
     list = list.filter(x=>diffLabel(x.difficulty) === currentDifficulty);
-  }
-
-  if(onlyUnfinished){
-    list = list.filter(x=>!done.has(x.id));
-  }
-
-  if(searchQuery){
-    const q = searchQuery.toLowerCase();
-    list = list.filter(x=>
-      x.title.toLowerCase().includes(q) ||
-      x.pack.toLowerCase().includes(q) ||
-      x.steps.join(" ").toLowerCase().includes(q)
-    );
   }
 
   list = list.slice().sort((a,b)=>
@@ -6262,32 +6179,9 @@ document.getElementById("btnShare").onclick = async ()=>{
 
 // btnChoosePack removed from UI — pack filter row handles this directly
 
-searchInput.addEventListener("input", ()=>{
-  searchQuery = setState("searchQuery", searchInput.value || "");
-  renderList();
-});
-
-btnOnlyUnfinished.onclick = ()=>{
-  clickSound("click");
-  onlyUnfinished = setState("onlyUnfinished", !onlyUnfinished);
-  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
-  persistOnly();
-  renderList();
-};
-
-// Filters toggle (Players + Difficulty collapsed by default)
-const btnToggleFilters = document.getElementById("btnToggleFilters");
-const filterGroupsEl = document.getElementById("filterGroups");
-let filtersOpen = false;
-if(btnToggleFilters && filterGroupsEl){
-  btnToggleFilters.addEventListener("click", ()=>{
-    clickSound("click");
-    filtersOpen = !filtersOpen;
-    filterGroupsEl.style.display = filtersOpen ? "" : "none";
-    btnToggleFilters.classList.toggle("active", filtersOpen);
-    btnToggleFilters.innerHTML = filtersOpen ? '<i class="jic jic-x" aria-hidden="true"></i> Filters' : '<i class="jic jic-settings" aria-hidden="true"></i> Filters';
-  });
-}
+// §2.1 — the search input, "only unfinished" toggle and Filters disclosure
+// used to be bound here. Their elements were display:none stubs, so none of
+// these handlers could ever run; they are removed with the markup.
 
 /** =======================
  * New UI buttons
@@ -7200,7 +7094,6 @@ function showWelcomeOverlay(){
       // me + "Next" — so they stay consistent with the welcome count.
       try {
         currentDifficulty = setState("currentDifficulty", selectedDiff);
-        renderFilterGroups();
         updateProgress({ deferStats: true });
         // Make the selected first mission the home-card pick too, so closing the
         // sheet never lands on a different recommendation.
@@ -8171,20 +8064,6 @@ function initBottomNav(){
   // Browse tab Path-only — toggle kaldirildi
   applyBrowseView();
 
-  // Search toggle (Browse tab)
-  const searchToggle = document.getElementById("searchToggleBtn");
-  const searchBox = document.getElementById("searchBox");
-  if(searchToggle && searchBox){
-    searchToggle.addEventListener("click", ()=>{
-      clickSound("click");
-      const isOpen = searchBox.style.display !== "none";
-      searchBox.style.display = isOpen ? "none" : "";
-      if(!isOpen){
-        const inp = document.getElementById("searchInput");
-        if(inp) setTimeout(()=> inp.focus(), 60);
-      }
-    });
-  }
 }
 
 /** =======================
@@ -9026,8 +8905,6 @@ soundToggle.onclick = ()=>{
  * Init
  * ======================= */
 function init(){
-  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
-
   applyBodyClasses();
   renderModeChips();
   applyTheme();
@@ -9049,8 +8926,6 @@ function init(){
   }
 
   renderSoundToggle();
-  renderFilters();
-  renderFilterGroups();
   const _dash = document.getElementById("parentDashboard");
   if(_dash) _dash.style.display = done.size === 0 ? "none" : "";
   updateProgress({ deferStats: true });
