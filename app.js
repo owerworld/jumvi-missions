@@ -2360,6 +2360,135 @@ function getSafetyText(ms){
   return base;
 }
 
+/* Space is not a field in data.js and inventing one per mission would be
+ * guesswork. The pack already carries it honestly — Indoor Compact exists
+ * because those games fit a living room, Beach/Park because those need
+ * outdoor room — so it is derived, not authored. */
+/* §3.3 — the four missions the quality audit flagged for physical load:
+ * arc height (7), throwing to the sky (11, 31) and stepping back over a long
+ * rally (36). None of them is removed and none of their ids or safety data
+ * change; each gains a gentler way in and an explicit place to stop.
+ *
+ * The wording deliberately reuses the vocabulary already in the safety data
+ * ("stop stepping back when throws get wild", "throw UP, never AT"). Nothing
+ * here is a new safety claim, a distance a physiotherapist would recognise, or
+ * a promise about the product — it is the same advice, said before the throw
+ * instead of after it. */
+const MISSION_EASIER = {
+  7: {
+    why: "This one asks for a high, floaty arc.",
+    easier: "Stand one big step closer and throw lower — a small rainbow still counts.",
+    cap: "Keep the arc no higher than the thrower can reach with one arm up.",
+    setup: "A grown-up picks the spot to stand before the first throw.",
+    stop: "Stop stepping back the moment a throw goes wild.",
+    quickSeconds: 45
+  },
+  11: {
+    why: "This one sends the ball up above head height.",
+    easier: "Throw only as high as you can catch without moving your feet.",
+    cap: "No higher than the thrower can reach with one arm up.",
+    setup: "A grown-up checks there is nothing overhead first.",
+    stop: "Stop if anyone has to walk backwards to reach it.",
+    quickSeconds: 45
+  },
+  31: {
+    why: "This one is a high throw, straight up.",
+    easier: "Toss it up and catch it yourself a few times before adding a partner.",
+    cap: "No higher than the thrower can reach with one arm up.",
+    setup: "A grown-up checks there is nothing overhead first.",
+    stop: "Stop if the ball starts landing behind you.",
+    quickSeconds: 45
+  },
+  36: {
+    why: "This one is long, and it asks you to keep stepping back.",
+    easier: "Stay at one distance the whole time instead of stepping back.",
+    cap: "Three steps back is far enough.",
+    setup: "A grown-up sets the far line before you start.",
+    stop: "Stop stepping back when throws get wild.",
+    quickSeconds: 60
+  }
+};
+
+/* §3.5 — who does what, before Start.
+ *
+ * Every one of the 36 missions needs at least two people; none is solo. Eight
+ * need three or four, and those are the ones where a family stands in the
+ * garden working out the turns instead of playing. The roles come from the
+ * mission's own player count, not from a hand-written table, so nothing here
+ * can drift out of step with the data. */
+function renderMissionPreflight(ms){
+  const wrap = document.getElementById("missionPreflight");
+  const roles = document.getElementById("missionRoleCard");
+  const easier = document.getElementById("missionEasier");
+  if(!wrap || !roles || !easier) return;
+
+  /* ── roles ───────────────────────────────────────────────────────────── */
+  const players = String(ms.players || "2");
+  const maxPlayers = Number(players.split("–").pop()) || 2;
+  const needsThird = maxPlayers >= 3;
+  if(needsThird){
+    const caller = maxPlayers >= 4
+      ? "One player calls the switches and keeps the count."
+      : "The player who is out this turn calls and counts.";
+    const twoOnly = maxPlayers >= 4
+      ? "Only two of you today? Play it as a pair and take the calling in turns."
+      : "Only two of you today? One of you throws and calls at the same time.";
+    roles.innerHTML =
+      `<b class="preflightHead"><i class="jic jic-users" aria-hidden="true"></i> Before you start — who does what</b>` +
+      `<ul class="preflightList">` +
+      `<li><b>Who throws?</b> Whoever has the ball starts.</li>` +
+      `<li><b>Who catches?</b> The player facing the thrower.</li>` +
+      `<li><b>Who calls and counts?</b> ${escapeHtml(caller)}</li>` +
+      `<li><b>When do we switch?</b> Every time the count resets, move round one place.</li>` +
+      `<li><b>Where do we stand?</b> In a ring, one to three metres apart.</li>` +
+      `<li>${escapeHtml(twoOnly)}</li>` +
+      `</ul>`;
+    roles.hidden = false;
+  }else{
+    /* A pair still benefits from being told it is a pair — quietly, in one
+       line, because two people do not need a list to work out the turns. */
+    roles.innerHTML =
+      `<b class="preflightHead"><i class="jic jic-users" aria-hidden="true"></i> This one is for two</b>` +
+      `<p class="preflightPair">One throws, one catches — swap over whenever you like. There is no solo version of this game.</p>`;
+    roles.hidden = false;
+  }
+
+  /* ── gentler way in, for the four flagged missions ────────────────────── */
+  const cfg = MISSION_EASIER[ms.id];
+  if(cfg){
+    easier.innerHTML =
+      `<b class="preflightHead"><i class="jic jic-shield" aria-hidden="true"></i> Take it gently</b>` +
+      `<p class="preflightWhy">${escapeHtml(cfg.why)}</p>` +
+      `<ul class="preflightList">` +
+      `<li><b>Start easier.</b> ${escapeHtml(cfg.easier)}</li>` +
+      `<li><b>How high, how far.</b> ${escapeHtml(cfg.cap)}</li>` +
+      `<li><b>Grown-up first.</b> ${escapeHtml(cfg.setup)}</li>` +
+      `<li><b>When to stop.</b> ${escapeHtml(cfg.stop)}</li>` +
+      `</ul>` +
+      `<button type="button" class="btn btnGhost preflightQuick" id="btnQuickRound" ` +
+      `data-seconds="${cfg.quickSeconds}">Quick round — ${cfg.quickSeconds}s</button>`;
+    easier.hidden = false;
+    const quick = document.getElementById("btnQuickRound");
+    if(quick) quick.onclick = ()=>{
+      clickSound("click");
+      trackEvent("Mission Quick Round", { id: ms.id, seconds: cfg.quickSeconds });
+      showCountdownThenStart(cfg.quickSeconds);
+    };
+  }else{
+    easier.innerHTML = "";
+    easier.hidden = true;
+  }
+
+  wrap.hidden = roles.hidden && easier.hidden;
+}
+
+function missionSpaceLabel(ms){
+  const pack = ms && ms.pack;
+  if(pack === "Indoor Compact") return "Small space";
+  if(pack === "Beach/Park") return "Outdoor";
+  return "Indoor or out";
+}
+
 function getKidsTip(ms){
   const tipsByPack = {
     "Reflex Rush": [
@@ -4702,9 +4831,32 @@ function openMission(id){
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
+    <span class="tag">${escapeHtml(missionSpaceLabel(ms))}</span>
     <span class="tag xpTag">+${missionXp(ms)} XP</span>
     ${bestChip}
   `;
+
+  /* §3.1 — the safety band names THIS game.
+   *
+   * It was one hardcoded sentence in index.html, identical on all 36 sheets:
+   * "Throw below face level · Stand 1–3 m apart · Adult nearby". Every mission
+   * carries its own safety line in data.js — "Always throw UP, never AT each
+   * other", "Stop stepping back when throws get wild" — and the only place it
+   * appeared was inside a collapsed "More tips & safety" accordion, so in
+   * practice nobody read the line written for the game they were about to
+   * play. The mission's own words lead now; the standing rules stay underneath
+   * because they are true for all 36 and dropping them would lose real safety
+   * information. Nothing new is claimed — both strings already existed. */
+  try { renderMissionPreflight(ms); } catch(_){}
+
+  const safetyBand = document.querySelector(".missionSafetyLine");
+  if(safetyBand){
+    const own = String(ms.safety || "").trim();
+    safetyBand.innerHTML = own
+      ? `<b class="safetyOwn">${escapeHtml(own)}</b>` +
+        `<span class="safetyAlways">Throw below face level · Stand 1–3 m apart · Adult nearby</span>`
+      : `<span class="safetyAlways">Throw below face level · Stand 1–3 m apart · Adult nearby</span>`;
+  }
 
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
   // Guide Leo beside the STEPS header (Task 4b/c): decorative pointing pose,
@@ -5492,6 +5644,7 @@ function showUndoBar(id, journeySnapshot){
       renderList();
       renderDailyChallenge();
       if(typeof renderMissionPath === "function"){ try{ renderMissionPath(); }catch(_){} }
+      refreshFamilySurfaces();
       clickSound("click");
       if(lastOpenedId === id) openMission(id);
       showToast("Marked as not done");
@@ -5554,6 +5707,7 @@ function markMissionDone(id, source="manual"){
   if(typeof renderMissionPath === "function"){
     try { renderMissionPath(); } catch(_){}
   }
+  refreshFamilySurfaces();
   clickSound("success");
   celebrate();
   window.JumviMusic?.cue("playMissionComplete");
@@ -5757,16 +5911,21 @@ function renderMissionPlayPanel(id, waitMs){
   const chip = document.getElementById("playPanelChip");
   const dial = document.getElementById("playPanelDial");
   const stateText = document.getElementById("playPanelStateText");
-  if(chip) chip.textContent = gateOpen
+  /* This runs once a second while the gate counts down, and the panel is an
+   * aria-live region. Assigning textContent fires a mutation even when the
+   * string is identical, so writing "Playing now" sixty times announced the
+   * panel sixty times. Only the transition is news; write only on change. */
+  const setText = (el, value) => { if(el && el.textContent !== value) el.textContent = value; };
+  setText(chip, gateOpen
     ? (tr ? "Aşama tamam" : "Gate complete")
-    : (tr ? "Şimdi oynuyor" : "Playing now");
+    : (tr ? "Şimdi oynuyor" : "Playing now"));
   if(dial){
-    dial.textContent = gateOpen ? "" : String(Math.ceil(waitMs / 1000)) + "s";
+    setText(dial, gateOpen ? "" : String(Math.ceil(waitMs / 1000)) + "s");
     dial.classList.toggle("done", gateOpen);
   }
-  if(stateText) stateText.textContent = gateOpen
+  setText(stateText, gateOpen
     ? (tr ? "Süre doldu! Harika oynadınız." : "Time's up! Great rallying.")
-    : (tr ? "Leo sayıyor — oynamaya devam." : "Leo is counting the rally — keep playing.");
+    : (tr ? "Leo sayıyor — oynamaya devam." : "Leo is counting the rally — keep playing."));
 }
 
 function updateToggleDoneGateUI(){
@@ -7895,6 +8054,21 @@ function levelNameFor(doneCount){
     if(info && info.current) return isTurkishUI() ? info.current.tr : info.current.en;
   }catch(_){}
   return isTurkishUI() ? "Çaylak Oyuncu" : "Rookie Player";
+}
+
+/* The Family surfaces used to render only from switchTab("modes"). That is
+ * fine while nothing changes underneath them, and wrong the moment progress
+ * moves somewhere else: completing a mission, or undoing one, left the Family
+ * streak card showing the old number until the family happened to visit the
+ * tab. Measured after an Undo, the card still read "Family streak: 0 days"
+ * from before the completion and only corrected on a tab bounce.
+ *
+ * Cheap enough to call on every progress mutation — these read localStorage
+ * and write text, and they bail immediately when their elements are absent. */
+function refreshFamilySurfaces(){
+  try{ if(typeof renderFamilyProgressCard === "function") renderFamilyProgressCard(); }catch(_){}
+  try{ if(typeof renderFamilyInsights === "function") renderFamilyInsights(); }catch(_){}
+  try{ if(typeof renderFamilyTeamsPreview === "function") renderFamilyTeamsPreview(); }catch(_){}
 }
 
 function renderFamilyProgressCard(){

@@ -952,6 +952,17 @@
         </div>
       </div>
 
+      <!-- §3.3/§3.5 — pre-play card. Two things a family needs BEFORE the
+           first throw and cannot get from the steps: who is doing what when
+           more than two people are playing, and a gentler way in for the
+           games that ask for height or distance. Rendered by
+           renderMissionPreflight() in app.js; empty and hidden for missions
+           that need neither. -->
+      <section class="missionPreflight" id="missionPreflight" hidden>
+        <div class="preflightRoles" id="missionRoleCard" hidden></div>
+        <div class="preflightEasier" id="missionEasier" hidden></div>
+      </section>
+
       <!-- Score Tracker — sadece tracking açıksa görünür -->
       <div class="scoreTracker" id="scoreTracker" style="display:none">
         <div class="scoreTrackerHeader">
@@ -1035,7 +1046,16 @@
         <div class="playPanelTitle" id="playPanelTitle">Eyes on the ball!</div>
         <div class="playPanelSub" id="playPanelSub">Put the phone down &mdash; Leo will let you know.</div>
         <div class="playPanelStateRow">
-          <span class="playPanelDial" id="playPanelDial"></span>
+          <!-- §3.6 — the dial is rewritten every second while the gate counts
+               down, and it sits inside this panel's aria-live region: measured
+               at 30 mutations in 10 seconds of play, i.e. a screen reader
+               re-announcing the panel roughly three times a second at exactly
+               the moment the product is telling the family to put the phone
+               down. The number is not lost — the completion button carries the
+               same countdown as its label, and that is a real control the user
+               can navigate to. The chip and the state line still change once,
+               on the gate transition, which is the announcement worth making. -->
+          <span class="playPanelDial" id="playPanelDial" aria-hidden="true"></span>
           <span class="playPanelStateText" id="playPanelStateText"></span>
         </div>
       </section>

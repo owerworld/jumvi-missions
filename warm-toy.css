@@ -3825,8 +3825,45 @@ html.theme--light .bottomNav, html.theme--dark .bottomNav{
   line-height:1.12 !important;
   font-weight:950 !important;
 }
-/* v32 keeps the sheet header clean — the chips move out of it. */
-#sheet .sheetMeta{ display:none !important; }
+/* §3.1 — the metadata row is back on the sheet.
+   The v32 pass hid it with the note "the chips move out of it", but they were
+   never moved anywhere: difficulty, time, players and age were rebuilt on
+   every open and shown to nobody, so the sheet answered "what do we need"
+   (You need: 2 paddles) without ever answering "how long, how many of us, is
+   this for my four-year-old". Restyled to v32's flat pills rather than
+   restoring the old chip look. */
+#sheet .sheetMeta{
+  display:flex !important;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+#sheet .sheetMeta .tag{
+  padding:5px 10px;
+  border-radius:var(--jv-r-pill,999px);
+  background:var(--jv-card-2,#dbe7f4);
+  border:0;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:850;
+  line-height:1.25;
+}
+
+/* The safety band leads with the line written for THIS mission, then the
+   rules that hold for all 36. Same band, same position — two weights instead
+   of one so the specific instruction is what the eye lands on. */
+#sheet .missionSafetyLine{ display:block; }
+#sheet .missionSafetyLine .safetyOwn{
+  display:block;
+  font-weight:900;
+}
+#sheet .missionSafetyLine .safetyAlways{
+  display:block;
+  margin-top:3px;
+  font-weight:700;
+  opacity:.82;
+  font-size:.94em;
+}
 .mSectionLabel{
   margin:16px 0 8px;
   color:var(--jv-text-2,var(--muted));
@@ -5203,3 +5240,106 @@ html.theme--dark :focus-visible{
 }
 /* Never let the ring be clipped away by a scroll container or a rounded card. */
 :focus-visible{ position:relative; z-index:5; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   §3.3 / §3.5 — pre-play card (roles, and a gentler way into the four
+   height/distance missions). Uses the sheet's existing card tokens; no new
+   colours, no new type scale.
+   ══════════════════════════════════════════════════════════════════════════ */
+#sheet .missionPreflight{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin:14px 0 4px;
+}
+#sheet .missionPreflight[hidden]{ display:none !important; }
+#sheet .preflightRoles,
+#sheet .preflightEasier{
+  padding:13px 14px;
+  border:1px solid var(--jv-line,var(--border));
+  border-radius:var(--jv-r-card,20px);
+  background:var(--jv-card,var(--card));
+}
+#sheet .preflightRoles[hidden],
+#sheet .preflightEasier[hidden]{ display:none !important; }
+#sheet .preflightHead{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:950;
+  color:var(--jv-text,var(--text));
+}
+#sheet .preflightList{
+  margin:9px 0 0;
+  padding:0 0 0 2px;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  font-size:14px;
+  line-height:1.4;
+  color:var(--jv-text-2,var(--muted));
+}
+#sheet .preflightList li{ padding-left:14px; position:relative; }
+#sheet .preflightList li::before{
+  content:"";
+  position:absolute;
+  left:0; top:.55em;
+  width:5px; height:5px;
+  border-radius:50%;
+  background:var(--jv-blue-strong,#1d6fb5);
+}
+#sheet .preflightList b{ color:var(--jv-text,var(--text)); font-weight:900; }
+#sheet .preflightPair,
+#sheet .preflightWhy{
+  margin:7px 0 0;
+  font-size:14px;
+  line-height:1.4;
+  color:var(--jv-text-2,var(--muted));
+}
+#sheet .preflightQuick{
+  margin-top:11px;
+  width:100%;
+  min-height:44px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Landscape phones: keep the finish button in the first viewport.
+
+   While a mission is playing #sheetBody is hidden and the "Eyes on the ball"
+   panel is laid out directly above .sheetActions. That panel is 346px tall —
+   more than a 320px landscape viewport on its own — so the completion button
+   landed at y=489 on a 390px-tall screen. It was reachable (the sheet scrolls,
+   and scrollIntoView plus a hit test confirmed it), but a parent glancing at a
+   phone lying on its side saw no way to finish.
+
+   The panel is compacted rather than removed: §3.6 wants that cue on screen
+   during play, and it is the thing telling the family to put the phone down.
+   Portrait is untouched — this only applies where height is the constraint.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-height: 460px) and (orientation: landscape){
+  #sheet .missionPlayPanel{
+    padding:10px 12px !important;
+    gap:4px !important;
+  }
+  #sheet .playPanelLeo{
+    width:44px !important;
+    height:44px !important;
+  }
+  #sheet .playPanelTitle{ font-size:17px !important; line-height:1.15 !important; }
+  #sheet .playPanelSub{ font-size:12.5px !important; line-height:1.25 !important; }
+  #sheet .playPanelChip{ font-size:11px !important; padding:3px 9px !important; }
+  #sheet .playPanelStateRow{ gap:8px !important; margin-top:4px !important; }
+  #sheet .playPanelDial{ width:46px !important; height:46px !important; }
+  #sheet .playPanelStateText{ font-size:12.5px !important; line-height:1.3 !important; }
+  #sheet .sheetActions{ padding-bottom:max(8px, calc(6px + env(safe-area-inset-bottom))) !important; }
+  #sheet .sheetActions .holdBtn{ min-height:46px !important; }
+  /* Once play has started the header is the least useful thing on screen: the
+     family has read the title and the metadata and is holding a paddle. Scoped
+     to .isPlaying so both stay full size while they are still deciding. */
+  #sheet.isPlaying .sheetMeta{ display:none !important; }
+  #sheet.isPlaying .sheetTitle{ font-size:17px !important; }
+  #sheet.isPlaying .sheetPack{ font-size:11px !important; }
+  #sheet.isPlaying .sheetHead{ padding-bottom:4px !important; }
+}
