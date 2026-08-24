@@ -160,7 +160,23 @@ export function initHub3D(opts) {
   container.appendChild(exitBtn);
   try {
     history.pushState({ jumviHub: true }, '');
-    var _onHubPop = function () { leaveHub(); window.removeEventListener('popstate', _onHubPop); };
+    var _onHubPop = function () {
+      // Any popstate used to mean "the family pressed Back, leave the island".
+      // It does not. app.js pushes its own {jumviSheet} entry when a mission
+      // opens from a gate, and closeMission() drops that entry with
+      // history.back(). That back is internal and lands right back ON this
+      // sentinel — but this listener read it as Back and walked them out.
+      //
+      // The visible symptom was that finishing a mission at a gate dumped you
+      // onto the Play tab with the island gone, and the queued walk to the next
+      // gate then opened a hub-themed mission sheet on top of Play.
+      //
+      // If our sentinel is still the current entry, the hub is still where the
+      // family is: stay, and keep listening for the real Back.
+      if (history.state && history.state.jumviHub) return;
+      leaveHub();
+      window.removeEventListener('popstate', _onHubPop);
+    };
     window.addEventListener('popstate', _onHubPop);
   } catch (e) {}
 
@@ -3597,10 +3613,9 @@ export function initHub3D(opts) {
   // straight into it — same one-tap-per-mission rhythm as arriving fresh at
   // the gate. If the pack just finished, do nothing here; the medal
   // ceremony below (updateGateDecor's isChampion branch) is the payoff.
-  window._hub3dAdvance = function (packKey) {
+  window._hub3dAdvance = function (packKey, earnedByMissionId) {
     var packMissions = packMissionList(packKey);
-    var nextUndone = packMissions.find(function (m) { return !done.has(m.id); });
-    if (!nextUndone) return;
+    if (!packMissions.some(function (m) { return !done.has(m.id); })) return;
     var start = performance.now();
     // Single-overlay rule (audit Bulgu #12): after the growth reveal plays,
     // do NOT pop the next mission card on top of a reward overlay. If the
@@ -3614,6 +3629,23 @@ export function initHub3D(opts) {
         setTimeout(tryOpen, 300);
         return;
       }
+      // This walk was earned by finishing a mission. If that completion has
+      // since been undone — and the 5s Undo bar sits squarely inside the wait
+      // above — then it was not earned, and the walk is off. Without this a
+      // family could tap Undo, close the sheet, and be marched straight back
+      // into a mission anyway.
+      if (earnedByMissionId != null && !done.has(earnedByMissionId)) return;
+      // Which mission is next is decided HERE, not when the walk was queued.
+      // It used to be captured up front, and that snapshot went stale across
+      // the wait: complete mission 7, tap Undo, and the queued advance still
+      // opened mission 8 — a mission the family never chose.
+      var nextUndone = packMissions.find(function (m) { return !done.has(m.id); });
+      if (!nextUndone) return;
+      // And only walk on if the island is still what the family is looking at.
+      // Completing from the hub can land them back on Play with the hub
+      // hidden; opening a themed "hub" mission on top of that is not a walk to
+      // the next gate, it is an ambush.
+      if (!container || container.style.display === 'none') return;
       openMissionFromHub(packKey, nextUndone.id);
     }
     setTimeout(tryOpen, GROWTH_FOCUS_MS + 250);

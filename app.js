@@ -5637,7 +5637,11 @@ function markMissionDone(id, source="manual"){
       // bail if the kid already closed/navigated away manually in the meantime
       if(!backdrop.classList.contains("show") || lastOpenedId !== id) return;
       closeMission();
-      if(window._hub3dAdvance) window._hub3dAdvance(packKey);
+      // Pass the completion that earned this walk. The hub waits for any
+      // reward overlay to clear before opening the next gate, and an Undo can
+      // land inside that wait — the walk must then be void, not merely
+      // retargeted.
+      if(window._hub3dAdvance) window._hub3dAdvance(packKey, id);
     }, 1100);
   } else {
     openMission(id);
