@@ -370,7 +370,7 @@ const MISSION_ICONS = {
         </svg>
       <div style="width:96px">
         <div style="position:relative;height:7px;border-radius:5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary)"><div style="width:20%;height:100%;border-radius:5px;background:#EF9F27"></div><div style="position:absolute;left:20%;top:3px;width:11px;height:11px;border-radius:50%;background:#EF9F27;border:2px solid var(--color-background-primary);transform:translate(-50%,-50%)"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--color-text-tertiary);margin-top:4px"><span>slow</span><span>fast</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-text-tertiary);margin-top:5px"><span>slow</span><span>fast</span></div>
       </div>
       <div style="font-size:13px;font-weight:500;color:var(--color-text-secondary)">5 × slow</div>
     </div>
@@ -390,7 +390,7 @@ const MISSION_ICONS = {
         </svg>
       <div style="width:96px">
         <div style="position:relative;height:7px;border-radius:5px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary)"><div style="width:55%;height:100%;border-radius:5px;background:#EF9F27"></div><div style="position:absolute;left:55%;top:3px;width:11px;height:11px;border-radius:50%;background:#EF9F27;border:2px solid var(--color-background-primary);transform:translate(-50%,-50%)"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--color-text-tertiary);margin-top:4px"><span>slow</span><span>fast</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--color-text-tertiary);margin-top:5px"><span>slow</span><span>fast</span></div>
       </div>
       <div style="font-size:13px;font-weight:500;color:var(--color-text-secondary)">5 × medium</div>
     </div>
