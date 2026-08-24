@@ -35,6 +35,14 @@ check("mission_complete{id:36}", buildDataPoint({ e: "mission_complete", id: 36 
 check("help_open{reason:ball_stuck}", buildDataPoint({ e: "help_open", reason: "ball_stuck" }), {
   blobs: ["help_open", "ball_stuck"], doubles: [], indexes: ["help_open"],
 });
+check("help_open{reason:ball_stuck,id:7} — Locked v1 review follow-up: optional mission id",
+  buildDataPoint({ e: "help_open", reason: "ball_stuck", id: 7 }), {
+    blobs: ["help_open", "ball_stuck"], doubles: [7], indexes: ["help_open"],
+  });
+check("help_open{reason:ball_stuck,id:invalid} — bad id still writes a valid row, just no doubles",
+  buildDataPoint({ e: "help_open", reason: "ball_stuck", id: "not-a-number" }), {
+    blobs: ["help_open", "ball_stuck"], doubles: [], indexes: ["help_open"],
+  });
 check("player_count{n:3}", buildDataPoint({ e: "player_count", n: 3 }), {
   blobs: ["player_count", ""], doubles: [3], indexes: ["player_count"],
 });
@@ -126,8 +134,8 @@ check("first_mission_complete", buildDataPoint({ e: "first_mission_complete" }),
   blobs: ["first_mission_complete", ""], doubles: [], indexes: ["first_mission_complete"],
 });
 
-console.log("\nAll six mission_entry sources accepted:");
-for (const s of ["today", "browse", "random", "resume", "coach", "island"]) {
+console.log("\nAll nine mission_entry sources accepted:");
+for (const s of ["today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown"]) {
   check(s, buildDataPoint({ e: "mission_entry", id: 1, source: s })?.blobs[1], s);
 }
 
@@ -156,6 +164,12 @@ check("welcome_complete carrying the chosen age band",
 check("home_add_tap carrying a platform string",
   buildDataPoint({ e: "home_add_tap", platform: "ios-safari" }),
   { blobs: ["home_add_tap", ""], doubles: [], indexes: ["home_add_tap"] });
+check("mission_undo (no id — pre-review-follow-up shape, still valid)",
+  buildDataPoint({ e: "mission_undo" }),
+  { blobs: ["mission_undo", ""], doubles: [], indexes: ["mission_undo"] });
+check("mission_undo{id:12} — Locked v1 review follow-up: optional mission id",
+  buildDataPoint({ e: "mission_undo", id: 12 }),
+  { blobs: ["mission_undo", ""], doubles: [12], indexes: ["mission_undo"] });
 
 console.log("\nRejected (must all be null):");
 const rejects = [
@@ -250,8 +264,17 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
     // Locked v1 R&D dashboard follow-up.
     '{"e":"mission_entry","id":12,"source":"coach"}',
     '{"e":"mission_entry","id":2,"source":"island"}',
+    // Locked v1 review follow-up: "next" (in-sheet Next button) and
+    // "unknown" (an honest, non-"browse" fallback) both accepted.
+    '{"e":"mission_entry","id":5,"source":"next"}',
+    '{"e":"mission_entry","id":30,"source":"unknown"}',
+    // Fix follow-up: the Family Board tile is a real entry, its own surface.
+    '{"e":"mission_entry","id":8,"source":"family"}',
     '{"e":"mission_unfinished_exit","id":7}',
     '{"e":"product_care_open","topic":"strap_fit"}',
+    // Locked v1 review follow-up: optional mission-id attribution.
+    '{"e":"help_open","reason":"mission_too_hard","id":9}',
+    '{"e":"mission_undo","id":9}',
     '{"e":"home_add_tap"}',
     '{"e":"standalone_open"}',
     '{"e":"first_mission_start"}',

@@ -111,14 +111,102 @@ const XP_LEVEL_VALUES = [2, 3, 4, 5, 6, 7];
 const LEGACY_EVENTS = ["quickplay_start"];
 
 /* ── Schema v3 — Locked v1 R&D dashboard follow-up (new events) ──────────── */
-/** Mirrors MISSION_ENTRY_SOURCES in src/worker.js / app.js. */
-const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island"];
+/** Mirrors MISSION_ENTRY_SOURCES in src/worker.js / app.js. "next" is the
+ *  in-sheet Next button; "family" is the Family Board tile tap; "unknown" is
+ *  the explicit, honest fallback for a real call site that isn't one of the
+ *  other eight — see docs/analytics/locked-v1.md §9b for the full
+ *  call-site mapping. */
+const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown"];
 /** Mirrors PRODUCT_CARE_TOPICS in src/worker.js / app.js — the real, current
  *  "Product Care & Quick Help" accordion in Grown-ups, not an invented list. */
 const PRODUCT_CARE_TOPICS = [
   "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
   "indoor_play", "cleaning_storage", "damaged_missing",
 ];
+
+/** A fresh, zero-filled { source: 0, ... } object — every mission that ever
+ *  appears in the snapshot's `missions` map gets one of these, even a
+ *  mission with zero mission_entry rows, so a reader sees "0 for every
+ *  source" rather than a missing key. */
+function zeroEntrySources() {
+  return Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 0]));
+}
+
+/**
+ * Pure, unit-testable fold: turns `SELECT source, mission, n` rows into both
+ * the overall total-by-source (mutates `missionEntrySources`) and a
+ * per-mission cross-tab (mutates each entry in `missions`, creating one if a
+ * mission_entry row exists for an id with no other activity yet — should not
+ * happen in practice, since mission_start always fires alongside
+ * mission_entry, but this must not silently drop a real row if it ever does).
+ *
+ * Exported so tools/check-mission-entry-sources.mjs can assert the exact
+ * cross-tab shape against a synthetic fixture, without a live WAE query.
+ *
+ * @param {{source: string, mission: number|string, n: number|string}[]} rows
+ * @param {Map<string, {starts:number, completes:number, exits:number, entry_sources?: object}>} missions
+ * @param {Record<string, number>} missionEntrySources
+ */
+export function applyMissionEntryRows(rows, missions, missionEntrySources) {
+  for (const row of rows) {
+    if (!(row.source in missionEntrySources)) {
+      console.error(`⚠️  unknown mission_entry source in dataset: ${JSON.stringify(row.source)}`);
+      continue;
+    }
+    const n = Number(row.n);
+    const missionKey = String(Number(row.mission));
+    missionEntrySources[row.source] = (missionEntrySources[row.source] ?? 0) + n;
+    const entry = missions.get(missionKey) ?? { starts: 0, completes: 0, exits: 0 };
+    if (!entry.entry_sources) entry.entry_sources = zeroEntrySources();
+    entry.entry_sources[row.source] = (entry.entry_sources[row.source] ?? 0) + n;
+    missions.set(missionKey, entry);
+  }
+}
+
+/**
+ * Pure, unit-testable fold for a `{mission, n}` row set into a single named
+ * per-mission field (e.g. `timer_starts`). Every mission id here is real —
+ * timer_start has carried it in double1 since Faz 1, no attribution gap.
+ */
+export function applyPerMissionCount(rows, missions, field) {
+  for (const row of rows) {
+    const key = String(Number(row.mission));
+    const n = Number(row.n);
+    const entry = missions.get(key) ?? { starts: 0, completes: 0, exits: 0 };
+    entry[field] = (entry[field] ?? 0) + n;
+    missions.set(key, entry);
+  }
+}
+
+/**
+ * Same shape as applyPerMissionCount, but for events where the mission id is
+ * a NEW, OPTIONAL addition (help_open, mission_undo — see src/worker.js's
+ * Locked v1 review follow-up comment on both). Real mission ids start at 1,
+ * so a row's `mission` of 0 is unambiguous: it's either an older row from
+ * before this field existed, or a live client that genuinely had no open
+ * mission when the event fired — either way, "not attributable", never
+ * silently folded into mission 0 (which doesn't exist) or dropped.
+ *
+ * @param {{mission: number|string, n: number|string}[]} rows
+ * @param {Map<string, object>} missions
+ * @param {string} field   e.g. "help_opens" or "undos"
+ * @param {{attributed: number, unattributed: number}} attribution  mutated in place
+ */
+export function applyAttributedPerMissionCount(rows, missions, field, attribution) {
+  for (const row of rows) {
+    const missionNum = Number(row.mission);
+    const n = Number(row.n);
+    if (missionNum === 0) {
+      attribution.unattributed += n;
+      continue;
+    }
+    attribution.attributed += n;
+    const key = String(missionNum);
+    const entry = missions.get(key) ?? { starts: 0, completes: 0, exits: 0 };
+    entry[field] = (entry[field] ?? 0) + n;
+    missions.set(key, entry);
+  }
+}
 
 /** The five cross-reads, and which mission label each one groups by. */
 const CROSS_READS = {
@@ -381,6 +469,12 @@ async function collect(ctx, startMs, endMs) {
   };
   const missionEntrySources = Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 0]));
   const productCareTopics = Object.fromEntries(PRODUCT_CARE_TOPICS.map((t) => [t, 0]));
+  // help_open/mission_undo mission attribution is new (Locked v1 review
+  // follow-up) — see applyAttributedPerMissionCount's own comment for why
+  // "attributed vs unattributed" is tracked explicitly rather than silently
+  // reading older rows as "zero for every mission".
+  const helpOpenAttribution = { attributed: 0, unattributed: 0 };
+  const missionUndoAttribution = { attributed: 0, unattributed: 0 };
 
   const where =
     `WHERE timestamp >= toDateTime('${sqlDateTime(startMs)}') ` +
@@ -540,18 +634,21 @@ async function collect(ctx, startMs, endMs) {
     family.level_up[key] = (family.level_up[key] ?? 0) + Number(row.n);
   }
 
-  // 11 — mission_entry: by source only. Per-mission × source is deliberately
-  // NOT cross-tabulated in v1 (see docs/analytics/locked-v1.md) — the raw
-  // rows still exist in WAE for 90 days if that breakdown is needed sooner
-  // than a follow-up snapshot version.
-  for (const row of await sql(
-    ctx,
-    `SELECT blob2 AS source, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
-      `AND blob1 = 'mission_entry' GROUP BY source`,
-  )) {
-    if (!(row.source in missionEntrySources)) console.error(`⚠️  unknown mission_entry source in dataset: ${row.source}`);
-    missionEntrySources[row.source] = (missionEntrySources[row.source] ?? 0) + Number(row.n);
-  }
+  // 11 — mission_entry: BOTH the overall total-by-source (kept for the
+  // dashboard overview) AND a per-mission × source cross-tab — "which
+  // mission gets found how" is exactly the kind of question this snapshot
+  // exists to answer before the raw rows expire. Grouped on both dimensions
+  // in one query since blob2 (source) and double1 (mission id) are both
+  // already indexed columns on every mission_entry row.
+  applyMissionEntryRows(
+    await sql(
+      ctx,
+      `SELECT blob2 AS source, double1 AS mission, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+        `AND blob1 = 'mission_entry' GROUP BY source, mission`,
+    ),
+    missions,
+    missionEntrySources,
+  );
 
   // 12 — product_care_open, by topic.
   for (const row of await sql(
@@ -563,10 +660,48 @@ async function collect(ctx, startMs, endMs) {
     productCareTopics[row.topic] = (productCareTopics[row.topic] ?? 0) + Number(row.n);
   }
 
+  // 13 — Locked v1 review follow-up: per-mission timer_start count. Every row
+  // has a real mission id (Faz 1 shape, no attribution gap).
+  applyPerMissionCount(
+    await sql(
+      ctx,
+      `SELECT double1 AS mission, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+        `AND blob1 = 'timer_start' GROUP BY mission`,
+    ),
+    missions,
+    "timer_starts",
+  );
+
+  // 14 — per-mission help_open. mission id is a new, optional column (see
+  // src/worker.js) — split attributed/unattributed explicitly.
+  applyAttributedPerMissionCount(
+    await sql(
+      ctx,
+      `SELECT double1 AS mission, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+        `AND blob1 = 'help_open' GROUP BY mission`,
+    ),
+    missions,
+    "help_opens",
+    helpOpenAttribution,
+  );
+
+  // 15 — per-mission mission_undo. Same new-optional-column treatment.
+  applyAttributedPerMissionCount(
+    await sql(
+      ctx,
+      `SELECT double1 AS mission, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+        `AND blob1 = 'mission_undo' GROUP BY mission`,
+    ),
+    missions,
+    "undos",
+    missionUndoAttribution,
+  );
+
   return {
     counts, helpOpens, playerCount, missions,
     features, hub3d, returnVisits, packViews, packCompletes,
     activationMilestones, legacy, family, missionEntrySources, productCareTopics,
+    helpOpenAttribution, missionUndoAttribution,
   };
 }
 
@@ -610,7 +745,18 @@ function crossRead(missions, meta, field) {
 function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, meta }) {
   const { counts, helpOpens, playerCount, missions,
           features, hub3d, returnVisits, packViews, packCompletes,
-          activationMilestones, legacy, family, missionEntrySources, productCareTopics } = data;
+          activationMilestones, legacy, family, missionEntrySources, productCareTopics,
+          helpOpenAttribution, missionUndoAttribution } = data;
+
+  // Every mission gets a zero-filled entry_sources/timer_starts/help_opens/
+  // undos even with zero rows for that field — a reader should see an
+  // explicit 0, never a missing key.
+  for (const entry of missions.values()) {
+    if (!entry.entry_sources) entry.entry_sources = zeroEntrySources();
+    if (entry.timer_starts == null) entry.timer_starts = 0;
+    if (entry.help_opens == null) entry.help_opens = 0;
+    if (entry.undos == null) entry.undos = 0;
+  }
 
   // Mission ids are numeric strings; sort them as numbers so 9 precedes 10.
   const missionsSorted = Object.fromEntries(
@@ -672,6 +818,14 @@ function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, me
     mission_entry_sources: missionEntrySources,
     product_care_topics: productCareTopics,
     legacy,
+    // How much of this week's help_open/mission_undo could be tied to a
+    // mission (src/worker.js only started accepting the id in this review
+    // follow-up). "unattributed" on a week entirely before that deploy is
+    // expected and NOT a data-quality problem — see docs/analytics/locked-v1.md.
+    attribution: {
+      help_open: { ...helpOpenAttribution },
+      mission_undo: { ...missionUndoAttribution },
+    },
 
     generated_at: generatedAt,
     dataset: DATASET,
@@ -798,7 +952,13 @@ async function main() {
   console.error(`wrote ${indexPath} — ${weeks.length} week(s)`);
 }
 
-main().catch((err) => {
-  console.error(`\n✗ ${err.message}`);
-  process.exit(1);
-});
+// Only auto-run when executed directly (`node tools/generate-weekly-snapshot.mjs`),
+// never when imported — tools/check-mission-entry-sources.mjs and friends
+// import applyMissionEntryRows/applyPerMissionCount/etc. for unit testing
+// without a live Cloudflare credential, and must not trigger a real run.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error(`\n✗ ${err.message}`);
+    process.exit(1);
+  });
+}

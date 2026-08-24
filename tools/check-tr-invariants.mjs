@@ -114,7 +114,7 @@ check("PLAY_MODE_IDS", setOf("PLAY_MODE_IDS"), [
   "sync-pop", "loop-rally", "twin-lane-rally",
 ]);
 check("MISSION_ENTRY_SOURCES", setOf("MISSION_ENTRY_SOURCES"), [
-  "today", "browse", "random", "resume", "coach", "island",
+  "today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown",
 ]);
 check("PRODUCT_CARE_TOPICS", setOf("PRODUCT_CARE_TOPICS"), [
   "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",

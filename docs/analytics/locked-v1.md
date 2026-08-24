@@ -201,19 +201,103 @@ weak ratio "bad" — missions below `CONFIG.minStartsForAlert` (5) don't
 alert at all, and a below-average one is labeled "inceleme adayı"
 (investigation candidate), not a definitive verdict.
 
-## 9. `mission_entry` scope: by-source counts, not the full cross-tab
+## 9. `mission_entry` scope: total-by-source AND a full per-mission cross-tab
 
-`mission_entry_sources` in the snapshot is a flat count by source (today /
-browse / random / resume / coach / island) for the whole week. A
-per-mission × per-source breakdown ("how many people found mission 7 via
-Random specifically") is **not** computed in this version — it would be a
-second GROUP BY dimension on top of an already-large per-mission map, and
-there isn't yet real traffic to validate that the extra complexity is
-worth it. The raw `mission_entry` rows carry both `id` (in `double1`) and
-`source` (in `blob2`) and sit in Analytics Engine for 90 days regardless,
-so that finer breakdown can be added to a future snapshot schema version
-without losing anything, as long as it ships before the 90-day window on
-the weeks it would apply to.
+An earlier draft of this feature only kept `mission_entry_sources` — a flat
+total by source for the whole week — and left "which mission gets found how"
+uncomputed, reasoning that there wasn't yet real traffic to justify the
+extra GROUP BY dimension. Review follow-up overturned that: "which mission
+is found how" is exactly the kind of question this snapshot exists to
+answer before the raw rows expire, and the cardinality is bounded (36
+missions × 9 sources = 324 cells at most), so there's no real cost to
+keeping it.
+
+Every mission in the snapshot's `missions` map now carries an
+`entry_sources` object with all 9 source counts (zero-filled, even for a
+mission with no `mission_entry` rows at all — see `zeroEntrySources()` in
+`tools/generate-weekly-snapshot.mjs`), alongside the unchanged top-level
+`mission_entry_sources` total for the dashboard overview. Both come from
+one query (`GROUP BY source, mission`) and one pure fold function,
+`applyMissionEntryRows()`, unit-tested against a synthetic fixture in
+`tools/check-mission-entry-sources.mjs`.
+
+## 9b. Every production `openMission()` call site is explicitly classified
+
+A previous version let an unclassified call silently default its
+`mission_entry` source to `"browse"` — which would have quietly credited
+the Browse tab with every call site nobody had gotten around to labeling.
+Fixed by (1) auditing all 23 real `openMission()` call sites in `app.js`
+and `jumvi-hub-app.js` and giving each one an explicit second argument, and
+(2) changing the runtime fallback to `"unknown"`, which should now only
+ever fire on a genuine bug.
+
+A second, later correction went further: `openMission()` is not only used
+for real navigation — 3 of the 23 call sites reuse it to refresh/re-render
+the mission sheet that is **already open** (undo, un-mark done,
+post-completion redraw), where no navigation happened at all. An earlier
+pass here still fired a full `mission_entry` on those 3 sites, just labeled
+`"unknown"` — which double-counted every undo or refresh as if it were a
+fresh discovery. `openMission(id, source, opts)` now takes a third
+`opts.trackEntry` argument (default `true`); the 3 refresh sites pass
+`{ trackEntry: false }`, which skips both the `mission_entry` beacon and the
+`_missionExitBeaconed` reset — an internal refresh must not let a
+genuinely-abandoned visit fire `mission_unfinished_exit` a second time
+either. `mission_start`, `first_mission_start`, and all timer/audio/UI
+behavior are untouched by this — the gate wraps only the entry-analytics
+block. See `tools/tr-qa/mission-entry-refresh.mjs` for the runtime proof.
+
+Three enum values exist beyond the original six: `"next"` (the in-sheet
+Next button, both the smart-pick and linear-fallback paths, outside a
+hub-pack run — those stay `"island"`), `"family"` (the Family Board's
+36-tile grid — a real, distinct discovery surface, not the Browse tab's
+Mission Path), and `"unknown"` (the honest fallback for a genuine call site
+that isn't one of the other eight — see the table below).
+
+| Call site | Source | Why |
+|---|---|---|
+| Browse tab's Mission Path row tap | `browse` | The actual current Browse UI (v32 renamed the old vertical path to a compact list row; same missions, same order, same surface) |
+| Legacy `#list` card tap (hidden, `applyBrowseView()` always shows the Path instead) | `browse` | Same surface, old renderer — kept for the rare case something still reaches it |
+| Daily Play / Daily Replay / header "Play Today" buttons | `today` | The Today card's own controls |
+| Welcome/onboarding → first mission after picking a level | `today` | Sets up and opens the same `dailyIdStored` mission the Today card would |
+| Coach Pick card + its alt-suggestion link | `coach` | Explicit Coach Leo recommendation |
+| Both "Random" buttons (from-pack, from-all) | `random` | |
+| "Continue where you left off" (Resume) button | `resume` | |
+| Leo's Island gate opening a mission; the in-hub pack "Next" flow | `island` | Only ever active while `window._hubMissionFlow` is set |
+| The in-sheet "Next" button (smart pick, and its linear fallback) | `next` | Distinct from Island's own pack-aware "next", which stays `island` |
+| Family Board's 36-tile grid | `family` | A real, distinct discovery surface — a genuine user tap into a mission, just not the Browse tab |
+| Seasonal collection list (Indoor/Outdoor Edition) | `unknown` | A curated modal list, not Browse — real entry, no enum value dedicated to it yet |
+| Mark-undone reopen; toggle-done "un-mark done" reopen; post-completion non-hub-flow redraw | *(suppressed — `{ trackEntry: false }`)* | Not a new discovery event at all: an in-place refresh of the mission sheet that is already open. No `mission_entry` fires. |
+
+**On the seasonal-list `unknown` call**: a real, distinct surface that
+doesn't cleanly fit any of the other eight values. Rather than invent a
+`"seasonal"` enum value for a comparatively minor surface before there's
+real data to justify it, it's honestly labeled `unknown` for now — visible
+in the dashboard as a real (if unattributed) number, never silently folded
+into `browse`. If it turns out to matter, promoting it to its own enum
+value is a small, additive follow-up (the same shape as adding `next` and
+`family` was).
+
+## 9c. `timer_start` / `help_open` / `mission_undo` mission attribution
+
+`timer_start` has carried a mission id in `double1` since Faz 1 — no schema
+change needed, just a new per-mission snapshot query
+(`missions[id].timer_starts`).
+
+`help_open` and `mission_undo` did not carry a mission id before this
+review follow-up. Both now accept one **optionally** in `double1`,
+additive and backward-compatible: `src/worker.js`'s `buildDataPoint()`
+still writes a valid row with no doubles when the id is absent or invalid,
+exactly as it always did. Since real mission ids start at 1, a `double1` of
+0 on a row can only mean "not attributed" (an older row, or — help_open's
+in-mission panel excepted — a genuine case where no mission was open),
+never a real mission's id.
+
+The snapshot tracks this explicitly rather than silently reading old data
+as "zero for every mission": a top-level `attribution` object records
+`{ attributed, unattributed }` counts for both events, generated by
+`applyAttributedPerMissionCount()`. A week generated entirely before this
+deploy will show 100% unattributed for both — that is expected, and is not
+a data-quality bug to chase.
 
 ## 10. Amazon / units-sold safety
 

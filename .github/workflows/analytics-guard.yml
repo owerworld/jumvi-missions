@@ -1,0 +1,65 @@
+name: Analytics Guard
+
+# Locked v1 review follow-up — a REAL, enforced CI gate for the analytics
+# pipeline (src/worker.js's beacon allowlist, app.js's emission side, and
+# tools/generate-weekly-snapshot.mjs's snapshot builder). Before this
+# workflow existed, every check in tools/check-*.mjs was a purely local
+# habit — nothing stopped a PR that broke one of them from merging.
+#
+# Deliberately deterministic and offline: every check here reads only the
+# files already in the repo (source code, data.js, the frozen WAE schema
+# constants) — none of them call Cloudflare, so this workflow needs NO
+# secrets and produces the same result on every run. The one workflow that
+# DOES need Cloudflare credentials (weekly-analytics-snapshot.yml) is a
+# separate, unrelated file — this one never queries live analytics data.
+#
+# Runs on every pull_request (so a regression is caught before merge) and on
+# every push to main (so a merge that slipped past — e.g. an admin override —
+# is still caught immediately). A failing check fails this job outright: no
+# step swallows a non-zero exit code, so a red check here is a real block,
+# not a log a human has to go read.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Syntax-check the analytics-critical files
+        run: |
+          node --check src/worker.js
+          node --check app.js
+          node --check jumvi-hub-app.js
+          node --check tools/generate-weekly-snapshot.mjs
+          node --check tools/check-event-coverage.mjs
+          node --check tools/check-analytics-compliance.mjs
+          node --check tools/check-beacon-schema.mjs
+          node --check tools/check-tr-invariants.mjs
+          node --check tools/check-mission-entry-sources.mjs
+
+      - name: Event coverage / drift guard
+        run: node tools/check-event-coverage.mjs
+
+      - name: Privacy & compliance guard
+        run: node tools/check-analytics-compliance.mjs
+
+      - name: Beacon schema guard
+        run: node tools/check-beacon-schema.mjs
+
+      - name: /tr localization + frozen-schema invariants
+        run: node tools/check-tr-invariants.mjs
+
+      - name: mission_entry source-map guard
+        run: node tools/check-mission-entry-sources.mjs

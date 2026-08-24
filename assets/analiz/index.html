@@ -86,9 +86,11 @@ body{
   align-items:center;justify-content:center;
   font-family:var(--mono);font-size:12px;font-weight:500;
   background:var(--ink-06);color:var(--ink-38);
-  position:relative;cursor:default;transition:transform .12s ease;
+  position:relative;cursor:pointer;transition:transform .12s ease;
+  border:0;padding:0;-webkit-appearance:none;appearance:none;
 }
 .cell:hover{transform:scale(1.09);z-index:3}
+.cell.selected{outline:2px solid var(--navy);outline-offset:1px}
 .cell[data-t]:hover::after{
   content:attr(data-t);position:absolute;bottom:calc(100% + 7px);left:50%;
   transform:translateX(-50%);background:var(--navy);color:var(--sand);
@@ -174,6 +176,17 @@ body{
 
 /* ---------- Locked v1 R&D dashboard follow-up ---------- */
 .notavail{font-family:var(--mono);font-size:11.5px;color:var(--ink-38);font-style:italic}
+.missionDetail{margin-top:14px}
+.mdHead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+.mdTitle{font-family:var(--display);font-weight:700;font-size:19px}
+.mdClose{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-38);
+  background:transparent;border:1px solid var(--ink-12);border-radius:6px;padding:4px 9px;cursor:pointer}
+.mdStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.mdStat{background:var(--ink-06);border-radius:10px;padding:10px 12px}
+.mdStatN{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.01em}
+.mdStatL{font-size:11.5px;color:var(--ink-60);margin-top:2px}
+.mdSourceRow{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--ink-06)}
+.mdSourceRow:last-child{border-bottom:0}
 </style>
 </head>
 <body>
@@ -204,6 +217,9 @@ body{
         Bu bir <b>olay oranı</b>, kohort dönüşüm oranı değil: start ve complete olayları kişi/cihaz bazında eşleştirilmiyor,
         bu yüzden oran teorik olarak %100'ü geçebilir. Turuncu kareler kesin "kötü görev" iddiası değil, incelenmeye değer adaylardır.</p>
       <div class="gridwrap" id="gridwrap"></div>
+      <p class="hint">Bir göreve dokun/tıkla — starts, completion events, unfinished exits, finish signal, keşif
+        kaynağı, zamanlayıcı ve yardım/geri-alma sinyalleri aşağıda açılır.</p>
+      <div class="card missionDetail" id="missionDetail" hidden></div>
     </section>
 
     <div class="cols">
@@ -333,6 +349,7 @@ const HUB_LABELS = {
 const ENTRY_SOURCE_LABELS = {
   today: "Bugün kartı", browse: "Gözat listesi", random: "Rastgele",
   resume: "Kaldığın yerden devam", coach: "Coach Leo önerisi", island: "Leo'nun Adası",
+  next: "Sıradaki (görev içi)", family: "Aile panosu", unknown: "Bilinmeyen (dürüst varsayılan)",
 };
 const PRODUCT_CARE_LABELS = {
   ball_not_sticking: "Top yapışmıyor", ball_hard_to_remove: "Top çıkmıyor",
@@ -578,6 +595,7 @@ function render(weekId) {
   $("panel").hidden = false;
   $("emptyState").hidden = true;
   $("weekRange").textContent = `Hafta ${snap.week} · ${dateRange(snap.period_start, snap.period_end)}`;
+  $("missionDetail").hidden = true; // stale detail from a previous week's grid must not linger
 
   renderSmallN(snap);
   renderThesis(snap);
@@ -697,13 +715,13 @@ function renderGrid(snap) {
       const { starts, completes } = missionStats(snap, id);
       ps += starts; pc += completes;
       if (!starts) {
-        return `<div class="cell" data-t="Görev ${id}&#10;hiç açılmadı">${id}</div>`;
+        return `<button type="button" class="cell" data-mission-id="${id}" data-t="Görev ${id}&#10;hiç açılmadı">${id}</button>`;
       }
       const r = completes / starts;
       const weak = avg !== null && starts >= CONFIG.minStartsForAlert && r < avg * CONFIG.weakMissionRatio;
       const c = cellColor(r, weak);
       const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ inceleme adayı" : ""}`;
-      return `<div class="cell" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</div>`;
+      return `<button type="button" class="cell" data-mission-id="${id}" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</button>`;
     }).join("");
 
     return `<div class="prow">
@@ -721,6 +739,65 @@ function renderGrid(snap) {
       <span><i class="sw" style="background:#6DBE45"></i>yüksek</span>
       <span><i class="sw" style="background:var(--orange)"></i>inceleme adayı</span>
     </div>`;
+
+  $("gridwrap").querySelectorAll(".cell[data-mission-id]").forEach((btn) => {
+    btn.onclick = () => {
+      const already = btn.classList.contains("selected");
+      $("gridwrap").querySelectorAll(".cell.selected").forEach((c) => c.classList.remove("selected"));
+      if (already) { $("missionDetail").hidden = true; return; }
+      btn.classList.add("selected");
+      renderMissionDetail(snap, btn.dataset.missionId);
+    };
+  });
+}
+
+/** Locked v1 review follow-up — the actual "R&D table" the grid's heatmap
+ *  only summarised: every column asked for, per mission, on tap. */
+function renderMissionDetail(snap, id) {
+  const el = $("missionDetail");
+  const { starts, completes } = missionStats(snap, id);
+  const m = snap.missions?.[String(id)] || {};
+  const exits = m.exits ?? 0;
+  const ratio = starts > 0 ? completes / starts : null;
+  const pack = META.missions[id]?.pack;
+  const title = pack ? `Görev ${esc(id)} — ${esc(META.pack_labels[pack] || pack)}` : `Görev ${esc(id)}`;
+
+  const stats = [
+    { n: nf(starts), l: "Starts" },
+    { n: nf(completes), l: "Completion events" },
+    { n: nf(exits), l: "Unfinished exits" },
+    { n: ratio === null ? "—" : `${ratio.toFixed(2)}x`, l: "Finish signal" },
+  ];
+  if (hasV3(snap)) {
+    stats.push({ n: nf(m.timer_starts ?? 0), l: "Timer starts" });
+    stats.push({ n: nf(m.help_opens ?? 0), l: "Help signals" });
+    stats.push({ n: nf(m.undos ?? 0), l: "Undo signals" });
+  }
+
+  const sourceRows = hasV3(snap) && m.entry_sources
+    ? Object.entries(ENTRY_SOURCE_LABELS)
+        .map(([key, label]) => ({ label, n: m.entry_sources[key] ?? 0 }))
+        .sort((a, b) => b.n - a.n)
+        .map((e) => `<div class="mdSourceRow"><span>${esc(e.label)}</span><span>${nf(e.n)}</span></div>`)
+        .join("")
+    : `<div class="xread">${NOT_IN_SCHEMA} — entry-source keşif kaydı bu haftadan önce toplanmıyordu.</div>`;
+
+  el.innerHTML = `
+    <div class="mdHead">
+      <span class="mdTitle">${title}</span>
+      <button type="button" class="mdClose" id="mdCloseBtn">Kapat</button>
+    </div>
+    <div class="mdStats">${stats.map((s) => `<div class="mdStat"><div class="mdStatN">${s.n}</div><div class="mdStatL">${esc(s.l)}</div></div>`).join("")}</div>
+    <div class="xt-h">Keşif kaynağı</div>
+    ${sourceRows}
+    <div class="xread">Finish signal bir <b>olay oranı</b>dır, kullanıcı dönüşüm oranı değil — start ve complete
+      olayları kişi/cihaz bazında eşleştirilmiyor. 1.00x'ten yüksek çıkması mümkündür ve hata değildir.</div>`;
+  el.hidden = false;
+  $("mdCloseBtn").onclick = () => {
+    el.hidden = true;
+    $("gridwrap").querySelectorAll(".cell.selected").forEach((c) => c.classList.remove("selected"));
+  };
+  el.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
 /** Önceki haftaya göre değişim. Yön belirtilir, yorum okuyucuya bırakılır. */

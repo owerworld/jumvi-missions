@@ -208,8 +208,17 @@ const HELP_REASONS = [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
   "need_more_space", "instructions_unclear", "mission_too_hard",
 ];
-/** How a mission was reached — mirrors src/worker.js's MISSION_ENTRY_SOURCES. */
-const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island"];
+/** How a mission was reached — mirrors src/worker.js's MISSION_ENTRY_SOURCES.
+ *  "next" is the in-sheet Next button (smart pick or linear fallback,
+ *  outside a hub pack run — those stay "island"). "family" is the Family
+ *  Board tile tap (its own surface, distinct from Browse). "unknown" is the
+ *  explicit, honest fallback for a real call site that isn't one of the
+ *  other eight — never silently relabeled as "browse". See
+ *  docs/analytics/locked-v1.md §9b for the full call-site-by-call-site
+ *  mapping, including which openMission() calls are internal re-renders
+ *  that must NOT fire mission_entry at all (see the trackEntry gate in
+ *  openMission() itself). */
+const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown"];
 /** The real, current "Product Care & Quick Help" accordion in Grown-ups —
  *  see the data-topic attributes on index.html's .productHelpItem elements. */
 const PRODUCT_CARE_TOPICS = [
@@ -2075,7 +2084,7 @@ function renderTeamsHub(){
       t.onclick = ()=>{
         clickSound("click");
         switchTab("today");
-        setTimeout(()=> openMission(Number(t.dataset.mission)), 60);
+        setTimeout(()=> openMission(Number(t.dataset.mission), "family"), 60);
       };
     });
   }
@@ -3443,7 +3452,7 @@ function updateMissionCard(card, ms, isDone){
     }
   }
   card.classList.toggle("done", isDone);
-  card.onclick = ()=>{ clickSound("click"); openMission(ms.id); };
+  card.onclick = ()=>{ clickSound("click"); openMission(ms.id, "browse"); };
 }
 
 function renderList(){
@@ -4682,7 +4691,7 @@ function initMissionCarousels(root){
   return true;
 }
 
-function openMission(id, source){
+function openMission(id, source, opts){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
   if(_missionXpRewardMissionId && _missionXpRewardMissionId !== Number(id)){
@@ -4703,14 +4712,28 @@ function openMission(id, source){
   stopLeoSpeakSteps();
   cancelTimerCountdown();
   _openMissionId = id;
-  // Locked v1 — every open reports how it was reached. Not de-duped: the
-  // question is how EACH visit arrived, not a once-per-session milestone.
-  // Callers that don't know their source (most of the ~20 call sites across
-  // Next/Hub/etc.) default to "browse" — an honest fallback, since nearly
-  // all of them are reached from a missions-surface flow.
-  const entrySource = MISSION_ENTRY_SOURCES.includes(source) ? source : "browse";
-  _missionExitBeaconed = false;
-  beacon("mission_entry", { id: id, source: entrySource });
+  // Locked v1 review follow-up — openMission() is also reused internally to
+  // refresh/re-render the mission sheet that is ALREADY open (undo, un-mark
+  // done, post-completion redraw): same mission, no navigation happened. A
+  // mission_entry there would be counting a re-render as a new discovery.
+  // trackEntry defaults true (every real call site above is a genuine user
+  // navigation); the 3 refresh call sites pass {trackEntry:false} instead of
+  // inventing a "refresh" source that would need its own analytics carve-out.
+  const trackEntry = !opts || opts.trackEntry !== false;
+  if(trackEntry){
+    // Every open reports how it was reached. Not de-duped: the question is
+    // how EACH visit arrived, not a once-per-session milestone.
+    // Every production call site now passes an explicit source (see the
+    // call-site-by-call-site mapping in docs/analytics/locked-v1.md §9b);
+    // this fallback exists only for a genuine bug (a typo'd/omitted source),
+    // and must NEVER silently read as "browse" — an unclassified open is a
+    // real gap to go find and fix, not free Browse-tab credit.
+    // tools/check-mission-entry-sources.mjs statically asserts every
+    // openMission() call in app.js/jumvi-hub-app.js passes a second argument.
+    const entrySource = MISSION_ENTRY_SOURCES.includes(source) ? source : "unknown";
+    _missionExitBeaconed = false;
+    beacon("mission_entry", { id: id, source: entrySource });
+  }
   // first_mission_start — once per session, the moment any mission view opens,
   // tagged with where it came from (hub vs 2D). Parity with the audit's A/B
   // funnel (2D had it implicitly, 3D had nothing).
@@ -5612,12 +5635,18 @@ function showUndoBar(id, journeySnapshot){
       renderDailyChallenge();
       if(typeof renderMissionPath === "function"){ try{ renderMissionPath(); }catch(_){} }
       clickSound("click");
-      if(lastOpenedId === id) openMission(id);
+      // Re-renders the SAME sheet that is already open (an in-place undo, not
+      // a new discovery event) — suppress mission_entry entirely, don't just
+      // relabel it "unknown".
+      if(lastOpenedId === id) openMission(id, "unknown", { trackEntry: false });
       showToast("Marked as not done");
       trackEvent("Mission Undone", { id: id });
-      // How often a completion was a misfire. The event only — no mission id,
-      // so this can never become a per-mission behaviour profile.
-      beacon("mission_undo");
+      // How often a completion was a misfire, per mission. Locked v1 review
+      // follow-up: mission id now travels alongside this event (was
+      // deliberately omitted before) — still just the id, never a name,
+      // profile, or anything that could build a behaviour profile of a
+      // specific child.
+      beacon("mission_undo", { id: id });
     }
   };
 }
@@ -5765,7 +5794,10 @@ function markMissionDone(id, source="manual"){
       if(window._hub3dAdvance) window._hub3dAdvance(packKey);
     }, 1100);
   } else {
-    openMission(id);
+    // Same reason as the mark-undone site above: this re-opens the mission
+    // that just completed, in place, to show the done-confirmation state —
+    // not a new discovery event, so mission_entry must not fire again.
+    openMission(id, "unknown", { trackEntry: false });
   }
 }
 
@@ -5802,7 +5834,9 @@ function renderSeasonalList(type){
     row.onclick = ()=>{
       clickSound("click");
       seasonalBackdrop.classList.remove("show");
-      openMission(ms.id);
+      // A curated seasonal collection, not the Browse tab's Mission Path —
+      // a distinct surface, so this is deliberately "unknown", not "browse".
+      openMission(ms.id, "unknown");
     };
     seasonalList.appendChild(row);
   });
@@ -5821,7 +5855,9 @@ if(btnToggleDone){
       persist();
       renderList();
       clickSound("click");
-      openMission(lastOpenedId);
+      // Re-renders the SAME already-open sheet after un-marking it done —
+      // not a new discovery event, so mission_entry must not fire again.
+      openMission(lastOpenedId, "unknown", { trackEntry: false });
       return;
     }
     const waitMs = missionGateRemainingMs(lastOpenedId);
@@ -5971,7 +6007,7 @@ btnNext.onclick = ()=>{
   const smartId = pickSmartNextMission(lastOpenedId);
   if(smartId){
     trackEvent("Mission Next Smart");
-    openMission(smartId);
+    openMission(smartId, "next");
     return;
   }
   // Fallback: görünür listede sıradaki
@@ -5980,7 +6016,7 @@ btnNext.onclick = ()=>{
   const next = list[(idx+1) % list.length];
   if(!done.has(lastOpenedId)) incSkip(lastOpenedId);
   trackEvent("Mission Next Linear");
-  openMission(next.id);
+  openMission(next.id, "next");
 };
 
 btnRandomPack.onclick = ()=>{
@@ -7048,7 +7084,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
       clickSound("click");
       // Beacon 4/5 — fires per pick, not de-duped: a kid hitting the same
       // problem in three different missions is exactly the signal we want.
-      if(HELP_REASONS.includes(reason)) beacon("help_open", { reason: reason });
+      // Locked v1 review follow-up: mission id travels alongside the reason
+      // when this panel is open on a real mission (always, in practice —
+      // the panel only exists inside an open mission sheet).
+      if(HELP_REASONS.includes(reason)) beacon("help_open", { reason: reason, id: _openMissionId });
     });
   });
 });
@@ -7326,7 +7365,7 @@ function showWelcomeOverlay(){
       // gone. Fired here rather than on render, so it means "the family got
       // through the welcome screen", not "the welcome screen was drawn".
       if(firstOnboard) beacon("welcome_complete");
-      if(firstMissionId) openMission(firstMissionId);
+      if(firstMissionId) openMission(firstMissionId, "today");
     });
   }
   // §1.3 — the sibling line is now STATIC helper text (a <p>), not a control:
@@ -8698,7 +8737,10 @@ function renderMissionPath(){
         try{ clickSound(isDone ? "success" : "click"); }catch(_){}
         if(navigator.vibrate){ try{ navigator.vibrate(8); }catch(_){} }
         trackEvent("Path Step Tapped", { mission: m.id, pack: pack.key, isDone: isDone });
-        openMission(m.id);
+        // This IS the Browse tab's Mission Path (v32 renamed it a "list" row,
+        // but the comment above confirms: same missions, same order, same
+        // surface the old vertical path replaced).
+        openMission(m.id, "browse");
       });
 
       step.appendChild(node);
@@ -9183,7 +9225,7 @@ function init(){
     btnHeaderPlay.onclick = ()=>{
       clickSound("click");
       ensureDailyMission();
-      if(dailyIdStored){ openMission(dailyIdStored); }
+      if(dailyIdStored){ openMission(dailyIdStored, "today"); }
     };
   }
   const btnPlayToday = document.getElementById("btnPlayToday");
@@ -9192,7 +9234,7 @@ function init(){
       clickSound("click");
       trackEvent("Play Today Clicked");
       ensureDailyMission();
-      if(dailyIdStored){ openMission(dailyIdStored); }
+      if(dailyIdStored){ openMission(dailyIdStored, "today"); }
     };
   }
 

@@ -189,7 +189,7 @@ const XP_LEVEL_VALUES = new Set([2, 3, 4, 5, 6, 7]);
  * to what actually exists in the UI beats inventing a taxonomy no button
  * fires. */
 const MISSION_ENTRY_SOURCES = new Set([
-  "today", "browse", "random", "resume", "coach", "island",
+  "today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown",
 ]);
 const PRODUCT_CARE_TOPICS = new Set([
   "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
@@ -228,8 +228,16 @@ export function buildDataPoint(payload) {
     case "mission_complete":
       return isMissionId(payload.id) ? point(String(payload.id), []) : null;
 
+    // Locked v1 review follow-up: mission id is now OPTIONAL in double1,
+    // additive and backward-compatible. blob2 stays the reason exactly as
+    // before; a client that doesn't know the mission id (or predates this
+    // change) still writes a valid row with no doubles. Since real mission
+    // ids start at 1, a double1 of 0 on an older/unattributed row can never
+    // be confused with a real mission's id — see
+    // tools/generate-weekly-snapshot.mjs's help-open-by-mission query.
     case "help_open":
-      return HELP_REASONS.has(payload.reason) ? point(payload.reason, []) : null;
+      if (!HELP_REASONS.has(payload.reason)) return null;
+      return isMissionId(payload.id) ? point(payload.reason, [payload.id]) : point(payload.reason, []);
 
     case "player_count":
       return PLAYER_COUNTS.has(payload.n) ? point("", [payload.n]) : null;
@@ -295,8 +303,11 @@ export function buildDataPoint(payload) {
     case "app_first_open":
     case "team_switch":
     case "profile_delete":
-    case "mission_undo":
       return point("", []);
+
+    // Same optional-mission-id treatment as help_open above, same reasoning.
+    case "mission_undo":
+      return isMissionId(payload.id) ? point("", [payload.id]) : point("", []);
 
     /* ── Locked v1 R&D dashboard follow-up ──────────────────────────────── */
 
