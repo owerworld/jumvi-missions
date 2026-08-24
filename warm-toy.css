@@ -5010,6 +5010,27 @@ html.theme--dark #statsEmptyState .emptyStateBtn{ color:var(--jv-on-blue,#06233a
 html.theme--dark #tabModes .familyTeamsCta{ color:var(--jv-recommend-fg,#0b4a78) !important; -webkit-text-fill-color:var(--jv-recommend-fg,#0b4a78) !important; }
 html.theme--dark #tabModes .teamsCreateBtn,
 html.theme--dark #tabModes .teamsCreateBtn *{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+/* The score pad is a deep-blue fill inside the mission sheet; in dark the
+   sheet's inherited #e5e7eb body colour was winning over the pad's own white
+   (3.94:1 on the pad). Same fill, white ink restored: 4.88:1. */
+html.theme--dark .scoreTrackerTap,
+html.theme--dark .scoreTrackerTap *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+/* Same fill, same rule, four buttons the earlier pass missed. In dark
+   --jv-blue-strong is the sky blue #4fb3ff; a legacy `html.theme--dark
+   .btnPrimary{color:#fff !important}` was still forcing white on it (2.28:1)
+   for these four while every other primary already carried --jv-on-blue
+   (7.93:1). The fill is not touched — only the ink that sits on it. */
+html.theme--dark #welcomeOverlay #btnWelcomeStart,
+html.theme--dark #welcomeOverlay #btnWelcomeStart *,
+html.theme--dark #helpBackdrop #btnHelpReplayTour,
+html.theme--dark #profileBackdrop #btnProfileEditSave,
+html.theme--dark #profileBackdrop #btnProfileAdd{
+  color:var(--jv-on-blue,#06233a) !important;
+  -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important;
+}
 #tabModes .achievementsHead .badgesHint{ opacity:1 !important; }
 
 /* The completion takeover sits at z-index 80; the promised 5-second safety
