@@ -103,6 +103,40 @@ for (const s of ["shown", "entered", "ready", "moved", "mission", "failed", "esc
   check(s, buildDataPoint({ e: "hub3d", step: s })?.blobs[1], s);
 }
 
+console.log("\nLocked v1 R&D dashboard follow-up — frozen column layout:");
+check("mission_entry{id:12,source:coach}", buildDataPoint({ e: "mission_entry", id: 12, source: "coach" }), {
+  blobs: ["mission_entry", "coach"], doubles: [12], indexes: ["mission_entry"],
+});
+check("mission_unfinished_exit{id:7}", buildDataPoint({ e: "mission_unfinished_exit", id: 7 }), {
+  blobs: ["mission_unfinished_exit", ""], doubles: [7], indexes: ["mission_unfinished_exit"],
+});
+check("product_care_open{topic:strap_fit}", buildDataPoint({ e: "product_care_open", topic: "strap_fit" }), {
+  blobs: ["product_care_open", "strap_fit"], doubles: [], indexes: ["product_care_open"],
+});
+check("home_add_tap", buildDataPoint({ e: "home_add_tap" }), {
+  blobs: ["home_add_tap", ""], doubles: [], indexes: ["home_add_tap"],
+});
+check("standalone_open", buildDataPoint({ e: "standalone_open" }), {
+  blobs: ["standalone_open", ""], doubles: [], indexes: ["standalone_open"],
+});
+check("first_mission_start", buildDataPoint({ e: "first_mission_start" }), {
+  blobs: ["first_mission_start", ""], doubles: [], indexes: ["first_mission_start"],
+});
+check("first_mission_complete", buildDataPoint({ e: "first_mission_complete" }), {
+  blobs: ["first_mission_complete", ""], doubles: [], indexes: ["first_mission_complete"],
+});
+
+console.log("\nAll six mission_entry sources accepted:");
+for (const s of ["today", "browse", "random", "resume", "coach", "island"]) {
+  check(s, buildDataPoint({ e: "mission_entry", id: 1, source: s })?.blobs[1], s);
+}
+
+console.log("\nAll seven product_care_open topics accepted:");
+for (const t of ["ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
+                 "indoor_play", "cleaning_storage", "damaged_missing"]) {
+  check(t, buildDataPoint({ e: "product_care_open", topic: t })?.blobs[1], t);
+}
+
 console.log("\nProp-less events emit an empty blob2:");
 for (const e of ["daily_pick_tap", "certificate_made", "speak_on", "score_saved",
                  "dashboard_open", "missionbook_get", "profile_add", "progress_reset"]) {
@@ -119,10 +153,20 @@ check("app_open carrying an id",
 check("welcome_complete carrying the chosen age band",
   buildDataPoint({ e: "welcome_complete", band: "just-starting", diff: "Easy" }),
   { blobs: ["welcome_complete", ""], doubles: [], indexes: ["welcome_complete"] });
+check("home_add_tap carrying a platform string",
+  buildDataPoint({ e: "home_add_tap", platform: "ios-safari" }),
+  { blobs: ["home_add_tap", ""], doubles: [], indexes: ["home_add_tap"] });
 
 console.log("\nRejected (must all be null):");
 const rejects = [
   ["unknown event name", { e: "Mission Completed", id: 1 }],
+  ["mission_entry source not in enum", { e: "mission_entry", id: 1, source: "search" }],
+  ["mission_entry with no source", { e: "mission_entry", id: 1 }],
+  ["mission_entry with invalid id", { e: "mission_entry", id: 0, source: "browse" }],
+  ["mission_unfinished_exit with invalid id", { e: "mission_unfinished_exit", id: "7" }],
+  ["mission_unfinished_exit with no id", { e: "mission_unfinished_exit" }],
+  ["product_care_open topic not in enum", { e: "product_care_open", topic: "battery_dead" }],
+  ["product_care_open free text", { e: "product_care_open", topic: "the ball is stuck" }],
   ["pack key not in enum", { e: "pack_view", pack: "all" }],
   ["pack display name, not key", { e: "pack_view", pack: "Bullseye!" }],
   ["pack slug, not key", { e: "pack_complete", pack: "aim-master" }],
@@ -203,6 +247,17 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
     '{"e":"level_up","level":7}',
     // Writes, but the team name must not survive into any column.
     '{"e":"team_create","kind":"sibling","team":"Ada + Ali"}',
+    // Locked v1 R&D dashboard follow-up.
+    '{"e":"mission_entry","id":12,"source":"coach"}',
+    '{"e":"mission_entry","id":2,"source":"island"}',
+    '{"e":"mission_unfinished_exit","id":7}',
+    '{"e":"product_care_open","topic":"strap_fit"}',
+    '{"e":"home_add_tap"}',
+    '{"e":"standalone_open"}',
+    '{"e":"first_mission_start"}',
+    '{"e":"first_mission_complete"}',
+    // Writes, but the smuggled device id must not survive into any column.
+    '{"e":"mission_entry","id":5,"source":"resume","device_id":"a1b2-c3d4-uid-999"}',
   ];
   const invalid = [
     '{"e":"Mission Completed","id":1}',
@@ -221,6 +276,13 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
     '{"e":"level_up","level":1}',
     '{"e":"level_up","level":9}',
     '{"e":"level_up"}',
+    // Locked v1 rejections.
+    '{"e":"mission_entry","id":12,"source":"search-engine"}',
+    '{"e":"mission_entry","source":"browse"}',
+    '{"e":"product_care_open","topic":"battery_dead"}',
+    '{"e":"product_care_open"}',
+    '{"e":"review_prompt_shown"}',
+    '{"e":"review_rating","stars":5}',
   ];
 
   for (const b of [...valid, ...invalid]) check(`204 for ${b.slice(0, 34)}`, (await post(b)).status, 204);
@@ -232,6 +294,7 @@ console.log("\nfetch handler — only allowlisted payloads reach WAE:");
   check("no child name reached any column", cells.some(c => /Ada/i.test(c)), false);
   check("no team name reached any column", cells.some(c => /Ali|\+/.test(c)), false);
   check("no age reached any column", writes.some(w => w.blobs[0] === "profile_add" && w.doubles.length), false);
+  check("no smuggled device id reached any column", cells.some(c => /a1b2-c3d4-uid-999/i.test(c)), false);
 
   check("GET /api/beacon rejected", (await worker.fetch(new Request("https://jumvi.co/api/beacon"), env)).status, 405);
   check("non-beacon path falls through to assets", (await worker.fetch(new Request("https://jumvi.co/style.css"), env)).status, 200);

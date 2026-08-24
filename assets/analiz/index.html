@@ -171,6 +171,9 @@ body{
   padding:9px 12px;border-radius:7px;display:block;margin:0 0 14px;overflow-x:auto}
 .empty input[type=file]{font-family:var(--body);font-size:13px}
 .hint{font-size:12.5px;color:var(--ink-38);margin-top:10px}
+
+/* ---------- Locked v1 R&D dashboard follow-up ---------- */
+.notavail{font-family:var(--mono);font-size:11.5px;color:var(--ink-38);font-style:italic}
 </style>
 </head>
 <body>
@@ -197,7 +200,9 @@ body{
 
     <section class="sec">
       <h2 class="sec-h">36 görev · tamamlanma haritası</h2>
-      <p class="grid-note">Her satır bir paket, her kare bir görev. Koyuluk = başlatanların kaçının bitirdiği. Boş kareler hiç açılmamış görevler.</p>
+      <p class="grid-note">Her satır bir paket, her kare bir görev. Koyuluk = başlatanların kaçının bitirdiği. Boş kareler hiç açılmamış görevler.
+        Bu bir <b>olay oranı</b>, kohort dönüşüm oranı değil: start ve complete olayları kişi/cihaz bazında eşleştirilmiyor,
+        bu yüzden oran teorik olarak %100'ü geçebilir. Turuncu kareler kesin "kötü görev" iddiası değil, incelenmeye değer adaylardır.</p>
       <div class="gridwrap" id="gridwrap"></div>
     </section>
 
@@ -214,13 +219,51 @@ body{
     </div>
 
     <section class="sec">
+      <h2 class="sec-h">Paket laboratuvarı</h2>
+      <p class="grid-note">6 beceri paketi — girildi mi, denendi mi, bitirildi mi.</p>
+      <div class="card" id="packLab"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Ürün sinyalleri</h2>
+      <p class="grid-note">Grown-ups → Product Care &amp; Quick Help'te hangi konu açıldı. Bunlar arıza oranı değil,
+        konu bazlı ilgi sinyalidir — "31 kişi bu konuyu açtı" demektir, "31 üründe arıza var" değil.</p>
+      <div class="card" id="productSignals"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Görev keşif kaynağı</h2>
+      <p class="grid-note">Bir görev nasıl açıldı — Bugün kartından mı, Gözat listesinden mi, Rastgele'den mi,
+        Kaldığın yerden devam'dan mı, Coach Leo önerisinden mi, yoksa Leo'nun Adası'ndan mı.</p>
+      <div class="card" id="entrySources"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Aile</h2>
+      <p class="grid-note">Takım kurma, seviye atlama, rozet, profil ve geri alma — hepsi sadece OLAY sayısı,
+        hiçbiri çocuk adı, profil kimliği veya takım kimliği taşımaz.</p>
+      <div class="card" id="family"></div>
+    </section>
+
+    <section class="sec">
       <h2 class="sec-h">Özellik kullanımı · canlı mı ölü mü</h2>
       <div class="card" id="features"></div>
     </section>
 
     <section class="sec">
       <h2 class="sec-h">3D Hub hunisi</h2>
+      <p class="grid-note">İkincil bir özellik ekranı — fiziksel oyun asıl ürün, bu sadece bir keşif bonusu.</p>
       <div class="card" id="hub"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Teknik · veri sağlığı</h2>
+      <div class="card" id="dataHealth"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Gizlilik · uyumluluk sağlığı</h2>
+      <div class="card" id="privacyHealth"></div>
     </section>
 
     <p class="foot" id="foot"></p>
@@ -231,14 +274,21 @@ body{
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
- * JUMVI Ar-Ge Paneli — Faz 2, Görev 2.3
+ * JUMVI Ar-Ge Paneli — Faz 2, Görev 2.3 + Locked v1 R&D dashboard follow-up
  *
  * Reads data/snapshots/*.json. Never queries Analytics Engine: that needs an
  * API token, and a token in a page is a leaked token. The snapshot generator
  * holds the credential in a terminal, this page reads its output.
  *
- * NOT DEPLOYED to qr.jumvi.co — that is the children's app. tools/ is in
- * .assetsignore, so the platform will not serve this even by accident.
+ * DEPLOYED at qr.jumvi.co/analiz, password-gated by src/worker.js's Basic
+ * Auth check (ANALIZ_PASSWORD). This file itself is a normal, servable asset
+ * at /assets/analiz/ — the gate is what keeps it from being casually
+ * stumbled on, not exclusion from the deploy (see src/worker.js's own header
+ * comment for why). Also reachable locally over plain HTTP for development.
+ *
+ * SCHEMA v3: this panel reads BOTH v2 and v3 snapshot files. A v3-only field
+ * missing from an older v2 file renders as "bu şema sürümünde yok", never as
+ * a fabricated zero — see hasV3() below and every renderer that checks it.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Ayarlar — eşikler burada, tek yerde ────────────────────────────────────
@@ -267,7 +317,7 @@ const FEATURE_LABELS = {
   certificate_made: "Sertifika",
   share_tap:        "Paylaşım (WhatsApp/kopyala)",
   score_saved:      "Skor takibi",
-  dashboard_open:   "Ebeveyn paneli",
+  dashboard_open:   "Aile / ilerleme açıldı",
   missionbook_get:  "Mission Book PDF",
   profile_add:      "Çoklu çocuk profili",
   progress_reset:   "İlerlemeyi sıfırlama",
@@ -278,6 +328,19 @@ const HUB_LABELS = {
   moved: "Yürüdü", mission: "Görev bitirdi", failed: "Yükleme hatası",
   escaped: "Yüklemeden çıktı",
 };
+
+/* ── Locked v1 R&D dashboard follow-up — schema v3 label maps ──────────────── */
+const ENTRY_SOURCE_LABELS = {
+  today: "Bugün kartı", browse: "Gözat listesi", random: "Rastgele",
+  resume: "Kaldığın yerden devam", coach: "Coach Leo önerisi", island: "Leo'nun Adası",
+};
+const PRODUCT_CARE_LABELS = {
+  ball_not_sticking: "Top yapışmıyor", ball_hard_to_remove: "Top çıkmıyor",
+  strap_fit: "El kayışı uyumu", missing_catches: "Yakalayamıyor",
+  indoor_play: "İç mekanda oynama", cleaning_storage: "Temizlik ve saklama",
+  damaged_missing: "Hasarlı / eksik parça",
+};
+const PACK_ORDER_NOTE = "Görüntüleme → başlatma → bitirme → tüm paketi bitirme.";
 
 const CROSS_TITLES = {
   by_age: "Yaş etiketi", by_difficulty: "Zorluk seviyesi",
@@ -388,6 +451,113 @@ function missionStats(snap, id) {
   return { starts: m?.starts ?? 0, completes: m?.completes ?? 0 };
 }
 
+/** Schema v3 alanları eski (v2) snapshot'larda yok — 0 değil, YOK. Bu, hangi
+ *  render fonksiyonunun "bu şema sürümünde yok" mu yoksa gerçek sıfır mı
+ *  göstereceğine karar vermesi için tek doğruluk kaynağı. */
+function hasV3(snap) {
+  return Number(snap.snapshot_schema ?? 1) >= 3;
+}
+const NOT_IN_SCHEMA = '<span class="notavail">bu şema sürümünde yok</span>';
+
+/** Basit bir "etiket · sayı" listesi — Ürün Sinyalleri, Aile ve Keşif Kaynağı
+ *  bölümlerinin üçü de aynı şekli kullanıyor, .frow'u burada tekrar yazmak
+ *  yerine. */
+function renderCountRows(el, entries) {
+  const max = Math.max(1, ...entries.map((e) => e.n));
+  el.innerHTML = entries.map((e) => {
+    const dead = e.n === 0;
+    return `<div class="frow${dead ? " dead" : ""}">
+        <span class="fname">${esc(e.label)}</span>
+        <span class="fmini"><i style="width:${(e.n / max) * 100}%;background:${dead ? "var(--ink-12)" : "var(--sky)"}"></i></span>
+        <span class="fval">${nf(e.n)}</span>
+      </div>`;
+  }).join("");
+}
+
+function renderPackLab(snap) {
+  const el = $("packLab");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — v3 öncesi snapshot'larda ayrı bir paket tablosu yok, ancak üstteki 36 görev haritasının sağ sütunu her paketin bitirme oranını zaten gösteriyordu.</div>`; return; }
+  const rows = META.pack_keys.map((key) => {
+    const p = snap.packs?.[key] || { views: 0, starts: 0, completes: 0, completed_pack: 0 };
+    return `<div class="frow">
+        <span class="fname">${esc(META.pack_labels[key])}</span>
+        <span class="fmini"><i style="width:${p.views ? "100" : "0"}%;background:${p.views ? "var(--sky)" : "var(--ink-12)"}"></i></span>
+        <span class="fval">${nf(p.views)} görüntü · ${nf(p.starts)} başlangıç · ${nf(p.completes)} bitirme · ${nf(p.completed_pack)} tam paket</span>
+      </div>`;
+  }).join("");
+  el.innerHTML = rows + `<div class="xread">${esc(PACK_ORDER_NOTE)}</div>`;
+}
+
+function renderProductSignals(snap) {
+  const el = $("productSignals");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — product_care_open bu haftadan önce toplanmıyordu.</div>`; return; }
+  const entries = Object.entries(PRODUCT_CARE_LABELS)
+    .map(([key, label]) => ({ key, label, n: snap.product_care_topics?.[key] ?? 0 }))
+    .sort((a, b) => b.n - a.n);
+  renderCountRows(el, entries);
+}
+
+function renderEntrySources(snap) {
+  const el = $("entrySources");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`; return; }
+  const entries = Object.entries(ENTRY_SOURCE_LABELS)
+    .map(([key, label]) => ({ key, label, n: snap.mission_entry_sources?.[key] ?? 0 }))
+    .sort((a, b) => b.n - a.n);
+  renderCountRows(el, entries);
+}
+
+function renderFamily(snap) {
+  const el = $("family");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — team_create/team_switch/level_up/mission_undo/profile_delete bu haftadan önce toplanmıyordu. profile_add, progress_reset, certificate_made, share_tap ve badge_earned aşağıdaki "Özellik kullanımı" bölümünde her zaman vardı.</div>`; return; }
+  const fam = snap.family || {};
+  const entries = [
+    { label: "Takım kuruldu (yetişkin)", n: fam.team_create?.adult ?? 0 },
+    { label: "Takım kuruldu (kardeş)", n: fam.team_create?.sibling ?? 0 },
+    { label: "Takım değiştirildi", n: fam.team_switch ?? 0 },
+    { label: "Rozet kazanıldı", n: snap.features?.badge_earned ?? 0 },
+    { label: "Seviye atlandı (toplam)", n: Object.values(fam.level_up || {}).reduce((a, b) => a + b, 0) },
+    { label: "Profil eklendi", n: snap.features?.profile_add ?? 0 },
+    { label: "Profil silindi", n: fam.profile_delete ?? 0 },
+    { label: "Tamamlama geri alındı (Undo)", n: fam.mission_undo ?? 0 },
+    { label: "İlerleme sıfırlandı", n: snap.features?.progress_reset ?? 0 },
+  ];
+  renderCountRows(el, entries);
+  const levels = Object.entries(fam.level_up || {}).filter(([, v]) => v > 0);
+  const levelLine = levels.length
+    ? `Seviye dağılımı: ${levels.map(([lvl, n]) => `Sv.${esc(lvl)} × ${nf(n)}`).join(" · ")}`
+    : "Bu hafta kimse seviye atlamadı.";
+  el.innerHTML += `<div class="xread">${levelLine}</div>`;
+}
+
+function renderDataHealth(snap) {
+  const el = $("dataHealth");
+  const schema = snap.snapshot_schema ?? 1;
+  const legacy = Object.entries(snap.legacy || {});
+  const legacyLine = legacy.length
+    ? legacy.map(([k, n]) => `<code>${esc(k)}</code>: ${nf(n)} (canlı özellik değil, sadece kayıt kalsın diye)`).join(", ")
+    : "İzlenen eski (legacy) olay yok.";
+  el.innerHTML = `
+    <div class="frow"><span class="fname">Snapshot şeması</span><span class="fmini"></span><span class="fval">v${esc(schema)}</span></div>
+    <div class="frow"><span class="fname">Üretildi</span><span class="fmini"></span><span class="fval">${esc((snap.generated_at || "").replace("T"," ").replace("Z"," UTC"))}</span></div>
+    <div class="frow"><span class="fname">Kaynak veri seti</span><span class="fmini"></span><span class="fval">${esc(snap.dataset || "—")}</span></div>
+    <div class="xread">Eski (legacy) olaylar: ${legacyLine}</div>
+    <div class="xread">Olay kapsamı, her deploy'da <code>tools/check-event-coverage.mjs</code> ile doğrulanır — Worker'ın kabul ettiği
+      her olayın bu snapshot'ta nereye yazıldığına dair açık bir karar olmadan CI kırmızı yanar.</div>`;
+}
+
+function renderPrivacyHealth() {
+  const el = $("privacyHealth");
+  el.innerHTML = `
+    <div class="frow"><span class="fname">Kişi/cihaz kimliği saklanan alan sayısı</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Amazon sipariş/alıcı kimliği</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Yorum (review) izleme/isteme akışı</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Üçüncü taraf reklam/davranışsal izleyici</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Kalıcı analytics kimliği (uuid/fingerprint)</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="xread">Bu satırlar iddia değil, iki otomatik testle zorlanıyor: <code>tools/check-beacon-schema.mjs</code>
+      (yasak alan enjeksiyonu denemeleri hiçbir sütuna ulaşmıyor mu) ve <code>tools/check-analytics-compliance.mjs</code>
+      (kod yollarında kimlik benzeri alan, review akışı veya üçüncü taraf izleyici var mı). İkisi de her PR'da çalışır.</div>`;
+}
+
 /** Prototipin renk merdiveni; "sorunlu" ayrı bir durum, skalanın parçası değil. */
 function cellColor(ratio, weak) {
   if (weak) return { bg: "var(--orange)", fg: "#fff" };
@@ -415,8 +585,14 @@ function render(weekId) {
   renderGrid(snap);
   renderFunnel(snap, prev);
   renderCross(snap);
+  renderPackLab(snap);
+  renderProductSignals(snap);
+  renderEntrySources(snap);
+  renderFamily(snap);
   renderFeatures(snap);
   renderHub(snap);
+  renderDataHealth(snap);
+  renderPrivacyHealth();
   renderFoot(snap, prev);
 }
 
@@ -471,8 +647,8 @@ function renderAlerts(snap) {
       if (r >= avg * CONFIG.weakMissionRatio) continue;
       out.push({
         num: pct(r),
-        title: `Görev ${id} yarıda kalıyor`,
-        text: `${nf(starts)} başlatma, ${nf(completes)} tamamlama. Diğer görevlerin ortalaması ${pct(avg)}. Adımları veya süresi sorunlu olabilir.`,
+        title: `Görev ${id} — inceleme adayı`,
+        text: `${nf(starts)} başlatma, ${nf(completes)} tamamlama olay oranı. Diğer görevlerin ortalaması ${pct(avg)}. Bu bir kohort dönüşüm oranı değil — kesin sonuç değil, adımlara veya süreye bakmayı gerektiren bir sinyal.`,
       });
     }
   }
@@ -526,7 +702,7 @@ function renderGrid(snap) {
       const r = completes / starts;
       const weak = avg !== null && starts >= CONFIG.minStartsForAlert && r < avg * CONFIG.weakMissionRatio;
       const c = cellColor(r, weak);
-      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ sorunlu" : ""}`;
+      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ inceleme adayı" : ""}`;
       return `<div class="cell" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</div>`;
     }).join("");
 
@@ -543,7 +719,7 @@ function renderGrid(snap) {
       <span><i class="sw" style="background:#e6f3de"></i>düşük</span>
       <span><i class="sw" style="background:#b3dd9c"></i>orta</span>
       <span><i class="sw" style="background:#6DBE45"></i>yüksek</span>
-      <span><i class="sw" style="background:var(--orange)"></i>sorunlu</span>
+      <span><i class="sw" style="background:var(--orange)"></i>inceleme adayı</span>
     </div>`;
 }
 

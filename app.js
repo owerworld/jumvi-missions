@@ -90,9 +90,11 @@ function trackEvent(name, props){
 /* ═══════════════════════════════════════════════════════════════════════════
  * BEACON — Faz 1, Görev 1.2 (5 events) + Faz 2, Görev 2.1 (16 more)
  *
- * Twenty-one events. The allowlist here is mirrored by a stricter one in
- * src/worker.js, which is what actually protects the dataset. This copy
- * exists to avoid pointless network calls, not as the security boundary.
+ * Thirty-five events (see tools/check-event-coverage.mjs, which fails CI if
+ * this Set and src/worker.js's allowlist ever drift apart). The allowlist
+ * here is mirrored by a stricter one in src/worker.js, which is what
+ * actually protects the dataset. This copy exists to avoid pointless network
+ * calls, not as the security boundary.
  *
  * FAZ 1 — the funnel:
  *   app_open                      once per session
@@ -153,6 +155,34 @@ function trackEvent(name, props){
  *   mission_undo                  the 5s Undo was used on a completion
  *   level_up          { level }   2..7, the ladder in XP_LEVELS
  *
+ * LOCKED v1 — R&D DASHBOARD FOLLOW-UP. Answers "how do families find a
+ * mission", "which missions get opened and walked away from", "what
+ * physical-product topic do parents open in Grown-ups", and closes the
+ * hub-vs-2D first-play gap that first_mission_start's DORMANT trackEvent()
+ * marker above never actually measured. Full taxonomy and rationale:
+ * docs/analytics/locked-v1.md.
+ *   mission_entry     { id, source } source ∈ today|browse|random|resume|
+ *                                    coach|island. Fired once per openMission()
+ *                                    call — every entry, not de-duped, because
+ *                                    the question is HOW EACH VISIT arrived.
+ *   mission_unfinished_exit { id }   a deliberate Back/Close/Cancel out of a
+ *                                    mission NOT completed in that open cycle.
+ *                                    Never fires on tab-hide/backgrounding —
+ *                                    putting the phone down to go play is the
+ *                                    product working, not abandonment.
+ *   product_care_open { topic }     one of the 7 real "Product Care & Quick
+ *                                    Help" accordion items in Grown-ups.
+ *   home_add_tap                    tapped "Keep JUMVI on this phone" — intent,
+ *                                    not observed install success (iOS cannot
+ *                                    report that; do not pretend otherwise).
+ *   standalone_open                 this session is already running installed
+ *                                    (display-mode: standalone), once per
+ *                                    session.
+ *   first_mission_start             once per device, forever — a REAL beacon,
+ *                                    distinct from the dormant trackEvent()
+ *                                    marker of the same name above.
+ *   first_mission_complete          once per device, forever.
+ *
  * READING app_first_open: it is an approximate activation INDICATOR, not a
  * count of physical units in use. One box can be opened on several phones,
  * one phone can be cleared and look new. Never divide it by units sold and
@@ -170,11 +200,21 @@ const BEACON_EVENTS = new Set([
   "hub3d", "app_first_open", "return_visit",
   "welcome_complete", "quickplay_start",
   "team_create", "team_switch", "profile_delete", "mission_undo", "level_up",
+  "mission_entry", "mission_unfinished_exit", "product_care_open",
+  "home_add_tap", "standalone_open", "first_mission_start", "first_mission_complete",
 ]);
 const TEAM_KINDS = ["adult", "sibling"];
 const HELP_REASONS = [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
   "need_more_space", "instructions_unclear", "mission_too_hard",
+];
+/** How a mission was reached — mirrors src/worker.js's MISSION_ENTRY_SOURCES. */
+const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island"];
+/** The real, current "Product Care & Quick Help" accordion in Grown-ups —
+ *  see the data-topic attributes on index.html's .productHelpItem elements. */
+const PRODUCT_CARE_TOPICS = [
+  "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
+  "indoor_play", "cleaning_storage", "damaged_missing",
 ];
 
 function beacon(name, props){
@@ -2983,6 +3023,10 @@ window.addEventListener("appinstalled", ()=>{
 /* The only place an install is triggered, and always straight from a tap. */
 async function runInstallAction(){
   const state = installState();
+  // Locked v1 — intent, not observed success: iOS never reports whether the
+  // family actually finished Share → Add to Home Screen, so this counts the
+  // tap that starts either path, never a fabricated "installed" signal.
+  if(state === "prompt" || state === "ios-manual") beacon("home_add_tap");
   if(state === "prompt"){
     const p = deferredInstallPrompt;
     // Cleared before awaiting: the event is single-use, and a second tap while
@@ -4529,6 +4573,15 @@ function applyHubMissionTheme(){
 }
 
 let _firstMissionStartTracked = false;
+/* Locked v1 — persistent, device-scoped milestone flags (mirrors SEEN_KEY's
+ * pattern above). Not sessionStorage: these must fire exactly once per
+ * device, forever, like app_first_open and welcome_complete. */
+const FIRST_MISSION_START_KEY = "jumvi_first_mission_start_v1";
+const FIRST_MISSION_COMPLETE_KEY = "jumvi_first_mission_complete_v1";
+/* Reset on every openMission(); closeMission() checks it so a mission closed
+ * more than once (e.g. both the history-back path and a direct call) cannot
+ * double-fire mission_unfinished_exit for the same open cycle. */
+let _missionExitBeaconed = false;
 
 /* The mission the sheet is currently showing. startTimer() is reached through
  * a countdown callback that carries only a duration, so without this the
@@ -4629,7 +4682,7 @@ function initMissionCarousels(root){
   return true;
 }
 
-function openMission(id){
+function openMission(id, source){
   const ms = missions.find(x=>x.id===id);
   if(!ms) return;
   if(_missionXpRewardMissionId && _missionXpRewardMissionId !== Number(id)){
@@ -4650,12 +4703,28 @@ function openMission(id){
   stopLeoSpeakSteps();
   cancelTimerCountdown();
   _openMissionId = id;
+  // Locked v1 — every open reports how it was reached. Not de-duped: the
+  // question is how EACH visit arrived, not a once-per-session milestone.
+  // Callers that don't know their source (most of the ~20 call sites across
+  // Next/Hub/etc.) default to "browse" — an honest fallback, since nearly
+  // all of them are reached from a missions-surface flow.
+  const entrySource = MISSION_ENTRY_SOURCES.includes(source) ? source : "browse";
+  _missionExitBeaconed = false;
+  beacon("mission_entry", { id: id, source: entrySource });
   // first_mission_start — once per session, the moment any mission view opens,
   // tagged with where it came from (hub vs 2D). Parity with the audit's A/B
   // funnel (2D had it implicitly, 3D had nothing).
   if(!_firstMissionStartTracked){
     _firstMissionStartTracked = true;
     trackEvent("first_mission_start", { source: window._hubMissionFlow ? "hub" : "2d" });
+  }
+  // Locked v1 — the REAL first_mission_start beacon, once per device forever
+  // (unlike the DORMANT trackEvent() call just above, which is a no-op
+  // marker — see the BEACON header comment). No id, no source: a milestone,
+  // not a measurement.
+  if(!lsGet(FIRST_MISSION_START_KEY, "")){
+    lsSet(FIRST_MISSION_START_KEY, "1");
+    beacon("first_mission_start");
   }
   // Beacon 2/5 — de-duped per mission per session. Opening the sheet is the
   // only reliable "started" signal: the timer is optional and plenty of kids
@@ -5044,6 +5113,15 @@ function closeMission(opts){
       // Task 5 — mission abandoned midway (real engagement, then left without
       // finishing): a gentle, no-pressure Leo. Deferred so it lands after the
       // modal has closed, not on top of it.
+    }
+    // Locked v1 — a DELIBERATE exit (this function only runs from Close/Back/
+    // Next-flow calls, never from visibilitychange — see app.js's own
+    // visibilitychange handler, which pauses/stops but never calls
+    // closeMission()). No open-duration threshold: even an instant Back is a
+    // real "not this one" signal, distinct from incAttempt's 20s engagement bar.
+    if(!_missionExitBeaconed){
+      _missionExitBeaconed = true;
+      beacon("mission_unfinished_exit", { id: lastOpenedId });
     }
   }
   resetTimerUI(); // Stop + reset timer on close
@@ -5576,6 +5654,12 @@ function markMissionDone(id, source="manual"){
   // Beacon 3/5 — no de-dupe needed: the guard at the top of this function
   // already returns early for a mission that is already done.
   beacon("mission_complete", { id: id });
+  // Locked v1 — once per device, forever. Same persistent-flag pattern as
+  // first_mission_start; no id, no source.
+  if(!lsGet(FIRST_MISSION_COMPLETE_KEY, "")){
+    lsSet(FIRST_MISSION_COMPLETE_KEY, "1");
+    beacon("first_mission_complete");
+  }
 
   // Hub3D Mission Completed — only for runs the kid launched from inside the hub
   // (window._hubMissionFlow is set by openMissionFromHub, cleared on hub exit).
@@ -5876,11 +5960,11 @@ btnNext.onclick = ()=>{
       const cand = packList[(i+k) % packList.length];
       if(!done.has(cand.id)){
         trackEvent("Mission Next Hub Pack");
-        openMission(cand.id);
+        openMission(cand.id, "island");
         return;
       }
     }
-    openMission(packList[(i+1) % packList.length].id);
+    openMission(packList[(i+1) % packList.length].id, "island");
     return;
   }
   // Akıllı öneri (mevcut mission tamamlandıysa)
@@ -5906,7 +5990,7 @@ btnRandomPack.onclick = ()=>{
   const pick = list[Math.floor(Math.random()*list.length)];
   if(!done.has(lastOpenedId)) incSkip(lastOpenedId);
   clickSound("click");
-  openMission(pick.id);
+  openMission(pick.id, "random");
 };
 
 /** =======================
@@ -5917,7 +6001,7 @@ document.getElementById("btnRandomAll").onclick = ()=>{
   const list = getVisibleMissions();
   const pick = list[Math.floor(Math.random()*list.length)];
   if(!pick){ showToast("No missions match the filters."); return; }
-  openMission(pick.id);
+  openMission(pick.id, "random");
 };
 
 // §3.2 — destructive reset now requires a deliberate press-and-hold (the guard
@@ -6338,17 +6422,17 @@ if(btnDailyPlay){
     // Once the featured mission is done this button leads onward instead of
     // replaying; renderDailyUI() is what decided that, and it stored the id.
     if(_dailyNextId && done.has(dailyIdStored)){
-      openMission(_dailyNextId);
+      openMission(_dailyNextId, "today");
       return;
     }
-    openMission(dailyIdStored);
+    openMission(dailyIdStored, "today");
   };
 }
 if(btnDailyReplay){
   btnDailyReplay.onclick = ()=>{
     clickSound("click");
     ensureDailyMission();
-    openMission(dailyIdStored);
+    openMission(dailyIdStored, "today");
   };
 }
 if(btnDailyNew){
@@ -6880,6 +6964,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
   // Faz 2 — the same moment, two different questions: is this device new, and
   // has it come back. Neither sends anything that identifies it.
   beaconReachAndRetention();
+  // Locked v1 — once per session: this launch is already running installed
+  // (display-mode: standalone / iOS's navigator.standalone).
+  if(isStandalone()) beaconOnce("standalone_open", "standalone_open");
 
   // The Mission Book is a plain PDF link in two places (profile quick-link and
   // the parent panel). Both are real <a href> navigations — bind, don't
@@ -7275,7 +7362,7 @@ function ensureHub3DLoaded(onProgress){
     step(0.12, "three");
     await import(THREE_MODULE_URL);                          // milestone 1: three.js
     step(0.45, "hub_module");
-    const mod = await import("./jumvi-hub-app.js?v=20260813-9"); // play-first mobile hub UX + deployed Leo model
+    const mod = await import("./jumvi-hub-app.js?v=20260821-1"); // play-first mobile hub UX + deployed Leo model
     step(0.72, "init");
     const container = document.getElementById("hub3dOverlay");
     _hub3dInstance = mod.initHub3D({
@@ -7930,6 +8017,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const care = document.querySelector("#tabProfile .productCareSection");
     if(care){ care.open = true; setTimeout(()=>care.scrollIntoView({block:"start",behavior:"smooth"}), 80); }
   });
+
+  // Locked v1 — product_care_open. The native <details> "toggle" event fires
+  // on both open AND close; el.open at that moment is the NEW state, so this
+  // only counts opens. Bound once, on the real elements, not the topic list —
+  // a data-topic that doesn't match PRODUCT_CARE_TOPICS simply won't beacon
+  // (defensive, not expected to ever happen since the enum mirrors the markup).
+  document.querySelectorAll(".productHelpItem[data-topic]").forEach(el=>{
+    const topic = el.dataset.topic;
+    if(!PRODUCT_CARE_TOPICS.includes(topic)) return;
+    el.addEventListener("toggle", ()=>{
+      if(el.open) beacon("product_care_open", { topic: topic });
+    });
+  });
 });
 
 
@@ -8180,7 +8280,7 @@ function initBottomNav(){
       const lastId = Number(lsGet("jumvi_last_opened_id_v1", "0"));
       if(lastId){
         const ms = missions.find(x=>x.id===lastId);
-        if(ms) openMission(lastId);
+        if(ms) openMission(lastId, "resume");
       }
     });
   }
@@ -8735,7 +8835,7 @@ function renderCoachPick(){
       clickSound("click");
       trackEvent("Coach Pick Tapped");
       beaconOnce("daily_pick_tap", "daily_pick_tap");
-      openMission(ms.id);
+      openMission(ms.id, "coach");
     };
   }
   card.style.display = "";
@@ -8750,7 +8850,7 @@ function renderCoachPick(){
       clickSound("click");
       trackEvent("Coach Pick Tapped");
       beaconOnce("daily_pick_tap", "daily_pick_tap");
-      openMission(ms.id);
+      openMission(ms.id, "coach");
     };
   }
 }

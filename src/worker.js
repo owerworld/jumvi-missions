@@ -1,8 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════════════════
  * JUMVI beacon — Faz 1, Görev 1.2 (5 events) + Faz 2, Görev 2.1 (16 more)
- *                + activation/Quick Play follow-up (2 more)
+ *                + activation/Quick Play follow-up (2 more) + Faz 2 Locked v1
+ *                R&D dashboard follow-up (7 more)
  *
- * THE RULE: this Worker writes EXACTLY twenty-three event names and nothing else.
+ * THE RULE: this Worker writes EXACTLY thirty-five event names and nothing else.
  * Anything not on the allowlist below is dropped silently (204, no write).
  * The endpoint is public, so the allowlist is the only thing standing between
  * a bored stranger and a polluted dataset — treat it as load-bearing.
@@ -171,6 +172,30 @@ const PLAY_MODE_IDS = new Set([
 const TEAM_KINDS = new Set(["adult", "sibling"]);
 const XP_LEVEL_VALUES = new Set([2, 3, 4, 5, 6, 7]);
 
+/* ── Locked v1 R&D dashboard follow-up — 7 more, all still shape-of-a-column,
+ * never free text. See docs/analytics/locked-v1.md for the full taxonomy,
+ * why each exists, and why mission_unfinished_exit deliberately does NOT
+ * fire on tab-hide/backgrounding (that would misclassify "put the phone
+ * down to go play" — the literal point of this product — as abandonment).
+ *
+ * mission_entry / mission_unfinished_exit reuse the timer_start shape: the
+ * mission id travels in double1, never blob2, so a query must always filter
+ * on blob1 first. product_care_open's 7 topics are the real, current
+ * "Product Care & Quick Help" accordion in Grown-ups (index.html) — NOT the
+ * 9-topic list an earlier draft of this spec assumed; two of those ("need
+ * more space", "mission too hard") are already covered by help_open's own
+ * reasons, which live inside a mission, not in Grown-ups, and one real topic
+ * ("something is damaged or missing") wasn't in that draft at all. Mapping
+ * to what actually exists in the UI beats inventing a taxonomy no button
+ * fires. */
+const MISSION_ENTRY_SOURCES = new Set([
+  "today", "browse", "random", "resume", "coach", "island",
+]);
+const PRODUCT_CARE_TOPICS = new Set([
+  "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
+  "indoor_play", "cleaning_storage", "damaged_missing",
+]);
+
 const MISSION_ID_MAX = 200;
 
 function isMissionId(v) {
@@ -271,6 +296,38 @@ export function buildDataPoint(payload) {
     case "team_switch":
     case "profile_delete":
     case "mission_undo":
+      return point("", []);
+
+    /* ── Locked v1 R&D dashboard follow-up ──────────────────────────────── */
+
+    // How a mission was reached. Mission id in double1 (see the block comment
+    // above PRODUCT_CARE_TOPICS for why), source enum in blob2.
+    case "mission_entry":
+      return MISSION_ENTRY_SOURCES.has(payload.source) && isMissionId(payload.id)
+        ? point(payload.source, [payload.id])
+        : null;
+
+    // A deliberate Back/Close/Cancel out of a mission that was not completed
+    // in that open cycle. Never fired on visibilitychange — app.js's own
+    // handler proves that boundary; this file only trusts what it is sent.
+    case "mission_unfinished_exit":
+      return isMissionId(payload.id) ? point("", [payload.id]) : null;
+
+    case "product_care_open":
+      return PRODUCT_CARE_TOPICS.has(payload.topic) ? point(payload.topic, []) : null;
+
+    // Install-intent tap and a same-session standalone-launch signal. Neither
+    // claims to observe install SUCCESS on platforms that don't expose it
+    // (iOS) — see docs/analytics/locked-v1.md.
+    case "home_add_tap":
+    case "standalone_open":
+      return point("", []);
+
+    // One-time-per-device milestones. The client gates these behind a
+    // localStorage flag exactly like app_first_open/welcome_complete — this
+    // file only ever sees "some device crossed this milestone", never which.
+    case "first_mission_start":
+    case "first_mission_complete":
       return point("", []);
 
     default:

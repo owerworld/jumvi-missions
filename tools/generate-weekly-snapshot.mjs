@@ -19,8 +19,32 @@
  * via data/missions-meta.json, which is DERIVED from data.js and re-verified
  * on every run — see loadMissionsMeta().
  *
+ * SCHEMA v3 (Locked v1 R&D dashboard follow-up) fixed a real gap this file's
+ * own opening paragraph warns about: the Worker's allowlist had grown to 27
+ * events (welcome_complete, quickplay_start, team_create, team_switch,
+ * profile_delete, mission_undo, level_up) while this generator still only
+ * knew the original Faz 1/2 set — every one of those seven was live in WAE
+ * and silently NOT being preserved before its 90-day window closed. v3 adds
+ * those seven plus the seven brand-new Locked v1 events (mission_entry,
+ * mission_unfinished_exit, product_care_open, home_add_tap, standalone_open,
+ * first_mission_start, first_mission_complete), and — the actual fix, not
+ * just a one-time backfill — tools/check-event-coverage.mjs now fails CI
+ * whenever a new active event is added to src/worker.js without a matching
+ * decision here. quickplay_start is queried but reported under `legacy`,
+ * not `features`: play-modes.js was removed from the product (see app.js's
+ * own comment above BEACON_EVENTS) and nothing emits it any more, but the
+ * Worker still accepts it — an append-only contract — so a stray/replayed
+ * row must still be counted, just not presented as a live feature.
+ *
+ * v2 snapshots on disk are untouched and still load: this file only adds
+ * fields, never renames or removes one, and the panel (assets/analiz/
+ * index.html) shows "not available in this snapshot schema" rather than a
+ * fabricated zero for a v3-only field on an older file.
+ *
  * MANUAL ONLY — Faz 1 spec is explicit that this must not run on a schedule
  * in this phase. There is no workflow, no cron, no hook. A human runs it.
+ * (Superseded, deliberately, by .github/workflows/weekly-analytics-snapshot.yml
+ * — see that file's header for why and what stays a human-gated PR merge.)
  *
  * PRIVACY: this script can only ever see what the beacon wrote, and the
  * beacon writes no identity of any kind (see docs/audits/faz1-beacon.md).
@@ -53,7 +77,7 @@ import { fileURLToPath } from "node:url";
 import { buildMeta, serialiseMeta } from "./derive-missions-meta.mjs";
 
 const DATASET = "jumvi_events_v1";
-const SNAPSHOT_SCHEMA = 2;
+const SNAPSHOT_SCHEMA = 3;
 
 /* Feature events: a flat count each, no props to break down. Order is the
  * order the panel reads them in. */
@@ -68,6 +92,33 @@ const HUB3D_STEPS = ["shown", "entered", "ready", "moved", "mission", "failed", 
 
 /** Only these visit numbers are ever reported (app.js). */
 const RETURN_VISIT_STEPS = [2, 3, 5, 10];
+
+/* ── Schema v3 — the seven events this file was previously silently
+ * dropping (see the header note above). Flat counts, same shape as
+ * FEATURE_EVENTS, but reported under `activation_milestones` / `family`
+ * instead of `features` — they answer a different kind of question than
+ * "is this feature alive", so they get their own section in the panel. */
+const ACTIVATION_MILESTONE_EVENTS = [
+  "welcome_complete", "first_mission_start", "first_mission_complete",
+  "home_add_tap", "standalone_open",
+];
+const TEAM_KINDS = ["adult", "sibling"];
+const XP_LEVEL_VALUES = [2, 3, 4, 5, 6, 7];
+/** Accepted by the Worker (append-only contract) but nothing in the current
+ *  product emits these any more — see app.js's own comment above
+ *  BEACON_EVENTS. Queried and preserved, reported under `legacy`, never
+ *  presented as a live feature. */
+const LEGACY_EVENTS = ["quickplay_start"];
+
+/* ── Schema v3 — Locked v1 R&D dashboard follow-up (new events) ──────────── */
+/** Mirrors MISSION_ENTRY_SOURCES in src/worker.js / app.js. */
+const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island"];
+/** Mirrors PRODUCT_CARE_TOPICS in src/worker.js / app.js — the real, current
+ *  "Product Care & Quick Help" accordion in Grown-ups, not an invented list. */
+const PRODUCT_CARE_TOPICS = [
+  "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
+  "indoor_play", "cleaning_storage", "damaged_missing",
+];
 
 /** The five cross-reads, and which mission label each one groups by. */
 const CROSS_READS = {
@@ -318,6 +369,19 @@ async function collect(ctx, startMs, endMs) {
   const packViews = new Map();
   const packCompletes = new Map();
 
+  // ── Schema v3 ────────────────────────────────────────────────────────────
+  const activationMilestones = Object.fromEntries(ACTIVATION_MILESTONE_EVENTS.map((e) => [e, 0]));
+  const legacy = Object.fromEntries(LEGACY_EVENTS.map((e) => [e, 0]));
+  const family = {
+    team_create: Object.fromEntries(TEAM_KINDS.map((k) => [k, 0])),
+    team_switch: 0,
+    profile_delete: 0,
+    mission_undo: 0,
+    level_up: Object.fromEntries(XP_LEVEL_VALUES.map((n) => [String(n), 0])),
+  };
+  const missionEntrySources = Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 0]));
+  const productCareTopics = Object.fromEntries(PRODUCT_CARE_TOPICS.map((t) => [t, 0]));
+
   const where =
     `WHERE timestamp >= toDateTime('${sqlDateTime(startMs)}') ` +
     `AND timestamp < toDateTime('${sqlDateTime(endMs)}')`;
@@ -369,10 +433,24 @@ async function collect(ctx, startMs, endMs) {
     `SELECT blob2 AS mission, blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
       `AND blob1 IN ('mission_start','mission_complete') GROUP BY mission, event`,
   )) {
-    const entry = missions.get(row.mission) ?? { starts: 0, completes: 0 };
+    const entry = missions.get(row.mission) ?? { starts: 0, completes: 0, exits: 0 };
     if (row.event === "mission_start") entry.starts += Number(row.n);
     else entry.completes += Number(row.n);
     missions.set(row.mission, entry);
+  }
+
+  // 4b — Schema v3: mission_unfinished_exit per mission. mission_start carries
+  // the id in blob2; this event (like timer_start) carries it in double1 —
+  // cast to a string so it joins the same `missions` map keys.
+  for (const row of await sql(
+    ctx,
+    `SELECT double1 AS mission, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'mission_unfinished_exit' GROUP BY mission`,
+  )) {
+    const key = String(Number(row.mission));
+    const entry = missions.get(key) ?? { starts: 0, completes: 0, exits: 0 };
+    entry.exits = (entry.exits ?? 0) + Number(row.n);
+    missions.set(key, entry);
   }
 
   /* ── Faz 2 ─────────────────────────────────────────────────────────────── */
@@ -421,9 +499,74 @@ async function collect(ctx, startMs, endMs) {
     returnVisits[key] = (returnVisits[key] ?? 0) + Number(row.n);
   }
 
+  // ── Schema v3 ────────────────────────────────────────────────────────────
+
+  // 9 — activation milestones + legacy events: flat counts, one batched query,
+  // same shape as step 5.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 IN (${[...ACTIVATION_MILESTONE_EVENTS, ...LEGACY_EVENTS].map((e) => `'${e}'`).join(",")}) ` +
+      `GROUP BY event`,
+  )) {
+    if (row.event in activationMilestones) activationMilestones[row.event] = Number(row.n);
+    else legacy[row.event] = Number(row.n);
+  }
+
+  // 10 — the family layer. team_create by kind, level_up by level, the rest
+  // are flat counts.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob2 AS kind, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'team_create' GROUP BY kind`,
+  )) {
+    if (!(row.kind in family.team_create)) console.error(`⚠️  unknown team_create kind in dataset: ${row.kind}`);
+    family.team_create[row.kind] = (family.team_create[row.kind] ?? 0) + Number(row.n);
+  }
+  for (const row of await sql(
+    ctx,
+    `SELECT blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 IN ('team_switch','profile_delete','mission_undo') GROUP BY event`,
+  )) {
+    family[row.event] = Number(row.n);
+  }
+  for (const row of await sql(
+    ctx,
+    `SELECT double1 AS level, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'level_up' GROUP BY level`,
+  )) {
+    const key = String(Number(row.level));
+    if (!(key in family.level_up)) console.error(`⚠️  off-ladder level_up value in dataset: ${key}`);
+    family.level_up[key] = (family.level_up[key] ?? 0) + Number(row.n);
+  }
+
+  // 11 — mission_entry: by source only. Per-mission × source is deliberately
+  // NOT cross-tabulated in v1 (see docs/analytics/locked-v1.md) — the raw
+  // rows still exist in WAE for 90 days if that breakdown is needed sooner
+  // than a follow-up snapshot version.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob2 AS source, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'mission_entry' GROUP BY source`,
+  )) {
+    if (!(row.source in missionEntrySources)) console.error(`⚠️  unknown mission_entry source in dataset: ${row.source}`);
+    missionEntrySources[row.source] = (missionEntrySources[row.source] ?? 0) + Number(row.n);
+  }
+
+  // 12 — product_care_open, by topic.
+  for (const row of await sql(
+    ctx,
+    `SELECT blob2 AS topic, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +
+      `AND blob1 = 'product_care_open' GROUP BY topic`,
+  )) {
+    if (!(row.topic in productCareTopics)) console.error(`⚠️  unknown product_care_open topic in dataset: ${row.topic}`);
+    productCareTopics[row.topic] = (productCareTopics[row.topic] ?? 0) + Number(row.n);
+  }
+
   return {
     counts, helpOpens, playerCount, missions,
     features, hub3d, returnVisits, packViews, packCompletes,
+    activationMilestones, legacy, family, missionEntrySources, productCareTopics,
   };
 }
 
@@ -466,7 +609,8 @@ function crossRead(missions, meta, field) {
 
 function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, meta }) {
   const { counts, helpOpens, playerCount, missions,
-          features, hub3d, returnVisits, packViews, packCompletes } = data;
+          features, hub3d, returnVisits, packViews, packCompletes,
+          activationMilestones, legacy, family, missionEntrySources, productCareTopics } = data;
 
   // Mission ids are numeric strings; sort them as numbers so 9 precedes 10.
   const missionsSorted = Object.fromEntries(
@@ -521,6 +665,13 @@ function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, me
     ...crossReads,
     features,
     hub3d,
+
+    // Schema v3 — Locked v1 R&D dashboard follow-up.
+    activation_milestones: activationMilestones,
+    family,
+    mission_entry_sources: missionEntrySources,
+    product_care_topics: productCareTopics,
+    legacy,
 
     generated_at: generatedAt,
     dataset: DATASET,
