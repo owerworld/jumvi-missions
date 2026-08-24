@@ -5123,7 +5123,13 @@ html.theme--dark #sheet .sheetActions .missionStartBtn .jic{
 html.theme--dark #statsEmptyState .emptyStateBtn{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
 html.theme--dark #tabModes .familyTeamsCta{ color:var(--jv-recommend-fg,#0b4a78) !important; -webkit-text-fill-color:var(--jv-recommend-fg,#0b4a78) !important; }
 html.theme--dark #tabModes .teamsCreateBtn,
-html.theme--dark #tabModes .teamsCreateBtn *{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+html.theme--dark #tabModes .teamsCreateBtn *,
+/* Family's "Pick a Mission" (§4.1) is a .btnPrimary on the same sky-blue fill,
+   so the legacy `html.theme--dark .btnPrimary{color:#fff !important}` caught it
+   too — 2.28:1, the exact defect the first contrast round fixed for four other
+   buttons. Same rule, same fill, dark ink. */
+html.theme--dark #tabModes .familyPickMission,
+html.theme--dark #tabModes .familyPickMission *{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
 /* The score pad is a deep-blue fill inside the mission sheet; in dark the
    sheet's inherited #e5e7eb body colour was winning over the pad's own white
    (3.94:1 on the pad). Same fill, white ink restored: 4.88:1. */
@@ -5181,8 +5187,37 @@ html.theme--dark #profileBackdrop #btnProfileAdd{
 #profileBackdrop[data-mode="add"] .profileAddSection,
 #profileBackdrop[data-mode="edit"] .profileEditSection{ margin-top:8px !important; }
 #profileBackdrop .profileAvatarPicker{
-  display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  display:grid !important;
+  /* Four equal fractions of the container meant the avatars grew with the
+     screen: on an 844px-wide landscape phone each cell became ~200px and the
+     twelve-avatar grid stood 607px tall inside a 390px viewport, pushing Save
+     and Cancel under the bottom nav. Capped so a tile is a tile at any width —
+     the grid stays four columns at every width, with the tile capped at 84px,
+     so it is three rows on every device and the footer stays in reach. An
+     auto-fit version fixed landscape but dropped to three columns at 320px,
+     which made the grid TALLER there — hence the explicit four. */
+  grid-template-columns:repeat(4, minmax(0, 84px)) !important;
+  justify-content:center !important;
   gap:10px !important;
+}
+/* §4.2 — the name field's own label and its error line. */
+#profileBackdrop .profileFieldLabel{
+  display:block;
+  margin:2px 0 6px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:900;
+}
+#profileBackdrop .profileFieldError{
+  margin:6px 0 0;
+  color:var(--jv-destructive-fg,#b42318);
+  font-size:13px;
+  font-weight:800;
+  line-height:1.35;
+}
+#profileBackdrop .profileFieldError[hidden]{ display:none !important; }
+#profileBackdrop .profileNameInput.hasError{
+  border-color:var(--jv-destructive-fg,#b42318) !important;
 }
 
 @media (max-width:374px){
@@ -5342,4 +5377,29 @@ html.theme--dark :focus-visible{
   #sheet.isPlaying .sheetTitle{ font-size:17px !important; }
   #sheet.isPlaying .sheetPack{ font-size:11px !important; }
   #sheet.isPlaying .sheetHead{ padding-bottom:4px !important; }
+}
+
+/* §4.1 — Family's "what can we play next" action. Sits directly under the
+   header so it is in the first viewport at every size tested, including a
+   320x568 phone. */
+#tabModes .familyPickMission{
+  width:100%;
+  margin:4px 0 14px;
+  min-height:50px;
+}
+
+/* §4.5 — the analytics disclosure inside Privacy & Safety. */
+#privacyBackdrop .privacyDisclosure{ margin-top:8px; }
+#privacyBackdrop .privacyDisclosure > summary{
+  cursor:pointer;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:900;
+  color:var(--jv-blue-strong,#1d6fb5);
+}
+#privacyBackdrop .privacyDisclosureBody{
+  margin-top:6px;
+  color:var(--jv-text-2,var(--muted));
 }

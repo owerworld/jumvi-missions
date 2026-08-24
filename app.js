@@ -1239,6 +1239,57 @@ function setMissionBackgroundIsolation(active){
   });
   _missionBackgroundRestore = null;
 }
+/* §6.2 / §4.4 / §4.5 — the dialog contract, applied to the surfaces that
+ * declared it but never implemented it.
+ *
+ * Privacy, Help, Badges, Certificate and the 3D fallback all carry
+ * role="dialog" aria-modal="true", and all of them opened with a bare
+ * classList.add("show"). Measured: Escape did nothing, Tab walked straight out
+ * into the page behind, focus never entered the dialog, and closing dropped
+ * focus on <body>. Only the mission sheet and the team picker were ever wired
+ * to handleDialogKeys.
+ *
+ * Done with a class observer rather than by editing each opener because these
+ * surfaces close in four different ways — a close button, a backdrop click,
+ * Escape, and in one case a programmatic hide — and only the observer sees all
+ * of them. Nothing about how they open or what they contain changes. */
+function enhanceDialog(bk){
+  if(!bk || bk.dataset.dialogEnhanced) return;
+  bk.dataset.dialogEnhanced = "1";
+  let returnFocus = null;
+
+  const close = ()=> bk.classList.remove("show");
+  bk.addEventListener("keydown", (e)=> handleDialogKeys(e, bk, close));
+
+  const onShown = ()=>{
+    const active = document.activeElement;
+    returnFocus = (active && active !== document.body && document.contains(active) && !bk.contains(active))
+      ? active : returnFocus;
+    requestAnimationFrame(()=>{
+      try{
+        if(bk.contains(document.activeElement)) return;   // something already took it
+        const first = bk.querySelector(".close") || dialogFocusable(bk)[0];
+        if(first) first.focus({ preventScroll:true });
+      }catch(_){ }
+    });
+  };
+  const onHidden = ()=>{
+    const back = returnFocus;
+    returnFocus = null;
+    if(back && document.contains(back)){
+      requestAnimationFrame(()=>{ try{ back.focus({ preventScroll:true }); }catch(_){ } });
+    }
+  };
+
+  let wasShown = bk.classList.contains("show");
+  new MutationObserver(()=>{
+    const isShown = bk.classList.contains("show");
+    if(isShown === wasShown) return;
+    wasShown = isShown;
+    if(isShown) onShown(); else onHidden();
+  }).observe(bk, { attributes:true, attributeFilter:["class"] });
+}
+
 function dialogFocusable(container){
   if(!container) return [];
   return Array.from(container.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
@@ -6538,9 +6589,22 @@ function setProfileSurfaceMode(mode){
   }
 }
 
+/* §4.2 / §6.2 — where focus goes when this screen closes.
+ *
+ * The mission sheet already remembers its opener (_missionReturnFocus); this
+ * one did not, so closing the Kids-and-settings screen dropped focus on
+ * <body>. A keyboard or switch user was returned to the top of the document
+ * and had to tab all the way back to the row they came from. Captured on open
+ * rather than guessed on close, because by then the opener may have been
+ * re-rendered out of existence. */
+let _profileReturnFocus = null;
 function openProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
   if(!bk) return;
+  const active = document.activeElement;
+  _profileReturnFocus = (active && active !== document.body && document.contains(active))
+    ? active
+    : document.getElementById("btnOpenProfileFromTab");
   _profileEditingId = null;
   setProfileSurfaceMode("switch");
   renderProfileList();
@@ -6549,6 +6613,23 @@ function openProfileSheet(){
   const nameInput = document.getElementById("profileNewName");
   if(nameInput) nameInput.value = "";
   bk.classList.add("show");
+  /* §6.2 — this surface carries role="dialog" aria-modal="true" but had no key
+     handling at all: Escape did nothing and Tab walked straight out of it into
+     the page behind. Every other dialog in the app routes through
+     handleDialogKeys (mission sheet, team picker, badge modal); this one was
+     simply never wired up. Bound once. */
+  if(!bk.dataset.keysBound){
+    bk.dataset.keysBound = "1";
+    bk.addEventListener("keydown", (e)=> handleDialogKeys(e, bk, closeProfileSheet));
+  }
+  /* open → first focus, so a keyboard user starts inside the dialog rather
+     than wherever they happened to be on the page underneath. */
+  requestAnimationFrame(()=>{
+    try{
+      const first = document.getElementById("btnProfileClose") || dialogFocusable(bk)[0];
+      if(first) first.focus({ preventScroll:true });
+    }catch(_){ }
+  });
   trackEvent("Profile Sheet Opened");
 }
 
@@ -6580,6 +6661,16 @@ function closeProfileSheet(){
   bk.classList.remove("show");
   _profileEditingId = null;
   setProfileSurfaceMode("switch");
+  /* Hand focus back to whatever opened this. If that control has since been
+     re-rendered away, fall back to the Grown-ups entry point rather than to
+     nothing — anywhere sensible beats <body>. */
+  const back = (_profileReturnFocus && document.contains(_profileReturnFocus))
+    ? _profileReturnFocus
+    : document.getElementById("btnOpenProfileFromTab");
+  _profileReturnFocus = null;
+  if(back){
+    requestAnimationFrame(()=>{ try{ back.focus({ preventScroll:true }); }catch(_){ } });
+  }
 
   if(_teamSetupSelectingChild){
     _teamSetupSelectingChild = false;
@@ -6690,21 +6781,47 @@ function renderProfileEditAvatarPicker(){
     picker.appendChild(btn);
   });
 }
+/* §4.2 — say it at the field, not only in a toast.
+ *
+ * Empty and duplicate names were already refused, but the only feedback was a
+ * transient toast at the other end of the screen: nothing marked the input as
+ * invalid, and nothing tied the reason to the control a screen reader was
+ * sitting on. The toast stays (it is what a sighted parent notices); this adds
+ * the part assistive tech needs. */
+function setNameFieldError(inputId, message){
+  const input = document.getElementById(inputId);
+  const err = document.getElementById(inputId + "Error");
+  if(!input) return;
+  if(message){
+    input.setAttribute("aria-invalid", "true");
+    input.classList.add("hasError");
+    if(err){ err.textContent = message; err.hidden = false; }
+  }else{
+    input.removeAttribute("aria-invalid");
+    input.classList.remove("hasError");
+    if(err){ err.textContent = ""; err.hidden = true; }
+  }
+}
+
 function saveProfileEdit(){
   if(!_profileEditingId) return;
   const nameEl = document.getElementById("profileEditName");
   const newName = (nameEl && nameEl.value || "").trim().slice(0, 20);
   if(!newName){
-    showToast("Please enter a name.");
+    const msg = "Please enter a name.";
+    setNameFieldError("profileEditName", msg);
+    showToast(msg);
     if(nameEl) nameEl.focus();
     return;
   }
   const renameConflict = childNameConflict(newName, _profileEditingId);
   if(renameConflict){
+    setNameFieldError("profileEditName", renameConflict);
     showToast(renameConflict);
     if(nameEl) nameEl.focus();
     return;
   }
+  setNameFieldError("profileEditName", "");
   const profiles = getProfiles();
   const idx = profiles.findIndex(x => x.id === _profileEditingId);
   if(idx === -1) return;
@@ -6937,16 +7054,20 @@ function addNewChildProfile(){
   if(!nameInput) return;
   const name = (nameInput.value || "").trim().slice(0, 20);
   if(!name){
-    showToast("Please enter a name first.");
+    const msg = "Please enter a name first.";
+    setNameFieldError("profileNewName", msg);
+    showToast(msg);
     nameInput.focus();
     return;
   }
   const conflict = childNameConflict(name, null);
   if(conflict){
+    setNameFieldError("profileNewName", conflict);
     showToast(conflict);
     nameInput.focus();
     return;
   }
+  setNameFieldError("profileNewName", "");
   const profiles = getProfiles();
   if(profiles.length >= 6){
     showToast("Maximum 6 children supported.");
@@ -9150,6 +9271,14 @@ soundToggle.onclick = ()=>{
  * Init
  * ======================= */
 function init(){
+  /* §6.2 — give the declared-modal surfaces the behaviour they claim.
+     The mission sheet, team picker and badge-unlock modal already route through
+     handleDialogKeys at their own call sites and are left alone. */
+  ["privacyBackdrop","helpBackdrop","badgesBackdrop","certBackdrop",
+   "seasonalBackdrop","fallbackBackdrop"].forEach(id=>{
+    try{ enhanceDialog(document.getElementById(id)); }catch(_){ }
+  });
+
   applyBodyClasses();
   renderModeChips();
   applyTheme();

@@ -526,6 +526,16 @@
           <p class="tabIntro teamsHubIntro jv-helper" id="teamsHubIntro">Complete missions together. Every team has its own XP, level, and streak.</p>
         </div>
 
+        <!-- §4.1 — the third question this screen has to answer.
+             Family told a parent who is playing and what they had finished,
+             but the only visible actions were "Add a player", "No team yet"
+             and "View all": nothing here started a game. Uses the existing
+             [data-go-tab] binding rather than a new handler, so it lands on
+             Play exactly like every other cross-tab link in the app. -->
+        <button class="btn btnPrimary jv-btn jv-btn--primary familyPickMission" data-go-tab="today" type="button">
+          <i class="ico i-play" aria-hidden="true"></i> Pick a Mission
+        </button>
+
         <!-- Family Insights — moved from the old #tabStats (>1 profile only) -->
         <div class="familyInsights jv-card" id="familyInsights" style="display:none">
           <div class="familyInsightsHeader">
@@ -1156,20 +1166,34 @@
         <div>
           <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling — ever.</b>
         </div>
+        <!-- §4.5 — the first layer stays a list of decisions a parent can make
+             in one read. This item's full inventory is four hundred words and
+             was sitting inline between "no ads" and "no microphone", which
+             pushed the remaining decisions off the screen. Not a word of it is
+             changed or removed — it is behind a disclosure, open to anyone who
+             wants the detail, and the summary line above it says the same
+             thing in one sentence. -->
         <div>
           <b><i class="jic jic-shield" aria-hidden="true"></i> Anonymous play analytics.</b><br/>
-          We measure a short, fixed list of anonymous events to see which missions work and
-          where kids get stuck: the app being opened, missions started and completed, which
-          help topic a parent opened, the player count, pack and badge milestones, whether an
-          optional feature was used at all (certificate, sharing, read-aloud, the timer, the
-          score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
-          few fixed return-visit milestones. Every event is just an event name plus, at most,
-          one small value — a mission number, a pack or badge name, a player count, or a fixed
-          option such as which help topic or which share button. Anything not on that list is
-          discarded without being stored. We never attach a name, account, email address, the
-          certificate name you type, a profile name, an IP address, a device ID, or any other
-          identifier to this data. This is measured using our own infrastructure, not a
-          third-party analytics service.
+          A short, fixed list of anonymous events — never tied to a name, a profile, a device
+          or an IP address.
+          <details class="privacyDisclosure">
+            <summary>Exactly what is measured</summary>
+            <div class="privacyDisclosureBody">
+              We measure a short, fixed list of anonymous events to see which missions work and
+              where kids get stuck: the app being opened, missions started and completed, which
+              help topic a parent opened, the player count, pack and badge milestones, whether an
+              optional feature was used at all (certificate, sharing, read-aloud, the timer, the
+              score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
+              few fixed return-visit milestones. Every event is just an event name plus, at most,
+              one small value — a mission number, a pack or badge name, a player count, or a fixed
+              option such as which help topic or which share button. Anything not on that list is
+              discarded without being stored. We never attach a name, account, email address, the
+              certificate name you type, a profile name, an IP address, a device ID, or any other
+              identifier to this data. This is measured using our own infrastructure, not a
+              third-party analytics service.
+            </div>
+          </details>
         </div>
         <div>
           <b><i class="jic jic-volume" aria-hidden="true"></i> No microphone, ever.</b><br/>
@@ -1284,7 +1308,16 @@
       <!-- Edit panel (shown when editing a profile) -->
       <div class="profileEditSection" id="profileEditSection" style="display:none">
         <div class="profileSectionTitle" id="profileEditTitle"><i class="jic jic-pencil" aria-hidden="true"></i> Edit child</div>
-        <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20" autocomplete="off" />
+        <!-- §4.2 — a real label. The placeholder disappears the moment a parent
+             starts typing, and several screen readers never announce one at
+             all, so "Child's name" was the field's only name and it was not a
+             name at all. The error slot is empty until validation fails; it is
+             referenced by aria-describedby up front so the association exists
+             before there is anything to read. -->
+        <label class="profileFieldLabel" for="profileEditName">Child&rsquo;s name</label>
+        <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20"
+               autocomplete="off" aria-describedby="profileEditNameError" />
+        <p class="profileFieldError" id="profileEditNameError" role="alert" hidden></p>
         <div class="profileAvatarPicker" id="profileEditAvatarPicker"></div>
         <div class="profileEditActions">
           <button class="btn btnGhost profileEditCancelBtn" id="btnProfileEditCancel" type="button">Cancel</button>
@@ -1295,7 +1328,10 @@
 
       <div class="profileAddSection" id="profileAddSection" style="display:none">
         <div class="profileSectionTitle"><i class="jic jic-plus" aria-hidden="true"></i> Add a new child</div>
-        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20" autocomplete="off" />
+        <label class="profileFieldLabel" for="profileNewName">Child&rsquo;s name</label>
+        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20"
+               autocomplete="off" aria-describedby="profileNewNameError" />
+        <p class="profileFieldError" id="profileNewNameError" role="alert" hidden></p>
         <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
         <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
       </div>
