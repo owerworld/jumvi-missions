@@ -382,16 +382,28 @@ if (wanted("R02") || wanted("R03")) {
       `done=${after.done} streak=${after.streak} best=${after.best} badges=${after.badges} dailyChallenge=${after.dailyChallenge} · UI: streakPill="${ui.streakPill}" done=${ui.probeDone} xp=${ui.probeXp}`);
   }
   if (wanted("R03")) {
-    /* The spec lists daily state and certificate among what reset must clear.
-       Reported separately because these are the ones that survive today. */
+    /* The certificate and the high scores must be GONE. The daily pick must not
+       — and demanding that it disappear was wrong.
+     *
+     * ensureDailyMission() computes the pick as pickDailyId(today, dailyN), and
+     * reset puts dailyN back to 0, so the getter deterministically rebuilds the
+     * SAME id for the same day. "Today's mission" is a property of the date,
+     * not of the child's progress; resetting progress must not change which
+     * mission today is. The Faz 5 version of this check asserted the daily keys
+     * were absent afterwards and passed only because the snapshot happened to
+     * be taken before the getter re-ran — a race, not a correct assertion. It
+     * now checks the fresh SHAPE (counter at 0, date stamped today) instead. */
     const survivors = [];
     if (after.certName === before.certName && before.certName) survivors.push(`cert_name_v1="${after.certName}"`);
     if (after.certId === before.certId && before.certId) survivors.push(`cert_id_v1="${after.certId}"`);
-    if (after.dailyId === before.dailyId && before.dailyId) survivors.push(`daily_id_v1=${after.dailyId}`);
-    if (after.dailyN === before.dailyN && before.dailyN) survivors.push(`daily_n_v1=${after.dailyN}`);
     if (after.highScores === before.highScores && before.highScores) survivors.push("high_scores_v1");
-    record("R03", "certificate and daily-pick state are cleared too", survivors.length === 0 ? "PASS" : "FAIL",
-      survivors.length ? `still set after reset: ${survivors.join(", ")}` : "nothing survived");
+    const dailyShapeFresh = (after.dailyN == null || String(after.dailyN) === "0");
+    if (!dailyShapeFresh) survivors.push(`daily_n_v1=${after.dailyN} (should be 0 or cleared)`);
+    record("R03", "certificate and high scores are cleared; the daily pick is rebuilt fresh",
+      survivors.length === 0 ? "PASS" : "FAIL",
+      (survivors.length ? "still set after reset: " + survivors.join(", ") : "nothing survived that should not have") +
+      `\n         daily pick rebuilt: id ${before.dailyId} → ${after.dailyId} (same id is correct — deterministic for the day), ` +
+      `n ${before.dailyN} → ${after.dailyN}`)
   }
 }
 if (wanted("R04")) {

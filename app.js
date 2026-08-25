@@ -5182,6 +5182,10 @@ function closeMission(opts){
   // active tab underneath, so the user lands right back on the island.
   const wasHubMission = !!window._hubMissionFlow;
   const hubMissionCompleted = lastOpenedId != null && done.has(lastOpenedId);
+  // Captured before _openMissionId is cleared below: the focus restore at the
+  // end re-finds this mission's card by id rather than trusting a node that
+  // the re-renders in between may have replaced.
+  const closedMissionId = _openMissionId || lastOpenedId || 0;
   window._hubMissionFlow = null;
   releaseWakeLock();
   if(lastOpenedId != null && !done.has(lastOpenedId)){
@@ -5223,18 +5227,44 @@ function closeMission(opts){
   setMissionBackgroundIsolation(false);
   const returnFocus = _missionReturnFocus;
   _missionReturnFocus = null;
-  const focusTarget = returnFocus && returnFocus.isConnected && returnFocus.getClientRects().length
-    ? returnFocus
-    : btnDailyPlay;
-  if(!wasHubMission && focusTarget && focusTarget.isConnected && focusTarget.getClientRects().length){
-    requestAnimationFrame(()=>{ try{ focusTarget.focus({ preventScroll:true }); }catch(_){ focusTarget.focus(); } });
-  }
+
   // Continue hint güncelle (last opened değişti)
   renderContinueHint();
   renderTodayContinuity();
   // Browse tab'daysak path'i de yenile — done state guncel olsun
   if(document.body.classList.contains("tab-browse") && typeof renderMissionPath === "function"){
     try { renderMissionPath(); } catch(_){}
+  }
+
+  /* Focus goes back AFTER those re-renders, and the target is re-resolved by
+   * mission id instead of being held as a node.
+   *
+   * Measured on the Missions tab, which is how most missions get opened: the
+   * card the user came from WAS remembered correctly, but renderMissionPath()
+   * (three lines up, and it used to run after this block) rebuilds the whole
+   * list, so by the time the queued rAF fired the remembered node had
+   * isConnected=false. The fallback, btnDailyPlay, lives on Today and has no
+   * box while Missions is the visible tab. Both guards failed silently and
+   * focus fell to <body> — a keyboard or screen-reader user was dumped at the
+   * top of the document every single time they closed a mission, and had to
+   * tab back through the header and nav to find their place in 36 items.
+   * Opening from Today never showed this, because #btnDailyPlay survives its
+   * own re-render. */
+  if(!wasHubMission){
+    const visible = (el)=> !!(el && el.isConnected && el.getClientRects().length);
+    let focusTarget = visible(returnFocus) ? returnFocus : null;
+    if(!focusTarget && closedMissionId){
+      // The same mission's card in the freshly rendered list — the exact spot
+      // the user was standing in before the sheet opened.
+      focusTarget = Array.from(document.querySelectorAll('[data-mission-id="' + closedMissionId + '"]')).find(visible) || null;
+    }
+    if(!focusTarget && visible(btnDailyPlay)) focusTarget = btnDailyPlay;
+    if(focusTarget){
+      requestAnimationFrame(()=>{
+        try{ focusTarget.focus({ preventScroll:true }); }
+        catch(_){ try{ focusTarget.focus(); }catch(__){} }
+      });
+    }
   }
 }
 
