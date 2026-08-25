@@ -23,11 +23,22 @@ name: Weekly Analytics Snapshot
 # Needs a CLOUDFLARE_API_TOKEN repo secret (Account Analytics: Read).
 # CLOUDFLARE_ACCOUNT_ID is optional — the script discovers it via the API
 # when the account only has one, same as running this locally.
+#
+# Manual "Run workflow" accepts an optional `week` input (e.g. 2026-33) to
+# backfill or regenerate a specific ISO week instead of the last completed
+# one — validated here before it ever reaches the script; an unrecognised
+# format fails the run instead of silently falling back to "last week".
+# No credentials are ever echoed to the log.
 
 on:
   schedule:
     - cron: '0 5 * * 1' # Monday 05:00 UTC = 08:00 Europe/Istanbul
-  workflow_dispatch: {} # manual "run now", e.g. to backfill or test
+  workflow_dispatch:
+    inputs:
+      week:
+        description: 'ISO week to (re)generate, e.g. 2026-33. Leave empty for the last complete week.'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -43,11 +54,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate last week's snapshot
+      - name: Generate the snapshot
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: node tools/generate-weekly-snapshot.mjs
+          WEEK_INPUT: ${{ inputs.week }}
+        run: |
+          if [ -z "$WEEK_INPUT" ]; then
+            node tools/generate-weekly-snapshot.mjs
+          elif [[ "$WEEK_INPUT" =~ ^[0-9]{4}-[0-9]{2}$ ]]; then
+            node tools/generate-weekly-snapshot.mjs --week "$WEEK_INPUT"
+          else
+            echo "::error::week input must look like 2026-33, got \"$WEEK_INPUT\""
+            exit 1
+          fi
 
       - name: Check for a new/changed snapshot
         id: diff
