@@ -5206,6 +5206,14 @@ function closeMission(opts){
   toggleScoreTracker(false);
   // Tear down Red Light / Green Light caller overlay if it was running (mission 2)
   try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
+  /* If an undo offer is still live, rescue the bar out of the sheet before the
+     sheet goes away — otherwise closing the sheet inside the five seconds would
+     take the only way to undo with it. Back on the body it is the fixed overlay
+     again, exactly as it behaves for a completion with no sheet on screen. */
+  if(_undoOffer){
+    const _ub = document.getElementById("undoBar");
+    if(_ub && _ub.parentNode !== document.body){ try{ document.body.appendChild(_ub); }catch(_){} }
+  }
   backdrop.classList.remove("show");
   backdrop.setAttribute("aria-hidden", "true");
   backdrop.inert = true;
@@ -5662,7 +5670,11 @@ function captureJourneySnapshot(){
     streak_last_v1: lsGet(STREAK_LAST_KEY, null),
     badges_unlocked_v1: lsGet(BADGES_UNLOCKED_KEY, null),
     streak_freeze_v1: lsGet(STREAK_FREEZE_KEY, null),
-    daily_challenge_v1: lsGet(DAILY_CHALLENGE_KEY, null)
+    daily_challenge_v1: lsGet(DAILY_CHALLENGE_KEY, null),
+    /* Undo rolls back the completion that earned the star, so it has to roll
+       back the family ledger too — otherwise one mis-tap plus an Undo would
+       burn the household's only star for the day with nothing to show. */
+    family_daily_star_v1: lsGet(FAMILY_DAILY_STAR_KEY, null)
   };
 }
 function restoreLsRaw(key, raw){
@@ -5687,6 +5699,7 @@ function restoreJourneySnapshot(snap){
   restoreLsRaw(BADGES_UNLOCKED_KEY, snap.badges_unlocked_v1);
   restoreLsRaw(STREAK_FREEZE_KEY, snap.streak_freeze_v1);
   restoreLsRaw(DAILY_CHALLENGE_KEY, snap.daily_challenge_v1);
+  restoreLsRaw(FAMILY_DAILY_STAR_KEY, snap.family_daily_star_v1);
 }
 
 let _undoTimer = null;
@@ -5698,17 +5711,49 @@ let _undoTimer = null;
  * click after the window still rolled a completion back. Nulling this is what
  * actually ends the offer. */
 let _undoOffer = null;
+
+/* Where the undo bar lives depends on whether the mission sheet is on screen.
+ *
+ * Inside the sheet it belongs in the flow, directly above the action row, so
+ * "Undo" and "Next" can never overlap — see the #sheet .undoBar rule in
+ * style.css for the measurements that ruled out doing this with a `bottom`
+ * value. Outside the sheet it stays the viewport-fixed overlay it has always
+ * been, because there is no sheet to sit in.
+ *
+ * The move always happens while the bar is HIDDEN, before its text is set.
+ * That matters: this element is role="status" aria-live="polite", and moving a
+ * live region with content in it can make a screen reader re-announce. Docking
+ * first and revealing second keeps exactly one announcement per completion. */
+function dockUndoBar(){
+  const bar = document.getElementById("undoBar");
+  if(!bar) return;
+  const actions = document.querySelector("#sheet .sheetActions");
+  const sheetOpen = !!backdrop && backdrop.classList.contains("show") && !!actions;
+  const wanted = sheetOpen ? actions.parentNode : document.body;
+  if(bar.parentNode === wanted && (!sheetOpen || bar.nextElementSibling === actions)) return;
+  try{
+    if(sheetOpen) actions.parentNode.insertBefore(bar, actions);
+    else document.body.appendChild(bar);
+  }catch(_){}
+}
+
 function endUndoOffer(){
   clearTimeout(_undoTimer);
   _undoTimer = null;
   _undoOffer = null;
   const bar = document.getElementById("undoBar");
-  if(bar) bar.hidden = true;
+  if(bar){
+    bar.hidden = true;
+    // Park it back on the body while hidden, so the next completion starts
+    // from a known place and a closing sheet never takes it away mid-offer.
+    try{ document.body.appendChild(bar); }catch(_){}
+  }
 }
 function showUndoBar(id, journeySnapshot){
   const bar = document.getElementById("undoBar");
   const btn = document.getElementById("undoBtn");
   if(!bar || !btn) return;
+  dockUndoBar();
   bar.hidden = false;
   clearTimeout(_undoTimer);
   // A new completion supersedes any older offer outright, so an expired or
@@ -5786,6 +5831,19 @@ function markMissionDone(id, source="manual"){
   window._justDoneMissionId = id;
 
   const changed = recordActivityToday();
+
+  /* The daily goal is counted here, inside the same transaction that already
+   * moves streak, badges and XP — so the Undo snapshot taken above rolls it
+   * back with everything else.
+   *
+   * This call is new. bumpDailyChallenge() has existed for a long time with
+   * ZERO call sites: measured on a clean profile, completing a real mission
+   * left jumvi_p1_daily_challenge_v1 at {"count":0,"claimed":false} and the
+   * visible #todayGoalBadge stuck on "0/1 today" forever. The big Today's Goal
+   * card is retired at the stylesheet (#dailyChallenge{display:none}), but the
+   * small badge was left on screen, so families have been looking at a counter
+   * that could never move. Wiring it up is what makes the daily star real. */
+  bumpDailyChallenge();
 
   persist();
   renderList();
@@ -6165,6 +6223,14 @@ document.getElementById("btnRandomAll").onclick = ()=>{
     try { localStorage.removeItem(BADGES_UNLOCKED_KEY); } catch(_){}
     try { localStorage.removeItem(STREAK_FREEZE_KEY); } catch(_){}
     try { localStorage.removeItem(DAILY_CHALLENGE_KEY); } catch(_){}
+    /* The button says "press and hold to clear this device", and the family
+       star IS device-wide, so it goes with everything else. Cleared AFTER the
+       scoped key above, which gives a useful property: familyDailyStar() will
+       re-derive the ledger on the next read, and it can no longer adopt the
+       scope that was just wiped — but it CAN still adopt another child who
+       genuinely earned today's star. So resetting one child never hands the
+       household a second star while somebody else's claim still stands. */
+    try { localStorage.removeItem(FAMILY_DAILY_STAR_KEY); } catch(_){}
 
     /* §5.4 — the rest of what a family means by "progress".
      *
@@ -8515,6 +8581,82 @@ function initBottomNav(){
  * ======================= */
 const DAILY_CHALLENGE_KEY = _PROGRESS_PREFIX + "daily_challenge_v1"; // { iso, count, reward }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+ * The Daily Champion star belongs to the FAMILY, once per day.
+ *
+ * The decision this implements: the daily goal is a shared, once-a-day
+ * celebration for everyone on this device. The per-scope counter below is
+ * unchanged and still lives where it always did — team-prefixed while a team
+ * is active, child-prefixed when playing solo — so nothing about the existing
+ * storage contract moves. What is new is one device-wide ledger recording
+ * whether today's star has already been earned, and by which scope.
+ *
+ * Why that was needed: the counter alone made the star re-earnable. A child
+ * playing with Dad finished a mission, the team scope claimed the star, and
+ * leaving the team put Today back to 0/1 — the same day's star could be
+ * collected again, and again, by hopping between team and solo. Measured in
+ * Faz 5 and confirmed in Faz 6.
+ *
+ * "The family" is the device. jumvi_profiles_v1 is device-wide and holds every
+ * child, so the device is the only family identity this app has — which is
+ * exactly right for something that promises progress never leaves the phone.
+ * Two devices in one household keep two stars; that is inherent to local-first
+ * and consistent with every other JUMVI guarantee.
+ * ══════════════════════════════════════════════════════════════════════════*/
+const FAMILY_DAILY_STAR_KEY = "jumvi_family_daily_star_v1"; // { iso, scope }
+
+/* Read the family's star for today, migrating an existing household on first
+ * read rather than in a one-shot upgrade step.
+ *
+ * Migration matters more than it looks. A family that already earned today's
+ * star has that fact recorded ONLY in a per-scope daily_challenge_v1 key,
+ * because the ledger did not exist when they played this morning. Writing a
+ * fresh empty ledger would hand them a second star for the same day — the very
+ * thing this change exists to stop, inflicted on every existing user at once.
+ * So before the ledger is created for a new day, every daily_challenge_v1 key
+ * on the device is read, and if any of them already claimed today, that claim
+ * is adopted. Nothing is written back into those keys and nothing is removed:
+ * the migration only ever reads them. */
+function familyDailyStar(){
+  const today = isoLocalDate();
+  let led = lsGetJSON(FAMILY_DAILY_STAR_KEY, null);
+  if(led && led.iso === today) return led;
+
+  // No ledger for today yet — adopt an existing claim before creating one.
+  let adopted = null;
+  try{
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(!k || !/daily_challenge_v1$/.test(k)) continue;
+      let st = null;
+      try{ st = JSON.parse(localStorage.getItem(k) || "null"); }catch(_){ continue; }
+      if(!st || st.iso !== today) continue;
+      if(st.claimed === true || Number(st.count || 0) >= 1){ adopted = k; break; }
+    }
+  }catch(_){}
+
+  led = adopted ? { iso: today, scope: adopted, migrated: true } : null;
+  if(led) lsSet(FAMILY_DAILY_STAR_KEY, JSON.stringify(led));
+  // Yesterday's ledger has no meaning once today has no claim to adopt; drop it
+  // rather than leaving a stale date on disk indefinitely.
+  else { try { localStorage.removeItem(FAMILY_DAILY_STAR_KEY); } catch(_){} }
+  return led;
+}
+
+/* Has this family already collected today's star? */
+function familyDailyStarEarned(){
+  return !!familyDailyStar();
+}
+
+/* Claim it for the scope that is playing right now. Returns true only for the
+ * ONE call that actually earns it, so the celebration fires exactly once a day
+ * no matter which child or team is on screen. */
+function claimFamilyDailyStar(){
+  if(familyDailyStarEarned()) return false;
+  lsSet(FAMILY_DAILY_STAR_KEY, JSON.stringify({ iso: isoLocalDate(), scope: DAILY_CHALLENGE_KEY }));
+  return true;
+}
+
 function getDailyChallengeState(){
   const today = isoLocalDate();
   let state = lsGetJSON(DAILY_CHALLENGE_KEY, null);
@@ -8527,13 +8669,23 @@ function getDailyChallengeState(){
 
 function bumpDailyChallenge(){
   const state = getDailyChallengeState();
+
+  /* Claim BEFORE touching the counter. familyDailyStar()'s migration scan
+   * reads every daily_challenge_v1 key on the device looking for a claim that
+   * predates the ledger — and if this scope's count had already been bumped,
+   * the scan would adopt THIS completion as a pre-existing claim and then
+   * refuse to celebrate it. Measured: the badge flipped to "Goal done!" while
+   * claimed stayed false and no toast or confetti ever fired. Order matters. */
+  const earnedNow = claimFamilyDailyStar();
+
+  // The counter is per-scope and still increments every time — what is gated
+  // is the STAR, not the count, so each surface keeps showing honest numbers.
   state.count++;
+  if(earnedNow) state.claimed = true;
   lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+
   renderDailyChallenge();
-  // 1 mission tamamlandı = daily point earned
-  if(state.count === 1 && !state.claimed){
-    state.claimed = true;
-    lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+  if(earnedNow){
     setTimeout(()=>{
       showToast("Daily Champion! Goal completed!");
       if(!prefersReducedMotion) fireConfetti(1500);
@@ -8544,28 +8696,39 @@ function bumpDailyChallenge(){
 function renderDailyChallenge(){
   const state = getDailyChallengeState();
   const goal = 1;
+  /* Done-ness is the FAMILY's, so the same answer shows on every profile and
+   * in every team today. The per-scope count still drives the number, which
+   * keeps "1 / 1" honest for whoever actually played. When the star was earned
+   * somewhere else in the family, this scope shows it as done with a line that
+   * says so — otherwise a parent switching profiles would see "Completed!"
+   * next to a bar they had not filled and have no idea why. */
+  const star = familyDailyStar();
+  const earnedElsewhere = !!star && star.scope !== DAILY_CHALLENGE_KEY;
+  const completed = !!star || state.count >= goal;
+  const shown = completed ? goal : Math.min(state.count, goal);
+
   const card = document.getElementById("dailyChallenge");
   const status = document.getElementById("dailyChallengeStatus");
   const fill = document.getElementById("dailyChallengeFill");
   const reward = document.getElementById("dailyChallengeReward");
   if(card){
-    const completed = state.count >= goal;
     card.classList.toggle("completed", completed);
-    if(status) status.textContent = `${Math.min(state.count, goal)} / ${goal}`;
-    if(fill) fill.style.width = (Math.min(state.count, goal) / goal * 100) + "%";
+    if(status) status.textContent = `${shown} / ${goal}`;
+    if(fill) fill.style.width = (shown / goal * 100) + "%";
     if(reward){
-      reward.innerHTML = completed
-        ? '<i class="jic jic-star" aria-hidden="true"></i> Completed! See you tomorrow for a new goal!'
-        : "Play 1 mission today → earn the Daily Champion star";
+      reward.innerHTML = !completed
+        ? "Play 1 mission today → earn the Daily Champion star"
+        : earnedElsewhere
+          ? '<i class="jic jic-star" aria-hidden="true"></i> Your family already earned today\u2019s star \u2014 keep playing for fun!'
+          : '<i class="jic jic-star" aria-hidden="true"></i> Completed! See you tomorrow for a new goal!';
     }
   }
   // Compact stats içindeki todayGoalBadge'i güncelle
   const badge = document.getElementById("todayGoalBadge");
   if(badge){
-    const completed = state.count >= goal;
     badge.innerHTML = completed
       ? '<i class="jic jic-star" aria-hidden="true"></i> Goal done!'
-      : `<i class="jic jic-star" aria-hidden="true"></i> ${state.count}/${goal} today`;
+      : `<i class="jic jic-star" aria-hidden="true"></i> ${shown}/${goal} today`;
     badge.classList.toggle("completed", completed);
   }
 }
