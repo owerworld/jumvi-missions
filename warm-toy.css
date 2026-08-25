@@ -3548,6 +3548,13 @@ html.theme--dark #tabToday .dailyHeroBand{ background:var(--jv-card-2,#16283c); 
   box-shadow:none !important;
   text-align:left;
 }
+/* A device with no WebGL can never open the island, so applyHub3dUnsupported()
+   hides this card for good. Its inline display:none cannot beat the
+   "display:flex !important" above, so the unsupported state gets its own
+   !important rule at higher specificity (2 ids + 1 class). */
+#advModeCard.hub3dUnsupported,
+#tabToday #advModeCard.hub3dUnsupported{ display:none !important; }
+
 #tabToday #advModeCard .advCardEmoji{
   width:44px !important; height:44px !important; flex:0 0 44px !important;
   border-radius:0 !important; background:none !important;
@@ -5377,6 +5384,51 @@ html.theme--dark :focus-visible{
   #sheet.isPlaying .sheetTitle{ font-size:17px !important; }
   #sheet.isPlaying .sheetPack{ font-size:11px !important; }
   #sheet.isPlaying .sheetHead{ padding-bottom:4px !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Faz 5 — Family in landscape (568x320 measured, a phone lying on its side).
+
+   Measured before: only ONE action was actually usable in the first viewport.
+   "Pick a Mission" sat at y=97, and "Add a player" reported y=258 — under a
+   bottom nav whose top edge was y=248, so it looked present and was not
+   clickable. Everything else on the tab (team card, View all, Create a Team)
+   started at y=441 of a 320px viewport.
+
+   Nothing is removed and nothing moves in the DOM: this reclaims vertical
+   space that is spent on decoration when height is the scarce axis.
+     · the header sub-line goes ("How your crew is doing" restates the title)
+     · the title drops to a size that still reads as the page heading
+     · the primary CTA keeps a 44px target, just without the airy margins
+     · the bottom nav tightens, and its buttons stay at 48px — above the 44px
+       comfortable-touch floor and well above WCAG 2.2 SC 2.5.8's 24px.
+   Portrait is untouched at every width; this is height-gated only.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-height: 460px) and (orientation: landscape){
+  .appHead{ padding:6px 16px 5px !important; }
+  .appHead .appHeadSub{ display:none !important; }
+  .appHead .appHeadTitle{ font-size:20px !important; line-height:1.1 !important; }
+  .appHead .appHeadOver{ font-size:11.5px !important; }
+
+  /* Both of this tab's actions belong in the first viewport. #tabModes is
+     already flex-direction:column, so `order` promotes "Add a player" above
+     the roster card WITHOUT touching the DOM — the source order (and with it
+     portrait, screen readers, and tab order at every other size) is unchanged.
+     The roster card is a status readout, not an action, so it is the right
+     thing to push below the fold on the one viewport that cannot hold both. */
+  #tabModes{ gap:8px !important; }
+  #tabModes .familyPickMission{
+    order:-2 !important;
+    margin:2px 0 4px !important;
+    min-height:44px !important;
+  }
+  #tabModes .familyAddPlayer{
+    order:-1 !important;
+    margin:0 0 4px !important;
+  }
+
+  .bottomNav{ padding:2px 0 calc(2px + env(safe-area-inset-bottom)) !important; }
+  .navTab{ min-height:48px !important; padding:4px 2px !important; gap:1px !important; }
 }
 
 /* §4.1 — Family's "what can we play next" action. Sits directly under the

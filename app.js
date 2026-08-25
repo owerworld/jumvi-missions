@@ -3857,6 +3857,11 @@ function updateProgress(options = {}){
    * before anyone has thrown a ball. */
   const islandCard = document.getElementById("advModeCard");
   if(islandCard && lsGet(HUB3D_UNSUPPORTED_KEY, "0") !== "1"){
+    // Keep the hide class in sync with the flag this branch just tested. The
+    // flag deliberately SURVIVES a reset (the device still has no WebGL), so
+    // this is not undoing a reset — it is making sure the class can never be
+    // left on a card the flag says is supported again.
+    islandCard.classList.remove("hub3dUnsupported");
     islandCard.style.display = (isFresh && !familyHasPlayed()) ? "none" : "";
   }
 }
@@ -6131,10 +6136,38 @@ document.getElementById("btnRandomAll").onclick = ()=>{
     try { localStorage.removeItem(STREAK_FREEZE_KEY); } catch(_){}
     try { localStorage.removeItem(DAILY_CHALLENGE_KEY); } catch(_){}
 
+    /* §5.4 — the rest of what a family means by "progress".
+     *
+     * Reset cleared the mission set, streak, badges and the daily challenge,
+     * and left behind: the certificate the child had already earned (name AND
+     * id), today's daily pick, the per-mission attempt and skip counts, and
+     * every high score. Measured on a seeded profile — after a full reset,
+     * cert_name_v1, cert_id_v1, daily_id_v1, daily_n_v1 and high_scores_v1
+     * were all still exactly as before. A parent who resets to hand the phone
+     * to a younger sibling got a clean mission list with the older child's
+     * certificate still sitting behind it.
+     *
+     * These use the same key constants as everywhere else, so they clear in
+     * whatever scope is active — team keys while a team is on, the child's
+     * otherwise — without this function having to know which. */
+    [CERT_ID_KEY, CERT_NAME_KEY, DAILY_DATE_KEY, DAILY_ID_KEY, DAILY_N_KEY,
+     ATTEMPTS_KEY, SKIPS_KEY, HIGH_SCORES_KEY].forEach(k=>{
+      try { cancelLsDebounced(k); } catch(_){}
+      try { localStorage.removeItem(k); } catch(_){}
+    });
+    /* The in-memory mirrors of the two that have them, so the current page
+       agrees with storage without waiting for a reload. */
+    attempts = setState("attempts", {});
+    skips = setState("skips", {});
+    dailyIso = setState("dailyIso", "");
+    dailyIdStored = setState("dailyIdStored", 0);
+    dailyN = setState("dailyN", 0);
+
     hideMissionXpReward();
     persist();
     renderList();
     renderDailyChallenge();
+    refreshFamilySurfaces();
     closeMission();
     closeCertificate();
     showToast("Progress reset");
@@ -7585,7 +7618,14 @@ const HUB3D_UNSUPPORTED_KEY = "jumvi_hub3d_unsupported_v1";
 // Once a device is known to lack WebGL, hide BOTH hub entry points for good.
 function applyHub3dUnsupported(){
   const card = document.getElementById("advModeCard");
-  if(card) card.style.display = "none";
+  if(!card) return;
+  // The inline display alone was not enough: warm-toy.css styles this card as
+  // "#tabToday #advModeCard{display:flex !important}", and !important beats an
+  // inline declaration. So the card stayed on screen on every WebGL-less
+  // device and each tap replayed the same "needs a newer device" toast — a
+  // dead CTA. The class carries the matching !important hide rule.
+  card.classList.add("hub3dUnsupported");
+  card.style.display = "none";
 }
 let _hub3dEntrySource = "nav_tab"; // set by the entry handlers before switchTab("hub3d")
 
@@ -7880,7 +7920,7 @@ function showHub3D(){
     applyHub3dUnsupported();
     showToast("Adventure Mode needs a newer device — missions still work great!");
     switchTab("today");
-    return;
+    return false;   // tells switchTab() the redirect above is the final word
   }
   window.__hub3dLoadStart = performance.now();
   window.__hub3dSessionStart = performance.now();
@@ -7998,12 +8038,20 @@ function switchTab(tabName){
   // The parent dashboard now lives on the "modes" (Family) tab.
   if(tabName === "modes") beaconOnce("dashboard_open", "dashboard_open");
 
-  // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez
-  if(tabName === "hub3d") showHub3D(); else hideHub3D();
-
   // Body class — mission list ve footer görünürlüğü için
   document.body.classList.remove("tab-today","tab-browse","tab-modes","tab-stats","tab-profile","tab-hub3d");
   document.body.classList.add("tab-" + tabName);
+
+  // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez.
+  // This runs AFTER the body class on purpose. showHub3D() can refuse (no
+  // WebGL) and send the user back by calling switchTab("today") itself; while
+  // it ran first, that inner call did its work and then this frame overwrote
+  // the body class with "tab-hub3d" again — a device that had just been told
+  // it cannot run the hub was left in the hub's CSS state. Now the inner call
+  // is the last writer and we return instead of undoing it.
+  if(tabName === "hub3d"){
+    if(showHub3D() === false) return;
+  } else hideHub3D();
 
   // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
   try {

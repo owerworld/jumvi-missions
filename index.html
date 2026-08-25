@@ -772,6 +772,22 @@
           <div class="productCareBody">
             <h3 class="productCareTitle">Keeping your set working</h3>
 
+            <!-- Order is by when a family actually hits the problem, not by
+                 component. The first three are the questions of the first ten
+                 minutes with the set — a child who cannot catch anything, a
+                 family playing in the living room because it is raining, and a
+                 ball that will not stick — and a parent asking one of them is
+                 mid-session with a disappointed kid. Cleaning, strap fit and
+                 replacement parts are all later, calmer questions, so they
+                 come after. -->
+            <details class="productHelpItem">
+              <summary>My child is missing most catches</summary>
+              <p>Move to 3&ndash;4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.</p>
+            </details>
+            <details class="productHelpItem">
+              <summary>Can we play indoors?</summary>
+              <p>Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.</p>
+            </details>
             <details class="productHelpItem">
               <summary>The ball won&rsquo;t stick</summary>
               <p>Use the blue catching face. Remove visible lint, grass, or sand with a soft, dry brush; let every piece dry fully; then move closer and aim a soft toss at the center.</p>
@@ -784,14 +800,6 @@
               <summary>How should the hand strap fit?</summary>
               <img class="strapFitPhoto" src="assets/equipment/jumvi-paddle-back-real.webp" alt="Back of a JUMVI paddle showing the hand strap" width="160" height="174" loading="lazy">
               <p>Loosen it first, slide your hand under the strap, then make it snug&mdash;not tight. It is a hand strap only; never attach it to furniture, a tree, a wall, or a person.</p>
-            </details>
-            <details class="productHelpItem">
-              <summary>My child is missing most catches</summary>
-              <p>Move to 3&ndash;4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.</p>
-            </details>
-            <details class="productHelpItem">
-              <summary>Can we play indoors?</summary>
-              <p>Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.</p>
             </details>
             <details class="productHelpItem">
               <summary>How do I clean and store the set?</summary>
@@ -1151,31 +1159,47 @@
         <button class="close" id="btnPrivacyClose" aria-label="Close privacy and safety"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="privacyBody" style="font-size:14px;line-height:1.5;color:var(--jv-text,#334155);display:flex;flex-direction:column;gap:12px;">
+        <!-- §4.5 / Faz 5 — this first layer used to be eight items and roughly
+             six hundred words, which meant a parent standing in a doorway read
+             the first two and closed it. It is now five decisions, each one
+             line, and NOT ONE COMMITMENT WAS DROPPED: the eight old items were
+             regrouped, not trimmed. Anything that was a sentence of detail
+             rather than a decision moved behind a disclosure, where it is still
+             open to anyone who wants it and still legally on the page. If you
+             edit this block, move text between the layers — never delete it. -->
         <div>
           <b><i class="jic jic-user-off" aria-hidden="true"></i> No sign-up, no account.</b><br/>
-          No login, no password, no email required. Just open and play.
+          No login, no password. We never ask for an email address, phone number, photos, or location. Just open and play.
         </div>
         <div>
-          <b><i class="jic jic-lock" aria-hidden="true"></i> Child names stay on this device.</b><br/>
-          If you choose to add a child name or avatar, it is stored only in this browser on this device. It is not uploaded to JUMVI. We do not ask for an email address, phone number, photos, or location.
+          <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on this device.</b><br/>
+          A child&rsquo;s name and avatar, mission progress and badges are saved only in this browser, on this device &mdash; never uploaded to JUMVI.
+          <details class="privacyDisclosure">
+            <summary>What that covers</summary>
+            <div class="privacyDisclosureBody">
+              If you choose to add a child name or avatar, it is stored only in this browser on this
+              device. It is not uploaded to JUMVI. Mission progress and badges are saved only in
+              this browser, on this device, and are never uploaded to a server. The optional
+              certificate name you type is used only to draw the image on your device &mdash; it is
+              not sent anywhere.
+            </div>
+          </details>
         </div>
         <div>
-          <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on your device.</b><br/>
-          Mission progress and badges are saved only in this browser, on this device. They are never uploaded to a server, and the optional certificate name you type is used only to draw the image on your device — it is not sent anywhere.
+          <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling &mdash; ever. No microphone, ever.</b><br/>
+          JUMVI never asks for microphone access and never records audio.
+          <details class="privacyDisclosure">
+            <summary>About read-aloud</summary>
+            <div class="privacyDisclosureBody">
+              The only sound JUMVI produces is optional read-aloud text, generated by your
+              device&rsquo;s own built-in voice (the browser&rsquo;s text-to-speech) &mdash; it
+              plays out loud but is never captured, saved, or sent anywhere.
+            </div>
+          </details>
         </div>
-        <div>
-          <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling — ever.</b>
-        </div>
-        <!-- §4.5 — the first layer stays a list of decisions a parent can make
-             in one read. This item's full inventory is four hundred words and
-             was sitting inline between "no ads" and "no microphone", which
-             pushed the remaining decisions off the screen. Not a word of it is
-             changed or removed — it is behind a disclosure, open to anyone who
-             wants the detail, and the summary line above it says the same
-             thing in one sentence. -->
         <div>
           <b><i class="jic jic-shield" aria-hidden="true"></i> Anonymous play analytics.</b><br/>
-          A short, fixed list of anonymous events — never tied to a name, a profile, a device
+          A short, fixed list of anonymous events &mdash; never tied to a name, a profile, a device
           or an IP address.
           <details class="privacyDisclosure">
             <summary>Exactly what is measured</summary>
@@ -1186,29 +1210,27 @@
               optional feature was used at all (certificate, sharing, read-aloud, the timer, the
               score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
               few fixed return-visit milestones. Every event is just an event name plus, at most,
-              one small value — a mission number, a pack or badge name, a player count, or a fixed
-              option such as which help topic or which share button. Anything not on that list is
-              discarded without being stored. We never attach a name, account, email address, the
-              certificate name you type, a profile name, an IP address, a device ID, or any other
-              identifier to this data. This is measured using our own infrastructure, not a
-              third-party analytics service.
+              one small value &mdash; a mission number, a pack or badge name, a player count, or a
+              fixed option such as which help topic or which share button. Anything not on that
+              list is discarded without being stored. We never attach a name, account, email
+              address, the certificate name you type, a profile name, an IP address, a device ID,
+              or any other identifier to this data. This is measured using our own infrastructure,
+              not a third-party analytics service.
             </div>
           </details>
         </div>
         <div>
-          <b><i class="jic jic-volume" aria-hidden="true"></i> No microphone, ever.</b><br/>
-          JUMVI never asks for microphone access and never records audio. The only sound
-          JUMVI produces is optional read-aloud text, generated by your device's own
-          built-in voice (the browser's text-to-speech) — it plays out loud but is never
-          captured, saved, or sent anywhere.
-        </div>
-        <div>
-          <b><i class="jic jic-shield" aria-hidden="true"></i> COPPA &amp; children's privacy.</b><br/>
-          This app is designed to align with the U.S. Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13. If you believe we have, contact us and we will address it promptly.
-        </div>
-        <div>
-          <b><i class="jic jic-shield" aria-hidden="true"></i> Play safely.</b><br/>
-          These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles.
+          <b><i class="jic jic-shield" aria-hidden="true"></i> Made for kids &mdash; and for safe play.</b><br/>
+          These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles. We do not knowingly collect personal information from children under&nbsp;13.
+          <details class="privacyDisclosure">
+            <summary>COPPA &amp; children&rsquo;s privacy</summary>
+            <div class="privacyDisclosureBody">
+              This app is designed to align with the U.S. Children&rsquo;s Online Privacy
+              Protection Act (COPPA). We do not knowingly collect personal information from
+              children under 13. If you believe we have, contact us and we will address it
+              promptly.
+            </div>
+          </details>
         </div>
         <div class="small" style="border-top:1px solid var(--jv-line,#e5e7eb);padding-top:10px;">
           JUMVI is a product of <b>SAY23 LLC</b>. Questions or requests: <a href="mailto:support@jumvi.co">support@jumvi.co</a>.<br/>
