@@ -7,16 +7,23 @@
    These are now self-contained inline mask-image SVGs at the
    bottom of this file (§5.1) — no webfont, no CDN, offline-safe.
    Colors auto-adapt to light/dark via prefers-color-scheme.
+
+   Tertiary text tone (--color-text-tertiary / --t) carries real labels inside
+   the illustrations ("slow"/"fast" on mission 14, carousel counters), so it is
+   held to WCAG AA as text, not treated as decoration: light #9aa1ac -> #67707d
+   (2.60:1 -> 5.01:1 on white), dark #7c828c -> #8a919b (4.37:1 -> 5.31:1 on the
+   dark illustration ground). Still a clear step lighter than --color-text-
+   secondary, so the hierarchy inside each icon is unchanged.
    ============================================================ */
 .jmv{
   --color-text-primary:#1f2430;
   --color-text-secondary:#5b6573;
-  --color-text-tertiary:#9aa1ac;
+  --color-text-tertiary:#67707d;
   --color-border-secondary:#cdd2d8;
   --color-border-tertiary:#e6e8ec;
   --color-background-primary:#ffffff;
   --color-background-secondary:#f4f6f8;
-  --s:#5b6573; --b:#cdd2d8; --bg2:#f4f6f8; --p:#1f2430; --t:#9aa1ac;
+  --s:#5b6573; --b:#cdd2d8; --bg2:#f4f6f8; --p:#1f2430; --t:#67707d;
   --border-radius-md:8px; --border-radius-lg:12px; --border-radius-xl:16px;
   --font-sans:inherit;
   color:var(--color-text-secondary);
@@ -33,35 +40,35 @@
   .jmv{
     --color-text-primary:#f0f2f5;
     --color-text-secondary:#aab2bd;
-    --color-text-tertiary:#7c828c;
+    --color-text-tertiary:#8a919b;
     --color-border-secondary:#3a4049;
     --color-border-tertiary:#2c3138;
     --color-background-primary:#1a1d22;
     --color-background-secondary:#23272e;
-    --s:#aab2bd; --b:#3a4049; --bg2:#23272e; --p:#f0f2f5; --t:#7c828c;
+    --s:#aab2bd; --b:#3a4049; --bg2:#23272e; --p:#f0f2f5; --t:#8a919b;
   }
 }
 /* Project also supports manual theme toggle via html.theme--dark — keep icons in sync */
 html.theme--dark .jmv{
   --color-text-primary:#f0f2f5;
   --color-text-secondary:#aab2bd;
-  --color-text-tertiary:#7c828c;
+  --color-text-tertiary:#8a919b;
   --color-border-secondary:#3a4049;
   --color-border-tertiary:#2c3138;
   --color-background-primary:#1a1d22;
   --color-background-secondary:#23272e;
-  --s:#aab2bd; --b:#3a4049; --bg2:#23272e; --p:#f0f2f5; --t:#7c828c;
+  --s:#aab2bd; --b:#3a4049; --bg2:#23272e; --p:#f0f2f5; --t:#8a919b;
 }
 /* And when the user explicitly chooses LIGHT, force light vars even if OS prefers dark */
 html.theme--light .jmv{
   --color-text-primary:#1f2430;
   --color-text-secondary:#5b6573;
-  --color-text-tertiary:#9aa1ac;
+  --color-text-tertiary:#67707d;
   --color-border-secondary:#cdd2d8;
   --color-border-tertiary:#e6e8ec;
   --color-background-primary:#ffffff;
   --color-background-secondary:#f4f6f8;
-  --s:#5b6573; --b:#cdd2d8; --bg2:#f4f6f8; --p:#1f2430; --t:#9aa1ac;
+  --s:#5b6573; --b:#cdd2d8; --bg2:#f4f6f8; --p:#1f2430; --t:#67707d;
 }
 
 /* ============================================================

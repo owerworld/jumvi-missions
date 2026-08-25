@@ -340,35 +340,18 @@ function cancelLsDebounced(key){
 }
 
 /** =======================
- * Disable zoom — kapsamlı (iOS + Android + desktop)
- * Kazara pinch/double-tap/Cmd+scroll zoom = kullanıcı kaybı
+ * §1.2 — zoom guards removed (WCAG 2.2 SC 1.4.4 / 1.4.10)
+ * A disableZoom() block used to live here and cancel four things: double-tap
+ * (touchend within 300ms), iOS gesturestart/change/end, any touchstart with
+ * more than one finger, and ctrl/cmd+wheel. Together with maximum-scale=1 in
+ * the viewport meta that made the app unzoomable on every platform, including
+ * desktop. It is gone rather than narrowed: the tap-latency argument for the
+ * double-tap half is already covered by width=device-width plus
+ * touch-action:manipulation on controls (style.css), and the remaining
+ * argument — an accidental pinch while holding the phone one-handed outdoors —
+ * costs a sighted parent one pinch to undo and costs a low-vision parent the
+ * whole screen. Nothing replaces it; zoom is meant to work.
  * ======================= */
-(function disableZoom(){
-  // 1. Double-tap zoom (iOS)
-  let lastTouchEnd = 0;
-  document.addEventListener("touchend", function(e){
-    const now = Date.now();
-    if(now - lastTouchEnd <= 300){ e.preventDefault(); }
-    lastTouchEnd = now;
-  }, { passive:false });
-
-  // 2. Pinch zoom (iOS gestureXxx)
-  ["gesturestart","gesturechange","gestureend"].forEach(evt => {
-    document.addEventListener(evt, function(e){ e.preventDefault(); }, { passive:false });
-  });
-
-  // 3. Multi-touch zoom (Android Chrome)
-  document.addEventListener("touchstart", function(e){
-    if(e.touches && e.touches.length > 1){
-      e.preventDefault();
-    }
-  }, { passive:false });
-
-  // 4. Wheel zoom (desktop Cmd/Ctrl + scroll)
-  document.addEventListener("wheel", function(e){
-    if(e.ctrlKey || e.metaKey){ e.preventDefault(); }
-  }, { passive:false });
-})();
 
 /** =======================
  * Selection / context menu disable
@@ -1224,10 +1207,6 @@ function ageEligibleMissions(){
  * Refs
  * ======================= */
 const listEl = document.getElementById("list");
-const filtersEl = document.getElementById("filters");
-const filterCategoryEl = document.getElementById("filterCategory");
-const filterPlayersEl = document.getElementById("filterPlayers");
-const filterDifficultyEl = document.getElementById("filterDifficulty");
 const progressText = document.getElementById("progressText");
 const progressSub = document.getElementById("progressSub");
 const progressFill = document.getElementById("progressBarFill");
@@ -1315,6 +1294,57 @@ function setMissionBackgroundIsolation(active){
   });
   _missionBackgroundRestore = null;
 }
+/* §6.2 / §4.4 / §4.5 — the dialog contract, applied to the surfaces that
+ * declared it but never implemented it.
+ *
+ * Privacy, Help, Badges, Certificate and the 3D fallback all carry
+ * role="dialog" aria-modal="true", and all of them opened with a bare
+ * classList.add("show"). Measured: Escape did nothing, Tab walked straight out
+ * into the page behind, focus never entered the dialog, and closing dropped
+ * focus on <body>. Only the mission sheet and the team picker were ever wired
+ * to handleDialogKeys.
+ *
+ * Done with a class observer rather than by editing each opener because these
+ * surfaces close in four different ways — a close button, a backdrop click,
+ * Escape, and in one case a programmatic hide — and only the observer sees all
+ * of them. Nothing about how they open or what they contain changes. */
+function enhanceDialog(bk){
+  if(!bk || bk.dataset.dialogEnhanced) return;
+  bk.dataset.dialogEnhanced = "1";
+  let returnFocus = null;
+
+  const close = ()=> bk.classList.remove("show");
+  bk.addEventListener("keydown", (e)=> handleDialogKeys(e, bk, close));
+
+  const onShown = ()=>{
+    const active = document.activeElement;
+    returnFocus = (active && active !== document.body && document.contains(active) && !bk.contains(active))
+      ? active : returnFocus;
+    requestAnimationFrame(()=>{
+      try{
+        if(bk.contains(document.activeElement)) return;   // something already took it
+        const first = bk.querySelector(".close") || dialogFocusable(bk)[0];
+        if(first) first.focus({ preventScroll:true });
+      }catch(_){ }
+    });
+  };
+  const onHidden = ()=>{
+    const back = returnFocus;
+    returnFocus = null;
+    if(back && document.contains(back)){
+      requestAnimationFrame(()=>{ try{ back.focus({ preventScroll:true }); }catch(_){ } });
+    }
+  };
+
+  let wasShown = bk.classList.contains("show");
+  new MutationObserver(()=>{
+    const isShown = bk.classList.contains("show");
+    if(isShown === wasShown) return;
+    wasShown = isShown;
+    if(isShown) onShown(); else onHidden();
+  }).observe(bk, { attributes:true, attributeFilter:["class"] });
+}
+
 function dialogFocusable(container){
   if(!container) return [];
   return Array.from(container.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
@@ -1369,8 +1399,6 @@ const badgesBackdrop = document.getElementById("badgesBackdrop");
 const btnBadgesClose = document.getElementById("btnBadgesClose");
 const badgesList = document.getElementById("badgesList");
 
-const searchInput = document.getElementById("searchInput");
-const btnOnlyUnfinished = document.getElementById("btnOnlyUnfinished");
 const soundToggle = document.getElementById("soundToggle");
 
 const btnSolidBg = document.getElementById("btnSolidBg");
@@ -2438,6 +2466,135 @@ function getSafetyText(ms){
   return base;
 }
 
+/* Space is not a field in data.js and inventing one per mission would be
+ * guesswork. The pack already carries it honestly — Indoor Compact exists
+ * because those games fit a living room, Beach/Park because those need
+ * outdoor room — so it is derived, not authored. */
+/* §3.3 — the four missions the quality audit flagged for physical load:
+ * arc height (7), throwing to the sky (11, 31) and stepping back over a long
+ * rally (36). None of them is removed and none of their ids or safety data
+ * change; each gains a gentler way in and an explicit place to stop.
+ *
+ * The wording deliberately reuses the vocabulary already in the safety data
+ * ("stop stepping back when throws get wild", "throw UP, never AT"). Nothing
+ * here is a new safety claim, a distance a physiotherapist would recognise, or
+ * a promise about the product — it is the same advice, said before the throw
+ * instead of after it. */
+const MISSION_EASIER = {
+  7: {
+    why: "This one asks for a high, floaty arc.",
+    easier: "Stand one big step closer and throw lower — a small rainbow still counts.",
+    cap: "Keep the arc no higher than the thrower can reach with one arm up.",
+    setup: "A grown-up picks the spot to stand before the first throw.",
+    stop: "Stop stepping back the moment a throw goes wild.",
+    quickSeconds: 45
+  },
+  11: {
+    why: "This one sends the ball up above head height.",
+    easier: "Throw only as high as you can catch without moving your feet.",
+    cap: "No higher than the thrower can reach with one arm up.",
+    setup: "A grown-up checks there is nothing overhead first.",
+    stop: "Stop if anyone has to walk backwards to reach it.",
+    quickSeconds: 45
+  },
+  31: {
+    why: "This one is a high throw, straight up.",
+    easier: "Toss it up and catch it yourself a few times before adding a partner.",
+    cap: "No higher than the thrower can reach with one arm up.",
+    setup: "A grown-up checks there is nothing overhead first.",
+    stop: "Stop if the ball starts landing behind you.",
+    quickSeconds: 45
+  },
+  36: {
+    why: "This one is long, and it asks you to keep stepping back.",
+    easier: "Stay at one distance the whole time instead of stepping back.",
+    cap: "Three steps back is far enough.",
+    setup: "A grown-up sets the far line before you start.",
+    stop: "Stop stepping back when throws get wild.",
+    quickSeconds: 60
+  }
+};
+
+/* §3.5 — who does what, before Start.
+ *
+ * Every one of the 36 missions needs at least two people; none is solo. Eight
+ * need three or four, and those are the ones where a family stands in the
+ * garden working out the turns instead of playing. The roles come from the
+ * mission's own player count, not from a hand-written table, so nothing here
+ * can drift out of step with the data. */
+function renderMissionPreflight(ms){
+  const wrap = document.getElementById("missionPreflight");
+  const roles = document.getElementById("missionRoleCard");
+  const easier = document.getElementById("missionEasier");
+  if(!wrap || !roles || !easier) return;
+
+  /* ── roles ───────────────────────────────────────────────────────────── */
+  const players = String(ms.players || "2");
+  const maxPlayers = Number(players.split("–").pop()) || 2;
+  const needsThird = maxPlayers >= 3;
+  if(needsThird){
+    const caller = maxPlayers >= 4
+      ? "One player calls the switches and keeps the count."
+      : "The player who is out this turn calls and counts.";
+    const twoOnly = maxPlayers >= 4
+      ? "Only two of you today? Play it as a pair and take the calling in turns."
+      : "Only two of you today? One of you throws and calls at the same time.";
+    roles.innerHTML =
+      `<b class="preflightHead"><i class="jic jic-users" aria-hidden="true"></i> Before you start — who does what</b>` +
+      `<ul class="preflightList">` +
+      `<li><b>Who throws?</b> Whoever has the ball starts.</li>` +
+      `<li><b>Who catches?</b> The player facing the thrower.</li>` +
+      `<li><b>Who calls and counts?</b> ${escapeHtml(caller)}</li>` +
+      `<li><b>When do we switch?</b> Every time the count resets, move round one place.</li>` +
+      `<li><b>Where do we stand?</b> In a ring, one to three metres apart.</li>` +
+      `<li>${escapeHtml(twoOnly)}</li>` +
+      `</ul>`;
+    roles.hidden = false;
+  }else{
+    /* A pair still benefits from being told it is a pair — quietly, in one
+       line, because two people do not need a list to work out the turns. */
+    roles.innerHTML =
+      `<b class="preflightHead"><i class="jic jic-users" aria-hidden="true"></i> This one is for two</b>` +
+      `<p class="preflightPair">One throws, one catches — swap over whenever you like. There is no solo version of this game.</p>`;
+    roles.hidden = false;
+  }
+
+  /* ── gentler way in, for the four flagged missions ────────────────────── */
+  const cfg = MISSION_EASIER[ms.id];
+  if(cfg){
+    easier.innerHTML =
+      `<b class="preflightHead"><i class="jic jic-shield" aria-hidden="true"></i> Take it gently</b>` +
+      `<p class="preflightWhy">${escapeHtml(cfg.why)}</p>` +
+      `<ul class="preflightList">` +
+      `<li><b>Start easier.</b> ${escapeHtml(cfg.easier)}</li>` +
+      `<li><b>How high, how far.</b> ${escapeHtml(cfg.cap)}</li>` +
+      `<li><b>Grown-up first.</b> ${escapeHtml(cfg.setup)}</li>` +
+      `<li><b>When to stop.</b> ${escapeHtml(cfg.stop)}</li>` +
+      `</ul>` +
+      `<button type="button" class="btn btnGhost preflightQuick" id="btnQuickRound" ` +
+      `data-seconds="${cfg.quickSeconds}">Quick round — ${cfg.quickSeconds}s</button>`;
+    easier.hidden = false;
+    const quick = document.getElementById("btnQuickRound");
+    if(quick) quick.onclick = ()=>{
+      clickSound("click");
+      trackEvent("Mission Quick Round", { id: ms.id, seconds: cfg.quickSeconds });
+      showCountdownThenStart(cfg.quickSeconds);
+    };
+  }else{
+    easier.innerHTML = "";
+    easier.hidden = true;
+  }
+
+  wrap.hidden = roles.hidden && easier.hidden;
+}
+
+function missionSpaceLabel(ms){
+  const pack = ms && ms.pack;
+  if(pack === "Indoor Compact") return "Small space";
+  if(pack === "Beach/Park") return "Outdoor";
+  return "Indoor or out";
+}
+
 function getKidsTip(ms){
   const tipsByPack = {
     "Reflex Rush": [
@@ -3240,12 +3397,9 @@ function applyBackupPayload(p){
   }
 
   // refresh UI
-  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
   applyBodyClasses();
   renderModeChips();
   renderSoundToggle();
-  renderFilters();
-  renderFilterGroups();
   renderList();
   renderStreakUI();
   renderDailyUI();
@@ -3269,112 +3423,38 @@ function setDoneFromArray(arr){
   bumpDoneVersion();
 }
 
-function renderFilterGroups(){
-  if(filterCategoryEl){
-    filterCategoryEl.innerHTML = "";
-    CATEGORY_OPTIONS.forEach(opt=>{
-      const b = document.createElement("button");
-      b.className = "chip" + (opt===currentCategory ? " active" : "");
-      b.textContent = opt === "all" ? "All" : opt;
-      b.onclick = ()=>{
-        clickSound("click");
-        currentCategory = setState("currentCategory", opt);
-        renderFilterGroups();
-        renderList();
-      };
-      filterCategoryEl.appendChild(b);
-    });
-  }
-  if(filterPlayersEl){
-    filterPlayersEl.innerHTML = "";
-    PLAYERS_OPTIONS.forEach(opt=>{
-      const b = document.createElement("button");
-      b.className = "chip" + (opt===currentPlayers ? " active" : "");
-      b.textContent = opt === "all" ? "All" : opt;
-      b.onclick = ()=>{
-        clickSound("click");
-        currentPlayers = setState("currentPlayers", opt);
-        renderFilterGroups();
-        renderList();
-      };
-      filterPlayersEl.appendChild(b);
-    });
-  }
-  if(filterDifficultyEl){
-    filterDifficultyEl.innerHTML = "";
-    DIFFICULTY_OPTIONS.forEach(opt=>{
-      const b = document.createElement("button");
-      b.className = "chip" + (opt===currentDifficulty ? " active" : "");
-      b.textContent = opt === "all" ? "All" : opt;
-      b.onclick = ()=>{
-        clickSound("click");
-        currentDifficulty = setState("currentDifficulty", opt);
-        renderFilterGroups();
-        renderList();
-      };
-      filterDifficultyEl.appendChild(b);
-    });
-  }
-}
+// §2.1 — renderFilterGroups() and renderFilters() used to build category,
+// player, difficulty and pack chip rows here. Every container they wrote into
+// (#filterCategory, #filterPlayers, #filterDifficulty, #filters) was either
+// display:none or absent from the markup entirely, so the chips were created,
+// styled and wired on every call and shown to nobody. The comment on
+// pack_view above already said as much about the pack row. Removed with the
+// stubs; the pack path in the Missions tab is how packs are browsed.
 
-function renderFilters(){
-  filtersEl.innerHTML = "";
-  PACKS.forEach(p=>{
-    const b = document.createElement("button");
-    b.className = "chip" + (p.key===currentPack ? " active" : "");
-    b.textContent = p.name;
-    b.onclick = ()=>{
-      clickSound("click");
-      currentPack = setState("currentPack", p.key);
-      lsSet(PACK_KEY, currentPack);
-      renderFilters();
-      renderList();
-    };
-    filtersEl.appendChild(b);
-  });
-}
-
+/* The candidate set for "Pick one for me" and for "Next".
+ *
+ * §2.1 — this used to narrow by currentPack, currentCategory, currentPlayers,
+ * onlyUnfinished and searchQuery as well. Those were the flat list view's
+ * filters, and that view is retired; every control that could change them was
+ * a display:none stub. currentPack and onlyUnfinished are also persisted to
+ * localStorage, so a value left behind by an older build or restored from a
+ * backup kept narrowing this set forever with nothing on screen to show it or
+ * clear it. Measured on a seeded profile: with jumvi_current_pack_v1 set to
+ * "Beach/Park", twenty-five presses of "Pick one for me" could only ever reach
+ * three of the thirty-six missions.
+ *
+ * So the only filter left is the one the family actually chose and can still
+ * change — the onboarding play level. The variables stay: applyBackupPayload
+ * reads and writes them and the v1 backup format must keep round-tripping.
+ */
 function getVisibleMissions(){
-  const key = [
-    currentPack,
-    currentCategory,
-    currentPlayers,
-    currentDifficulty,
-    onlyUnfinished ? "1" : "0",
-    searchQuery || "",
-    String(_doneVersion)
-  ].join("|");
+  const key = [currentDifficulty, String(_doneVersion)].join("|");
   if(key === _visibleCacheKey) return _visibleCacheList;
 
   let list = missions;
 
-  if(currentPack !== "all"){
-    list = list.filter(x=>x.pack===currentPack);
-  }
-
-  if(currentCategory !== "all"){
-    list = list.filter(x=>mapPackToCategory(x.pack) === currentCategory);
-  }
-
-  if(currentPlayers !== "all"){
-    list = list.filter(x=>normalizePlayers(x.players) === currentPlayers);
-  }
-
   if(currentDifficulty !== "all"){
     list = list.filter(x=>diffLabel(x.difficulty) === currentDifficulty);
-  }
-
-  if(onlyUnfinished){
-    list = list.filter(x=>!done.has(x.id));
-  }
-
-  if(searchQuery){
-    const q = searchQuery.toLowerCase();
-    list = list.filter(x=>
-      x.title.toLowerCase().includes(q) ||
-      x.pack.toLowerCase().includes(q) ||
-      x.steps.join(" ").toLowerCase().includes(q)
-    );
   }
 
   list = list.slice().sort((a,b)=>
@@ -3836,6 +3916,11 @@ function updateProgress(options = {}){
    * before anyone has thrown a ball. */
   const islandCard = document.getElementById("advModeCard");
   if(islandCard && lsGet(HUB3D_UNSUPPORTED_KEY, "0") !== "1"){
+    // Keep the hide class in sync with the flag this branch just tested. The
+    // flag deliberately SURVIVES a reset (the device still has no WebGL), so
+    // this is not undoing a reset — it is making sure the class can never be
+    // left on a card the flag says is supported again.
+    islandCard.classList.remove("hub3dUnsupported");
     islandCard.style.display = (isFresh && !familyHasPlayed()) ? "none" : "";
   }
 }
@@ -3937,6 +4022,45 @@ function missionGateRemainingMs(id){
   const openFor = Date.now() - (missionOpenedAt || 0);
   return Math.max(0, missionGateMsFor(id) - openFor);
 }
+
+/* Read-only test seam for tools/check-mission-play-state.mjs.
+ *
+ * The play state lives in script-scope `let`s (timerState, timerLeft,
+ * timerEndAt, the gate sets), which a test driver cannot reach: top-level
+ * function declarations land on window, `let` bindings never do. Without this
+ * the only way to assert "exactly one timer interval" or "the gate is closed"
+ * is to read it back out of rendered text, which tests the wording rather than
+ * the state.
+ *
+ * It only reads. Nothing here can start, stop or complete anything, so it
+ * cannot become a back door into the progress state. It deliberately carries
+ * no child name, profile name, certificate name or device identifier — the
+ * whole point is that a play-state trace can be logged without carrying any of
+ * that with it. */
+window.__jumviPlayProbe = function(){
+  return {
+    missionId: (typeof _openMissionId !== "undefined" ? _openMissionId : null),
+    lastOpenedId: (typeof lastOpenedId !== "undefined" ? lastOpenedId : null),
+    timerState,
+    timerTotal,
+    timerLeft,
+    timerEndAt,
+    timerIntervalLive: timerInterval != null,
+    countdownLive: (timerCountdownInterval != null || timerCountdownTimeout != null),
+    countdownToken: timerCountdownToken,
+    timerFinishedFor: Array.from(_timerFinishedFor),
+    gateTotalMs: (lastOpenedId != null ? missionGateMsFor(lastOpenedId) : 0),
+    gateRemainingMs: missionGateRemainingMs(lastOpenedId),
+    missionOpenedAt,
+    doneSize: done.size,
+    doneIds: Array.from(done).sort((a,b)=>a-b),
+    xp: (typeof xpFromDoneSet === "function" ? xpFromDoneSet(done) : null),
+    streakCount, bestStreak, lastActiveIso,
+    autoDoneOnEnd,
+    narrationPending: (typeof _missionNarrationPending !== "undefined" ? _missionNarrationPending : null),
+    undoBarVisible: !(document.getElementById("undoBar")?.hidden ?? true)
+  };
+};
 let timerCountdownInterval = null;
 let timerCountdownTimeout = null;
 let timerCountdownToken = 0;
@@ -4861,9 +4985,32 @@ function openMission(id, source, opts){
     <span class="tag diff">${diffLabel(ms.difficulty)} • ${escapeHtml(ms.time)}</span>
     <span class="tag"><i class="jic jic-users" aria-hidden="true"></i> ${escapeHtml(ms.players)}</span>
     <span class="tag">Ages ${escapeHtml(ms.age)}</span>
+    <span class="tag">${escapeHtml(missionSpaceLabel(ms))}</span>
     <span class="tag xpTag">+${missionXp(ms)} XP</span>
     ${bestChip}
   `;
+
+  /* §3.1 — the safety band names THIS game.
+   *
+   * It was one hardcoded sentence in index.html, identical on all 36 sheets:
+   * "Throw below face level · Stand 1–3 m apart · Adult nearby". Every mission
+   * carries its own safety line in data.js — "Always throw UP, never AT each
+   * other", "Stop stepping back when throws get wild" — and the only place it
+   * appeared was inside a collapsed "More tips & safety" accordion, so in
+   * practice nobody read the line written for the game they were about to
+   * play. The mission's own words lead now; the standing rules stay underneath
+   * because they are true for all 36 and dropping them would lose real safety
+   * information. Nothing new is claimed — both strings already existed. */
+  try { renderMissionPreflight(ms); } catch(_){}
+
+  const safetyBand = document.querySelector(".missionSafetyLine");
+  if(safetyBand){
+    const own = String(ms.safety || "").trim();
+    safetyBand.innerHTML = own
+      ? `<b class="safetyOwn">${escapeHtml(own)}</b>` +
+        `<span class="safetyAlways">Throw below face level · Stand 1–3 m apart · Adult nearby</span>`
+      : `<span class="safetyAlways">Throw below face level · Stand 1–3 m apart · Adult nearby</span>`;
+  }
 
   const steps = Array.isArray(ms.steps) && ms.steps.length ? ms.steps : ["Steps are coming soon. Please try another mission."];
   // Guide Leo beside the STEPS header (Task 4b/c): decorative pointing pose,
@@ -5133,6 +5280,10 @@ function closeMission(opts){
   // active tab underneath, so the user lands right back on the island.
   const wasHubMission = !!window._hubMissionFlow;
   const hubMissionCompleted = lastOpenedId != null && done.has(lastOpenedId);
+  // Captured before _openMissionId is cleared below: the focus restore at the
+  // end re-finds this mission's card by id rather than trusting a node that
+  // the re-renders in between may have replaced.
+  const closedMissionId = _openMissionId || lastOpenedId || 0;
   window._hubMissionFlow = null;
   releaseWakeLock();
   if(lastOpenedId != null && !done.has(lastOpenedId)){
@@ -5162,6 +5313,14 @@ function closeMission(opts){
   toggleScoreTracker(false);
   // Tear down Red Light / Green Light caller overlay if it was running (mission 2)
   try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
+  /* If an undo offer is still live, rescue the bar out of the sheet before the
+     sheet goes away — otherwise closing the sheet inside the five seconds would
+     take the only way to undo with it. Back on the body it is the fixed overlay
+     again, exactly as it behaves for a completion with no sheet on screen. */
+  if(_undoOffer){
+    const _ub = document.getElementById("undoBar");
+    if(_ub && _ub.parentNode !== document.body){ try{ document.body.appendChild(_ub); }catch(_){} }
+  }
   backdrop.classList.remove("show");
   backdrop.setAttribute("aria-hidden", "true");
   backdrop.inert = true;
@@ -5183,18 +5342,44 @@ function closeMission(opts){
   setMissionBackgroundIsolation(false);
   const returnFocus = _missionReturnFocus;
   _missionReturnFocus = null;
-  const focusTarget = returnFocus && returnFocus.isConnected && returnFocus.getClientRects().length
-    ? returnFocus
-    : btnDailyPlay;
-  if(!wasHubMission && focusTarget && focusTarget.isConnected && focusTarget.getClientRects().length){
-    requestAnimationFrame(()=>{ try{ focusTarget.focus({ preventScroll:true }); }catch(_){ focusTarget.focus(); } });
-  }
+
   // Continue hint güncelle (last opened değişti)
   renderContinueHint();
   renderTodayContinuity();
   // Browse tab'daysak path'i de yenile — done state guncel olsun
   if(document.body.classList.contains("tab-browse") && typeof renderMissionPath === "function"){
     try { renderMissionPath(); } catch(_){}
+  }
+
+  /* Focus goes back AFTER those re-renders, and the target is re-resolved by
+   * mission id instead of being held as a node.
+   *
+   * Measured on the Missions tab, which is how most missions get opened: the
+   * card the user came from WAS remembered correctly, but renderMissionPath()
+   * (three lines up, and it used to run after this block) rebuilds the whole
+   * list, so by the time the queued rAF fired the remembered node had
+   * isConnected=false. The fallback, btnDailyPlay, lives on Today and has no
+   * box while Missions is the visible tab. Both guards failed silently and
+   * focus fell to <body> — a keyboard or screen-reader user was dumped at the
+   * top of the document every single time they closed a mission, and had to
+   * tab back through the header and nav to find their place in 36 items.
+   * Opening from Today never showed this, because #btnDailyPlay survives its
+   * own re-render. */
+  if(!wasHubMission){
+    const visible = (el)=> !!(el && el.isConnected && el.getClientRects().length);
+    let focusTarget = visible(returnFocus) ? returnFocus : null;
+    if(!focusTarget && closedMissionId){
+      // The same mission's card in the freshly rendered list — the exact spot
+      // the user was standing in before the sheet opened.
+      focusTarget = Array.from(document.querySelectorAll('[data-mission-id="' + closedMissionId + '"]')).find(visible) || null;
+    }
+    if(!focusTarget && visible(btnDailyPlay)) focusTarget = btnDailyPlay;
+    if(focusTarget){
+      requestAnimationFrame(()=>{
+        try{ focusTarget.focus({ preventScroll:true }); }
+        catch(_){ try{ focusTarget.focus(); }catch(__){} }
+      });
+    }
   }
 }
 
@@ -5592,7 +5777,11 @@ function captureJourneySnapshot(){
     streak_last_v1: lsGet(STREAK_LAST_KEY, null),
     badges_unlocked_v1: lsGet(BADGES_UNLOCKED_KEY, null),
     streak_freeze_v1: lsGet(STREAK_FREEZE_KEY, null),
-    daily_challenge_v1: lsGet(DAILY_CHALLENGE_KEY, null)
+    daily_challenge_v1: lsGet(DAILY_CHALLENGE_KEY, null),
+    /* Undo rolls back the completion that earned the star, so it has to roll
+       back the family ledger too — otherwise one mis-tap plus an Undo would
+       burn the household's only star for the day with nothing to show. */
+    family_daily_star_v1: lsGet(FAMILY_DAILY_STAR_KEY, null)
   };
 }
 function restoreLsRaw(key, raw){
@@ -5617,19 +5806,72 @@ function restoreJourneySnapshot(snap){
   restoreLsRaw(BADGES_UNLOCKED_KEY, snap.badges_unlocked_v1);
   restoreLsRaw(STREAK_FREEZE_KEY, snap.streak_freeze_v1);
   restoreLsRaw(DAILY_CHALLENGE_KEY, snap.daily_challenge_v1);
+  restoreLsRaw(FAMILY_DAILY_STAR_KEY, snap.family_daily_star_v1);
 }
 
 let _undoTimer = null;
+/* Which completion the Undo button currently belongs to, or null when the
+ * offer has been used or has run out. The bar used to be closed by setting
+ * bar.hidden alone, which hides it (.undoBar[hidden]{display:none}) but leaves
+ * the click handler bound and the snapshot alive in its closure: the five
+ * second promise was about visibility, not about capability, and a programmatic
+ * click after the window still rolled a completion back. Nulling this is what
+ * actually ends the offer. */
+let _undoOffer = null;
+
+/* Where the undo bar lives depends on whether the mission sheet is on screen.
+ *
+ * Inside the sheet it belongs in the flow, directly above the action row, so
+ * "Undo" and "Next" can never overlap — see the #sheet .undoBar rule in
+ * style.css for the measurements that ruled out doing this with a `bottom`
+ * value. Outside the sheet it stays the viewport-fixed overlay it has always
+ * been, because there is no sheet to sit in.
+ *
+ * The move always happens while the bar is HIDDEN, before its text is set.
+ * That matters: this element is role="status" aria-live="polite", and moving a
+ * live region with content in it can make a screen reader re-announce. Docking
+ * first and revealing second keeps exactly one announcement per completion. */
+function dockUndoBar(){
+  const bar = document.getElementById("undoBar");
+  if(!bar) return;
+  const actions = document.querySelector("#sheet .sheetActions");
+  const sheetOpen = !!backdrop && backdrop.classList.contains("show") && !!actions;
+  const wanted = sheetOpen ? actions.parentNode : document.body;
+  if(bar.parentNode === wanted && (!sheetOpen || bar.nextElementSibling === actions)) return;
+  try{
+    if(sheetOpen) actions.parentNode.insertBefore(bar, actions);
+    else document.body.appendChild(bar);
+  }catch(_){}
+}
+
+function endUndoOffer(){
+  clearTimeout(_undoTimer);
+  _undoTimer = null;
+  _undoOffer = null;
+  const bar = document.getElementById("undoBar");
+  if(bar){
+    bar.hidden = true;
+    // Park it back on the body while hidden, so the next completion starts
+    // from a known place and a closing sheet never takes it away mid-offer.
+    try{ document.body.appendChild(bar); }catch(_){}
+  }
+}
 function showUndoBar(id, journeySnapshot){
   const bar = document.getElementById("undoBar");
   const btn = document.getElementById("undoBtn");
   if(!bar || !btn) return;
+  dockUndoBar();
   bar.hidden = false;
   clearTimeout(_undoTimer);
-  _undoTimer = setTimeout(()=>{ bar.hidden = true; }, 5000);
+  // A new completion supersedes any older offer outright, so an expired or
+  // superseded snapshot can never be applied to the wrong mission.
+  _undoOffer = { id, snapshot: journeySnapshot };
+  _undoTimer = setTimeout(endUndoOffer, 5000);
   btn.onclick = ()=>{
-    clearTimeout(_undoTimer);
-    bar.hidden = true;
+    // Gone means gone: after the window, or after this offer has been used,
+    // there is nothing to undo even if something reaches the button.
+    if(!_undoOffer || _undoOffer.id !== id) return;
+    endUndoOffer();
     if(done.has(id)){
       if(_badgeUnlockTimer){ clearTimeout(_badgeUnlockTimer); _badgeUnlockTimer = null; }
       done.delete(id);
@@ -5640,6 +5882,7 @@ function showUndoBar(id, journeySnapshot){
       renderList();
       renderDailyChallenge();
       if(typeof renderMissionPath === "function"){ try{ renderMissionPath(); }catch(_){} }
+      refreshFamilySurfaces();
       clickSound("click");
       // Re-renders the SAME sheet that is already open (an in-place undo, not
       // a new discovery event) — suppress mission_entry entirely, don't just
@@ -5708,12 +5951,26 @@ function markMissionDone(id, source="manual"){
 
   const changed = recordActivityToday();
 
+  /* The daily goal is counted here, inside the same transaction that already
+   * moves streak, badges and XP — so the Undo snapshot taken above rolls it
+   * back with everything else.
+   *
+   * This call is new. bumpDailyChallenge() has existed for a long time with
+   * ZERO call sites: measured on a clean profile, completing a real mission
+   * left jumvi_p1_daily_challenge_v1 at {"count":0,"claimed":false} and the
+   * visible #todayGoalBadge stuck on "0/1 today" forever. The big Today's Goal
+   * card is retired at the stylesheet (#dailyChallenge{display:none}), but the
+   * small badge was left on screen, so families have been looking at a counter
+   * that could never move. Wiring it up is what makes the daily star real. */
+  bumpDailyChallenge();
+
   persist();
   renderList();
   // Path tree'yi anında yenile — done state ✓ rozet gözüksün
   if(typeof renderMissionPath === "function"){
     try { renderMissionPath(); } catch(_){}
   }
+  refreshFamilySurfaces();
   clickSound("success");
   celebrate();
   window.JumviMusic?.cue("playMissionComplete");
@@ -5797,7 +6054,11 @@ function markMissionDone(id, source="manual"){
       // bail if the kid already closed/navigated away manually in the meantime
       if(!backdrop.classList.contains("show") || lastOpenedId !== id) return;
       closeMission();
-      if(window._hub3dAdvance) window._hub3dAdvance(packKey);
+      // Pass the completion that earned this walk. The hub waits for any
+      // reward overlay to clear before opening the next gate, and an Undo can
+      // land inside that wait — the walk must then be void, not merely
+      // retargeted.
+      if(window._hub3dAdvance) window._hub3dAdvance(packKey, id);
     }, 1100);
   } else {
     // Same reason as the mark-undone site above: this re-opens the mission
@@ -5920,16 +6181,21 @@ function renderMissionPlayPanel(id, waitMs){
   const chip = document.getElementById("playPanelChip");
   const dial = document.getElementById("playPanelDial");
   const stateText = document.getElementById("playPanelStateText");
-  if(chip) chip.textContent = gateOpen
+  /* This runs once a second while the gate counts down, and the panel is an
+   * aria-live region. Assigning textContent fires a mutation even when the
+   * string is identical, so writing "Playing now" sixty times announced the
+   * panel sixty times. Only the transition is news; write only on change. */
+  const setText = (el, value) => { if(el && el.textContent !== value) el.textContent = value; };
+  setText(chip, gateOpen
     ? (tr ? "Aşama tamam" : "Gate complete")
-    : (tr ? "Şimdi oynuyor" : "Playing now");
+    : (tr ? "Şimdi oynuyor" : "Playing now"));
   if(dial){
-    dial.textContent = gateOpen ? "" : String(Math.ceil(waitMs / 1000)) + "s";
+    setText(dial, gateOpen ? "" : String(Math.ceil(waitMs / 1000)) + "s");
     dial.classList.toggle("done", gateOpen);
   }
-  if(stateText) stateText.textContent = gateOpen
+  setText(stateText, gateOpen
     ? (tr ? "Süre doldu! Harika oynadınız." : "Time's up! Great rallying.")
-    : (tr ? "Leo sayıyor — oynamaya devam." : "Leo is counting the rally — keep playing.");
+    : (tr ? "Leo sayıyor — oynamaya devam." : "Leo is counting the rally — keep playing."));
 }
 
 function updateToggleDoneGateUI(){
@@ -5948,8 +6214,16 @@ function updateToggleDoneGateUI(){
   if(waitMs > 0){
     btnToggleDone.classList.add("btnGateWait");
     const secs = Math.ceil(waitMs / 1000);
+    /* §4.6 — "After you play (68s)" put a second clock on a screen that already
+       has one, and never said which was which. On mission 24 the play ring
+       counts 207 seconds down while this read 68: the gate is a floor on real
+       play, not the length of the game, and a parent has no way to know that
+       from a bare number in brackets. Naming the action removes the collision —
+       the ring says how long the game runs, this says how much longer to play
+       before finishing is the next step. Turkish copy is deliberately
+       untouched; that route is out of scope for this round. */
     btnToggleDone.innerHTML = `<i class="jic jic-play" aria-hidden="true"></i> ${
-      tr ? `Oynadıktan sonra (${secs}sn)` : `After you play (${secs}s)`}`;
+      tr ? `Oynadıktan sonra (${secs}sn)` : `Play for about ${secs}s more`}`;
     _gateUiTimer = setTimeout(updateToggleDoneGateUI, 1000);
   }else{
     btnToggleDone.classList.remove("btnGateWait");
@@ -6075,11 +6349,47 @@ document.getElementById("btnRandomAll").onclick = ()=>{
     try { localStorage.removeItem(BADGES_UNLOCKED_KEY); } catch(_){}
     try { localStorage.removeItem(STREAK_FREEZE_KEY); } catch(_){}
     try { localStorage.removeItem(DAILY_CHALLENGE_KEY); } catch(_){}
+    /* The button says "press and hold to clear this device", and the family
+       star IS device-wide, so it goes with everything else. Cleared AFTER the
+       scoped key above, which gives a useful property: familyDailyStar() will
+       re-derive the ledger on the next read, and it can no longer adopt the
+       scope that was just wiped — but it CAN still adopt another child who
+       genuinely earned today's star. So resetting one child never hands the
+       household a second star while somebody else's claim still stands. */
+    try { localStorage.removeItem(FAMILY_DAILY_STAR_KEY); } catch(_){}
+
+    /* §5.4 — the rest of what a family means by "progress".
+     *
+     * Reset cleared the mission set, streak, badges and the daily challenge,
+     * and left behind: the certificate the child had already earned (name AND
+     * id), today's daily pick, the per-mission attempt and skip counts, and
+     * every high score. Measured on a seeded profile — after a full reset,
+     * cert_name_v1, cert_id_v1, daily_id_v1, daily_n_v1 and high_scores_v1
+     * were all still exactly as before. A parent who resets to hand the phone
+     * to a younger sibling got a clean mission list with the older child's
+     * certificate still sitting behind it.
+     *
+     * These use the same key constants as everywhere else, so they clear in
+     * whatever scope is active — team keys while a team is on, the child's
+     * otherwise — without this function having to know which. */
+    [CERT_ID_KEY, CERT_NAME_KEY, DAILY_DATE_KEY, DAILY_ID_KEY, DAILY_N_KEY,
+     ATTEMPTS_KEY, SKIPS_KEY, HIGH_SCORES_KEY].forEach(k=>{
+      try { cancelLsDebounced(k); } catch(_){}
+      try { localStorage.removeItem(k); } catch(_){}
+    });
+    /* The in-memory mirrors of the two that have them, so the current page
+       agrees with storage without waiting for a reload. */
+    attempts = setState("attempts", {});
+    skips = setState("skips", {});
+    dailyIso = setState("dailyIso", "");
+    dailyIdStored = setState("dailyIdStored", 0);
+    dailyN = setState("dailyN", 0);
 
     hideMissionXpReward();
     persist();
     renderList();
     renderDailyChallenge();
+    refreshFamilySurfaces();
     closeMission();
     closeCertificate();
     showToast("Progress reset");
@@ -6405,32 +6715,9 @@ document.getElementById("btnShare").onclick = async ()=>{
 
 // btnChoosePack removed from UI — pack filter row handles this directly
 
-searchInput.addEventListener("input", ()=>{
-  searchQuery = setState("searchQuery", searchInput.value || "");
-  renderList();
-});
-
-btnOnlyUnfinished.onclick = ()=>{
-  clickSound("click");
-  onlyUnfinished = setState("onlyUnfinished", !onlyUnfinished);
-  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
-  persistOnly();
-  renderList();
-};
-
-// Filters toggle (Players + Difficulty collapsed by default)
-const btnToggleFilters = document.getElementById("btnToggleFilters");
-const filterGroupsEl = document.getElementById("filterGroups");
-let filtersOpen = false;
-if(btnToggleFilters && filterGroupsEl){
-  btnToggleFilters.addEventListener("click", ()=>{
-    clickSound("click");
-    filtersOpen = !filtersOpen;
-    filterGroupsEl.style.display = filtersOpen ? "" : "none";
-    btnToggleFilters.classList.toggle("active", filtersOpen);
-    btnToggleFilters.innerHTML = filtersOpen ? '<i class="jic jic-x" aria-hidden="true"></i> Filters' : '<i class="jic jic-settings" aria-hidden="true"></i> Filters';
-  });
-}
+// §2.1 — the search input, "only unfinished" toggle and Filters disclosure
+// used to be bound here. Their elements were display:none stubs, so none of
+// these handlers could ever run; they are removed with the markup.
 
 /** =======================
  * New UI buttons
@@ -6557,9 +6844,22 @@ function setProfileSurfaceMode(mode){
   }
 }
 
+/* §4.2 / §6.2 — where focus goes when this screen closes.
+ *
+ * The mission sheet already remembers its opener (_missionReturnFocus); this
+ * one did not, so closing the Kids-and-settings screen dropped focus on
+ * <body>. A keyboard or switch user was returned to the top of the document
+ * and had to tab all the way back to the row they came from. Captured on open
+ * rather than guessed on close, because by then the opener may have been
+ * re-rendered out of existence. */
+let _profileReturnFocus = null;
 function openProfileSheet(){
   const bk = document.getElementById("profileBackdrop");
   if(!bk) return;
+  const active = document.activeElement;
+  _profileReturnFocus = (active && active !== document.body && document.contains(active))
+    ? active
+    : document.getElementById("btnOpenProfileFromTab");
   _profileEditingId = null;
   setProfileSurfaceMode("switch");
   renderProfileList();
@@ -6568,6 +6868,23 @@ function openProfileSheet(){
   const nameInput = document.getElementById("profileNewName");
   if(nameInput) nameInput.value = "";
   bk.classList.add("show");
+  /* §6.2 — this surface carries role="dialog" aria-modal="true" but had no key
+     handling at all: Escape did nothing and Tab walked straight out of it into
+     the page behind. Every other dialog in the app routes through
+     handleDialogKeys (mission sheet, team picker, badge modal); this one was
+     simply never wired up. Bound once. */
+  if(!bk.dataset.keysBound){
+    bk.dataset.keysBound = "1";
+    bk.addEventListener("keydown", (e)=> handleDialogKeys(e, bk, closeProfileSheet));
+  }
+  /* open → first focus, so a keyboard user starts inside the dialog rather
+     than wherever they happened to be on the page underneath. */
+  requestAnimationFrame(()=>{
+    try{
+      const first = document.getElementById("btnProfileClose") || dialogFocusable(bk)[0];
+      if(first) first.focus({ preventScroll:true });
+    }catch(_){ }
+  });
   trackEvent("Profile Sheet Opened");
 }
 
@@ -6599,6 +6916,16 @@ function closeProfileSheet(){
   bk.classList.remove("show");
   _profileEditingId = null;
   setProfileSurfaceMode("switch");
+  /* Hand focus back to whatever opened this. If that control has since been
+     re-rendered away, fall back to the Grown-ups entry point rather than to
+     nothing — anywhere sensible beats <body>. */
+  const back = (_profileReturnFocus && document.contains(_profileReturnFocus))
+    ? _profileReturnFocus
+    : document.getElementById("btnOpenProfileFromTab");
+  _profileReturnFocus = null;
+  if(back){
+    requestAnimationFrame(()=>{ try{ back.focus({ preventScroll:true }); }catch(_){ } });
+  }
 
   if(_teamSetupSelectingChild){
     _teamSetupSelectingChild = false;
@@ -6709,21 +7036,47 @@ function renderProfileEditAvatarPicker(){
     picker.appendChild(btn);
   });
 }
+/* §4.2 — say it at the field, not only in a toast.
+ *
+ * Empty and duplicate names were already refused, but the only feedback was a
+ * transient toast at the other end of the screen: nothing marked the input as
+ * invalid, and nothing tied the reason to the control a screen reader was
+ * sitting on. The toast stays (it is what a sighted parent notices); this adds
+ * the part assistive tech needs. */
+function setNameFieldError(inputId, message){
+  const input = document.getElementById(inputId);
+  const err = document.getElementById(inputId + "Error");
+  if(!input) return;
+  if(message){
+    input.setAttribute("aria-invalid", "true");
+    input.classList.add("hasError");
+    if(err){ err.textContent = message; err.hidden = false; }
+  }else{
+    input.removeAttribute("aria-invalid");
+    input.classList.remove("hasError");
+    if(err){ err.textContent = ""; err.hidden = true; }
+  }
+}
+
 function saveProfileEdit(){
   if(!_profileEditingId) return;
   const nameEl = document.getElementById("profileEditName");
   const newName = (nameEl && nameEl.value || "").trim().slice(0, 20);
   if(!newName){
-    showToast("Please enter a name.");
+    const msg = "Please enter a name.";
+    setNameFieldError("profileEditName", msg);
+    showToast(msg);
     if(nameEl) nameEl.focus();
     return;
   }
   const renameConflict = childNameConflict(newName, _profileEditingId);
   if(renameConflict){
+    setNameFieldError("profileEditName", renameConflict);
     showToast(renameConflict);
     if(nameEl) nameEl.focus();
     return;
   }
+  setNameFieldError("profileEditName", "");
   const profiles = getProfiles();
   const idx = profiles.findIndex(x => x.id === _profileEditingId);
   if(idx === -1) return;
@@ -6956,16 +7309,20 @@ function addNewChildProfile(){
   if(!nameInput) return;
   const name = (nameInput.value || "").trim().slice(0, 20);
   if(!name){
-    showToast("Please enter a name first.");
+    const msg = "Please enter a name first.";
+    setNameFieldError("profileNewName", msg);
+    showToast(msg);
     nameInput.focus();
     return;
   }
   const conflict = childNameConflict(name, null);
   if(conflict){
+    setNameFieldError("profileNewName", conflict);
     showToast(conflict);
     nameInput.focus();
     return;
   }
+  setNameFieldError("profileNewName", "");
   const profiles = getProfiles();
   if(profiles.length >= 6){
     showToast("Maximum 6 children supported.");
@@ -7349,7 +7706,6 @@ function showWelcomeOverlay(){
       // me + "Next" — so they stay consistent with the welcome count.
       try {
         currentDifficulty = setState("currentDifficulty", selectedDiff);
-        renderFilterGroups();
         updateProgress({ deferStats: true });
         // Make the selected first mission the home-card pick too, so closing the
         // sheet never lands on a different recommendation.
@@ -7490,7 +7846,14 @@ const HUB3D_UNSUPPORTED_KEY = "jumvi_hub3d_unsupported_v1";
 // Once a device is known to lack WebGL, hide BOTH hub entry points for good.
 function applyHub3dUnsupported(){
   const card = document.getElementById("advModeCard");
-  if(card) card.style.display = "none";
+  if(!card) return;
+  // The inline display alone was not enough: warm-toy.css styles this card as
+  // "#tabToday #advModeCard{display:flex !important}", and !important beats an
+  // inline declaration. So the card stayed on screen on every WebGL-less
+  // device and each tap replayed the same "needs a newer device" toast — a
+  // dead CTA. The class carries the matching !important hide rule.
+  card.classList.add("hub3dUnsupported");
+  card.style.display = "none";
 }
 let _hub3dEntrySource = "nav_tab"; // set by the entry handlers before switchTab("hub3d")
 
@@ -7785,7 +8148,7 @@ function showHub3D(){
     applyHub3dUnsupported();
     showToast("Adventure Mode needs a newer device — missions still work great!");
     switchTab("today");
-    return;
+    return false;   // tells switchTab() the redirect above is the final word
   }
   window.__hub3dLoadStart = performance.now();
   window.__hub3dSessionStart = performance.now();
@@ -7903,12 +8266,20 @@ function switchTab(tabName){
   // The parent dashboard now lives on the "modes" (Family) tab.
   if(tabName === "modes") beaconOnce("dashboard_open", "dashboard_open");
 
-  // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez
-  if(tabName === "hub3d") showHub3D(); else hideHub3D();
-
   // Body class — mission list ve footer görünürlüğü için
   document.body.classList.remove("tab-today","tab-browse","tab-modes","tab-stats","tab-profile","tab-hub3d");
   document.body.classList.add("tab-" + tabName);
+
+  // 3D Hub — opt-in deneysel görünüm; diğer tab'lar bu satırdan etkilenmez.
+  // This runs AFTER the body class on purpose. showHub3D() can refuse (no
+  // WebGL) and send the user back by calling switchTab("today") itself; while
+  // it ran first, that inner call did its work and then this frame overwrote
+  // the body class with "tab-hub3d" again — a device that had just been told
+  // it cannot run the hub was left in the hub's CSS state. Now the inner call
+  // is the last writer and we return instead of undoing it.
+  if(tabName === "hub3d"){
+    if(showHub3D() === false) return;
+  } else hideHub3D();
 
   // Tab içine özel render'lar (defensive — herhangi bir hata sayfayı bozmasın)
   try {
@@ -8093,6 +8464,21 @@ function levelNameFor(doneCount){
     if(info && info.current) return isTurkishUI() ? info.current.tr : info.current.en;
   }catch(_){}
   return isTurkishUI() ? "Çaylak Oyuncu" : "Rookie Player";
+}
+
+/* The Family surfaces used to render only from switchTab("modes"). That is
+ * fine while nothing changes underneath them, and wrong the moment progress
+ * moves somewhere else: completing a mission, or undoing one, left the Family
+ * streak card showing the old number until the family happened to visit the
+ * tab. Measured after an Undo, the card still read "Family streak: 0 days"
+ * from before the completion and only corrected on a tab bounce.
+ *
+ * Cheap enough to call on every progress mutation — these read localStorage
+ * and write text, and they bail immediately when their elements are absent. */
+function refreshFamilySurfaces(){
+  try{ if(typeof renderFamilyProgressCard === "function") renderFamilyProgressCard(); }catch(_){}
+  try{ if(typeof renderFamilyInsights === "function") renderFamilyInsights(); }catch(_){}
+  try{ if(typeof renderFamilyTeamsPreview === "function") renderFamilyTeamsPreview(); }catch(_){}
 }
 
 function renderFamilyProgressCard(){
@@ -8333,26 +8719,88 @@ function initBottomNav(){
   // Browse tab Path-only — toggle kaldirildi
   applyBrowseView();
 
-  // Search toggle (Browse tab)
-  const searchToggle = document.getElementById("searchToggleBtn");
-  const searchBox = document.getElementById("searchBox");
-  if(searchToggle && searchBox){
-    searchToggle.addEventListener("click", ()=>{
-      clickSound("click");
-      const isOpen = searchBox.style.display !== "none";
-      searchBox.style.display = isOpen ? "none" : "";
-      if(!isOpen){
-        const inp = document.getElementById("searchInput");
-        if(inp) setTimeout(()=> inp.focus(), 60);
-      }
-    });
-  }
 }
 
 /** =======================
  * Daily Mini-Challenge — bugün 1 mission tamamla = one daily point
  * ======================= */
 const DAILY_CHALLENGE_KEY = _PROGRESS_PREFIX + "daily_challenge_v1"; // { iso, count, reward }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * The Daily Champion star belongs to the FAMILY, once per day.
+ *
+ * The decision this implements: the daily goal is a shared, once-a-day
+ * celebration for everyone on this device. The per-scope counter below is
+ * unchanged and still lives where it always did — team-prefixed while a team
+ * is active, child-prefixed when playing solo — so nothing about the existing
+ * storage contract moves. What is new is one device-wide ledger recording
+ * whether today's star has already been earned, and by which scope.
+ *
+ * Why that was needed: the counter alone made the star re-earnable. A child
+ * playing with Dad finished a mission, the team scope claimed the star, and
+ * leaving the team put Today back to 0/1 — the same day's star could be
+ * collected again, and again, by hopping between team and solo. Measured in
+ * Faz 5 and confirmed in Faz 6.
+ *
+ * "The family" is the device. jumvi_profiles_v1 is device-wide and holds every
+ * child, so the device is the only family identity this app has — which is
+ * exactly right for something that promises progress never leaves the phone.
+ * Two devices in one household keep two stars; that is inherent to local-first
+ * and consistent with every other JUMVI guarantee.
+ * ══════════════════════════════════════════════════════════════════════════*/
+const FAMILY_DAILY_STAR_KEY = "jumvi_family_daily_star_v1"; // { iso, scope }
+
+/* Read the family's star for today, migrating an existing household on first
+ * read rather than in a one-shot upgrade step.
+ *
+ * Migration matters more than it looks. A family that already earned today's
+ * star has that fact recorded ONLY in a per-scope daily_challenge_v1 key,
+ * because the ledger did not exist when they played this morning. Writing a
+ * fresh empty ledger would hand them a second star for the same day — the very
+ * thing this change exists to stop, inflicted on every existing user at once.
+ * So before the ledger is created for a new day, every daily_challenge_v1 key
+ * on the device is read, and if any of them already claimed today, that claim
+ * is adopted. Nothing is written back into those keys and nothing is removed:
+ * the migration only ever reads them. */
+function familyDailyStar(){
+  const today = isoLocalDate();
+  let led = lsGetJSON(FAMILY_DAILY_STAR_KEY, null);
+  if(led && led.iso === today) return led;
+
+  // No ledger for today yet — adopt an existing claim before creating one.
+  let adopted = null;
+  try{
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(!k || !/daily_challenge_v1$/.test(k)) continue;
+      let st = null;
+      try{ st = JSON.parse(localStorage.getItem(k) || "null"); }catch(_){ continue; }
+      if(!st || st.iso !== today) continue;
+      if(st.claimed === true || Number(st.count || 0) >= 1){ adopted = k; break; }
+    }
+  }catch(_){}
+
+  led = adopted ? { iso: today, scope: adopted, migrated: true } : null;
+  if(led) lsSet(FAMILY_DAILY_STAR_KEY, JSON.stringify(led));
+  // Yesterday's ledger has no meaning once today has no claim to adopt; drop it
+  // rather than leaving a stale date on disk indefinitely.
+  else { try { localStorage.removeItem(FAMILY_DAILY_STAR_KEY); } catch(_){} }
+  return led;
+}
+
+/* Has this family already collected today's star? */
+function familyDailyStarEarned(){
+  return !!familyDailyStar();
+}
+
+/* Claim it for the scope that is playing right now. Returns true only for the
+ * ONE call that actually earns it, so the celebration fires exactly once a day
+ * no matter which child or team is on screen. */
+function claimFamilyDailyStar(){
+  if(familyDailyStarEarned()) return false;
+  lsSet(FAMILY_DAILY_STAR_KEY, JSON.stringify({ iso: isoLocalDate(), scope: DAILY_CHALLENGE_KEY }));
+  return true;
+}
 
 function getDailyChallengeState(){
   const today = isoLocalDate();
@@ -8366,13 +8814,23 @@ function getDailyChallengeState(){
 
 function bumpDailyChallenge(){
   const state = getDailyChallengeState();
+
+  /* Claim BEFORE touching the counter. familyDailyStar()'s migration scan
+   * reads every daily_challenge_v1 key on the device looking for a claim that
+   * predates the ledger — and if this scope's count had already been bumped,
+   * the scan would adopt THIS completion as a pre-existing claim and then
+   * refuse to celebrate it. Measured: the badge flipped to "Goal done!" while
+   * claimed stayed false and no toast or confetti ever fired. Order matters. */
+  const earnedNow = claimFamilyDailyStar();
+
+  // The counter is per-scope and still increments every time — what is gated
+  // is the STAR, not the count, so each surface keeps showing honest numbers.
   state.count++;
+  if(earnedNow) state.claimed = true;
   lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+
   renderDailyChallenge();
-  // 1 mission tamamlandı = daily point earned
-  if(state.count === 1 && !state.claimed){
-    state.claimed = true;
-    lsSet(DAILY_CHALLENGE_KEY, JSON.stringify(state));
+  if(earnedNow){
     setTimeout(()=>{
       showToast("Daily Champion! Goal completed!");
       if(!prefersReducedMotion) fireConfetti(1500);
@@ -8383,28 +8841,39 @@ function bumpDailyChallenge(){
 function renderDailyChallenge(){
   const state = getDailyChallengeState();
   const goal = 1;
+  /* Done-ness is the FAMILY's, so the same answer shows on every profile and
+   * in every team today. The per-scope count still drives the number, which
+   * keeps "1 / 1" honest for whoever actually played. When the star was earned
+   * somewhere else in the family, this scope shows it as done with a line that
+   * says so — otherwise a parent switching profiles would see "Completed!"
+   * next to a bar they had not filled and have no idea why. */
+  const star = familyDailyStar();
+  const earnedElsewhere = !!star && star.scope !== DAILY_CHALLENGE_KEY;
+  const completed = !!star || state.count >= goal;
+  const shown = completed ? goal : Math.min(state.count, goal);
+
   const card = document.getElementById("dailyChallenge");
   const status = document.getElementById("dailyChallengeStatus");
   const fill = document.getElementById("dailyChallengeFill");
   const reward = document.getElementById("dailyChallengeReward");
   if(card){
-    const completed = state.count >= goal;
     card.classList.toggle("completed", completed);
-    if(status) status.textContent = `${Math.min(state.count, goal)} / ${goal}`;
-    if(fill) fill.style.width = (Math.min(state.count, goal) / goal * 100) + "%";
+    if(status) status.textContent = `${shown} / ${goal}`;
+    if(fill) fill.style.width = (shown / goal * 100) + "%";
     if(reward){
-      reward.innerHTML = completed
-        ? '<i class="jic jic-star" aria-hidden="true"></i> Completed! See you tomorrow for a new goal!'
-        : "Play 1 mission today → earn the Daily Champion star";
+      reward.innerHTML = !completed
+        ? "Play 1 mission today → earn the Daily Champion star"
+        : earnedElsewhere
+          ? '<i class="jic jic-star" aria-hidden="true"></i> Your family already earned today\u2019s star \u2014 keep playing for fun!'
+          : '<i class="jic jic-star" aria-hidden="true"></i> Completed! See you tomorrow for a new goal!';
     }
   }
   // Compact stats içindeki todayGoalBadge'i güncelle
   const badge = document.getElementById("todayGoalBadge");
   if(badge){
-    const completed = state.count >= goal;
     badge.innerHTML = completed
       ? '<i class="jic jic-star" aria-hidden="true"></i> Goal done!'
-      : `<i class="jic jic-star" aria-hidden="true"></i> ${state.count}/${goal} today`;
+      : `<i class="jic jic-star" aria-hidden="true"></i> ${shown}/${goal} today`;
     badge.classList.toggle("completed", completed);
   }
 }
@@ -9191,7 +9660,13 @@ soundToggle.onclick = ()=>{
  * Init
  * ======================= */
 function init(){
-  btnOnlyUnfinished.classList.toggle("active", onlyUnfinished);
+  /* §6.2 — give the declared-modal surfaces the behaviour they claim.
+     The mission sheet, team picker and badge-unlock modal already route through
+     handleDialogKeys at their own call sites and are left alone. */
+  ["privacyBackdrop","helpBackdrop","badgesBackdrop","certBackdrop",
+   "seasonalBackdrop","fallbackBackdrop"].forEach(id=>{
+    try{ enhanceDialog(document.getElementById(id)); }catch(_){ }
+  });
 
   applyBodyClasses();
   renderModeChips();
@@ -9214,8 +9689,6 @@ function init(){
   }
 
   renderSoundToggle();
-  renderFilters();
-  renderFilterGroups();
   const _dash = document.getElementById("parentDashboard");
   if(_dash) _dash.style.display = done.size === 0 ? "none" : "";
   updateProgress({ deferStats: true });

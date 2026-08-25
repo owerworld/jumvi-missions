@@ -3482,7 +3482,11 @@ button, a, input, textarea, select, label {
   font-weight: 800 !important;
   border-radius: 16px !important;
   background: linear-gradient(135deg, #4ade80, #16a34a) !important;
-  color: #fff !important;
+  /* Dark ink on the bright green, per the palette rule at the top of this file:
+     bright fills (lime/orange/green) carry --ink, never white. White was 1.74:1
+     against the light stop; --ink is 10.25:1 there and 5.42:1 on the dark stop,
+     so the gradient itself is untouched. */
+  color: var(--ink, #0F172A) !important;
   border: none !important;
   box-shadow: 0 8px 24px rgba(22,163,74,0.40) !important;
   letter-spacing: -0.01em;
@@ -3500,7 +3504,9 @@ button, a, input, textarea, select, label {
   font-size: 15px !important;
   font-weight: 800 !important;
   border-radius: 14px !important;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+  /* One shade deeper on the same indigo->violet ramp: white was 4.47:1 on the
+     old #6366f1 and 4.23:1 on #8b5cf6, both just under AA. Now 4.69:1 / 4.94:1. */
+  background: linear-gradient(135deg, #6062ee, #7f4ef0) !important;
   color: #fff !important;
   border: none !important;
   box-shadow: 0 4px 14px rgba(99,102,241,0.30) !important;
@@ -3532,7 +3538,9 @@ html.theme--dark .certNameInput {
   border-color: rgba(255,255,255,0.18) !important;
 }
 html.theme--dark .certPdfBtn {
-  color: #64748b !important;
+  /* was #64748b — the light-theme muted grey, 3.81:1 on the dark cert sheet.
+     --jv-text-3 is the dark-theme muted token: still visibly tertiary, 7.17:1. */
+  color: var(--jv-text-3, #93a4bd) !important;
 }
 html.theme--dark .certPreviewWrap {
   border-color: #d97706 !important;
@@ -4013,7 +4021,10 @@ html.theme--dark .missionIconWrap{
   font-size: 12px;
   font-variant-numeric: tabular-nums;
   text-align: right;
-  color: var(--color-text-tertiary, #9aa1ac);
+  /* The counter sits on the sheet card (--jv-card-2, #dbe7f4 in light), not on
+     the white illustration ground, where the tertiary tone was 2.08:1. The
+     secondary tone of the same icon palette is 4.71:1 there. */
+  color: var(--color-text-secondary, #5b6573);
 }
 @media (prefers-reduced-motion: reduce){
   .jvCarTrack{ scroll-behavior: auto; }
@@ -4151,10 +4162,17 @@ html.theme--dark .scoreTracker{
 }
 .scoreTrackerBest{
   font-size:var(--fs-meta); font-weight:800;
-  color: var(--accent-blue);
+  /* --accent-blue is the sky FILL tone; as text on this 12% sky tint it was
+     1.98:1. --blue is the same blue at text weight and carries the dark theme
+     (7.6:1 there); light needs the deeper tinted-pill token below. */
+  color: var(--blue);
   background: rgba(79,179,255,0.12);
   padding:4px 10px;
   border-radius:999px;
+}
+html.theme--light .scoreTrackerBest{
+  /* the app's existing on-tint blue — 7.85:1 on this pill */
+  color: var(--jv-recommend-fg, #0b4a78);
 }
 .scoreTrackerNumber{
   font-size: 64px;
@@ -4203,7 +4221,10 @@ html.theme--dark .scoreTracker{
 .scoreTrackerTapHint{
   font-size: var(--fs-meta);
   font-weight: 700;
-  opacity: 0.85;
+  /* was opacity:.85 — that faded white to #E5E7EB, 3.94:1 on the deep-blue
+     tap pad. Full opacity is 4.88:1; no colour changes, the hint just stops
+     being dimmed. */
+  opacity: 1;
 }
 .scoreTrackerActions{
   display:flex; gap:8px; margin-top:10px;
@@ -4482,7 +4503,9 @@ html.theme--dark .profileSettingRow:hover{ background: rgba(255,255,255,0.1); }
 .profileSettingIcon{ font-size:18px; }
 .profileSettingText{ font-weight:800; }
 .profileSettingValue{
-  color: var(--accent-blue);
+  /* was --accent-blue (the sky fill tone) — 2.34:1 as text on the white row.
+     --blue is the same blue's text-weight variant, theme-aware: 4.88:1 light. */
+  color: var(--blue);
   font-weight:800;
   font-size:13px;
 }
@@ -7721,6 +7744,61 @@ html.theme--dark .missionSafetyLine{ background:#2e2211; color:#FFD8A8; border-c
   background: var(--brand-blue); color: var(--ink);
 }
 @media (prefers-reduced-motion: reduce){ .undoBar{ animation: none; } }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Inside the mission sheet, the undo bar is NOT a floating overlay.
+ *
+ * As a viewport-fixed bar it competed with the sheet's own action row, and no
+ * single `bottom` value can settle that. Measured, with the bar up:
+ *
+ *   320x568   actions 419-487   bar 436-496   → 69% of "Next" covered
+ *   568x320   actions 297-361   on a 320px-tall viewport — the action row
+ *   844x390   actions 332-396   on a 390px-tall viewport — runs PAST the fold
+ *
+ * On landscape the actions already occupy the bottom of the screen and beyond,
+ * so moving the bar down collides there, and moving it up collides on the tall
+ * portrait screens. Tuning the number just relocates the bug.
+ *
+ * So while the sheet is open the bar joins the sheet's flow, directly above the
+ * actions. Flow layout cannot overlap: "Undo" and "Next" get their own boxes at
+ * every viewport by construction rather than by arithmetic. Outside the sheet
+ * (a completion that lands with no sheet on screen) it stays the fixed overlay
+ * it has always been.
+ * ══════════════════════════════════════════════════════════════════════════*/
+#sheet .undoBar{
+  position: static;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  margin: 0 auto 10px;
+  width: fit-content;
+  max-width: 100%;
+  flex: 0 0 auto;          /* a control: never squeezed to make room */
+  animation: undoInFlow .22s ease;
+}
+
+/* The celebration card is the one thing on this screen that can afford to give
+ * way. Post-completion it renders 378px tall with min-height:auto, which in a
+ * flex column means it CANNOT shrink — measured on a 568px-tall sheet it left
+ * the undo bar at top=-12, and on a 320px-tall one at top=-134: both controls
+ * pushed clean off the screen. It is presentation, so it yields and scrolls,
+ * and the two controls below it keep their boxes. */
+#sheet .missionXpReward{
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+#sheet .sheetActions{ flex: 0 0 auto; }
+
+/* The completion state re-orders the sheet with `order` (reward 1, actions 2,
+   header 3), so a bar left at the default 0 jumped to the very top of the
+   screen — above the celebration, under the toast. Same order as the reward
+   card puts it immediately after it, because equal-order items fall back to
+   DOM order and the bar is inserted after the reward and before the actions:
+   reward → Undo → Start/Done/Next. */
+#sheet.isComplete .undoBar{ order: 1; }
+@keyframes undoInFlow{ from{ opacity:0; transform: translateY(8px); } to{ opacity:1; transform: none; } }
+@media (prefers-reduced-motion: reduce){ #sheet .undoBar{ animation: none; } }
 
 /* §3.2 — hold-to-confirm fill on destructive Reset controls */
 .holdConfirm{ position: relative; overflow: hidden; }

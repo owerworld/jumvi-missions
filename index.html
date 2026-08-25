@@ -20,16 +20,19 @@
        references a relative URL, or those elements resolve against the
        page's own path anyway. -->
   <base href="/">
-  <!-- §2.5 — pinch-zoom ENABLED (WCAG 1.4.4); notch safe area kept -->
-  <!-- maximum-scale/user-scalable back up the JS pinch + double-tap guards that
-       already exist in app.js: on a toy the phone is held one-handed, often on
-       grass, and an accidental pinch that leaves the page zoomed makes every
-       screen scroll sideways. interactive-widget keeps the layout viewport from
-       being resized out from under the app when the keyboard opens for the
-       child-name field. Note iOS Safari deliberately ignores the scale hints
-       for accessibility, so the real defence there is the 16px minimum on every
-       input — see .profileNameInput in style.css. -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <!-- §1.2 — zoom is available (WCAG 2.2 SC 1.4.4). This tag used to carry
+       maximum-scale=1, user-scalable=no, backed by a disableZoom() guard in
+       app.js that cancelled pinch, double-tap and ctrl+wheel. The comment above
+       it said "pinch-zoom ENABLED" while the attributes said the opposite; the
+       stated reason was an accidental pinch on grass leaving the page zoomed.
+       That is a real annoyance, but the people it locks out — a parent who
+       needs to magnify a safety line, anyone with low vision — cannot work
+       around it, while an accidental zoom is undone with one pinch. Chrome and
+       Firefox on Android honour these hints, so this was a genuine block there,
+       not only on paper. viewport-fit keeps the notch safe area;
+       interactive-widget keeps the layout viewport from being resized out from
+       under the app when the keyboard opens for the child-name field. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>JUMVI Missions — Toss, Catch &amp; Keep Playing</title>
   <meta name="description" content="Quick, active games for the JUMVI Toss & Catch Paddle Set. Pick a play level, read the steps, then put the phone down and play. No app, account, or ads." />
   <meta name="keywords" content="JUMVI, paddle set, toss and catch, active kids games, paddle ball, kids missions, family games" />
@@ -147,6 +150,13 @@
   <!-- Welcome Overlay — shown once for new visitors -->
   <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
     <div class="welcomePanel">
+      <!-- §1.1 — Everything above the CTA lives in its own scroll region so the
+           Start button can be a real flex footer instead of a sticky overlay.
+           It used to be position:sticky, which pinned it over whatever content
+           happened to sit at the bottom of the viewport: the mission count at
+           390x844, the level labels at 320x568 and in landscape. A footer that
+           is a sibling of the scroller cannot cover it at any scroll offset. -->
+      <div class="welcomeScroll" id="welcomeScroll">
       <div class="welcomeBrandLine" aria-hidden="true">
         <img class="welcomeLogo logoLight" src="assets/logo/jumvi_logo_dark-192.webp" width="96" height="96" alt="" decoding="async" />
         <img class="welcomeLogo logoDark" src="assets/logo/jumvi_logo_light-192.webp" width="96" height="96" alt="" decoding="async" />
@@ -185,11 +195,12 @@
       <div class="welcomeDivider" aria-hidden="true"></div>
       <div class="welcomeAgesHeading">Choose a play level</div>
       <div class="welcomeAges" id="welcomeAges">
-        <button class="ageBtn" data-diff="Easy" data-band="just-starting" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span>Just starting</span></button>
-        <button class="ageBtn" data-diff="Medium" data-band="some-practice" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span>Some practice</span></button>
-        <button class="ageBtn" data-diff="all" data-band="any-challenge" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span>Any challenge</span></button>
+        <button class="ageBtn" data-diff="Easy" data-band="just-starting" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Just starting</span><span class="ageBtnHint">easy first games</span></span></button>
+        <button class="ageBtn" data-diff="Medium" data-band="some-practice" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Some practice</span><span class="ageBtnHint">a little more challenge</span></span></button>
+        <button class="ageBtn" data-diff="all" data-band="any-challenge" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Any challenge</span><span class="ageBtnHint">show me the full mix</span></span></button>
       </div>
       <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
+      </div><!-- /.welcomeScroll -->
       <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Start My First Mission</button>
     </div>
   </div>
@@ -484,18 +495,18 @@
           </a>
         </div>
 
-        <!-- Hidden stubs — JS uyumluluk icin (search/filter logic'i hayatta) -->
-        <div id="searchToggleBtn" style="display:none" aria-hidden="true"></div>
-        <div id="searchBox" style="display:none">
-          <input id="searchInput" type="text" style="display:none" />
-        </div>
-        <button id="btnOnlyUnfinished" type="button" style="display:none" aria-hidden="true"></button>
-        <button id="btnToggleFilters" type="button" style="display:none" aria-hidden="true"></button>
-        <div id="filters" style="display:none"></div>
-        <div id="filterGroups" style="display:none">
-          <div id="filterPlayers" style="display:none"></div>
-          <div id="filterDifficulty" style="display:none"></div>
-        </div>
+        <!-- §2.1 — the hidden search/filter stubs that used to sit here are
+             gone. They were eight display:none, 0x0, aria-hidden elements kept
+             "for JS compatibility": a search input nobody could type in, a
+             Filters toggle nobody could press, and chip rows rendered into
+             containers that are never displayed. v32 replaced the flat list
+             with the pack path above, and #list is display:none by design —
+             renderList() returns early on purpose, for the QR first-paint.
+             Making them visible would mean reinstating the retired list view,
+             which is a product decision, not a defect fix; so they are removed
+             instead, along with the bindings that could never fire. The state
+             they used to drive is handled where it is still read — see the
+             note on getVisibleMissions() in app.js. -->
       </div>
       <!-- ============== TAB: FAMILY ==============
            Internal route remains "modes" for backward compatibility (analytics,
@@ -514,6 +525,16 @@
           <h2 class="tabHeading teamsHubTitle jv-title" id="teamsHubTitle">Family Teams</h2>
           <p class="tabIntro teamsHubIntro jv-helper" id="teamsHubIntro">Complete missions together. Every team has its own XP, level, and streak.</p>
         </div>
+
+        <!-- §4.1 — the third question this screen has to answer.
+             Family told a parent who is playing and what they had finished,
+             but the only visible actions were "Add a player", "No team yet"
+             and "View all": nothing here started a game. Uses the existing
+             [data-go-tab] binding rather than a new handler, so it lands on
+             Play exactly like every other cross-tab link in the app. -->
+        <button class="btn btnPrimary jv-btn jv-btn--primary familyPickMission" data-go-tab="today" type="button">
+          <i class="ico i-play" aria-hidden="true"></i> Pick a Mission
+        </button>
 
         <!-- Family Insights — moved from the old #tabStats (>1 profile only) -->
         <div class="familyInsights jv-card" id="familyInsights" style="display:none">
@@ -751,6 +772,25 @@
           <div class="productCareBody">
             <h3 class="productCareTitle">Keeping your set working</h3>
 
+            <!-- Order is by when a family actually hits the problem, not by
+                 component. The first three are the questions of the first ten
+                 minutes with the set — a child who cannot catch anything, a
+                 family playing in the living room because it is raining, and a
+                 ball that will not stick — and a parent asking one of them is
+                 mid-session with a disappointed kid. Cleaning, strap fit and
+                 replacement parts are all later, calmer questions, so they
+                 come after.
+                 data-topic is what the product_care_open beacon reports; the
+                 attribute travels with the item, so reordering never changes
+                 what an item is called in the analytics. -->
+            <details class="productHelpItem" data-topic="missing_catches">
+              <summary>My child is missing most catches</summary>
+              <p>Move to 3&ndash;4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.</p>
+            </details>
+            <details class="productHelpItem" data-topic="indoor_play">
+              <summary>Can we play indoors?</summary>
+              <p>Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.</p>
+            </details>
             <details class="productHelpItem" data-topic="ball_not_sticking">
               <summary>The ball won&rsquo;t stick</summary>
               <p>Use the blue catching face. Remove visible lint, grass, or sand with a soft, dry brush; let every piece dry fully; then move closer and aim a soft toss at the center.</p>
@@ -763,14 +803,6 @@
               <summary>How should the hand strap fit?</summary>
               <img class="strapFitPhoto" src="assets/equipment/jumvi-paddle-back-real.webp" alt="Back of a JUMVI paddle showing the hand strap" width="160" height="174" loading="lazy">
               <p>Loosen it first, slide your hand under the strap, then make it snug&mdash;not tight. It is a hand strap only; never attach it to furniture, a tree, a wall, or a person.</p>
-            </details>
-            <details class="productHelpItem" data-topic="missing_catches">
-              <summary>My child is missing most catches</summary>
-              <p>Move to 3&ndash;4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.</p>
-            </details>
-            <details class="productHelpItem" data-topic="indoor_play">
-              <summary>Can we play indoors?</summary>
-              <p>Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.</p>
             </details>
             <details class="productHelpItem" data-topic="cleaning_storage">
               <summary>How do I clean and store the set?</summary>
@@ -941,6 +973,17 @@
         </div>
       </div>
 
+      <!-- §3.3/§3.5 — pre-play card. Two things a family needs BEFORE the
+           first throw and cannot get from the steps: who is doing what when
+           more than two people are playing, and a gentler way in for the
+           games that ask for height or distance. Rendered by
+           renderMissionPreflight() in app.js; empty and hidden for missions
+           that need neither. -->
+      <section class="missionPreflight" id="missionPreflight" hidden>
+        <div class="preflightRoles" id="missionRoleCard" hidden></div>
+        <div class="preflightEasier" id="missionEasier" hidden></div>
+      </section>
+
       <!-- Score Tracker — sadece tracking açıksa görünür -->
       <div class="scoreTracker" id="scoreTracker" style="display:none">
         <div class="scoreTrackerHeader">
@@ -1024,7 +1067,16 @@
         <div class="playPanelTitle" id="playPanelTitle">Eyes on the ball!</div>
         <div class="playPanelSub" id="playPanelSub">Put the phone down &mdash; Leo will let you know.</div>
         <div class="playPanelStateRow">
-          <span class="playPanelDial" id="playPanelDial"></span>
+          <!-- §3.6 — the dial is rewritten every second while the gate counts
+               down, and it sits inside this panel's aria-live region: measured
+               at 30 mutations in 10 seconds of play, i.e. a screen reader
+               re-announcing the panel roughly three times a second at exactly
+               the moment the product is telling the family to put the phone
+               down. The number is not lost — the completion button carries the
+               same countdown as its label, and that is a real control the user
+               can navigate to. The chip and the state line still change once,
+               on the gate transition, which is the announcement worth making. -->
+          <span class="playPanelDial" id="playPanelDial" aria-hidden="true"></span>
           <span class="playPanelStateText" id="playPanelStateText"></span>
         </div>
       </section>
@@ -1110,50 +1162,78 @@
         <button class="close" id="btnPrivacyClose" aria-label="Close privacy and safety"><i class="ico i-x" aria-hidden="true"></i></button>
       </div>
       <div class="privacyBody" style="font-size:14px;line-height:1.5;color:var(--jv-text,#334155);display:flex;flex-direction:column;gap:12px;">
+        <!-- §4.5 / Faz 5 — this first layer used to be eight items and roughly
+             six hundred words, which meant a parent standing in a doorway read
+             the first two and closed it. It is now five decisions, each one
+             line, and NOT ONE COMMITMENT WAS DROPPED: the eight old items were
+             regrouped, not trimmed. Anything that was a sentence of detail
+             rather than a decision moved behind a disclosure, where it is still
+             open to anyone who wants it and still legally on the page. If you
+             edit this block, move text between the layers — never delete it. -->
         <div>
           <b><i class="jic jic-user-off" aria-hidden="true"></i> No sign-up, no account.</b><br/>
-          No login, no password, no email required. Just open and play.
+          No login, no password. We never ask for an email address, phone number, photos, or location. Just open and play.
         </div>
         <div>
-          <b><i class="jic jic-lock" aria-hidden="true"></i> Child names stay on this device.</b><br/>
-          If you choose to add a child name or avatar, it is stored only in this browser on this device. It is not uploaded to JUMVI. We do not ask for an email address, phone number, photos, or location.
+          <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on this device.</b><br/>
+          A child&rsquo;s name and avatar, mission progress and badges are saved only in this browser, on this device &mdash; never uploaded to JUMVI.
+          <details class="privacyDisclosure">
+            <summary>What that covers</summary>
+            <div class="privacyDisclosureBody">
+              If you choose to add a child name or avatar, it is stored only in this browser on this
+              device. It is not uploaded to JUMVI. Mission progress and badges are saved only in
+              this browser, on this device, and are never uploaded to a server. The optional
+              certificate name you type is used only to draw the image on your device &mdash; it is
+              not sent anywhere.
+            </div>
+          </details>
         </div>
         <div>
-          <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on your device.</b><br/>
-          Mission progress and badges are saved only in this browser, on this device. They are never uploaded to a server, and the optional certificate name you type is used only to draw the image on your device — it is not sent anywhere.
-        </div>
-        <div>
-          <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling — ever.</b>
+          <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling &mdash; ever. No microphone, ever.</b><br/>
+          JUMVI never asks for microphone access and never records audio.
+          <details class="privacyDisclosure">
+            <summary>About read-aloud</summary>
+            <div class="privacyDisclosureBody">
+              The only sound JUMVI produces is optional read-aloud text, generated by your
+              device&rsquo;s own built-in voice (the browser&rsquo;s text-to-speech) &mdash; it
+              plays out loud but is never captured, saved, or sent anywhere.
+            </div>
+          </details>
         </div>
         <div>
           <b><i class="jic jic-shield" aria-hidden="true"></i> Anonymous play analytics.</b><br/>
-          We measure a short, fixed list of anonymous events to see which missions work and
-          where kids get stuck: the app being opened, missions started and completed, which
-          help topic a parent opened, the player count, pack and badge milestones, whether an
-          optional feature was used at all (certificate, sharing, read-aloud, the timer, the
-          score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
-          few fixed return-visit milestones. Every event is just an event name plus, at most,
-          one small value — a mission number, a pack or badge name, a player count, or a fixed
-          option such as which help topic or which share button. Anything not on that list is
-          discarded without being stored. We never attach a name, account, email address, the
-          certificate name you type, a profile name, an IP address, a device ID, or any other
-          identifier to this data. This is measured using our own infrastructure, not a
-          third-party analytics service.
+          A short, fixed list of anonymous events &mdash; never tied to a name, a profile, a device
+          or an IP address.
+          <details class="privacyDisclosure">
+            <summary>Exactly what is measured</summary>
+            <div class="privacyDisclosureBody">
+              We measure a short, fixed list of anonymous events to see which missions work and
+              where kids get stuck: the app being opened, missions started and completed, which
+              help topic a parent opened, the player count, pack and badge milestones, whether an
+              optional feature was used at all (certificate, sharing, read-aloud, the timer, the
+              score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
+              few fixed return-visit milestones. Every event is just an event name plus, at most,
+              one small value &mdash; a mission number, a pack or badge name, a player count, or a
+              fixed option such as which help topic or which share button. Anything not on that
+              list is discarded without being stored. We never attach a name, account, email
+              address, the certificate name you type, a profile name, an IP address, a device ID,
+              or any other identifier to this data. This is measured using our own infrastructure,
+              not a third-party analytics service.
+            </div>
+          </details>
         </div>
         <div>
-          <b><i class="jic jic-volume" aria-hidden="true"></i> No microphone, ever.</b><br/>
-          JUMVI never asks for microphone access and never records audio. The only sound
-          JUMVI produces is optional read-aloud text, generated by your device's own
-          built-in voice (the browser's text-to-speech) — it plays out loud but is never
-          captured, saved, or sent anywhere.
-        </div>
-        <div>
-          <b><i class="jic jic-shield" aria-hidden="true"></i> COPPA &amp; children's privacy.</b><br/>
-          This app is designed to align with the U.S. Children's Online Privacy Protection Act (COPPA). We do not knowingly collect personal information from children under 13. If you believe we have, contact us and we will address it promptly.
-        </div>
-        <div>
-          <b><i class="jic jic-shield" aria-hidden="true"></i> Play safely.</b><br/>
-          These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles.
+          <b><i class="jic jic-shield" aria-hidden="true"></i> Made for kids &mdash; and for safe play.</b><br/>
+          These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles. We do not knowingly collect personal information from children under&nbsp;13.
+          <details class="privacyDisclosure">
+            <summary>COPPA &amp; children&rsquo;s privacy</summary>
+            <div class="privacyDisclosureBody">
+              This app is designed to align with the U.S. Children&rsquo;s Online Privacy
+              Protection Act (COPPA). We do not knowingly collect personal information from
+              children under 13. If you believe we have, contact us and we will address it
+              promptly.
+            </div>
+          </details>
         </div>
         <div class="small" style="border-top:1px solid var(--jv-line,#e5e7eb);padding-top:10px;">
           JUMVI is a product of <b>SAY23 LLC</b>. Questions or requests: <a href="mailto:support@jumvi.co">support@jumvi.co</a>.<br/>
@@ -1253,7 +1333,16 @@
       <!-- Edit panel (shown when editing a profile) -->
       <div class="profileEditSection" id="profileEditSection" style="display:none">
         <div class="profileSectionTitle" id="profileEditTitle"><i class="jic jic-pencil" aria-hidden="true"></i> Edit child</div>
-        <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20" autocomplete="off" />
+        <!-- §4.2 — a real label. The placeholder disappears the moment a parent
+             starts typing, and several screen readers never announce one at
+             all, so "Child's name" was the field's only name and it was not a
+             name at all. The error slot is empty until validation fails; it is
+             referenced by aria-describedby up front so the association exists
+             before there is anything to read. -->
+        <label class="profileFieldLabel" for="profileEditName">Child&rsquo;s name</label>
+        <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20"
+               autocomplete="off" aria-describedby="profileEditNameError" />
+        <p class="profileFieldError" id="profileEditNameError" role="alert" hidden></p>
         <div class="profileAvatarPicker" id="profileEditAvatarPicker"></div>
         <div class="profileEditActions">
           <button class="btn btnGhost profileEditCancelBtn" id="btnProfileEditCancel" type="button">Cancel</button>
@@ -1264,7 +1353,10 @@
 
       <div class="profileAddSection" id="profileAddSection" style="display:none">
         <div class="profileSectionTitle"><i class="jic jic-plus" aria-hidden="true"></i> Add a new child</div>
-        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20" autocomplete="off" />
+        <label class="profileFieldLabel" for="profileNewName">Child&rsquo;s name</label>
+        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20"
+               autocomplete="off" aria-describedby="profileNewNameError" />
+        <p class="profileFieldError" id="profileNewNameError" role="alert" hidden></p>
         <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
         <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
       </div>

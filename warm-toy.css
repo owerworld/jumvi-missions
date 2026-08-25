@@ -3548,6 +3548,13 @@ html.theme--dark #tabToday .dailyHeroBand{ background:var(--jv-card-2,#16283c); 
   box-shadow:none !important;
   text-align:left;
 }
+/* A device with no WebGL can never open the island, so applyHub3dUnsupported()
+   hides this card for good. Its inline display:none cannot beat the
+   "display:flex !important" above, so the unsupported state gets its own
+   !important rule at higher specificity (2 ids + 1 class). */
+#advModeCard.hub3dUnsupported,
+#tabToday #advModeCard.hub3dUnsupported{ display:none !important; }
+
 #tabToday #advModeCard .advCardEmoji{
   width:44px !important; height:44px !important; flex:0 0 44px !important;
   border-radius:0 !important; background:none !important;
@@ -3825,8 +3832,45 @@ html.theme--light .bottomNav, html.theme--dark .bottomNav{
   line-height:1.12 !important;
   font-weight:950 !important;
 }
-/* v32 keeps the sheet header clean — the chips move out of it. */
-#sheet .sheetMeta{ display:none !important; }
+/* §3.1 — the metadata row is back on the sheet.
+   The v32 pass hid it with the note "the chips move out of it", but they were
+   never moved anywhere: difficulty, time, players and age were rebuilt on
+   every open and shown to nobody, so the sheet answered "what do we need"
+   (You need: 2 paddles) without ever answering "how long, how many of us, is
+   this for my four-year-old". Restyled to v32's flat pills rather than
+   restoring the old chip look. */
+#sheet .sheetMeta{
+  display:flex !important;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+#sheet .sheetMeta .tag{
+  padding:5px 10px;
+  border-radius:var(--jv-r-pill,999px);
+  background:var(--jv-card-2,#dbe7f4);
+  border:0;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:850;
+  line-height:1.25;
+}
+
+/* The safety band leads with the line written for THIS mission, then the
+   rules that hold for all 36. Same band, same position — two weights instead
+   of one so the specific instruction is what the eye lands on. */
+#sheet .missionSafetyLine{ display:block; }
+#sheet .missionSafetyLine .safetyOwn{
+  display:block;
+  font-weight:900;
+}
+#sheet .missionSafetyLine .safetyAlways{
+  display:block;
+  margin-top:3px;
+  font-weight:700;
+  opacity:.82;
+  font-size:.94em;
+}
 .mSectionLabel{
   margin:16px 0 8px;
   color:var(--jv-text-2,var(--muted));
@@ -4850,16 +4894,82 @@ html.theme--light #welcomeOverlay .welcomeLogo.logoDark{ display:none !important
   text-transform:none !important;
   font-size:16px !important;
 }
-/* v32 keeps the first-run CTA reachable without scrolling: it sticks to the
-   bottom of the screen while the level list scrolls behind it. */
-#welcomeOverlay .welcomePanel{ padding-bottom:0 !important; }
-#welcomeOverlay .welcomeMissionCount{ margin-bottom:4px !important; }
+/* §1.1 — v32 keeps the first-run CTA reachable without scrolling. It used to
+   do that with position:sticky, and a sticky footer cannot reserve its own
+   space: pinned at the viewport bottom it painted straight over whatever
+   content sat there. Measured at the default scroll offset, before any
+   interaction: the mission count lost 12px at 390x844, "Just starting" lost
+   22px at 320x568, "Any challenge" lost 9px at 568x320 and 18px at 844x390.
+   The panel is now a flex column exactly one viewport tall, the content above
+   the CTA is its own scroll region, and the CTA is that column's footer — a
+   sibling of the scroller, so no scroll offset can put content under it.
+   Nothing is clipped; the overflow moved into .welcomeScroll, which scrolls. */
+#welcomeOverlay{ overflow:hidden !important; }
+#welcomeOverlay .welcomePanel{
+  height:100vh;
+  height:100dvh;          /* follows the iOS URL bar; 100vh is the fallback */
+  max-height:100dvh;
+  min-height:0 !important;
+  padding-bottom:0 !important;
+  gap:0 !important;
+  justify-content:flex-start !important;
+}
+#welcomeOverlay .welcomeScroll{
+  flex:1 1 auto;
+  min-height:0;           /* without this a flex child refuses to scroll */
+  width:100%;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  /* .welcomePanel used to be the flex parent of this content and carried the
+     14px row gap; the scroller inherits that job along with the children. */
+  gap:14px;
+  /* Breathing room so the last line never sits flush against the CTA, and a
+     real measurable gap between helper text and the button. */
+  padding-bottom:12px;
+}
+/* A column flex container shrinks its children before it agrees to overflow.
+   That squashed the kit card to 30px around 86px of content, so the paddle and
+   ball tiles spilled out of the card and painted over the "Grab your kit"
+   eyebrow above it. Children keep their natural height; the scroller scrolls.
+   (Same guard .welcomePanel already carries for itself against the overlay.) */
+#welcomeOverlay .welcomeScroll > *{ flex:0 0 auto; }
+#welcomeOverlay .welcomeMissionCount{ margin-bottom:0 !important; }
 #welcomeOverlay .welcomeStart{
-  position:sticky;
-  bottom:0;
-  z-index:2;
-  margin-top:8px !important;
+  position:static;
+  flex:0 0 auto;
+  width:100%;
+  min-height:52px;        /* >= the 48px floor even before padding */
+  margin-top:0 !important;
   margin-bottom:calc(12px + env(safe-area-inset-bottom)) !important;
+}
+
+/* §1.3 — the level cards say what the level MEANS in play terms. No age
+   numbers: the data's age thresholds are per mission, not per band, so a
+   printed range here would be invented. */
+#welcomeOverlay .ageBtn{ align-items:center !important; }
+#welcomeOverlay .ageBtn .ageBtnText{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  text-align:left !important;
+  min-width:0;            /* let long hints wrap instead of pushing the radio */
+}
+#welcomeOverlay .ageBtn .ageBtnLabel{
+  font-size:15px !important;
+  font-weight:900;
+  line-height:1.25;
+}
+#welcomeOverlay .ageBtn .ageBtnHint{
+  margin-top:2px;
+  font-size:13px !important;
+  font-weight:600;
+  line-height:1.3;
+  color:var(--jv-text-2,var(--muted));
 }
 #welcomeOverlay .welcomeBrandLine{ margin-top:-4px; }
 #welcomeOverlay .welcomeBrandLine .welcomeMascot{ width:100px !important; }
@@ -5006,10 +5116,48 @@ html.theme--light #tabModes .familyMemberActive{ color:#0f6598 !important; -webk
 #sheet #mWin.kvWin .winLabel{ color:var(--jv-panel-fg-2,#cbd5f5) !important; -webkit-text-fill-color:var(--jv-panel-fg-2,#cbd5f5) !important; }
 #sheet #mWin.kvWin .winText{ color:var(--jv-panel-fg,#fff) !important; -webkit-text-fill-color:var(--jv-panel-fg,#fff) !important; }
 html.theme--dark #sheet .sheetActions #btnStartTimer{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+/* The play glyph is a mask painted with background-color:currentColor, and a
+   rule further up forces it white for the light theme's deep-blue gradient.
+   In dark the same button is sky blue carrying dark ink, so the label went
+   dark and the triangle stayed white next to it — 2.28:1, and visibly a
+   different colour from the word it sits beside. It follows the label now. */
+html.theme--dark #sheet .sheetActions .missionStartBtn .ico,
+html.theme--dark #sheet .sheetActions .missionStartBtn .jic{
+  color:var(--jv-on-blue,#06233a) !important;
+  background-color:var(--jv-on-blue,#06233a) !important;
+  -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important;
+}
 html.theme--dark #statsEmptyState .emptyStateBtn{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
 html.theme--dark #tabModes .familyTeamsCta{ color:var(--jv-recommend-fg,#0b4a78) !important; -webkit-text-fill-color:var(--jv-recommend-fg,#0b4a78) !important; }
 html.theme--dark #tabModes .teamsCreateBtn,
-html.theme--dark #tabModes .teamsCreateBtn *{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+html.theme--dark #tabModes .teamsCreateBtn *,
+/* Family's "Pick a Mission" (§4.1) is a .btnPrimary on the same sky-blue fill,
+   so the legacy `html.theme--dark .btnPrimary{color:#fff !important}` caught it
+   too — 2.28:1, the exact defect the first contrast round fixed for four other
+   buttons. Same rule, same fill, dark ink. */
+html.theme--dark #tabModes .familyPickMission,
+html.theme--dark #tabModes .familyPickMission *{ color:var(--jv-on-blue,#06233a) !important; -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important; }
+/* The score pad is a deep-blue fill inside the mission sheet; in dark the
+   sheet's inherited #e5e7eb body colour was winning over the pad's own white
+   (3.94:1 on the pad). Same fill, white ink restored: 4.88:1. */
+html.theme--dark .scoreTrackerTap,
+html.theme--dark .scoreTrackerTap *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+/* Same fill, same rule, four buttons the earlier pass missed. In dark
+   --jv-blue-strong is the sky blue #4fb3ff; a legacy `html.theme--dark
+   .btnPrimary{color:#fff !important}` was still forcing white on it (2.28:1)
+   for these four while every other primary already carried --jv-on-blue
+   (7.93:1). The fill is not touched — only the ink that sits on it. */
+html.theme--dark #welcomeOverlay #btnWelcomeStart,
+html.theme--dark #welcomeOverlay #btnWelcomeStart *,
+html.theme--dark #helpBackdrop #btnHelpReplayTour,
+html.theme--dark #profileBackdrop #btnProfileEditSave,
+html.theme--dark #profileBackdrop #btnProfileAdd{
+  color:var(--jv-on-blue,#06233a) !important;
+  -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important;
+}
 #tabModes .achievementsHead .badgesHint{ opacity:1 !important; }
 
 /* The completion takeover sits at z-index 80; the promised 5-second safety
@@ -5046,8 +5194,37 @@ html.theme--dark #tabModes .teamsCreateBtn *{ color:var(--jv-on-blue,#06233a) !i
 #profileBackdrop[data-mode="add"] .profileAddSection,
 #profileBackdrop[data-mode="edit"] .profileEditSection{ margin-top:8px !important; }
 #profileBackdrop .profileAvatarPicker{
-  display:grid !important; grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  display:grid !important;
+  /* Four equal fractions of the container meant the avatars grew with the
+     screen: on an 844px-wide landscape phone each cell became ~200px and the
+     twelve-avatar grid stood 607px tall inside a 390px viewport, pushing Save
+     and Cancel under the bottom nav. Capped so a tile is a tile at any width —
+     the grid stays four columns at every width, with the tile capped at 84px,
+     so it is three rows on every device and the footer stays in reach. An
+     auto-fit version fixed landscape but dropped to three columns at 320px,
+     which made the grid TALLER there — hence the explicit four. */
+  grid-template-columns:repeat(4, minmax(0, 84px)) !important;
+  justify-content:center !important;
   gap:10px !important;
+}
+/* §4.2 — the name field's own label and its error line. */
+#profileBackdrop .profileFieldLabel{
+  display:block;
+  margin:2px 0 6px;
+  color:var(--jv-text-2,var(--muted));
+  font-size:12.5px;
+  font-weight:900;
+}
+#profileBackdrop .profileFieldError{
+  margin:6px 0 0;
+  color:var(--jv-destructive-fg,#b42318);
+  font-size:13px;
+  font-weight:800;
+  line-height:1.35;
+}
+#profileBackdrop .profileFieldError[hidden]{ display:none !important; }
+#profileBackdrop .profileNameInput.hasError{
+  border-color:var(--jv-destructive-fg,#b42318) !important;
 }
 
 @media (max-width:374px){
@@ -5057,4 +5234,224 @@ html.theme--dark #tabModes .teamsCreateBtn *{ color:var(--jv-on-blue,#06233a) !i
   #tabToday .dailyBox #btnDailyNew{
     width:100% !important; min-width:0 !important; flex:0 0 auto !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   §6.1 — focus indicator (WCAG 2.2 SC 1.4.11 + 2.4.11)
+
+   There was no global focus style. Thirteen scoped rules covered a handful of
+   controls; everything else — the mission Start button, Mark as done, the tab
+   bar, every dialog close — fell through to the user agent's default ring,
+   which Chromium draws as a 1px near-black outline. Measured at 1.35:1 against
+   the dark mission sheet: a keyboard user could not see where they were.
+
+   One colour cannot solve this, because the same ring has to read on a white
+   card and on a near-black sheet. So the ring is two-tone: the amber this app
+   already uses for focus, which carries every dark surface, wrapped in a dark
+   halo that carries every light one. Whichever surface the control sits on,
+   one of the two is high contrast against it.
+
+   box-shadow is !important because most primary buttons set their own shadow
+   that way; it is replaced only while the control is focused.
+   ══════════════════════════════════════════════════════════════════════════ */
+/* outline-offset means the ring is drawn on the surface AROUND the control,
+   not on the control's own fill — so it only has to contrast with the page or
+   card behind it, and one colour per theme is enough. No colour works for
+   both: clearing 3:1 against white needs a relative luminance at or below
+   ~0.175, clearing it against the #1b2c44 sheet needs ~0.176 or above.
+
+   Only `outline` carries the requirement. A box-shadow halo was tried first
+   and lost the specificity fight — most primary buttons set their own
+   box-shadow with !important from selectors far more specific than
+   :focus-visible, so the halo silently never rendered on exactly the buttons
+   that needed it. It is kept as a secondary cue where it does apply. */
+:focus-visible{
+  outline:3px solid #0B4A78;      /* light theme: reads on white cards, 7.6:1 */
+  outline-offset:2px;
+  box-shadow:0 0 0 6px rgba(255,255,255,.85);
+}
+html.theme--dark :focus-visible{
+  outline-color:#FFD23F;          /* dark theme: the amber this app already uses */
+  box-shadow:0 0 0 6px rgba(4,12,24,.72);
+}
+@media (prefers-color-scheme: dark){
+  html:not(.theme--light) :focus-visible{
+    outline-color:#FFD23F;
+    box-shadow:0 0 0 6px rgba(4,12,24,.72);
+  }
+}
+/* Never let the ring be clipped away by a scroll container or a rounded card. */
+:focus-visible{ position:relative; z-index:5; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   §3.3 / §3.5 — pre-play card (roles, and a gentler way into the four
+   height/distance missions). Uses the sheet's existing card tokens; no new
+   colours, no new type scale.
+   ══════════════════════════════════════════════════════════════════════════ */
+#sheet .missionPreflight{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin:14px 0 4px;
+}
+#sheet .missionPreflight[hidden]{ display:none !important; }
+#sheet .preflightRoles,
+#sheet .preflightEasier{
+  padding:13px 14px;
+  border:1px solid var(--jv-line,var(--border));
+  border-radius:var(--jv-r-card,20px);
+  background:var(--jv-card,var(--card));
+}
+#sheet .preflightRoles[hidden],
+#sheet .preflightEasier[hidden]{ display:none !important; }
+#sheet .preflightHead{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:950;
+  color:var(--jv-text,var(--text));
+}
+#sheet .preflightList{
+  margin:9px 0 0;
+  padding:0 0 0 2px;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  font-size:14px;
+  line-height:1.4;
+  color:var(--jv-text-2,var(--muted));
+}
+#sheet .preflightList li{ padding-left:14px; position:relative; }
+#sheet .preflightList li::before{
+  content:"";
+  position:absolute;
+  left:0; top:.55em;
+  width:5px; height:5px;
+  border-radius:50%;
+  background:var(--jv-blue-strong,#1d6fb5);
+}
+#sheet .preflightList b{ color:var(--jv-text,var(--text)); font-weight:900; }
+#sheet .preflightPair,
+#sheet .preflightWhy{
+  margin:7px 0 0;
+  font-size:14px;
+  line-height:1.4;
+  color:var(--jv-text-2,var(--muted));
+}
+#sheet .preflightQuick{
+  margin-top:11px;
+  width:100%;
+  min-height:44px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Landscape phones: keep the finish button in the first viewport.
+
+   While a mission is playing #sheetBody is hidden and the "Eyes on the ball"
+   panel is laid out directly above .sheetActions. That panel is 346px tall —
+   more than a 320px landscape viewport on its own — so the completion button
+   landed at y=489 on a 390px-tall screen. It was reachable (the sheet scrolls,
+   and scrollIntoView plus a hit test confirmed it), but a parent glancing at a
+   phone lying on its side saw no way to finish.
+
+   The panel is compacted rather than removed: §3.6 wants that cue on screen
+   during play, and it is the thing telling the family to put the phone down.
+   Portrait is untouched — this only applies where height is the constraint.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-height: 460px) and (orientation: landscape){
+  #sheet .missionPlayPanel{
+    padding:10px 12px !important;
+    gap:4px !important;
+  }
+  #sheet .playPanelLeo{
+    width:44px !important;
+    height:44px !important;
+  }
+  #sheet .playPanelTitle{ font-size:17px !important; line-height:1.15 !important; }
+  #sheet .playPanelSub{ font-size:12.5px !important; line-height:1.25 !important; }
+  #sheet .playPanelChip{ font-size:11px !important; padding:3px 9px !important; }
+  #sheet .playPanelStateRow{ gap:8px !important; margin-top:4px !important; }
+  #sheet .playPanelDial{ width:46px !important; height:46px !important; }
+  #sheet .playPanelStateText{ font-size:12.5px !important; line-height:1.3 !important; }
+  #sheet .sheetActions{ padding-bottom:max(8px, calc(6px + env(safe-area-inset-bottom))) !important; }
+  #sheet .sheetActions .holdBtn{ min-height:46px !important; }
+  /* Once play has started the header is the least useful thing on screen: the
+     family has read the title and the metadata and is holding a paddle. Scoped
+     to .isPlaying so both stay full size while they are still deciding. */
+  #sheet.isPlaying .sheetMeta{ display:none !important; }
+  #sheet.isPlaying .sheetTitle{ font-size:17px !important; }
+  #sheet.isPlaying .sheetPack{ font-size:11px !important; }
+  #sheet.isPlaying .sheetHead{ padding-bottom:4px !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Faz 5 — Family in landscape (568x320 measured, a phone lying on its side).
+
+   Measured before: only ONE action was actually usable in the first viewport.
+   "Pick a Mission" sat at y=97, and "Add a player" reported y=258 — under a
+   bottom nav whose top edge was y=248, so it looked present and was not
+   clickable. Everything else on the tab (team card, View all, Create a Team)
+   started at y=441 of a 320px viewport.
+
+   Nothing is removed and nothing moves in the DOM: this reclaims vertical
+   space that is spent on decoration when height is the scarce axis.
+     · the header sub-line goes ("How your crew is doing" restates the title)
+     · the title drops to a size that still reads as the page heading
+     · the primary CTA keeps a 44px target, just without the airy margins
+     · the bottom nav tightens, and its buttons stay at 48px — above the 44px
+       comfortable-touch floor and well above WCAG 2.2 SC 2.5.8's 24px.
+   Portrait is untouched at every width; this is height-gated only.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media (max-height: 460px) and (orientation: landscape){
+  .appHead{ padding:6px 16px 5px !important; }
+  .appHead .appHeadSub{ display:none !important; }
+  .appHead .appHeadTitle{ font-size:20px !important; line-height:1.1 !important; }
+  .appHead .appHeadOver{ font-size:11.5px !important; }
+
+  /* Both of this tab's actions belong in the first viewport. #tabModes is
+     already flex-direction:column, so `order` promotes "Add a player" above
+     the roster card WITHOUT touching the DOM — the source order (and with it
+     portrait, screen readers, and tab order at every other size) is unchanged.
+     The roster card is a status readout, not an action, so it is the right
+     thing to push below the fold on the one viewport that cannot hold both. */
+  #tabModes{ gap:8px !important; }
+  #tabModes .familyPickMission{
+    order:-2 !important;
+    margin:2px 0 4px !important;
+    min-height:44px !important;
+  }
+  #tabModes .familyAddPlayer{
+    order:-1 !important;
+    margin:0 0 4px !important;
+  }
+
+  .bottomNav{ padding:2px 0 calc(2px + env(safe-area-inset-bottom)) !important; }
+  .navTab{ min-height:48px !important; padding:4px 2px !important; gap:1px !important; }
+}
+
+/* §4.1 — Family's "what can we play next" action. Sits directly under the
+   header so it is in the first viewport at every size tested, including a
+   320x568 phone. */
+#tabModes .familyPickMission{
+  width:100%;
+  margin:4px 0 14px;
+  min-height:50px;
+}
+
+/* §4.5 — the analytics disclosure inside Privacy & Safety. */
+#privacyBackdrop .privacyDisclosure{ margin-top:8px; }
+#privacyBackdrop .privacyDisclosure > summary{
+  cursor:pointer;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-weight:900;
+  color:var(--jv-blue-strong,#1d6fb5);
+}
+#privacyBackdrop .privacyDisclosureBody{
+  margin-top:6px;
+  color:var(--jv-text-2,var(--muted));
 }
