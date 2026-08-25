@@ -36,6 +36,27 @@ const args = process.argv.slice(2);
 const argVal = (n, d) => { const h = args.find((a) => a.startsWith(`--${n}=`)); return h ? h.slice(n.length + 3) : d; };
 const BASE = argVal("base", "http://localhost:8910/index.html");
 const EXE = process.env.JUMVI_EXE_CHROMIUM || undefined;
+const SHOTS = argVal("shots", "");
+if (SHOTS) await (await import("node:fs/promises")).mkdir(SHOTS, { recursive: true });
+/* Visual proof to sit beside the ledger numbers: what the family actually sees
+   on Today after a switch. Only written when --shots is passed, so a plain run
+   never touches anyone's evidence directory. */
+const shot = async (page, name) => {
+  if (!SHOTS) return;
+  /* The daily card lives on Today, and playOne() leaves the app on Missions,
+     so land on Today and bring the card into frame — otherwise the PNG proves
+     nothing about the star. */
+  await page.evaluate(() => {
+    try { if (typeof switchTab === "function") switchTab("today"); } catch (_) {}
+  });
+  await page.waitForTimeout(500);
+  /* The big Today's Goal card is retired at the stylesheet
+     (#dailyChallenge{display:none !important}), so the only surface a family
+     actually sees is the #todayGoalBadge near the top. Full page anyway, so the
+     frame also carries this scope's own mission count — that is what makes a
+     "Goal done!" on a 0/36 team read as the FAMILY's star, not this team's. */
+  await page.screenshot({ path: `${SHOTS}/daily-star-${name}.png`, fullPage: true });
+};
 
 const LEDGER = "jumvi_family_daily_star_v1";
 const results = [];
@@ -157,14 +178,19 @@ console.log("Daily Champion star — one per family, per day\n");
   const m1 = await playOne(page);
   const afterTeam = await ledger(page);
 
+  await shot(page, "d1-a-team-t1-earned");
+
   await setTeam(page, "");                        // leave the team, play solo
   const soloBefore = await surface(page);
+  await shot(page, "d1-b-solo-before-playing");
   const m2 = await playOne(page);
   const afterSolo = await ledger(page);
 
   await setTeam(page, "t2");                      // now play with Mom
+  await shot(page, "d1-c-team-t2-before-playing");
   const m3 = await playOne(page);
   const afterTeam2 = await ledger(page);
+  await shot(page, "d1-d-team-t2-after-playing");
   await ctx.close();
 
   const sameLedger = JSON.stringify(afterTeam) === JSON.stringify(afterSolo)
@@ -188,9 +214,11 @@ console.log("Daily Champion star — one per family, per day\n");
   const afterP1 = await ledger(page);
   await setProfile(page, "p2");
   const p2Sees = await surface(page);
+  await shot(page, "d2-a-child2-before-playing");
   await playOne(page);                            // p2 plays too
   const afterP2 = await ledger(page);
   const p2After = await surface(page);
+  await shot(page, "d2-b-child2-after-playing");
   await ctx.close();
   const ok = !!afterP1 && JSON.stringify(afterP1) === JSON.stringify(afterP2)
     && /p1_daily_challenge/.test(afterP1.scope || "");
