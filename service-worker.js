@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v242";
+const CACHE_NAME = "jumvi-missions-v244";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -208,12 +208,30 @@ self.addEventListener("fetch", (event) => {
   // and never even got asked. Forcing no-store makes every navigation a
   // real round trip, every time, with nothing left for the local HTTP
   // cache to intercept.
+  //
+  // `cache: "no-store"` only ever controlled the BROWSER's own HTTP cache —
+  // it is a fetch()-mode flag, not a request header, so it does nothing to
+  // Cloudflare sitting in front of the Worker. 2026-08-21 incident: real
+  // devices sat on a stale Cf-Cache-Status: HIT for many minutes, surviving
+  // two full Cloudflare "Purge Everything" runs, with zero Cache Rules or
+  // Page Rules to blame. The one thing that reliably cleared it was a manual
+  // hard refresh — because a hard refresh is what puts `Cache-Control:
+  // no-cache` on the actual outgoing request, and Cloudflare treats that as
+  // an instruction to skip its edge cache and go to origin. So send that
+  // header ourselves, on every navigation — not just the ones a family
+  // happens to hard-refresh. Paired with the Worker now answering with
+  // `Cache-Control: no-store` on the document itself, one such request stops
+  // the edge from ever caching it again — no purge, no customer
+  // instructions, required going forward.
   if (req.mode === "navigate" || (req.headers.get("accept") || "").includes("text/html")) {
     const navCacheKey = /^\/tr(?:\/|$)/.test(url.pathname)
       ? "/tr/index.html"
       : "/index.html";
+    const noCacheHeaders = new Headers(req.headers);
+    noCacheHeaders.set("Cache-Control", "no-cache");
+    const netReq = new Request(req, { cache: "no-store", headers: noCacheHeaders });
     event.respondWith(
-      fetch(req, { cache: "no-store" })
+      fetch(netReq)
         .then((res) => {
           const copy = res.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(navCacheKey, copy));

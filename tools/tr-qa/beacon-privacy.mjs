@@ -28,8 +28,10 @@ const ok = (l, c, d = "") => { c ? (pass++, console.log(`  ok   ${l}`)) : (fail+
 // Values a parent can type. If any of these reach /api/beacon, the modal lies.
 const SENTINELS = ["ZeynepSentinel", "sentinel@example.com", "ProfilSentinel"];
 
-/** Every prop key the Worker will store, from src/worker.js. */
-const ALLOWED_KEYS = new Set(["e", "id", "reason", "n", "pack", "badge", "channel", "step"]);
+/** Every prop key the Worker will store, from src/worker.js. Locked v1 adds
+ *  "source" (mission_entry) and "topic" (product_care_open) — both closed
+ *  enums, never free text, same as "reason"/"pack"/"channel"/"step" above. */
+const ALLOWED_KEYS = new Set(["e", "id", "reason", "n", "pack", "badge", "channel", "step", "source", "topic"]);
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 

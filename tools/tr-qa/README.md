@@ -22,6 +22,7 @@ node tools/tr-qa/locale.mjs
 node tools/tr-qa/sw-cache.mjs
 node tools/tr-qa/residual-english.mjs
 node tools/tr-qa/beacon-privacy.mjs
+node tools/tr-qa/mission-entry-refresh.mjs
 node tools/tr-qa/certificate.mjs
 node tools/tr-qa/production.mjs
 ```
@@ -72,6 +73,15 @@ can fill in (certificate name, profile name, text inputs), drives the flows
 that emit beacons, and captures them at `sendBeacon`/`fetch`. A grep over
 `app.js` shows the call sites are clean today; this catches the case a grep
 cannot — a future prop that happens to carry something the user typed.
+
+**`mission-entry-refresh.mjs`** — review follow-up: proves `openMission()`'s
+`trackEntry` gate at runtime. Drives the exact 5-point matrix a real Browse
+click fires exactly 1 `mission_entry`; an undo/rerender or a state refresh of
+the SAME open mission fires 0 more; pressing Next into another mission fires
+1 more with `source:"next"`; a genuine close-then-reopen fires 1 new one —
+plus a 6th check that an internal refresh never resets the dedup flag behind
+`mission_unfinished_exit`, which would otherwise let one abandoned visit fire
+that beacon twice.
 
 **`certificate.mjs`** — the Turkish certificate template is a separate binary, so
 no amount of locale-layer testing can catch a regression in it. Checks the three

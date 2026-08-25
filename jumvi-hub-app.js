@@ -3570,7 +3570,7 @@ export function initHub3D(opts) {
     window._hubMissionFlow = { packKey: packKey, themeColor: themeHex };
     // Hub3D Gate Opened — the kid reached a glowing gate and a mission opened.
     track('Hub3D Gate Opened', { pack: packKey });
-    openMission(missionId);
+    openMission(missionId, 'island');
   }
 
   // Closing an unfinished mission used to reveal Leo almost inside the gate:

@@ -80,6 +80,10 @@ check("olay adları", [...worker.matchAll(/case "([a-z_0-9]+)":/g)].map(m => m[1
   /* Faz 2F — the family layer (Teams, the XP ladder, the accidental-tap net).
    * Added, never renamed: every name above still means what it always meant. */
   "team_create", "team_switch", "profile_delete", "mission_undo", "level_up",
+  /* Locked v1 — R&D dashboard follow-up. Added, never renamed; see
+   * docs/analytics/locked-v1.md for what each one measures. */
+  "mission_entry", "mission_unfinished_exit", "product_care_open",
+  "home_add_tap", "standalone_open", "first_mission_start", "first_mission_complete",
 ].sort());
 check("HELP_REASONS", setOf("HELP_REASONS"), [
   "ball_stuck", "ball_hard_to_remove", "strap_uncomfortable",
@@ -108,6 +112,13 @@ check("PLAY_MODE_IDS", setOf("PLAY_MODE_IDS"), [
   "pop-and-stick", "quick-drop", "floor-target-four",
   "free-rally", "copycat-pops", "four-ball-round",
   "sync-pop", "loop-rally", "twin-lane-rally",
+]);
+check("MISSION_ENTRY_SOURCES", setOf("MISSION_ENTRY_SOURCES"), [
+  "today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown",
+]);
+check("PRODUCT_CARE_TOPICS", setOf("PRODUCT_CARE_TOPICS"), [
+  "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
+  "indoor_play", "cleaning_storage", "damaged_missing",
 ]);
 check("MISSION_ID_MAX", worker.match(/MISSION_ID_MAX = (\d+)/)?.[1], "200");
 

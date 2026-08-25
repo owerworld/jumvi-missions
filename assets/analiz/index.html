@@ -86,9 +86,11 @@ body{
   align-items:center;justify-content:center;
   font-family:var(--mono);font-size:12px;font-weight:500;
   background:var(--ink-06);color:var(--ink-38);
-  position:relative;cursor:default;transition:transform .12s ease;
+  position:relative;cursor:pointer;transition:transform .12s ease;
+  border:0;padding:0;-webkit-appearance:none;appearance:none;
 }
 .cell:hover{transform:scale(1.09);z-index:3}
+.cell.selected{outline:2px solid var(--navy);outline-offset:1px}
 .cell[data-t]:hover::after{
   content:attr(data-t);position:absolute;bottom:calc(100% + 7px);left:50%;
   transform:translateX(-50%);background:var(--navy);color:var(--sand);
@@ -171,6 +173,20 @@ body{
   padding:9px 12px;border-radius:7px;display:block;margin:0 0 14px;overflow-x:auto}
 .empty input[type=file]{font-family:var(--body);font-size:13px}
 .hint{font-size:12.5px;color:var(--ink-38);margin-top:10px}
+
+/* ---------- Locked v1 R&D dashboard follow-up ---------- */
+.notavail{font-family:var(--mono);font-size:11.5px;color:var(--ink-38);font-style:italic}
+.missionDetail{margin-top:14px}
+.mdHead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+.mdTitle{font-family:var(--display);font-weight:700;font-size:19px}
+.mdClose{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-38);
+  background:transparent;border:1px solid var(--ink-12);border-radius:6px;padding:4px 9px;cursor:pointer}
+.mdStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.mdStat{background:var(--ink-06);border-radius:10px;padding:10px 12px}
+.mdStatN{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.01em}
+.mdStatL{font-size:11.5px;color:var(--ink-60);margin-top:2px}
+.mdSourceRow{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--ink-06)}
+.mdSourceRow:last-child{border-bottom:0}
 </style>
 </head>
 <body>
@@ -197,8 +213,13 @@ body{
 
     <section class="sec">
       <h2 class="sec-h">36 görev · tamamlanma haritası</h2>
-      <p class="grid-note">Her satır bir paket, her kare bir görev. Koyuluk = başlatanların kaçının bitirdiği. Boş kareler hiç açılmamış görevler.</p>
+      <p class="grid-note">Her satır bir paket, her kare bir görev. Koyuluk = başlatanların kaçının bitirdiği. Boş kareler hiç açılmamış görevler.
+        Bu bir <b>olay oranı</b>, kohort dönüşüm oranı değil: start ve complete olayları kişi/cihaz bazında eşleştirilmiyor,
+        bu yüzden oran teorik olarak %100'ü geçebilir. Turuncu kareler kesin "kötü görev" iddiası değil, incelenmeye değer adaylardır.</p>
       <div class="gridwrap" id="gridwrap"></div>
+      <p class="hint">Bir göreve dokun/tıkla — başlatma olayları, tamamlama olayları, tamamlanmadan çıkış, bitirme sinyali, keşif
+        kaynağı, zamanlayıcı ve yardım/geri-alma sinyalleri aşağıda açılır.</p>
+      <div class="card missionDetail" id="missionDetail" hidden></div>
     </section>
 
     <div class="cols">
@@ -214,13 +235,52 @@ body{
     </div>
 
     <section class="sec">
+      <h2 class="sec-h">Paket laboratuvarı</h2>
+      <p class="grid-note">6 beceri paketi — girildi mi, denendi mi, bitirildi mi.</p>
+      <div class="card" id="packLab"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Ürün sinyalleri</h2>
+      <p class="grid-note">Grown-ups → Product Care &amp; Quick Help'te hangi konu açıldı. Bunlar arıza oranı değil,
+        konu bazlı ilgi sinyalidir — sayı "bu konu N kez açıldı" (N açılma sinyali) demektir, "N üründe arıza var"
+        ya da "N kişi bunu yaşadı" demek değildir. Analytics kimliksiz olduğu için aynı kişi konuyu birden çok kez açabilir.</p>
+      <div class="card" id="productSignals"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Görev keşif kaynağı</h2>
+      <p class="grid-note">Bir görev nasıl açıldı — Bugün kartından mı, Gözat listesinden mi, Rastgele'den mi,
+        Kaldığın yerden devam'dan mı, Coach Leo önerisinden mi, yoksa Leo'nun Adası'ndan mı.</p>
+      <div class="card" id="entrySources"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Aile</h2>
+      <p class="grid-note">Takım kurma, seviye atlama, rozet, profil ve geri alma — hepsi sadece OLAY sayısı,
+        hiçbiri çocuk adı, profil kimliği veya takım kimliği taşımaz.</p>
+      <div class="card" id="family"></div>
+    </section>
+
+    <section class="sec">
       <h2 class="sec-h">Özellik kullanımı · canlı mı ölü mü</h2>
       <div class="card" id="features"></div>
     </section>
 
     <section class="sec">
       <h2 class="sec-h">3D Hub hunisi</h2>
+      <p class="grid-note">İkincil bir özellik ekranı — fiziksel oyun asıl ürün, bu sadece bir keşif bonusu.</p>
       <div class="card" id="hub"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Teknik · veri sağlığı</h2>
+      <div class="card" id="dataHealth"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Gizlilik · uyumluluk sağlığı</h2>
+      <div class="card" id="privacyHealth"></div>
     </section>
 
     <p class="foot" id="foot"></p>
@@ -231,14 +291,21 @@ body{
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
- * JUMVI Ar-Ge Paneli — Faz 2, Görev 2.3
+ * JUMVI Ar-Ge Paneli — Faz 2, Görev 2.3 + Locked v1 R&D dashboard follow-up
  *
  * Reads data/snapshots/*.json. Never queries Analytics Engine: that needs an
  * API token, and a token in a page is a leaked token. The snapshot generator
  * holds the credential in a terminal, this page reads its output.
  *
- * NOT DEPLOYED to qr.jumvi.co — that is the children's app. tools/ is in
- * .assetsignore, so the platform will not serve this even by accident.
+ * DEPLOYED at qr.jumvi.co/analiz, password-gated by src/worker.js's Basic
+ * Auth check (ANALIZ_PASSWORD). This file itself is a normal, servable asset
+ * at /assets/analiz/ — the gate is what keeps it from being casually
+ * stumbled on, not exclusion from the deploy (see src/worker.js's own header
+ * comment for why). Also reachable locally over plain HTTP for development.
+ *
+ * SCHEMA v3: this panel reads BOTH v2 and v3 snapshot files. A v3-only field
+ * missing from an older v2 file renders as "bu şema sürümünde yok", never as
+ * a fabricated zero — see hasV3() below and every renderer that checks it.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Ayarlar — eşikler burada, tek yerde ────────────────────────────────────
@@ -267,7 +334,7 @@ const FEATURE_LABELS = {
   certificate_made: "Sertifika",
   share_tap:        "Paylaşım (WhatsApp/kopyala)",
   score_saved:      "Skor takibi",
-  dashboard_open:   "Ebeveyn paneli",
+  dashboard_open:   "Aile / ilerleme açıldı",
   missionbook_get:  "Mission Book PDF",
   profile_add:      "Çoklu çocuk profili",
   progress_reset:   "İlerlemeyi sıfırlama",
@@ -278,6 +345,20 @@ const HUB_LABELS = {
   moved: "Yürüdü", mission: "Görev bitirdi", failed: "Yükleme hatası",
   escaped: "Yüklemeden çıktı",
 };
+
+/* ── Locked v1 R&D dashboard follow-up — schema v3 label maps ──────────────── */
+const ENTRY_SOURCE_LABELS = {
+  today: "Bugün kartı", browse: "Gözat listesi", random: "Rastgele",
+  resume: "Kaldığın yerden devam", coach: "Coach Leo önerisi", island: "Leo'nun Adası",
+  next: "Sıradaki (görev içi)", family: "Aile panosu", unknown: "Bilinmeyen (dürüst varsayılan)",
+};
+const PRODUCT_CARE_LABELS = {
+  ball_not_sticking: "Top yapışmıyor", ball_hard_to_remove: "Top çıkmıyor",
+  strap_fit: "El kayışı uyumu", missing_catches: "Yakalayamıyor",
+  indoor_play: "İç mekanda oynama", cleaning_storage: "Temizlik ve saklama",
+  damaged_missing: "Hasarlı / eksik parça",
+};
+const PACK_ORDER_NOTE = "Görüntüleme → başlatma → bitirme → tüm paketi bitirme.";
 
 const CROSS_TITLES = {
   by_age: "Yaş etiketi", by_difficulty: "Zorluk seviyesi",
@@ -388,6 +469,123 @@ function missionStats(snap, id) {
   return { starts: m?.starts ?? 0, completes: m?.completes ?? 0 };
 }
 
+/** Schema v3 alanları eski (v2) snapshot'larda yok — 0 değil, YOK. Bu, hangi
+ *  render fonksiyonunun "bu şema sürümünde yok" mu yoksa gerçek sıfır mı
+ *  göstereceğine karar vermesi için tek doğruluk kaynağı. */
+function hasV3(snap) {
+  return Number(snap.snapshot_schema ?? 1) >= 3;
+}
+const NOT_IN_SCHEMA = '<span class="notavail">bu şema sürümünde yok</span>';
+
+/** Basit bir "etiket · sayı" listesi — Ürün Sinyalleri, Aile ve Keşif Kaynağı
+ *  bölümlerinin üçü de aynı şekli kullanıyor, .frow'u burada tekrar yazmak
+ *  yerine. */
+function renderCountRows(el, entries) {
+  const max = Math.max(1, ...entries.map((e) => e.n));
+  el.innerHTML = entries.map((e) => {
+    const dead = e.n === 0;
+    return `<div class="frow${dead ? " dead" : ""}">
+        <span class="fname">${esc(e.label)}</span>
+        <span class="fmini"><i style="width:${(e.n / max) * 100}%;background:${dead ? "var(--ink-12)" : "var(--sky)"}"></i></span>
+        <span class="fval">${nf(e.n)}</span>
+      </div>`;
+  }).join("");
+}
+
+function renderPackLab(snap) {
+  const el = $("packLab");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — v3 öncesi snapshot'larda ayrı bir paket tablosu yok, ancak üstteki 36 görev haritasının sağ sütunu her paketin bitirme oranını zaten gösteriyordu.</div>`; return; }
+  const rows = META.pack_keys.map((key) => {
+    const p = snap.packs?.[key] || { views: 0, starts: 0, completes: 0, completed_pack: 0 };
+    return `<div class="frow">
+        <span class="fname">${esc(META.pack_labels[key])}</span>
+        <span class="fmini"><i style="width:${p.views ? "100" : "0"}%;background:${p.views ? "var(--sky)" : "var(--ink-12)"}"></i></span>
+        <span class="fval">${nf(p.views)} görüntü · ${nf(p.starts)} başlangıç · ${nf(p.completes)} bitirme · ${nf(p.completed_pack)} tam paket</span>
+      </div>`;
+  }).join("");
+  el.innerHTML = rows + `<div class="xread">${esc(PACK_ORDER_NOTE)}</div>`;
+}
+
+function renderProductSignals(snap) {
+  const el = $("productSignals");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — product_care_open bu haftadan önce toplanmıyordu.</div>`; return; }
+  const entries = Object.entries(PRODUCT_CARE_LABELS)
+    .map(([key, label]) => ({ key, label, n: snap.product_care_topics?.[key] ?? 0 }))
+    .sort((a, b) => b.n - a.n);
+  renderCountRows(el, entries);
+}
+
+function renderEntrySources(snap) {
+  const el = $("entrySources");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`; return; }
+  const entries = Object.entries(ENTRY_SOURCE_LABELS)
+    .map(([key, label]) => ({ key, label, n: snap.mission_entry_sources?.[key] ?? 0 }))
+    .sort((a, b) => b.n - a.n);
+  renderCountRows(el, entries);
+}
+
+function renderFamily(snap) {
+  const el = $("family");
+  if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — team_create/team_switch/level_up/mission_undo/profile_delete bu haftadan önce toplanmıyordu. profile_add, progress_reset, certificate_made, share_tap ve badge_earned aşağıdaki "Özellik kullanımı" bölümünde her zaman vardı.</div>`; return; }
+  const fam = snap.family || {};
+  const entries = [
+    { label: "Takım kuruldu (yetişkin)", n: fam.team_create?.adult ?? 0 },
+    { label: "Takım kuruldu (kardeş)", n: fam.team_create?.sibling ?? 0 },
+    { label: "Takım değiştirildi", n: fam.team_switch ?? 0 },
+    { label: "Rozet kazanıldı", n: snap.features?.badge_earned ?? 0 },
+    { label: "Seviye atlandı (toplam)", n: Object.values(fam.level_up || {}).reduce((a, b) => a + b, 0) },
+    { label: "Profil eklendi", n: snap.features?.profile_add ?? 0 },
+    { label: "Profil silindi", n: fam.profile_delete ?? 0 },
+    { label: "Tamamlama geri alındı (Undo)", n: fam.mission_undo ?? 0 },
+    { label: "İlerleme sıfırlandı", n: snap.features?.progress_reset ?? 0 },
+  ];
+  renderCountRows(el, entries);
+  const levels = Object.entries(fam.level_up || {}).filter(([, v]) => v > 0);
+  const levelLine = levels.length
+    ? `Seviye dağılımı: ${levels.map(([lvl, n]) => `Sv.${esc(lvl)} × ${nf(n)}`).join(" · ")}`
+    : "Bu hafta level_up olayı yok.";
+  el.innerHTML += `<div class="xread">${levelLine}</div>`;
+}
+
+function renderDataHealth(snap) {
+  const el = $("dataHealth");
+  const schema = snap.snapshot_schema ?? 1;
+  const legacy = Object.entries(snap.legacy || {});
+  const legacyLine = legacy.length
+    ? legacy.map(([k, n]) => `<code>${esc(k)}</code>: ${nf(n)} (canlı özellik değil, sadece kayıt kalsın diye)`).join(", ")
+    : "İzlenen eski (legacy) olay yok.";
+  // Review follow-up: source mapping bozulursa (yeni bir call-site yanlışlıkla
+  // "unknown" ile giderse) bunu görünür kılan tek yer burası olmalı — CI
+  // sadece ÜRETİM koduna bakıyor, canlı veriye değil.
+  const unknownSources = snap.mission_entry_sources?.unknown ?? 0;
+  const unknownLine = hasV3(snap)
+    ? (unknownSources > 0
+        ? `<div class="xread" style="color:var(--orange)"><b>⚠ Bilinmeyen görev giriş kaynağı: ${nf(unknownSources)}</b> — instrumentation kontrolü gerekli.</div>`
+        : `<div class="xread">Bilinmeyen görev giriş kaynağı: 0 — kaynak eşlemesi sağlam görünüyor.</div>`)
+    : `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`;
+  el.innerHTML = `
+    <div class="frow"><span class="fname">Snapshot şeması</span><span class="fmini"></span><span class="fval">v${esc(schema)}</span></div>
+    <div class="frow"><span class="fname">Üretildi</span><span class="fmini"></span><span class="fval">${esc((snap.generated_at || "").replace("T"," ").replace("Z"," UTC"))}</span></div>
+    <div class="frow"><span class="fname">Kaynak veri seti</span><span class="fmini"></span><span class="fval">${esc(snap.dataset || "—")}</span></div>
+    <div class="xread">Eski (legacy) olaylar: ${legacyLine}</div>
+    ${unknownLine}
+    <div class="xread">Olay kapsamı, her deploy'da <code>tools/check-event-coverage.mjs</code> ile doğrulanır — Worker'ın kabul ettiği
+      her olayın bu snapshot'ta nereye yazıldığına dair açık bir karar olmadan CI kırmızı yanar.</div>`;
+}
+
+function renderPrivacyHealth() {
+  const el = $("privacyHealth");
+  el.innerHTML = `
+    <div class="frow"><span class="fname">Kişi/cihaz kimliği saklanan alan sayısı</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Amazon sipariş/alıcı kimliği</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Yorum (review) izleme/isteme akışı</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Üçüncü taraf reklam/davranışsal izleyici</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="frow"><span class="fname">Kalıcı analytics kimliği (uuid/fingerprint)</span><span class="fmini"></span><span class="fval">0</span></div>
+    <div class="xread">Bu satırlar iddia değil, iki otomatik testle zorlanıyor: <code>tools/check-beacon-schema.mjs</code>
+      (yasak alan enjeksiyonu denemeleri hiçbir sütuna ulaşmıyor mu) ve <code>tools/check-analytics-compliance.mjs</code>
+      (kod yollarında kimlik benzeri alan, review akışı veya üçüncü taraf izleyici var mı). İkisi de her PR'da çalışır.</div>`;
+}
+
 /** Prototipin renk merdiveni; "sorunlu" ayrı bir durum, skalanın parçası değil. */
 function cellColor(ratio, weak) {
   if (weak) return { bg: "var(--orange)", fg: "#fff" };
@@ -408,6 +606,7 @@ function render(weekId) {
   $("panel").hidden = false;
   $("emptyState").hidden = true;
   $("weekRange").textContent = `Hafta ${snap.week} · ${dateRange(snap.period_start, snap.period_end)}`;
+  $("missionDetail").hidden = true; // stale detail from a previous week's grid must not linger
 
   renderSmallN(snap);
   renderThesis(snap);
@@ -415,8 +614,14 @@ function render(weekId) {
   renderGrid(snap);
   renderFunnel(snap, prev);
   renderCross(snap);
+  renderPackLab(snap);
+  renderProductSignals(snap);
+  renderEntrySources(snap);
+  renderFamily(snap);
   renderFeatures(snap);
   renderHub(snap);
+  renderDataHealth(snap);
+  renderPrivacyHealth();
   renderFoot(snap, prev);
 }
 
@@ -431,7 +636,7 @@ function renderThesis(snap) {
   const ratio = overallRatio(snap);
   const reach = snap.app_first_opens ?? 0;
   $("thesis").innerHTML = reach
-    ? `${nf(reach)} cihaz açtı, <em>${nf(snap.mission_completes)} görev bitti.</em>`
+    ? `${nf(reach)} ilk açılış sinyali, <em>${nf(snap.mission_completes)} görev bitti.</em>`
     : `${nf(snap.app_opens)} oturum, <em>${nf(snap.mission_completes)} görev bitti.</em>`;
 
   const bits = [];
@@ -458,7 +663,7 @@ function renderAlerts(snap) {
     $("alerts").innerHTML = `<div class="alert calm"><div class="alert-num">—</div>
       <div><b class="alert-b">Bu hafta hiç veri yok</b>
       <span class="alert-w">Tek bir oturum bile kaydedilmedi, dolayısıyla uyarı eşiklerinin hiçbiri
-      anlamlı değil. Beacon canlıysa bu, kimsenin uygulamayı açmadığı anlamına gelir.</span></div></div>`;
+      anlamlı değil. Beacon canlıysa bu, hiçbir açılış sinyalinin kaydedilmediği anlamına gelir.</span></div></div>`;
     return;
   }
 
@@ -471,8 +676,8 @@ function renderAlerts(snap) {
       if (r >= avg * CONFIG.weakMissionRatio) continue;
       out.push({
         num: pct(r),
-        title: `Görev ${id} yarıda kalıyor`,
-        text: `${nf(starts)} başlatma, ${nf(completes)} tamamlama. Diğer görevlerin ortalaması ${pct(avg)}. Adımları veya süresi sorunlu olabilir.`,
+        title: `Görev ${id} — inceleme adayı`,
+        text: `${nf(starts)} başlatma, ${nf(completes)} tamamlama olay oranı. Diğer görevlerin ortalaması ${pct(avg)}. Bu bir kohort dönüşüm oranı değil — kesin sonuç değil, adımlara veya süreye bakmayı gerektiren bir sinyal.`,
       });
     }
   }
@@ -521,13 +726,13 @@ function renderGrid(snap) {
       const { starts, completes } = missionStats(snap, id);
       ps += starts; pc += completes;
       if (!starts) {
-        return `<div class="cell" data-t="Görev ${id}&#10;hiç açılmadı">${id}</div>`;
+        return `<button type="button" class="cell" data-mission-id="${id}" data-t="Görev ${id}&#10;hiç açılmadı">${id}</button>`;
       }
       const r = completes / starts;
       const weak = avg !== null && starts >= CONFIG.minStartsForAlert && r < avg * CONFIG.weakMissionRatio;
       const c = cellColor(r, weak);
-      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ sorunlu" : ""}`;
-      return `<div class="cell" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</div>`;
+      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ inceleme adayı" : ""}`;
+      return `<button type="button" class="cell" data-mission-id="${id}" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</button>`;
     }).join("");
 
     return `<div class="prow">
@@ -543,8 +748,67 @@ function renderGrid(snap) {
       <span><i class="sw" style="background:#e6f3de"></i>düşük</span>
       <span><i class="sw" style="background:#b3dd9c"></i>orta</span>
       <span><i class="sw" style="background:#6DBE45"></i>yüksek</span>
-      <span><i class="sw" style="background:var(--orange)"></i>sorunlu</span>
+      <span><i class="sw" style="background:var(--orange)"></i>inceleme adayı</span>
     </div>`;
+
+  $("gridwrap").querySelectorAll(".cell[data-mission-id]").forEach((btn) => {
+    btn.onclick = () => {
+      const already = btn.classList.contains("selected");
+      $("gridwrap").querySelectorAll(".cell.selected").forEach((c) => c.classList.remove("selected"));
+      if (already) { $("missionDetail").hidden = true; return; }
+      btn.classList.add("selected");
+      renderMissionDetail(snap, btn.dataset.missionId);
+    };
+  });
+}
+
+/** Locked v1 review follow-up — the actual "R&D table" the grid's heatmap
+ *  only summarised: every column asked for, per mission, on tap. */
+function renderMissionDetail(snap, id) {
+  const el = $("missionDetail");
+  const { starts, completes } = missionStats(snap, id);
+  const m = snap.missions?.[String(id)] || {};
+  const exits = m.exits ?? 0;
+  const ratio = starts > 0 ? completes / starts : null;
+  const pack = META.missions[id]?.pack;
+  const title = pack ? `Görev ${esc(id)} — ${esc(META.pack_labels[pack] || pack)}` : `Görev ${esc(id)}`;
+
+  const stats = [
+    { n: nf(starts), l: "Başlatma olayları" },
+    { n: nf(completes), l: "Tamamlama olayları" },
+    { n: nf(exits), l: "Tamamlanmadan çıkış" },
+    { n: ratio === null ? "—" : `${ratio.toFixed(2)}x`, l: "Bitirme sinyali" },
+  ];
+  if (hasV3(snap)) {
+    stats.push({ n: nf(m.timer_starts ?? 0), l: "Zamanlayıcı başlatma" });
+    stats.push({ n: nf(m.help_opens ?? 0), l: "Yardım sinyalleri" });
+    stats.push({ n: nf(m.undos ?? 0), l: "Geri alma sinyalleri" });
+  }
+
+  const sourceRows = hasV3(snap) && m.entry_sources
+    ? Object.entries(ENTRY_SOURCE_LABELS)
+        .map(([key, label]) => ({ label, n: m.entry_sources[key] ?? 0 }))
+        .sort((a, b) => b.n - a.n)
+        .map((e) => `<div class="mdSourceRow"><span>${esc(e.label)}</span><span>${nf(e.n)}</span></div>`)
+        .join("")
+    : `<div class="xread">${NOT_IN_SCHEMA} — entry-source keşif kaydı bu haftadan önce toplanmıyordu.</div>`;
+
+  el.innerHTML = `
+    <div class="mdHead">
+      <span class="mdTitle">${title}</span>
+      <button type="button" class="mdClose" id="mdCloseBtn">Kapat</button>
+    </div>
+    <div class="mdStats">${stats.map((s) => `<div class="mdStat"><div class="mdStatN">${s.n}</div><div class="mdStatL">${esc(s.l)}</div></div>`).join("")}</div>
+    <div class="xt-h">Keşif kaynağı</div>
+    ${sourceRows}
+    <div class="xread">Bitirme sinyali bir <b>olay oranı</b>dır; kullanıcı dönüşüm oranı değildir — start ve complete
+      olayları kişi/cihaz bazında eşleştirilmiyor. 1.00x'ten yüksek çıkması mümkündür ve hata değildir.</div>`;
+  el.hidden = false;
+  $("mdCloseBtn").onclick = () => {
+    el.hidden = true;
+    $("gridwrap").querySelectorAll(".cell.selected").forEach((c) => c.classList.remove("selected"));
+  };
+  el.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
 /** Önceki haftaya göre değişim. Yön belirtilir, yorum okuyucuya bırakılır. */
@@ -565,19 +829,19 @@ function renderFunnel(snap, prev) {
     steps.push({ label: "Satılan ünite", n: CONFIG.unitsSold, color: "var(--navy)", note: "" });
   }
   steps.push({
-    label: "Farklı cihaz açtı", n: reach, color: "var(--sky)",
-    note: CONFIG.unitsSold ? `satılanın ${pct(reach / CONFIG.unitsSold)}'i · yönsel tahmin` : "yönsel tahmin — kesin kişi sayısı değil",
+    label: "İlk açılış sinyali", n: reach, color: "var(--sky)",
+    note: CONFIG.unitsSold ? `satılanın ${pct(reach / CONFIG.unitsSold)}'i · yaklaşık ilk açılış sinyalleri` : "yaklaşık ilk açılış sinyalleri — kesin cihaz/kişi sayısı değil",
     prev: prev?.app_first_opens,
   });
   steps.push({
     label: "Toplam oturum", n: snap.app_opens, color: "var(--sky)",
-    note: reach ? `cihaz başına ${(snap.app_opens / reach).toFixed(1)} oturum` : "",
+    note: reach ? `ilk açılış sinyali başına ${(snap.app_opens / reach).toFixed(1)} oturum` : "",
     prev: prev?.app_opens,
   });
   for (const n of [2, 3, 5, 10]) {
     steps.push({
       label: `${n}. kez geldi`, n: rv[String(n)] ?? 0, color: "var(--lime)",
-      note: reach ? `açan cihazların ${pct((rv[String(n)] ?? 0) / reach)}'i` : "",
+      note: reach ? `ilk açılış sinyallerinin ${pct((rv[String(n)] ?? 0) / reach)}'i` : "",
       prev: prev?.return_visits?.[String(n)],
     });
   }
@@ -664,7 +928,7 @@ function renderFoot(snap, prev) {
     prev ? `Karşılaştırma: ${esc(prev.week)}.` : "Önceki hafta yok — karşılaştırma gösterilmiyor.",
     partial ? "<b>Bu hafta kapanmamıştı</b>, sayılar kısmi." : "",
     snap.excluded_before ? `<b>${esc(snap.excluded_before)}</b> öncesi hariç tutuldu (test verisi).` : "",
-    "“Farklı cihaz açtı” kimlik tutulmadığı için kesin değil, yönsel bir göstergedir — aynı hane iki telefondan girerse iki sayılır, tarayıcı verisi temizlenirse yeniden sayılır.",
+    "“İlk açılış sinyali” (app_first_open) kimlik tutulmadığı için kesin bir cihaz/kişi sayısı değil, yönsel bir göstergedir — aynı kutu birden fazla telefon/tarayıcıdan açılırsa birden çok kez sayılır, tarayıcı verisi (localStorage) temizlenirse yeniden sayılır.",
   ].filter(Boolean);
   $("foot").innerHTML = bits.join(" ");
 }
