@@ -3,15 +3,16 @@
  * JUMVI weekly snapshot generator — Faz 1, Görev 1.3 + Faz 2, Görev 2.2
  *
  * WHY THIS EXISTS
- * Workers Analytics Engine deletes rows after 90 days. Everything that must
- * outlive that window — exit diligence, R&D, marketing — has to be aggregated
- * and committed to git BEFORE the source rows expire. This script is that
- * aggregation step. It reads WAE via the SQL API and writes one JSON file per
- * ISO week under data/snapshots/.
+ * Workers Analytics Engine has a three-month retention window (Cloudflare
+ * documents this as a rolling retention period, not a guaranteed exact day
+ * count). Everything that must outlive that window — exit diligence, R&D,
+ * marketing — has to be aggregated and committed to git BEFORE the source
+ * rows expire. This script is that aggregation step. It reads WAE via the
+ * SQL API and writes one JSON file per ISO week under data/snapshots/.
  *
- * A number that is not in a snapshot is gone forever 90 days after the event.
- * That is the reason the mission-level breakdown is captured here even though
- * nothing reads it yet.
+ * A number that is not in a snapshot is gone forever once that retention
+ * window closes on the event. That is the reason the mission-level breakdown
+ * is captured here even though nothing reads it yet.
  *
  * FAZ 2 adds the sixteen content/feature events, and five cross-reads that
  * need no extra event at all: mission ids are joined against the labels each
@@ -24,7 +25,7 @@
  * events (welcome_complete, quickplay_start, team_create, team_switch,
  * profile_delete, mission_undo, level_up) while this generator still only
  * knew the original Faz 1/2 set — every one of those seven was live in WAE
- * and silently NOT being preserved before its 90-day window closed. v3 adds
+ * and silently NOT being preserved before its retention window closed. v3 adds
  * those seven plus the seven brand-new Locked v1 events (mission_entry,
  * mission_unfinished_exit, product_care_open, home_add_tap, standalone_open,
  * first_mission_start, first_mission_complete), and — the actual fix, not
@@ -520,8 +521,8 @@ async function collect(ctx, startMs, endMs) {
   }
 
   // 4 — per-mission starts/completes. Not in the spec's example body; added
-  // because WAE drops the source rows at 90 days and "which mission gets
-  // abandoned" is not recoverable after that.
+  // because WAE drops the source rows once retention closes and "which
+  // mission gets abandoned" is not recoverable after that.
   for (const row of await sql(
     ctx,
     `SELECT blob2 AS mission, blob1 AS event, sum(_sample_interval) AS n FROM ${DATASET} ${where} ` +

@@ -217,7 +217,7 @@ body{
         Bu bir <b>olay oranı</b>, kohort dönüşüm oranı değil: start ve complete olayları kişi/cihaz bazında eşleştirilmiyor,
         bu yüzden oran teorik olarak %100'ü geçebilir. Turuncu kareler kesin "kötü görev" iddiası değil, incelenmeye değer adaylardır.</p>
       <div class="gridwrap" id="gridwrap"></div>
-      <p class="hint">Bir göreve dokun/tıkla — starts, completion events, unfinished exits, finish signal, keşif
+      <p class="hint">Bir göreve dokun/tıkla — başlatma olayları, tamamlama olayları, tamamlanmadan çıkış, bitirme sinyali, keşif
         kaynağı, zamanlayıcı ve yardım/geri-alma sinyalleri aşağıda açılır.</p>
       <div class="card missionDetail" id="missionDetail" hidden></div>
     </section>
@@ -243,7 +243,8 @@ body{
     <section class="sec">
       <h2 class="sec-h">Ürün sinyalleri</h2>
       <p class="grid-note">Grown-ups → Product Care &amp; Quick Help'te hangi konu açıldı. Bunlar arıza oranı değil,
-        konu bazlı ilgi sinyalidir — "31 kişi bu konuyu açtı" demektir, "31 üründe arıza var" değil.</p>
+        konu bazlı ilgi sinyalidir — sayı "bu konu N kez açıldı" (N açılma sinyali) demektir, "N üründe arıza var"
+        ya da "N kişi bunu yaşadı" demek değildir. Analytics kimliksiz olduğu için aynı kişi konuyu birden çok kez açabilir.</p>
       <div class="card" id="productSignals"></div>
     </section>
 
@@ -542,7 +543,7 @@ function renderFamily(snap) {
   const levels = Object.entries(fam.level_up || {}).filter(([, v]) => v > 0);
   const levelLine = levels.length
     ? `Seviye dağılımı: ${levels.map(([lvl, n]) => `Sv.${esc(lvl)} × ${nf(n)}`).join(" · ")}`
-    : "Bu hafta kimse seviye atlamadı.";
+    : "Bu hafta level_up olayı yok.";
   el.innerHTML += `<div class="xread">${levelLine}</div>`;
 }
 
@@ -553,11 +554,21 @@ function renderDataHealth(snap) {
   const legacyLine = legacy.length
     ? legacy.map(([k, n]) => `<code>${esc(k)}</code>: ${nf(n)} (canlı özellik değil, sadece kayıt kalsın diye)`).join(", ")
     : "İzlenen eski (legacy) olay yok.";
+  // Review follow-up: source mapping bozulursa (yeni bir call-site yanlışlıkla
+  // "unknown" ile giderse) bunu görünür kılan tek yer burası olmalı — CI
+  // sadece ÜRETİM koduna bakıyor, canlı veriye değil.
+  const unknownSources = snap.mission_entry_sources?.unknown ?? 0;
+  const unknownLine = hasV3(snap)
+    ? (unknownSources > 0
+        ? `<div class="xread" style="color:var(--orange)"><b>⚠ Bilinmeyen görev giriş kaynağı: ${nf(unknownSources)}</b> — instrumentation kontrolü gerekli.</div>`
+        : `<div class="xread">Bilinmeyen görev giriş kaynağı: 0 — kaynak eşlemesi sağlam görünüyor.</div>`)
+    : `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`;
   el.innerHTML = `
     <div class="frow"><span class="fname">Snapshot şeması</span><span class="fmini"></span><span class="fval">v${esc(schema)}</span></div>
     <div class="frow"><span class="fname">Üretildi</span><span class="fmini"></span><span class="fval">${esc((snap.generated_at || "").replace("T"," ").replace("Z"," UTC"))}</span></div>
     <div class="frow"><span class="fname">Kaynak veri seti</span><span class="fmini"></span><span class="fval">${esc(snap.dataset || "—")}</span></div>
     <div class="xread">Eski (legacy) olaylar: ${legacyLine}</div>
+    ${unknownLine}
     <div class="xread">Olay kapsamı, her deploy'da <code>tools/check-event-coverage.mjs</code> ile doğrulanır — Worker'ın kabul ettiği
       her olayın bu snapshot'ta nereye yazıldığına dair açık bir karar olmadan CI kırmızı yanar.</div>`;
 }
@@ -625,7 +636,7 @@ function renderThesis(snap) {
   const ratio = overallRatio(snap);
   const reach = snap.app_first_opens ?? 0;
   $("thesis").innerHTML = reach
-    ? `${nf(reach)} cihaz açtı, <em>${nf(snap.mission_completes)} görev bitti.</em>`
+    ? `${nf(reach)} ilk açılış sinyali, <em>${nf(snap.mission_completes)} görev bitti.</em>`
     : `${nf(snap.app_opens)} oturum, <em>${nf(snap.mission_completes)} görev bitti.</em>`;
 
   const bits = [];
@@ -652,7 +663,7 @@ function renderAlerts(snap) {
     $("alerts").innerHTML = `<div class="alert calm"><div class="alert-num">—</div>
       <div><b class="alert-b">Bu hafta hiç veri yok</b>
       <span class="alert-w">Tek bir oturum bile kaydedilmedi, dolayısıyla uyarı eşiklerinin hiçbiri
-      anlamlı değil. Beacon canlıysa bu, kimsenin uygulamayı açmadığı anlamına gelir.</span></div></div>`;
+      anlamlı değil. Beacon canlıysa bu, hiçbir açılış sinyalinin kaydedilmediği anlamına gelir.</span></div></div>`;
     return;
   }
 
@@ -763,15 +774,15 @@ function renderMissionDetail(snap, id) {
   const title = pack ? `Görev ${esc(id)} — ${esc(META.pack_labels[pack] || pack)}` : `Görev ${esc(id)}`;
 
   const stats = [
-    { n: nf(starts), l: "Starts" },
-    { n: nf(completes), l: "Completion events" },
-    { n: nf(exits), l: "Unfinished exits" },
-    { n: ratio === null ? "—" : `${ratio.toFixed(2)}x`, l: "Finish signal" },
+    { n: nf(starts), l: "Başlatma olayları" },
+    { n: nf(completes), l: "Tamamlama olayları" },
+    { n: nf(exits), l: "Tamamlanmadan çıkış" },
+    { n: ratio === null ? "—" : `${ratio.toFixed(2)}x`, l: "Bitirme sinyali" },
   ];
   if (hasV3(snap)) {
-    stats.push({ n: nf(m.timer_starts ?? 0), l: "Timer starts" });
-    stats.push({ n: nf(m.help_opens ?? 0), l: "Help signals" });
-    stats.push({ n: nf(m.undos ?? 0), l: "Undo signals" });
+    stats.push({ n: nf(m.timer_starts ?? 0), l: "Zamanlayıcı başlatma" });
+    stats.push({ n: nf(m.help_opens ?? 0), l: "Yardım sinyalleri" });
+    stats.push({ n: nf(m.undos ?? 0), l: "Geri alma sinyalleri" });
   }
 
   const sourceRows = hasV3(snap) && m.entry_sources
@@ -790,7 +801,7 @@ function renderMissionDetail(snap, id) {
     <div class="mdStats">${stats.map((s) => `<div class="mdStat"><div class="mdStatN">${s.n}</div><div class="mdStatL">${esc(s.l)}</div></div>`).join("")}</div>
     <div class="xt-h">Keşif kaynağı</div>
     ${sourceRows}
-    <div class="xread">Finish signal bir <b>olay oranı</b>dır, kullanıcı dönüşüm oranı değil — start ve complete
+    <div class="xread">Bitirme sinyali bir <b>olay oranı</b>dır; kullanıcı dönüşüm oranı değildir — start ve complete
       olayları kişi/cihaz bazında eşleştirilmiyor. 1.00x'ten yüksek çıkması mümkündür ve hata değildir.</div>`;
   el.hidden = false;
   $("mdCloseBtn").onclick = () => {
@@ -818,19 +829,19 @@ function renderFunnel(snap, prev) {
     steps.push({ label: "Satılan ünite", n: CONFIG.unitsSold, color: "var(--navy)", note: "" });
   }
   steps.push({
-    label: "Farklı cihaz açtı", n: reach, color: "var(--sky)",
-    note: CONFIG.unitsSold ? `satılanın ${pct(reach / CONFIG.unitsSold)}'i · yönsel tahmin` : "yönsel tahmin — kesin kişi sayısı değil",
+    label: "İlk açılış sinyali", n: reach, color: "var(--sky)",
+    note: CONFIG.unitsSold ? `satılanın ${pct(reach / CONFIG.unitsSold)}'i · yaklaşık ilk açılış sinyalleri` : "yaklaşık ilk açılış sinyalleri — kesin cihaz/kişi sayısı değil",
     prev: prev?.app_first_opens,
   });
   steps.push({
     label: "Toplam oturum", n: snap.app_opens, color: "var(--sky)",
-    note: reach ? `cihaz başına ${(snap.app_opens / reach).toFixed(1)} oturum` : "",
+    note: reach ? `ilk açılış sinyali başına ${(snap.app_opens / reach).toFixed(1)} oturum` : "",
     prev: prev?.app_opens,
   });
   for (const n of [2, 3, 5, 10]) {
     steps.push({
       label: `${n}. kez geldi`, n: rv[String(n)] ?? 0, color: "var(--lime)",
-      note: reach ? `açan cihazların ${pct((rv[String(n)] ?? 0) / reach)}'i` : "",
+      note: reach ? `ilk açılış sinyallerinin ${pct((rv[String(n)] ?? 0) / reach)}'i` : "",
       prev: prev?.return_visits?.[String(n)],
     });
   }
@@ -917,7 +928,7 @@ function renderFoot(snap, prev) {
     prev ? `Karşılaştırma: ${esc(prev.week)}.` : "Önceki hafta yok — karşılaştırma gösterilmiyor.",
     partial ? "<b>Bu hafta kapanmamıştı</b>, sayılar kısmi." : "",
     snap.excluded_before ? `<b>${esc(snap.excluded_before)}</b> öncesi hariç tutuldu (test verisi).` : "",
-    "“Farklı cihaz açtı” kimlik tutulmadığı için kesin değil, yönsel bir göstergedir — aynı hane iki telefondan girerse iki sayılır, tarayıcı verisi temizlenirse yeniden sayılır.",
+    "“İlk açılış sinyali” (app_first_open) kimlik tutulmadığı için kesin bir cihaz/kişi sayısı değil, yönsel bir göstergedir — aynı kutu birden fazla telefon/tarayıcıdan açılırsa birden çok kez sayılır, tarayıcı verisi (localStorage) temizlenirse yeniden sayılır.",
   ].filter(Boolean);
   $("foot").innerHTML = bits.join(" ");
 }

@@ -42,6 +42,17 @@ function check(label, condition, detail = "") {
   failures++;
   console.log(`  FAIL  ${label}${detail ? ` — ${detail}` : ""}`);
 }
+/** Final review follow-up: check() takes a boolean condition. Several
+ *  assertions below used to call check(label, actual, expected) instead —
+ *  since `actual` is truthy for any non-zero/non-empty value, that silently
+ *  passed regardless of whether `actual` matched `expected` at all (e.g. a
+ *  cross-tab count of 2 would still PASS a check written to expect 3). Real
+ *  actual-vs-expected assertions must go through this instead. */
+function checkEqual(label, actual, expected) {
+  const a = JSON.stringify(actual);
+  const e = JSON.stringify(expected);
+  check(label, a === e, `expected ${e}, actual ${a}`);
+}
 
 const MISSION_ENTRY_SOURCES = [
   "today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown",
@@ -145,9 +156,9 @@ for (const bad of ["Browse", "browse ", "search_engine", "", null, undefined, 12
 }
 
 console.log("\n4 — valid mission_entry lands in the exact frozen columns\n");
-check("id -> double1, source -> blob2",
-  JSON.stringify(buildDataPoint({ e: "mission_entry", id: 17, source: "today" })),
-  JSON.stringify({ blobs: ["mission_entry", "today"], doubles: [17], indexes: ["mission_entry"] }));
+checkEqual("id -> double1, source -> blob2",
+  buildDataPoint({ e: "mission_entry", id: 17, source: "today" }),
+  { blobs: ["mission_entry", "today"], doubles: [17], indexes: ["mission_entry"] });
 
 console.log("\n5 — mission x source cross-tab folds synthetic rows correctly\n");
 // The exact fixture from the review request: mission 1 gets 3 "today" + 2
@@ -165,19 +176,23 @@ applyMissionEntryRows(rows, missions, totals);
 const m1 = missions.get("1");
 const m2 = missions.get("2");
 check("mission 1 exists after folding", !!m1);
-check("mission 1: today = 3", m1?.entry_sources?.today, 3);
-check("mission 1: coach = 2", m1?.entry_sources?.coach, 2);
-check("mission 1: every other source stays 0", m1 && Object.entries(m1.entry_sources)
-  .filter(([k]) => k !== "today" && k !== "coach")
-  .every(([, v]) => v === 0), true);
+checkEqual("mission 1: today = 3", m1?.entry_sources?.today, 3);
+checkEqual("mission 1: coach = 2", m1?.entry_sources?.coach, 2);
+const m1OtherSources = m1 && Object.fromEntries(
+  Object.entries(m1.entry_sources).filter(([k]) => k !== "today" && k !== "coach"));
+const m1OtherExpected = m1 && Object.fromEntries(
+  MISSION_ENTRY_SOURCES.filter((s) => s !== "today" && s !== "coach").map((s) => [s, 0]));
+checkEqual("mission 1: every other source is zero-filled (not missing)", m1OtherSources, m1OtherExpected);
 check("mission 2 exists after folding", !!m2);
-check("mission 2: browse = 4", m2?.entry_sources?.browse, 4);
-check("mission 2: random = 1", m2?.entry_sources?.random, 1);
-check("overall total: today = 3", totals.today, 3);
-check("overall total: coach = 2", totals.coach, 2);
-check("overall total: browse = 4", totals.browse, 4);
-check("overall total: random = 1", totals.random, 1);
-check("overall total: sources never touched stay 0", totals.resume === 0 && totals.island === 0 && totals.next === 0 && totals.family === 0 && totals.unknown === 0, true);
+checkEqual("mission 2: browse = 4", m2?.entry_sources?.browse, 4);
+checkEqual("mission 2: random = 1", m2?.entry_sources?.random, 1);
+checkEqual("overall total: today = 3", totals.today, 3);
+checkEqual("overall total: coach = 2", totals.coach, 2);
+checkEqual("overall total: browse = 4", totals.browse, 4);
+checkEqual("overall total: random = 1", totals.random, 1);
+const untouchedTotals = Object.fromEntries(["resume", "island", "next", "family", "unknown"].map((s) => [s, totals[s]]));
+checkEqual("overall total: sources never touched stay 0", untouchedTotals,
+  { resume: 0, island: 0, next: 0, family: 0, unknown: 0 });
 
 // An unknown source in the raw data (should be unreachable through the
 // Worker's own allowlist, but the fold function must not silently accept it

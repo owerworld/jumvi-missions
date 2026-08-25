@@ -8,9 +8,9 @@
  * events (welcome_complete, quickplay_start, team_create, team_switch,
  * profile_delete, mission_undo, level_up) — every one of them live in
  * Analytics Engine, and every one of them silently NOT being preserved
- * before WAE's 90-day window closed. That is not a bug this file can catch
- * after the fact (the rows are already gone); it is a class of bug this file
- * exists to make impossible to repeat.
+ * before WAE's three-month retention window closed. That is not a bug this
+ * file can catch after the fact (the rows are already gone); it is a class
+ * of bug this file exists to make impossible to repeat.
  *
  * WHAT IT CHECKS
  *   1. src/worker.js's allowlist and app.js's BEACON_EVENTS mirror exactly —
@@ -25,7 +25,7 @@
  *      under `legacy`, not `features`, so a stray/replayed row is still
  *      counted rather than silently lost).
  *      A brand-new event that is neither is exactly the mistake this file
- *      exists to catch: it fails loudly, at commit time, not 90 days later.
+ *      exists to catch: it fails loudly, at commit time, not months later.
  *   3. SNAPSHOT_HANDLED / LEGACY_EVENTS below don't list an event that no
  *      longer exists in the allowlist (keeps this file from silently going
  *      stale in the other direction).

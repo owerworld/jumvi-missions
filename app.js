@@ -162,9 +162,15 @@ function trackEvent(name, props){
  * marker above never actually measured. Full taxonomy and rationale:
  * docs/analytics/locked-v1.md.
  *   mission_entry     { id, source } source ∈ today|browse|random|resume|
- *                                    coach|island. Fired once per openMission()
- *                                    call — every entry, not de-duped, because
- *                                    the question is HOW EACH VISIT arrived.
+ *                                    coach|island|next|family|unknown. Fired
+ *                                    on a genuine user navigation into a
+ *                                    mission — every entry, not de-duped,
+ *                                    because the question is HOW EACH VISIT
+ *                                    arrived. NOT fired when openMission() is
+ *                                    reused internally to refresh/re-render
+ *                                    the SAME already-open mission (undo,
+ *                                    un-mark done, post-completion redraw) —
+ *                                    see openMission()'s trackEntry gate.
  *   mission_unfinished_exit { id }   a deliberate Back/Close/Cancel out of a
  *                                    mission NOT completed in that open cycle.
  *                                    Never fires on tab-hide/backgrounding —

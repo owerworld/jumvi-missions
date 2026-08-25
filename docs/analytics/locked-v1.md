@@ -77,7 +77,7 @@ goes to WAE.
 | `welcome_complete` | — | once/device, forever (activation funnel) |
 | `mission_start` | `id` | once/mission/session |
 | `mission_complete` | `id` | |
-| `mission_entry` | `id`, `source` ∈ {today,browse,random,resume,coach,island} | every open, not de-duped |
+| `mission_entry` | `id`, `source` ∈ {today,browse,random,resume,coach,island,next,family,unknown} | every genuine entry, not de-duped — NOT fired on an internal same-mission refresh (see §9b) |
 | `mission_unfinished_exit` | `id` | deliberate exit only — see §4 |
 | `mission_undo` | — | the 5s Undo on a completion |
 | `first_mission_start` | — | once/device, forever |
@@ -117,7 +117,9 @@ incident that motivated it: `generate-weekly-snapshot.mjs` silently did not
 preserve seven already-live events (`welcome_complete`, `quickplay_start`,
 `team_create`, `team_switch`, `profile_delete`, `mission_undo`, `level_up`)
 for an unknown number of weeks before this fix, and their pre-fix rows are
-gone for good once WAE's 90-day window closes.
+gone for good once WAE's three-month retention window closes (Cloudflare
+documents this as a rolling retention period, not a guaranteed exact day
+count).
 
 ## 4. Why `mission_unfinished_exit` never fires on backgrounding
 
