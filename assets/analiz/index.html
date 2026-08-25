@@ -477,6 +477,27 @@ function hasV3(snap) {
 }
 const NOT_IN_SCHEMA = '<span class="notavail">bu şema sürümünde yok</span>';
 
+/** Historical backfill semantics: a schema-v3 field can still be `null` on a
+ *  v3 snapshot — not because the schema doesn't have it (hasV3() covers
+ *  that), but because THIS PERIOD predates the field's own production
+ *  cutoff (see tools/generate-weekly-snapshot.mjs's INSTRUMENTATION
+ *  registry). Never render that as 0 / 0% / "kimse kullanmadı" — a real
+ *  zero and "not measured yet" are different facts. */
+const NOT_YET_COLLECTED = '<span class="notavail">bu dönemde henüz ölçülmüyordu</span>';
+const unavailable = (v) => v === null;
+
+/** A "partial" entry in snap.availability means the real number IS shown
+ *  (no fabrication — WAE simply has no rows before an event existed, so the
+ *  count is trustworthy), but it only covers part of the week. Surfaced as
+ *  one small note per section rather than silently implying full coverage. */
+function partialNote(snap, ...keys) {
+  const av = snap.availability || {};
+  const hits = keys.filter((k) => av[k]?.status === "partial");
+  if (!hits.length) return "";
+  const from = (k) => esc(av[k].available_from.replace("T", " ").replace("Z", " UTC"));
+  return `<div class="xread">Kısmi dönem: ${hits.map((k) => `<code>${esc(k)}</code> ${from(k)}'dan itibaren ölçülüyor`).join("; ")}. Hafta bu tarihten öncesi için bu sinyal(ler) toplanmıyordu.</div>`;
+}
+
 /** Basit bir "etiket · sayı" listesi — Ürün Sinyalleri, Aile ve Keşif Kaynağı
  *  bölümlerinin üçü de aynı şekli kullanıyor, .frow'u burada tekrar yazmak
  *  yerine. */
@@ -509,6 +530,7 @@ function renderPackLab(snap) {
 function renderProductSignals(snap) {
   const el = $("productSignals");
   if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — product_care_open bu haftadan önce toplanmıyordu.</div>`; return; }
+  if (unavailable(snap.product_care_topics)) { el.innerHTML = `<div class="xread">${NOT_YET_COLLECTED} — Product Care sinyalleri bu dönemde henüz toplanmıyordu.</div>`; return; }
   const entries = Object.entries(PRODUCT_CARE_LABELS)
     .map(([key, label]) => ({ key, label, n: snap.product_care_topics?.[key] ?? 0 }))
     .sort((a, b) => b.n - a.n);
@@ -518,16 +540,19 @@ function renderProductSignals(snap) {
 function renderEntrySources(snap) {
   const el = $("entrySources");
   if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`; return; }
+  if (unavailable(snap.mission_entry_sources)) { el.innerHTML = `<div class="xread">${NOT_YET_COLLECTED} — mission_entry bu dönemde henüz ölçülmüyordu.</div>`; return; }
   const entries = Object.entries(ENTRY_SOURCE_LABELS)
     .map(([key, label]) => ({ key, label, n: snap.mission_entry_sources?.[key] ?? 0 }))
     .sort((a, b) => b.n - a.n);
   renderCountRows(el, entries);
+  el.innerHTML += partialNote(snap, "mission_entry");
 }
 
 function renderFamily(snap) {
   const el = $("family");
   if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — team_create/team_switch/level_up/mission_undo/profile_delete bu haftadan önce toplanmıyordu. profile_add, progress_reset, certificate_made, share_tap ve badge_earned aşağıdaki "Özellik kullanımı" bölümünde her zaman vardı.</div>`; return; }
-  const fam = snap.family || {};
+  if (unavailable(snap.family)) { el.innerHTML = `<div class="xread">${NOT_YET_COLLECTED} — team_create/team_switch/level_up/mission_undo/profile_delete bu dönemde henüz ölçülmüyordu.</div>`; return; }
+  const fam = snap.family;
   const entries = [
     { label: "Takım kuruldu (yetişkin)", n: fam.team_create?.adult ?? 0 },
     { label: "Takım kuruldu (kardeş)", n: fam.team_create?.sibling ?? 0 },
@@ -544,7 +569,7 @@ function renderFamily(snap) {
   const levelLine = levels.length
     ? `Seviye dağılımı: ${levels.map(([lvl, n]) => `Sv.${esc(lvl)} × ${nf(n)}`).join(" · ")}`
     : "Bu hafta level_up olayı yok.";
-  el.innerHTML += `<div class="xread">${levelLine}</div>`;
+  el.innerHTML += `<div class="xread">${levelLine}</div>` + partialNote(snap, "family");
 }
 
 function renderDataHealth(snap) {
@@ -557,12 +582,13 @@ function renderDataHealth(snap) {
   // Review follow-up: source mapping bozulursa (yeni bir call-site yanlışlıkla
   // "unknown" ile giderse) bunu görünür kılan tek yer burası olmalı — CI
   // sadece ÜRETİM koduna bakıyor, canlı veriye değil.
-  const unknownSources = snap.mission_entry_sources?.unknown ?? 0;
-  const unknownLine = hasV3(snap)
-    ? (unknownSources > 0
-        ? `<div class="xread" style="color:var(--orange)"><b>⚠ Bilinmeyen görev giriş kaynağı: ${nf(unknownSources)}</b> — instrumentation kontrolü gerekli.</div>`
-        : `<div class="xread">Bilinmeyen görev giriş kaynağı: 0 — kaynak eşlemesi sağlam görünüyor.</div>`)
-    : `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`;
+  const unknownLine = !hasV3(snap)
+    ? `<div class="xread">${NOT_IN_SCHEMA} — mission_entry bu haftadan önce toplanmıyordu.</div>`
+    : unavailable(snap.mission_entry_sources)
+      ? `<div class="xread">${NOT_YET_COLLECTED} — mission_entry bu dönemde henüz ölçülmüyordu, instrumentation kontrolü bu haftaya uygulanamaz.</div>`
+      : ((snap.mission_entry_sources.unknown ?? 0) > 0
+          ? `<div class="xread" style="color:var(--orange)"><b>⚠ Bilinmeyen görev giriş kaynağı: ${nf(snap.mission_entry_sources.unknown)}</b> — instrumentation kontrolü gerekli.</div>`
+          : `<div class="xread">Bilinmeyen görev giriş kaynağı: 0 — kaynak eşlemesi sağlam görünüyor.</div>`);
   el.innerHTML = `
     <div class="frow"><span class="fname">Snapshot şeması</span><span class="fmini"></span><span class="fval">v${esc(schema)}</span></div>
     <div class="frow"><span class="fname">Üretildi</span><span class="fmini"></span><span class="fval">${esc((snap.generated_at || "").replace("T"," ").replace("Z"," UTC"))}</span></div>
@@ -768,7 +794,12 @@ function renderMissionDetail(snap, id) {
   const el = $("missionDetail");
   const { starts, completes } = missionStats(snap, id);
   const m = snap.missions?.[String(id)] || {};
-  const exits = m.exits ?? 0;
+  // `m.exits` etc. can be `null` on a v3 snapshot itself — the schema HAS
+  // the field, but this specific period predates the underlying event (see
+  // generate-weekly-snapshot.mjs's INSTRUMENTATION registry). A missing
+  // mission entirely (m === {}) is the ordinary "no rows for this id" case
+  // and stays a real 0, same as before.
+  const mdN = (v) => (v === null ? '<span class="notavail">ölçülmüyordu</span>' : nf(v ?? 0));
   const ratio = starts > 0 ? completes / starts : null;
   const pack = META.missions[id]?.pack;
   const title = pack ? `Görev ${esc(id)} — ${esc(META.pack_labels[pack] || pack)}` : `Görev ${esc(id)}`;
@@ -776,22 +807,24 @@ function renderMissionDetail(snap, id) {
   const stats = [
     { n: nf(starts), l: "Başlatma olayları" },
     { n: nf(completes), l: "Tamamlama olayları" },
-    { n: nf(exits), l: "Tamamlanmadan çıkış" },
+    { n: mdN(m.exits), l: "Tamamlanmadan çıkış" },
     { n: ratio === null ? "—" : `${ratio.toFixed(2)}x`, l: "Bitirme sinyali" },
   ];
   if (hasV3(snap)) {
-    stats.push({ n: nf(m.timer_starts ?? 0), l: "Zamanlayıcı başlatma" });
-    stats.push({ n: nf(m.help_opens ?? 0), l: "Yardım sinyalleri" });
-    stats.push({ n: nf(m.undos ?? 0), l: "Geri alma sinyalleri" });
+    stats.push({ n: mdN(m.timer_starts), l: "Zamanlayıcı başlatma" });
+    stats.push({ n: mdN(m.help_opens), l: "Yardım sinyalleri" });
+    stats.push({ n: mdN(m.undos), l: "Geri alma sinyalleri" });
   }
 
-  const sourceRows = hasV3(snap) && m.entry_sources
-    ? Object.entries(ENTRY_SOURCE_LABELS)
-        .map(([key, label]) => ({ label, n: m.entry_sources[key] ?? 0 }))
-        .sort((a, b) => b.n - a.n)
-        .map((e) => `<div class="mdSourceRow"><span>${esc(e.label)}</span><span>${nf(e.n)}</span></div>`)
-        .join("")
-    : `<div class="xread">${NOT_IN_SCHEMA} — entry-source keşif kaydı bu haftadan önce toplanmıyordu.</div>`;
+  const sourceRows = !hasV3(snap)
+    ? `<div class="xread">${NOT_IN_SCHEMA} — entry-source keşif kaydı bu haftadan önce toplanmıyordu.</div>`
+    : unavailable(m.entry_sources)
+      ? `<div class="xread">${NOT_YET_COLLECTED} — entry-source keşif kaydı bu dönemde henüz ölçülmüyordu.</div>`
+      : Object.entries(ENTRY_SOURCE_LABELS)
+          .map(([key, label]) => ({ label, n: m.entry_sources[key] ?? 0 }))
+          .sort((a, b) => b.n - a.n)
+          .map((e) => `<div class="mdSourceRow"><span>${esc(e.label)}</span><span>${nf(e.n)}</span></div>`)
+          .join("");
 
   el.innerHTML = `
     <div class="mdHead">
@@ -802,7 +835,8 @@ function renderMissionDetail(snap, id) {
     <div class="xt-h">Keşif kaynağı</div>
     ${sourceRows}
     <div class="xread">Bitirme sinyali bir <b>olay oranı</b>dır; kullanıcı dönüşüm oranı değildir — start ve complete
-      olayları kişi/cihaz bazında eşleştirilmiyor. 1.00x'ten yüksek çıkması mümkündür ve hata değildir.</div>`;
+      olayları kişi/cihaz bazında eşleştirilmiyor. 1.00x'ten yüksek çıkması mümkündür ve hata değildir.</div>
+    ${partialNote(snap, "mission_entry", "mission_unfinished_exit", "help_open_attribution", "mission_undo_attribution")}`;
   el.hidden = false;
   $("mdCloseBtn").onclick = () => {
     el.hidden = true;

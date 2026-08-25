@@ -82,34 +82,34 @@ const SNAPSHOT_SCHEMA = 3;
 
 /* Feature events: a flat count each, no props to break down. Order is the
  * order the panel reads them in. */
-const FEATURE_EVENTS = [
+export const FEATURE_EVENTS = [
   "daily_pick_tap", "speak_on", "timer_start", "badge_earned",
   "certificate_made", "share_tap", "score_saved", "dashboard_open",
   "missionbook_get", "profile_add", "progress_reset",
 ];
 
 /** The hub funnel, in order. Frozen with the event (src/worker.js). */
-const HUB3D_STEPS = ["shown", "entered", "ready", "moved", "mission", "failed", "escaped"];
+export const HUB3D_STEPS = ["shown", "entered", "ready", "moved", "mission", "failed", "escaped"];
 
 /** Only these visit numbers are ever reported (app.js). */
-const RETURN_VISIT_STEPS = [2, 3, 5, 10];
+export const RETURN_VISIT_STEPS = [2, 3, 5, 10];
 
 /* ── Schema v3 — the seven events this file was previously silently
  * dropping (see the header note above). Flat counts, same shape as
  * FEATURE_EVENTS, but reported under `activation_milestones` / `family`
  * instead of `features` — they answer a different kind of question than
  * "is this feature alive", so they get their own section in the panel. */
-const ACTIVATION_MILESTONE_EVENTS = [
+export const ACTIVATION_MILESTONE_EVENTS = [
   "welcome_complete", "first_mission_start", "first_mission_complete",
   "home_add_tap", "standalone_open",
 ];
-const TEAM_KINDS = ["adult", "sibling"];
-const XP_LEVEL_VALUES = [2, 3, 4, 5, 6, 7];
+export const TEAM_KINDS = ["adult", "sibling"];
+export const XP_LEVEL_VALUES = [2, 3, 4, 5, 6, 7];
 /** Accepted by the Worker (append-only contract) but nothing in the current
  *  product emits these any more — see app.js's own comment above
  *  BEACON_EVENTS. Queried and preserved, reported under `legacy`, never
  *  presented as a live feature. */
-const LEGACY_EVENTS = ["quickplay_start"];
+export const LEGACY_EVENTS = ["quickplay_start"];
 
 /* ── Schema v3 — Locked v1 R&D dashboard follow-up (new events) ──────────── */
 /** Mirrors MISSION_ENTRY_SOURCES in src/worker.js / app.js. "next" is the
@@ -117,13 +117,161 @@ const LEGACY_EVENTS = ["quickplay_start"];
  *  the explicit, honest fallback for a real call site that isn't one of the
  *  other eight — see docs/analytics/locked-v1.md §9b for the full
  *  call-site mapping. */
-const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown"];
+export const MISSION_ENTRY_SOURCES = ["today", "browse", "random", "resume", "coach", "island", "next", "family", "unknown"];
 /** Mirrors PRODUCT_CARE_TOPICS in src/worker.js / app.js — the real, current
  *  "Product Care & Quick Help" accordion in Grown-ups, not an invented list. */
-const PRODUCT_CARE_TOPICS = [
+export const PRODUCT_CARE_TOPICS = [
   "ball_not_sticking", "ball_hard_to_remove", "strap_fit", "missing_catches",
   "indoor_play", "cleaning_storage", "damaged_missing",
 ];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * HISTORICAL BACKFILL SEMANTICS — availability vs. true zero
+ *
+ * This generator can now be pointed at any past ISO week (--week), including
+ * one that predates an event's own existence. Before this section existed,
+ * every field this file didn't know about yet queried WAE, got an empty
+ * result set, and reported the totally ordinary Number(0) — indistinguishable
+ * from "this was live and nobody triggered it." For product/R&D that
+ * distinction is not cosmetic: a historical week showing
+ * mission_entry_sources: {today:0, browse:0, ...} looks like a dead feature,
+ * when the honest answer is "mission_entry did not exist yet."
+ *
+ * Every cutoff below is the exact PRODUCTION deploy instant — the commit that
+ * actually reached main, not a PR branch's own authored timestamp (a PR sits
+ * on a branch, possibly for days, before anything downstream of its commits
+ * is live) — verified with `git log -S"<event name>" -- src/worker.js`:
+ *
+ *   FAZ1      2026-08-07T00:03:48Z  43d7283  "feat(analytics): minimal
+ *             5-event beacon on Workers Analytics Engine (Faz 1 / 1.2)"
+ *             → app_open, mission_start, mission_complete, help_open,
+ *               player_count
+ *   FAZ2      2026-08-07T23:55:47Z  91eb42a  Faz 2 sixteen-event batch
+ *             → app_first_open, pack_view, pack_complete, badge_earned,
+ *               timer_start (WITH a mission id from day one — no separate
+ *               attribution gap for this one), return_visit, dashboard_open,
+ *               missionbook_get, profile_add, progress_reset, hub3d,
+ *               certificate_made, score_saved, share_tap, daily_pick_tap,
+ *               speak_on
+ *   FAZ2B     2026-08-15T14:26:03Z  50c5e99  welcome_complete added
+ *             (quickplay_start also lands here — already legacy today, but
+ *             its historical rows are just as real before this instant)
+ *   FAZ2F     2026-08-17T08:11:29Z  3b876f5  "fix(play): gate completion on
+ *             real play..." — the family layer's events themselves:
+ *             team_create, team_switch, profile_delete, mission_undo
+ *             (EVENT only — see LOCKED_V1 below for its mission-id
+ *             attribution, added much later), level_up
+ *   LOCKED_V1 2026-08-25T13:03:32Z  0d95331  PR #37's MERGE commit (the
+ *             branch's own commits are dated 2026-08-24; nothing on that
+ *             branch was live in production until this merge deployed) —
+ *             mission_entry, mission_unfinished_exit, product_care_open,
+ *             home_add_tap, standalone_open, first_mission_start,
+ *             first_mission_complete, AND the help_open / mission_undo
+ *             mission-id ATTRIBUTION (both events themselves pre-date this
+ *             by weeks — only the id column is new)
+ *
+ * A week entirely before a cutoff: "not_collected" — the generator writes
+ * `null`, never a fabricated 0, for every field that cutoff gates, and
+ * records the reason in the snapshot's `availability` block.
+ * A week straddling a cutoff: "partial" — the real WAE number IS trustworthy
+ * (an event that didn't exist yet simply has no rows before the cutoff, so
+ * there is no over- or under-counting risk), but reporting it bare would
+ * silently imply the whole week was measured. `availability` marks it
+ * "partial" with the exact `available_from` instant instead.
+ * A week entirely after every relevant cutoff: "available" — ordinary,
+ * un-annotated numbers, exactly like today. Nothing needed 2026-08-07's
+  * events marked unavailable in a week from last month, and nothing here
+ * does that — see EVENT_CUTOFF below; only fields with a REAL historical
+ * gap ever get an entry.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+export const INSTRUMENTATION = {
+  FAZ1: "2026-08-07T00:03:48Z",
+  FAZ2: "2026-08-07T23:55:47Z",
+  FAZ2B: "2026-08-15T14:26:03Z",
+  FAZ2F: "2026-08-17T08:11:29Z",
+  LOCKED_V1: "2026-08-25T13:03:32Z",
+};
+
+/** When each EVENT itself first went live in production. Does not imply
+ *  anything about per-mission attribution — see ATTRIBUTION_CUTOFF. */
+export const EVENT_CUTOFF = {
+  app_open: INSTRUMENTATION.FAZ1,
+  mission_start: INSTRUMENTATION.FAZ1,
+  mission_complete: INSTRUMENTATION.FAZ1,
+  help_open: INSTRUMENTATION.FAZ1,
+  player_count: INSTRUMENTATION.FAZ1,
+
+  app_first_open: INSTRUMENTATION.FAZ2,
+  pack_view: INSTRUMENTATION.FAZ2,
+  pack_complete: INSTRUMENTATION.FAZ2,
+  timer_start: INSTRUMENTATION.FAZ2,
+  return_visit: INSTRUMENTATION.FAZ2,
+  hub3d: INSTRUMENTATION.FAZ2,
+  dashboard_open: INSTRUMENTATION.FAZ2,
+  missionbook_get: INSTRUMENTATION.FAZ2,
+  profile_add: INSTRUMENTATION.FAZ2,
+  progress_reset: INSTRUMENTATION.FAZ2,
+  badge_earned: INSTRUMENTATION.FAZ2,
+  certificate_made: INSTRUMENTATION.FAZ2,
+  score_saved: INSTRUMENTATION.FAZ2,
+  share_tap: INSTRUMENTATION.FAZ2,
+  daily_pick_tap: INSTRUMENTATION.FAZ2,
+  speak_on: INSTRUMENTATION.FAZ2,
+
+  welcome_complete: INSTRUMENTATION.FAZ2B,
+  quickplay_start: INSTRUMENTATION.FAZ2B,
+
+  team_create: INSTRUMENTATION.FAZ2F,
+  team_switch: INSTRUMENTATION.FAZ2F,
+  profile_delete: INSTRUMENTATION.FAZ2F,
+  mission_undo: INSTRUMENTATION.FAZ2F,
+  level_up: INSTRUMENTATION.FAZ2F,
+
+  mission_entry: INSTRUMENTATION.LOCKED_V1,
+  mission_unfinished_exit: INSTRUMENTATION.LOCKED_V1,
+  product_care_open: INSTRUMENTATION.LOCKED_V1,
+  home_add_tap: INSTRUMENTATION.LOCKED_V1,
+  standalone_open: INSTRUMENTATION.LOCKED_V1,
+  first_mission_start: INSTRUMENTATION.LOCKED_V1,
+  first_mission_complete: INSTRUMENTATION.LOCKED_V1,
+};
+
+/** When a mission id became attachable to an event that ALREADY existed —
+ *  only listed when it differs from EVENT_CUTOFF. A historical week can
+ *  therefore have a fully real global count (help_opens by reason,
+ *  family.mission_undo) while its PER-MISSION breakdown is "not_collected",
+ *  because the two capabilities went live on different dates. */
+export const ATTRIBUTION_CUTOFF = {
+  timer_start: EVENT_CUTOFF.timer_start, // carried a mission id from day one — no gap
+  mission_entry: EVENT_CUTOFF.mission_entry, // id + source are one atomic row — no gap
+  help_open: INSTRUMENTATION.LOCKED_V1, // event: FAZ1 — mission id: LOCKED_V1
+  mission_undo: INSTRUMENTATION.LOCKED_V1, // event: FAZ2F — mission id: LOCKED_V1
+};
+
+/** "available" (cutoff at/before the week starts), "not_collected" (cutoff
+ *  at/after the week ends), or "partial" (cutoff falls inside the week —
+ *  the queried number is real, just not a full-week measurement). */
+export function availabilityStatus(cutoffIso, mondayMs, weekEndMs) {
+  const cutoffMs = Date.parse(cutoffIso);
+  if (cutoffMs <= mondayMs) return "available";
+  if (cutoffMs >= weekEndMs) return "not_collected";
+  return "partial";
+}
+
+/**
+ * Records one field's availability for this week and returns its status.
+ * Only ever writes an entry for a status other than "available" — an
+ * always-live field (nearly everything, for any real-world week) never
+ * appears in `availability` at all, keeping the block bounded to genuine
+ * historical gaps instead of restating what's already normal.
+ */
+function trackAvailability(availability, key, cutoffIso, mondayMs, weekEndMs) {
+  const status = availabilityStatus(cutoffIso, mondayMs, weekEndMs);
+  if (status !== "available") {
+    availability[key] = { status, available_from: cutoffIso };
+  }
+  return status;
+}
 
 /** A fresh, zero-filled { source: 0, ... } object — every mission that ever
  *  appears in the snapshot's `missions` map gets one of these, even a
@@ -219,7 +367,7 @@ const CROSS_READS = {
 };
 
 /** Frozen by the beacon allowlist (src/worker.js). Order matches the spec. */
-const HELP_REASONS = [
+export const HELP_REASONS = [
   "ball_stuck",
   "ball_hard_to_remove",
   "strap_uncomfortable",
@@ -228,7 +376,7 @@ const HELP_REASONS = [
   "mission_too_hard",
 ];
 
-const PLAYER_COUNTS = [2, 3, 4];
+export const PLAYER_COUNTS = [2, 3, 4];
 
 /* Mission labels, derived from data.js — never hand-written. See
  * tools/derive-missions-meta.mjs for why, and re-run it after editing data.js
@@ -260,19 +408,23 @@ function loadMissionsMeta() {
  * the person who can explain it; this is that explanation, attached. */
 const METHODOLOGY = [
   "QR Activation Proxy — metodoloji notu:",
-  'Bu sayılar cihaz/kullanıcı kimliği içermez. "app_opens" ilk tarayıcı',
-  "açılışlarının tahmini sayısıdır; hane başına birden fazla cihaz veya",
-  "tarayıcı verisi temizleme nedeniyle olduğundan az/çok sayılabilir.",
-  "Kesin kullanıcı sayısı değil, yönsel (directional) bir göstergedir.",
+  "Bu sayılar KİMLİKSİZ olay/sinyal toplamlarıdır: kalıcı bir sunucu taraflı",
+  "kimlik hiçbir zaman üretilmez. Ne benzersiz müşteri sayısıdır, ne",
+  'doğrulanmış cihaz sayısıdır — bunlar birer OLAY SAYIMIDIR. "app_opens"',
+  "toplam app_open olayı/kullanım sinyalidir (oturum sayısı, kişi sayısı",
+  'değil). "app_first_opens" yaklaşık ilk açılış sinyali sayısıdır:',
+  "tarayıcı verisi (localStorage) temizlenirse aynı cihaz yeniden \"ilk",
+  'açılış" sinyali üretir, bir hanedeki birden fazla tarayıcı/cihaz birden',
+  "çok sinyal üretebilir, tek cihazı paylaşan birden fazla kişi tek sinyal",
+  "üretir. Hiçbiri kesin kullanıcı/cihaz sayısı değildir, yönsel",
+  "(directional) bir göstergedir.",
   "",
   "Üç sayı üç ayrı soruyu cevaplar ve birbirinin yerine kullanılamaz:",
-  '"app_first_opens" kaç farklı cihazın hiç ulaştığı (erişim), "app_opens"',
-  'toplam oturum (kullanım), "return_visits" kaç cihazın geri döndüğü',
-  "(tutundurma). app_first_opens de KESİN KULLANICI SAYISI DEĞİL, yönsel",
-  "tahmindir: tarayıcı verisi temizlenirse aynı cihaz yeniden sayılır, iki",
-  "telefonlu hane iki sayılır, tek telefonu paylaşan iki çocuk bir sayılır.",
-  "return_visits yalnızca 2., 3., 5. ve 10. ziyaretlerde kaydedilir; aradaki",
-  "ziyaretler hiç gönderilmez ve cihaz kimliği hiçbir zaman üretilmez.",
+  '"app_first_opens" yaklaşık kaç ilk açılış sinyali görüldüğü (erişim),',
+  '"app_opens" toplam kullanım sinyali (kullanım), "return_visits"',
+  "localStorage tabanlı dönüş milestone olayları (tutundurma) — 2., 3., 5.",
+  "ve 10. ziyarette bir kez kaydedilir, aradaki ziyaretler hiç gönderilmez",
+  "ve hiçbirinde cihaz kimliği üretilmez.",
   "",
   'by_* kırılımları mission_start payıdır (toplamları 1.0). Kova başına',
   '"kaçı bitirildi" oranı burada hazır durmaz ama türetilebilir: "missions"',
@@ -288,6 +440,14 @@ const METHODOLOGY = [
   "",
   "generated_at, period_end'den önceyse hafta o an henüz kapanmamıştı ve",
   "sayılar kısmi haftaya aittir.",
+  "",
+  '"availability" alanı, bu haftada HANGİ sinyallerin henüz toplanmıyor',
+  '("not_collected") ya da hafta ortasında başladığını ("partial",',
+  "available_from ile) açıkça işaretler. Orada bir alan YOKSA o sinyal bu",
+  "hafta için tam ölçülüyordu demektir. \"not_collected\" bir alan snapshot'ta",
+  "null'dur — sıfır DEĞİLDİR: sıfır \"ölçüldü ve kimse tetiklemedi\" demek,",
+  'null "bu dönemde henüz ölçülmüyordu" demektir. Bkz.',
+  "docs/analytics/locked-v1.md, tarihsel geriye-doldurma semantiği bölümü.",
 ];
 
 /** Appended only on a run that used --since, with the reason spelled out. */
@@ -301,10 +461,10 @@ const exclusionNote = (isoInstant) => [
 
 // ── ISO week arithmetic (UTC, Monday–Sunday — matches the spec's examples) ──
 
-const DAY_MS = 86400000;
+export const DAY_MS = 86400000;
 
 /** Monday 00:00 UTC of the given ISO week. Jan 4 is always in ISO week 1. */
-function mondayOfIsoWeek(year, week) {
+export function mondayOfIsoWeek(year, week) {
   const jan4 = Date.UTC(year, 0, 4);
   const jan4Dow = (new Date(jan4).getUTCDay() + 6) % 7; // Mon = 0
   return jan4 - jan4Dow * DAY_MS + (week - 1) * 7 * DAY_MS;
@@ -743,20 +903,50 @@ function crossRead(missions, meta, field) {
   return Object.fromEntries(Object.entries(out).sort((a, b) => a[0].localeCompare(b[0], "en", { numeric: true })));
 }
 
-function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, meta }) {
+export function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, meta }) {
   const { counts, helpOpens, playerCount, missions,
           features, hub3d, returnVisits, packViews, packCompletes,
           activationMilestones, legacy, family, missionEntrySources, productCareTopics,
           helpOpenAttribution, missionUndoAttribution } = data;
 
-  // Every mission gets a zero-filled entry_sources/timer_starts/help_opens/
-  // undos even with zero rows for that field — a reader should see an
-  // explicit 0, never a missing key.
+  // Historical backfill semantics — see the INSTRUMENTATION block up top.
+  // Every field tracked here gets `null`, never Number(0), for the portion
+  // of a week before its capability existed in production.
+  const weekEndMs = mondayMs + 7 * DAY_MS;
+  const availability = {};
+  const track = (key, cutoffIso) => trackAvailability(availability, key, cutoffIso, mondayMs, weekEndMs);
+
+  const missionEntryStatus = track("mission_entry", EVENT_CUTOFF.mission_entry);
+  const exitStatus = track("mission_unfinished_exit", EVENT_CUTOFF.mission_unfinished_exit);
+  const productCareStatus = track("product_care_open", EVENT_CUTOFF.product_care_open);
+  const familyStatus = track("family", INSTRUMENTATION.FAZ2F);
+  const helpAttrStatus = track("help_open_attribution", ATTRIBUTION_CUTOFF.help_open);
+  const undoAttrStatus = track("mission_undo_attribution", ATTRIBUTION_CUTOFF.mission_undo);
+  track("timer_start_attribution", ATTRIBUTION_CUTOFF.timer_start);
+  // activation_milestones mixes two different cutoffs in ONE object —
+  // welcome_complete (FAZ2B) vs. the four genuinely-new Locked v1 milestones
+  // — so every key is tracked and gated independently instead of treating
+  // the whole object as one all-or-nothing field.
+  const activationStatus = {};
+  for (const ev of ACTIVATION_MILESTONE_EVENTS) {
+    activationStatus[ev] = track(ev, EVENT_CUTOFF[ev]);
+  }
+
+  // Every mission gets a zero-filled entry_sources/exits/timer_starts/
+  // help_opens/undos even with zero rows for that field — a reader should
+  // see an explicit 0, never a missing key — UNLESS the whole capability
+  // did not exist yet this week, in which case the field is `null` instead
+  // of a fabricated zero.
   for (const entry of missions.values()) {
     if (!entry.entry_sources) entry.entry_sources = zeroEntrySources();
+    if (entry.exits == null) entry.exits = 0;
     if (entry.timer_starts == null) entry.timer_starts = 0;
     if (entry.help_opens == null) entry.help_opens = 0;
     if (entry.undos == null) entry.undos = 0;
+    if (missionEntryStatus === "not_collected") entry.entry_sources = null;
+    if (exitStatus === "not_collected") entry.exits = null;
+    if (helpAttrStatus === "not_collected") entry.help_opens = null;
+    if (undoAttrStatus === "not_collected") entry.undos = null;
   }
 
   // Mission ids are numeric strings; sort them as numbers so 9 precedes 10.
@@ -813,20 +1003,36 @@ function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBefore, me
     features,
     hub3d,
 
-    // Schema v3 — Locked v1 R&D dashboard follow-up.
-    activation_milestones: activationMilestones,
-    family,
-    mission_entry_sources: missionEntrySources,
-    product_care_topics: productCareTopics,
+    // Schema v3 — Locked v1 R&D dashboard follow-up. Each field below is
+    // `null`, not the real object, when `availability` (further down) marks
+    // it "not_collected" for this week — see the INSTRUMENTATION block.
+    activation_milestones: Object.fromEntries(
+      ACTIVATION_MILESTONE_EVENTS.map((ev) => [
+        ev,
+        activationStatus[ev] === "not_collected" ? null : activationMilestones[ev],
+      ]),
+    ),
+    family: familyStatus === "not_collected" ? null : family,
+    mission_entry_sources: missionEntryStatus === "not_collected" ? null : missionEntrySources,
+    product_care_topics: productCareStatus === "not_collected" ? null : productCareTopics,
     legacy,
     // How much of this week's help_open/mission_undo could be tied to a
-    // mission (src/worker.js only started accepting the id in this review
-    // follow-up). "unattributed" on a week entirely before that deploy is
-    // expected and NOT a data-quality problem — see docs/analytics/locked-v1.md.
+    // mission (src/worker.js only started accepting the id in the Locked v1
+    // review follow-up). A `null` sub-object below means the CAPABILITY
+    // itself did not exist yet this week — not "0 could be attributed",
+    // which would misread as a measured, poor attribution rate. "partial"
+    // weeks keep the real counted split; see docs/analytics/locked-v1.md.
     attribution: {
-      help_open: { ...helpOpenAttribution },
-      mission_undo: { ...missionUndoAttribution },
+      help_open: helpAttrStatus === "not_collected" ? null : { ...helpOpenAttribution },
+      mission_undo: undoAttrStatus === "not_collected" ? null : { ...missionUndoAttribution },
     },
+    // Historical backfill semantics: present only for fields with a REAL
+    // gap for THIS week (see INSTRUMENTATION above) — absent entirely means
+    // every field was fully live for the whole week, same as any ordinary
+    // snapshot. "not_collected" fields are `null` above, never Number(0).
+    // "partial" fields keep their real (necessarily partial-week) count and
+    // name the exact instant collection began.
+    availability,
 
     generated_at: generatedAt,
     dataset: DATASET,
