@@ -794,12 +794,19 @@ function renderMissionDetail(snap, id) {
   const el = $("missionDetail");
   const { starts, completes } = missionStats(snap, id);
   const m = snap.missions?.[String(id)] || {};
-  // `m.exits` etc. can be `null` on a v3 snapshot itself — the schema HAS
-  // the field, but this specific period predates the underlying event (see
-  // generate-weekly-snapshot.mjs's INSTRUMENTATION registry). A missing
-  // mission entirely (m === {}) is the ordinary "no rows for this id" case
-  // and stays a real 0, same as before.
-  const mdN = (v) => (v === null ? '<span class="notavail">ölçülmüyordu</span>' : nf(v ?? 0));
+  const av = snap.availability || {};
+  // Review follow-up fix: availability is a SNAPSHOT-WIDE fact, never a
+  // per-mission one. A historical week where a capability "was not_collected"
+  // means every mission is unmeasured for it — including a mission that
+  // never produced a starts/completes row at all this week, where `m` is
+  // `{}` and `m.<field>` is `undefined`. Checking only `m.<field> === null`
+  // (as an earlier version of this function did) missed exactly that case:
+  // undefined silently fell through to "?? 0" and rendered a fabricated
+  // "0 ölçüldü" for a mission whose capability was never being measured.
+  // Deciding from `snap.availability` first, before ever looking at `m`,
+  // fixes it for every mission — present or absent from `missions` — at once.
+  const notCollected = (key) => av[key]?.status === "not_collected";
+  const mdN = (value, key) => (notCollected(key) ? '<span class="notavail">ölçülmüyordu</span>' : nf(value ?? 0));
   const ratio = starts > 0 ? completes / starts : null;
   const pack = META.missions[id]?.pack;
   const title = pack ? `Görev ${esc(id)} — ${esc(META.pack_labels[pack] || pack)}` : `Görev ${esc(id)}`;
@@ -807,21 +814,21 @@ function renderMissionDetail(snap, id) {
   const stats = [
     { n: nf(starts), l: "Başlatma olayları" },
     { n: nf(completes), l: "Tamamlama olayları" },
-    { n: mdN(m.exits), l: "Tamamlanmadan çıkış" },
+    { n: mdN(m.exits, "mission_unfinished_exit"), l: "Tamamlanmadan çıkış" },
     { n: ratio === null ? "—" : `${ratio.toFixed(2)}x`, l: "Bitirme sinyali" },
   ];
   if (hasV3(snap)) {
-    stats.push({ n: mdN(m.timer_starts), l: "Zamanlayıcı başlatma" });
-    stats.push({ n: mdN(m.help_opens), l: "Yardım sinyalleri" });
-    stats.push({ n: mdN(m.undos), l: "Geri alma sinyalleri" });
+    stats.push({ n: mdN(m.timer_starts, "timer_start_attribution"), l: "Zamanlayıcı başlatma" });
+    stats.push({ n: mdN(m.help_opens, "help_open_attribution"), l: "Yardım sinyalleri" });
+    stats.push({ n: mdN(m.undos, "mission_undo_attribution"), l: "Geri alma sinyalleri" });
   }
 
   const sourceRows = !hasV3(snap)
     ? `<div class="xread">${NOT_IN_SCHEMA} — entry-source keşif kaydı bu haftadan önce toplanmıyordu.</div>`
-    : unavailable(m.entry_sources)
+    : notCollected("mission_entry")
       ? `<div class="xread">${NOT_YET_COLLECTED} — entry-source keşif kaydı bu dönemde henüz ölçülmüyordu.</div>`
       : Object.entries(ENTRY_SOURCE_LABELS)
-          .map(([key, label]) => ({ label, n: m.entry_sources[key] ?? 0 }))
+          .map(([key, label]) => ({ label, n: m.entry_sources?.[key] ?? 0 }))
           .sort((a, b) => b.n - a.n)
           .map((e) => `<div class="mdSourceRow"><span>${esc(e.label)}</span><span>${nf(e.n)}</span></div>`)
           .join("");

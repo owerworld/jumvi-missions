@@ -346,20 +346,67 @@ console.log("\n6 — /analiz renders unavailable as a message, true zero as 0, n
     const famHtml = ctx.document.getElementById("family").innerHTML;
     check("renderFamily shows real numeric zeros (not the unavailable message)", !famHtml.includes(NOT_COLLECTED_TEXT));
 
-    // (c) mission-detail: unavailable per-field vs. a mission with real zeros.
-    const snapMissionUnavailable = {
+    // (c) mission-detail: availability is a SNAPSHOT-WIDE decision, never
+    // inferred from one mission's row. Regression coverage for the
+    // absent-mission bug: an earlier version of renderMissionDetail decided
+    // "unavailable" purely from `m.<field> === null`, which missed a mission
+    // that never appears in `snap.missions` at all (`m` = `{}`,
+    // `m.<field>` = `undefined`) — that silently fell through to a
+    // fabricated "0 ölçüldü" instead of the honest unavailable message.
+    const notCollectedAvailability = {
+      mission_entry: { status: "not_collected", available_from: INSTRUMENTATION.LOCKED_V1 },
+      mission_unfinished_exit: { status: "not_collected", available_from: INSTRUMENTATION.LOCKED_V1 },
+      help_open_attribution: { status: "not_collected", available_from: INSTRUMENTATION.LOCKED_V1 },
+      mission_undo_attribution: { status: "not_collected", available_from: INSTRUMENTATION.LOCKED_V1 },
+    };
+
+    // (A) historical v3, the selected mission DOES have a row this week
+    // (real starts/completes), but its Locked-v1-only fields are null.
+    const snapHistoricalPresent = {
       snapshot_schema: 3,
+      availability: notCollectedAvailability,
       missions: { 1: { starts: 5, completes: 2, exits: null, entry_sources: null, timer_starts: null, help_opens: null, undos: null } },
     };
     setGlobal("META", missionMeta);
-    ctx.renderMissionDetail(snapMissionUnavailable, "1");
-    const mdHtml1 = ctx.document.getElementById("missionDetail").innerHTML;
-    check("renderMissionDetail shows the unavailable marker for a null per-mission field", mdHtml1.includes("notavail"));
-    check("renderMissionDetail: no bare \"null\" leaked into rendered HTML", !hasBareNull(mdHtml1), mdHtml1);
-    check("renderMissionDetail: no \"NaN\" leaked into rendered HTML", !hasNaN(mdHtml1), mdHtml1);
+    ctx.renderMissionDetail(snapHistoricalPresent, "1");
+    const mdA = ctx.document.getElementById("missionDetail").innerHTML;
+    check("(A) present mission, historical week: unavailable marker shown", mdA.includes("notavail"));
+    check("(A) no bare \"null\" leaked into rendered HTML", !hasBareNull(mdA), mdA);
+    check("(A) no \"NaN\" leaked into rendered HTML", !hasNaN(mdA), mdA);
 
+    // (B) historical v3, the selected mission has NO row at all this week —
+    // absent from snap.missions entirely. This is the regression case: it
+    // must still show unavailable, never a fabricated 0.
+    const snapHistoricalAbsent = {
+      snapshot_schema: 3,
+      availability: notCollectedAvailability,
+      missions: { 1: { starts: 5, completes: 2, exits: null, entry_sources: null, timer_starts: null, help_opens: null, undos: null } },
+    };
+    setGlobal("META", missionMeta);
+    ctx.renderMissionDetail(snapHistoricalAbsent, "2");
+    const mdB = ctx.document.getElementById("missionDetail").innerHTML;
+    check("(B) absent mission, historical week: unavailable marker shown (not a fabricated 0)", mdB.includes("notavail"));
+    check("(B) absent mission, historical week: entry-source table shows the unavailable message, not a zeroed table", mdB.includes(NOT_COLLECTED_TEXT));
+    check("(B) no bare \"null\" leaked into rendered HTML", !hasBareNull(mdB), mdB);
+    check("(B) no \"NaN\" leaked into rendered HTML", !hasNaN(mdB), mdB);
+
+    // (C) post-cutoff v3 (empty availability — everything fully measured),
+    // the selected mission has NO row this week: a genuine, legitimate 0.
+    const snapPostCutoffAbsent = {
+      snapshot_schema: 3,
+      availability: {},
+      missions: { 1: { starts: 5, completes: 2, exits: 0, entry_sources: Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 0])), timer_starts: 0, help_opens: 0, undos: 0 } },
+    };
+    setGlobal("META", missionMeta);
+    ctx.renderMissionDetail(snapPostCutoffAbsent, "2");
+    const mdC = ctx.document.getElementById("missionDetail").innerHTML;
+    check("(C) absent mission, post-cutoff week: shows a real numeric 0, not the unavailable message", mdC.includes(">0<") && !mdC.includes("notavail"));
+
+    // True-zero-with-a-present-mission still renders as 0 (unchanged from
+    // before this fix).
     const snapMissionZero = {
       snapshot_schema: 3,
+      availability: {},
       missions: { 1: { starts: 5, completes: 2, exits: 0, entry_sources: Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 0])), timer_starts: 0, help_opens: 0, undos: 0 } },
     };
     setGlobal("META", missionMeta);
@@ -367,6 +414,126 @@ console.log("\n6 — /analiz renders unavailable as a message, true zero as 0, n
     const mdHtml2 = ctx.document.getElementById("missionDetail").innerHTML;
     check("renderMissionDetail shows a real numeric 0 for a true-zero per-mission field", mdHtml2.includes(">0<"));
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+console.log("\n9 — pre-FAZ1 week: every field EVENT_CUTOFF actually claims to gate is null\n");
+// Review follow-up: EVENT_CUTOFF/ATTRIBUTION_CUTOFF were claiming coverage
+// buildSnapshot did not enforce (e.g. app_open/mission_start/help_open/
+// timer_start/hub3d/... would still have reported Number(0) for a week
+// entirely before the product existed). 2026-31 (07-27 → 08-02) is fully
+// before EVERY registered cutoff, including FAZ1 itself.
+{
+  const preAll = snapshotForWeek(2026, 31, { missions: missionWith({ exits: 3, timer_starts: 2, help_opens: 1, undos: 1 }) });
+
+  // One extractor per EVENT_CUTOFF key — several genuinely share an
+  // extractor (the 11 FEATURE_EVENTS all live in one `features` object,
+  // gated as one unit; the 5 family-layer events all live in `family`).
+  const eventOutputs = {
+    app_open: (s) => s.app_opens,
+    mission_start: (s) => s.mission_starts,
+    mission_complete: (s) => s.mission_completes,
+    help_open: (s) => s.help_opens,
+    player_count: (s) => s.player_count,
+    app_first_open: (s) => s.app_first_opens,
+    pack_view: (s) => s.packs["Reflex Rush"].views,
+    pack_complete: (s) => s.packs["Reflex Rush"].completed_pack,
+    timer_start: (s) => s.features,
+    return_visit: (s) => s.return_visits,
+    hub3d: (s) => s.hub3d,
+    dashboard_open: (s) => s.features,
+    missionbook_get: (s) => s.features,
+    profile_add: (s) => s.features,
+    progress_reset: (s) => s.features,
+    badge_earned: (s) => s.features,
+    certificate_made: (s) => s.features,
+    score_saved: (s) => s.features,
+    share_tap: (s) => s.features,
+    daily_pick_tap: (s) => s.features,
+    speak_on: (s) => s.features,
+    welcome_complete: (s) => s.activation_milestones.welcome_complete,
+    quickplay_start: (s) => s.legacy,
+    team_create: (s) => s.family,
+    team_switch: (s) => s.family,
+    profile_delete: (s) => s.family,
+    mission_undo: (s) => s.family,
+    level_up: (s) => s.family,
+    mission_entry: (s) => s.mission_entry_sources,
+    mission_unfinished_exit: (s) => s.missions["1"]?.exits,
+    product_care_open: (s) => s.product_care_topics,
+    home_add_tap: (s) => s.activation_milestones.home_add_tap,
+    standalone_open: (s) => s.activation_milestones.standalone_open,
+    first_mission_start: (s) => s.activation_milestones.first_mission_start,
+    first_mission_complete: (s) => s.activation_milestones.first_mission_complete,
+  };
+
+  for (const key of Object.keys(EVENT_CUTOFF)) {
+    check(`EVENT_CUTOFF.${key} has a mapped output decision in this test`, key in eventOutputs);
+  }
+  for (const key of Object.keys(eventOutputs)) {
+    check(`eventOutputs.${key} corresponds to a real EVENT_CUTOFF entry (no stale test mapping)`, key in EVENT_CUTOFF);
+  }
+  for (const [key, extract] of Object.entries(eventOutputs)) {
+    check(`EVENT_CUTOFF.${key}: pre-FAZ1 week nulls its output field`, extract(preAll) === null,
+      `cutoff=${EVENT_CUTOFF[key]} got=${JSON.stringify(extract(preAll))}`);
+  }
+
+  const postAll = snapshotForWeek(2026, 36, { missions: missionWith({ exits: 3, timer_starts: 2, help_opens: 1, undos: 1 }) });
+  for (const [key, extract] of Object.entries(eventOutputs)) {
+    check(`EVENT_CUTOFF.${key}: fully post-cutoff week keeps its real (non-null) value`, extract(postAll) !== null);
+  }
+}
+
+console.log("\n10 — registry consistency: every ATTRIBUTION_CUTOFF key has an enforced output decision\n");
+{
+  const attributionOutputs = {
+    timer_start: (s) => s.missions["1"]?.timer_starts,
+    mission_entry: (s) => s.missions["1"]?.entry_sources,
+    help_open: (s) => s.missions["1"]?.help_opens,
+    mission_undo: (s) => s.missions["1"]?.undos,
+  };
+  for (const key of Object.keys(ATTRIBUTION_CUTOFF)) {
+    check(`ATTRIBUTION_CUTOFF.${key} has a mapped output decision in this test`, key in attributionOutputs);
+  }
+
+  // Pre-timer-attribution week behavior: 2026-31 is before FAZ2 (timer_start's
+  // own cutoff, and therefore its attribution's too — the two are identical,
+  // "carried a mission id from day one"), so a mission WITH a real row must
+  // still show timer_starts as null, not the row's real number.
+  const preTimerAttribution = snapshotForWeek(2026, 31, { missions: missionWith({ timer_starts: 7 }) });
+  check("pre-FAZ2 week: missions[1].timer_starts is null even though the mission has a row",
+    preTimerAttribution.missions["1"].timer_starts === null);
+
+  const preAllAttribution = snapshotForWeek(2026, 31, {
+    missions: missionWith({ timer_starts: 5, entry_sources: Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 1])), help_opens: 2, undos: 1 }),
+  });
+  for (const [key, extract] of Object.entries(attributionOutputs)) {
+    check(`ATTRIBUTION_CUTOFF.${key}: fully pre-cutoff week nulls its output field`, extract(preAllAttribution) === null,
+      `cutoff=${ATTRIBUTION_CUTOFF[key]} got=${JSON.stringify(extract(preAllAttribution))}`);
+  }
+  const postAllAttribution = snapshotForWeek(2026, 36, {
+    missions: missionWith({ timer_starts: 5, entry_sources: Object.fromEntries(MISSION_ENTRY_SOURCES.map((s) => [s, 1])), help_opens: 2, undos: 1 }),
+  });
+  for (const [key, extract] of Object.entries(attributionOutputs)) {
+    check(`ATTRIBUTION_CUTOFF.${key}: fully post-cutoff week keeps its real (non-null) value`, extract(postAllAttribution) !== null);
+  }
+}
+
+console.log("\n11 — one week, two different partial cutoffs (2026-32, straddles FAZ1 AND FAZ2)\n");
+{
+  // 2026-32 = 08-03 → 08-09. FAZ1 (08-07T00:03:48Z) and FAZ2
+  // (08-07T23:55:47Z) both fall inside this single week, ~24h apart —
+  // proof that two distinct registered cutoffs can each be independently
+  // "partial" for the same week with two different available_from instants.
+  const snap = snapshotForWeek(2026, 32, {
+    counts: { app_open: 9, mission_start: 6, mission_complete: 4, app_first_open: 3 },
+  });
+  check("FAZ1-gated app_open is partial", snap.availability.app_open?.status === "partial");
+  checkEqual("app_open.available_from is the FAZ1 instant", snap.availability.app_open?.available_from, INSTRUMENTATION.FAZ1);
+  check("FAZ2-gated app_first_open is partial", snap.availability.app_first_open?.status === "partial");
+  checkEqual("app_first_open.available_from is the FAZ2 instant (later than FAZ1, same week)", snap.availability.app_first_open?.available_from, INSTRUMENTATION.FAZ2);
+  checkEqual("app_opens keeps its real partial-week count", snap.app_opens, 9);
+  checkEqual("app_first_opens keeps its real partial-week count", snap.app_first_opens, 3);
 }
 
 if (failures) {

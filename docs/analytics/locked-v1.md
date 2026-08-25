@@ -361,9 +361,16 @@ always meant — measured, and nobody triggered it.
 ### The instrumentation registry
 
 `tools/generate-weekly-snapshot.mjs` carries an `INSTRUMENTATION` map of
-named cutoffs, each the exact **production deploy instant** (the commit that
-reached `main`, not a PR branch's own authored timestamp — a branch can sit
-for days before anything on it is live):
+named cutoffs, each a **main-merge cutoff** — deliberately not called an
+"exact deploy instant": git history proves when a commit reached `main`, not
+the precise moment Cloudflare's edge began serving it. This repo's own
+deploy pipeline observably completes within about a minute of a merge (see
+`.github/workflows/deploy-health-check.yml`'s post-merge run), and can only
+ever finish at or after that merge, never before — so using the merge
+instant as the boundary can only ever *under*-count "available" time. It
+never misclassifies a period that wasn't really live yet as available. Each
+instant is the real merge commit, not a PR branch's own authored timestamp —
+a branch can sit for days before anything on it is live:
 
 | Cutoff | Instant | Commit | Gates |
 |---|---|---|---|

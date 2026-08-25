@@ -137,10 +137,18 @@ export const PRODUCT_CARE_TOPICS = [
  * mission_entry_sources: {today:0, browse:0, ...} looks like a dead feature,
  * when the honest answer is "mission_entry did not exist yet."
  *
- * Every cutoff below is the exact PRODUCTION deploy instant — the commit that
- * actually reached main, not a PR branch's own authored timestamp (a PR sits
- * on a branch, possibly for days, before anything downstream of its commits
- * is live) — verified with `git log -S"<event name>" -- src/worker.js`:
+ * Every cutoff below is a MAIN-MERGE CUTOFF, not a verified Cloudflare
+ * deploy-completion timestamp — git history proves when a commit reached
+ * main, not the exact instant the Worker began serving it. Deliberately
+ * conservative rather than invented: the actual edge rollout can only ever
+ * complete at or shortly after its merge (this repo's own deploy pipeline
+ * observably finishes within roughly a minute — see
+ * .github/workflows/deploy-health-check.yml), never before it, so treating
+ * the merge instant as the boundary can only ever UNDER-count "available"
+ * time. It never mis-classifies a truly not-yet-live period as available.
+ * Each merge instant is real, not a PR branch's own authored timestamp (a
+ * branch can sit for days before anything on it is live) — verified with
+ * `git log -S"<event name>" -- src/worker.js`:
  *
  *   FAZ1      2026-08-07T00:03:48Z  43d7283  "feat(analytics): minimal
  *             5-event beacon on Workers Analytics Engine (Faz 1 / 1.2)"
@@ -163,7 +171,9 @@ export const PRODUCT_CARE_TOPICS = [
  *             attribution, added much later), level_up
  *   LOCKED_V1 2026-08-25T13:03:32Z  0d95331  PR #37's MERGE commit (the
  *             branch's own commits are dated 2026-08-24; nothing on that
- *             branch was live in production until this merge deployed) —
+ *             branch could reach production before this merge — the actual
+ *             deploy completed shortly after, confirmed green by
+ *             .github/workflows/deploy-health-check.yml the same run) —
  *             mission_entry, mission_unfinished_exit, product_care_open,
  *             home_add_tap, standalone_open, first_mission_start,
  *             first_mission_complete, AND the help_open / mission_undo
@@ -922,7 +932,7 @@ export function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBef
   const familyStatus = track("family", INSTRUMENTATION.FAZ2F);
   const helpAttrStatus = track("help_open_attribution", ATTRIBUTION_CUTOFF.help_open);
   const undoAttrStatus = track("mission_undo_attribution", ATTRIBUTION_CUTOFF.mission_undo);
-  track("timer_start_attribution", ATTRIBUTION_CUTOFF.timer_start);
+  const timerAttrStatus = track("timer_start_attribution", ATTRIBUTION_CUTOFF.timer_start);
   // activation_milestones mixes two different cutoffs in ONE object —
   // welcome_complete (FAZ2B) vs. the four genuinely-new Locked v1 milestones
   // — so every key is tracked and gated independently instead of treating
@@ -931,6 +941,37 @@ export function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBef
   for (const ev of ACTIVATION_MILESTONE_EVENTS) {
     activationStatus[ev] = track(ev, EVENT_CUTOFF[ev]);
   }
+
+  // Review follow-up — the registry was claiming coverage for FAZ1/FAZ2
+  // events (app_open, mission_start, help_open, timer_start, hub3d, ...)
+  // that this function was not actually enforcing: a week entirely before
+  // Faz 1 existed would still have reported Number(0) for every one of
+  // them. Every remaining EVENT_CUTOFF key gets its own explicit gating
+  // decision below — tracked individually, even where several share one
+  // instant, so `tools/check-snapshot-availability.mjs` can assert that
+  // no registered cutoff is ever silently unused. In practice these only
+  // ever matter for a week that predates this product's own launch
+  // (2026-08-07) — every real 2026-33/2026-34-style backfill is already
+  // well past FAZ1/FAZ2 and is untouched by any of this.
+  const appOpenStatus = track("app_open", EVENT_CUTOFF.app_open);
+  const missionStartStatus = track("mission_start", EVENT_CUTOFF.mission_start);
+  const missionCompleteStatus = track("mission_complete", EVENT_CUTOFF.mission_complete);
+  const helpOpenStatus = track("help_open", EVENT_CUTOFF.help_open);
+  const playerCountStatus = track("player_count", EVENT_CUTOFF.player_count);
+  const appFirstOpenStatus = track("app_first_open", EVENT_CUTOFF.app_first_open);
+  const packViewStatus = track("pack_view", EVENT_CUTOFF.pack_view);
+  const packCompleteStatus = track("pack_complete", EVENT_CUTOFF.pack_complete);
+  const returnVisitStatus = track("return_visit", EVENT_CUTOFF.return_visit);
+  const hub3dStatus = track("hub3d", EVENT_CUTOFF.hub3d);
+  // `features` is one flat object covering all of FEATURE_EVENTS (11 events)
+  // plus timer_start's own EVENT existence — every one of them shares the
+  // FAZ2 instant (see EVENT_CUTOFF), so one status covers the whole object,
+  // the same pattern as `family` for FAZ2F. timer_start's separate
+  // per-mission ATTRIBUTION (timerAttrStatus, above) is a distinct
+  // capability at the same instant, with no real gap — it just happens to
+  // have never had one.
+  const featuresStatus = track("features", EVENT_CUTOFF.timer_start);
+  const quickplayStatus = track("quickplay_start", EVENT_CUTOFF.quickplay_start);
 
   // Every mission gets a zero-filled entry_sources/exits/timer_starts/
   // help_opens/undos even with zero rows for that field — a reader should
@@ -947,6 +988,7 @@ export function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBef
     if (exitStatus === "not_collected") entry.exits = null;
     if (helpAttrStatus === "not_collected") entry.help_opens = null;
     if (undoAttrStatus === "not_collected") entry.undos = null;
+    if (timerAttrStatus === "not_collected") entry.timer_starts = null;
   }
 
   // Mission ids are numeric strings; sort them as numbers so 9 precedes 10.
@@ -954,54 +996,67 @@ export function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBef
     [...missions.entries()].sort((a, b) => Number(a[0]) - Number(b[0])),
   );
 
-  // Pack rollup: views and completed_pack come straight off their events,
-  // starts/completes are summed from the missions that belong to the pack.
+  // Pack rollup: views and completed_pack come straight off their events
+  // (FAZ2 — pack_view/pack_complete), starts/completes are summed from the
+  // missions that belong to the pack (FAZ1 — mission_start/mission_complete).
+  // Two different cutoffs inside one object, same treatment as
+  // activation_milestones: each field gated independently, never both
+  // assumed available just because the object exists.
   const packs = {};
   for (const key of meta.pack_keys) {
     packs[key] = {
-      views: packViews.get(key) ?? 0,
-      starts: 0,
-      completes: 0,
-      completed_pack: packCompletes.get(key) ?? 0,
+      views: packViewStatus === "not_collected" ? null : (packViews.get(key) ?? 0),
+      starts: missionStartStatus === "not_collected" ? null : 0,
+      completes: missionCompleteStatus === "not_collected" ? null : 0,
+      completed_pack: packCompleteStatus === "not_collected" ? null : (packCompletes.get(key) ?? 0),
     };
   }
   for (const [id, entry] of missions) {
     const labels = meta.missions[id];
     if (!labels || !packs[labels.pack]) continue;
-    packs[labels.pack].starts += entry.starts;
-    packs[labels.pack].completes += entry.completes;
+    if (packs[labels.pack].starts !== null) packs[labels.pack].starts += entry.starts;
+    if (packs[labels.pack].completes !== null) packs[labels.pack].completes += entry.completes;
   }
 
+  // by_* is entirely a share-of-mission_start computation — meaningless
+  // (and, worse, a fabricated "0% everywhere" from an empty `missions` map)
+  // for a week that never had mission_start at all.
   const crossReads = Object.fromEntries(
-    Object.entries(CROSS_READS).map(([out, field]) => [out, crossRead(missions, meta, field)]),
+    Object.entries(CROSS_READS).map(([out, field]) => [
+      out,
+      missionStartStatus === "not_collected" ? null : crossRead(missions, meta, field),
+    ]),
   );
 
   return {
     week: weekId,
     period_start: isoDate(mondayMs),
     period_end: isoDate(mondayMs + 6 * DAY_MS),
-    app_opens: counts.app_open,
-    mission_starts: counts.mission_start,
-    mission_completes: counts.mission_complete,
-    // null, not 0: with no starts there is no ratio to report, and 0 would
-    // read as "nobody finished anything".
+    app_opens: appOpenStatus === "not_collected" ? null : counts.app_open,
+    mission_starts: missionStartStatus === "not_collected" ? null : counts.mission_start,
+    mission_completes: missionCompleteStatus === "not_collected" ? null : counts.mission_complete,
+    // null, not 0: either FAZ1 hadn't happened yet (nothing to ratio), or
+    // there simply were no starts this week — 0 would read as "nobody
+    // finished anything" in both cases, which is only true for the second.
     recorded_completion_ratio:
-      counts.mission_start > 0
-        ? Math.round((counts.mission_complete / counts.mission_start) * 100) / 100
-        : null,
-    help_opens: helpOpens,
-    player_count: playerCount,
+      missionStartStatus === "not_collected" || missionCompleteStatus === "not_collected"
+        ? null
+        : counts.mission_start > 0
+          ? Math.round((counts.mission_complete / counts.mission_start) * 100) / 100
+          : null,
+    help_opens: helpOpenStatus === "not_collected" ? null : helpOpens,
+    player_count: playerCountStatus === "not_collected" ? null : playerCount,
 
     // Reach and retention — the two numbers app_opens alone cannot give.
     // See the methodology note: app_first_opens is directional, not a headcount.
-    app_first_opens: counts.app_first_open,
-    return_visits: returnVisits,
+    app_first_opens: appFirstOpenStatus === "not_collected" ? null : counts.app_first_open,
+    return_visits: returnVisitStatus === "not_collected" ? null : returnVisits,
 
     packs,
     missions: missionsSorted,
     ...crossReads,
-    features,
-    hub3d,
+    features: featuresStatus === "not_collected" ? null : features,
+    hub3d: hub3dStatus === "not_collected" ? null : hub3d,
 
     // Schema v3 — Locked v1 R&D dashboard follow-up. Each field below is
     // `null`, not the real object, when `availability` (further down) marks
@@ -1015,7 +1070,10 @@ export function buildSnapshot({ weekId, mondayMs, data, generatedAt, excludedBef
     family: familyStatus === "not_collected" ? null : family,
     mission_entry_sources: missionEntryStatus === "not_collected" ? null : missionEntrySources,
     product_care_topics: productCareStatus === "not_collected" ? null : productCareTopics,
-    legacy,
+    // LEGACY_EVENTS is just quickplay_start today, so one status covers the
+    // whole object — revisit this if LEGACY_EVENTS ever grows to include an
+    // event with a different cutoff.
+    legacy: quickplayStatus === "not_collected" ? null : legacy,
     // How much of this week's help_open/mission_undo could be tied to a
     // mission (src/worker.js only started accepting the id in the Locked v1
     // review follow-up). A `null` sub-object below means the CAPABILITY
