@@ -72,13 +72,32 @@ jobs:
       - name: Check for a new/changed snapshot
         id: diff
         run: |
-          if git diff --quiet -- data/snapshots; then
+          # A brand-new week's snapshot file (data/snapshots/YYYY-WW.json) is
+          # UNTRACKED the first time it's generated — `git diff` (staged vs
+          # working tree for TRACKED files only) never sees it, so the week
+          # extraction used to come up empty on every genuine backfill of a
+          # new week, even though data/snapshots/index.json (tracked, always
+          # rewritten alongside the snapshot) DID show up as changed. That
+          # produced changed=true with week="", which went on to build the
+          # branch name "snapshot/" and fail. `git status --porcelain
+          # --untracked-files=all` sees both tracked modifications and new
+          # untracked files, so the week is found regardless of whether this
+          # run is a first-time backfill or a re-run over an existing file.
+          changes=$(git status --porcelain --untracked-files=all -- data/snapshots)
+          if [ -z "$changes" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            week=$(git diff --name-only -- data/snapshots | grep -oE '[0-9]{4}-[0-9]{2}' | head -1)
-            echo "week=$week" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          week=$(printf '%s\n' "$changes" | grep -oE '[0-9]{4}-[0-9]{2}' | head -1)
+          # Fail closed: a change with no resolvable ISO week must never reach
+          # the next step and build "snapshot/<empty>" as a branch name.
+          if [[ ! "$week" =~ ^[0-9]{4}-[0-9]{2}$ ]]; then
+            echo "::error::snapshot changed but ISO week could not be resolved"
+            printf '%s\n' "$changes"
+            exit 1
+          fi
+          echo "week=$week" >> "$GITHUB_OUTPUT"
 
       - name: Open PR with the new snapshot
         if: steps.diff.outputs.changed == 'true'
