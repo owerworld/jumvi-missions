@@ -48,6 +48,7 @@ jobs:
           node --check tools/check-beacon-schema.mjs
           node --check tools/check-tr-invariants.mjs
           node --check tools/check-mission-entry-sources.mjs
+          node --check tools/check-snapshot-availability.mjs
 
       - name: Event coverage / drift guard
         run: node tools/check-event-coverage.mjs
@@ -63,3 +64,6 @@ jobs:
 
       - name: mission_entry source-map guard
         run: node tools/check-mission-entry-sources.mjs
+
+      - name: Historical backfill semantics guard
+        run: node tools/check-snapshot-availability.mjs

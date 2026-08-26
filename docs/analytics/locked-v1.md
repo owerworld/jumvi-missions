@@ -341,3 +341,108 @@ Or, from GitHub: Actions → "Weekly Analytics Snapshot" → **Run workflow** �
 set the `week` input to `2026-33` (then run again for `2026-34`). Each run
 opens (or force-pushes onto an already-open) a PR with the new snapshot —
 review the numbers, then merge; this workflow never merges on its own.
+
+## 13. Historical backfill semantics: availability vs. true zero
+
+`--week` can point at any past ISO week, including one that predates an
+event's own existence — 2026-33 and 2026-34 both predate Locked v1 entirely
+(merged 2026-08-25; those weeks close 2026-08-16 and 2026-08-23). Before this
+section's fix, a week like that queried WAE, got an empty result set for
+`mission_entry`/`product_care_open`/etc., and wrote the ordinary `Number(0)`
+— indistinguishable from "this was live and nobody used it." For product/R&D
+that distinction is not cosmetic: `mission_entry_sources: {today:0,
+browse:0, ...}` on a historical week reads as a dead feature, when the
+honest answer is "mission_entry did not exist yet."
+
+**The rule:** a field is `null`, never a fabricated `0`, for any portion of a
+week before its own production cutoff. `0` still means exactly what it
+always meant — measured, and nobody triggered it.
+
+### The instrumentation registry
+
+`tools/generate-weekly-snapshot.mjs` carries an `INSTRUMENTATION` map of
+named cutoffs, each a **main-merge cutoff** — deliberately not called an
+"exact deploy instant": git history proves when a commit reached `main`, not
+the precise moment Cloudflare's edge began serving it. This repo's own
+deploy pipeline observably completes within about a minute of a merge (see
+`.github/workflows/deploy-health-check.yml`'s post-merge run), and can only
+ever finish at or after that merge, never before — so using the merge
+instant as the boundary can only ever *under*-count "available" time. It
+never misclassifies a period that wasn't really live yet as available. Each
+instant is the real merge commit, not a PR branch's own authored timestamp —
+a branch can sit for days before anything on it is live:
+
+| Cutoff | Instant | Commit | Gates |
+|---|---|---|---|
+| `FAZ1` | 2026-08-07T00:03:48Z | `43d7283` | `app_open`, `mission_start`, `mission_complete`, `help_open`, `player_count` |
+| `FAZ2` | 2026-08-07T23:55:47Z | `91eb42a` | the 16-event batch, `app_first_open`, `timer_start` (with a mission id from day one) |
+| `FAZ2B` | 2026-08-15T14:26:03Z | `50c5e99` | `welcome_complete`, `quickplay_start` |
+| `FAZ2F` | 2026-08-17T08:11:29Z | `3b876f5` | `team_create`, `team_switch`, `profile_delete`, `mission_undo` (EVENT only), `level_up` |
+| `LOCKED_V1` | 2026-08-25T13:03:32Z | `0d95331` (PR #37's **merge**) | `mission_entry`, `mission_unfinished_exit`, `product_care_open`, `home_add_tap`, `standalone_open`, `first_mission_start`, `first_mission_complete`, AND the `help_open`/`mission_undo` mission-id **attribution** |
+
+Every instant was read off `git log -S"<event>" -- src/worker.js`, not
+guessed. Two fields can share the same event but different cutoffs — most
+notably `help_open` (event: `FAZ1`, mission-id attribution: `LOCKED_V1`) and
+`mission_undo` (event: `FAZ2F`, mission-id attribution: `LOCKED_V1`): the
+global `help_opens` reason breakdown and `family.mission_undo` count are
+real for any week back to their own event's cutoff, even on a week where the
+**per-mission** breakdown (`missions[*].help_opens`/`undos`,
+`attribution.help_open`/`mission_undo`) is unavailable. `EVENT_CUTOFF` and
+`ATTRIBUTION_CUTOFF` in the generator model these separately — see that
+file's own header comment for the full table, including every event this
+applies to.
+
+### Three states, not two
+
+For a given week `[monday, monday+7d)` and a field's cutoff instant:
+
+- **`available`** — cutoff at/before the week starts. Ordinary numbers,
+  exactly like today. No entry in `availability` at all — an always-live
+  field (nearly everything, for any real-world week) never appears there,
+  keeping the block bounded to genuine historical gaps.
+- **`not_collected`** — cutoff at/after the week ends. The field is `null`
+  in the snapshot; `availability.<key> = { status: "not_collected",
+  available_from: "<cutoff>" }`.
+- **`partial`** — cutoff falls inside the week. The real WAE number IS kept
+  (trustworthy: an event that didn't exist yet simply has no rows before the
+  cutoff, so there's no over- or under-counting risk) — only
+  `availability.<key> = { status: "partial", available_from: "<cutoff>" }`
+  is added, so a reader knows not to treat it as a full week's measurement.
+  2026-33 straddles `FAZ2B` (`welcome_complete` is partial there); 2026-34
+  straddles `FAZ2F` (`family.mission_undo`'s total is partial there, while
+  its mission-id attribution is still fully `not_collected` — `LOCKED_V1` is
+  weeks later).
+
+`activation_milestones` mixes two different cutoffs in one object
+(`welcome_complete` is `FAZ2B`, the other four are `LOCKED_V1`) — each key is
+tracked and gated independently rather than treating the object as
+all-or-nothing.
+
+### What this does NOT do
+
+It never touches a week's real, already-live totals. `app_opens`,
+`mission_starts`, `mission_completes`, `recorded_completion_ratio`, and the
+`help_opens` reason breakdown are exactly what WAE returned — 2026-34's real
+0.10 completion ratio (356 starts, 34 completes) stays 0.10; this is a
+review candidate for product to look at, not a bug this generator "fixes" by
+reshaping historical numbers.
+
+### `/analiz`
+
+`assets/analiz/index.html`'s `hasV3(snap)` already distinguished "wrong
+schema entirely" (a v2 file) from a v3 field's contents. `unavailable(v)`
+(`v === null`) is the second, narrower check every v3-aware renderer now
+makes before formatting a number: `renderEntrySources`, `renderProductSignals`,
+`renderFamily`, `renderDataHealth`'s unknown-source alert, and
+`renderMissionDetail`'s per-mission stats/entry-source rows. `null` renders
+as `bu dönemde henüz ölçülmüyordu` (or a topic-specific variant, e.g. "Product
+Care sinyalleri bu dönemde henüz toplanmıyordu"); a real numeric `0` still
+renders as `0`. A `partial` entry in `availability` additionally surfaces one
+small note naming the exact cutoff, via `partialNote()`, so a partially
+measured week is never silently presented as a fully measured one.
+
+See `tools/check-snapshot-availability.mjs` for the deterministic proof: a
+fully historical week, a fully post-cutoff week, a week straddling a cutoff,
+the `help_open`/`mission_undo` event-vs-attribution split, the real 2026-33/
+2026-34 totals staying untouched, and the dashboard rendering both states
+correctly with no `null`/`NaN` ever leaking into visible text.
