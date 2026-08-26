@@ -1,0 +1,561 @@
+{
+  "week": "2026-33",
+  "period_start": "2026-08-10",
+  "period_end": "2026-08-16",
+  "app_opens": 183,
+  "mission_starts": 635,
+  "mission_completes": 530,
+  "recorded_completion_ratio": 0.83,
+  "help_opens": {
+    "ball_stuck": 0,
+    "ball_hard_to_remove": 0,
+    "strap_uncomfortable": 0,
+    "need_more_space": 0,
+    "instructions_unclear": 1,
+    "mission_too_hard": 0
+  },
+  "player_count": {
+    "2": 1,
+    "3": 2,
+    "4": 0
+  },
+  "app_first_opens": 87,
+  "return_visits": {
+    "2": 19,
+    "3": 10,
+    "5": 7,
+    "10": 5
+  },
+  "packs": {
+    "Aim Master": {
+      "views": 88,
+      "starts": 179,
+      "completes": 127,
+      "completed_pack": 17
+    },
+    "Focus Control": {
+      "views": 28,
+      "starts": 128,
+      "completes": 103,
+      "completed_pack": 9
+    },
+    "Team Duo": {
+      "views": 22,
+      "starts": 82,
+      "completes": 88,
+      "completed_pack": 7
+    },
+    "Indoor Compact": {
+      "views": 18,
+      "starts": 82,
+      "completes": 80,
+      "completed_pack": 6
+    },
+    "Beach/Park": {
+      "views": 15,
+      "starts": 69,
+      "completes": 68,
+      "completed_pack": 6
+    },
+    "Reflex Rush": {
+      "views": 15,
+      "starts": 95,
+      "completes": 64,
+      "completed_pack": 5
+    }
+  },
+  "missions": {
+    "1": {
+      "starts": 17,
+      "completes": 13,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "2": {
+      "starts": 16,
+      "completes": 9,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "3": {
+      "starts": 21,
+      "completes": 12,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "4": {
+      "starts": 13,
+      "completes": 11,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "5": {
+      "starts": 18,
+      "completes": 13,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "6": {
+      "starts": 10,
+      "completes": 6,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "7": {
+      "starts": 42,
+      "completes": 27,
+      "exits": null,
+      "timer_starts": 4,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "8": {
+      "starts": 25,
+      "completes": 15,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "9": {
+      "starts": 22,
+      "completes": 18,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "10": {
+      "starts": 54,
+      "completes": 32,
+      "exits": null,
+      "timer_starts": 9,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "11": {
+      "starts": 21,
+      "completes": 16,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "12": {
+      "starts": 15,
+      "completes": 19,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "13": {
+      "starts": 24,
+      "completes": 16,
+      "exits": null,
+      "timer_starts": 4,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "14": {
+      "starts": 24,
+      "completes": 25,
+      "exits": null,
+      "timer_starts": 2,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "15": {
+      "starts": 19,
+      "completes": 19,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "16": {
+      "starts": 20,
+      "completes": 10,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "17": {
+      "starts": 18,
+      "completes": 18,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "18": {
+      "starts": 23,
+      "completes": 15,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "19": {
+      "starts": 17,
+      "completes": 16,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "20": {
+      "starts": 11,
+      "completes": 13,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "21": {
+      "starts": 19,
+      "completes": 17,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "22": {
+      "starts": 11,
+      "completes": 9,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "23": {
+      "starts": 15,
+      "completes": 18,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "24": {
+      "starts": 9,
+      "completes": 15,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "25": {
+      "starts": 18,
+      "completes": 15,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "26": {
+      "starts": 16,
+      "completes": 14,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "27": {
+      "starts": 9,
+      "completes": 14,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "28": {
+      "starts": 14,
+      "completes": 12,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "29": {
+      "starts": 9,
+      "completes": 15,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "30": {
+      "starts": 16,
+      "completes": 10,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "31": {
+      "starts": 12,
+      "completes": 11,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "32": {
+      "starts": 15,
+      "completes": 12,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "33": {
+      "starts": 9,
+      "completes": 10,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "34": {
+      "starts": 9,
+      "completes": 9,
+      "exits": null,
+      "timer_starts": 1,
+      "entry_sources": null,
+      "help_opens": null,
+      "undos": null
+    },
+    "35": {
+      "starts": 11,
+      "completes": 12,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    },
+    "36": {
+      "starts": 13,
+      "completes": 14,
+      "exits": null,
+      "entry_sources": null,
+      "timer_starts": 0,
+      "help_opens": null,
+      "undos": null
+    }
+  },
+  "by_age": {
+    "3+": 0.18,
+    "4+": 0.4,
+    "5+": 0.21,
+    "6+": 0.21
+  },
+  "by_difficulty": {
+    "1": 0.45,
+    "2": 0.55
+  },
+  "by_players": {
+    "2": 0.83,
+    "4": 0.07,
+    "2–3": 0.04,
+    "3–4": 0.06
+  },
+  "by_duration": {
+    "45s": 0.03,
+    "60s": 0.07,
+    "75s": 0.2,
+    "90s": 0.31,
+    "105s": 0.08,
+    "120s": 0.21,
+    "150s": 0.04,
+    "165s": 0.02,
+    "180s": 0.02,
+    "210s": 0.01
+  },
+  "by_setting": {
+    "indoor": 0.74,
+    "outdoor": 0.26
+  },
+  "features": {
+    "daily_pick_tap": 0,
+    "speak_on": 0,
+    "timer_start": 29,
+    "badge_earned": 94,
+    "certificate_made": 5,
+    "share_tap": 1,
+    "score_saved": 0,
+    "dashboard_open": 64,
+    "missionbook_get": 8,
+    "profile_add": 17,
+    "progress_reset": 8
+  },
+  "hub3d": {
+    "shown": 183,
+    "entered": 39,
+    "ready": 36,
+    "moved": 25,
+    "mission": 16,
+    "failed": 2,
+    "escaped": 0
+  },
+  "activation_milestones": {
+    "welcome_complete": 17,
+    "first_mission_start": null,
+    "first_mission_complete": null,
+    "home_add_tap": null,
+    "standalone_open": null
+  },
+  "family": null,
+  "mission_entry_sources": null,
+  "product_care_topics": null,
+  "legacy": {
+    "quickplay_start": 0
+  },
+  "attribution": {
+    "help_open": null,
+    "mission_undo": null
+  },
+  "availability": {
+    "mission_entry": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "mission_unfinished_exit": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "product_care_open": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "family": {
+      "status": "not_collected",
+      "available_from": "2026-08-17T08:11:29Z"
+    },
+    "help_open_attribution": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "mission_undo_attribution": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "welcome_complete": {
+      "status": "partial",
+      "available_from": "2026-08-15T14:26:03Z"
+    },
+    "first_mission_start": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "first_mission_complete": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "home_add_tap": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "standalone_open": {
+      "status": "not_collected",
+      "available_from": "2026-08-25T13:03:32Z"
+    },
+    "quickplay_start": {
+      "status": "partial",
+      "available_from": "2026-08-15T14:26:03Z"
+    }
+  },
+  "generated_at": "2026-08-26T13:30:09Z",
+  "dataset": "jumvi_events_v1",
+  "snapshot_schema": 3,
+  "excluded_before": null,
+  "methodology": [
+    "QR Activation Proxy — metodoloji notu:",
+    "Bu sayılar KİMLİKSİZ olay/sinyal toplamlarıdır: kalıcı bir sunucu taraflı",
+    "kimlik hiçbir zaman üretilmez. Ne benzersiz müşteri sayısıdır, ne",
+    "doğrulanmış cihaz sayısıdır — bunlar birer OLAY SAYIMIDIR. \"app_opens\"",
+    "toplam app_open olayı/kullanım sinyalidir (oturum sayısı, kişi sayısı",
+    "değil). \"app_first_opens\" yaklaşık ilk açılış sinyali sayısıdır:",
+    "tarayıcı verisi (localStorage) temizlenirse aynı cihaz yeniden \"ilk",
+    "açılış\" sinyali üretir, bir hanedeki birden fazla tarayıcı/cihaz birden",
+    "çok sinyal üretebilir, tek cihazı paylaşan birden fazla kişi tek sinyal",
+    "üretir. Hiçbiri kesin kullanıcı/cihaz sayısı değildir, yönsel",
+    "(directional) bir göstergedir.",
+    "",
+    "Üç sayı üç ayrı soruyu cevaplar ve birbirinin yerine kullanılamaz:",
+    "\"app_first_opens\" yaklaşık kaç ilk açılış sinyali görüldüğü (erişim),",
+    "\"app_opens\" toplam kullanım sinyali (kullanım), \"return_visits\"",
+    "localStorage tabanlı dönüş milestone olayları (tutundurma) — 2., 3., 5.",
+    "ve 10. ziyarette bir kez kaydedilir, aradaki ziyaretler hiç gönderilmez",
+    "ve hiçbirinde cihaz kimliği üretilmez.",
+    "",
+    "by_* kırılımları mission_start payıdır (toplamları 1.0). Kova başına",
+    "\"kaçı bitirildi\" oranı burada hazır durmaz ama türetilebilir: \"missions\"",
+    "her görevin start/complete sayısını, data/missions-meta.json her görevin",
+    "etiketlerini tutar.",
+    "",
+    "Sayımlar count() değil sum(_sample_interval) ile hesaplanır; Analytics",
+    "Engine örneklemeye başlarsa bu, ham satır sayısı yerine örneklemeye göre",
+    "düzeltilmiş tahmini verir.",
+    "",
+    "\"excluded_before\" null ise haftanın tamamı sayılmıştır; doluysa o andan",
+    "önceki satırlar sayıma girmemiştir ve gerekçesi aşağıda yazılıdır.",
+    "",
+    "generated_at, period_end'den önceyse hafta o an henüz kapanmamıştı ve",
+    "sayılar kısmi haftaya aittir.",
+    "",
+    "\"availability\" alanı, bu haftada HANGİ sinyallerin henüz toplanmıyor",
+    "(\"not_collected\") ya da hafta ortasında başladığını (\"partial\",",
+    "available_from ile) açıkça işaretler. Orada bir alan YOKSA o sinyal bu",
+    "hafta için tam ölçülüyordu demektir. \"not_collected\" bir alan snapshot'ta",
+    "null'dur — sıfır DEĞİLDİR: sıfır \"ölçüldü ve kimse tetiklemedi\" demek,",
+    "null \"bu dönemde henüz ölçülmüyordu\" demektir. Bkz.",
+    "docs/analytics/locked-v1.md, tarihsel geriye-doldurma semantiği bölümü."
+  ]
+}
