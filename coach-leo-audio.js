@@ -57,7 +57,10 @@
     18: "18-count-to-10-en.mp3",
     19: "19-round-robin-en.mp3",
     20: "20-crab-walk-relay-en.mp3",
-    21: "21-captain-says-en.mp3",
+    // 21 has no recording on purpose: mission 21 is now "Middle Defender",
+    // and the old "Captain Says" narration describes a different game. A
+    // missing id falls through to TTS, which reads the CURRENT copy, so the
+    // child hears the right rules until a new line is recorded.
     22: "22-spin-squad-en.mp3",
     23: "23-mix-it-up-en.mp3",
     24: "24-2v2-squad-count-en.mp3",
@@ -162,7 +165,6 @@
     9: "09-step-back-challenge-en.mp3",
     19: ["19-round-robin-a-en.mp3", "19-round-robin-b-en.mp3"],
     20: ["20-crab-walk-relay-a-en.mp3", "20-crab-walk-relay-b-en.mp3"],
-    21: ["21-captain-says-a-en.mp3", "21-captain-says-b-en.mp3"],
     22: ["22-spin-squad-a-en.mp3", "22-spin-squad-b-en.mp3"],
     23: ["23-mix-it-up-a-en.mp3", "23-mix-it-up-b-en.mp3"],
     24: ["24-2v2-squad-count-a-en.mp3", "24-2v2-squad-count-b-en.mp3"],
