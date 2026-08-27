@@ -7726,79 +7726,21 @@ html.theme--dark .offlineBanner{ color:#FFD8A8; background:#3a2810; border-botto
 }
 html.theme--dark .missionSafetyLine{ background:#2e2211; color:#FFD8A8; border-color:#5a4520; }
 
-/* ===== §3.2 — Undo bar (accidental-completion safety net) ===== */
-.undoBar{
-  position: fixed; left: 50%; transform: translateX(-50%);
-  bottom: calc(72px + env(safe-area-inset-bottom, 0px)); z-index: 60;
-  display: flex; align-items: center; gap: 14px;
-  padding: 10px 12px 10px 16px; border-radius: 14px;
-  background: #0F172A; color: #fff; box-shadow: 0 8px 24px rgba(15,23,42,0.34);
-  font-size: var(--fs-meta); font-weight: 700; max-width: calc(100vw - 32px);
-  animation: undoIn .22s ease;
-}
-.undoBar[hidden]{ display: none; }
-@keyframes undoIn{ from{ opacity:0; transform: translate(-50%, 8px); } to{ opacity:1; transform: translate(-50%, 0); } }
-.undoBarBtn{
-  flex: none; border: 0; cursor: pointer; font: inherit; font-weight: 900;
-  padding: 8px 16px; min-height: 40px; border-radius: 10px;
-  background: var(--brand-blue); color: var(--ink);
-}
-@media (prefers-reduced-motion: reduce){ .undoBar{ animation: none; } }
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * Inside the mission sheet, the undo bar is NOT a floating overlay.
- *
- * As a viewport-fixed bar it competed with the sheet's own action row, and no
- * single `bottom` value can settle that. Measured, with the bar up:
- *
- *   320x568   actions 419-487   bar 436-496   → 69% of "Next" covered
- *   568x320   actions 297-361   on a 320px-tall viewport — the action row
- *   844x390   actions 332-396   on a 390px-tall viewport — runs PAST the fold
- *
- * On landscape the actions already occupy the bottom of the screen and beyond,
- * so moving the bar down collides there, and moving it up collides on the tall
- * portrait screens. Tuning the number just relocates the bug.
- *
- * So while the sheet is open the bar joins the sheet's flow, directly above the
- * actions. Flow layout cannot overlap: "Undo" and "Next" get their own boxes at
- * every viewport by construction rather than by arithmetic. Outside the sheet
- * (a completion that lands with no sheet on screen) it stays the fixed overlay
- * it has always been.
- * ══════════════════════════════════════════════════════════════════════════*/
-#sheet .undoBar{
-  position: static;
-  left: auto;
-  bottom: auto;
-  transform: none;
-  margin: 0 auto 10px;
-  width: fit-content;
-  max-width: 100%;
-  flex: 0 0 auto;          /* a control: never squeezed to make room */
-  animation: undoInFlow .22s ease;
-}
-
 /* The celebration card is the one thing on this screen that can afford to give
  * way. Post-completion it renders 378px tall with min-height:auto, which in a
- * flex column means it CANNOT shrink — measured on a 568px-tall sheet it left
- * the undo bar at top=-12, and on a 320px-tall one at top=-134: both controls
- * pushed clean off the screen. It is presentation, so it yields and scrolls,
- * and the two controls below it keep their boxes. */
+ * flex column means it CANNOT shrink — measured on a 568px-tall sheet that
+ * pushed the controls below it clean off the screen. It is presentation, so it
+ * yields and scrolls, and the action row below keeps its box.
+ *
+ * This outlived the Undo bar it was first written for: the same arithmetic
+ * still decides whether "Next" and "Back to Play" are reachable on a short
+ * sheet, so removing it would put the action row back off-screen. */
 #sheet .missionXpReward{
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 #sheet .sheetActions{ flex: 0 0 auto; }
-
-/* The completion state re-orders the sheet with `order` (reward 1, actions 2,
-   header 3), so a bar left at the default 0 jumped to the very top of the
-   screen — above the celebration, under the toast. Same order as the reward
-   card puts it immediately after it, because equal-order items fall back to
-   DOM order and the bar is inserted after the reward and before the actions:
-   reward → Undo → Start/Done/Next. */
-#sheet.isComplete .undoBar{ order: 1; }
-@keyframes undoInFlow{ from{ opacity:0; transform: translateY(8px); } to{ opacity:1; transform: none; } }
-@media (prefers-reduced-motion: reduce){ #sheet .undoBar{ animation: none; } }
 
 /* §3.2 — hold-to-confirm fill on destructive Reset controls */
 .holdConfirm{ position: relative; overflow: hidden; }

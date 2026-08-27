@@ -101,7 +101,7 @@
        removes the swap flash on a cold visit. crossorigin is required on font
        preloads even same-origin, or the browser fetches it a second time. -->
   <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20260820-2">
+  <link rel="stylesheet" href="style.css?v=20260827-1">
   <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
   <link rel="stylesheet" href="jumvi-icons.css?v=20260821-1">
   <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
@@ -212,14 +212,6 @@
   <div class="offlineBanner" id="offlineBanner" role="status" aria-live="polite" hidden>
     <span class="offlineDot" aria-hidden="true"></span>
     Offline — missions still work. Island needs a connection.
-  </div>
-
-  <!-- §3.2 — Undo bar. Completing is one tap now (the hold-to-finish guard is
-       gone from the reward moment); this 5-second bar is the accidental-tap
-       safety net instead. Sits below the celebration, above the nav. -->
-  <div class="undoBar" id="undoBar" role="status" aria-live="polite" hidden>
-    <span class="undoBarText">Marked done</span>
-    <button class="undoBarBtn" id="undoBtn" type="button">Undo</button>
   </div>
 
   <!-- v32 app header. The FINAL v32 design has no logo/brand bar: every tab
@@ -1060,7 +1052,8 @@
            whether the timer was actually started), and it changes no timing,
            no thresholds and no handlers. The real flow is untouched:
            Start -> physical play -> gate opens -> one tap "We Finished!"
-           (#btnToggleDone) -> 5s undo bar. There is no hold-to-finish. -->
+           (#btnToggleDone). There is no hold-to-finish, and no Undo bar: the
+           same button becomes "Mark as Not Done" to reverse a completion. -->
       <section class="missionPlayPanel" id="missionPlayPanel" hidden aria-live="polite">
         <span class="playPanelChip" id="playPanelChip"></span>
         <img class="playPanelLeo" src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" width="120" height="120" alt="" aria-hidden="true" decoding="async">
@@ -1518,15 +1511,15 @@
 </div>
 
 <script src="confetti.min.js?v=20260524-29" defer></script>
-<script src="data.js?v=20260820-1" defer></script>
+<script src="data.js?v=20260827-1" defer></script>
   <script src="mission-coaching.js?v=20260814-4" defer></script>
   <!-- Must load BEFORE jumvi-mission-icons.js: that file's brandEquipment()
        runs on execution and swaps the placeholder paddle/ball in both icon
        sets, so these have to exist by then. -->
-<script src="jumvi-mission-icons.js?v=20260820-2" defer></script>
+<script src="jumvi-mission-icons.js?v=20260827-1" defer></script>
 <!-- Prerecorded English Coach Leo narration (live pilot). Must load BEFORE
      jumvi-redlight.js and app.js — both call window.CoachLeoAudio. -->
-<script src="coach-leo-audio.js?v=20260821-1" defer></script>
+<script src="coach-leo-audio.js?v=20260827-1" defer></script>
 <!-- Ambient audio system: world-ambience MUST load before music-scheduler
      (the scheduler looks up window.JumviWorldAmbience at start() time). -->
 <script src="jumvi-world-ambience.js?v=20260814-1" defer></script>
@@ -1534,7 +1527,7 @@
 <script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
 <script src="jumvi-redlight.js?v=20260819-1" defer></script>
 <script src="jumvi-art.js?v=20260805-1" defer></script>
-<script src="app.js?v=20260821-3" defer></script>
+<script src="app.js?v=20260827-1" defer></script>
 <!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
 <script src="leo-tour.js?v=20260722-1" defer></script>
 <script>

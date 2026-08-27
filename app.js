@@ -152,7 +152,8 @@ function trackEvent(name, props){
  *   team_create       { kind }    adult | sibling
  *   team_switch                   an existing team was made active again
  *   profile_delete                the EVENT only, mirroring profile_add
- *   mission_undo                  the 5s Undo was used on a completion
+ *   mission_undo                  retired with the 5s Undo bar; the client no
+ *                                 longer sends it, kept so history still resolves
  *   level_up          { level }   2..7, the ladder in XP_LEVELS
  *
  * LOCKED v1 — R&D DASHBOARD FOLLOW-UP. Answers "how do families find a
@@ -330,7 +331,7 @@ function lsSetDebounced(key, value, delay=500){
 }
 // Cancels a pending debounced write without replacing it. Needed wherever a
 // direct (non-debounced) write must win over an in-flight debounced one from
-// an earlier action on the SAME key — e.g. the 5s Undo restoring a streak key
+// an earlier action on the SAME key — e.g. a direct write restoring a key
 // that recordActivityToday() already queued a debounced write for.
 function cancelLsDebounced(key){
   if(_lsDebounceTimers.has(key)){
@@ -1220,8 +1221,6 @@ const sheet = document.getElementById("sheet");
 
 let _missionBackgroundRestore = null;
 let _missionReturnFocus = null;
-// #undoBar is intentionally excluded: it is hidden until completion, then it
-// must remain the one interactive safety action above the completion takeover.
 const MISSION_BACKGROUND_SELECTORS = [
   "#app-wrapper > .sticky",
   "#app-wrapper > .wrap",
@@ -1623,7 +1622,7 @@ function diffLabel(d){
  * `done` is already per-profile and is the source of truth, so:
  *   - existing families receive the correct XP immediately after this update,
  *   - replaying a completed mission cannot farm XP,
- *   - Undo / Mark as Not Done removes the XP automatically,
+ *   - Mark as Not Done removes the XP automatically,
  *   - backup/restore and progress reset need no new migration path.
  * Quick Play remains repeatable and does NOT award Mission XP.
  */
@@ -1901,11 +1900,6 @@ function openTeamSetupChildChooser(){
   closeTeamXpPicker();
   openProfileSheet();
 }
-function teamDoneSet(team){
-  if(!team) return new Set();
-  const raw = lsGetJSON(teamProgressPrefix(team.id) + "missions_done_v3", []);
-  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
-}
 /* ===== Family-wide reads =================================================
  * teamProgressPrefix() resolves an adult/friend team against the ACTIVE child,
  * so it cannot answer "what has my brother's team done?" — which is why the
@@ -1996,10 +1990,6 @@ function familyHasPlayed(){
   }catch(_){ return false; }
 }
 
-function personalDoneSet(){
-  const raw = lsGetJSON(_PP + "missions_done_v3", []);
-  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
-}
 function progressPreview(doneSet){
   const xp = xpFromDoneSet(doneSet);
   const info = xpLevelInfo(xp);
@@ -2640,14 +2630,6 @@ function buildSoftHints(ms){
   return hints;
 }
 
-function getWeekKey(d = new Date()){
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-  return `${date.getUTCFullYear()}-W${week}`;
-}
 
 function parseTimeSecs(timeStr){
   if(!timeStr) return 60;
@@ -2824,20 +2806,6 @@ function cycleTheme(){
   try{ window.dispatchEvent(new Event("themechange")); }catch(_){ }
 }
 
-function mapPackToCategory(pack){
-  if(pack === "Reflex Rush") return "Reflex";
-  if(pack === "Aim Master") return "Aim";
-  if(pack === "Focus Control") return "Focus";
-  if(pack === "Team Duo") return "Team";
-  if(pack === "Indoor Compact") return "Indoor";
-  return "Other";
-}
-function normalizePlayers(str){
-  const s = String(str || "");
-  if(/1/.test(s) && !/2|3|4|5|6/.test(s)) return "Solo";
-  if(/2/.test(s) && !/3|4|5|6|\+/.test(s)) return "2";
-  return "3+";
-}
 
 
 /* ===== Local date (streak + daily) ===== */
@@ -2952,21 +2920,6 @@ function recordActivityToday(){
   return true;
 }
 
-/* Public helper: freeze durumunu UI için */
-function getStreakFreezeStatus(){
-  refreshFreezeIfWeekChanged();
-  const s = getFreezeState();
-  return {
-    available: s.available,
-    lastUsedIso: s.lastUsedIso || "",
-    nextReplenishDays: (function(){
-      const today = new Date();
-      const dayOfWeek = today.getDay();
-      // Sonraki Pazartesi'ye kalan gün
-      return (dayOfWeek === 0) ? 1 : (8 - dayOfWeek);
-    })()
-  };
-}
 function renderStreakUI(animate=false){
   if(!streakPill) return;
   const sc = streakCount || 0;
@@ -3016,16 +2969,6 @@ function renderStreakUI(animate=false){
   }
 }
 
-function checkStreakWarning(){
-  if(streakCount <= 0) return;
-  const today = isoLocalDate();
-  if(lastActiveIso === today) return; // bugün zaten oynadı
-  // Streak kırılma riski — dün oynadıysa uyar
-  const yesterday = yesterdayIso(today);
-  if(lastActiveIso === yesterday){
-    setTimeout(()=> showToast("Coach Leo misses you! Play today to keep your streak going!"), 2000);
-  }
-}
 
 /* ===== Daily mission ===== */
 function hashFNV1a(str){
@@ -3578,13 +3521,6 @@ function renderList(){
 function remainingMissions(){
   return Math.max(0, missions.length - done.size);
 }
-function remainingText(){
-  const remaining = remainingMissions();
-  if(remaining <= 0) return "";
-  const done = missions.length - remaining;
-  if(done === 0) return "Complete all 36 missions to unlock.";
-  return `${done} / ${missions.length} done — keep going!`;
-}
 
 let _badgeUnlockTimer = null;
 
@@ -3795,9 +3731,12 @@ function updateBadges(){
   if(newlyUnlocked.length > 0 && done.size > 0){
     // Birden fazla unlock varsa en son kazanılanı göster.
     //
-    // The 5-second Undo control must remain usable for its entire promise.
-    // Badge unlock is a blocking modal, so it takes the stage only after that
-    // window closes; an actual Undo cancels this pending announcement below.
+    // Badge unlock is a blocking modal, so it is held back rather than thrown
+    // over the completion the child just earned. The 5.4s originally bought
+    // room for the 5-second Undo bar to live out its promise; the bar is gone,
+    // so this is now purely pacing between the completion and the modal. It is
+    // kept because changing celebration timing is a product decision, not a
+    // side effect of removing Undo.
     if(_badgeUnlockTimer) clearTimeout(_badgeUnlockTimer);
     _badgeUnlockTimer = setTimeout(()=>{
       _badgeUnlockTimer = null;
@@ -3925,20 +3864,6 @@ function updateProgress(options = {}){
   }
 }
 
-function renderShareCard(){
-  const card = document.getElementById("shareScoreCard");
-  if(!card) return;
-  if(done.size === 0){ card.style.display = "none"; return; }
-  card.style.display = "";
-  document.getElementById("shareScoreNum").textContent = done.size;
-  // Pick best unlocked badge (last in priority order)
-  let topBadge = null;
-  for(const b of BADGES){
-    if(b.check(done)) topBadge = b;
-  }
-  const badgeEl = document.getElementById("shareScoreBadge");
-  badgeEl.textContent = topBadge ? topBadge.name : "";
-}
 
 /** =======================
  * Modal
@@ -4057,8 +3982,7 @@ window.__jumviPlayProbe = function(){
     xp: (typeof xpFromDoneSet === "function" ? xpFromDoneSet(done) : null),
     streakCount, bestStreak, lastActiveIso,
     autoDoneOnEnd,
-    narrationPending: (typeof _missionNarrationPending !== "undefined" ? _missionNarrationPending : null),
-    undoBarVisible: !(document.getElementById("undoBar")?.hidden ?? true)
+    narrationPending: (typeof _missionNarrationPending !== "undefined" ? _missionNarrationPending : null)
   };
 };
 let timerCountdownInterval = null;
@@ -4406,15 +4330,6 @@ function markMissionNarrationHeard(ms){
   markMissionCoachRun(ms);
 }
 function ttsAuto(){ try{ return lsGet(TTS_AUTO_KEY, "1") === "1"; }catch(_){ return true; } }
-function autoReadMission(ms){
-  // Reads the mission name + first step, once, when a 3–5 mission opens. Must be
-  // called INSIDE the tap handler (openMission) so iOS allows speechSynthesis.
-  if(!soundOn) return;                       // shares the global mute guard
-  if(!("speechSynthesis" in window)) return;
-  const first = (ms.steps && ms.steps[0]) ? stripSpeechText(ms.steps[0]) : "";
-  const text = first ? `${stripSpeechText(ms.title)}. Step 1 — ${first}` : stripSpeechText(ms.title);
-  if(text) coachSpeak(text, { rate: 1.0 });
-}
 
 // ---- Spoken steps (Task 4c): tap Leo by the STEPS header → he reads the
 // steps in order, then the win condition. Second tap stops. No autoplay;
@@ -5313,14 +5228,6 @@ function closeMission(opts){
   toggleScoreTracker(false);
   // Tear down Red Light / Green Light caller overlay if it was running (mission 2)
   try{ if(window.JumviRedLight) window.JumviRedLight.stop(); }catch(_){ }
-  /* If an undo offer is still live, rescue the bar out of the sheet before the
-     sheet goes away — otherwise closing the sheet inside the five seconds would
-     take the only way to undo with it. Back on the body it is the fixed overlay
-     again, exactly as it behaves for a completion with no sheet on screen. */
-  if(_undoOffer){
-    const _ub = document.getElementById("undoBar");
-    if(_ub && _ub.parentNode !== document.body){ try{ document.body.appendChild(_ub); }catch(_){} }
-  }
   backdrop.classList.remove("show");
   backdrop.setAttribute("aria-hidden", "true");
   backdrop.inert = true;
@@ -5762,143 +5669,18 @@ btnClose.onclick = ()=>{ clickSound("click"); closeMission(); };
 backdrop.addEventListener("click",(e)=>{ if(e.target===backdrop){ clickSound("click"); closeMission(); } });
 backdrop.addEventListener("keydown",(e)=> handleDialogKeys(e, backdrop, closeMission));
 
-// §3.2 / Phase 2F fix 5 — 5-second Undo bar shown after an interactive
-// completion. This exists specifically for an accidental tap, so it must be a
-// TRUE transactional undo: everything the completion mutated (streak, best
-// streak, last-active date, badges, streak freeze, daily challenge) gets
-// rolled back exactly, not just the mission id. "Mark as Not Done" (used
-// later, outside this 5s window) intentionally does NOT rewind a historical
-// day's streak — only this immediate net does.
-function captureJourneySnapshot(){
-  return {
-    streakCount, bestStreak, lastActiveIso,
-    streak_count_v1: lsGet(STREAK_COUNT_KEY, null),
-    streak_best_v1: lsGet(STREAK_BEST_KEY, null),
-    streak_last_v1: lsGet(STREAK_LAST_KEY, null),
-    badges_unlocked_v1: lsGet(BADGES_UNLOCKED_KEY, null),
-    streak_freeze_v1: lsGet(STREAK_FREEZE_KEY, null),
-    daily_challenge_v1: lsGet(DAILY_CHALLENGE_KEY, null),
-    /* Undo rolls back the completion that earned the star, so it has to roll
-       back the family ledger too — otherwise one mis-tap plus an Undo would
-       burn the household's only star for the day with nothing to show. */
-    family_daily_star_v1: lsGet(FAMILY_DAILY_STAR_KEY, null)
-  };
-}
-function restoreLsRaw(key, raw){
-  // A direct write must win over any debounced write still in flight from
-  // the completion this snapshot is rolling back (persistStreak() etc.) —
-  // otherwise that late write lands after the restore and reintroduces the
-  // very state the undo just erased.
-  cancelLsDebounced(key);
-  try{
-    if(raw === null) localStorage.removeItem(key);
-    else localStorage.setItem(key, raw);
-  }catch(_){}
-}
-function restoreJourneySnapshot(snap){
-  if(!snap) return;
-  streakCount = setState("streakCount", snap.streakCount);
-  bestStreak = setState("bestStreak", snap.bestStreak);
-  lastActiveIso = setState("lastActiveIso", snap.lastActiveIso);
-  restoreLsRaw(STREAK_COUNT_KEY, snap.streak_count_v1);
-  restoreLsRaw(STREAK_BEST_KEY, snap.streak_best_v1);
-  restoreLsRaw(STREAK_LAST_KEY, snap.streak_last_v1);
-  restoreLsRaw(BADGES_UNLOCKED_KEY, snap.badges_unlocked_v1);
-  restoreLsRaw(STREAK_FREEZE_KEY, snap.streak_freeze_v1);
-  restoreLsRaw(DAILY_CHALLENGE_KEY, snap.daily_challenge_v1);
-  restoreLsRaw(FAMILY_DAILY_STAR_KEY, snap.family_daily_star_v1);
-}
-
-let _undoTimer = null;
-/* Which completion the Undo button currently belongs to, or null when the
- * offer has been used or has run out. The bar used to be closed by setting
- * bar.hidden alone, which hides it (.undoBar[hidden]{display:none}) but leaves
- * the click handler bound and the snapshot alive in its closure: the five
- * second promise was about visibility, not about capability, and a programmatic
- * click after the window still rolled a completion back. Nulling this is what
- * actually ends the offer. */
-let _undoOffer = null;
-
-/* Where the undo bar lives depends on whether the mission sheet is on screen.
+/* The 5-second Undo bar was removed in full. Reversing a completion is now
+ * only "Mark as Not Done" on the mission sheet, which by design returns the
+ * mission without rewinding the streak day it was earned on.
  *
- * Inside the sheet it belongs in the flow, directly above the action row, so
- * "Undo" and "Next" can never overlap — see the #sheet .undoBar rule in
- * style.css for the measurements that ruled out doing this with a `bottom`
- * value. Outside the sheet it stays the viewport-fixed overlay it has always
- * been, because there is no sheet to sit in.
+ * Everything the bar needed went with it: the journey snapshot that captured
+ * streak, best streak, last-active date, badges, streak freeze, the daily
+ * challenge counter and the family star ledger, and the restore path that
+ * rolled them back. Nothing else consumed any of it.
  *
- * The move always happens while the bar is HIDDEN, before its text is set.
- * That matters: this element is role="status" aria-live="polite", and moving a
- * live region with content in it can make a screen reader re-announce. Docking
- * first and revealing second keeps exactly one announcement per completion. */
-function dockUndoBar(){
-  const bar = document.getElementById("undoBar");
-  if(!bar) return;
-  const actions = document.querySelector("#sheet .sheetActions");
-  const sheetOpen = !!backdrop && backdrop.classList.contains("show") && !!actions;
-  const wanted = sheetOpen ? actions.parentNode : document.body;
-  if(bar.parentNode === wanted && (!sheetOpen || bar.nextElementSibling === actions)) return;
-  try{
-    if(sheetOpen) actions.parentNode.insertBefore(bar, actions);
-    else document.body.appendChild(bar);
-  }catch(_){}
-}
-
-function endUndoOffer(){
-  clearTimeout(_undoTimer);
-  _undoTimer = null;
-  _undoOffer = null;
-  const bar = document.getElementById("undoBar");
-  if(bar){
-    bar.hidden = true;
-    // Park it back on the body while hidden, so the next completion starts
-    // from a known place and a closing sheet never takes it away mid-offer.
-    try{ document.body.appendChild(bar); }catch(_){}
-  }
-}
-function showUndoBar(id, journeySnapshot){
-  const bar = document.getElementById("undoBar");
-  const btn = document.getElementById("undoBtn");
-  if(!bar || !btn) return;
-  dockUndoBar();
-  bar.hidden = false;
-  clearTimeout(_undoTimer);
-  // A new completion supersedes any older offer outright, so an expired or
-  // superseded snapshot can never be applied to the wrong mission.
-  _undoOffer = { id, snapshot: journeySnapshot };
-  _undoTimer = setTimeout(endUndoOffer, 5000);
-  btn.onclick = ()=>{
-    // Gone means gone: after the window, or after this offer has been used,
-    // there is nothing to undo even if something reaches the button.
-    if(!_undoOffer || _undoOffer.id !== id) return;
-    endUndoOffer();
-    if(done.has(id)){
-      if(_badgeUnlockTimer){ clearTimeout(_badgeUnlockTimer); _badgeUnlockTimer = null; }
-      done.delete(id);
-      if(_missionXpRewardMissionId === Number(id)) hideMissionXpReward();
-      bumpDoneVersion();
-      restoreJourneySnapshot(journeySnapshot);
-      persist();
-      renderList();
-      renderDailyChallenge();
-      if(typeof renderMissionPath === "function"){ try{ renderMissionPath(); }catch(_){} }
-      refreshFamilySurfaces();
-      clickSound("click");
-      // Re-renders the SAME sheet that is already open (an in-place undo, not
-      // a new discovery event) — suppress mission_entry entirely, don't just
-      // relabel it "unknown".
-      if(lastOpenedId === id) openMission(id, "unknown", { trackEntry: false });
-      showToast("Marked as not done");
-      trackEvent("Mission Undone", { id: id });
-      // How often a completion was a misfire, per mission. Locked v1 review
-      // follow-up: mission id now travels alongside this event (was
-      // deliberately omitted before) — still just the id, never a name,
-      // profile, or anything that could build a behaviour profile of a
-      // specific child.
-      beacon("mission_undo", { id: id });
-    }
-  };
-}
+ * The mission_undo beacon keeps its place in the event allowlist and in the
+ * Worker: the client no longer sends it, but the name still has to resolve
+ * for the history already sitting in the analytics store. */
 
 function markMissionDone(id, source="manual"){
   if(id==null || done.has(id)) return;
@@ -5910,10 +5692,6 @@ function markMissionDone(id, source="manual"){
   // Reward math is derived from the exact same unique-completion set as Home XP.
   const xpBefore = xpFromDoneSet(done);
   const levelBefore = xpLevelInfo(xpBefore);
-
-  // Phase 2F fix 5 — captured BEFORE this completion mutates streak/badges/
-  // daily state, so a 5s Undo can roll every side effect back exactly.
-  const journeySnapshot = captureJourneySnapshot();
 
   done.add(id);
   bumpDoneVersion();
@@ -5952,8 +5730,7 @@ function markMissionDone(id, source="manual"){
   const changed = recordActivityToday();
 
   /* The daily goal is counted here, inside the same transaction that already
-   * moves streak, badges and XP — so the Undo snapshot taken above rolls it
-   * back with everything else.
+   * moves streak, badges and XP.
    *
    * This call is new. bumpDailyChallenge() has existed for a long time with
    * ZERO call sites: measured on a clean profile, completing a real mission
@@ -5987,8 +5764,6 @@ function markMissionDone(id, source="manual"){
     });
   }
 
-  // §3.2 — offer a 5s Undo for interactive completions (not bulk/programmatic)
-  if(source === "manual" || source === "auto") showUndoBar(id, journeySnapshot);
   // Score özeti — eğer tracker açıksa ve skor varsa
   if(_scoreTrackerOpen && _currentScore > 0){
     showScoreSummary(id);
@@ -6054,10 +5829,8 @@ function markMissionDone(id, source="manual"){
       // bail if the kid already closed/navigated away manually in the meantime
       if(!backdrop.classList.contains("show") || lastOpenedId !== id) return;
       closeMission();
-      // Pass the completion that earned this walk. The hub waits for any
-      // reward overlay to clear before opening the next gate, and an Undo can
-      // land inside that wait — the walk must then be void, not merely
-      // retargeted.
+      // Pass the completion that earned this walk, so the hub can void the
+      // walk rather than merely retarget it if that completion stops standing.
       if(window._hub3dAdvance) window._hub3dAdvance(packKey, id);
     }, 1100);
   } else {
@@ -8069,7 +7842,6 @@ const HUB_BACKGROUND_SELECTORS = [
   "#app-wrapper > .sticky",
   "#app-wrapper > .wrap",
   "#offlineBanner",
-  "#undoBar",
   "#seasonalBackdrop",
   "#privacyBackdrop",
   "#profileBackdrop",
@@ -8475,6 +8247,24 @@ function levelNameFor(doneCount){
  *
  * Cheap enough to call on every progress mutation — these read localStorage
  * and write text, and they bail immediately when their elements are absent. */
+/* Kept deliberately, though nothing calls them today.
+ *
+ * These two are the only place the personal- and team-prefixed
+ * "missions_done_v3" keys are spelled out in app.js, and that spelling is part
+ * of the protected localStorage contract — tools/check-tr-invariants.mjs fails
+ * with a missing "<pp>missions_done_v3" the moment they go. Deleting them as
+ * dead code is exactly the mistake that check exists to catch. */
+function teamDoneSet(team){
+  if(!team) return new Set();
+  const raw = lsGetJSON(teamProgressPrefix(team.id) + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+
+function personalDoneSet(){
+  const raw = lsGetJSON(_PP + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+
 function refreshFamilySurfaces(){
   try{ if(typeof renderFamilyProgressCard === "function") renderFamilyProgressCard(); }catch(_){}
   try{ if(typeof renderFamilyInsights === "function") renderFamilyInsights(); }catch(_){}
@@ -8978,9 +8768,6 @@ function applyBrowseView(){
   renderMissionPath();
 }
 
-/* Geriye uyumluluk — eski JS bağlantıları için boş stub'lar */
-function getActiveBrowseView(){ return "path"; }
-function setActiveBrowseView(){ applyBrowseView(); }
 
 const PACK_TAGLINES = {
   "Reflex Rush":    "Lightning fast hands",
@@ -9516,94 +9303,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 });
 
-/** =======================
- * First-time Guided Tutorial (3-step spotlight)
- * ======================= */
-function showTutorial(){
-  if(lsGet(TUTORIAL_KEY, "0") === "1") return;
-  const overlay   = document.getElementById("tutorialOverlay");
-  const spotlight = document.getElementById("tutorialSpotlight");
-  const card      = document.getElementById("tutorialCard");
-  const stepEl    = document.getElementById("tutorialStep");
-  const titleEl   = document.getElementById("tutorialTitle");
-  const descEl    = document.getElementById("tutorialDesc");
-  const btnNextEl = document.getElementById("tutorialNext");
-  const btnSkipEl = document.getElementById("tutorialSkip");
-  if(!overlay || !spotlight || !card) return;
-
-  const steps = [
-    { selector: "#btnDailyPlay",
-      title: '<i class="jic jic-play" aria-hidden="true"></i> Today\'s Mission',
-      desc: "A fresh mission is picked for you each day. Tap here to start playing!" },
-    { selector: "#streakPill",
-      title: '<i class="jic jic-flame" aria-hidden="true"></i> Build Your Streak',
-      desc: "Play one mission every day to keep your streak alive. The longer it grows, the hotter it gets!" },
-    { selector: '.navTab[data-tab="stats"]',
-      title: '<i class="jic jic-chart-bar" aria-hidden="true"></i> Track Progress',
-      desc: "Tap Stats anytime to see weekly progress, badges earned, and the Champion Certificate." }
-  ];
-
-  let idx = 0;
-  const finish = (action)=>{
-    overlay.classList.remove("show");
-    overlay.setAttribute("aria-hidden","true");
-    lsSet(TUTORIAL_KEY, "1");
-    trackEvent("Tutorial " + (action||"completed"));
-  };
-
-  const positionSpotlight = ()=>{
-    const step = steps[idx];
-    const el = document.querySelector(step.selector);
-    if(!el){ next(); return; }
-    // Scroll target into view
-    try{ el.scrollIntoView({ behavior:"smooth", block:"center" }); }catch(_){}
-    setTimeout(()=>{
-      const r = el.getBoundingClientRect();
-      const pad = 8;
-      spotlight.style.left   = `${r.left - pad}px`;
-      spotlight.style.top    = `${r.top - pad}px`;
-      spotlight.style.width  = `${r.width + pad*2}px`;
-      spotlight.style.height = `${r.height + pad*2}px`;
-
-      // Card position: alta yer varsa altta, yoksa üstte
-      const vh = window.innerHeight;
-      const cardH = 160; // tahmin
-      const below = (r.bottom + 16 + cardH) < vh;
-      card.style.left = "16px";
-      card.style.right = "16px";
-      card.style.maxWidth = "320px";
-      card.style.margin = "0 auto";
-      if(below){
-        card.style.top = `${r.bottom + 14}px`;
-        card.style.bottom = "auto";
-      }else{
-        card.style.bottom = `${vh - r.top + 14}px`;
-        card.style.top = "auto";
-      }
-    }, 360);
-
-    stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
-    titleEl.innerHTML = step.title;
-    descEl.textContent  = step.desc;
-    btnNextEl.innerHTML = idx === steps.length-1
-      ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Got it!'
-      : 'Next <i class="jic jic-arrow-right" aria-hidden="true"></i>';
-  };
-
-  const next = ()=>{
-    idx++;
-    if(idx >= steps.length){ finish("completed"); return; }
-    positionSpotlight();
-  };
-
-  btnNextEl.onclick = ()=>{ clickSound("click"); next(); };
-  btnSkipEl.onclick = ()=>{ clickSound("click"); finish("skipped"); };
-
-  overlay.classList.add("show");
-  overlay.setAttribute("aria-hidden","false");
-  trackEvent("Tutorial Started");
-  positionSpotlight();
-}
 
 /** =======================
  * Mikro-kutlamalar
@@ -9614,26 +9313,6 @@ function fireDoneBurst(btn){
   setTimeout(()=> btn.classList.remove("firing"), 650);
 }
 
-function fireStreakBurst(){
-  if(prefersReducedMotion) return;
-  const pill = document.getElementById("streakPill");
-  if(!pill) return;
-  const r = pill.getBoundingClientRect();
-  const cx = r.left + r.width/2;
-  const cy = r.top + r.height/2;
-  for(let i=0;i<5;i++){
-    const el = document.createElement("div");
-    el.className = "streakFireBurst";
-    el.innerHTML = '<i class="jic jic-flame" aria-hidden="true"></i>';
-    el.style.left = `${cx - 16}px`;
-    el.style.top  = `${cy - 16}px`;
-    el.style.setProperty("--dx", `${(Math.random()-0.5)*120}px`);
-    el.style.fontSize = `${24 + Math.random()*16}px`;
-    el.style.animationDelay = `${i*60}ms`;
-    document.body.appendChild(el);
-    setTimeout(()=> el.remove(), 1400);
-  }
-}
 
 /** =======================
  * Sound toggle

@@ -205,7 +205,7 @@ check("a source outside the enum is not silently added as a new bucket",
 
 console.log("\n6 — internal re-renders never double-count as a new mission_entry\n");
 // openMission() is reused internally to refresh the SAME already-open sheet
-// (undo, un-mark done, post-completion redraw). Those 3 sites must pass
+// (un-mark done, post-completion redraw). Those 2 sites must pass
 // { trackEntry: false } as a 3rd argument — a review follow-up correction
 // after an earlier version of this feature let them fire a full
 // mission_entry (just labeled "unknown"), which double-counted a re-render
@@ -223,7 +223,6 @@ check("_missionExitBeaconed reset is inside the trackEntry-gated block, not unco
   !!trackEntryBlock && trackEntryBlock[1].includes("_missionExitBeaconed = false;"));
 
 const refreshSites = [
-  { label: "mark-undone reopen", pattern: /if\(lastOpenedId === id\) openMission\(id, "unknown", \{ trackEntry: false \}\);/ },
   { label: "post-completion non-hub refresh", pattern: /not a new discovery event, so mission_entry must not fire again\.\s*\n\s*openMission\(id, "unknown", \{ trackEntry: false \}\);/ },
   { label: "toggle-done un-mark-done reopen", pattern: /openMission\(lastOpenedId, "unknown", \{ trackEntry: false \}\);/ },
 ];

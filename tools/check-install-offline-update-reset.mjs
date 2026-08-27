@@ -179,7 +179,9 @@ if (wanted("O01")) {
   await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
   await page.waitForTimeout(900);
   const done1 = await probe();
-  await page.evaluate(() => document.getElementById("undoBtn")?.click());
+  // Same button, now "Mark as Not Done" — the only reversal since the Undo bar
+  // was removed.
+  await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
   await page.waitForTimeout(1000);
   const undone = await probe();
   const banner = await page.evaluate(() => {
@@ -192,8 +194,8 @@ if (wanted("O01")) {
      timerFinishedFor here asserted one particular route, not the outcome. */
   const ok = cards === 36 && running.gateRemainingMs === 0 &&
              done1.doneSize === 1 && undone.doneSize === 0 && !tabs.some((t) => t.includes("BLANK"));
-  record("O01", "offline: four tabs, 36 missions, timer, gate, completion and Undo", ok ? "PASS" : "FAIL",
-    `${tabs.join(" ")} · cards=${cards} · gate opened=${running.gateRemainingMs === 0} · done ${done1.doneSize} → undo ${undone.doneSize} · banner="${banner}"`);
+  record("O01", "offline: four tabs, 36 missions, timer, gate, completion and un-mark", ok ? "PASS" : "FAIL",
+    `${tabs.join(" ")} · cards=${cards} · gate opened=${running.gateRemainingMs === 0} · done ${done1.doneSize} → un-marked ${undone.doneSize} · banner="${banner}"`);
 }
 
 /* ── U01..U06 the six update states ────────────────────────────────────── */

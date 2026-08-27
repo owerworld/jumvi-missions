@@ -39,7 +39,7 @@ const MISSION_NAMES = {
   "18": "Count to 10",
   "19": "Circle Round",
   "20": "Crab Relay",
-  "21": "Captain Says",
+  "21": "Middle Defender",
   "22": "Spinning Team",
   "23": "Switch Partners",
   "24": "2v2 Shared Score",
@@ -585,24 +585,53 @@ const MISSION_ICONS = {
   </div>
 
 </div>`,
-  21: `<svg width="100%" viewBox="0 0 380 150" role="img"><title>Captain Says</title><desc>Captain Says</desc>
-<defs><marker id="g21ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
-<g fill="none" stroke="var(--s)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-<circle cx="70" cy="62" r="9"/><line x1="70" y1="71" x2="70" y2="100"/><line x1="70" y1="100" x2="60" y2="124"/><line x1="70" y1="100" x2="80" y2="124"/><line x1="70" y1="76" x2="92" y2="60"/><line x1="70" y1="78" x2="56" y2="90"/>
-<circle cx="206" cy="54" r="9"/><line x1="206" y1="63" x2="206" y2="90"/><line x1="206" y1="90" x2="197" y2="112"/><line x1="206" y1="90" x2="215" y2="112"/><line x1="206" y1="66" x2="190" y2="50"/><line x1="190" y1="50" x2="185" y2="42"/>
-<circle cx="284" cy="70" r="9"/><line x1="284" y1="79" x2="284" y2="106"/><line x1="284" y1="106" x2="275" y2="128"/><line x1="284" y1="106" x2="293" y2="128"/><line x1="284" y1="82" x2="268" y2="66"/><line x1="268" y1="66" x2="263" y2="58"/>
-<circle cx="326" cy="98" r="9"/><line x1="326" y1="107" x2="326" y2="132"/><line x1="326" y1="132" x2="317" y2="148"/><line x1="326" y1="132" x2="335" y2="148"/><line x1="326" y1="110" x2="310" y2="94"/><line x1="310" y1="94" x2="305" y2="86"/></g>
-<ellipse cx="181" cy="38" rx="6" ry="8" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-<ellipse cx="259" cy="54" rx="6" ry="8" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-<ellipse cx="301" cy="82" rx="6" ry="8" fill="#85B7EB" stroke="#639922" stroke-width="2.4"/>
-<path d="M70 40 L72.6 45.2 L78.3 46 L74.2 50 L75.1 55.7 L70 53 L64.9 55.7 L65.8 50 L61.7 46 L67.4 45.2 Z" fill="#EF9F27" stroke="#EF9F27" stroke-width="1" stroke-linejoin="round"/>
-<circle cx="284" cy="70" r="14" fill="none" stroke="#EF9F27" stroke-width="2" stroke-dasharray="3 3"/>
-<text class="ts" x="284" y="36" text-anchor="middle" fill="#EF9F27">Sam</text>
-<g><rect x="92" y="16" width="50" height="21" rx="7" fill="var(--bg2)" stroke="var(--s)" stroke-width="1.4"/><polygon points="100,37 112,37 96,46" fill="var(--bg2)" stroke="none"/><text class="th" x="117" y="30" text-anchor="middle">SAM!</text></g>
-<path d="M94 58 Q190 24 268 64" fill="none" stroke="#EF9F27" stroke-width="2.2" stroke-dasharray="4 5" stroke-linecap="round" marker-end="url(#g21ar)"/>
-<circle cx="94" cy="58" r="6" fill="#EF9F27"/>
-<text class="ts" x="190" y="146" text-anchor="middle">Captain calls a name → throws the ball to that person</text>
-</svg>`,
+  21: `<h2 class="sr-only">Middle Defender</h2>
+<div style="display:flex;align-items:center;gap:4px">
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);padding:8px 4px">
+    <svg width="110" height="96" viewBox="0 0 110 96" aria-hidden="true">
+    <line x1="8" y1="70" x2="102" y2="70" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <circle cx="55" cy="50" r="20" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <g fill="none" stroke="var(--color-text-secondary)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="20" cy="38" r="5"/><line x1="20" y1="43" x2="20" y2="55"/><line x1="20" y1="55" x2="17" y2="63"/><line x1="20" y1="55" x2="23" y2="63"/><line x1="20" y1="46" x2="26" y2="43"/><circle cx="55" cy="38" r="5"/><line x1="55" y1="43" x2="55" y2="55"/><line x1="55" y1="55" x2="52" y2="63"/><line x1="55" y1="55" x2="58" y2="63"/><line x1="55" y1="46" x2="50" y2="39"/><line x1="55" y1="46" x2="60" y2="39"/><circle cx="90" cy="38" r="5"/><line x1="90" y1="43" x2="90" y2="55"/><line x1="90" y1="55" x2="87" y2="63"/><line x1="90" y1="55" x2="93" y2="63"/><line x1="90" y1="46" x2="84" y2="43"/></g>
+    <ellipse cx="28" cy="43" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/><ellipse cx="48" cy="40" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/><ellipse cx="82" cy="43" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/>
+    </svg>
+    <div style="font-size:12px;color:var(--color-text-secondary);text-align:center">1. One in the middle</div>
+  </div>
+
+  <i class="ti ti-chevron-right" style="flex:none;font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);padding:8px 4px">
+    <svg width="110" height="96" viewBox="0 0 110 96" aria-hidden="true">
+    <defs><marker id="g21tp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <line x1="8" y1="70" x2="102" y2="70" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <g fill="none" stroke="var(--color-text-secondary)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="20" cy="38" r="5"/><line x1="20" y1="43" x2="20" y2="55"/><line x1="20" y1="55" x2="17" y2="63"/><line x1="20" y1="55" x2="23" y2="63"/><line x1="20" y1="46" x2="26" y2="43"/><circle cx="55" cy="38" r="5"/><line x1="55" y1="43" x2="55" y2="55"/><line x1="55" y1="55" x2="52" y2="63"/><line x1="55" y1="55" x2="58" y2="63"/><line x1="55" y1="46" x2="50" y2="39"/><line x1="55" y1="46" x2="60" y2="39"/><circle cx="90" cy="38" r="5"/><line x1="90" y1="43" x2="90" y2="55"/><line x1="90" y1="55" x2="87" y2="63"/><line x1="90" y1="55" x2="93" y2="63"/><line x1="90" y1="46" x2="84" y2="43"/></g>
+    <ellipse cx="28" cy="43" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/><ellipse cx="48" cy="40" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/><ellipse cx="82" cy="43" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/>
+    <path d="M31 40 Q55 14 80 40" fill="none" stroke="#EF9F27" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" marker-end="url(#g21tp)"/>
+    <circle cx="55" cy="27" r="4" fill="#EF9F27"/>
+    </svg>
+    <div style="font-size:12px;color:var(--color-text-secondary);text-align:center">2. Toss past them</div>
+  </div>
+
+  <i class="ti ti-chevron-right" style="flex:none;font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);padding:8px 4px">
+    <svg width="110" height="96" viewBox="0 0 110 96" aria-hidden="true">
+    <defs><marker id="g21sw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+    <line x1="8" y1="70" x2="102" y2="70" stroke="var(--color-border-secondary)" stroke-width="1"/>
+    <g fill="none" stroke="var(--color-text-secondary)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3">
+    <circle cx="90" cy="38" r="5"/><line x1="90" y1="43" x2="90" y2="55"/><line x1="90" y1="55" x2="87" y2="63"/><line x1="90" y1="55" x2="93" y2="63"/><line x1="90" y1="46" x2="84" y2="43"/></g>
+    <g fill="none" stroke="var(--color-text-secondary)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="20" cy="38" r="5"/><line x1="20" y1="43" x2="20" y2="55"/><line x1="20" y1="55" x2="17" y2="63"/><line x1="20" y1="55" x2="23" y2="63"/><line x1="20" y1="46" x2="26" y2="43"/><circle cx="55" cy="38" r="5"/><line x1="55" y1="43" x2="55" y2="55"/><line x1="55" y1="55" x2="52" y2="63"/><line x1="55" y1="55" x2="58" y2="63"/><line x1="55" y1="46" x2="61" y2="44"/><line x1="55" y1="46" x2="50" y2="41"/></g>
+    <ellipse cx="28" cy="43" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/><ellipse cx="62" cy="44" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6"/><ellipse cx="82" cy="43" rx="3" ry="4" fill="#85B7EB" stroke="#639922" stroke-width="1.6" opacity="0.3"/>
+    <circle cx="62" cy="44" r="4" fill="#EF9F27"/>
+    <path d="M24 78 Q37 88 51 78" fill="none" stroke="#EF9F27" stroke-width="2" stroke-linecap="round" marker-start="url(#g21sw)" marker-end="url(#g21sw)"/>
+    </svg>
+    <div style="font-size:12px;color:var(--color-text-secondary);text-align:center">3. Caught? Swap with the thrower</div>
+  </div>
+
+</div>`,
   22: `<h2 class="sr-only">Spinning Team</h2>
 <div style="display:flex;align-items:center;gap:6px">
 
