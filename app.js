@@ -1900,11 +1900,6 @@ function openTeamSetupChildChooser(){
   closeTeamXpPicker();
   openProfileSheet();
 }
-function teamDoneSet(team){
-  if(!team) return new Set();
-  const raw = lsGetJSON(teamProgressPrefix(team.id) + "missions_done_v3", []);
-  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
-}
 /* ===== Family-wide reads =================================================
  * teamProgressPrefix() resolves an adult/friend team against the ACTIVE child,
  * so it cannot answer "what has my brother's team done?" — which is why the
@@ -1995,10 +1990,6 @@ function familyHasPlayed(){
   }catch(_){ return false; }
 }
 
-function personalDoneSet(){
-  const raw = lsGetJSON(_PP + "missions_done_v3", []);
-  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
-}
 function progressPreview(doneSet){
   const xp = xpFromDoneSet(doneSet);
   const info = xpLevelInfo(xp);
@@ -2639,14 +2630,6 @@ function buildSoftHints(ms){
   return hints;
 }
 
-function getWeekKey(d = new Date()){
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-  return `${date.getUTCFullYear()}-W${week}`;
-}
 
 function parseTimeSecs(timeStr){
   if(!timeStr) return 60;
@@ -2823,20 +2806,6 @@ function cycleTheme(){
   try{ window.dispatchEvent(new Event("themechange")); }catch(_){ }
 }
 
-function mapPackToCategory(pack){
-  if(pack === "Reflex Rush") return "Reflex";
-  if(pack === "Aim Master") return "Aim";
-  if(pack === "Focus Control") return "Focus";
-  if(pack === "Team Duo") return "Team";
-  if(pack === "Indoor Compact") return "Indoor";
-  return "Other";
-}
-function normalizePlayers(str){
-  const s = String(str || "");
-  if(/1/.test(s) && !/2|3|4|5|6/.test(s)) return "Solo";
-  if(/2/.test(s) && !/3|4|5|6|\+/.test(s)) return "2";
-  return "3+";
-}
 
 
 /* ===== Local date (streak + daily) ===== */
@@ -2951,21 +2920,6 @@ function recordActivityToday(){
   return true;
 }
 
-/* Public helper: freeze durumunu UI için */
-function getStreakFreezeStatus(){
-  refreshFreezeIfWeekChanged();
-  const s = getFreezeState();
-  return {
-    available: s.available,
-    lastUsedIso: s.lastUsedIso || "",
-    nextReplenishDays: (function(){
-      const today = new Date();
-      const dayOfWeek = today.getDay();
-      // Sonraki Pazartesi'ye kalan gün
-      return (dayOfWeek === 0) ? 1 : (8 - dayOfWeek);
-    })()
-  };
-}
 function renderStreakUI(animate=false){
   if(!streakPill) return;
   const sc = streakCount || 0;
@@ -3015,16 +2969,6 @@ function renderStreakUI(animate=false){
   }
 }
 
-function checkStreakWarning(){
-  if(streakCount <= 0) return;
-  const today = isoLocalDate();
-  if(lastActiveIso === today) return; // bugün zaten oynadı
-  // Streak kırılma riski — dün oynadıysa uyar
-  const yesterday = yesterdayIso(today);
-  if(lastActiveIso === yesterday){
-    setTimeout(()=> showToast("Coach Leo misses you! Play today to keep your streak going!"), 2000);
-  }
-}
 
 /* ===== Daily mission ===== */
 function hashFNV1a(str){
@@ -3577,13 +3521,6 @@ function renderList(){
 function remainingMissions(){
   return Math.max(0, missions.length - done.size);
 }
-function remainingText(){
-  const remaining = remainingMissions();
-  if(remaining <= 0) return "";
-  const done = missions.length - remaining;
-  if(done === 0) return "Complete all 36 missions to unlock.";
-  return `${done} / ${missions.length} done — keep going!`;
-}
 
 let _badgeUnlockTimer = null;
 
@@ -3927,20 +3864,6 @@ function updateProgress(options = {}){
   }
 }
 
-function renderShareCard(){
-  const card = document.getElementById("shareScoreCard");
-  if(!card) return;
-  if(done.size === 0){ card.style.display = "none"; return; }
-  card.style.display = "";
-  document.getElementById("shareScoreNum").textContent = done.size;
-  // Pick best unlocked badge (last in priority order)
-  let topBadge = null;
-  for(const b of BADGES){
-    if(b.check(done)) topBadge = b;
-  }
-  const badgeEl = document.getElementById("shareScoreBadge");
-  badgeEl.textContent = topBadge ? topBadge.name : "";
-}
 
 /** =======================
  * Modal
@@ -4407,15 +4330,6 @@ function markMissionNarrationHeard(ms){
   markMissionCoachRun(ms);
 }
 function ttsAuto(){ try{ return lsGet(TTS_AUTO_KEY, "1") === "1"; }catch(_){ return true; } }
-function autoReadMission(ms){
-  // Reads the mission name + first step, once, when a 3–5 mission opens. Must be
-  // called INSIDE the tap handler (openMission) so iOS allows speechSynthesis.
-  if(!soundOn) return;                       // shares the global mute guard
-  if(!("speechSynthesis" in window)) return;
-  const first = (ms.steps && ms.steps[0]) ? stripSpeechText(ms.steps[0]) : "";
-  const text = first ? `${stripSpeechText(ms.title)}. Step 1 — ${first}` : stripSpeechText(ms.title);
-  if(text) coachSpeak(text, { rate: 1.0 });
-}
 
 // ---- Spoken steps (Task 4c): tap Leo by the STEPS header → he reads the
 // steps in order, then the win condition. Second tap stops. No autoplay;
@@ -8333,6 +8247,24 @@ function levelNameFor(doneCount){
  *
  * Cheap enough to call on every progress mutation — these read localStorage
  * and write text, and they bail immediately when their elements are absent. */
+/* Kept deliberately, though nothing calls them today.
+ *
+ * These two are the only place the personal- and team-prefixed
+ * "missions_done_v3" keys are spelled out in app.js, and that spelling is part
+ * of the protected localStorage contract — tools/check-tr-invariants.mjs fails
+ * with a missing "<pp>missions_done_v3" the moment they go. Deleting them as
+ * dead code is exactly the mistake that check exists to catch. */
+function teamDoneSet(team){
+  if(!team) return new Set();
+  const raw = lsGetJSON(teamProgressPrefix(team.id) + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+
+function personalDoneSet(){
+  const raw = lsGetJSON(_PP + "missions_done_v3", []);
+  return new Set(Array.isArray(raw) ? raw.map(Number).filter(Number.isFinite) : []);
+}
+
 function refreshFamilySurfaces(){
   try{ if(typeof renderFamilyProgressCard === "function") renderFamilyProgressCard(); }catch(_){}
   try{ if(typeof renderFamilyInsights === "function") renderFamilyInsights(); }catch(_){}
@@ -8836,9 +8768,6 @@ function applyBrowseView(){
   renderMissionPath();
 }
 
-/* Geriye uyumluluk — eski JS bağlantıları için boş stub'lar */
-function getActiveBrowseView(){ return "path"; }
-function setActiveBrowseView(){ applyBrowseView(); }
 
 const PACK_TAGLINES = {
   "Reflex Rush":    "Lightning fast hands",
@@ -9374,94 +9303,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }
 });
 
-/** =======================
- * First-time Guided Tutorial (3-step spotlight)
- * ======================= */
-function showTutorial(){
-  if(lsGet(TUTORIAL_KEY, "0") === "1") return;
-  const overlay   = document.getElementById("tutorialOverlay");
-  const spotlight = document.getElementById("tutorialSpotlight");
-  const card      = document.getElementById("tutorialCard");
-  const stepEl    = document.getElementById("tutorialStep");
-  const titleEl   = document.getElementById("tutorialTitle");
-  const descEl    = document.getElementById("tutorialDesc");
-  const btnNextEl = document.getElementById("tutorialNext");
-  const btnSkipEl = document.getElementById("tutorialSkip");
-  if(!overlay || !spotlight || !card) return;
-
-  const steps = [
-    { selector: "#btnDailyPlay",
-      title: '<i class="jic jic-play" aria-hidden="true"></i> Today\'s Mission',
-      desc: "A fresh mission is picked for you each day. Tap here to start playing!" },
-    { selector: "#streakPill",
-      title: '<i class="jic jic-flame" aria-hidden="true"></i> Build Your Streak',
-      desc: "Play one mission every day to keep your streak alive. The longer it grows, the hotter it gets!" },
-    { selector: '.navTab[data-tab="stats"]',
-      title: '<i class="jic jic-chart-bar" aria-hidden="true"></i> Track Progress',
-      desc: "Tap Stats anytime to see weekly progress, badges earned, and the Champion Certificate." }
-  ];
-
-  let idx = 0;
-  const finish = (action)=>{
-    overlay.classList.remove("show");
-    overlay.setAttribute("aria-hidden","true");
-    lsSet(TUTORIAL_KEY, "1");
-    trackEvent("Tutorial " + (action||"completed"));
-  };
-
-  const positionSpotlight = ()=>{
-    const step = steps[idx];
-    const el = document.querySelector(step.selector);
-    if(!el){ next(); return; }
-    // Scroll target into view
-    try{ el.scrollIntoView({ behavior:"smooth", block:"center" }); }catch(_){}
-    setTimeout(()=>{
-      const r = el.getBoundingClientRect();
-      const pad = 8;
-      spotlight.style.left   = `${r.left - pad}px`;
-      spotlight.style.top    = `${r.top - pad}px`;
-      spotlight.style.width  = `${r.width + pad*2}px`;
-      spotlight.style.height = `${r.height + pad*2}px`;
-
-      // Card position: alta yer varsa altta, yoksa üstte
-      const vh = window.innerHeight;
-      const cardH = 160; // tahmin
-      const below = (r.bottom + 16 + cardH) < vh;
-      card.style.left = "16px";
-      card.style.right = "16px";
-      card.style.maxWidth = "320px";
-      card.style.margin = "0 auto";
-      if(below){
-        card.style.top = `${r.bottom + 14}px`;
-        card.style.bottom = "auto";
-      }else{
-        card.style.bottom = `${vh - r.top + 14}px`;
-        card.style.top = "auto";
-      }
-    }, 360);
-
-    stepEl.textContent  = `Step ${idx+1} of ${steps.length}`;
-    titleEl.innerHTML = step.title;
-    descEl.textContent  = step.desc;
-    btnNextEl.innerHTML = idx === steps.length-1
-      ? '<i class="jic jic-circle-check" aria-hidden="true"></i> Got it!'
-      : 'Next <i class="jic jic-arrow-right" aria-hidden="true"></i>';
-  };
-
-  const next = ()=>{
-    idx++;
-    if(idx >= steps.length){ finish("completed"); return; }
-    positionSpotlight();
-  };
-
-  btnNextEl.onclick = ()=>{ clickSound("click"); next(); };
-  btnSkipEl.onclick = ()=>{ clickSound("click"); finish("skipped"); };
-
-  overlay.classList.add("show");
-  overlay.setAttribute("aria-hidden","false");
-  trackEvent("Tutorial Started");
-  positionSpotlight();
-}
 
 /** =======================
  * Mikro-kutlamalar
@@ -9472,26 +9313,6 @@ function fireDoneBurst(btn){
   setTimeout(()=> btn.classList.remove("firing"), 650);
 }
 
-function fireStreakBurst(){
-  if(prefersReducedMotion) return;
-  const pill = document.getElementById("streakPill");
-  if(!pill) return;
-  const r = pill.getBoundingClientRect();
-  const cx = r.left + r.width/2;
-  const cy = r.top + r.height/2;
-  for(let i=0;i<5;i++){
-    const el = document.createElement("div");
-    el.className = "streakFireBurst";
-    el.innerHTML = '<i class="jic jic-flame" aria-hidden="true"></i>';
-    el.style.left = `${cx - 16}px`;
-    el.style.top  = `${cy - 16}px`;
-    el.style.setProperty("--dx", `${(Math.random()-0.5)*120}px`);
-    el.style.fontSize = `${24 + Math.random()*16}px`;
-    el.style.animationDelay = `${i*60}ms`;
-    document.body.appendChild(el);
-    setTimeout(()=> el.remove(), 1400);
-  }
-}
 
 /** =======================
  * Sound toggle
