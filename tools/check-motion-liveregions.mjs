@@ -206,13 +206,12 @@ console.log("Reduced motion and live regions — Faz 6A.4\n");
     done: window.__jumviPlayProbe?.()?.doneSize ?? null,
     reward: (() => { const r = document.getElementById("missionXpReward"); return r && !r.hidden; })(),
     rewardText: (document.getElementById("missionXpReward")?.textContent || "").replace(/\s+/g, " ").trim().slice(0, 50),
-    undo: (() => { const u = document.getElementById("undoBar"); return !!u && !u.hidden; })(),
   }));
   await ctx.close();
   const completed = after.done !== before;
   record("M03", "reduced motion: completion still announces itself in text",
     completed || after.reward ? "PASS" : "FAIL",
-    `done ${before}→${after.done} · reward card shown=${after.reward} · undo offered=${after.undo}` +
+    `done ${before}→${after.done} · reward card shown=${after.reward}` +
     `\n         reward text="${after.rewardText}" — the outcome is words, not only confetti`);
 }
 
@@ -275,7 +274,7 @@ console.log("Reduced motion and live regions — Faz 6A.4\n");
     `completion button label="${st.doneLabel}" · timer="${st.timerText}"`);
 }
 
-/* ── M06 Undo and completion DO get announced ───────────────────────────── */
+/* ── M06 the completion DOES get announced ──────────────────────────────── */
 {
   const { ctx, page } = await session({ census: true });
   await page.evaluate(() => { try { switchTab("browse"); } catch (_) {} });
@@ -289,15 +288,16 @@ console.log("Reduced motion and live regions — Faz 6A.4\n");
   await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
   await page.waitForTimeout(1600);
   const census = await page.evaluate(() => window.__live.regions);
-  const undoVisible = await page.evaluate(() => { const u = document.getElementById("undoBar"); return !!u && !u.hidden; });
+  const barGone = await page.evaluate(() => !document.getElementById("undoBar"));
   await ctx.close();
   const spoke = Object.entries(census).filter(([, v]) => v.announcements > 0);
-  const undoSpoke = spoke.find(([k]) => /undo/i.test(k));
-  record("M06", "completion and Undo are announced (the events worth interrupting for)",
-    spoke.length > 0 ? "PASS" : "FAIL",
-    `undo bar visible=${undoVisible} · regions that spoke: ` +
-    (spoke.length ? spoke.map(([k, v]) => `${k}=${v.announcements}`).join(", ") : "NONE") +
-    (undoSpoke ? `\n         undo said: ${JSON.stringify(undoSpoke[1].texts.slice(0, 2))}` : ""));
+  /* The Undo bar was the second live region this case used to watch. It is
+     gone, so the completion has to carry the announcement on its own — and
+     that it still does is the whole point of keeping this test. */
+  record("M06", "the completion is announced (the event worth interrupting for)",
+    spoke.length > 0 && barGone ? "PASS" : "FAIL",
+    `#undoBar in DOM=${!barGone} · regions that spoke: ` +
+    (spoke.length ? spoke.map(([k, v]) => `${k}=${v.announcements}`).join(", ") : "NONE"));
 }
 
 await browser.close();

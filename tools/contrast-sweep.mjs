@@ -130,11 +130,6 @@ const STATES = [
     await p.evaluate(() => { const e = document.getElementById("scoreTracker"); if (e) { e.hidden = false; e.style.display = ""; } });
     await settle(p, 500);
   }],
-  ["Undo bar", async (p) => {
-    await pastWelcome(p);
-    await p.evaluate(() => { const e = document.getElementById("undoBar"); if (e) { e.hidden = false; e.classList.add("show"); e.style.display = ""; } });
-    await settle(p, 500);
-  }],
   ["Tutorial overlay", async (p) => { await pastWelcome(p); await showBackdrop(p, "tutorialOverlay"); }],
   ["Badge unlock",     async (p) => { await pastWelcome(p); await p.evaluate(() => { const e = document.getElementById("badgeUnlockModal"); if (e) { e.classList.add("show"); e.hidden = false; } }); await settle(p, 600); }],
   ["3D hub overlay",   async (p) => { await pastWelcome(p); await p.evaluate(() => { const e = document.getElementById("hub3dOverlay"); if (e) { e.classList.add("show"); e.hidden = false; } }); await settle(p, 900); }],

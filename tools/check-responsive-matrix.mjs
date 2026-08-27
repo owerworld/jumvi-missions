@@ -187,29 +187,23 @@ for (const vp of VIEWPORTS) {
     const playing = await reachAll(page, ["#btnStartTimer", "#btnToggleDone", "#btnClose"]);
     const playingRequired = playing.filter(r => r.sel !== "#btnStartTimer");
     await page.screenshot({ path: `${SHOTS}/${tag}-mission-playing.png` });
-    // complete, then check the undo bar is not buried under a fixed layer
+    // complete, then check the sheet's own action row survives the takeover
     await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
     await page.waitForTimeout(1300);
-    const undo = await page.evaluate(() => {
-      const u = document.getElementById("undoBar");
-      if (!u || u.hidden) return { present: false };
-      const btn = u.querySelector("button") || u;
-      return { present: true, ...window.__reach(btn),
-        text: (u.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40) };
-    });
-    /* Post-completion the sheet is already showing its action row, so this is
-       measured WITHOUT scrolling. __reach() scrolls the target to the vertical
-       centre first, which is precisely where the fixed undo bar sits — that
-       alone manufactured a "blocked by undoBar" at three viewports where the
-       real, unscrolled layout has no overlap at all. Geometry and a grid hit
-       test over the whole button are the honest measure here. */
-    const nextVsUndo = await page.evaluate(() => {
+    /* Measured WITHOUT scrolling: post-completion the sheet already shows its
+       action row, and __reach() scrolls the target to the vertical centre,
+       which reports a different layout than the one the family actually sees.
+       Geometry plus a grid hit test over the whole button is the honest measure.
+
+       This used to also weigh the Undo bar against "Next". The bar is gone, so
+       what is left is the question that outlived it: is the action row still
+       reachable once the celebration card takes the screen? */
+    const nextState = await page.evaluate(() => {
+      const barGone = !document.getElementById("undoBar");
       const n = document.getElementById("btnNext");
-      const u = document.getElementById("undoBar");
-      if (!n || !n.getClientRects().length) return { next: "no box" };
+      if (!n || !n.getClientRects().length) return { barGone, next: "no box" };
       const nr = n.getBoundingClientRect();
-      const ur = u && !u.hidden ? u.getBoundingClientRect() : null;
-      const overlapPx = ur ? Math.max(0, Math.min(nr.bottom, ur.bottom) - Math.max(nr.top, ur.top)) : 0;
+      const withinViewport = nr.top >= 0 && nr.bottom <= innerHeight;
       let clickable = false;
       for (let x = nr.left + 6; x < nr.right - 6 && !clickable; x += 8) {
         for (let y = nr.top + 4; y < nr.bottom - 4; y += 6) {
@@ -217,29 +211,19 @@ for (const vp of VIEWPORTS) {
           if (hit && (hit === n || n.contains(hit))) { clickable = true; break; }
         }
       }
-      return {
-        next: `${Math.round(nr.top)}–${Math.round(nr.bottom)}`,
-        undo: ur ? `${Math.round(ur.top)}–${Math.round(ur.bottom)}` : "not shown",
-        overlapPct: Math.round(overlapPx / nr.height * 100),
-        clickable,
-      };
-    });    await page.screenshot({ path: `${SHOTS}/${tag}-mission-done.png` });
+      return { barGone, next: `${Math.round(nr.top)}–${Math.round(nr.bottom)}`, withinViewport, clickable };
+    });
+    await page.screenshot({ path: `${SHOTS}/${tag}-mission-done.png` });
     await ctx.close();
     const bad = [...beforeStart, ...playingRequired]
       .filter(r => !r.ok && r.why !== "absent" && r.why !== "no box");
-    /* "Next" only fails if no part of it can be tapped at all. A partial
-       overlap with the undo bar is reported with its exact percentage and
-       raised separately — the two controls mean opposite things, so how much
-       they overlap is a product question, not a pass/fail. */
-    const nextUsable = nextVsUndo.next === "no box" || nextVsUndo.clickable;
-    const undoOk = !undo.present || undo.ok;
-    record(`${tag}.mission`, `${tag} ${vp.o}: mission sheet controls reachable, undo not buried`,
-      bad.length === 0 && undoOk && nextUsable ? "PASS" : "FAIL",
+    const nextUsable = nextState.next === "no box" || nextState.clickable;
+    record(`${tag}.mission`, `${tag} ${vp.o}: mission sheet controls reachable, Next not buried`,
+      bad.length === 0 && nextUsable && nextState.barGone ? "PASS" : "FAIL",
       `before start: ${beforeStart.map(r => `${r.sel}=${r.ok ? "ok" : r.why}`).join(" ")} · sheet scrolls=${scrolls?.canScroll}` +
       `\n         playing: ${playing.map(r => `${r.sel}=${r.ok ? "ok" : r.why}`).join(" ")}` +
-      `\n         after completion: undo present=${undo.present} reachable=${undo.ok ?? "n/a"}${undo.why ? " (" + undo.why + ")" : ""}` +
-      `\n         unscrolled geometry: #btnNext ${nextVsUndo.next} · undoBar ${nextVsUndo.undo} · ` +
-      `vertical overlap of Next=${nextVsUndo.overlapPct ?? 0}% · any part of Next tappable=${nextVsUndo.clickable}`);
+      `\n         after completion: #undoBar in DOM=${!nextState.barGone} · #btnNext ${nextState.next}` +
+      ` · fully in viewport=${nextState.withinViewport} · any part tappable=${nextState.clickable}`);
   }
 
   /* ── Family: the first actions must be reachable, not merely present ─── */

@@ -2361,7 +2361,7 @@ html.theme--dark #teamsHubKicker{
    and the Adults row renders in standalone and on platforms with no install
    path at all — the dead CTA this feature exists to avoid. Every other hidden
    element in JUMVI carries the same pairing (.offlineBanner[hidden],
-   .undoBar[hidden], .missionXpReward[hidden], .installDlg[hidden] …); these
+   .missionXpReward[hidden], .installDlg[hidden] …); these
    two were simply missed. */
 .keepCard[hidden],
 #btnKeepOnPhone[hidden]{ display:none !important; }
@@ -5159,10 +5159,6 @@ html.theme--dark #profileBackdrop #btnProfileAdd{
   -webkit-text-fill-color:var(--jv-on-blue,#06233a) !important;
 }
 #tabModes .achievementsHead .badgesHint{ opacity:1 !important; }
-
-/* The completion takeover sits at z-index 80; the promised 5-second safety
-   action must stay tappable above it until its timer ends. */
-#undoBar.undoBar{ z-index:9600 !important; }
 
 /* Profiles are separate switch/add/edit screens while retaining the existing
    profile records, twelve-avatar product set, and save/delete handlers. */

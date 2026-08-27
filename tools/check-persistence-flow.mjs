@@ -217,21 +217,25 @@ const backSolo = await snap();
     `\n         team key still on disk: ${backSolo.all["jumvi_p1_team_t1_missions_done_v3"]}`);
 }
 
-/* ── P6.7 Undo, inside its window, reverses a completion for real ───────── */
+/* ── P6.7 Mark as Not Done returns the mission and its XP ───────────────────
+ * Was "Undo inside its window". The bar is gone; the sheet's own toggle is the
+ * only reversal left, and it keeps the streak day on purpose. */
 {
   const before = (await snap()).probe;
   await playOne();
   const completed = (await snap()).probe;
-  const undoShown = await page.evaluate(() => { const u = document.getElementById("undoBar"); return !!u && !u.hidden; });
-  await page.evaluate(() => document.querySelector("#undoBar button")?.click());
+  const barGone = await page.evaluate(() => !document.getElementById("undoBar"));
+  await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
   await page.waitForTimeout(1200);
   const undone = (await snap()).probe;
-  const ok = completed.doneSize === before.doneSize + 1 && undone.doneSize === before.doneSize
-    && undone.xp === before.xp;
-  record("P6.7", "Undo inside the window puts done, xp and streak back", ok ? "PASS" : "FAIL",
+  const ok = barGone && completed.doneSize === before.doneSize + 1
+    && undone.doneSize === before.doneSize && undone.xp === before.xp
+    && undone.streakCount === completed.streakCount;
+  record("P6.7", "Mark as Not Done returns the mission and its XP, keeps the streak day", ok ? "PASS" : "FAIL",
     `done ${before.doneSize} → ${completed.doneSize} → ${undone.doneSize} · ` +
-    `xp ${before.xp} → ${completed.xp} → ${undone.xp} · streak ${before.streakCount} → ${undone.streakCount}` +
-    `\n         undo bar was offered=${undoShown}`);
+    `xp ${before.xp} → ${completed.xp} → ${undone.xp} · ` +
+    `streak ${completed.streakCount} → ${undone.streakCount} (kept)` +
+    `\n         #undoBar in DOM=${!barGone}`);
 }
 
 /* ── P6.8 the full scope inventory before reset ─────────────────────────── */

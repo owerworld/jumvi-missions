@@ -6,7 +6,7 @@
  * phone goes on the grass, and when they pick it back up the timer, the gate
  * and the progress state all have to agree about what happened. Every failure
  * mode here is silent — two intervals counting the same mission down twice as
- * fast, a completion credited to the mission you switched away from, an Undo
+ * fast, a completion credited to the mission you switched away from, an un-mark
  * that puts the mission back but leaves the streak day it awarded.
  *
  * HOW IT MEASURES. Two seams, both read-only:
@@ -155,9 +155,6 @@ async function session(fn, { seed } = {}) {
     async tapDone() {
       await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
     },
-    async tapUndo() {
-      await page.evaluate(() => document.getElementById("undoBtn")?.click());
-    },
     startLabel: () => page.evaluate(() => (document.getElementById("btnStartTimer")?.textContent || "").trim()),
     doneLabel: () => page.evaluate(() => (document.getElementById("btnToggleDone")?.textContent || "").trim()),
     timerText: () => page.evaluate(() => (document.getElementById("timerDisplay")?.textContent || "").trim()),
@@ -166,7 +163,7 @@ async function session(fn, { seed } = {}) {
   return errors;
 }
 
-console.log("Mission play state — Faz 1.4 timer/gate, Faz 1.5 completion/Undo\n");
+console.log("Mission play state — Faz 1.4 timer/gate, Faz 1.5 completion/un-mark\n");
 
 /* ── T01 clean open ────────────────────────────────────────────────────── */
 if (wanted("T01")) await session(async (t) => {
@@ -309,7 +306,7 @@ if (wanted("T09") || wanted("T10") || wanted("T11")) await session(async (t) => 
   }
 });
 
-/* ── one real journey: Time's Up → gate → complete → double-tap → Undo ───
+/* ── one real journey: Time's Up → gate → complete → double-tap → un-mark ─
  * These used to be five sessions, each paying the mission's real 45 seconds to
  * reach Time's Up. They are one run now: it is faster, and it is also the
  * sequence a family actually performs, so a state leak between the steps has
@@ -357,32 +354,29 @@ if (["T13","T16","T15","T17","T21","T23"].some(wanted)) await session(async (t) 
   await t.tapDone();
   await t.wait(800);
   const one = await t.probe();
+  const noBar = await t.page.evaluate(() => !document.getElementById("undoBar"));
   if (wanted("T17")) {
     const ok = one.doneSize === before.doneSize + 1 && one.doneIds.includes(1) &&
-               one.xp > before.xp && one.undoBarVisible;
-    record("T17", "manual completion: one done, xp up, Undo offered", ok ? "PASS" : "FAIL",
-      `done ${before.doneSize}→${one.doneSize} xp ${before.xp}→${one.xp} streak ${before.streakCount}→${one.streakCount} undoBar=${one.undoBarVisible}`);
+               one.xp > before.xp && noBar;
+    record("T17", "manual completion: one done, xp up, and no Undo bar exists", ok ? "PASS" : "FAIL",
+      `done ${before.doneSize}→${one.doneSize} xp ${before.xp}→${one.xp} streak ${before.streakCount}→${one.streakCount} #undoBar in DOM=${!noBar}`);
   }
 
-  if (wanted("T21") || wanted("T23")) {
-    await t.tapUndo();
+  /* T21 replaces the old "Undo rolls everything back" case. The Undo bar is
+     gone, so the only reversal left is the sheet's own toggle, and it is a
+     DIFFERENT promise: it returns the mission and its XP but deliberately does
+     not rewrite the history of a day the family really did play. Asserting the
+     old rollback here would be asserting a feature that no longer exists. */
+  if (wanted("T21")) {
+    await t.tapDone();                        // the button now reads "Mark as Not Done"
     await t.wait(900);
     const undone = await t.probe();
-    if (wanted("T21")) {
-      const ok = undone.doneSize === before.doneSize && undone.xp === before.xp &&
-                 undone.streakCount === before.streakCount && undone.bestStreak === before.bestStreak &&
-                 undone.lastActiveIso === before.lastActiveIso && !undone.undoBarVisible;
-      record("T21", "Undo rolls back done, xp, streak, bestStreak and lastActive", ok ? "PASS" : "FAIL",
-        `done→${undone.doneSize} (pre ${before.doneSize}) xp→${undone.xp} (pre ${before.xp}) streak→${undone.streakCount} (pre ${before.streakCount}) best→${undone.bestStreak} (pre ${before.bestStreak}) lastActive="${undone.lastActiveIso}" (pre "${before.lastActiveIso}")`);
-    }
-    if (wanted("T23")) {
-      await t.tapUndo();
-      await t.wait(600);
-      const twice = await t.probe();
-      const ok = twice.doneSize === undone.doneSize && twice.xp === undone.xp;
-      record("T23", "second Undo tap is a no-op", ok ? "PASS" : "FAIL",
-        `done ${undone.doneSize}→${twice.doneSize} xp ${undone.xp}→${twice.xp}`);
-    }
+    const ok = undone.doneSize === before.doneSize && undone.xp === before.xp &&
+               undone.streakCount === one.streakCount &&
+               undone.lastActiveIso === one.lastActiveIso;
+    record("T21", "Mark as Not Done returns the mission and its XP, keeps the streak day", ok ? "PASS" : "FAIL",
+      `done→${undone.doneSize} (pre ${before.doneSize}) xp→${undone.xp} (pre ${before.xp}) ` +
+      `streak ${one.streakCount}→${undone.streakCount} (kept) lastActive "${one.lastActiveIso}"→"${undone.lastActiveIso}" (kept)`);
   }
 });
 
@@ -391,7 +385,7 @@ if (["T13","T16","T15","T17","T21","T23"].some(wanted)) await session(async (t) 
  * toggle. A second tap after the UI repaints is the deliberate "Mark as Not
  * Done" action and correctly un-completes; an early version of this file read
  * that as a failure. This runs in its own session because the race
- * deliberately churns streak state, and sharing a session with the Undo tests
+ * deliberately churns streak state, and sharing a session with the un-mark tests
  * hands them a baseline that has already moved. */
 if (wanted("T18")) await session(async (t) => {
   await t.pastWelcome();
@@ -425,31 +419,10 @@ if (wanted("T14")) await session(async (t) => {
   const after = await t.probe();
   const ok = after.doneSize === before.doneSize && after.xp === before.xp &&
              after.streakCount === before.streakCount && after.bestStreak === before.bestStreak &&
-             after.lastActiveIso === before.lastActiveIso && !after.undoBarVisible &&
+             after.lastActiveIso === before.lastActiveIso &&
              after.gateRemainingMs > 0;
-  record("T14", "gate closed: no done/xp/streak/Undo mutation", ok ? "PASS" : "FAIL",
-    `gateRemaining=${Math.round(after.gateRemainingMs / 1000)}s done ${before.doneSize}→${after.doneSize} xp ${before.xp}→${after.xp} streak ${before.streakCount}→${after.streakCount} undoBar=${after.undoBarVisible}`);
-});
-
-/* ── T22 Undo after the window expires ─────────────────────────────────── */
-if (wanted("T22")) await session(async (t) => {
-  await t.pastWelcome();
-  await t.open(1);
-  await t.startUntilRunning();
-  let p = await t.probe();
-  const deadline = Date.now() + (p.timerLeft + 4) * 1000;
-  while (Date.now() < deadline) { p = await t.probe(); if (p.gateRemainingMs === 0) break; await t.wait(1000); }
-  await t.tapDone();
-  await t.wait(700);
-  const done1 = await t.probe();
-  await t.wait(5600);                       // past the 5s window
-  const expired = await t.probe();
-  await t.tapUndo();                        // the handler is still bound to the button
-  await t.wait(800);
-  const after = await t.probe();
-  const ok = !expired.undoBarVisible && after.doneSize === done1.doneSize && after.xp === done1.xp;
-  record("T22", "Undo after the window expires changes nothing", ok ? "PASS" : "FAIL",
-    `barVisibleAtExpiry=${expired.undoBarVisible} done ${done1.doneSize}→${after.doneSize} xp ${done1.xp}→${after.xp}`);
+  record("T14", "gate closed: no done/xp/streak mutation", ok ? "PASS" : "FAIL",
+    `gateRemaining=${Math.round(after.gateRemainingMs / 1000)}s done ${before.doneSize}→${after.doneSize} xp ${before.xp}→${after.xp} streak ${before.streakCount}→${after.streakCount}`);
 });
 
 /* ── T20 completed mission replay ──────────────────────────────────────── */
@@ -612,54 +585,6 @@ if (wanted("T12")) await session(async (t) => {
     `timerLeft ${before.timerLeft}→${after.timerLeft} over ~${expected}s hidden; timerEndAt unchanged=${after.timerEndAt === before.timerEndAt}`);
 });
 
-/* ── T24 Undo survives the reward takeover ─────────────────────────────── */
-if (wanted("T24")) await session(async (t) => {
-  await t.pastWelcome();
-  await t.open(1);
-  await t.startUntilRunning();
-  let g = await t.probe();
-  const dl = Date.now() + (g.timerLeft + 4) * 1000;
-  while (Date.now() < dl) { g = await t.probe(); if (g.gateRemainingMs === 0) break; await t.wait(1000); }
-  await t.tapDone();
-  await t.wait(900);
-  const withReward = await t.page.evaluate(() => {
-    const bar = document.getElementById("undoBar");
-    const btn = document.getElementById("undoBtn");
-    const r = btn.getBoundingClientRect();
-    const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-    return {
-      barVisible: !bar.hidden,
-      rewardOpen: !!document.querySelector("#missionXpReward.show"),
-      undoOnTop: !!top && (top === btn || btn.contains(top)),
-    };
-  });
-  const ok = withReward.barVisible && withReward.undoOnTop;
-  record("T24", "Undo stays reachable while the reward takeover is up", ok ? "PASS" : "FAIL",
-    `undoBarVisible=${withReward.barVisible} rewardOpen=${withReward.rewardOpen} undoHitTestOnTop=${withReward.undoOnTop}`);
-});
-
-/* ── T25 Undo after reload ─────────────────────────────────────────────── */
-if (wanted("T25")) await session(async (t) => {
-  await t.pastWelcome();
-  await t.open(1);
-  await t.startUntilRunning();
-  let g = await t.probe();
-  const dl = Date.now() + (g.timerLeft + 4) * 1000;
-  while (Date.now() < dl) { g = await t.probe(); if (g.gateRemainingMs === 0) break; await t.wait(1000); }
-  await t.tapDone();
-  await t.wait(900);
-  const beforeReload = await t.probe();
-  await t.page.reload({ waitUntil: "networkidle" });
-  await t.wait(1600);
-  const after = await t.probe();
-  /* The snapshot is memory-only by design — no new storage key, no child data
-     parked on the device. So a reload is expected to end the offer and keep
-     the completion. Documented, not silently "unsupported". */
-  const ok = after.doneSize === beforeReload.doneSize && !after.undoBarVisible;
-  record("T25", "reload keeps the completion and ends the memory-only Undo offer", ok ? "PASS" : "FAIL",
-    `done ${beforeReload.doneSize}→${after.doneSize} undoBarAfterReload=${after.undoBarVisible} (snapshot is in-memory by design)`);
-});
-
 /* ── T26 Mark as Not Done later ────────────────────────────────────────── */
 if (wanted("T26")) await session(async (t) => {
   await t.pastWelcome();
@@ -671,7 +596,7 @@ if (wanted("T26")) await session(async (t) => {
   await t.tapDone();
   await t.wait(900);
   const done1 = await t.probe();
-  await t.wait(5600);                        // let the Undo offer lapse
+  await t.wait(5600);                        // a deliberate later un-mark, not a quick correction
   await t.tapDone();                         // now it is "Mark as Not Done"
   await t.wait(900);
   const after = await t.probe();

@@ -284,7 +284,12 @@ console.log("Daily Champion star — one per family, per day\n");
     `\n         after playing : ${JSON.stringify(after)} · screen: status="${seen.status}" reward="${seen.reward}"`);
 }
 
-/* ── D5 Undo gives the star back ────────────────────────────────────────── */
+/* ── D5 the star is spent for the day, even after Mark as Not Done ─────────
+ * The Undo bar this case was originally written for is gone, so the star can
+ * no longer be handed back. That is a real consequence, not an oversight: the
+ * sheet's "Mark as Not Done" returns the mission but has never rewritten the
+ * history of a day the family actually played, and the ledger follows that
+ * same rule. Asserted here so the cost is measured rather than assumed. */
 {
   const { ctx, page } = await open();
   await page.evaluate(() => switchTab("browse"));
@@ -304,14 +309,22 @@ console.log("Daily Champion star — one per family, per day\n");
   await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
   await page.waitForTimeout(1400);
   const claimed = await ledger(page);
-  await page.evaluate(() => document.querySelector("#undoBar button")?.click());
+  const barGone = await page.evaluate(() => !document.getElementById("undoBar"));
+  // Same button, now reading "Mark as Not Done".
+  await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
   await page.waitForTimeout(1400);
-  const undone = await ledger(page);
+  const afterUnmark = await ledger(page);
+  const surface = await page.evaluate(() =>
+    (document.getElementById("dailyChallengeStatus")?.textContent || "").trim());
   await ctx.close();
-  const ok = !!claimed && undone === null;
-  record("D5", "Undo returns the family's star instead of burning the day",
+  const ok = barGone && !!claimed &&
+             JSON.stringify(afterUnmark) === JSON.stringify(claimed);
+  record("D5", "no Undo bar exists; Mark as Not Done does NOT hand the star back",
     ok ? "PASS" : "FAIL",
-    `after completion: ${JSON.stringify(claimed)}\n         after Undo      : ${JSON.stringify(undone)}`);
+    `#undoBar in DOM=${!barGone}` +
+    `\n         after completion     : ${JSON.stringify(claimed)}` +
+    `\n         after Mark as Not Done: ${JSON.stringify(afterUnmark)} (unchanged=${JSON.stringify(afterUnmark) === JSON.stringify(claimed)})` +
+    `\n         screen still says    : status="${surface}"`);
 }
 
 /* ── D6 a new day is a new star ─────────────────────────────────────────── */

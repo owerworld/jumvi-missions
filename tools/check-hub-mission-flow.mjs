@@ -24,7 +24,7 @@
  * Asserts, in one continuous session:
  *   · the hub opens the mission id it names, and marks the run as hub-sourced
  *   · completing from inside the hub flow completes exactly that mission, once
- *   · Undo rolls it back without disturbing the hub
+ *   · un-marking rolls it back without disturbing the hub
  *   · closing hands control back with the hub still alive and rendering
  *
  *   node tools/check-hub-mission-flow.mjs
@@ -172,8 +172,11 @@ const okDone = afterDone.doneSize === beforeDone.doneSize + 1 &&
 record("T29.2", "completing inside the hub flow completes that id, exactly once", okDone ? "PASS" : "FAIL",
   `done ${beforeDone.doneSize}→${afterDone.doneSize} ids=[${afterDone.doneIds}] xp ${beforeDone.xp}→${afterDone.xp}`);
 
-/* ── T29.3 Undo from a hub completion ──────────────────────────────────── */
-await page.evaluate(() => document.getElementById("undoBtn")?.click());
+/* ── T29.3 un-marking a hub completion ────────────────────────────────────
+ * Was "Undo from a hub completion". The Undo bar is gone, so this now drives
+ * the sheet's own toggle — the point is unchanged: reversing a completion made
+ * inside the hub must not tear the hub down. */
+await page.evaluate(() => document.getElementById("btnToggleDone")?.click());
 await wait(1200);
 const afterUndo = await probe();
 const hubAliveAfterUndo = await page.evaluate(() => ({
@@ -182,7 +185,7 @@ const hubAliveAfterUndo = await page.evaluate(() => ({
 }));
 const okUndo = afterUndo.doneSize === beforeDone.doneSize && afterUndo.xp === beforeDone.xp &&
                hubAliveAfterUndo.canvas === 1;
-record("T29.3", "Undo rolls the hub completion back and leaves the hub intact", okUndo ? "PASS" : "FAIL",
+record("T29.3", "un-marking the hub completion rolls it back and leaves the hub intact", okUndo ? "PASS" : "FAIL",
   `done ${afterDone.doneSize}→${afterUndo.doneSize} xp ${afterDone.xp}→${afterUndo.xp} hubCanvas=${hubAliveAfterUndo.canvas} overlayShown=${hubAliveAfterUndo.overlayShown}`);
 
 /* ── T29.4 close hands control back to a live hub ──────────────────────── */

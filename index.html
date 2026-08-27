@@ -214,14 +214,6 @@
     Offline — missions still work. Island needs a connection.
   </div>
 
-  <!-- §3.2 — Undo bar. Completing is one tap now (the hold-to-finish guard is
-       gone from the reward moment); this 5-second bar is the accidental-tap
-       safety net instead. Sits below the celebration, above the nav. -->
-  <div class="undoBar" id="undoBar" role="status" aria-live="polite" hidden>
-    <span class="undoBarText">Marked done</span>
-    <button class="undoBarBtn" id="undoBtn" type="button">Undo</button>
-  </div>
-
   <!-- v32 app header. The FINAL v32 design has no logo/brand bar: every tab
        leads with its own title and keeps the player switcher on the same
        row, right-aligned. The brand marks stay in the DOM (hidden) because
@@ -1060,7 +1052,8 @@
            whether the timer was actually started), and it changes no timing,
            no thresholds and no handlers. The real flow is untouched:
            Start -> physical play -> gate opens -> one tap "We Finished!"
-           (#btnToggleDone) -> 5s undo bar. There is no hold-to-finish. -->
+           (#btnToggleDone). There is no hold-to-finish, and no Undo bar: the
+           same button becomes "Mark as Not Done" to reverse a completion. -->
       <section class="missionPlayPanel" id="missionPlayPanel" hidden aria-live="polite">
         <span class="playPanelChip" id="playPanelChip"></span>
         <img class="playPanelLeo" src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" width="120" height="120" alt="" aria-hidden="true" decoding="async">
