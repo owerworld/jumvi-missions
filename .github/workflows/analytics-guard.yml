@@ -42,6 +42,7 @@ jobs:
           node --check src/worker.js
           node --check app.js
           node --check jumvi-hub-app.js
+          node --check data.js
           node --check tools/generate-weekly-snapshot.mjs
           node --check tools/check-event-coverage.mjs
           node --check tools/check-analytics-compliance.mjs
@@ -49,6 +50,18 @@ jobs:
           node --check tools/check-tr-invariants.mjs
           node --check tools/check-mission-entry-sources.mjs
           node --check tools/check-snapshot-availability.mjs
+          node --check tools/check-mission-schema.mjs
+          node --check tools/derive-missions-meta.mjs
+          node --check tools/check-mission-growth-fixture.mjs
+
+      - name: Mission data contract guard
+        run: node tools/check-mission-schema.mjs
+
+      - name: Mission meta sync guard (data.js -> data/missions-meta.json)
+        run: node tools/derive-missions-meta.mjs --check
+
+      - name: Mission growth fixture (badges/totals scale with no code changes)
+        run: node tools/check-mission-growth-fixture.mjs
 
       - name: Event coverage / drift guard
         run: node tools/check-event-coverage.mjs

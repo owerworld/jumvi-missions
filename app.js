@@ -1796,7 +1796,7 @@ const TEAM_COPY = Object.freeze({
     level:"Level", missions:"missions",
     hubKicker:"FAMILY BOARD",
     hubTitle:"Our Family Board",
-    hubIntro:"Every game anyone plays fills in the board. 36 to collect together.",
+    hubIntro:"Every game anyone plays fills in the board. {N} to collect together.",
     standings:"Who's playing",
     standingsSub:"Everyone adds to the same board",
     boardDone:"games your family has played",
@@ -1826,7 +1826,7 @@ const TEAM_COPY = Object.freeze({
     level:"Seviye", missions:"görev",
     hubKicker:"AİLE PANOSU",
     hubTitle:"Aile Panomuz",
-    hubIntro:"Kim oynarsa oynasın pano doluyor. Birlikte toplanacak 36 oyun.",
+    hubIntro:"Kim oynarsa oynasın pano doluyor. Birlikte toplanacak {N} oyun.",
     standings:"Kimler oynuyor",
     standingsSub:"Herkes aynı panoya ekliyor",
     boardDone:"oyunu ailen oynadı",
@@ -2051,7 +2051,7 @@ function renderTeamsHub(){
   };
   setText("teamsHubKicker", c.hubKicker);
   setText("teamsHubTitle", c.hubTitle);
-  setText("teamsHubIntro", c.hubIntro);
+  setText("teamsHubIntro", c.hubIntro.replace("{N}", missions.length));
   setText("teamsStandingsTitle", c.standings);
   setText("teamsStandingsSub", c.standingsSub);
   setText("btnTeamsCreateLabel", c.createTeam);
@@ -2719,7 +2719,7 @@ function renderParentDashboard(){
   const frag = document.createDocumentFragment();
   SKILL_PACKS.forEach(p=>{
     const doneCount = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
-    const total = missions.filter(m=>m.pack===p.key).length || 6;
+    const total = missions.filter(m=>m.pack===p.key).length;
     counts[p.label] = doneCount;
     const pct = Math.round((doneCount / total) * 100);
     const row = document.createElement("div");
@@ -3605,7 +3605,7 @@ function updateBadges(){
     // Pack badge'i için ilerleme detayı (3/6 gibi)
     let progressText = "";
     if(b.category === "pack" && b.pack){
-      const total = missions.filter(m=>m.pack===b.pack).length || 6;
+      const total = missions.filter(m=>m.pack===b.pack).length;
       const doneInPack = missions.filter(m=>m.pack===b.pack && done.has(m.id)).length;
       progressText = `${doneInPack}/${total}`;
     } else if(b.category === "streak"){
@@ -3615,7 +3615,7 @@ function updateBadges(){
     } else if(b.id === "first"){
       progressText = `${Math.min(done.size, 1)}/1`;
     } else if(b.id === "champ"){
-      progressText = `${done.size}/36`;
+      progressText = `${done.size}/${missions.length}`;
     }
 
     const el = document.createElement("div");
@@ -3656,7 +3656,7 @@ function updateBadges(){
     let toGo = "";
     if(!ok){
       if(b.category === "pack" && b.pack){
-        const total = missions.filter(m=>m.pack===b.pack).length || 6;
+        const total = missions.filter(m=>m.pack===b.pack).length;
         const doneInPack = missions.filter(m=>m.pack===b.pack && done.has(m.id)).length;
         const left = Math.max(0, total - doneInPack);
         toGo = `${doneInPack}/${total} · ${left} to go`;
@@ -3668,8 +3668,8 @@ function updateBadges(){
       } else if(b.id === "first"){
         toGo = "Start your first mission!";
       } else if(b.id === "champ"){
-        const left = Math.max(0, 36 - done.size);
-        toGo = `${done.size}/36 · ${left} more to go`;
+        const left = Math.max(0, missions.length - done.size);
+        toGo = `${done.size}/${missions.length} · ${left} more to go`;
       } else {
         toGo = '<i class="jic jic-lock" aria-hidden="true"></i> Locked';
       }
@@ -5494,9 +5494,9 @@ async function downloadCertificatePNG({auto=true}={}){
 async function shareCertificate(){
   clickSound("click");
   const filename = `JUMVI-Certificate-${getTodayISO()}.png`;
-  // FIX: correct mission count (36) + always try image file first.
+  // FIX: dynamic mission count + always try image file first.
   // §6.3 — include qr.jumvi.co so the share is an organic growth channel.
-  const shareText = "Completed all 36 JUMVI Toss & Catch missions! Play along: qr.jumvi.co";
+  const shareText = `Completed all ${missions.length} JUMVI Toss & Catch missions! Play along: qr.jumvi.co`;
   try{
     const blob = await renderSimpleCertificateBlob();
     if(!blob){ showToast("Couldn't generate certificate."); return; }
@@ -5531,7 +5531,7 @@ async function shareCertificateWhatsApp(){
   // URL'sine gömülüp isim URL üzerinden WhatsApp'a gidiyordu (aşağıdaki
   // fallback, satır ~2994). Mesaj generic — sertifika görselindeki isim
   // (renderSimpleCertificateBlob, canvas üzerinde) buna dokunulmadan kalıyor.
-  const shareText = `🏆 Completed all 36 JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
+  const shareText = `🏆 Completed all ${missions.length} JUMVI Toss & Catch missions! 🎾\nCertificate: ${location.href}`;
 
   // FIX: try Web Share API with image file first (works on iOS + Android Chrome)
   // — this opens WhatsApp natively if the user picks it from the share sheet
@@ -5650,7 +5650,7 @@ if(certBtn){
     if(unlocked){
       openCertificate();
     }else{
-      showToast("Finish all 36 missions to unlock.");
+      showToast(`Finish all ${missions.length} missions to unlock.`);
     }
   };
 }
@@ -5781,7 +5781,7 @@ function markMissionDone(id, source="manual"){
   // Pack milestone — 3/6 halfway veya 6/6 complete
   if(packKey){
     const packAfter = packBefore + 1;
-    const packTotal = missions.filter(m=>m.pack===packKey).length || 6;
+    const packTotal = missions.filter(m=>m.pack===packKey).length;
     const packLabel = (typeof getPackName === "function") ? getPackName(packKey) : packKey;
     if(packAfter === Math.ceil(packTotal/2)){
       // Halfway hint
@@ -6350,7 +6350,7 @@ function buildFamilyShareText(){
     });
   }
   let text = `${name}'s JUMVI progress this week:\n`;
-  text += `${total}/36 missions completed\n`;
+  text += `${total}/${missions.length} missions completed\n`;
   if(sc > 0) text += `${sc}-day streak\n`;
   if(topPackLabel) text += `Top skill: ${topPackLabel}\n`;
   text += `\nPlay along: https://qr.jumvi.co`;
@@ -6396,16 +6396,13 @@ const btnDashPrint = document.getElementById("btnDashPrint");
 if(btnDashPrint){
   btnDashPrint.onclick = ()=>{
     clickSound("click");
-    const packs = [
-      { key:"Reflex Rush", label:"Reflex" },
-      { key:"Aim Master", label:"Aim" },
-      { key:"Focus Control", label:"Focus" },
-      { key:"Team Duo", label:"Team" },
-      { key:"Indoor Compact", label:"Indoor" }
-    ];
-    const rows = packs.map(p=>{
-      const n = missions.filter(m=>m.pack===p.key && done.has(m.id)).length;
-      return `<tr><td>${p.label}</td><td>${n} of 6 complete</td><td>${n}/6</td></tr>`;
+    // Derived from SKILL_PACKS (the real pack list) rather than a separate
+    // hand-maintained array — a prior hardcoded copy here silently dropped
+    // Beach/Park from every printed report.
+    const rows = SKILL_PACKS.map(p=>{
+      const inPack = missions.filter(m=>m.pack===p.key);
+      const n = inPack.filter(m=>done.has(m.id)).length;
+      return `<tr><td>${p.label}</td><td>${n} of ${inPack.length} complete</td><td>${n}/${inPack.length}</td></tr>`;
     }).join("");
     const mins = getEstimatedPlayMinutes();
     const dateStr = getToday();
@@ -6451,7 +6448,7 @@ document.getElementById("btnShareWhatsApp").onclick = ()=>{
   let topBadge = null;
   for(const b of BADGES){ if(b.check(done)) topBadge = b; }
   const badgePart = topBadge ? `Top badge: ${topBadge.name}\n` : "";
-  const text = `We completed ${done.size}/36 JUMVI missions!\n${badgePart}Try it: ${url}`;
+  const text = `We completed ${done.size}/${missions.length} JUMVI missions!\n${badgePart}Try it: ${url}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
 };
 document.getElementById("btnShareCopy").onclick = async ()=>{
@@ -6460,7 +6457,7 @@ document.getElementById("btnShareCopy").onclick = async ()=>{
   let topBadge = null;
   for(const b of BADGES){ if(b.check(done)) topBadge = b; }
   const badgePart = topBadge ? ` | Badge: ${topBadge.name}` : "";
-  const text = `${done.size}/36 JUMVI missions completed${badgePart} — ${url}`;
+  const text = `${done.size}/${missions.length} JUMVI missions completed${badgePart} — ${url}`;
   try{
     if(navigator.share){
       await navigator.share({ title:"JUMVI Missions", text, url });
@@ -7386,7 +7383,7 @@ if(btnRestore){
  * ======================= */
 // K3 — single source of truth for the mission total. Do NOT hardcode the
 // number anywhere else; format the welcome count through renderMissionCount.
-const TOTAL_MISSIONS = 36;
+const TOTAL_MISSIONS = missions.length;
 function renderMissionCount(bandLabel, n){
   // Every mission stays available; the selected band only tunes the first pick.
   //
@@ -8132,7 +8129,7 @@ function renderAppHead(tabName){
 
   let o = "", t = "", s = "";
   if(tabName === "browse"){
-    t = tr ? "36 Görev" : "36 Missions";
+    t = tr ? `${missions.length} Görev` : `${missions.length} Missions`;
     // Same real count as the Home card, in v32's Missions-header wording.
     try { s = `${done.size} / ${missions.length} completed`; } catch(_){ s = ""; }
   }else if(tabName === "modes"){
@@ -8166,7 +8163,7 @@ function renderProfileTab(){
   }
   if(statsEl){
     if(ACTIVE_JUMVI_TEAM){
-      statsEl.textContent = `${teamDisplayName(ACTIVE_JUMVI_TEAM)} · ${done.size}/36 ${isTurkishUI() ? "görev" : "missions"}`;
+      statsEl.textContent = `${teamDisplayName(ACTIVE_JUMVI_TEAM)} · ${done.size}/${missions.length} ${isTurkishUI() ? "görev" : "missions"}`;
     }else{
       statsEl.textContent = isTurkishUI()
         ? "İsim ve avatar seç, sonra bir takım oluştur"
@@ -8349,7 +8346,7 @@ function renderFamilyInsights(){
   items.forEach(it => {
     const card = document.createElement("div");
     card.className = "familyMember";
-    const pct = Math.max(0, Math.min(100, Math.round((it.doneCount / 36) * 100)));
+    const pct = Math.max(0, Math.min(100, Math.round((it.doneCount / missions.length) * 100)));
     const isActive = it.p.id === activeId;
     card.innerHTML = `
       <div class="familyMemberAvatar">${JUMVI_ART.img(JUMVI_ART.avatar(it.p.avatar), "avatarArt", "", true)}</div>
@@ -8361,7 +8358,7 @@ function renderFamilyInsights(){
         <div class="familyMemberLevel">${escapeHtml(levelNameFor(it.doneCount))}</div>
         <div class="familyMemberBar"><div class="familyMemberBarFill" style="width:${pct}%"></div></div>
         <div class="familyMemberStats">
-          <span class="familyMemberMissions">${it.doneCount} / 36 ${tr ? "görev" : "missions"}</span>
+          <span class="familyMemberMissions">${it.doneCount} / ${missions.length} ${tr ? "görev" : "missions"}</span>
           <span class="familyMemberStreak"><i class="jic jic-flame" aria-hidden="true"></i> ${it.streak}</span>
         </div>
       </div>
@@ -8717,7 +8714,7 @@ function renderTodayContinuity(){
 
   if(doneCount >= total){
     subEl.textContent = tr
-      ? `36 görevin hepsi tamam. İstediğinizi tekrar oynayın.`
+      ? `${total} görevin hepsi tamam. İstediğinizi tekrar oynayın.`
       : `All ${total} missions done. Play any of them again.`;
     return;
   }
@@ -9407,7 +9404,7 @@ function init(){
       const badgePart = topBadge ? `Top badge: ${topBadge.name}\n` : "";
       const msDone = lastOpenedId ? missions.find(x=>x.id===lastOpenedId) : null;
       const missionPart = msDone ? `Just completed: ${msDone.title}\n` : "";
-      const text = `${missionPart}${badgePart}${done.size}/36 JUMVI missions done! Try it: ${url}`;
+      const text = `${missionPart}${badgePart}${done.size}/${missions.length} JUMVI missions done! Try it: ${url}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
     };
   }
@@ -9419,7 +9416,7 @@ function init(){
       let topBadge = null;
       for(const b of BADGES){ if(b.check(done)) topBadge = b; }
       const badgePart = topBadge ? ` | Badge: ${topBadge.name}` : "";
-      const text = `${done.size}/36 JUMVI missions completed${badgePart} — ${url}`;
+      const text = `${done.size}/${missions.length} JUMVI missions completed${badgePart} — ${url}`;
       try{
         if(navigator.share){ await navigator.share({ title:"JUMVI Missions", text, url }); }
         else{ await navigator.clipboard.writeText(text); showToast("Copied to clipboard!"); }
