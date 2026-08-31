@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://qr.jumvi.co/schemas/approved-mission-batch.schema.json",
   "title": "JUMVI Approved Mission Batch",
-  "description": "Contract for a Lab -> Auditor mission batch handed to tools/import-approved-missions.mjs. Each item describes ONE candidate mission in the exact shape the current data.js mission model needs (see data.js's m() helper) plus the auditor's verdict. The importer assigns real mission ids itself -- a batch never specifies one. Only items with auditor_verdict = \"APPROVED\" may be imported; everything else is reported and skipped.",
+  "description": "Contract for a Lab -> Auditor mission batch handed to tools/import-approved-missions.mjs. Each item describes ONE candidate mission in the exact shape the current data.js mission model needs (see data.js's m() helper) plus the Independent Auditor's verdict. The importer assigns real mission ids itself -- a batch never specifies one. Only items with auditor_verdict = \"APPROVE_FOR_REAL_CHILD_PLAYTEST\" may be imported; REVISE_AND_REAUDIT and REJECT are reported and always blocked.",
   "type": "array",
   "items": { "$ref": "#/$defs/candidate" },
   "$defs": {
@@ -73,8 +73,8 @@
         "tip": { "type": "string", "minLength": 1 },
         "auditor_verdict": {
           "type": "string",
-          "enum": ["APPROVED", "REJECTED", "NEEDS_REVISION"],
-          "description": "Only APPROVED candidates may pass the importer. REJECTED/NEEDS_REVISION are reported and skipped -- never imported, never an error by themselves."
+          "enum": ["APPROVE_FOR_REAL_CHILD_PLAYTEST", "REVISE_AND_REAUDIT", "REJECT"],
+          "description": "Canonical Independent Auditor verdict vocabulary. Only APPROVE_FOR_REAL_CHILD_PLAYTEST candidates may pass the importer. REVISE_AND_REAUDIT and REJECT are reported and always blocked -- never imported, never an error by themselves. Any other string (including the legacy generic \"APPROVED\") fails schema validation outright rather than being silently treated as eligible."
         },
         "auditor_notes": {
           "type": "string",

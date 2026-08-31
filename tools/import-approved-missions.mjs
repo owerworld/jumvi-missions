@@ -6,11 +6,15 @@
  * total; see tools/check-mission-growth-fixture.mjs).
  *
  * WHAT THIS IS
- * A reusable pipeline that takes an ALREADY-APPROVED batch (Lab -> Auditor
- * output matching data/approved-mission-batch.schema.json) and integrates it
- * into data.js using the exact current mission model — nothing new is
- * designed or rendered; new missions ride the same generic mission-card
- * pipeline every existing mission already uses.
+ * A reusable pipeline that takes a batch the Independent Auditor has ALREADY
+ * scored (Lab -> Auditor output matching
+ * data/approved-mission-batch.schema.json) and integrates only the
+ * auditor_verdict = "APPROVE_FOR_REAL_CHILD_PLAYTEST" candidates into
+ * data.js, using the exact current mission model — nothing new is designed
+ * or rendered; new missions ride the same generic mission-card pipeline
+ * every existing mission already uses. REVISE_AND_REAUDIT and REJECT
+ * candidates are always blocked; the legacy generic verdict "APPROVED" is
+ * not part of this vocabulary and fails validation.
  *
  * WHAT THIS IS NOT
  * - Not a mission designer: it never invents mission content. Every field
@@ -119,7 +123,13 @@ export function readWorkerPackKeys(root = DEFAULT_REPO_ROOT) {
  *    data/approved-mission-batch.schema.json — the schema file is the
  *    documented contract; this is the enforcement, since the repo carries no
  *    JSON-Schema validator dependency) ───────────────────────────────────── */
-const VERDICTS = new Set(["APPROVED", "REJECTED", "NEEDS_REVISION"]);
+// Canonical Independent Auditor verdict vocabulary — the JUMVI pipeline's
+// actual verdicts, not a generic placeholder. Only ELIGIBLE_VERDICT may pass
+// the importer; the other two are always blocked (reported, not an error).
+// A batch carrying the legacy generic "APPROVED" fails shape validation
+// outright — it is not silently treated as eligible.
+const ELIGIBLE_VERDICT = "APPROVE_FOR_REAL_CHILD_PLAYTEST";
+const VERDICTS = new Set([ELIGIBLE_VERDICT, "REVISE_AND_REAUDIT", "REJECT"]);
 const REQUIRED_FIELDS = [
   "title", "pack", "difficulty", "players", "time", "age",
   "equipment", "steps", "win", "safety", "tip", "auditor_verdict",
@@ -220,7 +230,7 @@ export function validateCandidateShape(candidate, index) {
 export function planImport(batch, current, root = DEFAULT_REPO_ROOT) {
   const shape = validateBatchShape(batch);
   if (!shape.valid) {
-    return { fatal: shape.errors, notApproved: [], invalid: [], toImport: [] };
+    return { fatal: shape.errors, notEligible: [], invalid: [], toImport: [] };
   }
 
   const existingTitles = new Set(current.missions.map((m) => m.title.toLowerCase()));
@@ -230,33 +240,34 @@ export function planImport(batch, current, root = DEFAULT_REPO_ROOT) {
   const missionIdMax = readMissionIdMax(root);
   const workerPackKeys = readWorkerPackKeys(root);
 
-  const notApproved = [];
+  const notEligible = [];
   const invalid = [];
 
   // Pass 1: shape + verdict only. Splits the batch into shape-invalid,
-  // not-approved, and "everything else" without yet knowing about
-  // collisions — a collision needs to see the WHOLE batch first.
-  const approvedShapeValid = [];
+  // not-eligible (blocked verdict), and "everything else" without yet
+  // knowing about collisions — a collision needs to see the WHOLE batch
+  // first.
+  const eligibleShapeValid = [];
   batch.forEach((candidate, index) => {
     const shapeErrors = validateCandidateShape(candidate, index);
     if (shapeErrors.length) {
       invalid.push({ index, candidate, errors: shapeErrors });
       return;
     }
-    if (candidate.auditor_verdict !== "APPROVED") {
-      notApproved.push({ index, candidate });
+    if (candidate.auditor_verdict !== ELIGIBLE_VERDICT) {
+      notEligible.push({ index, candidate });
       return;
     }
-    approvedShapeValid.push({ index, candidate });
+    eligibleShapeValid.push({ index, candidate });
   });
 
-  // Pass 2: count in-batch collisions across ALL approved+shape-valid
+  // Pass 2: count in-batch collisions across ALL eligible+shape-valid
   // candidates first, so pass 3 can flag EVERY occurrence of a collision —
   // not just the second one seen, which would silently let the first
   // through as if it were unique.
   const titleCounts = new Map();
   const suggestedIdCounts = new Map();
-  for (const { candidate } of approvedShapeValid) {
+  for (const { candidate } of eligibleShapeValid) {
     const titleKey = candidate.title.toLowerCase();
     titleCounts.set(titleKey, (titleCounts.get(titleKey) || 0) + 1);
     if (candidate.suggested_id !== undefined) {
@@ -266,7 +277,7 @@ export function planImport(batch, current, root = DEFAULT_REPO_ROOT) {
 
   // Pass 3: per-candidate validation using the collision counts above.
   const candidatesToPlace = [];
-  for (const { index, candidate } of approvedShapeValid) {
+  for (const { index, candidate } of eligibleShapeValid) {
     const errors = [];
     const titleKey = candidate.title.toLowerCase();
     if (existingTitles.has(titleKey)) {
@@ -367,7 +378,7 @@ export function planImport(batch, current, root = DEFAULT_REPO_ROOT) {
     totalAfter,
     packCountsBefore,
     packCountsAfter,
-    notApproved,
+    notEligible,
     invalid,
     toImport,
     filesThatWouldChange,
@@ -482,16 +493,16 @@ export function formatDryRunReport(plan, { mode = "dry-run" } = {}) {
 
   lines.push(`  files that WOULD change:`);
   if (plan.filesThatWouldChange.length === 0) {
-    lines.push(`    (none — nothing approved+valid to import)`);
+    lines.push(`    (none — nothing eligible+valid to import)`);
   } else {
     for (const f of plan.filesThatWouldChange) lines.push(`    ${f}`);
   }
   lines.push("");
 
   lines.push(`  validation:`);
-  lines.push(`    approved+valid   ${plan.toImport.length}`);
-  lines.push(`    not APPROVED     ${plan.notApproved.length}${plan.notApproved.length ? "  (skipped, not an error)" : ""}`);
-  for (const { index, candidate } of plan.notApproved) {
+  lines.push(`    eligible+valid   ${plan.toImport.length}  (auditor_verdict: ${ELIGIBLE_VERDICT})`);
+  lines.push(`    blocked verdict  ${plan.notEligible.length}${plan.notEligible.length ? "  (skipped, not an error)" : ""}`);
+  for (const { index, candidate } of plan.notEligible) {
     lines.push(`      batch[${index}] "${candidate.title}" — verdict: ${candidate.auditor_verdict}`);
   }
   lines.push(`    invalid          ${plan.invalid.length}${plan.invalid.length ? "  (BLOCKS those candidates only)" : ""}`);
@@ -670,7 +681,7 @@ async function main() {
   const approvedCount = Number(approvedCountRaw);
   if (!Number.isInteger(approvedCount) || approvedCount !== plan.toImport.length) {
     console.error(
-      `\n❌ APPLY refused: --approved-count=${JSON.stringify(approvedCountRaw)} does not match the plan's ${plan.toImport.length} approved+valid mission(s).`
+      `\n❌ APPLY refused: --approved-count=${JSON.stringify(approvedCountRaw)} does not match the plan's ${plan.toImport.length} eligible+valid mission(s).`
     );
     console.error("   Re-read the DRY_RUN report above, then pass the exact count you are approving.");
     console.error("   No repo write. No PR. No merge. No deployment.");

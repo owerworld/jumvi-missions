@@ -1,11 +1,22 @@
 # Approved Mission Batch Importer
 
-`tools/import-approved-missions.mjs` takes an already-approved mission batch
-(Lab → Auditor output) and integrates it into `data.js` using the exact
-current mission model — the same generic mission-card pipeline every existing
-mission already renders through. It does not design missions, does not
-create packs, and does not commit, push, open a PR, merge, or deploy. Those
-stay explicit human actions, always.
+`tools/import-approved-missions.mjs` takes a mission batch the Independent
+Auditor has already scored (Lab → Auditor output) and integrates the
+eligible candidates into `data.js` using the exact current mission model —
+the same generic mission-card pipeline every existing mission already
+renders through. It does not design missions, does not create packs, and
+does not commit, push, open a PR, merge, or deploy. Those stay explicit
+human actions, always.
+
+**Verdict vocabulary.** The importer speaks the JUMVI pipeline's actual
+Independent Auditor verdicts, not a generic placeholder:
+
+| Verdict | Meaning | Importer behavior |
+|---|---|---|
+| `APPROVE_FOR_REAL_CHILD_PLAYTEST` | Eligible | The only verdict that may be imported |
+| `REVISE_AND_REAUDIT` | Needs another pass | Always blocked — reported, skipped, not an error |
+| `REJECT` | Rejected | Always blocked — reported, skipped, not an error |
+| `"APPROVED"` (legacy generic) | Not a recognised verdict | **Fails validation as invalid** — never silently treated as eligible |
 
 This document is the operating manual. The machine-readable contract for the
 batch itself lives in [`data/approved-mission-batch.schema.json`](../data/approved-mission-batch.schema.json).
@@ -43,7 +54,7 @@ that itself) plus one addition, `auditor_verdict`:
     "win": "Win condition text.",
     "safety": "Safety line text.",
     "tip": "Tip text.",
-    "auditor_verdict": "APPROVED"
+    "auditor_verdict": "APPROVE_FOR_REAL_CHILD_PLAYTEST"
   }
 ]
 ```
@@ -63,11 +74,12 @@ which mirrors `tools/check-mission-schema.mjs`'s rules for `data.js` itself):
 | `equipment.balls` | A positive integer |
 | `steps` | 1–3 non-empty strings (the mission sheet renders at most 3) |
 | `win` / `safety` / `tip` | Non-empty strings |
-| `auditor_verdict` | `"APPROVED"`, `"REJECTED"`, or `"NEEDS_REVISION"` — **only `APPROVED` may be imported** |
+| `auditor_verdict` | `"APPROVE_FOR_REAL_CHILD_PLAYTEST"`, `"REVISE_AND_REAUDIT"`, or `"REJECT"` — **only `APPROVE_FOR_REAL_CHILD_PLAYTEST` may be imported.** The legacy generic `"APPROVED"` is not part of this vocabulary and fails validation. |
 | `suggested_id` *(optional)* | A sanity hint only. The importer always assigns the real id itself and flags this field if it collides with anything |
 
-A runnable example — some `APPROVED`, one `NEEDS_REVISION`, one with an
-invalid pack — lives at
+A runnable example — two `APPROVE_FOR_REAL_CHILD_PLAYTEST`, one
+`REVISE_AND_REAUDIT`, one `REJECT`, one `APPROVE_FOR_REAL_CHILD_PLAYTEST`
+with an invalid pack — lives at
 [`tools/fixtures/approved-mission-batch.example.json`](../tools/fixtures/approved-mission-batch.example.json).
 **It is a fixture for demos and tests, not a real candidate batch.**
 
@@ -110,11 +122,12 @@ Approved-mission-batch import plan (DRY-RUN)
     index.html (data.js/app.js cache-busting ?v= query strings)
 
   validation:
-    approved+valid   2
-    not APPROVED     1  (skipped, not an error)
-      batch[2] "Example Placeholder Gamma (needs another pass)" — verdict: NEEDS_REVISION
+    eligible+valid   2  (auditor_verdict: APPROVE_FOR_REAL_CHILD_PLAYTEST)
+    blocked verdict  2  (skipped, not an error)
+      batch[2] "Example Placeholder Gamma (needs another pass)" — verdict: REVISE_AND_REAUDIT
+      batch[3] "Example Placeholder Epsilon (rejected)" — verdict: REJECT
     invalid          1  (BLOCKS those candidates only)
-      batch[3] "Example Placeholder Delta (bad pack)":
+      batch[4] "Example Placeholder Delta (bad pack)":
         - pack "Water Balloon Blitz" does not exist in data.js's PACKS — this importer does not create new packs
 
   test plan (run after a real APPLY):
@@ -156,9 +169,9 @@ afterward.
 
 1. Re-validates the batch (the same logic `DRY_RUN` used — the two modes
    share one `planImport()`, so they can never disagree).
-2. If nothing is `APPROVED` + valid, it's a no-op: **no file is touched**,
-   even in `APPLY` mode. Cache/version bumps only happen when there's
-   actually something to bump.
+2. If nothing is `APPROVE_FOR_REAL_CHILD_PLAYTEST` + valid, it's a no-op:
+   **no file is touched**, even in `APPLY` mode. Cache/version bumps only
+   happen when there's actually something to bump.
 3. Appends the new `m(...)` entries to `data.js`, in the same shape as every
    existing mission, with a comment noting the import date and approver.
 4. Regenerates `data/missions-meta.json` via `tools/derive-missions-meta.mjs`'s
@@ -225,7 +238,10 @@ work and is intentionally **not** automated here.
 
 - a missing required field
 - an invalid (non-existent) pack
-- a non-`APPROVED` verdict (skipped, not an error)
+- the canonical verdict vocabulary: `APPROVE_FOR_REAL_CHILD_PLAYTEST` is
+  eligible; `REVISE_AND_REAUDIT` and `REJECT` are always blocked (skipped,
+  not an error); the legacy generic `"APPROVED"` is rejected as invalid,
+  never silently treated as eligible
 - duplicate ids/titles — both against existing missions and within the same
   batch (every colliding occurrence is flagged, not just the second one)
 - assigning past `src/worker.js`'s `MISSION_ID_MAX`

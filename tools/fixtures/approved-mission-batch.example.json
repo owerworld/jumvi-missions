@@ -15,7 +15,7 @@
     "win": "Placeholder win condition for demo purposes only.",
     "safety": "Placeholder safety line for demo purposes only.",
     "tip": "Placeholder tip for demo purposes only.",
-    "auditor_verdict": "APPROVED",
+    "auditor_verdict": "APPROVE_FOR_REAL_CHILD_PLAYTEST",
     "auditor_notes": "Fixture used by tools/check-mission-importer.mjs and the DRY_RUN walkthrough in docs/AUTONOMOUS_MISSION_IMPORTER.md."
   },
   {
@@ -33,7 +33,7 @@
     "win": "Placeholder win condition for demo purposes only.",
     "safety": "Placeholder safety line for demo purposes only.",
     "tip": "Placeholder tip for demo purposes only.",
-    "auditor_verdict": "APPROVED",
+    "auditor_verdict": "APPROVE_FOR_REAL_CHILD_PLAYTEST",
     "auditor_notes": "Fixture used by tools/check-mission-importer.mjs and the DRY_RUN walkthrough in docs/AUTONOMOUS_MISSION_IMPORTER.md."
   },
   {
@@ -48,8 +48,23 @@
     "win": "Placeholder win condition.",
     "safety": "Placeholder safety line.",
     "tip": "Placeholder tip.",
-    "auditor_verdict": "NEEDS_REVISION",
-    "auditor_notes": "Demonstrates a non-APPROVED verdict: reported by the importer, skipped, never imported, never treated as an error."
+    "auditor_verdict": "REVISE_AND_REAUDIT",
+    "auditor_notes": "Demonstrates a REVISE_AND_REAUDIT verdict: reported by the importer, always blocked, never imported, never treated as an error."
+  },
+  {
+    "title": "Example Placeholder Epsilon (rejected)",
+    "pack": "Team Duo",
+    "difficulty": 2,
+    "players": "3–4",
+    "time": "120s",
+    "age": "6+",
+    "equipment": { "paddles": [3, 4], "balls": 1 },
+    "steps": ["Placeholder step one", "Placeholder step two"],
+    "win": "Placeholder win condition.",
+    "safety": "Placeholder safety line.",
+    "tip": "Placeholder tip.",
+    "auditor_verdict": "REJECT",
+    "auditor_notes": "Demonstrates a REJECT verdict: reported by the importer, always blocked, never imported, never treated as an error."
   },
   {
     "title": "Example Placeholder Delta (bad pack)",
@@ -63,7 +78,7 @@
     "win": "Placeholder win condition.",
     "safety": "Placeholder safety line.",
     "tip": "Placeholder tip.",
-    "auditor_verdict": "APPROVED",
-    "auditor_notes": "Demonstrates the invalid-pack rejection path: \"Water Balloon Blitz\" does not exist in data.js's PACKS, so this candidate is blocked even though it is APPROVED."
+    "auditor_verdict": "APPROVE_FOR_REAL_CHILD_PLAYTEST",
+    "auditor_notes": "Demonstrates the invalid-pack rejection path: \"Water Balloon Blitz\" does not exist in data.js's PACKS, so this candidate is blocked even though its verdict is eligible."
   }
 ]

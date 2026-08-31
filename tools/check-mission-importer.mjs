@@ -55,7 +55,7 @@ const VALID_CANDIDATE = Object.freeze({
   win: "Win text",
   safety: "Safety text",
   tip: "Tip text",
-  auditor_verdict: "APPROVED",
+  auditor_verdict: "APPROVE_FOR_REAL_CHILD_PLAYTEST",
 });
 
 const current = loadCurrentData(ROOT);
@@ -75,11 +75,48 @@ const currentMaxId = current.missions.reduce((mx, m) => Math.max(mx, m.id), 0);
   check("invalid pack error names the pack", (plan.invalid[0]?.errors || []).some((e) => e.includes("does not exist in data.js's PACKS")));
 }
 
-/* ── 3. non-approved auditor verdict ─────────────────────────────────────── */
+/* ── 3. canonical Independent Auditor verdict vocabulary ──────────────────
+ * APPROVE_FOR_REAL_CHILD_PLAYTEST -> eligible
+ * REVISE_AND_REAUDIT              -> always blocked
+ * REJECT                          -> always blocked
+ * legacy generic "APPROVED"       -> rejected as invalid (not a recognised
+ *                                     verdict at all -- fails shape
+ *                                     validation, not silently treated as
+ *                                     eligible or as a blocked-but-valid verdict)
+ * ─────────────────────────────────────────────────────────────────────── */
 {
-  const plan = planImport([{ ...VALID_CANDIDATE, title: "Needs Revision Mission", auditor_verdict: "NEEDS_REVISION" }], current, ROOT);
-  check("non-APPROVED verdict is skipped, not imported", plan.notApproved.length === 1 && plan.toImport.length === 0);
-  check("non-APPROVED verdict is not counted as invalid (it isn't an error)", plan.invalid.length === 0);
+  const plan = planImport([{ ...VALID_CANDIDATE, title: "Eligible Verdict Mission" }], current, ROOT);
+  check(
+    "APPROVE_FOR_REAL_CHILD_PLAYTEST is eligible for import",
+    plan.toImport.length === 1 && plan.notEligible.length === 0 && plan.invalid.length === 0,
+    JSON.stringify({ toImport: plan.toImport.length, notEligible: plan.notEligible.length, invalid: plan.invalid.length })
+  );
+}
+{
+  const plan = planImport([{ ...VALID_CANDIDATE, title: "Revise And Reaudit Mission", auditor_verdict: "REVISE_AND_REAUDIT" }], current, ROOT);
+  check("REVISE_AND_REAUDIT is always blocked, not imported", plan.notEligible.length === 1 && plan.toImport.length === 0);
+  check("REVISE_AND_REAUDIT is not counted as invalid (it isn't an error)", plan.invalid.length === 0);
+}
+{
+  const plan = planImport([{ ...VALID_CANDIDATE, title: "Reject Mission", auditor_verdict: "REJECT" }], current, ROOT);
+  check("REJECT is always blocked, not imported", plan.notEligible.length === 1 && plan.toImport.length === 0);
+  check("REJECT is not counted as invalid (it isn't an error)", plan.invalid.length === 0);
+}
+{
+  const errors = validateCandidateShape({ ...VALID_CANDIDATE, auditor_verdict: "APPROVED" }, 0);
+  check(
+    "legacy generic verdict \"APPROVED\" is rejected as invalid, not treated as eligible",
+    errors.some((e) => e.includes("auditor_verdict") && e.includes("APPROVED")),
+    errors.join("; ")
+  );
+}
+{
+  const plan = planImport([{ ...VALID_CANDIDATE, title: "Legacy Approved Mission", auditor_verdict: "APPROVED" }], current, ROOT);
+  check(
+    "a batch entry using the legacy \"APPROVED\" verdict never reaches toImport or notEligible -- it is blocked as invalid",
+    plan.invalid.length === 1 && plan.toImport.length === 0 && plan.notEligible.length === 0,
+    JSON.stringify(plan.invalid)
+  );
 }
 {
   const errors = validateCandidateShape({ ...VALID_CANDIDATE, auditor_verdict: "MAYBE" }, 0);
