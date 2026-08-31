@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qr.jumvi.co/schemas/approved-mission-batch.schema.json",
+  "title": "JUMVI Approved Mission Batch",
+  "description": "Contract for a Lab -> Auditor mission batch handed to tools/import-approved-missions.mjs. Each item describes ONE candidate mission in the exact shape the current data.js mission model needs (see data.js's m() helper) plus the Independent Auditor's verdict. The importer assigns real mission ids itself -- a batch never specifies one. Only items with auditor_verdict = \"APPROVE_FOR_REAL_CHILD_PLAYTEST\" may be imported; REVISE_AND_REAUDIT and REJECT are reported and always blocked.",
+  "type": "array",
+  "items": { "$ref": "#/$defs/candidate" },
+  "$defs": {
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title", "pack", "difficulty", "players", "time", "age",
+        "equipment", "steps", "win", "safety", "tip", "auditor_verdict"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Mission card title. Must be unique against every existing mission and every other candidate in the same batch (case-insensitive)."
+        },
+        "pack": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must be an EXISTING pack key from data.js's PACKS array (e.g. \"Aim Master\"). This importer does not create new packs -- see docs/AUTONOMOUS_MISSION_IMPORTER.md for what a brand-new pack additionally requires."
+        },
+        "difficulty": {
+          "type": "integer",
+          "enum": [1, 2, 3]
+        },
+        "players": {
+          "type": "string",
+          "pattern": "^[0-9]+(–[0-9]+)?$",
+          "description": "\"N\" or an inclusive range \"N–M\" using an EN DASH (U+2013), matching every existing mission -- a plain hyphen fails validation."
+        },
+        "time": {
+          "type": "string",
+          "pattern": "^[0-9]+s$"
+        },
+        "age": {
+          "type": "string",
+          "pattern": "^[0-9]+\\+$"
+        },
+        "equipment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["paddles", "balls"],
+          "properties": {
+            "paddles": {
+              "description": "A single count, or an inclusive [min, max] range (renders as \"min–max\"). Must cover the max of \"players\" -- a mission cannot need more hands than paddles.",
+              "oneOf": [
+                { "type": "integer", "minimum": 1 },
+                {
+                  "type": "array",
+                  "items": { "type": "integer", "minimum": 1 },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              ]
+            },
+            "balls": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "The mission sheet renders at most 3 steps -- a 4th is written but never shown."
+        },
+        "win": { "type": "string", "minLength": 1 },
+        "safety": { "type": "string", "minLength": 1 },
+        "tip": { "type": "string", "minLength": 1 },
+        "auditor_verdict": {
+          "type": "string",
+          "enum": ["APPROVE_FOR_REAL_CHILD_PLAYTEST", "REVISE_AND_REAUDIT", "REJECT"],
+          "description": "Canonical Independent Auditor verdict vocabulary. Only APPROVE_FOR_REAL_CHILD_PLAYTEST candidates may pass the importer. REVISE_AND_REAUDIT and REJECT are reported and always blocked -- never imported, never an error by themselves. Any other string (including the legacy generic \"APPROVED\") fails schema validation outright rather than being silently treated as eligible."
+        },
+        "auditor_notes": {
+          "type": "string",
+          "description": "Optional free-text rationale from the auditor. Carried through into the dry-run/apply report; never written into data.js."
+        },
+        "suggested_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional. The importer ALWAYS assigns the real id itself (current highest id + 1, in batch order) -- this field, if present, is only cross-checked as a sanity hint and flagged if it collides with an existing mission id. It is never trusted as the final id."
+        }
+      }
+    }
+  }
+}

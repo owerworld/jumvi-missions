@@ -43,22 +43,25 @@ const PACK_SETTING = {
   "Reflex Rush": "outdoor",
 };
 
-function evaluateDataJs() {
+function evaluateDataJs(dataJsPath = DATA_JS) {
   // data.js declares everything with `const`, and top-level const is a
   // script-scoped binding — it never lands on the context object. The values
   // have to be read by an expression appended to the SAME script, where those
   // bindings are still in scope.
-  const source = `${readFileSync(DATA_JS, "utf8")}\n;({ missions, PACKS, BADGES });`;
+  const source = `${readFileSync(dataJsPath, "utf8")}\n;({ missions, PACKS, BADGES });`;
   const context = vm.createContext({});
-  const { missions, PACKS, BADGES } = vm.runInContext(source, context, { filename: "data.js" });
+  const { missions, PACKS, BADGES } = vm.runInContext(source, context, { filename: dataJsPath });
   if (!Array.isArray(missions) || !missions.length) {
-    throw new Error("data.js evaluated but exposed no missions array");
+    throw new Error(`${dataJsPath} evaluated but exposed no missions array`);
   }
   return { missions, PACKS, BADGES };
 }
 
-export function buildMeta() {
-  const { missions, PACKS, BADGES } = evaluateDataJs();
+// dataJsPath lets a caller point this at a data.js that isn't the real repo's
+// (e.g. tools/import-approved-missions.mjs regenerating meta for a sandboxed
+// copy under test) without duplicating this derivation logic a second time.
+export function buildMeta(dataJsPath = DATA_JS) {
+  const { missions, PACKS, BADGES } = evaluateDataJs(dataJsPath);
 
   const packKeys = PACKS.map((p) => p.key).filter((k) => k !== "all");
   const missing = packKeys.filter((k) => !(k in PACK_SETTING));
