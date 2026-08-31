@@ -1,0 +1,69 @@
+[
+  {
+    "title": "Example Placeholder Alpha",
+    "pack": "Aim Master",
+    "difficulty": 2,
+    "players": "2",
+    "time": "90s",
+    "age": "5+",
+    "equipment": { "paddles": 2, "balls": 1 },
+    "steps": [
+      "This is placeholder step text for the importer demo",
+      "It is NOT a real, approved JUMVI mission",
+      "See docs/AUTONOMOUS_MISSION_IMPORTER.md"
+    ],
+    "win": "Placeholder win condition for demo purposes only.",
+    "safety": "Placeholder safety line for demo purposes only.",
+    "tip": "Placeholder tip for demo purposes only.",
+    "auditor_verdict": "APPROVED",
+    "auditor_notes": "Fixture used by tools/check-mission-importer.mjs and the DRY_RUN walkthrough in docs/AUTONOMOUS_MISSION_IMPORTER.md."
+  },
+  {
+    "title": "Example Placeholder Beta",
+    "pack": "Beach/Park",
+    "difficulty": 1,
+    "players": "2",
+    "time": "60s",
+    "age": "4+",
+    "equipment": { "paddles": 2, "balls": 1 },
+    "steps": [
+      "This is placeholder step text for the importer demo",
+      "It is NOT a real, approved JUMVI mission"
+    ],
+    "win": "Placeholder win condition for demo purposes only.",
+    "safety": "Placeholder safety line for demo purposes only.",
+    "tip": "Placeholder tip for demo purposes only.",
+    "auditor_verdict": "APPROVED",
+    "auditor_notes": "Fixture used by tools/check-mission-importer.mjs and the DRY_RUN walkthrough in docs/AUTONOMOUS_MISSION_IMPORTER.md."
+  },
+  {
+    "title": "Example Placeholder Gamma (needs another pass)",
+    "pack": "Focus Control",
+    "difficulty": 2,
+    "players": "2",
+    "time": "90s",
+    "age": "5+",
+    "equipment": { "paddles": 2, "balls": 1 },
+    "steps": ["Placeholder step one", "Placeholder step two"],
+    "win": "Placeholder win condition.",
+    "safety": "Placeholder safety line.",
+    "tip": "Placeholder tip.",
+    "auditor_verdict": "NEEDS_REVISION",
+    "auditor_notes": "Demonstrates a non-APPROVED verdict: reported by the importer, skipped, never imported, never treated as an error."
+  },
+  {
+    "title": "Example Placeholder Delta (bad pack)",
+    "pack": "Water Balloon Blitz",
+    "difficulty": 1,
+    "players": "2",
+    "time": "60s",
+    "age": "4+",
+    "equipment": { "paddles": 2, "balls": 1 },
+    "steps": ["Placeholder step one"],
+    "win": "Placeholder win condition.",
+    "safety": "Placeholder safety line.",
+    "tip": "Placeholder tip.",
+    "auditor_verdict": "APPROVED",
+    "auditor_notes": "Demonstrates the invalid-pack rejection path: \"Water Balloon Blitz\" does not exist in data.js's PACKS, so this candidate is blocked even though it is APPROVED."
+  }
+]
