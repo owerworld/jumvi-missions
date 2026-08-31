@@ -21,6 +21,14 @@ function getPackName(key){
   return p ? p.name : key;
 }
 
+// Single source of truth for "how many missions does this pack actually
+// have" — badges (below) and every pack-total display in app.js read this
+// instead of assuming a fixed per-pack count, so a pack gaining missions
+// never needs a matching hardcoded number anywhere else.
+function missionsInPack(packKey){
+  return missions.filter(x => x.pack === packKey);
+}
+
 // Pack-level imagination themes — opsiyonel hayal katmanı
 // Görev kurallarını DEĞIŞTIRMEZ — sadece çocuğun zihninde sahneyi kurar
 const PACK_THEMES = {
@@ -278,18 +286,20 @@ const BADGES = [
   // Pack badges — pack'in TAMAMINI bitirme. Display order follows the PACK
   // order above (Bullseye first, Lightning Hands last) so the badge row tells
   // the same story as the mission path — ids/checks are key-based, unchanged.
+  // Completion is done-in-pack >= actual missions in that pack (missionsInPack),
+  // never a fixed count — a pack that grows to 7 or 8 missions just works.
   { id:"aim", name:"Sharp Shooter", req:"Finish all Bullseye missions", category:"pack", pack:"Aim Master",
-    check: (done)=>missions.filter(x=>x.pack==="Aim Master"&& done.has(x.id)).length>=6 },
+    check: (done)=>missionsInPack("Aim Master").filter(x=>done.has(x.id)).length>=missionsInPack("Aim Master").length },
   { id:"zen", name:"Zen Master", req:"Finish all Zen Mode missions", category:"pack", pack:"Focus Control",
-    check: (done)=>missions.filter(x=>x.pack==="Focus Control"&& done.has(x.id)).length>=6 },
+    check: (done)=>missionsInPack("Focus Control").filter(x=>done.has(x.id)).length>=missionsInPack("Focus Control").length },
   { id:"team", name:"Team Captain", req:"Finish all Team Up missions", category:"pack", pack:"Team Duo",
-    check: (done)=>missions.filter(x=>x.pack==="Team Duo"&& done.has(x.id)).length>=6 },
+    check: (done)=>missionsInPack("Team Duo").filter(x=>done.has(x.id)).length>=missionsInPack("Team Duo").length },
   { id:"indoor", name:"Living Room Hero", req:"Finish all Indoor Fun missions", category:"pack", pack:"Indoor Compact",
-    check: (done)=>missions.filter(x=>x.pack==="Indoor Compact"&& done.has(x.id)).length>=6 },
+    check: (done)=>missionsInPack("Indoor Compact").filter(x=>done.has(x.id)).length>=missionsInPack("Indoor Compact").length },
   { id:"outdoor", name:"Outdoor Adventurer", req:"Finish all Outdoor missions", category:"pack", pack:"Beach/Park",
-    check: (done)=>missions.filter(x=>x.pack==="Beach/Park"&& done.has(x.id)).length>=6 },
+    check: (done)=>missionsInPack("Beach/Park").filter(x=>done.has(x.id)).length>=missionsInPack("Beach/Park").length },
   { id:"reflex", name:"Reflex Pro", req:"Finish all Lightning Hands", category:"pack", pack:"Reflex Rush",
-    check: (done)=>missions.filter(x=>x.pack==="Reflex Rush"&& done.has(x.id)).length>=6 },
+    check: (done)=>missionsInPack("Reflex Rush").filter(x=>done.has(x.id)).length>=missionsInPack("Reflex Rush").length },
 
   // Streak badges
   { id:"streak3", name:"3-Day Streak", req:"Play 3 days in a row", category:"streak",
@@ -298,8 +308,8 @@ const BADGES = [
     check: (_done, ctx)=>(ctx?.streakCount||0)>=7 },
 
   // Final
-  { id:"champ", name:"JUMVI Champion", req:"Complete all 36 missions", category:"champion",
-    check: (done)=>done.size>=36 },
+  { id:"champ", name:"JUMVI Champion", req:`Complete all ${missions.length} missions`, category:"champion",
+    check: (done)=>done.size>=missions.length },
 
   { id:"zippy", name:"Zippy Zana", req:"Master the secret Zana bounce", category:"fun",
     check: ()=>false },

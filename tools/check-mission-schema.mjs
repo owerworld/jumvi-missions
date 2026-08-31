@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ═══════════════════════════════════════════════════════════════════════════
- * check-mission-schema.mjs — the data contract behind all 36 missions.
+ * check-mission-schema.mjs — the data contract behind the missions array.
  *
  * Every screen in JUMVI is a projection of this array. A mission missing
  * `safety` renders a sheet with an empty safety band; a duplicate id silently
@@ -28,13 +28,16 @@ vm.runInContext(src + "\n;globalThis.__out = { missions, PACKS, BADGES };", ctx,
 const { missions, PACKS } = ctx.__out;
 
 const REQUIRED = ["id", "title", "pack", "difficulty", "age", "players", "time", "equipment", "steps", "win", "tip", "safety"];
-const EXPECTED_COUNT = 36;
 
 const problems = [];
 const fail = (msg) => problems.push(msg);
 
-/* ── count ─────────────────────────────────────────────────────────────── */
-if (missions.length !== EXPECTED_COUNT) fail(`mission count is ${missions.length}, expected ${EXPECTED_COUNT}`);
+/* ── count ─────────────────────────────────────────────────────────────── *
+ * No fixed EXPECTED_COUNT here on purpose: missions.length IS the count —
+ * the schema contract is about shape (required fields, unique ids, every
+ * mission in a declared pack), not a number that has to be hand-bumped
+ * every time a mission is added. */
+if (missions.length < 1) fail("missions array is empty");
 
 /* ── required fields, per mission ──────────────────────────────────────── */
 for (const mission of missions) {
@@ -101,7 +104,7 @@ for (const [key, n] of packCounts) if (n === 0) fail(`pack "${key}" has no missi
 
 /* ── report ────────────────────────────────────────────────────────────── */
 console.log("Mission data contract\n");
-console.log(`  missions          ${missions.length} / ${EXPECTED_COUNT}`);
+console.log(`  missions          ${missions.length}`);
 console.log(`  unique ids        ${byId.size}`);
 console.log(`  required fields   ${REQUIRED.join(", ")}`);
 console.log("\n  per pack:");
@@ -115,4 +118,4 @@ if (problems.length) {
   for (const p of problems) console.log(`  · ${p}`);
   process.exit(1);
 }
-console.log("\n✅ 36/36 missions satisfy the schema; ids, titles and packs are consistent.");
+console.log(`\n✅ ${missions.length}/${missions.length} missions satisfy the schema; ids, titles and packs are consistent.`);
