@@ -1,0 +1,71 @@
+{
+  "governance_version": "1.0.0",
+  "id": "PHASE3_PHYSICAL_PRINCIPLES",
+  "title": "JUMVI Locked Physical Principles",
+  "description": "Pinned, versioned physical-design law for the real JUMVI Toss & Catch paddle set. `enforced: true` constraints are deterministically checked (a hard fail, no auditor discretion). `enforced: false` entries are informational -- they describe the product's real behavioral envelope and are fed to the Auditor's own review, but their absence from a candidate's wording is never itself grounds for an automatic reject (see meta_rules.behavioral_risk_not_auto_reject).",
+  "hard_constraints": [
+    {
+      "id": "MAX_PLAYERS",
+      "type": "numeric_bound",
+      "field": "player_count",
+      "max": 4,
+      "enforced": true,
+      "description": "max 4 players"
+    },
+    {
+      "id": "MAX_BALLS",
+      "type": "numeric_bound",
+      "field": "ball_count",
+      "max": 4,
+      "enforced": true,
+      "description": "max 4 balls"
+    },
+    {
+      "id": "EQUIPMENT_ALLOWLIST",
+      "type": "equipment_allowlist",
+      "allowed": ["paddle", "ball"],
+      "enforced": true,
+      "description": "only actual JUMVI set equipment"
+    },
+    {
+      "id": "ALLOWED_PADDLE_BEHAVIOR",
+      "type": "behavior_allowlist",
+      "allowed": ["catch", "catching", "receive", "receiving", "present", "presenting", "reposition", "repositioning", "supported transfer"],
+      "enforced": false,
+      "description": "catching / receiving / presenting paddle / repositioning / supported transfer behavior only -- informational envelope, fed to the Auditor, never enforced by absence"
+    },
+    {
+      "id": "FORBIDDEN_PADDLE_BEHAVIOR",
+      "type": "behavior_denylist",
+      "forbidden": ["rebound", "bounce", "bouncing", "racket", "racquet", "strike", "striking", "swing the paddle", "smash", "volley", "hit the ball", "paddle-propelled", "propel the ball", "whack"],
+      "enforced": true,
+      "description": "do not assume rebound, bouncing, racket-style striking, or paddle-propelled throwing"
+    }
+  ],
+  "judgment_required_constraints": [
+    {
+      "id": "NO_IMPOSSIBLE_SIMULTANEOUS_STATES",
+      "requires_auditor_judgment": true,
+      "description": "impossible simultaneous states fail (e.g. more concurrent possessors claimed than ball_count allows)"
+    },
+    {
+      "id": "NO_UNSAFE_INTENDED_CONTACT",
+      "requires_auditor_judgment": true,
+      "description": "unsafe intended contact fails"
+    },
+    {
+      "id": "REQUIRES_VALID_CONTINUATION",
+      "requires_auditor_judgment": true,
+      "description": "no valid continuation fails"
+    },
+    {
+      "id": "NO_PERMANENT_MEANINGLESS_PARTICIPATION",
+      "requires_auditor_judgment": true,
+      "description": "permanent meaningless participation fails"
+    }
+  ],
+  "meta_rules": {
+    "behavioral_risk_not_auto_reject": "behavioral risk must NOT be promoted into a physical hard reject unless a formal hard constraint is actually satisfied",
+    "unknown_stays_unknown": "UNKNOWN remains UNKNOWN and must be routed to validation (REVISE_AND_REAUDIT) rather than guessed or silently approved"
+  }
+}
