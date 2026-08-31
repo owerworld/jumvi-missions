@@ -2,3 +2,10 @@
 node_modules/
 .wrangler/
 .dev.vars*
+
+# tools/jumvi-mission-factory.mjs run artifacts — every run writes a full
+# record to artifacts/mission-runs/<RUN_ID>/ for human review, but these are
+# working files (LLM generations, revision rounds, structured JSON, deploy
+# results), not source. Never committed; see docs/JUMVI_MISSION_FACTORY.md.
+artifacts/mission-runs/*/
+!artifacts/mission-runs/.gitkeep
