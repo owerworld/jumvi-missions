@@ -16,6 +16,7 @@
  *                               Requires ANTHROPIC_API_KEY. Not exercised in
  *                               this repo's tests or by this session.
  * ══════════════════════════════════════════════════════════════════════════*/
+import { loadAuditorSystemPrompt, AUDITOR_PROMPT_VERSION } from "./prompts/prompts.mjs";
 
 const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
@@ -24,6 +25,7 @@ export function createMockAuditorAdapter({ script }) {
   if (typeof script !== "function") throw new Error("createMockAuditorAdapter requires a script(auditorInput) function");
   return {
     kind: "mock",
+    promptVersion: AUDITOR_PROMPT_VERSION,
     async audit(auditorInput) {
       return script(auditorInput);
     },
@@ -61,11 +63,7 @@ function extractJson(text) {
   return JSON.parse(candidate.slice(start));
 }
 
-const AUDITOR_SYSTEM_PROMPT = `You are the JUMVI Independent Auditor, a review context ISOLATED from the Lab that proposed this candidate. You did not write it and must not defer to its own uniqueness_rationale -- independently re-derive every judgment from the fingerprints and checklists you are given.
-Evaluate: existing JUMVI duplicate status, batch-internal duplicate status, the HG10 hard-gate checklist, the Phase 3 physical-constraint checklist, structural similarity, participation, role fairness, event clarity, complexity, safety (including any real-world flags: collision/separation, interception/contact, age/motor uncertainty, physical distance, multi-ball interference, behavioral competition risk), category placement, and evidence quality.
-Output ONLY a single JSON object matching this exact shape, nothing else:
-{"lab_candidate_id":"...","auditor_verdict":"APPROVE_FOR_REAL_CHILD_PLAYTEST"|"REVISE_AND_REAUDIT"|"REJECT","findings":{"existing_duplicate":{"flag":bool,"detail":"..."},"batch_duplicate":{"flag":bool,"detail":"..."},"hard_gate":{"passed":bool,"failed_items":["HGx: ..."]},"phase3_physical":{"passed":bool,"concerns":["P3.x: ..."]},"structural_similarity":{"score":0..1,"nearest":"title or null"},"participation":{"assessment":"..."},"role_fairness":{"assessment":"..."},"event_clarity":{"assessment":"..."},"complexity":{"assessment":"..."},"safety":{"assessment":"...","real_world_flags":["..."]},"category_placement":{"assessment":"...","suggested_pack":"key or null"},"evidence_quality":{"assessment":"..."}},"revision_instructions":"required and specific when auditor_verdict is REVISE_AND_REAUDIT, otherwise null"}
-Verdict rule: APPROVE_FOR_REAL_CHILD_PLAYTEST only if every hard-gate item passes, no unresolved duplicate flag, and safety/phase3 concerns are either none or clearly minor and disclosed. REJECT for a fundamental problem no realistic revision fixes (a genuine duplicate, a prohibited mechanic). REVISE_AND_REAUDIT for a fixable gap -- always include specific revision_instructions.`;
+const AUDITOR_SYSTEM_PROMPT = loadAuditorSystemPrompt();
 
 export function createLiveAuditorAdapter({ apiKey = process.env.ANTHROPIC_API_KEY, model } = {}) {
   if (!apiKey) {
@@ -75,6 +73,7 @@ export function createLiveAuditorAdapter({ apiKey = process.env.ANTHROPIC_API_KE
   }
   return {
     kind: "live",
+    promptVersion: AUDITOR_PROMPT_VERSION,
     async audit(auditorInput) {
       const text = await callAnthropic(apiKey, AUDITOR_SYSTEM_PROMPT, JSON.stringify(auditorInput), { model });
       return extractJson(text);

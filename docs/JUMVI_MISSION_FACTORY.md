@@ -10,6 +10,12 @@ Turkish human review, a single approval prompt, and (only on approval) the
 full import → test → PR → CI → merge → production-verify flow. Nobody
 manually invokes a second tool or copies a packet between steps.
 
+By default this needs **no manually-set credentials** if your machine
+already has the `claude` CLI logged in and `gh` authenticated — see
+[Dependency check](#dependency-check) below. Default console output is
+quiet: only the Turkish review, the `ONAY`/`İPTAL` prompt, and one final
+outcome line. Add `--verbose` for the full stage-by-stage trace.
+
 This document is the operating manual. For the batch contract the importer
 half of this system consumes, see
 [`docs/AUTONOMOUS_MISSION_IMPORTER.md`](AUTONOMOUS_MISSION_IMPORTER.md) —
@@ -99,36 +105,128 @@ replacement to hit the requested count — see
 `tools/factory/pipeline.mjs`'s revision loop and the "Delta" fixture in the
 test suite, which proves exactly this.
 
-## "Isolated model context"
+## Dependency check
+
+Before any adapter is constructed, `main()` runs
+`tools/factory/adapters/dependency-check.mjs`'s `checkDependencies()`. It
+checks, in this fixed priority order, and stops at the **first** thing
+missing:
+
+1. `git` is on `PATH`.
+2. The current `--repo-root` looks like this repo (`data.js`,
+   `tools/import-approved-missions.mjs`, `src/worker.js` all present, and
+   it's a real git working tree).
+3. Either the `claude` CLI is installed, **or** `ANTHROPIC_API_KEY` is set.
+4. Either `gh` reports `gh auth status` success, **or** `GITHUB_TOKEN` is
+   set.
+
+On the first thing missing it prints **exactly one** short, actionable
+Turkish message and exits — never a wall of diagnostics. A normal user with
+Claude Code and `gh` already set up on their machine sees nothing here at
+all; the check passes silently and the run proceeds straight to generation.
+
+## Isolated model context
 
 Every Lab call and every Auditor call — including each revision round — is
-a **fresh, stateless request** to the Anthropic Messages API
-(`tools/factory/lab.mjs` / `tools/factory/auditor.mjs`, live adapters). No
-conversation history is shared between them, and the Auditor is explicitly
-instructed not to defer to the Lab's own `uniqueness_rationale`. That
-statelessness *is* the isolation — there is no cheaper or more literal way
-to get independent model contexts from inside a plain Node script that
-runs outside any particular agent host.
+a **fresh, stateless invocation** with no shared conversation state.
 
-**Live mode requires `ANTHROPIC_API_KEY`** (for Lab/Auditor) **and
-`GITHUB_TOKEN`** (for PR/CI/merge). This factory never fabricates either.
-Building the live adapters correctly is in scope for this implementation;
-actually running them against a real key is a separately-reviewed decision
-the user makes later — nothing in this repository's test suite or in the
-implementation session that built it ever called a real LLM API, pushed a
-real branch, or opened a real PR.
+**Default (one-command mode): the locally authenticated `claude` CLI**
+(`tools/factory/adapters/claude-cli.mjs`). Each call spawns a brand-new
+`claude -p --output-format json --append-system-prompt "<pinned prompt>"`
+subprocess with the structured task payload piped over stdin — never
+`--continue`, `--resume`, or a shared session id, so each generation call,
+each Auditor call, and each revision round is a genuinely new process, not
+just a new logical request inside one shared conversation. This is what
+lets a normal user run the factory without ever setting
+`ANTHROPIC_API_KEY` themselves.
 
-## HG10 and Phase 3 — a stated assumption, not a hidden one
+**Optional fallback: the direct Anthropic Messages API**
+(`tools/factory/lab.mjs` / `tools/factory/auditor.mjs`, `createLive*Adapter`),
+used only when the `claude` CLI isn't installed and `ANTHROPIC_API_KEY` is
+set. Same isolation guarantee (a fresh, stateless HTTP request per call),
+just a different transport.
 
-No existing "HG10" or "Phase 3 physical constraints" document was found
-anywhere in this repository. `tools/factory/fingerprint.mjs` defines its own
-10-item hard-gate checklist and 7-item physical-constraint checklist,
-written to match what this product actually ships (2-4 players, ages 3-8,
-six packs, "big-kid steps" phrasing). **If the real JUMVI production
-pipeline has an authoritative HG10 / Phase 3 spec, replace
-`HARD_GATE_CHECKLIST` / `PHASE3_CONSTRAINTS` in that one file** — every
-consumer (the deterministic pre-Auditor gate, and the text handed to the
-Auditor) reads them from there, never duplicates them inline.
+Either way, the Auditor is explicitly instructed (in its pinned system
+prompt, see below) not to defer to the Lab's own `uniqueness_rationale`,
+and never to invent a replacement mechanic of its own — its structured
+output contract has no field for handing back a mission, only text
+`revision_instructions` a **fresh** Lab context must act on independently.
+
+This factory never fabricates a credential. Building the live/CLI adapters
+correctly is in scope for this implementation; actually running them for
+real is a separately-reviewed decision the user makes later — nothing in
+this repository's test suite ever calls a real LLM API, spawns a real
+`claude`/`gh` process, pushes a real branch, or opens a real PR.
+
+## Lab / Auditor prompts — pinned and versioned
+
+The Lab and Auditor system prompts are not inlined as string literals in
+`lab.mjs`/`auditor.mjs`/`claude-cli.mjs`. They live as plain text files
+under `tools/factory/prompts/` (`lab.v1.txt`, `auditor.v1.txt`), loaded
+through the one loader module, `tools/factory/prompts/prompts.mjs`
+(`loadLabSystemPrompt()` / `loadAuditorSystemPrompt()`,
+`LAB_PROMPT_VERSION` / `AUDITOR_PROMPT_VERSION`). Every adapter — mock,
+direct-API, and `claude -p` — reports which `promptVersion` it used, so a
+run's artifacts always resolve to the exact prompt text that produced them.
+Bumping a prompt means adding a new `lab.vN.txt` / `auditor.vN.txt` file
+and moving the version constant to it; the previous version stays on disk.
+
+The Lab prompt pins: current-main sync first (a fresh structural-fingerprint
+exclusion corpus every run/round, never a memorized list); no cosmetic
+novelty (reskinning an existing mechanic is not a new mission); autonomous
+player-count/difficulty/pack decisions; structural invention before naming;
+never lowering quality to hit the requested count; and an explicit evidence
+hierarchy (real observation > structural/physical reasoning > a
+self-generated "simulated" playtest, which is never real-child evidence).
+
+The Auditor prompt pins: independent live sync (re-derive duplicate status
+itself); never inventing a replacement game; never trusting the Lab's own
+conclusions; independent duplicate/category/HG10/physical/safety review;
+the exact canonical verdict vocabulary; and no simulation claim without
+reproducible evidence.
+
+## Pinned governance (HG10 / Phase 3)
+
+HG10 completeness and the Phase 3 physical principles are **not** defined
+in `tools/factory/fingerprint.mjs` (an earlier build of this factory did
+exactly that — invented its own `HARD_GATE_CHECKLIST` / `PHASE3_CONSTRAINTS`
+lists and called them authoritative JUMVI governance; that has been
+removed). They are pinned, versioned data:
+
+- `tools/factory/governance/hg10-schema.json` — the 14 canonical Phase-3
+  semantic fields (`player_count`, `ball_count`, `starting_positions`,
+  `roles`, `starting_possession`, `objective`, `core_actions`,
+  `event_triggers`, `consequences`, `role_transitions`, `continuation`,
+  `reentry`, `difficulty_variables`, `safety_constraints`), the legacy
+  field-name normalization map, the `consequences` merge rule,
+  `safety_constraints` as mandatory-no-substitute, and the exact
+  `HARD_FAIL — INCOMPLETE_PHYSICAL_GENOME (HG10)` error string.
+- `tools/factory/governance/physical-principles.json` — the locked JUMVI
+  physical-design law: `enforced: true` hard constraints (max 4 players,
+  max 4 balls, only real JUMVI-set equipment, no rebound/bounce/racket
+  -style/paddle-propelled mechanics) that deterministically hard-fail a
+  candidate, and `enforced: false` / judgment-required entries (no
+  impossible simultaneous states, no unsafe intended contact, requires
+  valid continuation, no permanent meaningless participation) that are
+  always surfaced to the Auditor as flags and **never** auto-promoted into
+  a hard reject.
+
+`tools/factory/governance/governance.mjs` is the **only** module allowed to
+read those two files. `fingerprint.mjs` and `pipeline.mjs` consume its
+exports (`validateHG10Genome`, `checkPhysicalPrinciples`); neither
+redefines a rule list. A genome field that is genuinely absent is a
+`HARD_FAIL`; a field the Lab honestly could not resolve and marked
+`"UNKNOWN"` is **not** a hard fail, but is never silently treated as
+resolved either — `pipeline.mjs` downgrades even an Auditor `APPROVE` into
+a forced revision round if any `hg10_status.unknownFields` remain open, so
+an unresolved field can never reach the published batch by the Auditor
+simply overlooking it.
+
+`tools/check-mission-factory-governance.mjs` proves all of this, including
+that the validators' behavior is genuinely read from the JSON on disk (by
+loading a deliberately mutated temp copy via `loadGovernanceFrom()` and
+showing the same genome now validates differently) — governance drift
+cannot silently happen.
 
 ## Duplicate / near-duplicate detection
 
@@ -162,6 +260,15 @@ becomes a trusted object: it calls the producer up to `maxAttempts` times,
 and the first response to pass validation wins. A payload that never
 validates fails the run closed (`FactoryFailClosedError`) — it is never
 patched, guessed, or silently accepted partially invalid.
+
+Every Lab candidate must carry a `physical_genome` object (checked
+structurally here; checked for HG10 *completeness* by the governance-driven
+pre-Auditor gate above). Every `AuditorInput` carries a `governance` object
+(the pinned HG10/Phase-3 versions and field list, sourced from
+`governance.mjs`, never authored in `schemas.mjs`) and an `hg10_status`
+object (this exact candidate's own missing/unknown genome fields) — the
+Auditor is always told explicitly which fields, if any, are still
+`UNKNOWN`, rather than having to guess.
 
 ## The Turkish human review
 
@@ -223,20 +330,24 @@ stage, plus `run.log`. **Never committed** (see `.gitignore` — only
 
 ```sh
 node tools/check-mission-factory.mjs
+node tools/check-mission-factory-governance.mjs
+node tools/check-mission-factory-cli-adapters.mjs
 ```
 
-Drives the real `runFactory()` orchestration — the same function the CLI's
-`main()` calls — with mock Lab/Auditor adapters (`tools/factory/lab.mjs` /
-`auditor.mjs`, `createMock*Adapter`) and fake git/github/cloudflare
-adapters (`tools/factory/adapters/fake.mjs`). The only thing that runs for
-real is the actual import against a throwaway sandbox directory (via
+Three suites, all fixtures/mocks only. **Nothing in any of them calls a
+real LLM API, spawns a real `claude`/`gh` process, touches the real repo's
+`data.js`, or makes a real GitHub/Cloudflare request.**
+
+**`check-mission-factory.mjs`** drives the real `runFactory()`
+orchestration — the same function the CLI's `main()` calls — with mock
+Lab/Auditor adapters (`tools/factory/lab.mjs` / `auditor.mjs`,
+`createMock*Adapter`) and fake git/github/cloudflare adapters
+(`tools/factory/adapters/fake.mjs`). The only thing that runs for real is
+the actual import against a throwaway sandbox directory (via
 `--repo-root`-style parameterization, identical to how
 `tools/check-mission-importer.mjs` already tests the importer alone), so a
 passing run proves the real write/validation plumbing, not just control
-flow. **Nothing in the test suite calls a real LLM API, touches the real
-repo's `data.js`, or makes a real GitHub/Cloudflare request.**
-
-Covers, in one end-to-end run plus targeted scenario tests:
+flow. Covers, in one end-to-end run plus targeted scenario tests:
 
 - `APPROVE_FOR_REAL_CHILD_PLAYTEST` on the first pass
 - `REVISE_AND_REAUDIT` → automatic Lab revision → re-Auditor `APPROVE`
@@ -251,6 +362,28 @@ Covers, in one end-to-end run plus targeted scenario tests:
 - the importer's own rejection (defense in depth) → no PR ever created
 - a failing post-apply regression test → stops before any push/PR
 
+**`check-mission-factory-governance.mjs`** proves the pinned-governance
+contract: HG10 canonical completeness (a complete genome passes; a missing
+field hard-fails with the exact `HARD_FAIL — INCOMPLETE_PHYSICAL_GENOME
+(HG10)` string); `UNKNOWN` staying `UNKNOWN` at both the governance-module
+level and the full pipeline level (an Auditor that `APPROVE`s despite an
+open `UNKNOWN` field is overridden by the deterministic gate, proven via a
+deliberately misbehaving scripted Auditor); Phase-3 enforced-vs-judgment
+separation; and governance drift detection (a mutated temp copy of the
+pinned JSON changes validator behavior, proving it's data-driven, not
+hardcoded — and a directory with no governance files fails loudly).
+
+**`check-mission-factory-cli-adapters.mjs`** proves the one-command
+defaults: the `claude -p` Lab/Auditor adapter's request shape (`-p
+--output-format json --append-system-prompt`, payload on stdin, never a
+session-continuation flag) and response parsing (including fail-closed
+behavior on a bad process/response); the `gh` CLI GitHub adapter's request
+shape (`gh api ... --input -`) and response parsing, matching
+`adapters/github.mjs`'s semantics exactly; `checkClaudeCliInstalled` /
+`checkGhCliAuthenticated`; the full `dependency-check.mjs` decision matrix
+(CLI preferred, env-var fallback used only when the CLI truly isn't
+available, in every combination); and the pinned prompts' required content.
+
 ## Guardrails (repeated, deliberately)
 
 - This factory never creates a new pack.
@@ -258,6 +391,12 @@ Covers, in one end-to-end run plus targeted scenario tests:
   analytics allowlists, and never loosens validation.
 - `mergePullRequest` is only ever reached after required CI is green.
 - A stale-main id collision is always a stop, never a force-merge.
-- Live mode requires the human to supply real credentials
-  (`ANTHROPIC_API_KEY`, `GITHUB_TOKEN`) — this implementation never
-  fabricates or assumes one.
+- HG10/Phase-3 rules are pinned governance data
+  (`tools/factory/governance/`), never a checklist authored in
+  `fingerprint.mjs` or anywhere else in source.
+- An `UNKNOWN` genome field is never silently treated as resolved, even if
+  the Auditor itself returns `APPROVE_FOR_REAL_CHILD_PLAYTEST` — the
+  deterministic gate has the final say on that one rule.
+- Live mode prefers the locally authenticated `claude` / `gh` CLIs; it
+  never fabricates or assumes `ANTHROPIC_API_KEY` / `GITHUB_TOKEN` — those
+  remain optional fallbacks for when the CLIs aren't available.

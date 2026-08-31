@@ -18,8 +18,13 @@
  * `runFactory()` is the actual orchestration and is exported so
  * tools/check-mission-factory.mjs can drive the exact same one-command flow
  * with mock Lab/Auditor and fake git/github/cloudflare adapters -- main()
- * below is a thin wrapper that supplies the REAL ones (Anthropic API via
- * ANTHROPIC_API_KEY, GitHub REST API via GITHUB_TOKEN).
+ * below is a thin wrapper that supplies the REAL ones. Before constructing
+ * any of them it runs factory/adapters/dependency-check.mjs, which prefers
+ * the locally authenticated `claude` and `gh` CLIs (so a normal user never
+ * has to set ANTHROPIC_API_KEY or GITHUB_TOKEN by hand) and falls back to
+ * those env vars only if the CLIs aren't available. Default console output
+ * is quiet -- only the Turkish review, the ONAY/İPTAL prompt, and one final
+ * outcome line -- pass --verbose for the full stage-by-stage trace.
  * ══════════════════════════════════════════════════════════════════════════*/
 import path from "node:path";
 import os from "node:os";
@@ -49,6 +54,14 @@ function gitConfigUserName(repoRoot) {
  * and fakes. `approvalFn` is `() => Promise<"ONAY"|"IPTAL">`; the real CLI
  * uses the interactive terminal prompt, tests use a scripted decision.
  */
+/**
+ * `verbose` controls only the EXTRA stage-by-stage progress lines and the
+ * raw deployment-result JSON dump. Regardless of `verbose`, the user always
+ * sees: the Turkish review, the ONAY/İPTAL prompt, and one final outcome
+ * line -- "Make one-command mode actually simple" means a normal run's
+ * terminal output is exactly that and nothing else by default; pass
+ * `--verbose` (main()'s CLI flag) for the full stage-marker trace.
+ */
 export async function runFactory({
   repoRoot = DEFAULT_REPO_ROOT,
   requestedCount,
@@ -60,6 +73,7 @@ export async function runFactory({
   cloudflareAdapter,
   approvalFn,
   approvedBy,
+  verbose = false,
   log = console.log,
   logError = console.error,
 } = {}) {
@@ -67,16 +81,17 @@ export async function runFactory({
     throw new Error("requestedCount must be a positive integer");
   }
   const artifacts = new RunArtifacts(repoRoot, runId);
-  log(`JUMVI Mission Factory — run ${runId}`);
-  log(`Artifacts: ${artifacts.dir}`);
+  const vlog = verbose ? log : () => {};
+  vlog(`JUMVI Mission Factory — run ${runId}`);
+  vlog(`Artifacts: ${artifacts.dir}`);
 
-  log("\n→ CURRENT MAIN SYNC / LAB GENERATION / CHECKS / AUDITOR / REVISION LOOP / REAUDIT");
+  vlog("\n→ CURRENT MAIN SYNC / LAB GENERATION / CHECKS / AUDITOR / REVISION LOOP / REAUDIT");
   let pipelineResult;
   try {
     pipelineResult = await runGenerationPipeline({ repoRoot, requestedCount, runId, labAdapter, auditorAdapter, artifacts });
   } catch (e) {
     if (e instanceof FactoryFailClosedError) {
-      logError(`\n❌ Pipeline stopped (fail-closed): ${e.message}`);
+      logError(`❌ Üretim durduruldu: ${e.message}`);
       artifacts.log(`FAIL-CLOSED: ${e.message}`);
       return { outcome: "fail-closed", stage: "generation", reason: e.message, artifacts };
     }
@@ -85,7 +100,7 @@ export async function runFactory({
 
   const { finalBatch, sync } = pipelineResult;
 
-  log("\n→ TURKISH HUMAN REVIEW");
+  // This is one of the two things a normal run always shows, unconditionally.
   const review = formatTurkishReview(finalBatch, requestedCount);
   log(`\n${review.text}\n`);
   artifacts.write("06-turkish-review", review);
@@ -94,11 +109,11 @@ export async function runFactory({
   artifacts.write("07-human-decision", { decision, at: new Date().toISOString() });
 
   if (decision !== "ONAY") {
-    log(`\nİPTAL. Depoda hiçbir değişiklik yapılmadı. Çalışma kayıtları saklandı: ${artifacts.dir}`);
+    log(`İPTAL. Depoda hiçbir değişiklik yapılmadı. Çalışma kayıtları: ${artifacts.dir}`);
     return { outcome: "iptal", finalBatch, review, artifacts };
   }
 
-  log("\n✅ ONAY alındı. Yayın süreci otomatik devam ediyor...");
+  vlog("\n✅ ONAY alındı. Yayın süreci otomatik devam ediyor...");
   const result = await publishApprovedBatch({
     repoRoot,
     runId,
@@ -112,14 +127,14 @@ export async function runFactory({
   });
 
   if (result.stopped) {
-    logError(`\n❌ Publication stopped at stage "${result.stage}": ${result.reason}`);
-    logError(`Run artifacts: ${artifacts.dir}`);
+    logError(`❌ Yayın durduruldu ("${result.stage}"): ${result.reason}`);
+    logError(`Çalışma kayıtları: ${artifacts.dir}`);
     return { outcome: "publish-stopped", stage: result.stage, reason: result.reason, finalBatch, review, artifacts };
   }
 
-  log("\n✅ Published and verified in production.");
-  log(JSON.stringify(result.deploymentResult, null, 2));
-  log(`\nRun artifacts: ${artifacts.dir}`);
+  log(`✅ Yayınlandı ve production'da doğrulandı. (${result.deploymentResult.live_mission_count} görev, PR #${result.deploymentResult.pr_number})`);
+  vlog(JSON.stringify(result.deploymentResult, null, 2));
+  vlog(`Çalışma kayıtları: ${artifacts.dir}`);
   return { outcome: "published", deploymentResult: result.deploymentResult, finalBatch, review, artifacts };
 }
 
@@ -127,29 +142,30 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const requestedCount = Number(args.count);
   if (!Number.isInteger(requestedCount) || requestedCount < 1) {
-    console.error("Usage: node tools/jumvi-mission-factory.mjs --count N [--approved-by=NAME] [--repo-root=DIR]");
+    console.error("Usage: node tools/jumvi-mission-factory.mjs --count N [--approved-by=NAME] [--repo-root=DIR] [--verbose]");
     process.exit(1);
   }
   const repoRoot = args["repo-root"] ? path.resolve(args["repo-root"]) : DEFAULT_REPO_ROOT;
+  const verbose = args.verbose === true || args.verbose === "true";
 
-  // Real adapters only, loaded lazily so a missing ANTHROPIC_API_KEY /
-  // GITHUB_TOKEN fails fast with a clear message instead of failing deep
-  // inside the pipeline after real API calls have already been made.
-  const { createLiveLabAdapter } = await import("./factory/lab.mjs");
-  const { createLiveAuditorAdapter } = await import("./factory/auditor.mjs");
-  const { createGitAdapter } = await import("./factory/adapters/git.mjs");
-  const { createGitHubAdapter } = await import("./factory/adapters/github.mjs");
-  const { createCloudflareAdapter } = await import("./factory/adapters/cloudflare.mjs");
-
-  let labAdapter, auditorAdapter, githubAdapter;
-  try {
-    labAdapter = createLiveLabAdapter();
-    auditorAdapter = createLiveAuditorAdapter();
-    githubAdapter = createGitHubAdapter({ repoRoot });
-  } catch (e) {
-    console.error(`\n❌ ${e.message}`);
+  // Dependency check FIRST, before any adapter is constructed: is `claude`
+  // installed (else ANTHROPIC_API_KEY), is `gh` authenticated (else
+  // GITHUB_TOKEN), is git available, is this the right repo. A normal user
+  // with Claude Code and `gh` already set up needs neither env var. On
+  // anything missing, print exactly ONE short actionable Turkish message
+  // and stop -- no adapter is ever constructed past this point on failure.
+  const { checkDependencies, resolveLabAndAuditorAdapters, resolveGithubAdapter } = await import("./factory/adapters/dependency-check.mjs");
+  const deps = await checkDependencies({ repoRoot });
+  if (!deps.ok) {
+    console.error(`❌ ${deps.turkishMessage}`);
     process.exit(1);
   }
+
+  const { createGitAdapter } = await import("./factory/adapters/git.mjs");
+  const { createCloudflareAdapter } = await import("./factory/adapters/cloudflare.mjs");
+
+  const { labAdapter, auditorAdapter } = await resolveLabAndAuditorAdapters({ preferClaudeCli: deps.llm.useClaudeCli });
+  const { githubAdapter } = await resolveGithubAdapter({ repoRoot, preferGhCli: deps.github.useGhCli });
   const gitAdapter = createGitAdapter({ repoRoot });
   const cloudflareAdapter = createCloudflareAdapter({ githubAdapter });
 
@@ -163,6 +179,7 @@ async function main() {
     cloudflareAdapter,
     approvalFn: askForApprovalInteractive,
     approvedBy: args["approved-by"],
+    verbose,
   });
 
   process.exit(result.outcome === "published" || result.outcome === "iptal" ? 0 : 1);

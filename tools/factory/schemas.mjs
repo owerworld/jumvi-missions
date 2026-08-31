@@ -48,6 +48,16 @@ function missionFieldErrors(c, label) {
     if (!Number.isInteger(maxPaddles) || maxPaddles < 1) errors.push(`${label}: equipment.paddles is not a positive count`);
     if (!Number.isInteger(eq.balls) || eq.balls < 1) errors.push(`${label}: equipment.balls is not a positive count`);
   }
+  // The candidate's physical genome (HG10). This checks only that the field
+  // is present and shaped like an object -- whether it's actually HG10
+  // COMPLETE (all 14 canonical fields resolved or explicitly UNKNOWN) is a
+  // governance-pinned question, answered by
+  // tools/factory/governance/governance.mjs's validateHG10Genome(), not
+  // here. This file only owns the structural contract; the semantic rule
+  // list lives in tools/factory/governance/ and nowhere else.
+  if (!c.physical_genome || typeof c.physical_genome !== "object" || Array.isArray(c.physical_genome)) {
+    errors.push(`${label}: "physical_genome" is not an object`);
+  }
   return errors;
 }
 
@@ -74,6 +84,10 @@ export function validateLabOutput(obj) {
 }
 
 /* ── 2. Auditor input ─────────────────────────────────────────────────── */
+function isPlainObject(v) {
+  return !!v && typeof v === "object" && !Array.isArray(v);
+}
+
 export function validateAuditorInput(obj) {
   const errors = [];
   if (!obj || typeof obj !== "object") return { valid: false, errors: ["Auditor input is not an object"] };
@@ -81,8 +95,29 @@ export function validateAuditorInput(obj) {
   else errors.push(...missionFieldErrors(obj.candidate, "candidate"));
   if (!Array.isArray(obj.batch_siblings)) errors.push("batch_siblings must be an array (may be empty)");
   if (!Array.isArray(obj.existing_fingerprints)) errors.push("existing_fingerprints must be an array");
-  if (!isStringArray(obj.hard_gate_checklist, { min: 1 })) errors.push("hard_gate_checklist must be a non-empty string array");
-  if (!isStringArray(obj.phase3_constraints, { min: 1 })) errors.push("phase3_constraints must be a non-empty string array");
+  // governance: sourced from tools/factory/governance/governance.mjs at call
+  // time (see pipeline.mjs) -- this is NOT a checklist authored in this
+  // file. Only the shape is enforced here; the actual field list, versions,
+  // and constraint text are pinned governance data.
+  if (!isPlainObject(obj.governance)) {
+    errors.push("governance is missing");
+  } else {
+    if (!isNonEmptyString(obj.governance.hg10_version)) errors.push("governance.hg10_version is missing");
+    if (!isStringArray(obj.governance.hg10_canonical_fields, { min: 1 })) errors.push("governance.hg10_canonical_fields must be a non-empty string array");
+    if (!isNonEmptyString(obj.governance.physical_principles_version)) errors.push("governance.physical_principles_version is missing");
+    if (!Array.isArray(obj.governance.judgment_flags)) errors.push("governance.judgment_flags must be an array");
+  }
+  // hg10_status: the deterministic pre-audit gate's own read of this exact
+  // candidate's genome completeness (tools/factory/fingerprint.mjs's
+  // runPreAuditChecks), so the Auditor is told explicitly which fields (if
+  // any) are still UNKNOWN rather than having to re-derive it blind.
+  if (!isPlainObject(obj.hg10_status)) {
+    errors.push("hg10_status is missing");
+  } else {
+    if (typeof obj.hg10_status.complete !== "boolean") errors.push("hg10_status.complete must be boolean");
+    if (typeof obj.hg10_status.hasUnknown !== "boolean") errors.push("hg10_status.hasUnknown must be boolean");
+    if (!Array.isArray(obj.hg10_status.unknownFields)) errors.push("hg10_status.unknownFields must be an array");
+  }
   if (!Number.isInteger(obj.revision_round) || obj.revision_round < 0) errors.push("revision_round must be a non-negative integer");
   return { valid: errors.length === 0, errors };
 }

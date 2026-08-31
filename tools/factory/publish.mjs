@@ -30,6 +30,13 @@ function toImporterBatch(finalBatch) {
     win: candidate.win,
     safety: candidate.safety,
     tip: candidate.tip,
+    // Carried through (never rendered into data.js -- renderMissionEntries()
+    // only reads the fields above) so a stale-main re-validation can still
+    // run the same HG10 gate the candidate already passed at generation
+    // time. Dropping this here would make revalidateAgainstCurrent() reject
+    // every approved candidate as HG10-incomplete purely because of this
+    // reshape, not because anything about the candidate actually changed.
+    physical_genome: candidate.physical_genome,
     auditor_verdict: "APPROVE_FOR_REAL_CHILD_PLAYTEST",
   }));
 }

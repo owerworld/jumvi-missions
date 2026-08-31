@@ -22,6 +22,7 @@
  *                            real key is a separately-reviewed decision the
  *                            user makes later.
  * ══════════════════════════════════════════════════════════════════════════*/
+import { loadLabSystemPrompt, LAB_PROMPT_VERSION } from "./prompts/prompts.mjs";
 
 const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION = "2023-06-01";
@@ -58,7 +59,7 @@ export function createMockLabAdapter({ fixtures, reviseFn } = {}) {
     };
   }
 
-  return { kind: "mock", generate, revise };
+  return { kind: "mock", promptVersion: LAB_PROMPT_VERSION, generate, revise };
 }
 
 async function callAnthropic(apiKey, system, userPrompt, { model = "claude-sonnet-5" } = {}) {
@@ -95,10 +96,7 @@ function extractJson(text) {
   return JSON.parse(candidate.slice(start));
 }
 
-const LAB_SYSTEM_PROMPT = `You are the JUMVI Mission Lab, an isolated generation context for the JUMVI Toss & Catch paddle set (2-4 players, ages 3-8, six packs: Aim Master, Focus Control, Team Duo, Indoor Compact, Beach/Park, Reflex Rush).
-You output ONLY a single JSON object matching this exact shape, nothing else:
-{"run_id":"...","requested_count":N,"generated_at":"ISO-8601","candidates":[{"lab_candidate_id":"...","title":"...","pack":"<one of the six pack keys>","difficulty":1|2|3,"players":"N or N–M (en dash)","time":"Ns","age":"N+","equipment":{"paddles":N or [min,max],"balls":N},"steps":["1-3 short imperative steps"],"win":"measurable win condition","safety":"specific safety line","tip":"one tip","mechanics_summary":"one sentence describing the core mechanic","continuation_note":"how this extends the existing skill progression","uniqueness_rationale":"why this is not a duplicate of an existing JUMVI mission"}]}
-You will be given the CURRENT full mission inventory as structural fingerprints (pack + token bag) to exclude. Never propose a mechanic that overlaps heavily with any of them. Never invent a new pack. Do not lower quality just to reach the requested count -- fewer, better candidates are correct if that many good ideas don't exist.`;
+const LAB_SYSTEM_PROMPT = loadLabSystemPrompt();
 
 export function createLiveLabAdapter({ apiKey = process.env.ANTHROPIC_API_KEY, model } = {}) {
   if (!apiKey) {
@@ -125,5 +123,5 @@ export function createLiveLabAdapter({ apiKey = process.env.ANTHROPIC_API_KEY, m
     return extractJson(text);
   }
 
-  return { kind: "live", generate, revise };
+  return { kind: "live", promptVersion: LAB_PROMPT_VERSION, generate, revise };
 }

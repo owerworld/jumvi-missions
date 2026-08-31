@@ -11,10 +11,30 @@
  * exactly what happened without re-running the models.
  * ══════════════════════════════════════════════════════════════════════════*/
 import { loadCurrentData } from "../import-approved-missions.mjs";
-import { fingerprintExistingMissions, runPreAuditChecks, structuralFingerprint, HARD_GATE_CHECKLIST, PHASE3_CONSTRAINTS } from "./fingerprint.mjs";
+import { fingerprintExistingMissions, runPreAuditChecks, structuralFingerprint } from "./fingerprint.mjs";
+import { HG10_SCHEMA, HG10_VERSION, PHYSICAL_PRINCIPLES, PHYSICAL_PRINCIPLES_VERSION } from "./governance/governance.mjs";
 import { validateLabOutput, validateAuditorInput, validateAuditorOutput, validateRevisionPacket, validateFinalApprovedBatch, validateOrRetry } from "./schemas.mjs";
 
 export const MAX_REVISION_ROUNDS = 3;
+
+// The governance descriptor handed to every Auditor call. Sourced entirely
+// from tools/factory/governance/governance.mjs (pinned JSON) -- this module
+// never authors its own checklist, it only shapes what's already loaded
+// there into the AuditorInput contract (see schemas.mjs's validateAuditorInput).
+const GOVERNANCE_FOR_AUDITOR = Object.freeze({
+  hg10_version: HG10_VERSION,
+  hg10_canonical_fields: HG10_SCHEMA.canonical_fields,
+  physical_principles_version: PHYSICAL_PRINCIPLES_VERSION,
+  judgment_flags: PHYSICAL_PRINCIPLES.judgment_required_constraints.map((j) => ({ id: j.id, description: j.description })),
+});
+
+function hg10StatusFromPreAudit(pre) {
+  return {
+    complete: pre.hg10.complete,
+    hasUnknown: pre.hasUnknownGenomeFields,
+    unknownFields: pre.unknownGenomeFields,
+  };
+}
 
 export async function syncCurrentMain(repoRoot) {
   const current = loadCurrentData(repoRoot);
@@ -74,13 +94,13 @@ function runPreAuditStage({ candidates, sync, artifacts }) {
   return results;
 }
 
-async function auditOnce({ auditorAdapter, candidate, batchSiblings, sync, revisionRound, priorFindings, artifacts, stageLabel }) {
+async function auditOnce({ auditorAdapter, candidate, batchSiblings, sync, revisionRound, priorFindings, artifacts, stageLabel, hg10Status }) {
   const auditorInput = {
     candidate,
     batch_siblings: batchSiblings,
     existing_fingerprints: sync.existingFingerprints,
-    hard_gate_checklist: HARD_GATE_CHECKLIST,
-    phase3_constraints: PHASE3_CONSTRAINTS,
+    governance: GOVERNANCE_FOR_AUDITOR,
+    hg10_status: hg10Status,
     revision_round: revisionRound,
     prior_findings: priorFindings || null,
   };
@@ -129,6 +149,7 @@ export async function runGenerationPipeline({ repoRoot, requestedCount, runId, l
 
     const siblings = labOutput.candidates.filter((c) => c.lab_candidate_id !== candidate.lab_candidate_id);
     let current = candidate;
+    let currentPre = pre;
     let round = 0;
     let priorFindings = null;
     let lastOutput = null;
@@ -144,27 +165,45 @@ export async function runGenerationPipeline({ repoRoot, requestedCount, runId, l
         priorFindings,
         artifacts,
         stageLabel: round === 0 ? "03-audit-initial" : `03-audit-reaudit-r${round}`,
+        hg10Status: hg10StatusFromPreAudit(currentPre),
       });
 
-      if (lastOutput.auditor_verdict === "APPROVE_FOR_REAL_CHILD_PLAYTEST") {
+      const verdict = lastOutput.auditor_verdict;
+      // Governance rule (physical-principles.json meta_rules.unknown_stays_
+      // unknown): a genome field the deterministic gate found still marked
+      // UNKNOWN is never silently treated as resolved -- even if the
+      // Auditor itself returns APPROVE. The pipeline never trusts a model
+      // to have quietly resolved something it was explicitly told (via
+      // hg10_status) was still open; it downgrades that case into a forced
+      // revision round instead.
+      const blockedByUnknownGenome = verdict === "APPROVE_FOR_REAL_CHILD_PLAYTEST" && currentPre.hasUnknownGenomeFields;
+
+      if (verdict === "APPROVE_FOR_REAL_CHILD_PLAYTEST" && !blockedByUnknownGenome) {
         approved.push({ candidate: current, auditor_output: lastOutput, revision_round_used: round });
         settled = true;
         break;
       }
-      if (lastOutput.auditor_verdict === "REJECT") {
+      if (verdict === "REJECT") {
         rejectedOutright.push({ candidate: current, reason: "auditor REJECT", auditor_output: lastOutput });
         settled = true;
         break;
       }
 
-      // REVISE_AND_REAUDIT
+      // REVISE_AND_REAUDIT, or an APPROVE downgraded above.
       if (round === MAX_REVISION_ROUNDS) break; // no rounds left -- fall through to "still failed"
 
       const nextRound = round + 1;
+      const findingsForRevision = blockedByUnknownGenome
+        ? { ...lastOutput.findings, hg10_unknown_fields: { flag: true, detail: `Auditor approved, but HG10 field(s) remain UNKNOWN and cannot be silently accepted: ${currentPre.unknownGenomeFields.join(", ")}` } }
+        : lastOutput.findings;
+      const revisionInstructions = blockedByUnknownGenome
+        ? `HG10 field(s) remain UNKNOWN and cannot be silently approved: resolve ${currentPre.unknownGenomeFields.join(", ")}.`
+        : lastOutput.revision_instructions;
+
       const revisionPacket = {
         original_candidate: current,
-        auditor_findings: lastOutput.findings,
-        revision_instructions: lastOutput.revision_instructions,
+        auditor_findings: findingsForRevision,
+        revision_instructions: revisionInstructions,
         revision_round: nextRound,
       };
       const packetCheck = validateRevisionPacket(revisionPacket);
@@ -189,7 +228,8 @@ export async function runGenerationPipeline({ repoRoot, requestedCount, runId, l
       }
 
       current = revised;
-      priorFindings = lastOutput.findings;
+      currentPre = revisedPre;
+      priorFindings = findingsForRevision;
       round = nextRound;
     }
 

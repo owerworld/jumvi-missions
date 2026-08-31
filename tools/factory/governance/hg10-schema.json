@@ -1,0 +1,39 @@
+{
+  "governance_version": "1.0.0",
+  "id": "HG10",
+  "title": "JUMVI Canonical Physical Genome — Hard Gate 10",
+  "description": "The locked minimum semantic predicate every mission candidate's physical genome must resolve before it is eligible for Auditor review. This is NOT a checklist the factory invented -- it is a pinned, versioned contract consumed by tools/factory/governance/governance.mjs. Deterministic code must read this file, never duplicate the field list inline.",
+  "canonical_fields": [
+    "player_count",
+    "ball_count",
+    "starting_positions",
+    "roles",
+    "starting_possession",
+    "objective",
+    "core_actions",
+    "event_triggers",
+    "consequences",
+    "role_transitions",
+    "continuation",
+    "reentry",
+    "difficulty_variables",
+    "safety_constraints"
+  ],
+  "mandatory_no_substitute": ["safety_constraints"],
+  "normalization_map": {
+    "core_interactions": "core_actions",
+    "continuation_engine": "continuation",
+    "reentry_model": "reentry"
+  },
+  "consequence_merge": {
+    "target": "consequences",
+    "sources": ["success_consequences", "failure_consequences"]
+  },
+  "excluded_from_minimum_predicate": [
+    "candidate_id",
+    "control_transitions",
+    "physical_requirements"
+  ],
+  "unknown_marker": "UNKNOWN",
+  "hard_fail_code": "HARD_FAIL — INCOMPLETE_PHYSICAL_GENOME (HG10)"
+}
