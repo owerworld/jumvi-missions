@@ -390,7 +390,11 @@ function ensureAudio(){
   if(!audioCtx){
     const AC = window.AudioContext || window.webkitAudioContext;
     if(!AC) return null;
-    audioCtx = new AC();
+    try{
+      audioCtx = new AC();
+    }catch(_){
+      return null;
+    }
   }
   if(audioCtx.state === "suspended"){
     // will resume on user gesture

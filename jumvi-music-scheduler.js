@@ -66,9 +66,15 @@ class JumviMusicScheduler {
 
   async start() {
     if (this._running) return;
-    this._running = true;
 
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextCtor) return false;
+    try {
+      this.ctx = new AudioContextCtor();
+    } catch (_) {
+      return false;
+    }
+    this._running = true;
     this.musicBus = this.ctx.createGain();
     this.musicBus.gain.value = this.musicGain;
     this.musicBus.connect(this.ctx.destination);
@@ -85,6 +91,7 @@ class JumviMusicScheduler {
 
     // Ilk fragman: 3-10 sn icinde (Hub'a giris)
     this._scheduleNext(this._rand(3, 10));
+    return true;
   }
 
   stop() {
@@ -173,7 +180,13 @@ class JumviMusicScheduler {
     if (!this._running) return;
     const id = this._nextFragmentId();
     const meta = this.fragments.find(f => f.id === id);
-    const buffer = await this._loadBuffer(meta);
+    let buffer;
+    try {
+      buffer = await this._loadBuffer(meta);
+    } catch (_) {
+      if (this._running) this._scheduleNext(this._nextGapSeconds());
+      return;
+    }
 
     const source = this.ctx.createBufferSource();
     source.buffer = buffer;
