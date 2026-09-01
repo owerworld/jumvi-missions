@@ -67,16 +67,48 @@ const SCRIPT_DIR = fileURLToPath(new URL(".", import.meta.url));
 const DEFAULT_REPO_ROOT = path.resolve(SCRIPT_DIR, "..");
 
 /* ── tiny arg parser (no dependency — matches the repo's zero-dependency
- *    tools/*.mjs style) ──────────────────────────────────────────────────── */
-export function parseArgs(argv) {
+ *    tools/*.mjs style) ──────────────────────────────────────────────────── *
+ * `valueFlags` (a Set of bare flag names, e.g. {"count", "repo-root"}) are
+ * the ONLY flags this parser will consume a following space-separated
+ * token for. Everything not in that set behaves exactly as before: a bare
+ * `--flag` is the boolean `true`, `--flag=value` sets a string, and any
+ * other token is a positional pushed onto `_`. This is what lets
+ * `--count 6` and `--count=6` parse identically for a caller that declares
+ * `count` a value flag, while a plain boolean switch like `--verbose`
+ * never accidentally swallows the next unrelated token as its "value".
+ *
+ * A declared value flag given with NO value at all -- either bare at the
+ * end of argv, or immediately followed by another `--flag` -- is left
+ * UNSET (never coerced to `true`, which is exactly the bug this guards
+ * against: `Number(true) === 1` used to make a bare `--count` silently
+ * behave like `--count=1`). Every caller's own validation (e.g.
+ * `Number.isInteger(...)` on a required numeric flag) then sees "missing"
+ * and fails closed the same way it would for a flag that was never passed
+ * at all -- there is deliberately no separate "flag given but empty" code
+ * path to keep the failure behavior uniform and simple to reason about. */
+export function parseArgs(argv, { valueFlags = new Set() } = {}) {
   const out = { _: [] };
-  for (const raw of argv) {
-    if (raw.startsWith("--")) {
-      const eq = raw.indexOf("=");
-      if (eq === -1) out[raw.slice(2)] = true;
-      else out[raw.slice(2, eq)] = raw.slice(eq + 1);
-    } else {
+  for (let i = 0; i < argv.length; i++) {
+    const raw = argv[i];
+    if (!raw.startsWith("--")) {
       out._.push(raw);
+      continue;
+    }
+    const eq = raw.indexOf("=");
+    if (eq !== -1) {
+      out[raw.slice(2, eq)] = raw.slice(eq + 1);
+      continue;
+    }
+    const name = raw.slice(2);
+    if (valueFlags.has(name)) {
+      const next = argv[i + 1];
+      if (next !== undefined && !next.startsWith("--")) {
+        out[name] = next;
+        i++; // consume the value token -- it is NOT a stray positional
+      }
+      // else: no usable value -- leave `name` unset, never `true`.
+    } else {
+      out[name] = true;
     }
   }
   return out;
@@ -622,8 +654,10 @@ export function writeApply({
 }
 
 /* ── CLI ───────────────────────────────────────────────────────────────── */
+export const VALUE_FLAGS = new Set(["mode", "approved-by", "approved-count", "repo-root"]);
+
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
+  const args = parseArgs(process.argv.slice(2), { valueFlags: VALUE_FLAGS });
   const batchPath = args._[0];
   if (!batchPath) {
     console.error("Usage: node tools/import-approved-missions.mjs <batch.json> [--mode=dry-run|apply] [--approved-by=NAME] [--approved-count=N] [--repo-root=DIR] [--json]");

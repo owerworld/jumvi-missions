@@ -55,51 +55,66 @@ function checkRepoCorrect(repoRoot) {
   return { correct: true };
 }
 
+const DEFAULT_NEED = Object.freeze({ git: true, repo: true, llm: true, github: true });
+
 /**
- * Runs the full startup dependency check. Returns { ok: true, ... details }
- * on success, or { ok: false, turkishMessage } on the FIRST blocking issue
+ * Runs the startup dependency check. Returns { ok: true, ... details } on
+ * success, or { ok: false, turkishMessage } on the FIRST blocking issue
  * found (git -> repo -> Claude/API key -> gh/token, in that order) -- never
  * a combined list, per the "ONE short actionable message" requirement.
+ *
+ * `need` (default: everything) lets a caller scope the check to what THAT
+ * command actually uses -- the factory's generate/resume split means no
+ * single command needs all four anymore: generation never touches GitHub,
+ * and --resume --approve/--cancel never call the Lab or Auditor. Skipping
+ * an irrelevant check isn't a shortcut on safety -- it's not blocking a
+ * legitimate cancel on a machine that simply never configured `gh`.
+ *
  * `claudeRunner`/`ghRunner` are injectable so tests never spawn the real
  * `claude`/`gh` binaries.
  */
-export async function checkDependencies({ repoRoot, claudeRunner, ghRunner } = {}) {
-  const git = checkGitAvailable();
-  if (!git.available) {
-    return { ok: false, turkishMessage: "git bulunamadı. Devam etmeden önce git kurun ve PATH üzerinde erişilebilir olduğundan emin olun." };
+export async function checkDependencies({ repoRoot, claudeRunner, ghRunner, need = DEFAULT_NEED } = {}) {
+  if (need.git) {
+    const git = checkGitAvailable();
+    if (!git.available) {
+      return { ok: false, turkishMessage: "git bulunamadı. Devam etmeden önce git kurun ve PATH üzerinde erişilebilir olduğundan emin olun." };
+    }
   }
 
-  const repo = checkRepoCorrect(repoRoot);
-  if (!repo.correct) {
-    return { ok: false, turkishMessage: `Depo doğrulanamadı (${repo.reason}). --repo-root ile doğru JUMVI mission deposunu işaret ettiğinizden emin olun.` };
+  if (need.repo) {
+    const repo = checkRepoCorrect(repoRoot);
+    if (!repo.correct) {
+      return { ok: false, turkishMessage: `Depo doğrulanamadı (${repo.reason}). --repo-root ile doğru JUMVI mission deposunu işaret ettiğinizden emin olun.` };
+    }
   }
 
-  const claudeInstalled = await checkClaudeCliInstalled(claudeRunner ? { runner: claudeRunner } : {});
-  const hasApiKeyFallback = !!process.env.ANTHROPIC_API_KEY;
-  if (!claudeInstalled.installed && !hasApiKeyFallback) {
-    return {
-      ok: false,
-      turkishMessage: "Claude Code CLI bulunamadı ve ANTHROPIC_API_KEY de ayarlanmamış. Devam etmek için `claude` CLI'ı kurup giriş yapın (claude.ai/code), ya da ANTHROPIC_API_KEY ortam değişkenini ayarlayın.",
-    };
+  let llm;
+  if (need.llm) {
+    const claudeInstalled = await checkClaudeCliInstalled(claudeRunner ? { runner: claudeRunner } : {});
+    const hasApiKeyFallback = !!process.env.ANTHROPIC_API_KEY;
+    if (!claudeInstalled.installed && !hasApiKeyFallback) {
+      return {
+        ok: false,
+        turkishMessage: "Claude Code CLI bulunamadı ve ANTHROPIC_API_KEY de ayarlanmamış. Devam etmek için `claude` CLI'ı kurup giriş yapın (claude.ai/code), ya da ANTHROPIC_API_KEY ortam değişkenini ayarlayın.",
+      };
+    }
+    llm = { useClaudeCli: claudeInstalled.installed, useApiKeyFallback: !claudeInstalled.installed && hasApiKeyFallback };
   }
 
-  const ghAuth = await checkGhCliAuthenticated(ghRunner ? { runner: ghRunner } : {});
-  const hasTokenFallback = !!process.env.GITHUB_TOKEN;
-  if (!ghAuth.authenticated && !hasTokenFallback) {
-    return {
-      ok: false,
-      turkishMessage: "`gh` CLI kimlik doğrulaması bulunamadı ve GITHUB_TOKEN de ayarlanmamış. Devam etmek için `gh auth login` çalıştırın, ya da GITHUB_TOKEN ortam değişkenini ayarlayın.",
-    };
+  let github;
+  if (need.github) {
+    const ghAuth = await checkGhCliAuthenticated(ghRunner ? { runner: ghRunner } : {});
+    const hasTokenFallback = !!process.env.GITHUB_TOKEN;
+    if (!ghAuth.authenticated && !hasTokenFallback) {
+      return {
+        ok: false,
+        turkishMessage: "`gh` CLI kimlik doğrulaması bulunamadı ve GITHUB_TOKEN de ayarlanmamış. Devam etmek için `gh auth login` çalıştırın, ya da GITHUB_TOKEN ortam değişkenini ayarlayın.",
+      };
+    }
+    github = { useGhCli: ghAuth.authenticated, useTokenFallback: !ghAuth.authenticated && hasTokenFallback };
   }
 
-  return {
-    ok: true,
-    turkishMessage: null,
-    git,
-    repo,
-    llm: { useClaudeCli: claudeInstalled.installed, useApiKeyFallback: !claudeInstalled.installed && hasApiKeyFallback },
-    github: { useGhCli: ghAuth.authenticated, useTokenFallback: !ghAuth.authenticated && hasTokenFallback },
-  };
+  return { ok: true, turkishMessage: null, llm, github };
 }
 
 /** Builds the real Lab + Auditor adapters, preferring the local `claude`
