@@ -4,17 +4,35 @@
 node tools/jumvi-mission-factory.mjs --count 6
 ```
 
-One command runs the entire pipeline — Lab generation, duplicate/hard-gate/category
-checks, an independent Auditor pass, automatic targeted revision, a concise
-Turkish human review, a single approval prompt, and (only on approval) the
-full import → test → PR → CI → merge → production-verify flow. Nobody
-manually invokes a second tool or copies a packet between steps.
+That one command runs the entire generation pipeline — Lab generation,
+duplicate/hard-gate/category checks, an independent Auditor pass, automatic
+targeted revision — shows the Turkish human review, **persists the run, and
+exits**. It never blocks a process waiting for a human to answer. When
+you're ready to decide:
+
+```sh
+node tools/jumvi-mission-factory.mjs --resume <RUN_ID> --approve   # the single ONAY
+node tools/jumvi-mission-factory.mjs --resume <RUN_ID> --cancel    # the single İPTAL
+```
+
+`--approve` re-fetches current `main`, re-validates if it moved, imports
+(reusing `tools/import-approved-missions.mjs`), runs tests, branches,
+pushes, opens a PR, waits for required CI + Cloudflare checks, merges only
+if green, waits for deploy, verifies production — resuming the **exact
+same audited batch** the review showed, never regenerating it. `--cancel`
+makes zero repository writes. Neither command manually invokes a second
+tool or copies a packet between steps; see
+[Durable, resumable runs](#durable-resumable-runs) for why this is two
+commands instead of one interactive prompt, and how a normal conversational
+user never has to type a `RUN_ID` themselves.
 
 By default this needs **no manually-set credentials** if your machine
 already has the `claude` CLI logged in and `gh` authenticated — see
 [Dependency check](#dependency-check) below. Default console output is
-quiet: only the Turkish review, the `ONAY`/`İPTAL` prompt, and one final
-outcome line. Add `--verbose` for the full stage-by-stage trace.
+quiet: the generate command shows only the Turkish review and the `RUN_ID`
++ the two resume commands to run next; the resume commands show only one
+final outcome line. Add `--verbose` to either for the full stage-by-stage
+trace.
 
 This document is the operating manual. For the batch contract the importer
 half of this system consumes, see
@@ -36,10 +54,12 @@ CURRENT MAIN SYNC
   → "YAYINLANSIN MI? [ONAY / İPTAL]"
 ```
 
-**İPTAL** → stop. No repository change, no PR, no deployment. Run artifacts
-are preserved under `artifacts/mission-runs/<RUN_ID>/` for review.
+**İPTAL** (`--resume <RUN_ID> --cancel`) → stop. No repository change, no
+PR, no deployment. Run artifacts are preserved under
+`artifacts/mission-runs/<RUN_ID>/` for review.
 
-**ONAY** → automatically, in the same process, with no further prompts:
+**ONAY** (`--resume <RUN_ID> --approve`) → automatically, with no further
+prompts:
 
 1. Re-fetch current `main`.
 2. Confirm the mission inventory hasn't changed since generation.
@@ -68,6 +88,74 @@ The single `ONAY` is the human's authorization for the whole `IMPORT → TEST
 → PR → CI → MERGE → PRODUCTION DEPLOY` chain — but it only ever *reaches*
 production if every one of the checks above stays green. Approval is
 necessary, never sufficient.
+
+## Durable, resumable runs
+
+Generation and approval are two separate commands on purpose. A design
+where one Node process runs generation, prints the review, then blocks on
+`readline` waiting for a human to type `ONAY`/`İPTAL` cannot survive a
+crash, a container restart, or a sandbox reclaiming a detached background
+process between conversation turns — which is exactly what happened on the
+first real run of this factory, losing a fully-audited, fully-approvable
+batch for no reason related to the batch itself. The fix isn't a more
+robust way to hold a process open; it's removing the requirement that any
+one process stay alive across the human decision at all.
+
+**What `--count N` actually does**: runs the pipeline, writes every fact a
+later decision needs under `artifacts/mission-runs/<RUN_ID>/` — the final
+approved batch (`05-final-approved-batch.json`), the site fingerprint it
+was generated against (`00-site-fingerprint.json`), the Turkish review, and
+`state.json` — prints the review and the two commands to run next, and
+exits with code 0. Nothing is held in memory past that point.
+
+**What `--resume <RUN_ID> --approve/--cancel` actually does**: reads
+`state.json` and the persisted batch back off disk — never regenerates,
+never trusts anything a caller might still be holding from generation —
+and proceeds exactly as if it were the same process, because as far as the
+pipeline is concerned it might as well be. `tools/check-mission-factory-
+durability.mjs` proves this literally: one real, separate `node` process
+generates and fully exits, then a second, unrelated `node` process resumes
+by `RUN_ID` alone and publishes the same batch.
+
+### Run states (`tools/factory/run-state.mjs`)
+
+```
+GENERATING → WAITING_FOR_HUMAN_APPROVAL → CANCELLED                  (İPTAL)
+                                        → PUBLISHING → PUBLISHED       (ONAY, success)
+                                                     → PUBLISH_STOPPED (ONAY, stopped for cause)
+                                                     → FAILED          (ONAY, unexpected error)
+GENERATING → FAILED                                                   (fail-closed pipeline error)
+```
+
+Every arrow above is the **entire** set of transitions the code will ever
+perform — `transitionRunState()` is the sole place `state.json`'s `state`
+field changes, and it throws `InvalidTransitionError` rather than silently
+applying anything not on this list. That table, not a convention callers
+have to remember, is what makes "a cancelled run cannot be approved" and "a
+published run cannot be republished" actually true: `CANCELLED`,
+`PUBLISHED`, and `PUBLISH_STOPPED` have zero outgoing transitions. A second
+`--resume --approve` on an already-`PUBLISHED` (or `CANCELLED`, or
+`PUBLISH_STOPPED`) run is refused, not re-executed — a `PUBLISH_STOPPED`
+run is terminal on purpose, matching the existing stale-id-collision
+guidance: re-run the factory for fresh ids rather than retrying.
+
+`state.json` is written write-to-temp-then-`rename`, so a process killed
+mid-write can never leave it half-written — a reader sees the complete old
+version or the complete new version, never a corrupt mix. `readRunState()`
+additionally validates shape (required fields, a recognised `state` value)
+and throws `CorruptRunStateError` on anything else. Both error types (plus
+a missing run entirely, `RunNotFoundError`) are fail-closed: `--resume`
+refuses to proceed, it never guesses at a plausible-looking partial state.
+
+### Simple UX, technical RUN_ID
+
+A person talking to Claude Code still just says "6 yeni görev üret", reads
+the Turkish review, and replies "ONAY" or "İPTAL" — they are not expected
+to know the `RUN_ID` exists. The controlling Claude Code session reads the
+`RUN_ID` the generate command printed and runs the matching `--resume`
+command on the human's behalf; typing `--resume <RUN_ID> --approve` by
+hand is for direct terminal / scripted use, not the normal conversational
+path.
 
 ## Fail-closed, always
 
@@ -108,22 +196,34 @@ test suite, which proves exactly this.
 ## Dependency check
 
 Before any adapter is constructed, `main()` runs
-`tools/factory/adapters/dependency-check.mjs`'s `checkDependencies()`. It
-checks, in this fixed priority order, and stops at the **first** thing
-missing:
+`tools/factory/adapters/dependency-check.mjs`'s `checkDependencies()`,
+**scoped to what the specific command being run actually needs** — the
+generate/resume split means no single command needs everything anymore:
 
-1. `git` is on `PATH`.
+| Command | git | repo | `claude`/API key | `gh`/token |
+|---|---|---|---|---|
+| `--count N` (generate) | ✓ | ✓ | ✓ | — |
+| `--resume … --approve` | ✓ | ✓ | — | ✓ |
+| `--resume … --cancel` | — | ✓ | — | — |
+
+Generation never touches GitHub; `--resume` never calls the Lab or
+Auditor; `--cancel` makes zero repository writes and so needs neither.
+Within whichever subset applies, checks run in this fixed priority order
+and stop at the **first** thing missing:
+
+1. `git` is on `PATH` (generate, approve only).
 2. The current `--repo-root` looks like this repo (`data.js`,
    `tools/import-approved-missions.mjs`, `src/worker.js` all present, and
    it's a real git working tree).
-3. Either the `claude` CLI is installed, **or** `ANTHROPIC_API_KEY` is set.
+3. Either the `claude` CLI is installed, **or** `ANTHROPIC_API_KEY` is set
+   (generate only).
 4. Either `gh` reports `gh auth status` success, **or** `GITHUB_TOKEN` is
-   set.
+   set (approve only).
 
 On the first thing missing it prints **exactly one** short, actionable
 Turkish message and exits — never a wall of diagnostics. A normal user with
 Claude Code and `gh` already set up on their machine sees nothing here at
-all; the check passes silently and the run proceeds straight to generation.
+all; the check passes silently and the run proceeds.
 
 ## Isolated model context
 
@@ -319,12 +419,15 @@ Checked twice, per the spec's explicit requirement:
 ## Run artifacts
 
 Every run writes a full record to `artifacts/mission-runs/<RUN_ID>/`:
-the site fingerprint, every Lab generation, every pre-audit check, every
+`state.json` (see [Durable, resumable runs](#durable-resumable-runs)), the
+site fingerprint, every Lab generation, every pre-audit check, every
 Auditor round (initial + each reaudit), every revision packet, the final
 approved batch, the Turkish review, the human decision, the import plan,
 apply/test results, PR info, and the deployment result — one JSON file per
 stage, plus `run.log`. **Never committed** (see `.gitignore` — only
-`artifacts/mission-runs/.gitkeep` is tracked).
+`artifacts/mission-runs/.gitkeep` is tracked). `state.json` and the final
+approved batch are the two files a `--resume` command actually depends on
+to reconstruct the run; everything else here is audit trail.
 
 ## Test mode
 
@@ -332,11 +435,17 @@ stage, plus `run.log`. **Never committed** (see `.gitignore` — only
 node tools/check-mission-factory.mjs
 node tools/check-mission-factory-governance.mjs
 node tools/check-mission-factory-cli-adapters.mjs
+node tools/check-mission-factory-cli-args.mjs
+node tools/check-mission-factory-durability.mjs
 ```
 
-Three suites, all fixtures/mocks only. **Nothing in any of them calls a
+Five suites, all fixtures/mocks only. **Nothing in any of them calls a
 real LLM API, spawns a real `claude`/`gh` process, touches the real repo's
-`data.js`, or makes a real GitHub/Cloudflare request.**
+`data.js`, or makes a real GitHub/Cloudflare request** — except that
+`check-mission-factory-durability.mjs` spawns real, separate `node`
+subprocesses (still against a throwaway sandbox, still with mock/fake
+adapters) specifically to prove cross-process durability, not to touch
+anything real.
 
 **`check-mission-factory.mjs`** drives the real `runFactory()`
 orchestration — the same function the CLI's `main()` calls — with mock
@@ -384,6 +493,32 @@ shape (`gh api ... --input -`) and response parsing, matching
 (CLI preferred, env-var fallback used only when the CLI truly isn't
 available, in every combination); and the pinned prompts' required content.
 
+**`check-mission-factory-cli-args.mjs`** proves the argument-parsing fix:
+`--count 6` and `--count=6` parse identically; a bare or missing `--count`
+is left unset (never coerced to a truthy `1`) and fails validation; zero,
+negative, decimal, and non-numeric counts all fail; unknown positional
+tokens never get silently consumed as some other flag's value; and the
+same audit covers `tools/import-approved-missions.mjs`'s own value flags
+(`--mode`, `--approved-by`, `--approved-count`, `--repo-root`), which had
+the identical latent defect.
+
+**`check-mission-factory-durability.mjs`** proves the durable/resumable
+workflow: generation persists `WAITING_FOR_HUMAN_APPROVAL` and returns
+without ever blocking on stdin; `--resume --approve`/`--cancel` reload the
+persisted batch and site fingerprint from disk (structurally — neither
+function even accepts the batch as a parameter); the existing stale-main
+protection still applies through the new resume path; a run id that never
+existed, a corrupted `state.json`, and a missing persisted-batch file all
+fail closed via `RunNotFoundError`/`CorruptRunStateError` — the last case
+additionally proving a failed load never leaves the run half-transitioned
+into `PUBLISHING`; a second approve of an already-published run is
+refused and nothing is published twice; a cancelled run cannot be
+approved; a `PUBLISH_STOPPED` run (e.g. CI failure) is terminal, never
+silently retried; and — the literal scenario this rework exists for — one
+real `node` process generates and fully exits, then a second, completely
+separate `node` process resumes by `RUN_ID` alone and publishes (or
+cancels) the exact same audited batch.
+
 ## Guardrails (repeated, deliberately)
 
 - This factory never creates a new pack.
@@ -400,3 +535,11 @@ available, in every combination); and the pinned prompts' required content.
 - Live mode prefers the locally authenticated `claude` / `gh` CLIs; it
   never fabricates or assumes `ANTHROPIC_API_KEY` / `GITHUB_TOKEN` — those
   remain optional fallbacks for when the CLIs aren't available.
+- No command blocks on stdin waiting for a human. Generation persists and
+  exits; approval/cancellation is always a separate `--resume` invocation
+  against durable, on-disk state.
+- A run's `state.json` transition table has no path back out of
+  `CANCELLED` / `PUBLISHED` / `PUBLISH_STOPPED` — a cancelled run cannot
+  be approved, a published run cannot be republished, and a stopped
+  publish is never silently retried, all enforced by
+  `tools/factory/run-state.mjs`, not by convention.
