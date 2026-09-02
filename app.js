@@ -1263,11 +1263,18 @@ function unlockBackgroundScroll(){
   window.scrollTo(0, _scrollLockY);
 }
 
-function setMissionBackgroundIsolation(active){
+/* `skip` — selectors to leave alone. A true modal (the mission sheet) isolates
+ * everything behind it, but the v32 full-screen surfaces keep the bottom
+ * navigation deliberately visible and usable; marking it inert there left a nav
+ * that looked live and swallowed every tap. Whatever WAS isolated is recorded,
+ * so the restore path needs no matching argument. */
+function setMissionBackgroundIsolation(active, skip){
   if(active){
     if(_missionBackgroundRestore) return;
+    const skipList = Array.isArray(skip) ? skip : [];
     const seen = new Set();
     _missionBackgroundRestore = MISSION_BACKGROUND_SELECTORS
+      .filter(sel => !skipList.includes(sel))
       .map(sel => document.querySelector(sel))
       .filter(el => el && !seen.has(el) && seen.add(el))
       .map(el => ({
@@ -2347,7 +2354,9 @@ function openTeamXpPicker(){
   backdrop.removeAttribute("inert");
   backdrop.setAttribute("aria-hidden","false");
   document.body.classList.add("modalOpen");
-  setMissionBackgroundIsolation(true);
+  // .jvFullSurface keeps #bottomNav visible on this screen (see warm-toy.css),
+  // so it must stay interactive too — see dismissFullSurfaces().
+  setMissionBackgroundIsolation(true, ["#bottomNav"]);
   requestAnimationFrame(()=>{
     backdrop.classList.add("show");
     try { document.getElementById("teamXpClose")?.focus({preventScroll:true}); } catch(_){}
@@ -8011,6 +8020,31 @@ document.addEventListener("visibilitychange", ()=>{
   }
 });
 
+/* Badges, Kids & settings and Team setup are full app SCREENS (.jvFullSurface),
+ * not modals: the bottom navigation stays visible and on top of them by design.
+ * switchTab() only swaps the panels UNDERNEATH, though, so a tab tap used to
+ * change a page nobody could see while the surface stayed exactly where it was.
+ * Combined with a close control that iOS would not let you tap (see the
+ * safe-area fix in warm-toy.css) the screen was a dead end. A tab tap is a
+ * navigation away from the surface, so dismiss it first — through each screen's
+ * own closer, which is what restores focus, body state and background inertness.
+ */
+function dismissFullSurfaces(){
+  const open = document.querySelectorAll(".jvFullSurface.show");
+  if(!open.length) return false;
+  open.forEach(el => {
+    try{
+      if(el.id === "profileBackdrop" && typeof closeProfileSheet === "function"){ closeProfileSheet(); return; }
+      if(el.id === "teamXpBackdrop" && typeof closeTeamXpPicker === "function"){ closeTeamXpPicker(); return; }
+      el.classList.remove("show");
+    }catch(_){ el.classList.remove("show"); }
+  });
+  // Belt and braces, and only once something really was dismissed: a surface
+  // closed this way must never leave the page behind it pinned or hidden.
+  document.body.classList.remove("modalOpen");
+  return true;
+}
+
 function switchTab(tabName){
   if(!tabName) tabName = "today";
   // "stats" stays a legal internal tab (its panel/functions remain for
@@ -8459,6 +8493,7 @@ function initBottomNav(){
       clickSound("click");
       const tab = btn.dataset.tab;
       if(tab === "hub3d") _hub3dEntrySource = "nav_tab";
+      dismissFullSurfaces();
       switchTab(tab);
     });
   });
@@ -8470,6 +8505,7 @@ function initBottomNav(){
       const tab = el.dataset.goTab;
       if(tab){
         clickSound("click");
+        dismissFullSurfaces();
         switchTab(tab);
       }
     });

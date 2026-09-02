@@ -4705,7 +4705,18 @@ html.theme--dark #tabToday #xpProgressCard > .bar{ background:var(--jv-track) !i
   min-height:100% !important;
   max-height:none !important;
   margin:0 !important;
-  padding:14px 16px calc(96px + env(safe-area-inset-bottom)) !important;
+  /* viewport-fit=cover means this surface really does start at pixel row 0, so
+     the top inset has to be reserved here or the title block is drawn UNDER the
+     status bar / Dynamic Island. On a standalone iPhone that is not only ugly:
+     iOS never delivers a tap to that strip (it scrolls to top instead), so the
+     round close control at the end of the row became physically unreachable and
+     the screen was a dead end. Every other sheet in the app already reserves it
+     via .sheet's own padding-top — this rule was overriding that with !important
+     and putting nothing back. Left/right insets are here for landscape. */
+  padding:calc(14px + env(safe-area-inset-top))
+          calc(16px + env(safe-area-inset-right))
+          calc(96px + env(safe-area-inset-bottom))
+          calc(16px + env(safe-area-inset-left)) !important;
   border:0 !important;
   border-radius:0 !important;
   background:var(--jv-page) !important;
@@ -4751,7 +4762,8 @@ html.theme--dark #tabToday #xpProgressCard > .bar{ background:var(--jv-track) !i
 .jvFullSurface .close,
 .jvFullSurface .teamXpClose{
   flex:0 0 auto !important;
-  width:40px !important; height:40px !important;
+  /* 44px is the iOS minimum touch target; this is the only way off the screen. */
+  width:44px !important; height:44px !important;
   display:grid !important; place-items:center !important;
   border:1px solid var(--jv-line,var(--border)) !important;
   border-radius:50% !important;
@@ -4802,7 +4814,9 @@ body:has(.jvFullSurface.show) #app-wrapper > .wrap{ visibility:hidden; }
 
 /* ── First Open: exact v32 geometry ──────────────────────────────────────── */
 #welcomeOverlay{ background:var(--jv-page) !important; }
-#welcomeOverlay .welcomePanel{ justify-content:flex-start !important; padding-top:22px !important; }
+/* #welcomeOverlay above drops the overlay's own safe-area padding, so the panel
+   owns the notch inset now — same reason as .jvFullSurface > .sheet. */
+#welcomeOverlay .welcomePanel{ justify-content:flex-start !important; padding-top:calc(22px + env(safe-area-inset-top)) !important; }
 /* v32 stacks the wordmark, then Coach Leo large and centred beneath it. */
 #welcomeOverlay .welcomeBrandLine{
   flex-direction:column !important;
