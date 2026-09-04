@@ -187,6 +187,20 @@ body{
 .mdStatL{font-size:11.5px;color:var(--ink-60);margin-top:2px}
 .mdSourceRow{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--ink-06)}
 .mdSourceRow:last-child{border-bottom:0}
+
+/* ---------- haftalar arası trend ---------- */
+.trendGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:12px}
+.tcard{background:var(--surface);border:1px solid var(--ink-12);border-radius:12px;padding:12px 14px}
+.tlab{font-size:11.5px;color:var(--ink-60)}
+.tnum{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.02em;margin-top:1px;
+  display:flex;align-items:baseline;gap:7px}
+.tspark{display:block;width:100%;height:56px;margin-top:6px;overflow:visible}
+.tfoot{font-size:11px;color:var(--ink-38);margin-top:5px}
+.tbreak{font-size:11px;color:var(--orange);font-weight:600;margin-top:5px;line-height:1.35}
+.tdead{font-size:12px;color:var(--ink-38);padding:14px 0}
+.trendNote{background:rgba(244,122,32,.08);border-left:3px solid var(--orange);
+  padding:11px 13px;border-radius:0 8px 8px 0;font-size:13px;margin-top:14px;line-height:1.5}
+.trendNote b{color:var(--orange)}
 </style>
 </head>
 <body>
@@ -209,6 +223,16 @@ body{
     <section class="sec">
       <h2 class="sec-h">Karar bekliyor</h2>
       <div id="alerts"></div>
+    </section>
+
+    <section class="sec">
+      <h2 class="sec-h">Haftalar arası trend</h2>
+      <p class="grid-note">Her kutu bir metriğin bütün haftalardaki seyri; dolu nokta seçili haftadır.
+        Kesik dikey turuncu çizgi, metriğin <b>tanımının değiştiği</b> anı işaretler — o çizginin iki yakası
+        aynı şeyi ölçmediği için eğri kasıtlı olarak <b>koparılır</b>, tek bir trend gibi okunamaz.
+        Çizgideki boşluk “o hafta ölçülmüyordu” demektir, sıfır demek değildir.</p>
+      <div class="trendGrid" id="trendGrid"></div>
+      <div id="trendNote"></div>
     </section>
 
     <section class="sec">
@@ -324,6 +348,35 @@ const CONFIG = {
   // null bırakılırsa huninin ilk basamağı gizlenir.
   unitsSold: null,
 };
+
+/* ── Metrik TANIMI değişiklikleri ───────────────────────────────────────────
+ * Snapshot'taki "availability" bloğu bir sinyalin NE ZAMAN TOPLANMAYA
+ * BAŞLADIĞINI söyler (yok → null, sıfır değil). Burası bambaşka bir şeyi
+ * kaydeder: zaten toplanan bir olayın ANLAMININ değiştiği anı.
+ *
+ * Neden ayrı bir kayıt: tanımı değişmiş bir metriğin iki yakası tek bir
+ * çizgiyle birleştirilirse grafik gerçekte olmayan bir "çöküş" gösterir.
+ * Sayılar doğrudur, çizgi yalandır. Bu yüzden trend eğrisi bu anda kasıtlı
+ * olarak koparılır ve gerekçesi ekranda yazılır.
+ *
+ * `at` main'e merge anıdır (deploy'un kendisi değil — bkz.
+ * tools/generate-weekly-snapshot.mjs'deki INSTRUMENTATION notu, aynı
+ * ihtiyatlı sınır mantığı). Yeni bir kırılma eklerken: gerçek commit'i
+ * `git log -S` ile doğrula, tahmin yazma. */
+const METRIC_CHANGES = [
+  {
+    at: "2026-08-17T08:11:29Z",
+    commit: "3b876f5",
+    affects: ["completes", "ratio"],
+    short: "tamamlama tanımı sıkılaştı",
+    detail:
+      "17 Ağustos 08:11'de “We Finished!” gerçek oyun şartına bağlandı: zamanlayıcının " +
+      "bitmesi ya da görev sayfasının oynanmış sayılacak kadar açık kalması gerekiyor. " +
+      "Öncesinde 36 görev bir dakikanın altında tıklanıp geçilebiliyordu, her tıklama " +
+      "tamamlama sayılıyordu. Bu tarihten önceki tamamlama sayıları ve oranı şişkindir; " +
+      "sonrakiler dürüsttür. Aradaki düşüş bir gerileme değil, ölçünün düzelmesidir.",
+  },
+];
 
 /* Event adı → panelde görünen ad. */
 const FEATURE_LABELS = {
@@ -637,6 +690,7 @@ function render(weekId) {
   renderSmallN(snap);
   renderThesis(snap);
   renderAlerts(snap);
+  renderTrend(weekId);
   renderGrid(snap);
   renderFunnel(snap, prev);
   renderCross(snap);
@@ -649,6 +703,146 @@ function render(weekId) {
   renderDataHealth(snap);
   renderPrivacyHealth();
   renderFoot(snap, prev);
+}
+
+/* ── Haftalar arası trend ───────────────────────────────────────────────────
+ * Bütün haftalar zaten CACHE'te; tek hafta gösteren panelin göremediği tek
+ * şey seyirdi. Buradaki iki kural pazarlığa kapalı:
+ *   1. null (o hafta ölçülmüyordu) asla 0 olarak çizilmez — eğri kopar.
+ *   2. METRIC_CHANGES'teki bir anın iki yakası asla tek çizgiyle bağlanmaz.
+ * İkisi de aynı sebeple: grafik, sayılar doğruyken bile yalan söyleyebilir. */
+
+const TREND_SERIES = [
+  { key: "first",    label: "İlk açılış sinyali", color: "var(--sky)",
+    get: (s) => s.app_first_opens },
+  { key: "opens",    label: "Toplam oturum", color: "var(--sky)",
+    get: (s) => s.app_opens },
+  { key: "starts",   label: "Görev başlatma", color: "var(--lime)",
+    get: (s) => s.mission_starts },
+  { key: "completes", label: "Görev tamamlama", color: "var(--lime)",
+    get: (s) => s.mission_completes },
+  { key: "ratio",    label: "Tamamlama oranı", color: "var(--orange)",
+    get: (s) => s.recorded_completion_ratio, fmt: (v) => v.toFixed(2) },
+  { key: "timer",    label: "Zamanlayıcı başlatma", color: "var(--navy)",
+    get: (s) => s.features?.timer_start },
+];
+
+const changeFor = (key) => METRIC_CHANGES.find((c) => c.affects.includes(key)) || null;
+
+/** Bir haftanın, tanım değişikliğine göre hangi yakada durduğu. */
+function sideOfChange(snap, change) {
+  if (!change) return "after";
+  const at = Date.parse(change.at);
+  if (Date.parse(snap.period_end + "T23:59:59Z") < at) return "before";
+  if (Date.parse(snap.period_start + "T00:00:00Z") >= at) return "after";
+  return "straddles"; // değişiklik haftanın ortasına düştü: iki dönem karışık
+}
+
+/**
+ * Sparkline SVG'si. `pts` içindeki v null ise o noktada eğri kopar; `side`
+ * değişince de kopar (tanımı değişmiş metriği tek çizgi yapmamak için).
+ */
+function sparkSvg(pts, color, selectedIdx, change) {
+  const W = 200, H = 56, P = 7;
+  const vals = pts.map((p) => p.v).filter((v) => v !== null && v !== undefined && Number.isFinite(v));
+  if (!vals.length) return `<div class="tdead">Bu metrik hiçbir haftada ölçülmedi.</div>`;
+
+  const min = Math.min(...vals, 0), max = Math.max(...vals);
+  const span = max - min || 1;
+  const n = pts.length;
+  const x = (i) => (n === 1 ? W / 2 : P + (i * (W - 2 * P)) / (n - 1));
+  const y = (v) => H - P - ((v - min) / span) * (H - 2 * P);
+
+  // Alt çizgileri kur: null'da ve yaka değişiminde yeni parça başlat.
+  const segs = [];
+  let cur = [];
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    const ok = p.v !== null && p.v !== undefined && Number.isFinite(p.v);
+    const broke = i > 0 && pts[i - 1].side !== p.side;
+    if (!ok) { if (cur.length) segs.push(cur); cur = []; continue; }
+    if (broke && cur.length) { segs.push(cur); cur = []; }
+    cur.push(i);
+  }
+  if (cur.length) segs.push(cur);
+
+  const line = segs
+    .filter((s) => s.length > 1)
+    .map((s) => `<path d="${s.map((i, k) => `${k ? "L" : "M"}${x(i).toFixed(1)} ${y(pts[i].v).toFixed(1)}`).join(" ")}"
+      fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`)
+    .join("");
+
+  const dots = pts
+    .map((p, i) =>
+      p.v === null || p.v === undefined || !Number.isFinite(p.v)
+        ? ""
+        : `<circle cx="${x(i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="${i === selectedIdx ? 4 : 2.4}"
+             fill="${i === selectedIdx ? color : "var(--surface)"}" stroke="${color}" stroke-width="1.6"/>`)
+    .join("");
+
+  // Kırılma çizgisi: "before" biten son nokta ile sonrasının arasına.
+  let vline = "";
+  const firstAfter = pts.findIndex((p) => p.side !== "before");
+  if (change && firstAfter > 0) {
+    const bx = (x(firstAfter - 1) + x(firstAfter)) / 2;
+    vline = `<line x1="${bx.toFixed(1)}" y1="2" x2="${bx.toFixed(1)}" y2="${H - 2}"
+      stroke="var(--orange)" stroke-width="1.5" stroke-dasharray="3 3" opacity=".75"/>`;
+  }
+
+  return `<svg class="tspark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"
+    role="img" aria-label="Haftalık seyir">${vline}${line}${dots}</svg>`;
+}
+
+function renderTrend(weekId) {
+  const idx = WEEKS.indexOf(weekId);
+  const snaps = WEEKS.map((w) => CACHE.get(w));
+
+  $("trendGrid").innerHTML = TREND_SERIES.map((s) => {
+    const change = changeFor(s.key);
+    const pts = snaps.map((sn) => {
+      const raw = s.get(sn);
+      return {
+        v: raw === null || raw === undefined ? null : Number(raw),
+        side: sideOfChange(sn, change),
+      };
+    });
+
+    const cur = pts[idx]?.v;
+    const shown = cur === null || cur === undefined
+      ? `<span class="notavail">ölçülmüyordu</span>`
+      : (s.fmt ? s.fmt(cur) : nf(cur));
+
+    // Delta yalnızca ÖNCEKİ HAFTA AYNI YAKADAYSA gösterilir. Tanım değiştiyse
+    // fark anlamsızdır — "▼496" yazmak, olmayan bir çöküşü rapor etmek olur.
+    let d = "";
+    const prev = pts[idx - 1];
+    if (prev && prev.v !== null && cur !== null && cur !== undefined && prev.side === pts[idx].side) {
+      const diff = cur - prev.v;
+      d = diff === 0
+        ? `<span class="delta">▬</span>`
+        : `<span class="delta">${diff > 0 ? "▲" : "▼"}${s.fmt ? Math.abs(diff).toFixed(2) : nf(Math.abs(diff))}</span>`;
+    } else if (prev && prev.v !== null && cur !== null && cur !== undefined) {
+      d = `<span class="delta" title="Tanım değişti — karşılaştırılamaz">≠</span>`;
+    }
+
+    const crossed = change && pts.some((p) => p.side === "before") && pts.some((p) => p.side !== "before");
+
+    return `<div class="tcard">
+      <div class="tlab">${esc(s.label)}</div>
+      <div class="tnum">${shown}${d}</div>
+      ${sparkSvg(pts, s.color, idx, change)}
+      <div class="tfoot">${esc(WEEKS[0])} → ${esc(WEEKS[WEEKS.length - 1])} · ${WEEKS.length} hafta</div>
+      ${crossed ? `<div class="tbreak">⚠ ${esc(change.short)} — çizgi kasıtlı kopuk</div>` : ""}
+    </div>`;
+  }).join("");
+
+  const active = METRIC_CHANGES.filter((c) => {
+    const sides = snaps.map((sn) => sideOfChange(sn, c));
+    return sides.includes("before") && sides.some((s) => s !== "before");
+  });
+  $("trendNote").innerHTML = active
+    .map((c) => `<div class="trendNote"><b>Tanım değişikliği (${esc(c.commit)}):</b> ${esc(c.detail)}</div>`)
+    .join("");
 }
 
 function renderSmallN(snap) {
