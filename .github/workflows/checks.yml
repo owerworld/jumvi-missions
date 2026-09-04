@@ -1,0 +1,176 @@
+name: Checks
+
+# The repo carries ~35 check tools in tools/. Until this file existed, CI ran
+# nine of them (.github/workflows/analytics-guard.yml, which guards the
+# analytics pipeline and is deliberately scoped to it). The other twenty-six
+# were a local habit, and two of them had been failing for weeks with nobody
+# to notice:
+#
+#   check-mission-equipment   red since 2026-08-27, when mission 21 became
+#                             "Middle Defender" and the check's frozen copy of
+#                             the equipment matrix did not.
+#   check-hub-fallback        red because its two "aborted module" cases could
+#                             not actually abort anything through the service
+#                             worker, so they measured the happy path.
+#
+# Both are fixed; this workflow is what stops the next one lasting weeks.
+#
+# analytics-guard.yml is left exactly as it is. It is a separate, narrower,
+# already-enforced gate, and splitting the fast deterministic checks from the
+# slow browser ones keeps a red X readable.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Fast, deterministic, offline ────────────────────────────────────────────
+  # Reads only files already in the repo. No network, no browser, no secrets —
+  # same result on every run.
+  offline:
+    name: Offline checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Syntax-check every shipped script
+        run: |
+          fail=0
+          while IFS= read -r file; do
+            node --check "$file" || { echo "::error file=$file::syntax error"; fail=1; }
+          done < <(git ls-files '*.js' '*.mjs' | grep -vE '^(vendor|prototypes)/')
+          exit $fail
+
+      - name: Cache-busting guards
+        run: |
+          fail=0
+          bash tools/check-core-assets.sh || fail=1
+          node tools/check-versioned-assets.mjs || fail=1
+          exit $fail
+
+      - name: Mission catalogue, audio and icon guards
+        run: |
+          fail=0
+          run() {
+            echo "::group::$*"
+            if "$@"; then echo "PASS"; else echo "::error::$* failed"; fail=1; fi
+            echo "::endgroup::"
+          }
+          run node tools/check-mission-equipment.mjs
+          run node tools/check-mission-art.mjs
+          run node tools/check-mission-coaching.mjs
+          run node tools/check-coach-leo-audio.mjs
+          run node tools/check-icon-glyphs.mjs
+          exit $fail
+
+      - name: Mission factory and importer guards
+        run: |
+          fail=0
+          run() {
+            echo "::group::$*"
+            if "$@"; then echo "PASS"; else echo "::error::$* failed"; fail=1; fi
+            echo "::endgroup::"
+          }
+          run node tools/check-mission-factory.mjs
+          run node tools/check-mission-factory-governance.mjs
+          run node tools/check-mission-factory-cli-args.mjs
+          run node tools/check-mission-factory-cli-adapters.mjs
+          run node tools/check-mission-factory-durability.mjs
+          run node tools/check-mission-importer.mjs
+          exit $fail
+
+      - name: The tree must be exactly as it was checked out
+        run: git diff --exit-code && git status --porcelain --untracked-files=all | tee /dev/stderr | wc -l | grep -qx 0
+
+  # ── Browser checks ──────────────────────────────────────────────────────────
+  # Driven with Playwright against tools/tr-qa/serve.mjs, which runs the REAL
+  # src/worker.js over the repo the way Cloudflare's asset binding does.
+  #
+  # Not run here, on purpose:
+  #   mobile-matrix.mjs           needs WebKit as well as Chromium
+  #   contrast-sweep.mjs          a ~10 minute full sweep; check-nontext-contrast
+  #                               is the gate, the sweep is the report
+  #   check-deploy-health.sh      probes the LIVE site — deploy-health-check.yml
+  #   check-production-ui-assets  same, probes production
+  browser:
+    name: Browser checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Installed OUTSIDE the working tree so no node_modules/ or lockfile can
+      # appear in the repo and make the "tree unchanged" step below lie.
+      - name: Install Playwright
+        run: |
+          mkdir -p "$RUNNER_TEMP/pw"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y > /dev/null
+          npm install --silent playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Start the local worker server
+        run: |
+          # setsid + a detached stdio, so the servers survive this step ending
+          # and are still listening when the suite runs in the next one.
+          setsid node tools/tr-qa/serve.mjs "$PWD" 8910 > "$RUNNER_TEMP/serve-8910.log" 2>&1 < /dev/null &
+          setsid node tools/tr-qa/serve.mjs "$PWD" 8911 > "$RUNNER_TEMP/serve-8911.log" 2>&1 < /dev/null &
+          for port in 8910 8911; do
+            for _ in $(seq 1 30); do
+              curl -sf -o /dev/null "http://127.0.0.1:$port/index.html" && break
+              sleep 1
+            done
+            curl -sf -o /dev/null "http://127.0.0.1:$port/index.html" \
+              || { echo "::error::server on $port never came up"; exit 1; }
+          done
+
+      - name: Run the browser suite
+        env:
+          JUMVI_PW: ${{ runner.temp }}/pw/node_modules/playwright
+        run: |
+          fail=0
+          run() {
+            echo "::group::$*"
+            if "$@"; then echo "PASS"; else echo "::error::$* failed"; fail=1; fi
+            echo "::endgroup::"
+          }
+          # check-responsive-matrix and check-zoom-textresize write their
+          # screenshots into docs/audits/screens/faz6 by default — that is the
+          # committed Faz 6 evidence, so CI sends them somewhere disposable.
+          shots="$RUNNER_TEMP/shots"
+          run node tools/check-a11y-controls.mjs
+          run node tools/check-dialog-contract.mjs
+          run node tools/check-motion-liveregions.mjs
+          run node tools/check-nontext-contrast.mjs
+          run node tools/check-onboarding-occlusion.mjs
+          run node tools/check-daily-star-scope.mjs
+          run node tools/check-mission-sheet-matrix.mjs
+          run node tools/check-mission-play-state.mjs
+          run node tools/check-hub-mission-flow.mjs
+          run node tools/check-hub-fallback.mjs
+          run node tools/check-persistence-flow.mjs
+          run node tools/check-profile-team-isolation.mjs
+          run node tools/check-profile-team-ux.mjs
+          run node tools/check-install-offline-update-reset.mjs
+          run node tools/check-runtime-health.mjs
+          run node tools/pwa-standalone-check.mjs
+          run node tools/install-ux-check.mjs
+          run node tools/check-responsive-matrix.mjs "--shots=$shots"
+          run node tools/check-zoom-textresize.mjs "--shots=$shots"
+          exit $fail
+
+      - name: The tree must be exactly as it was checked out
+        run: git diff --exit-code && git status --porcelain --untracked-files=all | tee /dev/stderr | wc -l | grep -qx 0
