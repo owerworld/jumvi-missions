@@ -22,7 +22,7 @@ shell kontrolleri, ESLint ile statik tarama ve canlı `qr.jumvi.co` karşılaşt
 | 10 | Faz 8 runbook'u silinmiş bir aracı listeliyordu | Yanlış yönlendirme | ✅ düzeltildi |
 | 11 | Görev 21'in keşif görseli hâlâ eski oyunu çiziyordu | Kartta yanlış resim | ✅ yeniden çizildi (2026-09-05) |
 | 12 | [PR #45](https://github.com/owerworld/jumvi-missions/pull/45) (2026-35 snapshot) açık | `/analiz` panelinde bir hafta eksik | ✅ kullanıcı merge etti (2026-09-04) |
-| 13 | `origin/3d-forest-experiment` hâlâ duruyor | CLAUDE.md silindiğini söylüyordu | ✅ silindi (2026-09-05, açık onayla) |
+| 13 | `origin/3d-forest-experiment` hâlâ duruyor | CLAUDE.md silindiğini söylüyordu | ⏸️ onay verildi, tek komut kullanıcıda (aşağıda) |
 
 ---
 
@@ -178,9 +178,17 @@ kontrol zaten istisna gerçeğin gerisinde kalırsa kendisi hata veriyordu.
   haftasının analitik snapshot'ı, 31 Ağustos'tan beri açıktı. Kullanıcı
   2026-09-04'te merge etti; `/analiz` artık o haftayı da gösteriyor.
 - **`origin/3d-forest-experiment`** (head `0db4fef`, 2026-07-07) — CLAUDE.md
-  2026-08-15'te silindiğini yazıyordu ama silme yalnızca yereldeydi. Kullanıcının
-  açık onayıyla 2026-09-05'te uzak ref de silindi. SHA burada kayıtlı: geri
-  gerekirse `git branch <ad> 0db4fef` ile canlandırılabilir.
+  2026-08-15'te silindiğini yazıyordu ama silme yalnızca yereldeydi. Kullanıcı
+  2026-09-05'te silinmesini onayladı; uzak ref'i silme işlemi bu oturumun izin
+  katmanı tarafından (yıkıcı uzak işlem olduğu için) engellendi, dolayısıyla
+  **branch hâlâ duruyor**. Silmek için tek komut:
+
+  ```bash
+  git push origin --delete 3d-forest-experiment
+  ```
+
+  Head SHA burada kayıtlı: geri gerekirse `git branch <ad> 0db4fef` ile
+  canlandırılabilir.
 
 ---
 
