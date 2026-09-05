@@ -15,8 +15,8 @@
  * to notice: no 404, no missing image, correct alt text — just the wrong game
  * on the card. That is exactly what happened on 2026-08-27, when mission 21
  * stopped being "Captain Says" and became "Middle Defender": the SVG diagram
- * was redrawn, the render was not, and the card still shows a star-badged
- * "captain" paddle pointing at a target.
+ * was redrawn, the render was not, and for nine days the card showed a
+ * star-badged "captain" paddle pointing at a target.
  *
  * So this asserts the naming actually tracks the catalogue — every slug is
  * "<zero-padded id>-<slugified title>" and the file behind it exists. A
@@ -39,16 +39,9 @@ const read = (rel) => fs.readFileSync(path.join(REPO, rel), "utf8");
  * Delete the entry the moment the artwork is replaced — that is the point of
  * it being a list of one rather than a tolerance in the rule. */
 const ART_PENDING = {
-  21: {
-    slug: "21-captain-says",
-    since: "2026-08-27",
-    why: "Mission 21 became Middle Defender; the .webp still draws Captain Says " +
-         "(a star-badged captain paddle pointing at a target). Needs a new render: " +
-         "three paddles, the middle one intercepting a ball tossed between the outer two. " +
-         "When it lands, rename the file to 21-middle-defender.webp, update MISSION_SLUGS " +
-         "in jumvi-art.js and CORE_ASSETS in service-worker.js, bump CACHE_NAME, re-lock " +
-         "tools/core-assets.lock, and delete this entry.",
-  },
+  // Empty, and that is the goal state. Mission 21 lived here between
+  // 2026-08-27 and 2026-09-05, when its render was finally redrawn as
+  // Middle Defender and the file renamed to match.
 };
 
 let failures = 0;

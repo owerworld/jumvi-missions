@@ -20,9 +20,9 @@ shell kontrolleri, ESLint ile statik tarama ve canlı `qr.jumvi.co` karşılaşt
 | 8 | `manifest.webmanifest` sahipsiz, çelişen `theme_color` | Kafa karışıklığı | ✅ silindi |
 | 9 | CSP'de kullanılmayan `unpkg.com`, pdf-lib CDN'lerinde SRI yok | Gereksiz saldırı yüzeyi | ✅ düzeltildi |
 | 10 | Faz 8 runbook'u silinmiş bir aracı listeliyordu | Yanlış yönlendirme | ✅ düzeltildi |
-| 11 | Görev 21'in keşif görseli hâlâ eski oyunu çiziyor | Kartta yanlış resim | ⚠️ **yeni render gerekiyor** — guard'a kaydedildi |
-| 12 | [PR #45](https://github.com/owerworld/jumvi-missions/pull/45) (2026-35 snapshot) açık | `/analiz` panelinde bir hafta eksik | ⏸️ **kullanıcı onayı bekliyor** |
-| 13 | `origin/3d-forest-experiment` hâlâ duruyor | CLAUDE.md silindiğini söylüyordu | ⏸️ **kullanıcı onayı bekliyor** (CLAUDE.md düzeltildi) |
+| 11 | Görev 21'in keşif görseli hâlâ eski oyunu çiziyordu | Kartta yanlış resim | ✅ yeniden çizildi (2026-09-05) |
+| 12 | [PR #45](https://github.com/owerworld/jumvi-missions/pull/45) (2026-35 snapshot) açık | `/analiz` panelinde bir hafta eksik | ✅ kullanıcı merge etti (2026-09-04) |
+| 13 | `origin/3d-forest-experiment` hâlâ duruyor | CLAUDE.md silindiğini söylüyordu | ✅ silindi (2026-09-05, açık onayla) |
 
 ---
 
@@ -149,35 +149,38 @@ CI dışı bırakılanlar ve nedeni: `mobile-matrix` (WebKit de gerekiyor),
 `check-deploy-health` ve `check-production-ui-assets` (canlı siteyi yokluyorlar,
 kendi workflow'ları var).
 
-## 7. Görev 21'in keşif görseli — kapatılamadı
+## 7. Görev 21'in keşif görseli — yeniden çizildi (2026-09-05)
 
-`assets/ui/missions/21-captain-says.webp` hâlâ *Captain Says* çiziyor: yıldız
+`assets/ui/missions/21-captain-says.webp` hâlâ *Captain Says* çiziyordu: yıldız
 rozetli bir "kaptan" raketi, okla başka bir rakete işaret ediyor. Detay
-sayfasındaki SVG diyagram `e476b83` ile doğru şekilde yeniden çizildi; kart,
-bugünün görevi ve liste yüzeylerinin kullandığı ürün render'ı çizilmedi.
+sayfasındaki SVG diyagram `e476b83` ile doğru şekilde yeniden çizilmişti; kart,
+bugünün görevi ve liste yüzeylerinin kullandığı ürün render'ı çizilmemişti — yani
+dokuz gün boyunca kartta artık var olmayan bir oyunun resmi durdu.
 
-Bu bir render işi — kodla üretilemez. Yapılan: yeni `tools/check-mission-art.mjs`,
-her slug'ın `<id>-<slugify(başlık)>` olduğunu ve dosyanın diskte bulunduğunu
-doğruluyor. Görev 21 `ART_PENDING` içinde **tarihli ve gerekçeli** bir istisna
-olarak duruyor, yani sorun görünmez değil kayıtlı. İstisna, sorun çözüldüğünde
-kendisi de hata veriyor (`no exception outlives the problem it records`), böylece
-unutulup gelecekteki bir uyuşmazlığı susturamıyor.
+Yeni görsel **paketin kendi sprite'larından** kuruldu: raket ve top, eski
+dosyanın içinden (orada ayrı birer bağlı bileşen oldukları için) piksel piksel,
+değiştirilmeden alındı. Yani render dili birebir aynı; elle çizilen tek şey mavi
+yol. O mavinin değeri de `19-round-robin.webp`'ten örneklendi (`rgb(45,158,217)`).
+Kompozisyon: iki dış oyuncu, ortada işaretli savunmacı, soldan sağa yay çizen top;
+ortadaki oyuncu görevin kendi SVG diyagramındaki gibi kesikli bir halkayla
+işaretli. Çerçeveleme pakete birebir uyuyor: içerik kutusu `x[16-239]`, tıpkı 19,
+20, 21 ve 22'de olduğu gibi.
 
-**Yeni render ne göstermeli:** üç raket; ortadaki, dıştaki ikisinin arasında atılan
-topu kesiyor. Geldiğinde: dosyayı `21-middle-defender.webp` yap, `jumvi-art.js`
-içindeki `MISSION_SLUGS` ve `service-worker.js` içindeki `CORE_ASSETS` güncelle,
-`CACHE_NAME` bump'la, `tools/core-assets.lock`'ı yenile ve `ART_PENDING` kaydını sil.
+Dosya `21-middle-defender.webp` olarak yeniden adlandırıldı; `jumvi-art.js`
+içindeki `MISSION_SLUGS`, `service-worker.js` içindeki `CORE_ASSETS`,
+`CACHE_NAME` (v249), `jumvi-art.js`'in `?v=` damgası ve iki kilit dosyası
+güncellendi. `tools/check-mission-art.mjs` içindeki `ART_PENDING` kaydı silindi —
+kontrol zaten istisna gerçeğin gerisinde kalırsa kendisi hata veriyordu.
 
-## 8. Kullanıcı onayı bekleyen iki iş
+## 8. Depo bakımı
 
-- **[PR #45](https://github.com/owerworld/jumvi-missions/pull/45)** — 2026-08-31'den
-  beri açık, 2026-35 haftasının analitik snapshot'ı. Merge edilmediği için `/analiz`
-  panelinde o hafta eksik. CLAUDE.md main'e merge'ü açık onaya bağladığı için
-  dokunulmadı.
+- **[PR #45](https://github.com/owerworld/jumvi-missions/pull/45)** — 2026-35
+  haftasının analitik snapshot'ı, 31 Ağustos'tan beri açıktı. Kullanıcı
+  2026-09-04'te merge etti; `/analiz` artık o haftayı da gösteriyor.
 - **`origin/3d-forest-experiment`** (head `0db4fef`, 2026-07-07) — CLAUDE.md
-  2026-08-15'te silindiğini yazıyordu; silme yalnızca yerelde yapılmış. Uzak ref'i
-  silmek geri alması zor bir işlem olduğu için bırakıldı; CLAUDE.md'deki yanlış
-  cümle düzeltildi.
+  2026-08-15'te silindiğini yazıyordu ama silme yalnızca yereldeydi. Kullanıcının
+  açık onayıyla 2026-09-05'te uzak ref de silindi. SHA burada kayıtlı: geri
+  gerekirse `git branch <ad> 0db4fef` ile canlandırılabilir.
 
 ---
 

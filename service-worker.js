@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v248";
+const CACHE_NAME = "jumvi-missions-v249";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -58,7 +58,7 @@ const CORE_ASSETS = [
   "/assets/ui/missions/18-count-to-10.webp",
   "/assets/ui/missions/19-round-robin.webp",
   "/assets/ui/missions/20-crab-walk-relay.webp",
-  "/assets/ui/missions/21-captain-says.webp",
+  "/assets/ui/missions/21-middle-defender.webp",
   "/assets/ui/missions/22-spin-squad.webp",
   "/assets/ui/missions/23-mix-it-up.webp",
   "/assets/ui/missions/24-2v2-squad-count.webp",
