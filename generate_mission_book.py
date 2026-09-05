@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 JUMVI Mission Book PDF Generator
-Generates a polished 36-mission book for the JUMVI Toss & Catch Paddle Set.
+Generates a polished mission book for the JUMVI Toss & Catch Paddle Set.
+Missions, packs and every printed total are read from data.js at build time.
 """
 
 from reportlab.lib.pagesizes import LETTER
@@ -16,7 +17,12 @@ from reportlab.platypus import (
 from reportlab.platypus.flowables import Flowable
 from reportlab.pdfgen import canvas as pdfcanvas
 from reportlab.pdfbase.pdfmetrics import stringWidth
-import os
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 BRAND_BLUE = colors.HexColor("#4FB3FF")
@@ -36,207 +42,93 @@ PACK_COLORS = {
     "Beach/Park":     colors.HexColor("#F59E0B"),
 }
 
-OUTPUT_PATH = "/Users/ramo/Desktop/jumvi-missions/mission-book.pdf"
+REPO_ROOT = Path(__file__).resolve().parent
+DEFAULT_OUTPUT = REPO_ROOT / "mission-book.pdf"
+
+# The set ships four paddles, so no printed page may promise a fifth player.
+MAX_PLAYERS = 4
 
 PAGE_W, PAGE_H = LETTER
 MARGIN = 0.5 * inch
 USABLE_W = PAGE_W - 2 * MARGIN
 USABLE_H = PAGE_H - 2 * MARGIN
 
-# ── Mission Data (data.js v3 ile uyumlu — US-friendly mission isimleri) ─────
-MISSIONS = [
-    # Lightning Hands (Reflex Rush) — 6
-    {"pack":"Reflex Rush","num":1,"title":"Speed Demon","age":"3+","players":"2","time":"45s",
-     "steps":["Stand 2 big-kid steps apart.","Throw fast — but soft.","Catch and reset — go again!"],
-     "win":"Catch as many as you can in 45 seconds — beat your best!",
-     "safety":"Throw under chin level — never aim at faces.",
-     "tip":"Tiny humans? Slow it down — fun first, speed later!"},
-    {"pack":"Reflex Rush","num":2,"title":"Red Light, Green Light","age":"4+","players":"2-3","time":"60s",
-     "steps":["GREEN LIGHT — throw and catch normally.","RED LIGHT — FREEZE! No throwing, no moving.","Keep going until the timer ends."],
-     "win":"Make it through 60 seconds with zero RED LIGHT throws.",
-     "safety":"Freeze means freeze — no sneaky moves.",
-     "tip":"Best part? Trying not to laugh during the freeze."},
-    {"pack":"Reflex Rush","num":3,"title":"Quick Slap","age":"6+","players":"2","time":"60s",
-     "steps":["Partner throws gently.","Quick slap your free hand on the paddle once.","Then turn and catch! Switch every 10 throws."],
-     "win":"10 clean slap-catches each side wins.",
-     "safety":"Hold the handle tight — only the free hand slaps.",
-     "tip":"Find a rhythm: throw → SLAP → catch — repeat!"},
-    {"pack":"Reflex Rush","num":4,"title":"Switcharoo","age":"6+","players":"2","time":"90s",
-     "steps":["Start with your strong hand on the paddle.","After each catch, pass to your other hand.","Catch with the new hand. Alternate every throw!"],
-     "win":"First to 12 alternating catches wins.",
-     "safety":"Take the handoff slow — no fumbling.",
-     "tip":"Strong hand = the one you write with. Start there!"},
-    {"pack":"Reflex Rush","num":5,"title":"Statue Mode","age":"4+","players":"2","time":"60s",
-     "steps":["Catch the ball — then FREEZE for 2 seconds.","No moving — paddle, body, feet — all stone.","Then throw it back."],
-     "win":"10 catches with a full freeze between each.",
-     "safety":"Truly no moving during the freeze.",
-     "tip":"Try a silly statue pose — funnier every time!"},
-    {"pack":"Reflex Rush","num":6,"title":"Number Echo","age":"3+","players":"2","time":"60s",
-     "steps":["Throw and shout the number out loud.","Catcher repeats the number, then throws back.","Drop it? Restart from 1."],
-     "win":"Reach 15 in a row — count loud!",
-     "safety":"Stay relaxed if you miss — just restart.",
-     "tip":"Sneaky math practice — don't tell the kids!"},
+# ── Mission data ─────────────────────────────────────────────────────────────
+# Read straight out of data.js — the same file the app ships — instead of
+# keeping a second copy here.
+#
+# The second copy is exactly how this book went stale: it was last touched in
+# May 2026, so the printed page 12 still taught "Captain Says" long after the
+# app had replaced mission 21 with "Middle Defender", 26 mission timers had
+# been retuned, and "3+" / "4+" / "3-6" player labels had been banned for
+# implying more players than the four-paddle kit holds. A parent printing this
+# got a game their child could not find in the app.
+#
+# data.js is a plain script (no module system), so node evaluates it in a bare
+# VM context and hands back JSON. That is the same trick tools/check-*.mjs use,
+# and it means this book cannot drift from the app again without the checks
+# below failing loudly.
+def load_missions():
+    reader = (
+        "const fs=require('fs'),vm=require('vm');"
+        "const ctx=vm.createContext({});"
+        "vm.runInContext(fs.readFileSync(process.argv[1],'utf8')+'\\n;__out={missions};',ctx);"
+        "process.stdout.write(JSON.stringify(ctx.__out.missions));"
+    )
+    data_js = REPO_ROOT / "data.js"
+    try:
+        raw = subprocess.run(
+            ["node", "-e", reader, str(data_js)],
+            capture_output=True, text=True, check=True,
+        ).stdout
+    except FileNotFoundError:
+        sys.exit("node is required to read data.js — install Node and re-run.")
+    except subprocess.CalledProcessError as err:
+        sys.exit(f"could not evaluate {data_js}:\n{err.stderr.strip()}")
 
-    # Bullseye! (Aim Master) — 6
-    {"pack":"Aim Master","num":7,"title":"Rainbow Throws","age":"4+","players":"2","time":"90s",
-     "steps":["Stand 5 big-kid steps apart.","Every throw must arc HIGH — over both heads.","Flat throws don't count. After 5 clean arcs, step back!"],
-     "win":"Beat 3 distance levels with 5 rainbows each.",
-     "safety":"Soft height, not power — let gravity do the work.",
-     "tip":"Picture a real rainbow — up, over, down to the paddle."},
-    {"pack":"Aim Master","num":8,"title":"The Landing Pad","age":"4+","players":"2","time":"90s",
-     "steps":["Thrower sends a soft, high arc.","Catcher holds the paddle FLAT and STILL — like a runway.","The ball must STICK on its own — no swinging!"],
-     "win":"8 perfect landings wins.",
-     "safety":"Don't swat — let the velcro do the work.",
-     "tip":"The only mission where you do NOTHING and win!"},
-    {"pack":"Aim Master","num":9,"title":"Step-Back Challenge","age":"5+","players":"2","time":"120s",
-     "steps":["Start 1 big step apart, get 3 clean catches.","Step back half a step — repeat.","Climb the ladder up to 3 big steps apart!"],
-     "win":"Reach the top with 3 clean catches at max distance.",
-     "safety":"Stop if throws start going wild.",
-     "tip":"Soft arcs only — power isn't the win here."},
-    {"pack":"Aim Master","num":10,"title":"Power Step","age":"5+","players":"2","time":"90s",
-     "steps":["Start 6 big-kid steps apart.","Step FORWARD as you throw — like a real athlete!","Catch, then step back to start. Partner's turn!"],
-     "win":"10 clean step-throws each.",
-     "safety":"Throw soft — the step adds power on its own.",
-     "tip":"This is how pro pitchers and quarterbacks throw!"},
-    {"pack":"Aim Master","num":11,"title":"Sky Floater","age":"3+","players":"2","time":"90s",
-     "steps":["Throw it as high and SLOW as you can.","Catcher waits patiently — no rushing!","Let the ball drift down to the paddle."],
-     "win":"10 patient sky catches.",
-     "safety":"Slow and patient wins — no swinging.",
-     "tip":"Calm-down time after a wild day? This one's perfect."},
-    {"pack":"Aim Master","num":12,"title":"Heart-High","age":"6+","players":"2","time":"120s",
-     "steps":["Stand 6 big-kid steps apart.","Every throw must hit the catcher's CHEST.","Catcher holds paddle at chest as a target. Too high or low = miss!"],
-     "win":"10 chest-height catches in a row.",
-     "safety":"Aim for the paddle, not the person.",
-     "tip":"Picture a bullseye where the paddle is — aim there!"},
+    missions = [
+        {
+            "num":     m["id"],
+            "pack":    m["pack"],
+            "title":   m["title"],
+            "age":     m["age"],
+            "players":  m["players"],
+            "time":    m["time"],
+            "steps":   m["steps"],
+            "win":     m["win"],
+            "safety":  m["safety"],
+            "tip":     m["tip"],
+        }
+        for m in json.loads(raw)
+    ]
 
-    # Zen Mode (Focus Control) — 6
-    {"pack":"Focus Control","num":13,"title":"Silent Mode","age":"4+","players":"2","time":"120s",
-     "steps":["Total silence — no talking AT ALL.","Show the count with your fingers after each catch.","Anyone speaks? Restart from 1!"],
-     "win":"Reach 12 catches in pure silence.",
-     "safety":"Take a breath before each throw.",
-     "tip":"Surprisingly hard — and weirdly fun!"},
-    {"pack":"Focus Control","num":14,"title":"Tempo Master","age":"4+","players":"2","time":"90s",
-     "steps":["5 super-slow throws.","5 medium-speed throws.","Repeat one cycle. Feet stay PLANTED!"],
-     "win":"Finish all 20 throws — no drops.",
-     "safety":"Feet planted — only arms move.",
-     "tip":"Like switching gears in a song — slow first, then build!"},
-    {"pack":"Focus Control","num":15,"title":"Spotlight Eyes","age":"3+","players":"2","time":"90s",
-     "steps":["Before catching, shout: I SEE IT!","Partner throws after they hear you.","Catch, say I SEE IT again, throw back."],
-     "win":"Reach 15 spotlight catches.",
-     "safety":"Keep the same distance — no surprises.",
-     "tip":"Saying it out loud helps the eyes lock on first!"},
-    {"pack":"Focus Control","num":16,"title":"1 — 2 — 3 — GO!","age":"4+","players":"2","time":"90s",
-     "steps":["Thrower counts 1 — 2 — 3 out loud.","Ball flies on 3, exactly!","Catcher counts 1 — 2 — 3 back, then throws."],
-     "win":"10 perfectly-timed catches.",
-     "safety":"Calm count, steady rhythm.",
-     "tip":"Real athletes call this 'tempo' — pro skill unlocked!"},
-    {"pack":"Focus Control","num":17,"title":"Mirror Mode","age":"6+","players":"2","time":"120s",
-     "steps":["Thrower holds the paddle in a position (high, low, tilted).","Catcher copies the EXACT same position.","Throw happens after the mirror! Switch every 5."],
-     "win":"8 mirror-and-catch rounds.",
-     "safety":"Keep poses comfortable — no awkward stretches.",
-     "tip":"Try silly positions — surprise your partner!"},
-    {"pack":"Focus Control","num":18,"title":"Count to 10","age":"3+","players":"2","time":"90s",
-     "steps":["Count every clean catch out loud TOGETHER.","Drop = restart from 1.","No pressure — just try again!"],
-     "win":"Reach 10 catches with no drops.",
-     "safety":"Stress-free zone — restarting is part of the game.",
-     "tip":"Best first mission for tiny humans — confidence builder!"},
+    # Fail loudly rather than printing a book that quietly disagrees with the
+    # app. Every one of these was a real defect in the shipped PDF.
+    problems = []
+    for m in missions:
+        if m["pack"] not in PACK_COLORS:
+            problems.append(f"#{m['num']} has unknown pack {m['pack']!r}")
+        if "+" in str(m["players"]):
+            problems.append(f"#{m['num']} player label {m['players']!r} uses '+'")
+        counts = [int(n) for n in re.findall(r"\d+", str(m["players"]))]
+        if counts and max(counts) > MAX_PLAYERS:
+            problems.append(f"#{m['num']} player label {m['players']!r} exceeds the kit")
+        for field in ("title", "win", "safety", "tip"):
+            if not str(m[field]).strip():
+                problems.append(f"#{m['num']} has an empty {field}")
+        if not m["steps"]:
+            problems.append(f"#{m['num']} has no steps")
+    # Packs are drawn as contiguous chapters, so a pack must not be interleaved.
+    seen = []
+    for m in missions:
+        if not seen or seen[-1] != m["pack"]:
+            if m["pack"] in seen:
+                problems.append(f"pack {m['pack']!r} is split across the list")
+            seen.append(m["pack"])
+    if problems:
+        sys.exit("data.js failed the mission book's checks:\n  " + "\n  ".join(problems))
 
-    # Team Up (Team Duo) — 6
-    {"pack":"Team Duo","num":19,"title":"Round Robin","age":"4+","players":"3-6","time":"3min",
-     "steps":["Stand in a circle, each holding a paddle.","Throw to ANYONE — but never twice in a row to the same person!","Keep all throws gentle."],
-     "win":"2 full minutes — count drops, beat your record!",
-     "safety":"Stay spaced out — no crowding.",
-     "tip":"4 paddles + 4 players = ultimate party mode!"},
-    {"pack":"Team Duo","num":20,"title":"Crab Walk Relay","age":"5+","players":"4+","time":"3min",
-     "steps":["Two lines facing each other.","Pass the ball down your line — catch & pass.","After your turn, crab-walk to the back!"],
-     "win":"Both lines hit 20 passes together.",
-     "safety":"Walk or crab-walk only — no running.",
-     "tip":"Slow and silly — short throws keep it safe!"},
-    {"pack":"Team Duo","num":21,"title":"Captain Says","age":"6+","players":"3+","time":"150s",
-     "steps":["Pick a captain for 3 throws.","Captain calls out a teammate's name, then throws to them.","That person catches! Switch captain every 3."],
-     "win":"12 clean called catches.",
-     "safety":"Friendly voices — no fake-outs!",
-     "tip":"Make sure everyone gets a turn as captain!"},
-    {"pack":"Team Duo","num":22,"title":"Spin Squad","age":"6+","players":"4","time":"3min",
-     "steps":["4 players in a square, each with a paddle.","One player throws to anyone.","EVERYONE steps clockwise after each catch — then throw again!"],
-     "win":"20 catches with full team rotations.",
-     "safety":"Rotate calm — no bumping!",
-     "tip":"Shout SPIN! after each catch to keep the squad moving!"},
-    {"pack":"Team Duo","num":23,"title":"Mix It Up","age":"6+","players":"4+","time":"3min",
-     "steps":["Start in pairs — 6 catches together.","After 6, swap to a new partner!","Repeat until everyone's played with everyone."],
-     "win":"Most clean swap cycles wins.",
-     "safety":"Swap calmly — no pushing.",
-     "tip":"4 paddles + 4 players makes this perfect!"},
-    {"pack":"Team Duo","num":24,"title":"2v2 Squad Count","age":"6+","players":"4","time":"4min",
-     "steps":["Split into 2 teams of 2.","Each team gets 5 clean catches, then the other team goes.","Add it all to ONE shared total!"],
-     "win":"Reach 40 total team catches.",
-     "safety":"Celebrate every clean catch — this is OUR score.",
-     "tip":"Uses ALL 4 paddles at once!"},
-
-    # Indoor Fun (Indoor Compact) — 6
-    {"pack":"Indoor Compact","num":25,"title":"Chill Catch","age":"3+","players":"2","time":"120s",
-     "steps":["Both players sit — floor or chair.","Short, soft throws only.","Catch from your seat — no jumping up!"],
-     "win":"15 clean seated catches.",
-     "safety":"No standing — calm, controlled play.",
-     "tip":"Rainy day winner — also great for tired humans!"},
-    {"pack":"Indoor Compact","num":26,"title":"Tiny Space","age":"4+","players":"2","time":"90s",
-     "steps":["Stand just 1 big step apart.","Throw soft — no stepping forward!","Feet PLANTED the whole time."],
-     "win":"12 clean catches in tiny range.",
-     "safety":"Watch out for lamps and shelves.",
-     "tip":"No-step rule = every catch is a real win."},
-    {"pack":"Indoor Compact","num":27,"title":"Secret Signal","age":"4+","players":"2-3","time":"120s",
-     "steps":["Pick a secret hand signal together.","Thrower flashes the signal, then throws.","Catcher signals back, then returns. No signal = no throw!"],
-     "win":"10 secret signal catches.",
-     "safety":"Keep signals simple — easy to spot.",
-     "tip":"Make up your own family secret signal!"},
-    {"pack":"Indoor Compact","num":28,"title":"Mind Reader","age":"5+","players":"2","time":"120s",
-     "steps":["Thrower secretly picks: LEFT, RIGHT, or CENTER.","3-second pause — no hints!","Catcher predicts and positions paddle BEFORE the throw!"],
-     "win":"Predict 8 out of 12 correctly.",
-     "safety":"Soft, predictable distance — surprise only the direction.",
-     "tip":"Pro tip: Watch the thrower's shoulders — they always tell!"},
-    {"pack":"Indoor Compact","num":29,"title":"Stuck-Foot Catch","age":"3+","players":"2","time":"120s",
-     "steps":["Both players: feet stuck to the floor.","Soft tosses only.","Catch and return — no chasing!"],
-     "win":"20 clean catches.",
-     "safety":"If throws get wild, slow down together.",
-     "tip":"The safest indoor mission — works in ANY space."},
-    {"pack":"Indoor Compact","num":30,"title":"Left or Right!","age":"5+","players":"2","time":"90s",
-     "steps":["Caller shouts LEFT or RIGHT before throwing.","Catcher turns paddle to that side and catches!","Wrong side = miss. Switch caller every 5."],
-     "win":"Score 8 correct side catches.",
-     "safety":"Throws straight and gentle — direction is the puzzle.",
-     "tip":"Just paddle + ears + reflexes!"},
-
-    # Outdoor (Beach/Park) — 6
-    {"pack":"Beach/Park","num":31,"title":"Cloud Chaser","age":"4+","players":"2","time":"60s",
-     "steps":["Stand 6 big-kid steps apart.","Throw the ball as HIGH as you can into the sky!","Watch it the whole way down — catch with the paddle!"],
-     "win":"10 sky catches.",
-     "safety":"Always throw UP — never AT each other.",
-     "tip":"Open sky = easier to track — perfect outdoor starter!"},
-    {"pack":"Beach/Park","num":32,"title":"Home Base","age":"4+","players":"2","time":"90s",
-     "steps":["Each player picks a home base (shadow, sidewalk square, grass patch).","Throw and catch from your base — no moving feet!","Step off your base = miss."],
-     "win":"10 base-only catches.",
-     "safety":"Pick safe, flat ground for your base.",
-     "tip":"Set bases 8-10 big steps apart for a real challenge!"},
-    {"pack":"Beach/Park","num":33,"title":"How Far Can You Throw?","age":"5+","players":"2","time":"120s",
-     "steps":["Start 6 big-kid steps apart.","Get 3 clean catches, then BOTH step back 2 big steps.","Keep going! Note your best distance!"],
-     "win":"Beat your previous distance record.",
-     "safety":"Use big arcs at long distance — flat throws fall short.",
-     "tip":"Outdoor only — needs space to grow!"},
-    {"pack":"Beach/Park","num":34,"title":"Chase the Ball!","age":"5+","players":"2","time":"120s",
-     "steps":["Thrower tosses the ball ahead of you — not too far!","Catcher runs to meet it.","Catch with the paddle BEFORE it lands!"],
-     "win":"7 running catches wins.",
-     "safety":"Pick a clear run zone — no obstacles!",
-     "tip":"Soft grass works best — flat ground only."},
-    {"pack":"Beach/Park","num":35,"title":"Sky High Jump","age":"6+","players":"2","time":"150s",
-     "steps":["Thrower aims JUST above your normal reach — not too high!","Wait for the throw — don't pre-jump!","Then JUMP and catch in the air! Switch every 5."],
-     "win":"8 jump catches.",
-     "safety":"Jump on flat soft ground — grass is best.",
-     "tip":"The sweet spot is JUST above normal reach — not too high!"},
-    {"pack":"Beach/Park","num":36,"title":"Marathon Rally","age":"4+","players":"2","time":"3min",
-     "steps":["Start close together — build a rally!","After every 5 clean catches, BOTH step back one big step.","See how far you can stretch the rally!"],
-     "win":"Reach 20 catches without a drop.",
-     "safety":"Stop stepping back when throws get wild.",
-     "tip":"Try to beat your distance every time you play!"},
-]
+    return missions
 
 
 # ── Text wrapping helper ──────────────────────────────────────────────────────
@@ -275,7 +167,7 @@ def draw_labeled_block(c, label, text, x, y, block_w, text_col, bg_col, accent_c
 
 
 # ── Cover page drawing ────────────────────────────────────────────────────────
-def draw_cover(c, pw, ph):
+def draw_cover(c, pw, ph, mission_count, pack_count):
     c.setFillColor(DARK_BG)
     c.rect(0, 0, pw, ph, fill=1, stroke=0)
 
@@ -308,7 +200,8 @@ def draw_cover(c, pw, ph):
     # subtitle
     c.setFillColor(colors.HexColor("#CBD5E1"))
     c.setFont("Helvetica", 15)
-    c.drawCentredString(pw / 2, ph / 2 + 58, "36 Fun Tossing & Catching Games for Ages 3-8")
+    c.drawCentredString(pw / 2, ph / 2 + 58,
+                        f"{mission_count} Fun Tossing & Catching Games for Ages 3-8")
 
     # pack color dots
     dot_r = 12
@@ -339,10 +232,11 @@ def draw_cover(c, pw, ph):
     c.roundRect(bx, by, bw, bh, 8, fill=1, stroke=0)
     c.setFillColor(BRAND_BLUE)
     c.setFont("Helvetica-Bold", 22)
-    c.drawCentredString(pw / 2, by + 28, "36 MISSIONS")
+    c.drawCentredString(pw / 2, by + 28, f"{mission_count} MISSIONS")
     c.setFillColor(colors.HexColor("#94A3B8"))
     c.setFont("Helvetica", 9)
-    c.drawCentredString(pw / 2, by + 13, "across 6 skill packs  |  Ages 3-8  |  Indoors & Outdoors")
+    c.drawCentredString(pw / 2, by + 13,
+                        f"across {pack_count} skill packs  |  Ages 3-8  |  Indoors & Outdoors")
 
     # website
     c.setFillColor(BRAND_BLUE)
@@ -462,20 +356,29 @@ def _draw_info_column(c, x, top, col_w, title, bg_col, accent_col, items,
 
 
 # ── Pack header drawing ───────────────────────────────────────────────────────
-PACK_INFO = {
-    "Reflex Rush":    ("Missions 1-6",   "Speed, reaction time & hand-eye coordination"),
-    "Aim Master":     ("Missions 7-12",  "Accuracy, distance & precision throwing"),
-    "Focus Control":  ("Missions 13-18", "Concentration, breath control & steady play"),
-    "Team Duo":       ("Missions 19-24", "Teamwork, communication & group fun"),
-    "Indoor Compact": ("Missions 25-30", "Safe, space-friendly indoor play"),
-    "Beach/Park":     ("Missions 31-36", "Outdoor adventures, nature & open-air play"),
+# Editorial copy only. The "Missions 7-12" half used to live here too and went
+# stale the moment the catalogue moved, so it is now counted from the data.
+PACK_TAGLINES = {
+    "Reflex Rush":    "Speed, reaction time & hand-eye coordination",
+    "Aim Master":     "Accuracy, distance & precision throwing",
+    "Focus Control":  "Concentration, breath control & steady play",
+    "Team Duo":       "Teamwork, communication & group fun",
+    "Indoor Compact": "Safe, space-friendly indoor play",
+    "Beach/Park":     "Outdoor adventures, nature & open-air play",
 }
 
-def draw_pack_header(c, x, y, w, pack_name):
+def pack_range_label(missions):
+    """"Missions 7-12", counted from the pack itself rather than remembered."""
+    nums = [m["num"] for m in missions]
+    lo, hi = min(nums), max(nums)
+    return f"Mission {lo}" if lo == hi else f"Missions {lo}-{hi}"
+
+
+def draw_pack_header(c, x, y, w, pack_name, mission_range):
     pc = PACK_COLORS[pack_name]
     h  = 44
     r  = 6
-    mr, tl = PACK_INFO[pack_name]
+    mr, tl = mission_range, PACK_TAGLINES[pack_name]
 
     c.setFillColor(pc)
     c.roundRect(x, y - h, w, h, r, fill=1, stroke=0)
@@ -610,14 +513,14 @@ def draw_page_number(c, page_num):
 
 
 # ── Main PDF builder ──────────────────────────────────────────────────────────
-def build_pdf():
-    c = pdfcanvas.Canvas(OUTPUT_PATH, pagesize=LETTER)
+def build_pdf(missions, output_path):
+    c = pdfcanvas.Canvas(str(output_path), pagesize=LETTER)
     c.setTitle("JUMVI Mission Book")
     c.setAuthor("qr.jumvi.co")
-    c.setSubject("36 Fun Tossing & Catching Games for Ages 3-8")
+    c.setSubject(f"{len(missions)} Fun Tossing & Catching Games for Ages 3-8")
 
     # ── Page 1: Cover ────────────────────────────────────────────────────────
-    draw_cover(c, PAGE_W, PAGE_H)
+    draw_cover(c, PAGE_W, PAGE_H, len(missions), len({m["pack"] for m in missions}))
     c.showPage()
 
     # ── Page 2: Safety & How to Use ─────────────────────────────────────────
@@ -633,7 +536,7 @@ def build_pdf():
     # Group by pack
     packs = []
     current_pack = None
-    for m in MISSIONS:
+    for m in missions:
         if m["pack"] != current_pack:
             current_pack = m["pack"]
             packs.append({"name": current_pack, "missions": []})
@@ -646,11 +549,11 @@ def build_pdf():
     CARD_TOP_GAP = 6
 
     for pack in packs:
-        missions = pack["missions"]
+        pack_missions = pack["missions"]
         # Each pack: header on top, then pairs of cards
         # Pairs per page
-        pairs = [(missions[i], missions[i+1] if i+1 < len(missions) else None)
-                 for i in range(0, len(missions), 2)]
+        pairs = [(pack_missions[i], pack_missions[i+1] if i+1 < len(pack_missions) else None)
+                 for i in range(0, len(pack_missions), 2)]
 
         # We fit: header + 1 pair per page (header only on first page of pack)
         first_page = True
@@ -663,7 +566,8 @@ def build_pdf():
             cursor = PAGE_H - MARGIN  # top of content area
 
             if first_page:
-                draw_pack_header(c, MARGIN, cursor, USABLE_W, pack["name"])
+                draw_pack_header(c, MARGIN, cursor, USABLE_W, pack["name"],
+                                 pack_range_label(pack_missions))
                 cursor -= HDR_H + HDR_GAP
                 first_page = False
 
@@ -681,9 +585,13 @@ def build_pdf():
             page_num += 1
 
     c.save()
-    print(f"PDF written to: {OUTPUT_PATH}")
-    print(f"Total pages: {page_num - 1}")
+    print(f"PDF written to: {output_path}")
+    print(f"Missions: {len(missions)}  ·  Total pages: {page_num - 1}")
 
 
 if __name__ == "__main__":
-    build_pdf()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default=DEFAULT_OUTPUT, type=Path,
+                        help="where to write the PDF (default: mission-book.pdf next to this script)")
+    args = parser.parse_args()
+    build_pdf(load_missions(), args.out)

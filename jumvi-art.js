@@ -10,7 +10,7 @@
     "01-speed-demon", "02-red-light-green-light", "03-quick-slap", "04-switcharoo", "05-statue-mode", "06-number-echo",
     "07-rainbow-throws", "08-the-landing-pad", "09-step-back-challenge", "10-power-step", "11-sky-floater", "12-heart-high",
     "13-silent-mode", "14-tempo-master", "15-spotlight-eyes", "16-1-2-3-go", "17-mirror-mode", "18-count-to-10",
-    "19-round-robin", "20-crab-walk-relay", "21-captain-says", "22-spin-squad", "23-mix-it-up", "24-2v2-squad-count",
+    "19-round-robin", "20-crab-walk-relay", "21-middle-defender", "22-spin-squad", "23-mix-it-up", "24-2v2-squad-count",
     "25-chill-catch", "26-tiny-space", "27-secret-signal", "28-mind-reader", "29-stuck-foot-catch", "30-left-or-right",
     "31-cloud-chaser", "32-home-base", "33-how-far-can-you-throw", "34-chase-the-ball", "35-sky-high-jump", "36-marathon-rally"
   ];

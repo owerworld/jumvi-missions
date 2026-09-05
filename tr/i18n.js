@@ -131,7 +131,8 @@
     "Time’s up — did you do it?": "Süre doldu — başardın mı?",
     "Done — tap to undo": "Bitti — geri almak için dokun",
     "surprise": "sürpriz",
-    "How to play": "Nasıl oynanır",
+    // "How to play" is already mapped above, in the mission-sheet block — a
+    // second copy here was a silently shadowed key, not a second translation.
     "Tap the ground — Leo walks there!": "Yere dokun — Leo oraya yürüsün!",
     "Reach a glowing gate to open a mission": "Görev açmak için parlayan kapıya ulaş",
     "Finish missions to grow each zone!": "Her bölgeyi büyütmek için görevleri bitir!",

@@ -1,5 +1,12 @@
+# The CDN entries below are the leftovers of an earlier build that pulled
+# three.js, icons and fonts from jsdelivr. All of that is vendored now
+# (vendor/three.module.min.js, jumvi-icons.css, no @font-face at all), so the
+# only third-party script this app can still reach for is pdf-lib, and only as
+# a fallback when the local copy fails — hence jsdelivr and cdnjs in script-src
+# and nowhere else. unpkg.com was allow-listed and never used by anything.
+# An allow-list entry nobody uses is just a bigger target.
 /*
-  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' blob: https://cdn.jsdelivr.net; frame-ancestors 'self'; base-uri 'self'
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
