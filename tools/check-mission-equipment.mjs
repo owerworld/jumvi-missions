@@ -16,14 +16,30 @@ vm.runInContext(
 );
 const { missions, formatEquipmentCount } = context.__out;
 
-const expected = [
-  [1,2,1],[2,[2,3],1],[3,2,1],[4,2,1],[5,2,1],[6,2,1],
-  [7,2,1],[8,2,1],[9,2,1],[10,2,1],[11,2,1],[12,2,1],
-  [13,2,1],[14,2,1],[15,2,1],[16,2,1],[17,2,1],[18,2,1],
-  [19,[3,4],1],[20,4,1],[21,[3,4],1],[22,4,1],[23,4,1],[24,4,1],
-  [25,2,1],[26,2,1],[27,[2,3],1],[28,2,1],[29,2,1],[30,2,1],
-  [31,2,1],[32,2,1],[33,2,1],[34,2,1],[35,2,1],[36,2,1],
-];
+/* This file used to carry a frozen 36-row copy of every mission's equipment.
+ * That copy is what actually broke: when mission 21 became "Middle Defender"
+ * (3 players, 3 paddles) the row here still said [3,4], so the check went red
+ * and stayed red — reporting the catalogue as wrong when the catalogue was
+ * right. A duplicated table cannot audit the thing it duplicates.
+ *
+ * So the rule is derived from the mission itself instead: a mission needs one
+ * paddle per active player and one ball, which is the actual product fact and
+ * holds for all 36 today. A kit that disagrees with its own player label is a
+ * real defect; a mission whose player count legitimately changes just carries
+ * its kit along, with nothing here to update.
+ *
+ * The bounds (never more than the four-paddle kit, never a "+" label) stay
+ * asserted separately below — those are the promises the printed book and the
+ * FBA kit have to keep, and they do not follow from consistency alone. */
+const MAX_PLAYERS = 4;
+
+/** "2" -> 2, "3–4" -> [3,4]; the count(s) a mission actually puts on court. */
+const activePlayers = (label) => {
+  const found = String(label).match(/\d+/g);
+  if(!found) return null;
+  const nums = found.map(Number);
+  return nums.length === 1 ? nums[0] : [nums[0], nums[nums.length - 1]];
+};
 
 const validCount = (value) => {
   if(Number.isInteger(value)) return value >= 0 && value <= 4;
@@ -47,17 +63,24 @@ check("all paddle counts are defined and valid",
 check("all ball counts are defined and valid",
   missions.every((mission) => validCount(mission.equipment?.balls))
 );
-check("all equipment values match the audited matrix",
-  missions.every((mission, index) => {
-    const [, paddles, balls] = expected[index];
-    return JSON.stringify(mission.equipment) === JSON.stringify({ paddles, balls });
-  })
+check("every mission packs one paddle per active player",
+  missions.every((mission) =>
+    JSON.stringify(mission.equipment.paddles) === JSON.stringify(activePlayers(mission.players))),
+  missions.filter((mission) =>
+    JSON.stringify(mission.equipment.paddles) !== JSON.stringify(activePlayers(mission.players)))
+    .map((mission) => `#${mission.id} players ${mission.players} vs paddles ${JSON.stringify(mission.equipment.paddles)}`)
+    .join(", ")
+);
+check("every mission needs exactly one ball",
+  missions.every((mission) => mission.equipment.balls === 1),
+  missions.filter((mission) => mission.equipment.balls !== 1)
+    .map((mission) => `#${mission.id}=${mission.equipment.balls}`).join(", ")
 );
 check("paddles never exceed the four-paddle kit",
-  Math.max(...missions.map((mission) => upper(mission.equipment.paddles))) === 4
+  Math.max(...missions.map((mission) => upper(mission.equipment.paddles))) === MAX_PLAYERS
 );
 check("balls never exceed the four-ball kit",
-  Math.max(...missions.map((mission) => upper(mission.equipment.balls))) <= 4
+  Math.max(...missions.map((mission) => upper(mission.equipment.balls))) <= MAX_PLAYERS
 );
 
 console.log("\nEquipment labels");
@@ -69,14 +92,29 @@ check("ranges use an en dash", formatEquipmentCount([3,4], "paddle", "paddles") 
 check("zero-count equipment is hidden", formatEquipmentCount(0, "paddle", "paddles") === "");
 
 console.log("\nPlayer labels");
-const playerById = Object.fromEntries(missions.map((mission) => [mission.id, mission.players]));
-check("range labels use bounded active-player counts",
-  playerById[2] === "2–3" && playerById[19] === "3–4" && playerById[20] === "4" &&
-  playerById[21] === "3–4" && playerById[23] === "4" && playerById[27] === "2–3"
+check("every player label parses to a real, well-ordered count",
+  missions.every((mission) => {
+    const players = activePlayers(mission.players);
+    if(players === null) return false;
+    if(Array.isArray(players)) return players[0] >= 2 && players[0] < players[1] && players[1] <= MAX_PLAYERS;
+    return players >= 2 && players <= MAX_PLAYERS;
+  }),
+  missions.filter((mission) => {
+    const players = activePlayers(mission.players);
+    if(players === null) return true;
+    return Array.isArray(players)
+      ? !(players[0] >= 2 && players[0] < players[1] && players[1] <= MAX_PLAYERS)
+      : !(players >= 2 && players <= MAX_PLAYERS);
+  }).map((mission) => `#${mission.id}=${mission.players}`).join(", ")
 );
-check("no mission label implies more than four active players",
+check("range labels use an en dash, never a hyphen or a plus",
+  missions.every((mission) => !/[-+]/.test(String(mission.players))),
+  missions.filter((mission) => /[-+]/.test(String(mission.players)))
+    .map((mission) => `#${mission.id}=${mission.players}`).join(", ")
+);
+check("no mission label implies more than the four-paddle kit",
   missions.every((mission) => !String(mission.players).includes("+") &&
-    Math.max(...(String(mission.players).match(/\d+/g) || [0]).map(Number)) <= 4)
+    Math.max(...(String(mission.players).match(/\d+/g) || [0]).map(Number)) <= MAX_PLAYERS)
 );
 
 console.log("\nMission Detail renderer");

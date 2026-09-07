@@ -56,7 +56,6 @@ node tools/check-mission-play-state.mjs
 node tools/check-hub-mission-flow.mjs
 node tools/check-profile-team-isolation.mjs
 node tools/check-daily-star-scope.mjs      --shots=docs/audits/screens/faz8
-node tools/check-undo-next-layout.mjs      --shots=docs/audits/screens/faz8
 node tools/check-responsive-matrix.mjs     --shots=docs/audits/screens/faz8
 node tools/check-zoom-textresize.mjs       --shots=docs/audits/screens/faz8
 node tools/check-dialog-contract.mjs
@@ -71,9 +70,15 @@ node tools/check-tr-invariants.mjs
 ```
 
 > **`--shots` zorunludur.** `check-responsive-matrix.mjs` ve
-> `check-zoom-textresize.mjs` varsayılan olarak `docs/audits/screens/faz6`,
-> `check-undo-next-layout.mjs` ise `docs/audits/screens/faz7` dizinine yazar.
-> Bayrak verilmezse Faz 6 / Faz 7 kanıtları sessizce ezilir. Bkz. bölüm 7.
+> `check-zoom-textresize.mjs` varsayılan olarak `docs/audits/screens/faz6`
+> dizinine yazar. Bayrak verilmezse Faz 6 kanıtları sessizce ezilir. Bkz. bölüm 7.
+
+> **Faz 9 sonrası not.** Bu bölüm bir *çalıştırma listesiydi*; aşağıdaki sonuç
+> tablosu ise o günkü kaydı olduğu gibi koruyor. `check-undo-next-layout.mjs`
+> Faz 9'da Undo bar ile birlikte silindi (bkz.
+> `docs/audits/faz9-undo-bar-kaldirma.md`), bu yüzden komut listesinden
+> çıkarıldı — 8 numaralı satır tarihsel kayıt olarak duruyor, koşulacak bir
+> adım olarak değil.
 
 ---
 

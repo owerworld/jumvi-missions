@@ -56,6 +56,16 @@ const browser = await chromium.launch({
 async function session({ killWebGL, abort, offline, reducedMotion } = {}) {
   const ctx = await browser.newContext({
     viewport: { width: 390, height: 844 },
+    // page.route() never sees a request the SERVICE WORKER issues on the page's
+    // behalf. With the worker registered, the two "aborted module" cases below
+    // aborted nothing: jumvi-hub-app.js and three.js loaded straight through
+    // it, the hub came up perfectly, and the check then counted the hub menu's
+    // own "Browse Missions" alongside "← Missions" and reported two recovery
+    // actions — red for months, while testing the happy path. Blocking the
+    // worker is what makes the abort real. Only the abort cases get it: H04's
+    // offline case is more honest WITH the worker, which is how a family in a
+    // garden with no signal actually meets this app.
+    ...(abort ? { serviceWorkers: "block" } : {}),
     ...(reducedMotion ? { reducedMotion: "reduce" } : {}),
   });
   const page = await ctx.newPage();
@@ -70,7 +80,12 @@ async function session({ killWebGL, abort, offline, reducedMotion } = {}) {
       };
     });
   }
-  if (abort) await page.route(abort, (r) => r.abort());
+  // Counted, not assumed — see the note above. A failure case that aborted
+  // nothing proves nothing, so each case asserts its own abort actually fired.
+  const aborted = [];
+  if (abort) {
+    await page.route(abort, (r) => { aborted.push(r.request().url()); return r.abort(); });
+  }
   await page.goto(BASE + "?hub3d=1", { waitUntil: "networkidle" }).catch(() => {});
   await page.waitForTimeout(1500);
   for (let i = 0; i < 4; i++) {
@@ -78,7 +93,7 @@ async function session({ killWebGL, abort, offline, reducedMotion } = {}) {
     await page.keyboard.press("Escape"); await page.waitForTimeout(300);
   }
   if (offline) await ctx.setOffline(true);
-  return { ctx, page };
+  return { ctx, page, aborted };
 }
 
 const enterHub = async (page) => {
@@ -147,30 +162,31 @@ if (wanted("H01")) {
 
 /* ── H02 hub module fails to load ──────────────────────────────────────── */
 if (wanted("H02")) {
-  const { ctx, page } = await session({ abort: "**/jumvi-hub-app.js*" });
+  const { ctx, page, aborted } = await session({ abort: "**/jumvi-hub-app.js*" });
   await enterHub(page);
   await page.waitForTimeout(6000);
   const rec = await recoveryActions(page);
   const core = await coreStillWorks(page);
   await ctx.close();
   const backButtons = rec.buttons.filter((b) => /back|missions/i.test(b));
-  const ok = rec.buttons.length > 0 && backButtons.length === 1 && core.cards === 36 && core.open;
+  const ok = aborted.length > 0 && rec.buttons.length > 0 && backButtons.length === 1 &&
+    core.cards === 36 && core.open;
   record("H02", "hub module aborted: failure UI with one way back, core app intact", ok ? "PASS" : "FAIL",
-    `buttons=[${rec.buttons.join(" | ")}] → ${backButtons.length} recovery action\n         message="${rec.message}"\n         core: ${core.cards} missions, sheet opens`);
+    `aborted=${aborted.length} request(s)\n         buttons=[${rec.buttons.join(" | ")}] → ${backButtons.length} recovery action\n         message="${rec.message}"\n         core: ${core.cards} missions, sheet opens`);
 }
 
 /* ── H03 three.js fails to load ────────────────────────────────────────── */
 if (wanted("H03")) {
-  const { ctx, page } = await session({ abort: "**/three.module.min.js*" });
+  const { ctx, page, aborted } = await session({ abort: "**/three.module.min.js*" });
   await enterHub(page);
   await page.waitForTimeout(6000);
   const rec = await recoveryActions(page);
   const core = await coreStillWorks(page);
   await ctx.close();
   const backButtons = rec.buttons.filter((b) => /back|missions/i.test(b));
-  const ok = backButtons.length === 1 && core.cards === 36 && core.open;
+  const ok = aborted.length > 0 && backButtons.length === 1 && core.cards === 36 && core.open;
   record("H03", "three.js aborted: same failure UI, core app intact", ok ? "PASS" : "FAIL",
-    `buttons=[${rec.buttons.join(" | ")}]\n         core: ${core.cards} missions, sheet opens`);
+    `aborted=${aborted.length} request(s)\n         buttons=[${rec.buttons.join(" | ")}]\n         core: ${core.cards} missions, sheet opens`);
 }
 
 /* ── H04 offline ───────────────────────────────────────────────────────── */

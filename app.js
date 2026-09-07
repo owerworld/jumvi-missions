@@ -5376,7 +5376,7 @@ if(certNameInput){
 let _certAutoDownloaded = false;
 
 // ---- Certificate export helpers (iOS-safe) ----
-function _loadScriptOnce(src){
+function _loadScriptOnce(src, integrity){
   return new Promise((resolve, reject)=>{
     // If already present, resolve
     for(const s of Array.from(document.scripts||[])){
@@ -5385,6 +5385,12 @@ function _loadScriptOnce(src){
     const el = document.createElement("script");
     el.src = src;
     el.async = true;
+    if(integrity){
+      // Subresource Integrity only applies to a CORS-enabled fetch, so the two
+      // go together or the hash is silently ignored.
+      el.integrity = integrity;
+      el.crossOrigin = "anonymous";
+    }
     el.onload = ()=> resolve();
     el.onerror = ()=> reject(new Error("script load failed: "+src));
     document.head.appendChild(el);
@@ -5394,14 +5400,24 @@ async function ensurePdfLib(){
   if(window.PDFLib) return true;
   // §6.3 — the certificate PDF (a child's physical reward) must not depend on a
   // reachable CDN. Local copy first; CDNs stay as a fallback only.
-  const cdns = [
-    "vendor/pdf-lib.min.js",
-    "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"
+  //
+  // Both CDN copies are pinned by Subresource Integrity. They are byte-for-byte
+  // the same file as vendor/pdf-lib.min.js (pdf-lib 1.17.1, 525099 bytes), so
+  // one hash covers both, and a swapped or tampered CDN build is refused rather
+  // than executed on the page that draws a child's name.
+  //
+  // The local copy deliberately carries no hash: pinning it would mean that
+  // legitimately updating the vendored file silently pushes every family onto
+  // a third-party CDN instead of failing loudly.
+  const PDF_LIB_SRI = "sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI";
+  const sources = [
+    { src: "vendor/pdf-lib.min.js" },
+    { src: "https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js", integrity: PDF_LIB_SRI },
+    { src: "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js", integrity: PDF_LIB_SRI }
   ];
-  for(const src of cdns){
+  for(const source of sources){
     try{
-      await _loadScriptOnce(src);
+      await _loadScriptOnce(source.src, source.integrity);
       if(window.PDFLib) return true;
     }catch(_){ }
   }
