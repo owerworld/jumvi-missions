@@ -74,15 +74,82 @@ check(
   `${SERIES.length} seri, ${seriesKeys.size} benzersiz anahtar`,
 );
 
-console.log("\n2 — METRIC_CHANGES ↔ TREND_SERIES tutarlılığı (asıl sessiz hata)\n");
+/* COMPARABLE_KEYS bir Set literali; readConst dizi bekliyor, o yüzden içindeki
+ * anahtarları kaynaktan ayrıca çıkarıyoruz. Trend serilerinin dışında kalan
+ * anahtarlar (ızgara, paket, huni) burada yaşıyor. */
+const cmpBlock = html.slice(
+  html.indexOf("const COMPARABLE_KEYS"),
+  html.indexOf("const changeFor"),
+);
+const extraKeys = [...cmpBlock.matchAll(/^\s*"([a-z_]+)",/gm)].map((m) => m[1]);
+const comparableKeys = new Set([...seriesKeys, ...extraKeys]);
+
+check("COMPARABLE_KEYS panelde tanımlı", cmpBlock.includes("COMPARABLE_KEYS = new Set"));
+check(
+  "COMPARABLE_KEYS TREND_SERIES'i kapsıyor",
+  cmpBlock.includes("...TREND_SERIES.map((s) => s.key)"),
+  "trend serileri havuzun dışında kalırsa kırılma trendde işaretlenmez",
+);
+console.log(`        trend dışı karşılaştırma anahtarları: ${extraKeys.join(", ") || "—"}`);
+
+console.log("\n2 — METRIC_CHANGES ↔ COMPARABLE_KEYS tutarlılığı (asıl sessiz hata)\n");
 
 for (const c of CHANGES) {
   check(`${c.commit}: affects boş değil`, Array.isArray(c.affects) && c.affects.length > 0);
   for (const key of c.affects || []) {
     check(
-      `${c.commit}: affects["${key}"] gerçek bir TREND_SERIES anahtarı`,
-      seriesKeys.has(key),
-      `panelde böyle bir seri yok — kırılma işareti sessizce kaybolurdu`,
+      `${c.commit}: affects["${key}"] gerçek bir karşılaştırma anahtarı`,
+      comparableKeys.has(key),
+      `panelde böyle bir metrik yok — kırılma işareti sessizce kaybolurdu`,
+    );
+  }
+}
+
+/**
+ * Adı verilen fonksiyonun gövdesini kaynaktan çıkarır (süslü parantez sayarak).
+ *
+ * Neden gerekli: bir ifadenin dosyada "bir yerde" bulunması, DOĞRU YERDE
+ * bulunduğunu kanıtlamaz. Izgara kırılmayı sormayı bıraksa bile aynı çağrı
+ * başka fonksiyonda durduğu için dosya geneline bakan bir kontrol geçer —
+ * yani bekçi, yakalamayı iddia ettiği sessiz hatayı tam olarak kaçırır.
+ * Bu, kontrolleri denerken bozma testiyle bulundu ve o yüzden site bazlı.
+ */
+function fnBody(name) {
+  const start = html.indexOf(`function ${name}(`);
+  if (start === -1) return "";
+  const open = html.indexOf("{", start);
+  let depth = 0;
+  for (let i = open; i < html.length; i++) {
+    if (html[i] === "{") depth++;
+    else if (html[i] === "}" && --depth === 0) return html.slice(open, i + 1);
+  }
+  return "";
+}
+
+console.log("\n2b — kırılma, etkilediği her yerde karşılaştırmayı kapatıyor\n");
+
+/* Bir anahtarı affects'e yazmak tek başına bir şey yapmaz; o metriğin
+ * gösterildiği yerin comparable() sorması gerekir. Aksi halde kayıt "bu
+ * karşılaştırma yapılmamalı" der, ekran yine de yapar. */
+/* Her anahtar için: hangi fonksiyonda, hangi çağrının bulunması gerektiği.
+ * Dosya geneline değil, o fonksiyonun gövdesine bakılır. */
+const enforcedAt = {
+  mission_ratio:  { fn: "renderGrid",     rx: /comparable\(snap, prev, "mission_ratio"\)/ },
+  pack_completes: { fn: "renderPackLab",  rx: /comparable\(snap, prev, "pack_completes"\)/ },
+  certificate:    { fn: "renderFunnel",   rx: /comparable\(snap, prev, "certificate"\)/ },
+  ratio:          { fn: "renderTrend",    rx: /changeFor\(s\.key\)/ },
+  completes:      { fn: "renderTrend",    rx: /changeFor\(s\.key\)/ },
+};
+for (const c of CHANGES) {
+  for (const key of c.affects || []) {
+    const site = enforcedAt[key];
+    const body = site ? fnBody(site.fn) : "";
+    check(
+      `affects["${key}"] → ${site ? site.fn + "()" : "?"} içinde gerçekten uygulanıyor`,
+      Boolean(site && body && site.rx.test(body)),
+      !site ? "bu anahtar için uygulama noktası tanımlanmamış"
+        : !body ? `${site.fn}() bulunamadı`
+        : "kayıt 'bu metrik etkilendi' diyor ama o fonksiyon kırılmayı hiç sormuyor",
     );
   }
 }
@@ -196,6 +263,53 @@ check(
   "farklı yakadaki haftalar arasında delta gösterilmiyor",
   /prev\.side === pts\[idx\]\.side/.test(html),
   "tanım değiştiyse fark anlamsızdır — '▼496' olmayan bir çöküşü rapor etmek olur",
+);
+
+console.log("\n7 — karşılaştırma katmanı: susarken bile konuşuyor\n");
+
+check("comparable() tanımlı", html.includes("function comparable("));
+check(
+  "karşılaştırma kapalıyken gerekçe yazılıyor",
+  html.includes("function incomparableNote(") &&
+    /incomparableNote\("mission_ratio",\s*snap,\s*prev\)/.test(html),
+  "sessiz kalmak 'demek ki değişmemiş' diye okunur",
+);
+check(
+  "gerekçe hangi haftaların sorunlu olduğunu adıyla söylüyor",
+  /incomparableNote\(key, snap, prev\)/.test(html) && /esc\(prev\.week\)/.test(html),
+  "yalnızca 'tanım 17 Ağustos'ta değişti' demek, tamamen o tarihten sonraki bir haftaya bakanı şaşırtır",
+);
+check(
+  "kırılmanın içine düşen hafta karşılaştırılırken sapma açıkça söyleniyor",
+  html.includes("function compareCaveat(") &&
+    /compareCaveat\(snap, prev, "mission_ratio"\)/.test(fnBody("missionCompare")) &&
+    /compareCaveat\(snap, prev, "mission_ratio"\)/.test(fnBody("renderGrid")),
+  "straddles↔after kıyasına izin veriliyorsa, taşıdığı sapma her iki yerde de gizlenemez",
+);
+check(
+  "comparable() before↔after'ı kapatıp straddles↔after'a izin veriyor",
+  /a === "straddles" && b === "after"/.test(fnBody("comparable")) &&
+    /if \(a === b\) return true/.test(fnBody("comparable")),
+  "tam kırılma boyunca kıyas açılırsa panel yine yalan söyler",
+);
+check(
+  "yüzde yalnızca anlamlı tabanda gösteriliyor",
+  /before >= CONFIG\.pctDeltaMinBase/.test(html),
+  "1'den 3'e çıkışı '+%200' diye yazmak küçük tabanda yanıltıcıdır",
+);
+check(
+  "ızgara hareket işareti örneklem eşiğine bağlı",
+  /p\.starts >= CONFIG\.minStartsForAlert && starts >= CONFIG\.minStartsForAlert/.test(html),
+);
+check(
+  "kırılımlar (paylar) kırılmadan etkilenmiyor olarak işaretli",
+  /comparable\(snap, prev, "starts"\)/.test(html),
+  "mission_start'ın tanımı değişmedi — payları karşılaştırma dışı bırakmak gereksiz bilgi kaybı olur",
+);
+check(
+  "paket satırında giriş ve bitirme ayrı kurala tabi",
+  /const cmpEntry = comparable\(snap, prev, "starts"\)/.test(html) &&
+    /const cmpDone = comparable\(snap, prev, "pack_completes"\)/.test(html),
 );
 
 console.log("");

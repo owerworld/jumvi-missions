@@ -188,6 +188,67 @@ body{
 .mdSourceRow{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--ink-06)}
 .mdSourceRow:last-child{border-bottom:0}
 
+/* ---------- haftalar arası karşılaştırma ---------- */
+.deltaPct{margin-left:4px;opacity:.72;font-size:.92em}
+/* Hareket eden görev karesi: renk zaten oranı taşıyor, işaret köşeye gider ki
+   iki bilgi birbirinin üstüne binmesin. */
+.cell.moveUp,.cell.moveDown{position:relative}
+.cell.moveUp::after,.cell.moveDown::after{
+  content:"";position:absolute;top:2px;right:2px;width:0;height:0;
+  border-left:4px solid transparent;border-right:4px solid transparent;
+}
+.cell.moveUp::after{border-bottom:5px solid var(--navy);opacity:.55}
+.cell.moveDown::after{border-top:5px solid var(--orange)}
+.sw.swMove{position:relative;background:var(--ink-06)}
+.sw.swMove::after{
+  content:"";position:absolute;top:1px;right:1px;width:0;height:0;
+  border-left:3px solid transparent;border-right:3px solid transparent;
+  border-top:4px solid var(--orange);
+}
+.movers{margin-top:10px;font-size:12.5px;color:var(--ink-60);line-height:1.9}
+.movers b{color:var(--navy);font-weight:600}
+.mv{
+  display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:500;
+  padding:1px 7px;border-radius:5px;margin:0 4px 0 0;white-space:nowrap;
+}
+.mv.up{background:rgba(109,190,69,.16);color:#3f7a26}
+.mv.down{background:rgba(244,122,32,.14);color:#a2500f}
+.mvNote{color:var(--ink-38)}
+.xdelta{
+  font-style:normal;font-family:var(--mono);font-size:10.5px;font-weight:600;
+  margin-left:5px;padding:0 3px;border-radius:3px;
+}
+.xdelta.up{color:#3f7a26;background:rgba(109,190,69,.14)}
+.xdelta.down{color:#a2500f;background:rgba(244,122,32,.13)}
+/* Karşılaştırmanın neden YOK olduğunu söyleyen satır. Sessiz kalmak,
+   "demek ki değişmemiş" diye okunur — o yüzden hep bir cümle bırakılıyor. */
+.cmpOff{
+  margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--ink-60);
+  background:rgba(244,122,32,.07);border-left:3px solid var(--orange);
+  padding:8px 11px;border-radius:0 7px 7px 0;
+}
+.cmpOff b{color:var(--orange)}
+/* Karşılaştırma gösteriliyor ama taraflardan biri kırılmanın içinde: kıyas
+   duruyor, sapma saklanmıyor. Uyarıdan bir tık sakin. */
+.cmpCaveat{
+  margin-top:9px;font-size:12px;line-height:1.5;color:var(--ink-60);
+  background:var(--ink-06);border-left:3px solid var(--ink-12);
+  padding:7px 11px;border-radius:0 7px 7px 0;
+}
+.cmpCaveat b{color:var(--navy);font-weight:600}
+.cmpRow{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;
+  margin:12px 0 2px;padding:10px 12px;border-radius:8px;
+  background:var(--ink-06);font-size:13px;
+}
+.cmpLab{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-38)}
+.cmpVal{color:var(--ink-60)}
+.cmpMove{font-family:var(--mono);font-size:12.5px;font-weight:600}
+.cmpMove.up{color:#3f7a26}
+.cmpMove.down{color:#a2500f}
+.cmpMove.flat{color:var(--ink-38)}
+.cmpNote{flex-basis:100%;font-size:11.5px;color:var(--ink-38);line-height:1.45}
+
 /* ---------- haftalar arası trend ---------- */
 .trendGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:12px}
 .tcard{background:var(--surface);border:1px solid var(--ink-12);border-radius:12px;padding:12px 14px}
@@ -347,6 +408,13 @@ const CONFIG = {
   // Satılan ünite sayısı elle girilir; hiçbir veri kaynağında yok.
   // null bırakılırsa huninin ilk basamağı gizlenir.
   unitsSold: null,
+  // Yüzde değişim yalnızca taban bu sayıya ulaşırsa gösterilir. 1'den 3'e
+  // çıkmak matematiksel olarak "+%200"dür ama bu yönlendirici bir bilgi
+  // değil, gürültüdür — küçük tabanlarda sadece mutlak fark yazılır.
+  pctDeltaMinBase: 10,
+  // Bir görev karesinin "kayda değer hareket etti" sayılması için gereken
+  // oran farkı (puan). Altındaki dalgalanma haftalık gürültüdür.
+  gridMoveThreshold: 0.15,
 };
 
 /* ── Metrik TANIMI değişiklikleri ───────────────────────────────────────────
@@ -367,14 +435,17 @@ const METRIC_CHANGES = [
   {
     at: "2026-08-17T08:11:29Z",
     commit: "3b876f5",
-    affects: ["completes", "ratio"],
+    affects: ["completes", "ratio", "mission_ratio", "pack_completes", "certificate"],
     short: "tamamlama tanımı sıkılaştı",
     detail:
       "17 Ağustos 08:11'de “We Finished!” gerçek oyun şartına bağlandı: zamanlayıcının " +
       "bitmesi ya da görev sayfasının oynanmış sayılacak kadar açık kalması gerekiyor. " +
       "Öncesinde 36 görev bir dakikanın altında tıklanıp geçilebiliyordu, her tıklama " +
       "tamamlama sayılıyordu. Bu tarihten önceki tamamlama sayıları ve oranı şişkindir; " +
-      "sonrakiler dürüsttür. Aradaki düşüş bir gerileme değil, ölçünün düzelmesidir.",
+      "sonrakiler dürüsttür. Aradaki düşüş bir gerileme değil, ölçünün düzelmesidir. " +
+      "Etkisi tamamlama sayısıyla sınırlı da değil: görev bazlı bitirme oranı, paket " +
+      "bitirme ve sertifika (36 görevin tamamı) aynı anda ve aynı sebeple zorlaştı — " +
+      "hepsi bu tarihin iki yakası arasında karşılaştırma dışı bırakılır.",
   },
 ];
 
@@ -566,18 +637,30 @@ function renderCountRows(el, entries) {
   }).join("");
 }
 
-function renderPackLab(snap) {
+function renderPackLab(snap, prev) {
   const el = $("packLab");
   if (!hasV3(snap)) { el.innerHTML = `<div class="xread">${NOT_IN_SCHEMA} — v3 öncesi snapshot'larda ayrı bir paket tablosu yok, ancak üstteki 36 görev haritasının sağ sütunu her paketin bitirme oranını zaten gösteriyordu.</div>`; return; }
+
+  // Görüntüleme ve başlangıç tanımı değişmedi; bitirme ve tam paket, tamamlama
+  // sıkılaşmasından doğrudan etkilendi. Aynı satırda iki farklı karşılaştırma
+  // kuralı işliyor — hepsini birden kapatmak gereksiz bilgi kaybı olurdu.
+  const cmpEntry = comparable(snap, prev, "starts");
+  const cmpDone = comparable(snap, prev, "pack_completes");
+  const prevPack = (key) => (hasV3(prev || {}) ? prev?.packs?.[key] : null);
+
   const rows = META.pack_keys.map((key) => {
     const p = snap.packs?.[key] || { views: 0, starts: 0, completes: 0, completed_pack: 0 };
+    const q = prevPack(key);
+    const d = (now, before, allowed) => (allowed && q ? delta(now, before ?? null) : "");
     return `<div class="frow">
         <span class="fname">${esc(META.pack_labels[key])}</span>
         <span class="fmini"><i style="width:${p.views ? "100" : "0"}%;background:${p.views ? "var(--sky)" : "var(--ink-12)"}"></i></span>
-        <span class="fval">${nf(p.views)} görüntü · ${nf(p.starts)} başlangıç · ${nf(p.completes)} bitirme · ${nf(p.completed_pack)} tam paket</span>
+        <span class="fval">${nf(p.views)} görüntü${d(p.views, q?.views, cmpEntry)} · ${nf(p.starts)} başlangıç${d(p.starts, q?.starts, cmpEntry)} · ${nf(p.completes)} bitirme${d(p.completes, q?.completes, cmpDone)} · ${nf(p.completed_pack)} tam paket${d(p.completed_pack, q?.completed_pack, cmpDone)}</span>
       </div>`;
   }).join("");
-  el.innerHTML = rows + `<div class="xread">${esc(PACK_ORDER_NOTE)}</div>`;
+
+  el.innerHTML = rows + `<div class="xread">${esc(PACK_ORDER_NOTE)}</div>` +
+    (!cmpDone && prev ? incomparableNote("pack_completes", snap, prev) : compareCaveat(snap, prev, "pack_completes"));
 }
 
 function renderProductSignals(snap) {
@@ -691,10 +774,10 @@ function render(weekId) {
   renderThesis(snap);
   renderAlerts(snap);
   renderTrend(weekId);
-  renderGrid(snap);
+  renderGrid(snap, prev);
   renderFunnel(snap, prev);
-  renderCross(snap);
-  renderPackLab(snap);
+  renderCross(snap, prev);
+  renderPackLab(snap, prev);
   renderProductSignals(snap);
   renderEntrySources(snap);
   renderFamily(snap);
@@ -727,7 +810,76 @@ const TREND_SERIES = [
     get: (s) => s.features?.timer_start },
 ];
 
+/* Panelde karşılaştırma yapılan HER metriğin anahtarı. TREND_SERIES bunun bir
+ * alt kümesi: ızgara, huni ve paket tablosu da aynı havuzdan besleniyor.
+ * METRIC_CHANGES yalnızca buradaki anahtarları işaret edebilir — bir kırılma
+ * "şu metriği etkiliyor" derken var olmayan bir şeyi gösteremesin diye
+ * tools/check-trend-semantics.mjs bu kümeyi zorluyor. */
+const COMPARABLE_KEYS = new Set([
+  ...TREND_SERIES.map((s) => s.key),
+  "mission_ratio",   // ızgaradaki tek görev bitirme oranı
+  "pack_completes",  // paket laboratuvarındaki bitirme sütunları
+  "certificate",     // huninin son basamağı (36 görevin tamamı)
+]);
+
 const changeFor = (key) => METRIC_CHANGES.find((c) => c.affects.includes(key)) || null;
+
+/**
+ * İki hafta, verilen metrik için karşılaştırılabilir mi?
+ *
+ * Tanımı değişmiş bir metrikte kırılmanın iki yakası arasında fark göstermek,
+ * trend eğrisini kırılma boyunca tek çizgi yapmakla aynı yalandır: sayılar
+ * doğru, çıkarım yanlış. Karşılaştırmayı yaymak, bu kuralı da yaymak demek.
+ */
+function comparable(snap, prev, key) {
+  if (!snap || !prev) return false;
+  const c = changeFor(key);
+  if (!c) return true;
+  const a = sideOfChange(prev, c), b = sideOfChange(snap, c);
+  if (a === b) return true;
+
+  // "straddles" (kırılmanın içine düşen hafta) ile "after" arasında
+  // karşılaştırmaya izin veriliyor, "before" ile hiçbirine verilmiyor. Bu bir
+  // gevşetme değil, iki farklı büyüklükteki hatayı ayırmak:
+  //   before ↔ after     → iki dönem tamamen farklı tanım. Kıyas anlamsız.
+  //   straddles ↔ after  → straddling hafta zaten çoğunlukla yeni tanımda
+  //                        (3b876f5 haftanın ilk 8 saatinde girdi, yani
+  //                        168 saatin ~%5'i eski tanım). Sapma sınırlı ve
+  //                        yönü biliniyor; tamamen susmak gerçek bilgiyi de
+  //                        siler. Yine de compareCaveat() ile açıkça söyleniyor.
+  return (a === "straddles" && b === "after") || (a === "after" && b === "straddles");
+}
+
+/**
+ * Karşılaştırma KAPALIYSA gerekçesi. Hangi haftanın sorunlu olduğunu adıyla
+ * söyler: "tanım 17 Ağustos'ta değişti" demek, tamamen 17 Ağustos sonrasındaki
+ * bir haftaya bakan kişiyi haklı olarak şaşırtır — asıl sebep karşılaştırılan
+ * ÖNCEKİ haftanın kırılmanın diğer yakasında kalmasıdır.
+ */
+function incomparableNote(key, snap, prev) {
+  const c = changeFor(key);
+  if (!c) return "";
+  const which = prev && snap
+    ? `<b>${esc(prev.week)}</b> ile <b>${esc(snap.week)}</b> kırılmanın iki farklı yakasında`
+    : "iki hafta kırılmanın farklı yakalarında";
+  return `<div class="cmpOff">Geçen haftayla karşılaştırma gösterilmiyor: ${which} —
+    <b>${esc(c.short)}</b> (${esc(c.at.slice(0, 10))}, ${esc(c.commit)}). Sayılar doğru,
+    ama iki dönem aynı şeyi ölçmediği için farkları anlamlı değil.</div>`;
+}
+
+/**
+ * Karşılaştırma AÇIK ama taraflardan biri kırılmanın içine düşüyorsa uyarı.
+ * Kıyas gösteriliyor; sapmanın varlığı gizlenmiyor.
+ */
+function compareCaveat(snap, prev, key) {
+  const c = changeFor(key);
+  if (!c || !prev) return "";
+  const straddler = [prev, snap].find((s) => sideOfChange(s, c) === "straddles");
+  if (!straddler) return "";
+  return `<div class="cmpCaveat"><b>${esc(straddler.week)}</b> haftası kırılmanın içine düşüyor
+    (${esc(c.at.slice(0, 10))}, ${esc(c.commit)}): o haftanın ilk saatleri eski tanımla
+    ölçüldü, bu yüzden karşılaştırma küçük bir sapma taşır.</div>`;
+}
 
 /** Bir haftanın, tanım değişikliğine göre hangi yakada durduğu. */
 function sideOfChange(snap, change) {
@@ -934,8 +1086,13 @@ function renderAlerts(snap) {
         <span class="alert-w">Zayıf görev, girilmemiş paket ve sıfırlama eşiklerinin üçü de temiz.</span></div></div>`;
 }
 
-function renderGrid(snap) {
+function renderGrid(snap, prev) {
   const avg = overallRatio(snap);
+  // Hücrenin rengi bitirme oranı — yani tanımı 17 Ağustos'ta değişen metriğin
+  // ta kendisi. Kırılmanın iki yakası arasında görev karşılaştırmak, trend
+  // eğrisini kırılma boyunca birleştirmekle aynı hata olurdu.
+  const cmp = comparable(snap, prev, "mission_ratio");
+  const moved = [];
   const rows = META.pack_keys.map((key) => {
     const ids = Object.keys(META.missions)
       .filter((id) => META.missions[id].pack === key)
@@ -951,8 +1108,24 @@ function renderGrid(snap) {
       const r = completes / starts;
       const weak = avg !== null && starts >= CONFIG.minStartsForAlert && r < avg * CONFIG.weakMissionRatio;
       const c = cellColor(r, weak);
-      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ inceleme adayı" : ""}`;
-      return `<button type="button" class="cell" data-mission-id="${id}" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</button>`;
+
+      // Hareket işareti yalnızca iki hafta da anlamlı örnekleme sahipse:
+      // 1 başlatmadan 2'ye çıkan bir görev "yüzde yüz iyileşti" değildir.
+      let moveCls = "", moveTip = "";
+      if (cmp) {
+        const p = missionStats(prev, id);
+        if (p.starts >= CONFIG.minStartsForAlert && starts >= CONFIG.minStartsForAlert) {
+          const d = r - p.completes / p.starts;
+          if (Math.abs(d) >= CONFIG.gridMoveThreshold) {
+            moveCls = d > 0 ? " moveUp" : " moveDown";
+            moveTip = `&#10;geçen hafta ${pct(p.completes / p.starts)} · ${d > 0 ? "▲" : "▼"}${Math.round(Math.abs(d) * 100)} puan`;
+            moved.push({ id, d });
+          }
+        }
+      }
+
+      const tip = `Görev ${id}&#10;${starts} başladı · ${completes} bitirdi&#10;${pct(r)}${weak ? " ⚠ inceleme adayı" : ""}${moveTip}`;
+      return `<button type="button" class="cell${moveCls}" data-mission-id="${id}" style="background:${c.bg};color:${c.fg}" data-t="${tip}">${id}</button>`;
     }).join("");
 
     return `<div class="prow">
@@ -962,6 +1135,20 @@ function renderGrid(snap) {
       </div>`;
   }).join("");
 
+  // Hareket edenleri ayrıca yazıyoruz: 36 kareyi gözle taramak, "bu hafta
+  // hangi görev değişti" sorusunun cevabı değildir.
+  const movers = moved.length
+    ? `<div class="movers"><b>Geçen haftaya göre hareket eden:</b> ` +
+      moved.sort((a, b) => a.d - b.d)
+        .map((m) => `<span class="mv ${m.d > 0 ? "up" : "down"}">Görev ${m.id} ${m.d > 0 ? "▲" : "▼"}${Math.round(Math.abs(m.d) * 100)}</span>`)
+        .join("") +
+      ` <span class="mvNote">puan · en az ${CONFIG.minStartsForAlert} başlatma olan görevler</span></div>` +
+      compareCaveat(snap, prev, "mission_ratio")
+    : cmp && prev
+      ? `<div class="movers"><span class="mvNote">Geçen haftaya (${esc(prev.week)}) göre ${Math.round(CONFIG.gridMoveThreshold * 100)} puandan fazla hareket eden görev yok.</span></div>` +
+        compareCaveat(snap, prev, "mission_ratio")
+      : incomparableNote("mission_ratio", snap, prev);
+
   $("gridwrap").innerHTML = rows + `
     <div class="legend">
       <span><i class="sw" style="background:var(--ink-06)"></i>hiç açılmadı</span>
@@ -969,7 +1156,8 @@ function renderGrid(snap) {
       <span><i class="sw" style="background:#b3dd9c"></i>orta</span>
       <span><i class="sw" style="background:#6DBE45"></i>yüksek</span>
       <span><i class="sw" style="background:var(--orange)"></i>inceleme adayı</span>
-    </div>`;
+      <span><i class="sw swMove"></i>geçen haftaya göre hareket etti</span>
+    </div>` + movers;
 
   $("gridwrap").querySelectorAll(".cell[data-mission-id]").forEach((btn) => {
     btn.onclick = () => {
@@ -977,14 +1165,43 @@ function renderGrid(snap) {
       $("gridwrap").querySelectorAll(".cell.selected").forEach((c) => c.classList.remove("selected"));
       if (already) { $("missionDetail").hidden = true; return; }
       btn.classList.add("selected");
-      renderMissionDetail(snap, btn.dataset.missionId);
+      renderMissionDetail(snap, btn.dataset.missionId, prev);
     };
   });
 }
 
 /** Locked v1 review follow-up — the actual "R&D table" the grid's heatmap
  *  only summarised: every column asked for, per mission, on tap. */
-function renderMissionDetail(snap, id) {
+/**
+ * Tek görevin geçen haftayla karşılaştırması. Ayrı bir fonksiyon, çünkü üç
+ * ayrı "gösterme" gerekçesi var ve hepsi farklı bir cümle hak ediyor: önceki
+ * hafta yok, tanım değişti, ya da örneklem karşılaştırma için fazla küçük.
+ * Sessizce boş bırakmak, okuyanın "demek ki değişmemiş" diye okumasına yol açar.
+ */
+function missionCompare(snap, prev, id, starts, completes, ratio) {
+  if (!prev) return "";
+  if (!comparable(snap, prev, "mission_ratio")) return incomparableNote("mission_ratio", snap, prev);
+
+  const p = missionStats(prev, id);
+  if (p.starts < CONFIG.minStartsForAlert || starts < CONFIG.minStartsForAlert) {
+    return `<div class="cmpRow"><span class="cmpLab">Geçen hafta (${esc(prev.week)})</span>
+      <span class="cmpVal">${nf(p.starts)} başlatma · ${nf(p.completes)} tamamlama</span>
+      <span class="cmpNote">Oran karşılaştırması gösterilmiyor — iki haftadan biri
+      ${CONFIG.minStartsForAlert} başlatmanın altında, tek kullanıcı oranı savurur.</span></div>`;
+  }
+
+  const pr = p.completes / p.starts;
+  const d = (ratio ?? 0) - pr;
+  const dir = Math.abs(d) < 0.005 ? "flat" : d > 0 ? "up" : "down";
+  const arrow = dir === "flat" ? "▬" : d > 0 ? "▲" : "▼";
+  return `<div class="cmpRow">
+      <span class="cmpLab">Geçen hafta (${esc(prev.week)})</span>
+      <span class="cmpVal">${nf(p.starts)} başlatma · ${nf(p.completes)} tamamlama · ${pct(pr)}</span>
+      <span class="cmpMove ${dir}">${arrow}${dir === "flat" ? " değişmedi" : ` ${Math.round(Math.abs(d) * 100)} puan`}</span>
+    </div>${compareCaveat(snap, prev, "mission_ratio")}`;
+}
+
+function renderMissionDetail(snap, id, prev) {
   const el = $("missionDetail");
   const { starts, completes } = missionStats(snap, id);
   const m = snap.missions?.[String(id)] || {};
@@ -1033,6 +1250,7 @@ function renderMissionDetail(snap, id) {
       <button type="button" class="mdClose" id="mdCloseBtn">Kapat</button>
     </div>
     <div class="mdStats">${stats.map((s) => `<div class="mdStat"><div class="mdStatN">${s.n}</div><div class="mdStatL">${esc(s.l)}</div></div>`).join("")}</div>
+    ${missionCompare(snap, prev, id, starts, completes, ratio)}
     <div class="xt-h">Keşif kaynağı</div>
     ${sourceRows}
     <div class="xread">Bitirme sinyali bir <b>olay oranı</b>dır; kullanıcı dönüşüm oranı değildir — start ve complete
@@ -1047,11 +1265,19 @@ function renderMissionDetail(snap, id) {
 }
 
 /** Önceki haftaya göre değişim. Yön belirtilir, yorum okuyucuya bırakılır. */
+/**
+ * Geçen haftaya göre fark. Mutlak değer her zaman, yüzde yalnızca taban
+ * CONFIG.pctDeltaMinBase'e ulaşınca: 1'den 3'e çıkmak "+%200"dür ama küçük
+ * tabanlarda yüzde, olmayan bir hareketi büyük gösterir.
+ */
 function delta(now, before) {
   if (before === null || before === undefined) return "";
   const d = now - before;
   if (d === 0) return `<span class="delta">▬ değişmedi</span>`;
-  return `<span class="delta">${d > 0 ? "▲" : "▼"}${nf(Math.abs(d))}</span>`;
+  const pctPart = before >= CONFIG.pctDeltaMinBase
+    ? `<span class="deltaPct">(${d > 0 ? "+" : "−"}${Math.round(Math.abs(d / before) * 100)}%)</span>`
+    : "";
+  return `<span class="delta">${d > 0 ? "▲" : "▼"}${nf(Math.abs(d))}${pctPart}</span>`;
 }
 
 function renderFunnel(snap, prev) {
@@ -1080,9 +1306,13 @@ function renderFunnel(snap, prev) {
       prev: prev?.return_visits?.[String(n)],
     });
   }
+  // Sertifika 36 görevin tamamını gerektiriyor, yani tamamlama tanımının
+  // sıkılaşması bu basamağı da doğrudan zorlaştırdı. Kırılmanın iki yakası
+  // arasında fark göstermek yanıltıcı olur — o hafta delta'sız kalır.
   steps.push({
     label: "Sertifika üreten", n: snap.features?.certificate_made ?? 0, color: "var(--orange)",
-    note: "36 görevin tamamı", prev: prev?.features?.certificate_made,
+    note: "36 görevin tamamı",
+    prev: comparable(snap, prev, "certificate") ? prev?.features?.certificate_made : null,
   });
 
   $("funnel").innerHTML = steps.map((s) => `
@@ -1096,7 +1326,21 @@ function renderFunnel(snap, prev) {
     </div>`).join("");
 }
 
-function renderCross(snap) {
+function renderCross(snap, prev) {
+  // Bu paylar mission_start üzerinden hesaplanıyor ve mission_start'ın tanımı
+  // 17 Ağustos'ta DEĞİŞMEDİ — yalnızca mission_complete sıkılaştı. Dolayısıyla
+  // kırılımlar kırılmanın iki yakası arasında karşılaştırılabilir kalıyor.
+  // Bu ayrımı yapmamak, dürüstlük adına gerçek bilgiyi de silmek olurdu.
+  const cmp = comparable(snap, prev, "starts");
+  const shareDelta = (field, k, v) => {
+    if (!cmp) return "";
+    const before = prev?.[field]?.[k];
+    if (before === null || before === undefined) return "";
+    const d = Math.round((v - before) * 100);
+    if (d === 0) return "";
+    return `<i class="xdelta ${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"}${Math.abs(d)}</i>`;
+  };
+
   const blocks = Object.entries(CROSS_TITLES).map(([field, title]) => {
     const data = snap[field] || {};
     const entries = Object.entries(data).filter(([, v]) => v > 0);
@@ -1114,7 +1358,7 @@ function renderCross(snap) {
       }</div>`
     ).join("");
     const keys = entries.map(([k, v], i) =>
-      `<span><i class="dot" style="background:${SEG_COLORS[i % SEG_COLORS.length]}"></i>${esc(k)} · ${pct(v)}</span>`
+      `<span><i class="dot" style="background:${SEG_COLORS[i % SEG_COLORS.length]}"></i>${esc(k)} · ${pct(v)}${shareDelta(field, k, v)}</span>`
     ).join("");
     return `<div class="xt">
         <div class="xt-h">${esc(title)}</div>
@@ -1125,7 +1369,10 @@ function renderCross(snap) {
 
   $("cross").innerHTML = blocks +
     `<div class="xread">Paylar <b>başlatılan görev</b> üzerinden. Kova başına tamamlanma oranı
-      snapshot'taki <b>missions</b> ve <b>missions-meta.json</b>'dan türetilebilir.</div>`;
+      snapshot'taki <b>missions</b> ve <b>missions-meta.json</b>'dan türetilebilir.${
+        cmp ? ` Oklar geçen haftaya göre <b>pay değişimini</b> puan olarak gösterir; paylar
+        mission_start üzerinden hesaplandığı için 17 Ağustos kırılmasından etkilenmez.` : ""
+      }</div>`;
 }
 
 function renderFeatures(snap) {
