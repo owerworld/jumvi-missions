@@ -363,10 +363,60 @@ for (const dev of DEVICES) {
     }
   });
 
+/* ── settle before measuring ───────────────────────────────────────────────
+ * PROBE multiplies every ancestor's opacity into the text alpha, which is
+ * correct: text rendered at 35% really is unreadable. But the tab panels fade
+ * in on an opacity transition, so measuring MID-FADE reports a contrast
+ * failure for text that is perfectly fine once the panel has landed.
+ *
+ * A fixed 600ms was enough for Chromium and not for WebKit — at 650ms the
+ * panel is still at opacity 0.35 there — which is exactly how this produced
+ * seven WebKit-only "contrast failures" for text that measures 5.26:1 (well
+ * over the 4.5 it needs) the moment the animation ends. A check that cries
+ * wolf on every WebKit run is a check people learn to ignore.
+ *
+ * So wait for the animations to actually finish rather than guessing a delay.
+ * Infinite ones — the ambient loops, Leo's idle — never finish and are
+ * excluded, or this would always burn the full timeout.
+ */
+const settled = async (page, cap = 5000) => {
+  const deadline = Date.now() + cap;
+  // Two conditions, because either alone races. "Nothing is animating" is true
+  // BEFORE a transition starts as well as after it ends, so a fresh tab switch
+  // can slip through the gap; "the faded elements stopped changing" catches
+  // that, and needs the animation check to avoid declaring victory on a slow
+  // linear fade that happens to look similar across two samples.
+  let previous = null;
+  while (Date.now() < deadline) {
+    const state = await page
+      .evaluate(() => {
+        const busy = document.getAnimations().some((a) => {
+          if (a.playState !== "running") return false;
+          const timing = a.effect?.getComputedTiming?.();
+          return timing ? timing.iterations !== Infinity : true;
+        });
+        // Signature of everything currently mid-fade. Stable twice running
+        // means the fades have landed (or were never going to move).
+        const faded = [];
+        for (const el of document.querySelectorAll("*")) {
+          const o = parseFloat(getComputedStyle(el).opacity);
+          if (o < 1) faded.push(`${el.tagName}#${el.id || ""}.${(el.className || "").toString().split(" ")[0]}=${o.toFixed(2)}`);
+        }
+        return { busy, signature: faded.join("|") };
+      })
+      .catch(() => null);
+    if (!state) return;                       // page went away; measure anyway
+    if (!state.busy && state.signature === previous) return;
+    previous = state.signature;
+    await page.waitForTimeout(150);
+  }
+};
+
   const note = {};
   await page.goto(BASE + "/", { waitUntil: "domcontentloaded" });
   const flow = await walk(page, note);
 
+  await settled(page);
   const home = await page.evaluate(PROBE);
   if (SHOTS) {
     fs.mkdirSync(SHOTS, { recursive: true });
@@ -380,6 +430,7 @@ for (const dev of DEVICES) {
   for (const tab of ["today", "browse", "modes", "stats", "profile"]) {
     await page.evaluate((t) => { const b = document.querySelector(`.navTab[data-tab="${t}"]`); b && b.click(); }, tab);
     await page.waitForTimeout(600);
+    await settled(page);
     perTab[tab] = await page.evaluate(PROBE);
     if (SHOTS) await page.screenshot({ path: `${SHOTS}/${dev.engine}-${dev.w}x${dev.h}-${scheme}-${tab}.png` });
   }
@@ -393,6 +444,7 @@ for (const dev of DEVICES) {
   // Landscape must not be catastrophic, even though portrait is the product.
   await page.setViewportSize({ width: dev.h, height: dev.w });
   await page.waitForTimeout(600);
+  await settled(page);
   const landscape = await page.evaluate(PROBE);
   await page.setViewportSize({ width: dev.w, height: dev.h });
 

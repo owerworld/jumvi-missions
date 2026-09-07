@@ -23,6 +23,7 @@ shell kontrolleri, ESLint ile statik tarama ve canlı `qr.jumvi.co` karşılaşt
 | 11 | Görev 21'in keşif görseli hâlâ eski oyunu çiziyordu | Kartta yanlış resim | ✅ yeniden çizildi (2026-09-05) |
 | 12 | [PR #45](https://github.com/owerworld/jumvi-missions/pull/45) (2026-35 snapshot) açık | `/analiz` panelinde bir hafta eksik | ✅ kullanıcı merge etti (2026-09-04) |
 | 13 | `origin/3d-forest-experiment` hâlâ duruyor | CLAUDE.md silindiğini söylüyordu | ⏸️ onay verildi, tek komut kullanıcıda (aşağıda) |
+| 14 | `mobile-matrix` WebKit'te 7 sahte kontrast hatası veriyordu | Safari kontrolü güvenilmezdi | ✅ düzeltildi + CI'a alındı (2026-09-07) |
 
 ---
 
@@ -171,6 +172,53 @@ içindeki `MISSION_SLUGS`, `service-worker.js` içindeki `CORE_ASSETS`,
 `CACHE_NAME` (v249), `jumvi-art.js`'in `?v=` damgası ve iki kilit dosyası
 güncellendi. `tools/check-mission-art.mjs` içindeki `ART_PENDING` kaydı silindi —
 kontrol zaten istisna gerçeğin gerisinde kalırsa kendisi hata veriyordu.
+
+## 7b. Üçüncü "hiçbir şey ölçmeyen" test: mobile-matrix (2026-09-07)
+
+`tools/mobile-matrix.mjs` ilk taramada hiç koşturulamamıştı — WebKit kurulu
+değildi ve CI'dan da tam bu gerekçeyle dışarıda bırakılmıştı. WebKit kurulunca
+(`playwright install --with-deps webkit`) 16 cihaz sınıfının 7'si
+**PASS WITH LIMITATION** verdi: yalnızca WebKit'te, yalnızca kontrast bulgusuyla.
+Chromium tertemizdi.
+
+Bu bir ürün hatası değildi. `PROBE`, metnin alfasına **bütün ata zincirinin
+`opacity`'sini** çarpıyor — ki bu doğrudur, %35 opaklıkla çizilen metin gerçekten
+okunmaz. Ama sekme panelleri `opacity` geçişiyle beliriyor ve ölçüm geçiş
+bitmeden alınıyordu. İki motorda aynı elemanı ölçtüm:
+
+| An | Chromium | WebKit |
+|---|---|---|
+| ~150 ms | `.tabPanel` 0.72 → 3.11:1 | 0.35 → 1.67:1 |
+| ~650 ms | 1.0 → **5.26:1** | hâlâ 0.35 → 1.67:1 |
+| ~2.6 s | 1.0 → **5.26:1** | 1.0 → **5.26:1** |
+
+Yani `span.pathRowPill` yerleşince 5.26:1 — 4.5 eşiğinin rahatça üstünde.
+Sabit 600 ms bekleme Chromium'a yetiyor, WebKit'e yetmiyordu.
+
+**Çözüm:** tahmini gecikme yerine gerçekten yerleşmeyi beklemek. `settled()` iki
+koşulu birden arıyor, çünkü tek başına her ikisi de yarışıyor: "hiçbir animasyon
+koşmuyor" ifadesi geçiş *başlamadan önce* de doğru olduğu için taze bir sekme
+geçişi aradan sızabiliyor; "solgun elemanlar değişmeyi bıraktı" ise yavaş bir
+lineer geçişte iki örneklemede benzer görünebiliyor. Sonsuz animasyonlar (ortam
+döngüleri, Leo'nun boşta hâli) hiç bitmediği için dışarıda bırakılıyor.
+
+**Doğrulama:** düzeltmeden sonra 16/16 temiz PASS, sıfır kontrast bulgusu. Kontrolü
+boşa çıkarmadığımı kanıtlamak için `warm-toy.css`'e bilerek soluk renk enjekte
+edildi (`#a8cdea`) — araç bunu 1.21–1.67:1 olarak doğru elemanlarda raporladı,
+sonra dosya birebir geri alındı.
+
+**CI:** araç artık `checks.yml`'ın tarayıcı işine dahil (`--with-deps chromium
+webkit`). 16 cihaz sınıfı 2 dk 38 sn sürüyor. Gerekçe, aracın kendi başlığında
+yazıyor: Safari bu ürünün alıcılarının çoğunluk motoru ve Chromium tek başına
+Safari sorularını (100vh, `-webkit-` önekleri, AudioContext jestleri)
+cevaplayamıyor.
+
+**Kapatılmayan, bilgi amaçlı bulgu:** her iki motorda tutarlı biçimde 6 farklı
+metin düğümü 12px altında — `10px "Active"`, `11px "Family"`, `11.5px` bölüm
+etiketleri (`"You need"`, `"You win when"`, `"Play now"`, `"Explore"`). Araç
+bunları bilerek hata saymıyor ("neyin dekoratif olduğu insan kararı"). Tipografi
+kararı olduğu için dokunulmadı; güneş altında telefon tutan bir ebeveyn için
+gözden geçirmeye değer.
 
 ## 8. Depo bakımı
 

@@ -95,8 +95,12 @@ jobs:
   # Driven with Playwright against tools/tr-qa/serve.mjs, which runs the REAL
   # src/worker.js over the repo the way Cloudflare's asset binding does.
   #
+  # mobile-matrix.mjs runs WebKit as well, and that is the point: Safari is the
+  # majority engine for this product's buyers, and Chromium cannot answer the
+  # Safari questions (100vh, -webkit- prefixes, AudioContext gestures). It adds
+  # ~2.5 minutes and one extra browser download.
+  #
   # Not run here, on purpose:
-  #   mobile-matrix.mjs           needs WebKit as well as Chromium
   #   contrast-sweep.mjs          a ~10 minute full sweep; check-nontext-contrast
   #                               is the gate, the sweep is the report
   #   check-deploy-health.sh      probes the LIVE site — deploy-health-check.yml
@@ -120,7 +124,7 @@ jobs:
           cd "$RUNNER_TEMP/pw"
           npm init -y > /dev/null
           npm install --silent playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
 
       - name: Start the local worker server
         run: |
@@ -170,6 +174,10 @@ jobs:
           run node tools/install-ux-check.mjs
           run node tools/check-responsive-matrix.mjs "--shots=$shots"
           run node tools/check-zoom-textresize.mjs "--shots=$shots"
+          # Both engines, 16 device classes. Exits 1 only on P0 (overflow,
+          # console error, dead asset); tap-target and contrast findings are
+          # printed for a human to judge.
+          run node tools/mobile-matrix.mjs
           exit $fail
 
       - name: The tree must be exactly as it was checked out
