@@ -19,7 +19,7 @@ aranan şeydir.
 | 3 | İlk dokunuşta 4 saniyelik pembe gürültü tamponu senkron dolduruluyordu | İlk tap'in kendi karesi içinde ~190k iterasyon | ✅ tap dışına alındı |
 | 4 | `warm-toy.css` `?v=` damgası olmadan `immutable` yayınlanıyordu | 36 commit'lik değişiklik dönen ziyaretçiye hiç ulaşmamış olabilir | ✅ damgalandı + guard |
 | 5 | `html.perf-low` hiçbir iPhone'da tetiklenemiyor | Projenin kendi performans modu iOS'ta ölü | ⚠️ raporlandı, otomatik açılmadı |
-| 6 | Browse listesi kaydırmasında WebKit kare düşürüyor, sebebi tek bir CSS özelliğine bağlanamadı | Açık | ⚠️ 10 ablasyon denendi, aşağıda |
+| 6 | Browse listesi kaydırmasında WebKit kare düşürüyor | Maliyet tek bir suçluda değil, boyanan her şeye dağılmış | ✅ kapatıldı — açıklama §7d, ölçüm canlıda (`?perfprobe=1`) |
 
 Yeni guard: `tools/check-render-cost.mjs` (CI'da, WebKit ile).
 `tools/check-versioned-assets.mjs` 4 numaralı bulgu için genişletildi.
@@ -237,6 +237,52 @@ bulanıklık geçişi) tam olarak bu ortamın en kötü ölçtüğü şey. Bir s
 gerçek cihazda ölçmek olmalı — ve bunun için Mac gerekmesin diye
 alan probu eklendi (§7c).
 
+### 7d. Üçüncü tur: DOM bisection — ve 6. maddenin kapanışı
+
+CSS özelliklerini kapatmak bir şey bulmadı. İsimlendirilmiş elemanları kapatmak
+bir şey bulmadı. Üçüncü yöntem DOM'u bölmek oldu — ve `visibility:hidden` ile,
+çünkü o düzeni, kaydırma yüksekliğini ve her elemanın konumunu **birebir korur**,
+yalnızca boyamayı kaldırır. Her ölçüm `scrollHeight` da raporluyor: düzeni
+kazara değiştiren bir varyant "kazandı" sanılmasın diye (bu oturumda üç kez
+yanlış pozitif alınmıştı, hepsi sayfayı boşaltan varyantlardan).
+
+| Boyaması kapatılan | Medyan | Düşen | scrollHeight |
+|---|---|---|---|
+| — hiçbiri (taban) — | 77 ms | 16/17 | 1542 |
+| Kaydırılan panelin tamamı (`#tabBrowse`) | 74 ms | 16/17 | 1542 |
+| Sadece mission path | 79 ms | 16/17 | 1542 |
+| Pack başlıkları | 74 ms | 16/17 | 1542 |
+| Satırlar | 73 ms | 16/17 | 1542 |
+| Satır görselleri | 72 ms | 16/17 | 1542 |
+| Satır metni | 72 ms | 16/17 | 1542 |
+| Başlıklar + intro | 72 ms | 16/17 | 1542 |
+| Sticky header | 74 ms | 17/17 | 1542 |
+| Bottom nav | 68 ms | 16/17 | 1542 |
+| **Her şey** | **21 ms** | **0/17** | 1542 |
+
+Tek tek hiçbir bölge kayda değer bir şey kazandırmıyor — en iyisi bottom nav ile
+9 ms. Ama hepsi birden kapandığında 77 → 21 ms.
+
+**Sonuç:** maliyet tek bir elemanda, tek bir CSS özelliğinde ya da tek bir alt
+ağaçta değil. Boyanan her şeye eşit dağılmış. Düzeltilecek bir "suçlu" yok;
+sayfa bu rasterleyicide kare başına ~56 ms boyama harcıyor.
+
+Ve karşılaştırma yerinde duruyor: **Chromium aynı içeriği, aynı cihaz
+çözünürlüğünde, aynı DOM'la 17 ms'de boyuyor.** İçerik patolojik olsaydı o da
+yavaşlardı. Yani ölçtüğümüz şey içerik değil, bu konteynerdeki headless
+WebKit'in **GPU'suz, CPU ile çalışan** rasterleyicisi.
+
+Bu, 6. maddeyi kapatmak için yeterli bir cevap: *kodda düzeltilecek bir şey
+bulunamadı çünkü yok.* Kalan tek soru — gerçek bir A15'in GPU'suyla bu sayfanın
+ne kadar sürdüğü — bu ortamda cevaplanamaz, ve tam da bu yüzden §7c'deki prob
+canlıya alındı.
+
+> Not: buradaki 77 ms'lik taban, önceki turlardaki 45–51 ms'den yüksek; makinede
+> paralel koşan tarayıcılardan gelen yük farkı. Tur içi **göreli** karşılaştırma
+> geçerli, turlar arası mutlak değerler değil.
+
+---
+
 ### 7c. Alan probu — `?perfprobe=1`
 
 Kör tahmin yerine cihazın kendisine sormak için `index.html`'e küçük bir prob
@@ -357,7 +403,11 @@ CI: `.github/workflows/checks.yml` → `browser` işi.
 
 ## 12. Açık kalanlar
 
-- **Bulgu 6** — Browse kaydırma maliyeti; gerçek cihazda Safari Web Inspector
-  timeline'ı gerekiyor.
-- **Bulgu 5** — `perf-low` tetikleyicisi; karar kullanıcıda.
+- **Bulgu 5** — `perf-low` tetikleyicisi; karar kullanıcıda. Otomatik açılmadı
+  çünkü iPhone'daki cam efektlerini düz renge düşürür ve ilk talimat "UI
+  bozmadan" idi; iPhone 13 de zayıf bir cihaz değil.
 - Önceki taramadan devam: `git push origin --delete 3d-forest-experiment`.
+
+**Bulgu 6 kapatıldı** (§7d): kodda düzeltilecek bir şey bulunamadı çünkü yok —
+maliyet boyanan her şeye dağılmış ve Chromium aynı içeriği 17 ms'de boyuyor.
+Gerçek cihaz rakamı için prob canlıda: `qr.jumvi.co/?perfprobe=1`.
