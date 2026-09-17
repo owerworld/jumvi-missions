@@ -1533,7 +1533,7 @@
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260917-1", { updateViaCache: "none" })
+    navigator.serviceWorker.register("/service-worker.js?v=20260917-2", { updateViaCache: "none" })
         .then((reg)=>{
           // §5.4 — returning-browser freshness. skipWaiting()+clients.claim()
           // in service-worker.js already hand a NEW worker control of every
@@ -1589,6 +1589,62 @@
         .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
     });
   }
+</script>
+
+<!-- §6 — field frame probe. Inert unless the URL carries ?perfprobe=1.
+     Everything below the guard is dead weight for a normal visitor: one
+     indexOf on location.search at parse time, nothing else. No listener, no
+     timer, no global, no network.
+
+     Why it exists: "iPhone 13 stutters" could not be reproduced to a cause in
+     headless WebKit. Every real scroll frame there costs ~45ms against
+     Chromium's 17ms on the identical page, and thirty-five hypotheses
+     (every paint property, rule count up to 12,588 rules, layer promotion,
+     containment, the sticky header, image decode, overdraw) each came back
+     flat. That renderer rasterises on the CPU with no GPU at all, so the one
+     reading it cannot give is what an A15 actually does. This asks the phone.
+
+     Open https://qr.jumvi.co/?perfprobe=1 on the device, scroll normally with
+     a finger, and read the numbers off the screen. -->
+<script>
+  if (location.search.indexOf("perfprobe") > -1) (function () {
+    var box = document.createElement("div");
+    box.setAttribute("aria-hidden", "true");
+    box.style.cssText = "position:fixed;left:8px;right:8px;bottom:84px;z-index:99999;" +
+      "background:rgba(10,22,40,.92);color:#fff;font:12px/1.45 ui-monospace,Menlo,monospace;" +
+      "padding:10px 12px;border-radius:12px;pointer-events:none;white-space:pre";
+    box.textContent = "frame probe — scroll with your finger";
+    document.addEventListener("DOMContentLoaded", function () { document.body.appendChild(box); });
+
+    /* Only frames during which the page actually moved are frames the renderer
+     * had to do scrolling work for. A gap recorded while nothing moved says
+     * nothing about scroll cost, and counting it was the mistake that made the
+     * headless benchmark look worse than it was. */
+    var gaps = [], last = performance.now(), lastY = -1, moving = false;
+    addEventListener("scroll", function () { moving = true; }, { passive: true });
+
+    var pct = function (a, q) { return a.length ? a[Math.min(a.length - 1, Math.floor(a.length * q))] : 0; };
+    (function tick(now) {
+      var dt = now - last; last = now;
+      var y = (document.scrollingElement || document.documentElement).scrollTop;
+      if (moving && y !== lastY && dt < 400) gaps.push(dt);
+      lastY = y; moving = false;
+      if (gaps.length > 600) gaps.splice(0, gaps.length - 600);
+      if (gaps.length && gaps.length % 10 === 0) {
+        var s = gaps.slice().sort(function (a, b) { return a - b; });
+        var over = 0;
+        for (var i = 0; i < gaps.length; i++) if (gaps[i] > 32) over++;
+        box.textContent =
+          "scrolled frames  " + gaps.length +
+          "\nmedian           " + pct(s, 0.5).toFixed(1) + " ms" +
+          "\np95              " + pct(s, 0.95).toFixed(1) + " ms" +
+          "\nworst            " + s[s.length - 1].toFixed(1) + " ms" +
+          "\ndropped (>32ms)  " + over + "  (" + Math.round(over / gaps.length * 100) + "%)" +
+          "\ndpr " + devicePixelRatio + "  " + innerWidth + "x" + innerHeight;
+      }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  })();
 </script>
 
 </body>

@@ -201,11 +201,68 @@ Tam stil yeniden hesaplaması WebKit'te **98 ms**, Chromium'da **9 ms** (2588
 kural, 1336 element) — 11 katlık fark. Sebep tek bir seçici sınıfına da
 bağlanamadı; `:has()` (54 adet) ve `[style*=]` denemeleri fark yaratmadı.
 
+### 7b. İkinci tur (merge sonrası) — ve ölçüm yönteminin kendi hatası
+
+Önce kendi testimdeki bir hatayı buldum: Browse sayfasının **gerçek kaydırma
+mesafesi 698 px** (16 kare), ama benchmark 45 kare kaydırıyordu — yani 29 kare
+sayfanın dibinde hiçbir şey yapmadan geçiyordu. Düzeltilmiş ölçüm tabloyu
+sertleştiriyor:
+
+| | WebKit | Chromium |
+|---|---|---|
+| Medyan kare (gerçekten kayan kareler) | **45 ms** | 17 ms |
+| Düşen kare | **16/17** | 0/17 |
+
+Yani gerçekten kayan neredeyse her kare düşüyor.
+
+İkinci turda elenen hipotezler (her biri "sayfa hâlâ çiziliyor mu" kontrolüyle):
+
+| Hipotez | Test | Sonuç |
+|---|---|---|
+| Seçici eşleştirme / kural sayısı | Hiçbir şeyle eşleşmeyen **+10.000 kural** | 49 → 51 ms, aynı 17 kare. **Alakasız** |
+| Gizli tam ekran modal katmanları | `#badgesBackdrop`, `#profileBackdrop` `display:none` | 49 → 56 ms |
+| `position:sticky` başlık | `static` | 49 → 59 ms |
+| Başlığın gizlenme animasyonu (`transform .25s`) | `transition:none` · `.hidden` iptal · `display:none` · terfi · `fixed` | Beşi de 44–48 ms, 14–17/17 düşük |
+| `bottomNav` katman terfisi | `will-change:auto` ve tersi | Etkisiz |
+| Overdraw | Sade kontrolle kıyas | 4,76 vs 3,65 — 1,3× fark, maliyet farkı 2,2× |
+
+`+10.000 kural` sonucu özellikle önemli: 2588 kurallık stil sayfası **kare
+başına maliyetin sebebi değil**. (Tam stil yeniden hesaplamasındaki 98 ms ayrı
+bir metrik ve orada kural sayısı hâlâ rol oynuyor olabilir.)
+
 **Dürüst sonuç:** bu kaydırma maliyeti bu oturumda kök nedene indirilemedi.
 Yazılımla rasterleyen headless bir WebKit, GPU'lu gerçek bir iPhone'un
 fiyatlandırmasını birebir vermiyor; özellikle 1 numaralı bulgu (tam ekran GPU
 bulanıklık geçişi) tam olarak bu ortamın en kötü ölçtüğü şey. Bir sonraki adım
-gerçek cihazda Safari Web Inspector timeline'ı olmalı.
+gerçek cihazda ölçmek olmalı — ve bunun için Mac gerekmesin diye
+alan probu eklendi (§7c).
+
+### 7c. Alan probu — `?perfprobe=1`
+
+Kör tahmin yerine cihazın kendisine sormak için `index.html`'e küçük bir prob
+konuldu. URL'de `perfprobe` yoksa **hiç çalışmıyor**: yükleme sırasında
+`location.search` üzerinde tek bir `indexOf`, başka hiçbir şey — dinleyici yok,
+zamanlayıcı yok, global yok, ağ isteği yok. Doğrulandı: bayraksız açılışta
+0 prob düğümü, ağ istekleri ve DOM düğüm sayısı öncekiyle aynı.
+
+Bayrakla açıldığında ekranın altında parmakla kaydırırken okunabilen bir kutu
+çıkıyor. Yalnızca **sayfanın gerçekten hareket ettiği** kareleri sayıyor —
+hareketsiz kareleri saymak, yukarıdaki benchmark hatasının ta kendisiydi.
+
+    https://qr.jumvi.co/?perfprobe=1
+
+Doğrulama (aynı ortam, aynı sayfa, iki motor):
+
+| | WebKit | Chromium |
+|---|---|---|
+| Medyan | 48,0 ms | 16,7 ms |
+| p95 | 57,0 ms | 16,7 ms |
+| Düşen (>32 ms) | %100 | %0 |
+
+Yani prob, headless bulgusunu sadakatle yeniden üretiyor. Şimdi aynı soruyu
+gerçek bir iPhone 13'e soruyor: orada da medyan 45 ms civarıysa hata gerçek ve
+hedefi var; 16–17 ms geliyorsa headless WebKit'in yazılım rasterleyicisinin
+bir artefaktıydı ve 6 numara kapanır.
 
 ---
 
