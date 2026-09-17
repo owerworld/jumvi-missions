@@ -1533,7 +1533,7 @@
 <script>
   if("serviceWorker" in navigator){
     window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("/service-worker.js?v=20260917-2", { updateViaCache: "none" })
+    navigator.serviceWorker.register("/service-worker.js?v=20260917-3", { updateViaCache: "none" })
         .then((reg)=>{
           // §5.4 — returning-browser freshness. skipWaiting()+clients.claim()
           // in service-worker.js already hand a NEW worker control of every

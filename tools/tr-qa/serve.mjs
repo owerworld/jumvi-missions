@@ -169,7 +169,18 @@ const ASSETS = {
 };
 
 const worker = (await import(path.join(REPO, "src/worker.js"))).default;
-const env = { ASSETS, JUMVI_ANALYTICS: { writeDataPoint() {} } };
+/* Secrets come from the environment, the way wrangler hands them to the Worker
+ * in production. Leaving them out is not neutral: both gates fail CLOSED when
+ * their secret is missing, so a harness that never sets one can only ever
+ * observe a 401 and would call a wide-open gate "correct". Set them to test
+ * the authorized side:
+ *     PANEL_PASSWORD=… ANALIZ_PASSWORD=… node tools/tr-qa/serve.mjs . 8787 */
+const env = {
+  ASSETS,
+  JUMVI_ANALYTICS: { writeDataPoint() {} },
+  ANALIZ_PASSWORD: process.env.ANALIZ_PASSWORD,
+  PANEL_PASSWORD: process.env.PANEL_PASSWORD,
+};
 
 http.createServer(async (req, res) => {
   const url = `http://localhost:${PORT}${req.url}`;

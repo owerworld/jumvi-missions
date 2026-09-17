@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>JUMVI · Panel</title>
+<!--
+  The owner's "everything finished" view.
+
+  What this is NOT: a second copy of the app. Seeding a second copy would mean
+  a second thing to keep in step with data.js, and the whole point is to look
+  at the REAL app. So this page only writes state and hands over.
+
+  Why a separate profile rather than filling in the one on the device: the app
+  already has profiles, each with its own progress prefix (jumvi_<id>_…). A
+  dedicated "panel" profile means the owner's real progress is never written
+  to, never overwritten, and never needs restoring — switching back is the
+  app's own profile picker, not an undo button this page has to get right.
+  The id is the literal string "panel"; nextProfileId() only ever hands out
+  p1, p2, p3…, so it cannot collide with a real child.
+
+  Badges, XP, the progress ring and the certificate are all DERIVED from the
+  done-set and the streak (updateBadges() re-checks every badge against them
+  on render). So seeding those two things is enough — there is no separate
+  "unlock all badges" list to keep in step, and there is nothing here that can
+  drift out of date when a badge rule changes.
+-->
+<style>
+  :root{
+    --bg:#FBFAF6; --card:#FFFDF8; --line:#E8E0D2; --ink:#2C2A26; --muted:#7A7266;
+    --blue:#1577B1; --blue-soft:rgba(47,182,232,.10); --green:#4F8F3A; --warn:#9A6B1E;
+    --warn-soft:#FDF6E6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#111E2C; --card:#17283A; --line:#24384C; --ink:#F2F5F8; --muted:#9FB0C0;
+      --blue:#73CAE7; --blue-soft:rgba(47,182,232,.14); --green:#91D66D; --warn:#E8C37A;
+      --warn-soft:#2A2416;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    padding:24px 16px calc(32px + env(safe-area-inset-bottom));
+  }
+  main{max-width:520px; margin:0 auto}
+  h1{font-size:22px; margin:0 0 4px; letter-spacing:-.01em}
+  .sub{color:var(--muted); font-size:14px; margin:0 0 20px}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:18px;
+    padding:18px; margin-bottom:14px;
+  }
+  .card h2{font-size:15px; margin:0 0 10px; letter-spacing:.01em}
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0 4px}
+  .stat{background:var(--blue-soft); border-radius:14px; padding:10px 8px; text-align:center}
+  .stat b{display:block; font-size:19px; line-height:1.2}
+  .stat span{display:block; font-size:11px; color:var(--muted); margin-top:2px}
+  button{
+    font:inherit; font-weight:700; width:100%; min-height:52px; cursor:pointer;
+    border-radius:14px; border:1px solid transparent; padding:12px 16px;
+  }
+  .primary{background:var(--blue); color:#fff}
+  .ghost{background:transparent; color:var(--blue); border-color:var(--line); margin-top:10px}
+  .note{
+    background:var(--warn-soft); border:1px solid var(--line); color:var(--warn);
+    border-radius:14px; padding:12px 14px; font-size:13px; margin-bottom:14px;
+  }
+  ul{margin:8px 0 0; padding-left:18px; font-size:13px; color:var(--muted)}
+  li{margin:3px 0}
+  .out{
+    margin-top:12px; font:12px/1.5 ui-monospace,Menlo,monospace; color:var(--muted);
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .who{font-size:13px; color:var(--muted); margin-top:10px}
+  .who b{color:var(--ink)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Panel</h1>
+  <p class="sub">Uygulamanın tamamlanmış hâli — yalnızca bu cihazda.</p>
+
+  <div class="note" id="scopeNote">
+    Kendi ilerlemeniz <b>silinmez</b>. Bu panel ayrı bir profil açar
+    (“Panel”), her şeyi orada tamamlanmış gösterir. Kendi profilinize
+    uygulamanın içindeki profil seçiciden dönersiniz.
+  </div>
+
+  <div class="card">
+    <h2>Ne göreceksiniz</h2>
+    <div class="stats" id="stats">
+      <div class="stat"><b id="sMissions">—</b><span>görev tamam</span></div>
+      <div class="stat"><b id="sBadges">—</b><span>rozet açık</span></div>
+      <div class="stat"><b>100%</b><span>ilerleme</span></div>
+    </div>
+    <ul>
+      <li>Bütün görevler tamamlanmış olarak işaretli</li>
+      <li>Rozetler, XP ve ilerleme halkası buradan kendiliğinden doluyor</li>
+      <li>Sertifika alınabilir durumda</li>
+      <li>Seri (streak) dolu, günlük görev tamamlanmış</li>
+    </ul>
+    <p class="who" id="whoNow"></p>
+  </div>
+
+  <button class="primary" id="go">Tamamlanmış hâliyle aç</button>
+  <button class="ghost" id="back">Kendi profilime dön</button>
+  <div class="out" id="out"></div>
+</main>
+
+<script src="/data.js?v=20260831-1"></script>
+<script>
+(function(){
+  "use strict";
+  var PANEL_ID = "panel";
+  var PANEL_NAME = "Panel";
+  var PROFILES_KEY = "jumvi_profiles_v1";
+  var ACTIVE_KEY   = "jumvi_active_profile_v1";
+  /* Remembers whichever profile was active when the panel was first opened,
+   * so "kendi profilime dön" is exact rather than a guess at p1. */
+  var PREV_KEY     = "jumvi_panel_prev_profile_v1";
+  var out = document.getElementById("out");
+
+  function say(msg){ out.textContent = msg; }
+  function get(k, d){ try { var v = localStorage.getItem(k); return v === null ? d : v; } catch(_){ return d; } }
+  function set(k, v){ try { localStorage.setItem(k, v); return true; } catch(_){ return false; } }
+  function getJSON(k, d){ try { var v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch(_){ return d; } }
+
+  /* The catalogue is the source of truth for how many missions "all" is —
+   * data.js is loaded above rather than a number being written here, so a
+   * 37th mission needs no edit in this file.
+   *
+   * It is read as a bare identifier, NOT off window: data.js declares
+   * `const missions = […]`, and a top-level const is a script-scope binding
+   * that never becomes a window property. `window.missions` is undefined and
+   * reading it gave this page an empty catalogue on the first try. */
+  var catalogue = (typeof missions !== "undefined" && Array.isArray(missions)) ? missions : [];
+  var all = catalogue.map(function(m){ return m.id; });
+  var total = all.length;
+  document.getElementById("sMissions").textContent = total || "—";
+
+  /* Badge count is shown the same way: counted from the app's own rules if
+   * they are reachable, otherwise left blank rather than guessed at. */
+  /* Same reasoning as above — BADGES is a const in data.js too. */
+  try {
+    document.getElementById("sBadges").textContent =
+      (typeof BADGES !== "undefined" && BADGES.length) ? BADGES.length : "hepsi";
+  } catch(_){ document.getElementById("sBadges").textContent = "hepsi"; }
+
+  function isoLocalDate(d){
+    d = d || new Date();
+    return d.getFullYear() + "-" +
+      String(d.getMonth()+1).padStart(2,"0") + "-" +
+      String(d.getDate()).padStart(2,"0");
+  }
+
+  function currentName(){
+    var id = get(ACTIVE_KEY, "p1");
+    var ps = getJSON(PROFILES_KEY, []);
+    for (var i=0; i<ps.length; i++) if (ps[i] && ps[i].id === id) return ps[i].name || id;
+    return id;
+  }
+  function refreshWho(){
+    document.getElementById("whoNow").innerHTML =
+      "Şu an aktif profil: <b>" + String(currentName()).replace(/[<>&]/g, "") + "</b>";
+  }
+  refreshWho();
+
+  document.getElementById("go").onclick = function(){
+    if (!total) { say("data.js yüklenemedi — görev listesi boş, hiçbir şey yazılmadı."); return; }
+    try { localStorage.setItem("__jumvi_probe__", "1"); localStorage.removeItem("__jumvi_probe__"); }
+    catch(_){ say("Bu tarayıcıda depolama kapalı (özel sekme?) — durum yazılamaz."); return; }
+
+    var active = get(ACTIVE_KEY, "p1");
+    if (active !== PANEL_ID) set(PREV_KEY, active);
+
+    var ps = getJSON(PROFILES_KEY, []);
+    if (!Array.isArray(ps)) ps = [];
+    var found = false;
+    for (var i=0; i<ps.length; i++) if (ps[i] && ps[i].id === PANEL_ID) found = true;
+    if (!found) {
+      ps.push({ id: PANEL_ID, name: PANEL_NAME, avatar: "robot", createdAt: new Date().toISOString() });
+      set(PROFILES_KEY, JSON.stringify(ps));
+    }
+
+    var P = "jumvi_" + PANEL_ID + "_";
+    var today = isoLocalDate();
+    set(P + "missions_done_v3", JSON.stringify(all));
+    set(P + "streak_count_v1", "12");
+    set(P + "streak_best_v1", "12");
+    set(P + "streak_last_v1", today);
+    set(P + "age_v2", "all");              // no difficulty ceiling hiding missions
+    set(P + "avatar_v1", "0");
+    set(P + "cert_name_v1", PANEL_NAME);
+    set(P + "daily_date_v1", today);
+    set(P + "daily_id_v1", String(all[0]));
+    set(P + "daily_n_v1", String(total));
+    set(P + "today_done_ids_v1", JSON.stringify(all));
+    /* The daily star lives in its own per-scope record, not in the done-set,
+     * so seeding the missions alone left the badge reading "0/1 today" on a
+     * profile with everything finished. { iso: today, count, claimed } is the
+     * shape getDailyChallengeState() writes; a stale iso makes it reset
+     * itself, which is why today's date has to go in with it. */
+    set(P + "daily_challenge_v1", JSON.stringify({ iso: today, count: 1, claimed: true }));
+    set("jumvi_onboarded_v2", "1");         // global: skip the welcome overlay
+    set(ACTIVE_KEY, PANEL_ID);
+
+    say("Hazır: " + total + " görev tamamlandı olarak işaretlendi. Açılıyor…");
+    setTimeout(function(){ location.href = "/"; }, 400);
+  };
+
+  document.getElementById("back").onclick = function(){
+    var prev = get(PREV_KEY, "p1");
+    set(ACTIVE_KEY, prev);
+    refreshWho();
+    say("Aktif profil geri alındı: " + currentName() + ". Panel profilinin ilerlemesi olduğu gibi duruyor.");
+    setTimeout(function(){ location.href = "/"; }, 500);
+  };
+})();
+</script>
+</body>
+</html>
