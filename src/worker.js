@@ -77,6 +77,25 @@ const ANALIZ_REALM = "jumvi-analiz";
 const PANEL_PATH = "/panel";
 const PANEL_ASSET_PREFIX = "/assets/panel/";
 const PANEL_REALM = "jumvi-panel";
+/* One tap, not a login dialog. Three ways in, all checked here:
+ *
+ *   ?k=<pin>   the link you save to the home screen. On a match the PIN is
+ *              swapped for a cookie and the browser is redirected to the bare
+ *              /panel, so the address bar stops showing it immediately.
+ *   cookie     what every visit after that uses — nothing typed at all.
+ *   Basic Auth still works, for a desktop browser or if the cookie is gone.
+ *
+ * The cookie is NOT the PIN. It is "<expiry>.<HMAC-SHA256(secret, expiry)>",
+ * so it can be verified with no stored state and it cannot be turned back
+ * into the PIN. HttpOnly keeps page JavaScript away from it, Secure keeps it
+ * off plain HTTP, and Path=/panel means it is never sent anywhere else on the
+ * domain — not to the app, not to the beacon.
+ *
+ * Honest limit: a ?k= link lands in that browser's own history. That is the
+ * cost of one-tap entry, it is the same device the cookie would sit on
+ * anyway, and it is why the redirect strips it from the address bar. */
+const PANEL_COOKIE = "jumvi_panel";
+const PANEL_COOKIE_DAYS = 60;
 
 /** Every branch takes the same time regardless of where a/b first differ —
  *  a plain === would let an attacker time out the correct password
@@ -130,8 +149,48 @@ function isPanelPath(pathname) {
     pathname.startsWith(PANEL_ASSET_PREFIX);
 }
 
-function isPanelAuthorized(request, env) {
-  if (!env.PANEL_PASSWORD) return false; // secret not set → nobody gets in
+const b64url = (bytes) =>
+  btoa(String.fromCharCode(...new Uint8Array(bytes)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+
+/** HMAC-SHA256 of the expiry under the panel secret. Deriving the cookie from
+ *  the secret rather than storing a session means there is nothing to keep,
+ *  and rotating PANEL_PASSWORD invalidates every cookie already handed out. */
+async function panelToken(secret, expiry) {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+  );
+  const sig = await crypto.subtle.sign(
+    "HMAC", key, new TextEncoder().encode(`panel:${expiry}`)
+  );
+  return `${expiry}.${b64url(sig)}`;
+}
+
+async function panelCookieValid(value, secret) {
+  const dot = String(value || "").indexOf(".");
+  if (dot < 1) return false;
+  const expiry = Number(value.slice(0, dot));
+  if (!Number.isFinite(expiry) || expiry <= Date.now()) return false;
+  return safeEqual(value, await panelToken(secret, expiry));
+}
+
+function readCookie(request, name) {
+  const jar = request.headers.get("Cookie") || "";
+  for (const part of jar.split(";")) {
+    const eq = part.indexOf("=");
+    if (eq < 0) continue;
+    if (part.slice(0, eq).trim() === name) return part.slice(eq + 1).trim();
+  }
+  return null;
+}
+
+/** The PIN itself, by ?k= or by Basic Auth. Kept separate from the cookie
+ *  check because only this one earns a NEW cookie. */
+function panelPinMatches(request, env) {
+  const url = new URL(request.url);
+  const k = url.searchParams.get("k");
+  if (k !== null && safeEqual(k, env.PANEL_PASSWORD)) return true;
   const header = request.headers.get("Authorization") || "";
   if (!header.startsWith("Basic ")) return false;
   let decoded;
@@ -140,8 +199,14 @@ function isPanelAuthorized(request, env) {
   } catch (_) {
     return false;
   }
-  const pin = decoded.slice(decoded.indexOf(":") + 1);
-  return safeEqual(pin, env.PANEL_PASSWORD);
+  return safeEqual(decoded.slice(decoded.indexOf(":") + 1), env.PANEL_PASSWORD);
+}
+
+async function isPanelAuthorized(request, env) {
+  if (!env.PANEL_PASSWORD) return false; // secret not set → nobody gets in
+  const cookie = readCookie(request, PANEL_COOKIE);
+  if (cookie && await panelCookieValid(cookie, env.PANEL_PASSWORD)) return true;
+  return panelPinMatches(request, env);
 }
 
 const PANEL_UNAUTHORIZED = () =>
@@ -541,7 +606,28 @@ export default {
     if (TR_APP_PATHS.has(pathname)) return handleTurkishApp(request, env);
 
     if (isPanelPath(pathname)) {
-      if (!isPanelAuthorized(request, env)) return PANEL_UNAUTHORIZED();
+      if (!(await isPanelAuthorized(request, env))) return PANEL_UNAUTHORIZED();
+
+      /* Arrived with the PIN in the URL: hand back a cookie and bounce to the
+       * clean path, so the address bar stops showing it and every later visit
+       * needs nothing typed. */
+      const incoming = new URL(request.url);
+      if (incoming.searchParams.has("k")) {
+        const expiry = Date.now() + PANEL_COOKIE_DAYS * 86400000;
+        const token = await panelToken(env.PANEL_PASSWORD, expiry);
+        const clean = new URL(request.url);
+        clean.search = "";
+        return new Response(null, {
+          status: 302,
+          headers: {
+            Location: clean.pathname,
+            "Set-Cookie": `${PANEL_COOKIE}=${token}; Path=${PANEL_PATH}; Max-Age=${PANEL_COOKIE_DAYS * 86400}; HttpOnly; Secure; SameSite=Lax`,
+            "Cache-Control": "no-store",
+            "X-Robots-Tag": "noindex",
+          },
+        });
+      }
+
       if (pathname === PANEL_PATH || pathname === `${PANEL_PATH}/`) {
         // Directory form, not .../index.html — same 307 reasoning as /analiz.
         const panelUrl = new URL(request.url);
