@@ -59,13 +59,41 @@ const SKIP_DIRS = new Set([
 ]);
 const SCAN_EXT = new Set([".html", ".js", ".mjs", ".css"]);
 
+/* Skipped wholesale — except these. Both are gated HTML pages that live under
+ * assets/ for the run_worker_first rule's sake, and both are shipped pages
+ * that can reference a stamped script. /panel does exactly that: it loads
+ * data.js to read the mission list rather than hard-coding how many missions
+ * "all of them" is. Without this exception those references sit in the one
+ * directory the scan walks past, which is precisely the blind spot that let
+ * warm-toy.css ship unstamped for thirty-six commits. */
+const SCAN_ANYWAY = new Set(["assets/analiz", "assets/panel"]);
+
+/** Is this directory on the way to, or inside, something SCAN_ANYWAY names?
+ *  "assets" is on the way to "assets/panel"; "assets/ui" is not. Both checks
+ *  are needed — walking into assets/ at all requires the first, and NOT
+ *  walking into assets/ui once we are there requires the second. */
+const onAllowedPath = (rel) => {
+  for (const allowed of SCAN_ANYWAY) {
+    if (allowed === rel) return true;
+    if (allowed.startsWith(rel + "/")) return true;   // an ancestor of it
+    if (rel.startsWith(allowed + "/")) return true;   // inside it
+  }
+  return false;
+};
+/** The skip list is rooted at the top level: "assets" skips assets/ and
+ *  everything under it, not every directory anywhere that happens to be
+ *  called assets. */
+const insideSkippedRoot = (rel) => SKIP_DIRS.has(rel.split("/")[0]);
+
 function* walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    const rel = path.relative(REPO, full).split(path.sep).join("/");
     if (entry.isDirectory()) {
-      if (SKIP_DIRS.has(entry.name)) continue;
-      yield* walk(path.join(dir, entry.name));
+      if (insideSkippedRoot(rel) && !onAllowedPath(rel)) continue;
+      yield* walk(full);
     } else if (SCAN_EXT.has(path.extname(entry.name))) {
-      yield path.join(dir, entry.name);
+      yield full;
     }
   }
 }
