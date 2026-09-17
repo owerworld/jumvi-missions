@@ -5465,3 +5465,86 @@ html.theme--dark :focus-visible{
   margin-top:6px;
   color:var(--jv-text-2,var(--muted));
 }
+
+/* ============================================================================
+   §9 — iOS render cost: blurs that composite but never show
+
+   style.css gives the glass surfaces `backdrop-filter: blur(18–24px)`, which
+   was right when those surfaces were translucent. This stylesheet then repaints
+   them with SOLID backgrounds (--glass resolves to #FFFDF8 / #17283A, and the
+   sheet recipes below it are opaque too) and never withdrew the blur.
+
+   A backdrop-filter under a fully opaque background is invisible by definition:
+   the blurred backdrop is composited and then painted over, every pixel of it.
+   Safari still does the work — it samples the region behind the element and
+   runs a separate blur pass on the GPU each time that region changes. On the
+   mission sheet that region is the whole viewport, and the sheet is what opens
+   on every single mission tap.
+
+   Measured with tools/check-render-cost.mjs, which is what keeps this honest:
+   it reads the COMPUTED background of every backdrop-filter element in both
+   themes and fails when an opaque one still asks for a blur.
+
+   Only the surfaces that are opaque in BOTH themes are listed here. The ones
+   that stay translucent somewhere keep their blur and are named below so the
+   omission reads as deliberate rather than forgotten. */
+/* The theme rules in style.css set this blur with BOTH a theme class and an id
+   (html.theme--light #sheet, …), so an honest override has to out-specify that
+   rather than lean on !important alone. #sheet and .fallbackSheet both carry
+   .sheet, so the :not() form below reaches every one of them. */
+html.theme--light .sheet:not(#certSheet),
+html.theme--dark .sheet:not(#certSheet),
+html.theme--light #tabToday .dailyBox.dailyBoxPromoted,
+html.theme--dark #tabToday .dailyBox.dailyBoxPromoted,
+html.theme--dark #parentDashboard.dashCard,
+html.theme--dark #certBox.certBox{
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+/* Deliberately still blurred, because their own background lets it through:
+     #backdrop          rgba(2,6,23,.45)    — 55% of the blur is visible
+     #badgeUnlockModal  rgba(10,22,40,.7)   — 30%
+     #timerCountdown    rgba(10,22,40,.85)  — 15%
+     #certSheet         rgba(15,23,42,.9)   — 10% in dark
+     #toast             rgba(15,23,42,.92)  —  8% in dark
+     #seasonalCard      transparent in light                                  */
+
+/* ── §9.1 — the noise texture that costs the most and shows the least ──────
+   style.css lays a repeating-radial-gradient over twelve surfaces — .hero,
+   .progressBox, .dailyBox, .certBox, .footer, .dashCard, .seasonalCard,
+   .filterGroups, .search, .card, .badge and .sheet — through a full-size
+   ::before:
+
+     background: repeating-radial-gradient(circle at 0 0,
+                   rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px,
+                   transparent 1px, transparent 3px);
+     opacity: .22;
+
+   Effective alpha is 0.04 × 0.22 = 0.0088 — under one percent, which on an
+   8-bit channel is a difference of at most 2/255 against this skin's cream and
+   navy cards. The cost is not proportionate: it is an extra generated box on
+   every card, and a 3px-period radial gradient that Safari re-rasterises at
+   device scale (3× on this phone) across each one.
+
+   Be honest about the measurement: in HEADLESS WebKit, which rasterises on the
+   CPU, removing these moved the Browse-list scroll benchmark only a little
+   (dropped frames 19/45 to 17/45, together with §9 above). The case for the
+   change is the work it deletes and the 2/255 it costs to delete it, not a
+   number from a renderer that prices GPU passes wrong. What that renderer CAN
+   show is that this app's list costs ~3x a plain list of the same node count
+   per scrolled frame in WebKit while Chromium is at a clean 60fps — the shape
+   of the bug reported: fine everywhere, stuttery on iPhone.
+
+   style.css already deletes these under html.perf-low and calls the reason
+   "rasterisation cost" — but perf-low is gated on `isAndroid || deviceMemory
+   <= 4`, and Safari implements neither, so no iPhone has ever reached it.
+
+   34 screenshots across both engines, both themes, every tab and every modal
+   put the whole change at 2/255 in WebKit; the full table is in
+   docs/audits/ios-performance-2026-09-17.md. */
+.hero::before, .progressBox::before, .dailyBox::before, .certBox::before,
+.footer::before, .dashCard::before, .seasonalCard::before,
+.filterGroups::before, .search::before, .card::before, .badge::before,
+.sheet::before{
+  display:none !important;
+}

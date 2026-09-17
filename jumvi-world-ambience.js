@@ -35,17 +35,39 @@ class JumviWorldAmbience {
     this._running = false;
     this._nodes = [];        // temizlik icin referans tut
     this._dropletTimer = null;
+    this._generation = 0;    // start/stop cycles, so a deferred build cannot
+                             // attach a second wind layer after a restart
   }
 
   start() {
     if (this._running) return;
     this._running = true;
-    this._startWindLayer();
+    /* _startWindLayer() fills a four-second pink-noise buffer one sample at a
+     * time — ~190k iterations of a seven-tap filter. It is called from
+     * startJumviMusicOnce(), which runs inside the pointerdown listener for the
+     * user's FIRST tap anywhere in the app, so on an iPhone that loop lands
+     * squarely inside the frame that is trying to respond to that tap
+     * (measured at 14ms of a 39ms handler in WebKit).
+     *
+     * Nothing about it needs to be in the gesture: the AudioContext is created
+     * and connected by the scheduler before this runs, and a wind bed that
+     * fades in one task later is not something anyone can hear. Deferring it
+     * gives the tap its frame back.
+     *
+     * requestIdleCallback where it exists (Safari 16.4+), with a short timeout
+     * so it cannot be starved, and a plain task everywhere else. */
+    const generation = ++this._generation;
+    const buildWind = () => {
+      if (this._running && this._generation === generation) this._startWindLayer();
+    };
+    if (typeof requestIdleCallback === "function") requestIdleCallback(buildWind, { timeout: 250 });
+    else setTimeout(buildWind, 0);
     this._scheduleDroplet();
   }
 
   stop() {
     this._running = false;
+    this._generation++;      // abandons a wind layer that has not been built yet
     if (this._dropletTimer) clearTimeout(this._dropletTimer);
     this._nodes.forEach(n => { try { n.stop?.(); n.disconnect?.(); } catch (e) {} });
     this._nodes = [];
