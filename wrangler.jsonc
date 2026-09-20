@@ -18,7 +18,10 @@
     // /assets/analiz/* is the panel's own HTML file — without the second
     // one, a request straight to /assets/analiz/ would skip /analiz's gate
     // entirely and reach the file unauthenticated.
-    "run_worker_first": ["/data/*", "/assets/analiz/*"]
+    // /assets/panel/* is the same story one door over: the owner's /panel
+    // view is an ordinary asset, and without this line a direct request to
+    // /assets/panel/ would reach it without ever meeting the PIN.
+    "run_worker_first": ["/data/*", "/assets/analiz/*", "/assets/panel/*"]
   },
   // Faz 1 / 1.2 minimal beacon. Dataset is created on first write.
   // Renaming it starts a new, empty history — see docs/audits/faz1-beacon.md.
