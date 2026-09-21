@@ -15,10 +15,19 @@ name: Weekly Analytics Snapshot
 # --week argument. If the resulting JSON differs from what's on disk, it
 # opens a PR with the new snapshot for a human to review.
 #
-# Deliberately does NOT push to main directly or merge automatically — see
-# CLAUDE.md: "main'e geçiş/merge işlemi sadece kullanıcının açık onayıyla
-# yapılır, otomatik olmaz." The PR this workflow opens is the "report"; a
-# human still merges it.
+# Deliberately does NOT push to main directly. The report is always a PR,
+# which stays the audit record of when a week was published.
+#
+# ZAMANLANMIŞ çalışma o PR'ı kendisi merge eder (bkz. aşağıdaki "Publish the
+# snapshot" adımı ve CLAUDE.md'deki "Otomatik yayın istisnası"). Bu, CLAUDE.md'
+# nin "main'e merge yalnızca açık onayla" kuralına sahibi tarafından konmuş dar
+# bir istisnadır ve sebebi somut: 2026-36 ile 2026-37 raporları merge edilmeyi
+# bekleyip iki hafta boyunca panelde hiç görünmedi. Elle tetiklenen backfill
+# ise ASLA otomatik yayınlanmaz — geçmişi yeniden yazabilen tek yol o.
+#
+# Yan fayda: her hafta anında yayınlandığı için bir sonraki haftanın dalı
+# zaten öncekini içeren bir main'den üretiliyor ve data/snapshots/index.json
+# çakışması (2026-33/34 ve 2026-36/37'de iki kez yaşandı) ortadan kalkıyor.
 #
 # Needs a CLOUDFLARE_API_TOKEN repo secret (Account Analytics: Read).
 # CLOUDFLARE_ACCOUNT_ID is optional — the script discovers it via the API
@@ -100,6 +109,7 @@ jobs:
           echo "week=$week" >> "$GITHUB_OUTPUT"
 
       - name: Open PR with the new snapshot
+        id: pr
         if: steps.diff.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -130,7 +140,11 @@ jobs:
               console.log('- Mission completes: ' + s.mission_completes);
             "
             echo
-            echo "Review the numbers, then merge to publish to /analiz. This workflow never merges on its own."
+            if [ "${{ github.event_name }}" = "schedule" ]; then
+              echo "Bu PR zamanlanmış haftalık çalışmadan geldi ve bekçiler yeşilse **otomatik yayınlanır** (bkz. CLAUDE.md, Otomatik yayın istisnası)."
+            else
+              echo "Elle tetiklenmiş backfill — **otomatik yayınlanmaz**. Sayıları inceleyip merge edin."
+            fi
           } > pr-body.md
 
           # A force-push above just refreshed data on an already-open PR for
@@ -139,11 +153,68 @@ jobs:
           existing=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
             echo "PR #$existing is already open for $branch — force-pushed the refreshed snapshot onto it, nothing else to do."
+            echo "pr=$existing" >> "$GITHUB_OUTPUT"
           else
             gh pr create \
               --title "chore(analytics): weekly snapshot ${WEEK}" \
               --base main \
               --head "$branch" \
               --body-file pr-body.md
+            echo "pr=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')" >> "$GITHUB_OUTPUT"
           fi
           rm -f pr-body.md
+
+      # ── Otomatik yayın ────────────────────────────────────────────────────
+      #
+      # CLAUDE.md'nin ana kuralı "main'e merge yalnızca kullanıcının açık
+      # onayıyla" olmaya devam ediyor. Buradaki istisna dar ve bilinçli: sahibi
+      # haftalık raporun elle merge edilmesini kaldırmak istedi, çünkü rapor
+      # iki hafta boyunca merge edilmeyi bekleyip panelde hiç görünmedi.
+      # İstisnanın sınırları CLAUDE.md'de yazılı; burada uygulanıyor.
+      #
+      # Yalnızca ZAMANLANMIŞ çalışma yayınlar. Elle tetiklenen backfill
+      # yayınlamaz: rutin haftalık rapor her hafta aynı şekli üretir, backfill
+      # ise geçmişi yeniden yazabilir — riskli olan o, insan baksın.
+      #
+      # GITHUB_TOKEN ile yapılan merge, main'de yeni workflow tetiklemez
+      # (GitHub'ın döngü koruması). Bu yüzden Analytics Guard'ın kontrolleri
+      # merge'den ÖNCE burada, aynı işin içinde çalıştırılıyor — "merge ettik,
+      # bekçi sonra bakar" diye bir boşluk kalmasın. Cloudflare dağıtımı kendi
+      # GitHub App'i üzerinden tetiklendiği için etkilenmiyor.
+      - name: Publish the snapshot (scheduled runs only)
+        if: steps.diff.outputs.changed == 'true' && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ steps.pr.outputs.pr }}
+          WEEK: ${{ steps.diff.outputs.week }}
+        run: |
+          if [ -z "$PR" ]; then
+            echo "::error::PR numarası çözülemedi — yayınlanmıyor"
+            exit 1
+          fi
+
+          # 1) Kapsam kilidi: bu PR data/snapshots dışında bir şeye dokunuyorsa
+          #    otomatik yayın yok. Beklenmedik bir dosya buraya sızarsa insan
+          #    baksın; otomasyonun yetkisi rapor dosyalarıyla sınırlı.
+          outside=$(gh pr diff "$PR" --name-only | grep -v '^data/snapshots/' || true)
+          if [ -n "$outside" ]; then
+            echo "::warning::PR #$PR data/snapshots dışına çıkıyor — otomatik yayın atlandı, inceleme için açık bırakıldı"
+            printf '%s\n' "$outside"
+            exit 0
+          fi
+
+          # 2) Bekçiler. Analytics Guard'ın main'de koştuğu kontrollerin aynısı.
+          #    Biri kırmızıysa merge yok: PR açık kalır ve iş başarısız olur.
+          node tools/check-event-coverage.mjs
+          node tools/check-analytics-compliance.mjs
+          node tools/check-beacon-schema.mjs
+          node tools/check-tr-invariants.mjs
+          node tools/check-mission-entry-sources.mjs
+          node tools/check-snapshot-availability.mjs
+          node tools/check-trend-semantics.mjs
+
+          # 3) Yayınla. --merge (squash değil): snapshot dalları tek commit
+          #    taşıyor ve merge commit'i "bu rapor ne zaman yayınlandı"nın
+          #    kaydı oluyor.
+          gh pr merge "$PR" --merge --delete-branch
+          echo "✅ ${WEEK} yayınlandı (PR #$PR) — /analiz birkaç dakika içinde gösterir."
