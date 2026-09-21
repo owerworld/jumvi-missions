@@ -120,18 +120,53 @@ console.log("\nWorker never reads request/network identity signals:");
 const workerCode = scanned.find((f) => f.path === "src/worker.js").code;
 const IDENTITY_SIGNALS = [
   /request\.cf\b/, /CF-Connecting-IP/i, /\.headers\.get\(\s*["']user-agent["']/i,
-  /\.headers\.get\(\s*["']referer["']/i, /\.headers\.get\(\s*["']cookie["']/i,
+  /\.headers\.get\(\s*["']referer["']/i,
 ];
 for (const re of IDENTITY_SIGNALS) {
   check(`src/worker.js: no ${re}`, !re.test(workerCode));
 }
-// The one legitimate header read in this file is Authorization, for the
-// /analiz password gate — confirm it's still the only header this file
-// touches, so a future addition doesn't slip past the checks above.
+
+// Cookie okuması 36e76ac ile geldi: /panel artık her seferinde PIN sormak
+// yerine imzalı bir oturum çerezi kullanıyor ("<expiry>.<HMAC>"). Bu bir
+// KİMLİK sinyali değil — içinde kullanıcıya/cihaza ait hiçbir şey yok, yalnızca
+// son kullanma damgası ve onun imzası var.
+//
+// Eskiden bu kural "Authorization dışında hiçbir başlık okunamaz" diyordu ve
+// o çerez kuralı kırmızıya düşürüyordu. Kuralı gevşetmek yerine DARALTIP
+// karşılığında güçlendirdik: izin verilen başlıklar açık bir listeye bağlandı
+// ve asıl mesele — başlıklardan gelen hiçbir şeyin analitiğe sızmaması —
+// aşağıda doğrudan test ediliyor. Amaç aynı, kapsam daha keskin.
+const ALLOWED_HEADERS = new Set(["authorization", "cookie"]);
 const headerReads = [...workerCode.matchAll(/\.headers\.get\(\s*["']([^"']+)["']/gi)].map((m) => m[1].toLowerCase());
-check("src/worker.js only ever reads the Authorization header",
-  headerReads.every((h) => h === "authorization"),
+check("src/worker.js yalnızca kimlik doğrulama başlıklarını okuyor (Authorization, Cookie)",
+  headerReads.every((h) => ALLOWED_HEADERS.has(h)),
   JSON.stringify([...new Set(headerReads)]));
+
+// Asıl güvence: beacon yolu hiçbir başlığa dokunmuyor. Bu geçtiği sürece
+// çerezin ya da Authorization'ın analitik sütunlarına sızma yolu yok —
+// "worker'da cookie geçmesin" demekten daha doğrudan bir garanti.
+const beaconFns = ["buildDataPoint"];
+for (const fn of beaconFns) {
+  const i = workerCode.indexOf(`function ${fn}(`);
+  check(`src/worker.js: ${fn}() kaynakta bulundu`, i !== -1);
+  if (i === -1) continue;
+  let depth = 0, body = "";
+  for (let j = workerCode.indexOf("{", i); j < workerCode.length; j++) {
+    body += workerCode[j];
+    if (workerCode[j] === "{") depth++;
+    else if (workerCode[j] === "}" && --depth === 0) break;
+  }
+  check(`src/worker.js: ${fn}() hiçbir başlık/çerez okumuyor`,
+    !/headers|readCookie|request\b/.test(body),
+    "analitik satırı yalnızca JSON gövdesinden üretilmeli");
+}
+
+// Çerez yalnızca kimlik doğrulama için: değeri hiçbir yerde WAE'ye giden bir
+// alana yazılmamalı. writeDataPoint çağrılarının yakınında çerez geçmemeli.
+check("src/worker.js: çerez değeri WAE'ye yazılan hiçbir yere taşınmıyor",
+  ![...workerCode.matchAll(/writeDataPoint\([\s\S]{0,400}?\)/g)]
+    .some((m) => /cookie|readCookie|jar/i.test(m[0])),
+  "writeDataPoint çağrısının yakınında çerez referansı var");
 
 console.log("\nNo persistent analytics identifier is ever minted client-side:");
 // A generated/stored id used for ANALYTICS. This deliberately does not flag
