@@ -17,7 +17,7 @@
  *     ./tools/check-core-assets.sh --update   → re-lock after bumping
  * Run it before every deploy.
  * ═══════════════════════════════════════════════════════════════════════════ */
-const CACHE_NAME = "jumvi-missions-v253";
+const CACHE_NAME = "jumvi-missions-v254";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -238,6 +238,39 @@ self.addEventListener("fetch", (event) => {
           return res;
         })
         .catch(() => caches.match(navCacheKey))
+    );
+    return;
+  }
+
+  // Ar-Ge panelinin verisi (/data/*) — önce ağ, önbellek yalnızca yedek.
+  //
+  // Bunlar HAFTALIK DEĞİŞEN veri dosyaları, statik varlık değil. Aşağıdaki
+  // önce-önbellek dalına düştüklerinde service worker ilk çektiği kopyayı
+  // süresiz servis ediyor ve panel yeni haftaları HİÇ göremiyor: rapor
+  // main'de durur, ekranda görünmez. 2026-36 ve 2026-37 tam olarak böyle
+  // kayboldu — iki hafta boyunca main'de vardılar, panelde yoktular.
+  //
+  // CACHE_NAME bumpı bunun çözümü değil: rapor her hafta yayınlanıyor ama
+  // sürüm numarası her hafta artmıyor. Haftalık veriyi sürüm bumpına
+  // bağlamak, otomatik yayını baştan anlamsız kılardı.
+  //
+  // Çocuk uygulaması /data/ altından hiçbir şey okumuyor (app.js ve
+  // jumvi-hub-app.js'de sıfır referans), dolayısıyla bu dalın oyun
+  // performansına etkisi yok — yalnızca şifre korumalı panel etkilenir.
+  //
+  // Yalnızca başarılı yanıt önbelleğe girer: /data/ Basic Auth arkasında ve
+  // bir 401'i önbelleğe almak, çevrimdışı yedeği kalıcı olarak 401'e çevirir.
+  if (url.pathname.startsWith("/data/")) {
+    event.respondWith(
+      fetch(new Request(req, { cache: "no-store" }))
+        .then((res) => {
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match(req))
     );
     return;
   }

@@ -667,7 +667,17 @@ export default {
     // was the one Cloudflare's edge held a stale HIT for on 2026-08-21 with
     // no Cache Rule or Page Rule in sight to explain it. `max-age=0` asks the
     // edge to revalidate; `no-store` is the directive it cannot cache around.
-    if (pathname === "/" || pathname === "/index.html") {
+    //
+    // /data/ joins it for a different but equally concrete reason: those are
+    // the Ar-Ge panel's WEEKLY snapshot files, not static assets. They were
+    // going out with the asset layer's cacheable default, so a browser (or
+    // the edge) could keep serving last week's data/snapshots/index.json and
+    // the panel would simply never list a newly published week. That is what
+    // happened with 2026-36 and 2026-37: both were merged to main and live,
+    // and the panel still showed 2026-35 as the newest. Nothing here is
+    // performance-sensitive — one small JSON per week, behind a password, for
+    // an audience of one — so correctness wins outright.
+    if (pathname === "/" || pathname === "/index.html" || pathname.startsWith(DATA_PREFIX)) {
       const headers = new Headers(response.headers);
       headers.set("cache-control", "no-store");
       return new Response(response.body, {
