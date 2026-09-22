@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "stage": "M4 partial canonical closure; HUMAN DECISION REQUIRED",
+  "stage": "M4 canonical mechanics closed for all 36 IDs; R4 final asset/physical acceptance remains separate",
   "buildPolicy": "Review-only new canonical content layer. Not imported or copied by production/staging build. Promote to content/missions only after mechanics and critical meaning gates pass.",
   "records": [
     {
       "id": "m01",
       "mechanicsVersion": "m4-20260923-m01-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -48,7 +48,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -199,9 +199,9 @@
     },
     {
       "id": "m04",
-      "mechanicsVersion": null,
-      "localeContentVersion": "m4-review-20260923-v1",
-      "status": "blocked-human-mechanics",
+      "mechanicsVersion": "m4-20260923-m04-v2",
+      "localeContentVersion": "m4-final-mechanics-20260923-v2",
+      "status": "human-mechanics-approved",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -209,7 +209,38 @@
         "paddles": 2,
         "balls": 1
       },
-      "locale": null,
+      "locale": {
+        "en-US": {
+          "title": "Switcharoo",
+          "setup": "2 players, 2 paddles, 1 ball. Begin with the paddle strapped to one hand.",
+          "steps": [
+            "Catch the ball on the blue front with your current paddle hand.",
+            "Take the ball off the paddle with your free hand.",
+            "Transfer the ball to your current paddle hand.",
+            "Safely slip that hand out of the strap.",
+            "Move the paddle to your other hand and secure that hand in the strap.",
+            "The hand holding the ball is now free of the paddle. Use it for a gentle toss.",
+            "Make your next catch with the new paddle hand. Repeat this hand-change sequence after every clean catch."
+          ],
+          "goal": "Be the first to make 12 alternating catches.",
+          "safety": "Change hands calmly and securely. Do not switch the paddle in the air or rush. Never change the strap hand while the ball is stuck to the paddle. There is no handle."
+        },
+        "tr": {
+          "title": "El Değiştir",
+          "setup": "2 oyuncu, 2 paddle, 1 top. Paddle bir elinde kayışla takılı olarak başla.",
+          "steps": [
+            "Mevcut paddle elinle topu mavi ön yüzde yapıştırarak yakala.",
+            "Boş elinle topu paddle’dan ayır.",
+            "Topu mevcut paddle eline aktar.",
+            "Bu elini kayıştan güvenli biçimde çıkar.",
+            "Paddle’ı diğer eline geçir ve elini kayışa güvenli biçimde tak.",
+            "Topu tutan elin artık paddle’dan boştadır. Bu elinle yumuşakça at.",
+            "Sonraki yakalamayı yeni paddle elinle yap. Her temiz yakalamadan sonra bu el değiştirme sırasını tekrarla."
+          ],
+          "goal": "Dönüşümlü 12 yakalamaya ilk ulaşan ol.",
+          "safety": "El değişimini sakin ve güvenli biçimde yap. Paddle’ı havada veya aceleyle el değiştirme. Top paddle’a yapışıkken kayış eli değiştirilmez. Paddle’ın sapı yoktur."
+        }
+      },
       "provenance": {
         "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
         "sourceRefs": {
@@ -217,26 +248,18 @@
           "tr": "tr/i18n.js:11 missionTR[\"4\"] (tek uzun satır)"
         },
         "legacyRecordSHA256": "b011a8f2b600e1b0e8720ce9161a0529edc119438c439b693eca439d74d70203",
-        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
-        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+        "authority": "Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
+        "quantitativeRules": "Existing legacy goal retained; human decision supplies action order/roles. No app counter, timer, success detection or new target invented."
       },
       "readiness": {
-        "mechanics": "HUMAN_DECISION_REQUIRED",
-        "locales": "HOLD",
-        "criticalArt": "NOT_PRODUCED",
+        "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "TWO_CANDIDATES_REJECTED_PHYSICAL_REFERENCE_OPEN",
         "narration": "OPTIONAL_UNRECORDED",
         "physicalValidation": "OPEN",
         "runtime": "NOT_PUBLISHED"
       },
-      "decisionGate": {
-        "id": "H-M04",
-        "question_tr": "Paddle hangi sırada el değiştirecek: top henüz mavi yüzdeyken mi, boş elle ayrıldıktan sonra mı, geri atıştan sonra mı? Diğer oyuncu ne zaman bekler? Strap çıkarma/takma ve top kontrolü sırası onaylanmalı.",
-        "known": "Alternate paddle hands remains the legacy goal; no transfer sequence is approved.",
-        "blocked": [
-          "transfer sequence",
-          "ball control during strap change"
-        ]
-      },
+      "decisionGate": null,
       "briefRef": "briefs.json#m04",
       "legacyAssets": "reference paths only; no automatic reuse/approval",
       "runtimeAudio": {
@@ -245,13 +268,29 @@
         "automaticTimer": false,
         "automaticResumeNarration": false,
         "successFromAudio": false
+      },
+      "mechanicsContract": {
+        "type": "hand-transfer-after-each-clean-catch",
+        "steps": [
+          "sticky_catch",
+          "free_hand_detach",
+          "ball_to_current_paddle_hand",
+          "old_hand_out_of_strap",
+          "paddle_secured_on_other_hand",
+          "new_free_hand_toss",
+          "next_catch_on_new_paddle_hand"
+        ],
+        "ballAttachedDuringStrapChange": false,
+        "airbornePaddleSwap": false,
+        "rushRequired": false,
+        "extraEquipmentRequired": false
       }
     },
     {
       "id": "m05",
       "mechanicsVersion": "m4-20260923-m05-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -292,7 +331,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -314,7 +353,7 @@
       "id": "m06",
       "mechanicsVersion": "m4-20260923-m06-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -355,7 +394,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -377,7 +416,7 @@
       "id": "m07",
       "mechanicsVersion": "m4-20260923-m07-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -418,7 +457,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -440,7 +479,7 @@
       "id": "m08",
       "mechanicsVersion": "m4-20260923-m08-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -481,7 +520,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -503,7 +542,7 @@
       "id": "m09",
       "mechanicsVersion": "m4-20260923-m09-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -544,7 +583,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -566,7 +605,7 @@
       "id": "m10",
       "mechanicsVersion": "m4-20260923-m10-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -607,7 +646,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -629,7 +668,7 @@
       "id": "m11",
       "mechanicsVersion": "m4-20260923-m11-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -670,7 +709,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -819,7 +858,7 @@
       "id": "m14",
       "mechanicsVersion": "m4-20260923-m14-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -860,7 +899,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -882,7 +921,7 @@
       "id": "m15",
       "mechanicsVersion": "m4-20260923-m15-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -923,7 +962,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -945,7 +984,7 @@
       "id": "m16",
       "mechanicsVersion": "m4-20260923-m16-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -986,7 +1025,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1006,9 +1045,9 @@
     },
     {
       "id": "m17",
-      "mechanicsVersion": null,
-      "localeContentVersion": "m4-review-20260923-v1",
-      "status": "blocked-human-mechanics",
+      "mechanicsVersion": "m4-20260923-m17-v2",
+      "localeContentVersion": "m4-final-mechanics-20260923-v2",
+      "status": "human-mechanics-approved",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1016,7 +1055,36 @@
         "paddles": 2,
         "balls": 1
       },
-      "locale": null,
+      "locale": {
+        "en-US": {
+          "title": "Mirror Mode",
+          "setup": "2 players, 2 paddles, 1 ball. Choose comfortable high, low, or gently tilted paddle poses. Mirror the pose relative to your own body, not an identical angle in the room.",
+          "steps": [
+            "The leader shows a comfortable paddle pose.",
+            "The catcher takes the same pose relative to their own body.",
+            "The leader makes a gentle toss with their free hand.",
+            "The catcher makes a sticky catch on the blue front in the mirrored pose.",
+            "The catcher removes the ball with their free hand and returns it to the leader with a normal reset pass.",
+            "Keep the same leader for 5 counted throws. Reset passes do not count toward those 5. Then swap leader and follower roles."
+          ],
+          "goal": "Complete 8 mirror-and-catch rounds.",
+          "safety": "Keep poses within a comfortable range: high, low, or gentle tilt. Do not overstretch or tilt sharply. The blue front receives the ball."
+        },
+        "tr": {
+          "title": "Ayna Modu",
+          "setup": "2 oyuncu, 2 paddle, 1 top. Rahat bir yüksek, alçak veya hafif eğik paddle pozu seçin. Odanın içinde birebir aynı açıyı değil, kendi vücudunuza göre aynı pozu alın.",
+          "steps": [
+            "Lider rahat bir paddle pozu gösterir.",
+            "Yakalayan kendi vücuduna göre aynı pozu alır.",
+            "Lider boş eliyle yumuşakça atar.",
+            "Yakalayan aynalanmış pozdaki mavi ön yüzle topu yapıştırarak yakalar.",
+            "Yakalayan topu boş elle ayırır ve normal bir geri pasla lider’a verir.",
+            "Aynı oyuncu 5 sayılan atış boyunca lider olur. Geri paslar bu 5 atışa dahil değildir. Sonra lider ve takipçi rolleri değişir."
+          ],
+          "goal": "8 ayna-ve-yakala turu tamamlayın.",
+          "safety": "Rahat hareket aralığında yüksek, alçak veya hafif eğik pozlar kullanın. Aşırı uzanma veya eğim yoktur. Gelen topu mavi ön yüz karşılar."
+        }
+      },
       "provenance": {
         "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
         "sourceRefs": {
@@ -1024,26 +1092,18 @@
           "tr": "tr/i18n.js:11 missionTR[\"17\"] (tek uzun satır)"
         },
         "legacyRecordSHA256": "71ca9c13712808358c2df75ef63523aea2bdfd2bf33582be9736ae3b4e857159",
-        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
-        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+        "authority": "Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
+        "quantitativeRules": "Existing legacy goal retained; human decision supplies action order/roles. No app counter, timer, success detection or new target invented."
       },
       "readiness": {
-        "mechanics": "HUMAN_DECISION_REQUIRED",
-        "locales": "HOLD",
+        "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+        "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
         "physicalValidation": "OPEN",
         "runtime": "NOT_PUBLISHED"
       },
-      "decisionGate": {
-        "id": "H-M17",
-        "question_tr": "Ayna, yakalayana göre aynı yükseklik/eğim mi demek? Beş atış boyunca aynı kişi mi pozu seçer; geri paslar da ayna atışı/sayımına girer mi?",
-        "known": "Comfortable high/low/tilted poses with blue front receiving are compatible; leader/return-pass/count semantics remain unspecified.",
-        "blocked": [
-          "mirror frame of reference",
-          "leader and return pass semantics"
-        ]
-      },
+      "decisionGate": null,
       "briefRef": "briefs.json#m17",
       "legacyAssets": "reference paths only; no automatic reuse/approval",
       "runtimeAudio": {
@@ -1052,13 +1112,32 @@
         "automaticTimer": false,
         "automaticResumeNarration": false,
         "successFromAudio": false
+      },
+      "mechanicsContract": {
+        "poseFrame": "each-player-own-body",
+        "poseCategories": [
+          "high",
+          "low",
+          "gentle-tilt"
+        ],
+        "leaderCountedThrows": 5,
+        "returnPassCounts": false,
+        "countedAttempt": [
+          "leader_pose",
+          "follower_body_relative_pose",
+          "leader_free_hand_toss",
+          "follower_sticky_catch",
+          "free_hand_detach",
+          "normal_return_pass"
+        ],
+        "autoCaller": false
       }
     },
     {
       "id": "m18",
       "mechanicsVersion": "m4-20260923-m18-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1099,7 +1178,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1121,7 +1200,7 @@
       "id": "m19",
       "mechanicsVersion": "m4-20260923-m19-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "3–4",
@@ -1165,7 +1244,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1314,7 +1393,7 @@
       "id": "m22",
       "mechanicsVersion": "m4-20260923-m22-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "4",
@@ -1355,7 +1434,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1650,7 +1729,7 @@
       "id": "m26",
       "mechanicsVersion": "m4-20260923-m26-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1691,7 +1770,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1711,9 +1790,9 @@
     },
     {
       "id": "m27",
-      "mechanicsVersion": null,
-      "localeContentVersion": "m4-review-20260923-v1",
-      "status": "blocked-human-mechanics",
+      "mechanicsVersion": "m4-20260923-m27-v2",
+      "localeContentVersion": "m4-final-mechanics-20260923-v2",
+      "status": "human-mechanics-approved",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2–3",
@@ -1724,7 +1803,32 @@
         ],
         "balls": 1
       },
-      "locale": null,
+      "locale": {
+        "en-US": {
+          "title": "Secret Signal",
+          "setup": "Use 1 ball. Before starting, choose a simple paddle signal, such as briefly raising the paddle or gently tilting it to the side. With 2 players, pass A ↔ B. With 3 players, pass A → B → C → A.",
+          "steps": [
+            "Make a sticky catch on the paddle’s blue front.",
+            "Remove the ball with your free hand and hold it in that hand.",
+            "Use your strapped paddle hand to show the chosen signal to the next receiver.",
+            "Once the signal has been seen, gently toss to the next player with your free hand. No signal means no throw."
+          ],
+          "goal": "Make 10 secret-signal catches.",
+          "safety": "Keep the paddle signal simple and easy to see. No complicated hand or finger gesture is needed. There is only 1 ball."
+        },
+        "tr": {
+          "title": "Gizli İşaret",
+          "setup": "1 top kullanın. Başlamadan önce paddle’ı kısa süre kaldırmak veya hafif yana eğmek gibi basit bir paddle işareti seçin. 2 oyuncuda A ↔ B; 3 oyuncuda A → B → C → A sırasıyla pas verin.",
+          "steps": [
+            "Topu paddle’ın mavi ön yüzüne yapıştırarak yakala.",
+            "Boş elinle topu ayır ve o elinde tut.",
+            "Kayışlı paddle elinle seçtiğiniz işareti sıradaki yakalayana göster.",
+            "İşaret görüldükten sonra boş elinle sıradaki oyuncuya yumuşakça at. İşaret yoksa atış da yok."
+          ],
+          "goal": "10 gizli işaret yakalaması yapın.",
+          "safety": "Paddle işareti basit ve kolay görülür olsun. Karmaşık el veya parmak hareketi gerekmez. Yalnız 1 top vardır."
+        }
+      },
       "provenance": {
         "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
         "sourceRefs": {
@@ -1732,26 +1836,18 @@
           "tr": "tr/i18n.js:11 missionTR[\"27\"] (tek uzun satır)"
         },
         "legacyRecordSHA256": "b36f4ab5b15abace7ef4c85cb6082fa88bd6d1681aaf500fcbd6bd71fc23ece9",
-        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
-        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+        "authority": "Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
+        "quantitativeRules": "Existing legacy goal retained; human decision supplies action order/roles. No app counter, timer, success detection or new target invented."
       },
       "readiness": {
-        "mechanics": "HUMAN_DECISION_REQUIRED",
-        "locales": "HOLD",
+        "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+        "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
         "physicalValidation": "OPEN",
         "runtime": "NOT_PUBLISHED"
       },
-      "decisionGate": {
-        "id": "H-M27",
-        "question_tr": "Üç oyunculu Gizli İşaret’te üçüncü kişi kime ve hangi sırada pas verir; sinyal kimden kime gider? Elinde top varken ve paddle takılıyken uygulanacak sinyal/reset sırası nedir?",
-        "known": "Signal before each throw; no signal means no throw. Two-player intent is known, three-player variant is not.",
-        "blocked": [
-          "third player role/order",
-          "signal with occupied hands sequence"
-        ]
-      },
+      "decisionGate": null,
       "briefRef": "briefs.json#m27",
       "legacyAssets": "reference paths only; no automatic reuse/approval",
       "runtimeAudio": {
@@ -1760,13 +1856,42 @@
         "automaticTimer": false,
         "automaticResumeNarration": false,
         "successFromAudio": false
+      },
+      "mechanicsContract": {
+        "signal": "simple-paddle-signal",
+        "signalExamples": [
+          "brief-raise",
+          "gentle-side-tilt"
+        ],
+        "handGestureRequired": false,
+        "order2": [
+          "A",
+          "B",
+          "A"
+        ],
+        "order3": [
+          "A",
+          "B",
+          "C",
+          "A"
+        ],
+        "balls": 1,
+        "steps": [
+          "sticky_catch",
+          "free_hand_detach_and_hold",
+          "paddle_signal_to_next_receiver",
+          "signal_seen",
+          "free_hand_toss_to_next_receiver"
+        ],
+        "noSignalNoThrow": true,
+        "signalBackInThreePlayerMode": false
       }
     },
     {
       "id": "m28",
       "mechanicsVersion": "m4-20260923-m28-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1807,7 +1932,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1829,7 +1954,7 @@
       "id": "m29",
       "mechanicsVersion": "m4-20260923-m29-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1870,7 +1995,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -1890,9 +2015,9 @@
     },
     {
       "id": "m30",
-      "mechanicsVersion": "m4-20260923-m30-v1",
-      "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "mechanicsVersion": "m4-20260923-m30-v2",
+      "localeContentVersion": "m4-final-mechanics-20260923-v2",
+      "status": "human-mechanics-approved",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1901,6 +2026,64 @@
         "balls": 1
       },
       "locale": {
+        "en-US": {
+          "title": "Left or Right!",
+          "setup": "2 players, 2 paddles, 1 ball. Left and right are from the catcher’s own body perspective.",
+          "steps": [
+            "Before each counted challenge toss, the caller says LEFT or RIGHT.",
+            "The catcher positions the paddle on that side, keeping its blue front toward the incoming ball.",
+            "The caller makes a straight, gentle toss toward the paddle target on the called side, never at the person’s body.",
+            "A correct catch counts only when the ball sticks to the blue front on the called side.",
+            "The catcher removes the ball with the free hand and makes a neutral reset pass back to the caller. Reset passes do not count and need no Left or Right call.",
+            "The same caller makes 5 counted challenge tosses, then roles switch. Only the caller’s challenge tosses count toward those 5."
+          ],
+          "goal": "Make 8 correct side catches.",
+          "safety": "Aim at the blue paddle face on the called side, not at the person. Keep tosses straight and gentle."
+        },
+        "tr": {
+          "title": "Sol mu Sağ mı?",
+          "setup": "2 oyuncu, 2 paddle, 1 top. Sol ve sağ, yakalayanın kendi vücuduna göre belirlenir.",
+          "steps": [
+            "Her sayılan görev atışından önce çağıran kişi SOL veya SAĞ der.",
+            "Yakalayan paddle’ı o tarafta konumlandırır; mavi ön yüz gelen topa dönük kalır.",
+            "Çağıran kişi topu söylenen taraftaki paddle hedefine düz ve yumuşak biçimde atar; kişinin gövdesini hedeflemez.",
+            "Top yalnız söylenen taraftaki mavi ön yüze yapışırsa doğru yakalama sayılır.",
+            "Yakalayan topu boş elle ayırır ve çağıran kişiye normal bir geri pas verir. Geri paslar sayılmaz; SOL veya SAĞ çağrısı gerektirmez.",
+            "Aynı kişi 5 sayılan görev atışı yapar, sonra roller değişir. Bu 5’e yalnız çağıran kişinin görev atışları dahildir."
+          ],
+          "goal": "Doğru tarafta 8 yakalama yapın.",
+          "safety": "Kişiyi değil söylenen taraftaki mavi paddle yüzünü hedefleyin. Düz ve yumuşak atın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:241",
+          "tr": "tr/i18n.js:11 missionTR[\"30\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "589ebc79ad5a4722f4e98f2f89769470690990f2f8f7fb02635b44b200ae5e8a",
+        "authority": "Explicit user m30 canonical decision in response to H-M30, 2026-09-23",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m30",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      },
+      "sourceCandidateLocale": {
         "en-US": {
           "title": "Left or Right!",
           "steps": [
@@ -1922,40 +2105,31 @@
           "safety": "Atışlar düz ve yumuşak olsun — bulmaca sadece yön."
         }
       },
-      "provenance": {
-        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
-        "sourceRefs": {
-          "en": "data.js:241",
-          "tr": "tr/i18n.js:11 missionTR[\"30\"] (tek uzun satır)"
-        },
-        "legacyRecordSHA256": "589ebc79ad5a4722f4e98f2f89769470690990f2f8f7fb02635b44b200ae5e8a",
-        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
-        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
-      },
-      "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
-        "locales": "EN_TR_PAIRED_REVIEW",
-        "criticalArt": "NOT_PRODUCED",
-        "narration": "OPTIONAL_UNRECORDED",
-        "physicalValidation": "OPEN",
-        "runtime": "NOT_PUBLISHED"
-      },
-      "decisionGate": null,
-      "briefRef": "briefs.json#m30",
-      "legacyAssets": "reference paths only; no automatic reuse/approval",
-      "runtimeAudio": {
-        "mode": "optional-explicit-approved-prerecorded-only",
-        "automaticCaller": false,
-        "automaticTimer": false,
-        "automaticResumeNarration": false,
-        "successFromAudio": false
+      "mechanicsContract": {
+        "sideReference": "catcher-own-body",
+        "blueFaceTowardIncoming": true,
+        "target": "paddle-on-called-side",
+        "bodyTarget": false,
+        "callerCountedTosses": 5,
+        "returnPassCounts": false,
+        "returnPassNeedsCall": false,
+        "correctCatch": "sticky-blue-front-on-called-side",
+        "goalCorrectCatches": 8,
+        "steps": [
+          "call_side",
+          "position_paddle_with_blue_front_toward_incoming",
+          "straight_gentle_toss_to_paddle",
+          "correct_side_sticky_catch",
+          "free_hand_detach",
+          "neutral_uncounted_reset_pass"
+        ]
       }
     },
     {
       "id": "m31",
       "mechanicsVersion": "m4-20260923-m31-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -1996,7 +2170,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -2018,7 +2192,7 @@
       "id": "m32",
       "mechanicsVersion": "m4-20260923-m32-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -2059,7 +2233,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -2081,7 +2255,7 @@
       "id": "m33",
       "mechanicsVersion": "m4-20260923-m33-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -2122,7 +2296,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -2144,7 +2318,7 @@
       "id": "m34",
       "mechanicsVersion": "m4-20260923-m34-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -2185,7 +2359,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -2207,7 +2381,7 @@
       "id": "m35",
       "mechanicsVersion": "m4-20260923-m35-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -2248,7 +2422,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",
@@ -2270,7 +2444,7 @@
       "id": "m36",
       "mechanicsVersion": "m4-20260923-m36-v1",
       "localeContentVersion": "m4-review-20260923-v1",
-      "status": "source-reconciled-copy-candidate",
+      "status": "canonical-source-reconciled",
       "releaseEligible": false,
       "globalRulesRef": "human-m4-physical-v1",
       "players": "2",
@@ -2311,7 +2485,7 @@
         "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
       },
       "readiness": {
-        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
         "locales": "EN_TR_PAIRED_REVIEW",
         "criticalArt": "NOT_PRODUCED",
         "narration": "OPTIONAL_UNRECORDED",

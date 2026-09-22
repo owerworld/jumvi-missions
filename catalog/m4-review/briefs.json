@@ -5,17 +5,24 @@
     {
       "id": "m01",
       "mechanicsVersion": "m4-20260923-m01-v1",
-      "recordSHA256": "14255d2b12bfcf641ca1180757961332c691522039f546e23325cc3ce7e7f05c",
+      "recordSHA256": "9f2261df74ba607dbdf107fc96f7cfa9d792f84d547e2625f342fa2728d2abd2",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Two players with two paddles, one ball, short spacing as source text; no precise metric claim.",
+          "Gentle quick exchange: free-hand release then blue-front sticky catch, no hard racket strike.",
+          "Free-hand detach/reset before return; 45-second goal is text only, no phone timer artwork."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Stand 2 big-kid steps apart",
+          "Throw fast — but soft!",
+          "Catch and reset — go again!"
+        ],
+        "canonicalConditions": "Throw under chin level — never aim at faces.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -37,7 +44,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m01-v1",
-        "recordSHA256": "14255d2b12bfcf641ca1180757961332c691522039f546e23325cc3ce7e7f05c",
+        "recordSHA256": "9f2261df74ba607dbdf107fc96f7cfa9d792f84d547e2625f342fa2728d2abd2",
         "locales": [
           "en-US",
           "tr"
@@ -56,13 +63,20 @@
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Show mission-specific setup and free-hand toss.",
           "Ball approaches and sticks to blue front.",
           "Free hand detaches and prepares next toss."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help.",
+        "canonicalActionSource": [
+          "A person calls Green or Red. With 3 players, the third player can call; with 2, take turns being the caller.",
+          "Green: toss and catch. Red: freeze—do not toss or move.",
+          "The phone does not generate calls, a timer, or automatic sounds."
+        ],
+        "canonicalConditions": "Freeze means freeze — no sneaky moves!",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -104,13 +118,20 @@
       "movementEvidence": "A1 rear strap + A2 free arm separate from receiving paddle; no actual tap/catch sequence observed.",
       "jumviContradictionCheck": "Keep paddle strapped; free-hand light tap is human-approved, not a competitor rule. No handle, rebound or tapping with paddle hand.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Gentle incoming toss; receiver’s free hand makes one light tap on own paddle.",
           "Free hand clears the catch face; incoming orange/blue ball meets blue front.",
           "Ball retained; free hand detaches for next toss."
         ],
-        "sequenceAssessment": "3 frames: tap/contact/reset. Do not superpose tap and contact or imply body spin."
+        "sequenceAssessment": "3 frames: tap/contact/reset. Do not superpose tap and contact or imply body spin.",
+        "canonicalActionSource": [
+          "Your partner makes a gentle toss. Keep your paddle strapped to one hand.",
+          "Lightly tap your own paddle once with your free hand.",
+          "Catch the ball on the blue front. Switch roles every 10 throws."
+        ],
+        "canonicalConditions": "Only your free hand makes the light tap. There is no handle.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -146,20 +167,35 @@
     },
     {
       "id": "m04",
-      "mechanicsVersion": null,
-      "recordSHA256": "137fcc77b2a9d75a22edd070e0d81e141a11ad70c3c81bc030fed86fea97d952",
+      "mechanicsVersion": "m4-20260923-m04-v2",
+      "recordSHA256": "d13134ad5f622ed44bdbc0f5fd0617fca7faaf89bd5c97dfaed4ad71f95c7d68",
       "movementEvidence": "A1/A3 strap on back; no continuous two-hand transfer reference validated.",
-      "jumviContradictionCheck": "A strapped paddle cannot be depicted as an instant racket hand-off. Ball ownership must remain possible.",
+      "jumviContradictionCheck": "Closed by explicit human final-mechanics decision. Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
       "poseMechanicsBrief": {
-        "status": "HOLD_HUMAN_DECISION",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Only nonsequential setup/blue-front contact is known.",
-          "HOLD transfer frames until H-M04."
+          "Current hand A in rear strap; ball contacts blue front.",
+          "Hand B removes ball; exactly one ball, now in B.",
+          "Ball transfers B → A while A is still the current paddle hand.",
+          "A exits strap with ball retained; no airborne paddle or attached ball.",
+          "Paddle secured on B; ball still controlled by A, now the free hand.",
+          "A makes gentle toss; next catch uses paddle hand B."
         ],
-        "sequenceAssessment": "HOLD: final sequence length/hand change cannot be settled before human decision."
+        "sequenceAssessment": "Six visual beats across two 3-step teaching sequences; detach/transfer/unstrap/restrap cannot be collapsed into one instantaneous swap. Seven canonical action steps remain fully available as text. No new app screen or component mandated.",
+        "canonicalActionSource": [
+          "Catch the ball on the blue front with your current paddle hand.",
+          "Take the ball off the paddle with your free hand.",
+          "Transfer the ball to your current paddle hand.",
+          "Safely slip that hand out of the strap.",
+          "Move the paddle to your other hand and secure that hand in the strap.",
+          "The hand holding the ball is now free of the paddle. Use it for a gentle toss.",
+          "Make your next catch with the new paddle hand. Repeat this hand-change sequence after every clean catch."
+        ],
+        "canonicalConditions": "Change hands calmly and securely. Do not switch the paddle in the air or rush. Never change the strap hand while the ball is stuck to the paddle. There is no handle.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
-        "status": "NOT_PRODUCED_THIS_PASS",
+        "status": "TWO_CANDIDATES_REJECTED",
         "legacyFallback": false,
         "requiredChecks": [
           "blue/lime front and red/black rear",
@@ -172,18 +208,20 @@
           "no weight-bearing on strapped hand",
           "critical meaning survives mobile crop",
           "mission/locale/version match",
-          "no result image claiming observed performance"
-        ]
+          "no result image claiming observed performance",
+          "Approved hand transfer explicitly overrides generic same-hand-across-frames assumption; trace A/B and ball ownership at every beat. Exact child grip/fit is unverified; do not invent buckle release mechanics or a third hand."
+        ],
+        "rejection": "Panel3 extra hand/fingers and unverified intermediate grip; see outputs/M4_MECHANICS_ART/m04-prompts-and-review.json. No runtime fallback."
       },
       "narration": {
-        "status": "HOLD_MECHANICS",
-        "mechanicsVersion": null,
-        "recordSHA256": "137fcc77b2a9d75a22edd070e0d81e141a11ad70c3c81bc030fed86fea97d952",
+        "status": "CANONICAL_SCRIPT_READY_AUDIO_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m04-v2",
+        "recordSHA256": "d13134ad5f622ed44bdbc0f5fd0617fca7faaf89bd5c97dfaed4ad71f95c7d68",
         "locales": [
           "en-US",
           "tr"
         ],
-        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "scriptSource": "missions.json locale setup/steps/goal/safety exactly; preserve every action/role/count exclusion. Recording acceptance is separate.",
         "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
         "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
         "runtimeAsset": null
@@ -193,17 +231,24 @@
     {
       "id": "m05",
       "mechanicsVersion": "m4-20260923-m05-v1",
-      "recordSHA256": "263361c5366f022a77ac24bb9db71b80bd6708283a537c9ab2b14d7c543750f5",
+      "recordSHA256": "5f48cc706e3d6c3b58d83cc0980da202833f60e966c5ea8beec5a111a51c7352",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Blue-front sticky catch with ball retained.",
+          "Whole body, feet and paddle remain still for the source two-second freeze; no premature detach arrow.",
+          "Only after freeze: free-hand detach and gentle return toss."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Catch the ball — then FREEZE for 2 seconds",
+          "No moving — paddle, body, feet — all stone",
+          "Then throw it back!"
+        ],
+        "canonicalConditions": "Truly no moving during the freeze.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -225,7 +270,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m05-v1",
-        "recordSHA256": "263361c5366f022a77ac24bb9db71b80bd6708283a537c9ab2b14d7c543750f5",
+        "recordSHA256": "5f48cc706e3d6c3b58d83cc0980da202833f60e966c5ea8beec5a111a51c7352",
         "locales": [
           "en-US",
           "tr"
@@ -240,17 +285,24 @@
     {
       "id": "m06",
       "mechanicsVersion": "m4-20260923-m06-v1",
-      "recordSHA256": "048088a72854b4e7d255e7888e4da0420b1947ae83c6d9873f4e6cfb16e03ff5",
+      "recordSHA256": "e646f19705e9e0e646e261e284fd81050b7e532af015932a5a31b29306c33fd3",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Human thrower speaks the count while making a free-hand toss.",
+          "Receiver blue-front catch, then repeats count; phone/Leo not caller.",
+          "Free-hand detach and return; drop/restart rule in text, no observed-success graphic."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Throw and shout the number out loud",
+          "Catcher repeats the number, then throws back",
+          "Drop it? Restart from 1!"
+        ],
+        "canonicalConditions": "Stay relaxed if you miss — just restart.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -272,7 +324,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m06-v1",
-        "recordSHA256": "048088a72854b4e7d255e7888e4da0420b1947ae83c6d9873f4e6cfb16e03ff5",
+        "recordSHA256": "e646f19705e9e0e646e261e284fd81050b7e532af015932a5a31b29306c33fd3",
         "locales": [
           "en-US",
           "tr"
@@ -287,17 +339,24 @@
     {
       "id": "m07",
       "mechanicsVersion": "m4-20260923-m07-v1",
-      "recordSHA256": "c30cd097fd7a6cdc9282dfceb3a5e60e28ba62915b8ea1908150f73e08881eb2",
+      "recordSHA256": "4f21528d296fe05b4d3823d7619156507fe1c24febc2aa234172465f4204f773",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Two players and high-arc flight context; apex is not a head target.",
+          "Descending ball meets blue receiving face; never draw path through either head.",
+          "After source five clean arcs, distance-level change is explanatory context; no guessed safe metric."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Stand 5 big steps apart.",
+          "Make gentle high arcs toward your partner’s paddle, not their head.",
+          "Flat throws do not count. After 5 clean arcs, step back."
+        ],
+        "canonicalConditions": "Soft height, not power — let gravity do the work.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -319,7 +378,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m07-v1",
-        "recordSHA256": "c30cd097fd7a6cdc9282dfceb3a5e60e28ba62915b8ea1908150f73e08881eb2",
+        "recordSHA256": "4f21528d296fe05b4d3823d7619156507fe1c24febc2aa234172465f4204f773",
         "locales": [
           "en-US",
           "tr"
@@ -334,17 +393,24 @@
     {
       "id": "m08",
       "mechanicsVersion": "m4-20260923-m08-v1",
-      "recordSHA256": "326eb14251afcc8fd18bf55228fea917d246e06611f66087fe719a07625d3800",
+      "recordSHA256": "5dd585673ebc48cc6a1742531489d1a880fad53878fd75545e72811aad59ab70",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Free hand launches gentle arc.",
+          "Receiver holds blue front upward, flat and still; descending contact in face plane.",
+          "Retained ball then free-hand detach; no swing or rebound."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Send a soft, high arc.",
+          "Hold the paddle flat and still with its blue front facing upward.",
+          "Let the ball stick to the blue front. Do not swing at it."
+        ],
+        "canonicalConditions": "Don't swat — let the velcro do the work.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -366,7 +432,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m08-v1",
-        "recordSHA256": "326eb14251afcc8fd18bf55228fea917d246e06611f66087fe719a07625d3800",
+        "recordSHA256": "5dd585673ebc48cc6a1742531489d1a880fad53878fd75545e72811aad59ab70",
         "locales": [
           "en-US",
           "tr"
@@ -381,17 +447,24 @@
     {
       "id": "m09",
       "mechanicsVersion": "m4-20260923-m09-v1",
-      "recordSHA256": "c30908d6838ea9687efeb1e711f890a4d13ea99562aec4993188965a241e48a0",
+      "recordSHA256": "f7dfab6bb828306800cdd23179aced5d08bc141dd48e1726923e9645540d7e10",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Close initial spacing with room between players, no invented body proportions.",
+          "Three blue-front catches at current level, each with free-hand detach/toss.",
+          "Half-step backward progression from source, both feet/clear ground legible; no app level meter."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Start 1 big step apart, get 3 clean catches",
+          "Step back half a step — repeat",
+          "Climb the ladder up to 3 big steps apart!"
+        ],
+        "canonicalConditions": "Stop if throws start going wild.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -413,7 +486,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m09-v1",
-        "recordSHA256": "c30908d6838ea9687efeb1e711f890a4d13ea99562aec4993188965a241e48a0",
+        "recordSHA256": "f7dfab6bb828306800cdd23179aced5d08bc141dd48e1726923e9645540d7e10",
         "locales": [
           "en-US",
           "tr"
@@ -428,17 +501,24 @@
     {
       "id": "m10",
       "mechanicsVersion": "m4-20260923-m10-v1",
-      "recordSHA256": "beaa7e763e64988f921a85e973cfafaa60374cd010fb7b28fd679731c4e186d8",
+      "recordSHA256": "5efc127a1a54dab2507fd83b1f8587bff991f6de21f280c2b41469a317c90792",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Thrower takes source forward step with free-hand release; paddle remains strapped to other hand.",
+          "Partner catches on blue front; no striking posture or added force.",
+          "Source return-to-start step and turn exchange; reset text carries exact source order."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Start 6 big-kid steps apart",
+          "Step FORWARD as you throw — like a real athlete!",
+          "Catch, then step back to start. Partner's turn!"
+        ],
+        "canonicalConditions": "Throw soft — the step adds power on its own.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -460,7 +540,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m10-v1",
-        "recordSHA256": "beaa7e763e64988f921a85e973cfafaa60374cd010fb7b28fd679731c4e186d8",
+        "recordSHA256": "5efc127a1a54dab2507fd83b1f8587bff991f6de21f280c2b41469a317c90792",
         "locales": [
           "en-US",
           "tr"
@@ -475,17 +555,24 @@
     {
       "id": "m11",
       "mechanicsVersion": "m4-20260923-m11-v1",
-      "recordSHA256": "b3908f68e4a5c4b75d0a704b26e34995980d781f76733b54b836196cd5135e8c",
+      "recordSHA256": "612ebc3510a2d7ca1301cbe673759671f038b64549422409f5eee1978c69e810",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Gentle controlled arc from free hand; no maximum-height challenge.",
+          "Receiver waits with blue face oriented toward descending approach.",
+          "Contact then free-hand detach; no swing; no invented flight time."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Make a gentle, controlled high arc toward the paddle.",
+          "The catcher waits for the ball without rushing.",
+          "Let the ball descend onto the paddle’s blue front."
+        ],
+        "canonicalConditions": "Slow and patient wins — no swinging.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -507,7 +594,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m11-v1",
-        "recordSHA256": "b3908f68e4a5c4b75d0a704b26e34995980d781f76733b54b836196cd5135e8c",
+        "recordSHA256": "612ebc3510a2d7ca1301cbe673759671f038b64549422409f5eee1978c69e810",
         "locales": [
           "en-US",
           "tr"
@@ -526,13 +613,20 @@
       "movementEvidence": "A2 receiver presents catching face outward; A3 hand behind catcher.",
       "jumviContradictionCheck": "Chest height describes paddle height. Body/chest target or head-level contact is prohibited.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Wide shot shows receiver holding blue face at chest height, separated from torso.",
           "Close contact shows ball meeting blue face; no arrow continues into body.",
           "Free hand removes ball before returning it."
         ],
-        "sequenceAssessment": "2–3 frames; contact inset can carry target distinction, reset included in Help."
+        "sequenceAssessment": "2–3 frames; contact inset can carry target distinction, reset included in Help.",
+        "canonicalActionSource": [
+          "Stand 6 big steps apart.",
+          "The catcher holds the paddle at chest height, with its blue front facing the incoming ball.",
+          "Toss toward that blue front—not the person’s chest. Too high or low is a miss."
+        ],
+        "canonicalConditions": "Aim at the paddle’s blue front, never the person’s body.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -573,13 +667,20 @@
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Show mission-specific setup and free-hand toss.",
           "Ball approaches and sticks to blue front.",
           "Free hand detaches and prepares next toss."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help.",
+        "canonicalActionSource": [
+          "Players stay silent during active physical play.",
+          "Show the count with your fingers after each catch. If someone speaks, restart from 1.",
+          "You may listen to an explanation before play or when you explicitly request Help. Returning to play does not start narration."
+        ],
+        "canonicalConditions": "Take a breath before each throw.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -617,17 +718,24 @@
     {
       "id": "m14",
       "mechanicsVersion": "m4-20260923-m14-v1",
-      "recordSHA256": "6afe42590d09dd0e5af513c4c1f67ba82965ec9e88bcd5e060337337c7384adf",
+      "recordSHA256": "804e6a88cf65beae3e9aecd08c5d585cabcc51594e43501e28a21a6c2f56fdec",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Planted feet, human-paced five slow tosses with sticky-catch/reset cycles.",
+          "Same positions for five medium-paced gentle tosses.",
+          "Repeat source cycle to20; no musical/metronome timing or app counter."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "5 super-slow throws",
+          "5 medium-speed throws",
+          "Repeat one cycle. Feet stay PLANTED!"
+        ],
+        "canonicalConditions": "Feet planted — only arms move.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -649,7 +757,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m14-v1",
-        "recordSHA256": "6afe42590d09dd0e5af513c4c1f67ba82965ec9e88bcd5e060337337c7384adf",
+        "recordSHA256": "804e6a88cf65beae3e9aecd08c5d585cabcc51594e43501e28a21a6c2f56fdec",
         "locales": [
           "en-US",
           "tr"
@@ -664,17 +772,24 @@
     {
       "id": "m15",
       "mechanicsVersion": "m4-20260923-m15-v1",
-      "recordSHA256": "b337d9cf4f4f6405b9382326646ed3e5170a66dbd83cd4b8c5b70691ee4ce9ba",
+      "recordSHA256": "e301e979992bf232350e4333ff5d4bf65e0b7c88dc44d85483ee1b55d3775d84",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Show existing human readiness call before partner toss.",
+          "Blue-front catch, free-hand detach; preserve source call sequence in captions.",
+          "Return toss with no unexpected spacing change; no new phone coach or camera detection."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Before catching, shout: I SEE IT!",
+          "Partner throws after they hear you",
+          "Catch, say I SEE IT again, throw back"
+        ],
+        "canonicalConditions": "Keep the same distance — no surprises.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -696,7 +811,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m15-v1",
-        "recordSHA256": "b337d9cf4f4f6405b9382326646ed3e5170a66dbd83cd4b8c5b70691ee4ce9ba",
+        "recordSHA256": "e301e979992bf232350e4333ff5d4bf65e0b7c88dc44d85483ee1b55d3775d84",
         "locales": [
           "en-US",
           "tr"
@@ -711,17 +826,24 @@
     {
       "id": "m16",
       "mechanicsVersion": "m4-20260923-m16-v1",
-      "recordSHA256": "fce9d7261f5f3756e0f48824108257f1cf50b5d55d4290b3f1bcab2f982e0e48",
+      "recordSHA256": "463e28fbd18f04691c900f11aa6001ed515e3c99a702e77abba379b193fb526a",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Human thrower counts1–2–3; free-hand release on3.",
+          "Receiver catches on blue front and removes ball with free hand.",
+          "Human receiver counts before return; no auto countdown/sound from app."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Thrower counts 1 — 2 — 3 out loud",
+          "Ball flies on 3, exactly!",
+          "Catcher counts 1 — 2 — 3 back, then throws"
+        ],
+        "canonicalConditions": "Calm count, steady rhythm.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -743,7 +865,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m16-v1",
-        "recordSHA256": "fce9d7261f5f3756e0f48824108257f1cf50b5d55d4290b3f1bcab2f982e0e48",
+        "recordSHA256": "463e28fbd18f04691c900f11aa6001ed515e3c99a702e77abba379b193fb526a",
         "locales": [
           "en-US",
           "tr"
@@ -757,17 +879,30 @@
     },
     {
       "id": "m17",
-      "mechanicsVersion": null,
-      "recordSHA256": "a5822450b429aa29d81335349f1949aba18378cdbf603f6410fbeef1b133a719",
+      "mechanicsVersion": "m4-20260923-m17-v2",
+      "recordSHA256": "4c42bcd233ed62b57f74bcdb40158e9501d67487a0714cee9d73a719443768ae",
       "movementEvidence": "A1 back strap/A2 outward face demonstrate possible plane orientation, not a mirror game.",
-      "jumviContradictionCheck": "Exact world-plane mirroring could point one paddle away from incoming ball. Both receiving faces must remain usable.",
+      "jumviContradictionCheck": "Closed by explicit human final-mechanics decision. Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
       "poseMechanicsBrief": {
-        "status": "HOLD_HUMAN_DECISION",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Comfortable high/low/tilted placement only; no extreme wrist fold.",
-          "HOLD leader, mirrored frame and return-pass storyboard for H-M17."
+          "Show comfortable high / low / gentle-tilt category relative to each player’s own torso.",
+          "Leader presents pose; follower adopts body-relative matching pose, blue receiving face usable.",
+          "Leader free-hand toss → follower blue-front sticky contact: counted attempt.",
+          "Follower free-hand detach → ordinary return to leader: not counted.",
+          "After 5 counted throws, swap leader/follower; do not count the return path as a sixth."
         ],
-        "sequenceAssessment": "HOLD role sequence; a single mirrored pose cannot settle turn mechanics."
+        "sequenceAssessment": "Counted action and return are separate labeled phases; role switch shown separately. A single mirror still does not teach count exclusion.",
+        "canonicalActionSource": [
+          "The leader shows a comfortable paddle pose.",
+          "The catcher takes the same pose relative to their own body.",
+          "The leader makes a gentle toss with their free hand.",
+          "The catcher makes a sticky catch on the blue front in the mirrored pose.",
+          "The catcher removes the ball with their free hand and returns it to the leader with a normal reset pass.",
+          "Keep the same leader for 5 counted throws. Reset passes do not count toward those 5. Then swap leader and follower roles."
+        ],
+        "canonicalConditions": "Keep poses within a comfortable range: high, low, or gentle tilt. Do not overstretch or tilt sharply. The blue front receives the ball.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -787,34 +922,42 @@
         ]
       },
       "narration": {
-        "status": "HOLD_MECHANICS",
-        "mechanicsVersion": null,
-        "recordSHA256": "a5822450b429aa29d81335349f1949aba18378cdbf603f6410fbeef1b133a719",
+        "status": "CANONICAL_SCRIPT_READY_AUDIO_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m17-v2",
+        "recordSHA256": "4c42bcd233ed62b57f74bcdb40158e9501d67487a0714cee9d73a719443768ae",
         "locales": [
           "en-US",
           "tr"
         ],
-        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "scriptSource": "missions.json locale setup/steps/goal/safety exactly; preserve every action/role/count exclusion. Recording acceptance is separate.",
         "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
         "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
-        "runtimeAsset": null
+        "runtimeAsset": null,
+        "special": "State body-relative pose, same leader for five counted throws, reset pass excluded."
       },
       "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
     },
     {
       "id": "m18",
       "mechanicsVersion": "m4-20260923-m18-v1",
-      "recordSHA256": "40cce04fc107f49727523a18db171416d488510bf0c63bef450356a0ac88f93e",
+      "recordSHA256": "961d0097a6c0ca2f9ad675154b339c25ffebe15a645bad1f9ad3586089ba57e5",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Two players with one ball; free-hand toss toward blue face.",
+          "Both humans count clean catch; no app counting sensor.",
+          "Free-hand reset; source drop/restart rule only, no shame/failure celebration."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Count every clean catch out loud TOGETHER",
+          "Drop = restart from 1",
+          "No pressure — just try again!"
+        ],
+        "canonicalConditions": "Stress-free zone — restarting is part of the game.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -836,7 +979,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m18-v1",
-        "recordSHA256": "40cce04fc107f49727523a18db171416d488510bf0c63bef450356a0ac88f93e",
+        "recordSHA256": "961d0097a6c0ca2f9ad675154b339c25ffebe15a645bad1f9ad3586089ba57e5",
         "locales": [
           "en-US",
           "tr"
@@ -851,17 +994,24 @@
     {
       "id": "m19",
       "mechanicsVersion": "m4-20260923-m19-v1",
-      "recordSHA256": "63aed3eac8db552be314158a314948be0ca9b3357aa8cdad3806d9c40b509e01",
+      "recordSHA256": "415aa658fb883f654e5d73298b2a0e1a017da8fafdf9b8ee153e56f034ac891c",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Three/four player circle, one ball, receiving faces toward play.",
+          "Toss choice to another player; show one active path, not concurrent routes.",
+          "Source prohibits repeated same recipient in a row; two-minute physical goal is not automatic app timer."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Stand in a circle, each holding a paddle",
+          "Throw to ANYONE — but never twice in a row to the same person!",
+          "Keep all throws gentle"
+        ],
+        "canonicalConditions": "Stay spaced out — no crowding.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -883,7 +1033,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m19-v1",
-        "recordSHA256": "63aed3eac8db552be314158a314948be0ca9b3357aa8cdad3806d9c40b509e01",
+        "recordSHA256": "415aa658fb883f654e5d73298b2a0e1a017da8fafdf9b8ee153e56f034ac891c",
         "locales": [
           "en-US",
           "tr"
@@ -902,13 +1052,20 @@
       "movementEvidence": "A2/A3 show standing postures, not a relay or sideways movement sequence.",
       "jumviContradictionCheck": "Standing side-shuffle comes from human decision. No ground support on hands/paddles, crab-walk silhouette or second ball.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "4 players / 2 lines / 1 ball; make next recipient legible.",
           "Blue-face catch then free-hand detach/toss to next player.",
           "Previous player side-shuffles upright to line back; floor route distinct from ball path."
         ],
-        "sequenceAssessment": "3-panel overview plus shared catch/reset detail. Do not invent lane dimensions or exact pass topology beyond approved next-player rule."
+        "sequenceAssessment": "3-panel overview plus shared catch/reset detail. Do not invent lane dimensions or exact pass topology beyond approved next-player rule.",
+        "canonicalActionSource": [
+          "4 players form 2 lines and use 1 ball.",
+          "Catch on the blue front, detach with your free hand, then toss to the next player.",
+          "After your catch/pass turn, stay standing and side-shuffle to the back of the line."
+        ],
+        "canonicalConditions": "Side-shuffle while standing. Do not crab-walk on your hands or put weight on a paddle-strapped hand. No running.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -949,13 +1106,20 @@
       "movementEvidence": "A2 shows receiver-facing catcher; no middle-interception reference validated.",
       "jumviContradictionCheck": "3 players/3 paddles/1 ball. Middle Defender only; no Captain Says pose or spoken instruction game.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Outer players face each other with middle position clear; toss below faces.",
           "Middle player’s blue face retains the intercepted ball.",
           "Middle and thrower walk to exchange places; no diving or second ball."
         ],
-        "sequenceAssessment": "3 frames; walking swap uses ground marker, ball path ends at paddle. Receiver is not swapped."
+        "sequenceAssessment": "3 frames; walking swap uses ground marker, ball path ends at paddle. Receiver is not swapped.",
+        "canonicalActionSource": [
+          "3 players use 3 paddles and 1 ball. Two players face each other; the third stands between them.",
+          "The outer players toss to each other below face level.",
+          "If the middle player catches on the paddle, they swap places with the thrower by walking."
+        ],
+        "canonicalConditions": "Keep tosses below face level. Walk when swapping; do not dive.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -992,17 +1156,24 @@
     {
       "id": "m22",
       "mechanicsVersion": "m4-20260923-m22-v1",
-      "recordSHA256": "372886cfe5090e71f22db80674089f8f0fcd9f3f65edb0f7ae41542ead439aec",
+      "recordSHA256": "496a8dfb7e3ebf2bb6201a0d0a90c31ecb8b568229a289fb94f04d5bf2c89832",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Four players form a square, one active ball path.",
+          "Blue-front sticky catch; whole group takes source clockwise step after catch.",
+          "Next toss follows rotation; separate foot arrows from ball arrow; no spinning with airborne ball or invented full-circle count."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "4 players in a square, each with a paddle",
+          "One player throws to anyone",
+          "EVERYONE steps clockwise after each catch — then throw again!"
+        ],
+        "canonicalConditions": "Rotate calm — no bumping!",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1024,7 +1195,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m22-v1",
-        "recordSHA256": "372886cfe5090e71f22db80674089f8f0fcd9f3f65edb0f7ae41542ead439aec",
+        "recordSHA256": "496a8dfb7e3ebf2bb6201a0d0a90c31ecb8b568229a289fb94f04d5bf2c89832",
         "locales": [
           "en-US",
           "tr"
@@ -1043,13 +1214,20 @@
       "movementEvidence": "A2 demonstrates one pair with space between; no four-player pairing-order evidence.",
       "jumviContradictionCheck": "One active pair only. Six pairings is combinatorics from approved four-player rule; never prescribe an unapproved ordering.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "One active pair; remaining two wait away from toss path.",
           "After 6 clean catches, ball is transferred to next pairing.",
           "Show pair coverage as explanatory illustration, not two simultaneous rallies or a new app dashboard."
         ],
-        "sequenceAssessment": "2–3 frames; exact pairing order not newly mandated. Do not render all 6 pairs as concurrent play."
+        "sequenceAssessment": "2–3 frames; exact pairing order not newly mandated. Do not render all 6 pairs as concurrent play.",
+        "canonicalActionSource": [
+          "4 players use 1 ball. Only 1 pair plays at a time.",
+          "After the active pair makes 6 clean catches, the ball goes to the next pairing.",
+          "Complete every pairing of the 4 players once. There are 6 different pairs."
+        ],
+        "canonicalConditions": "Change pairs calmly. There is no second ball or simultaneous rally.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1090,13 +1268,20 @@
       "movementEvidence": "A2 one-pair example; competitor pack quantity does not define simultaneous play.",
       "jumviContradictionCheck": "Two teams alternate one ball after 5 catches; shared40. Four paddles do not mean four concurrent catchers.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Team A active with 1 ball; Team B waiting.",
           "After 5 clean catches, transfer the same ball.",
           "Team B active; Team A waiting."
         ],
-        "sequenceAssessment": "3 frames with explicit active/waiting state; no ALL4 at once or new scoreboard UI."
+        "sequenceAssessment": "3 frames with explicit active/waiting state; no ALL4 at once or new scoreboard UI.",
+        "canonicalActionSource": [
+          "Make 2 teams of 2. Both teams share 1 ball and take turns.",
+          "The active team makes 5 clean catches, then passes the ball to the other team.",
+          "Add both teams’ catches to one shared total."
+        ],
+        "canonicalConditions": "Only one team plays at a time. Four paddles may be used; there are no simultaneous rallies.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1137,13 +1322,20 @@
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "EXISTING_LOCKED_FIXTURE_SPEC",
         "frames": [
           "Show mission-specific setup and free-hand toss.",
           "Ball approaches and sticks to blue front.",
           "Free hand detaches and prepares next toss."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help.",
+        "canonicalActionSource": [
+          "Make short tosses. Both players stay seated.",
+          "The ball sticks to the paddle’s blue front.",
+          "Take the ball off with your free hand. Then gently toss it back."
+        ],
+        "canonicalConditions": "Keep tosses gentle and below face level. Stay 1–3 meters apart, with adult supervision. Clear away breakable objects.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "EXISTING_LOCKED_FIXTURE_ONLY_UNCHANGED",
@@ -1180,17 +1372,24 @@
     {
       "id": "m26",
       "mechanicsVersion": "m4-20260923-m26-v1",
-      "recordSHA256": "e0a2141428754dd27a575d79184541fca1b95a93811b9aed2d68914900366a39",
+      "recordSHA256": "1a56a532d90adb3cd77e0769d0f3b28974b2d8a0c40c94fe55c85c1091da0253",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Two players at source short spacing with breakables cleared; no universal safe-space claim.",
+          "Feet planted, gentle free-hand toss then blue-front catch.",
+          "Detach and return without stepping forward."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Stand just 1 big step apart",
+          "Throw soft — no stepping forward!",
+          "Feet PLANTED the whole time"
+        ],
+        "canonicalConditions": "Watch out for lamps and shelves.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1212,7 +1411,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m26-v1",
-        "recordSHA256": "e0a2141428754dd27a575d79184541fca1b95a93811b9aed2d68914900366a39",
+        "recordSHA256": "1a56a532d90adb3cd77e0769d0f3b28974b2d8a0c40c94fe55c85c1091da0253",
         "locales": [
           "en-US",
           "tr"
@@ -1226,17 +1425,27 @@
     },
     {
       "id": "m27",
-      "mechanicsVersion": null,
-      "recordSHA256": "7beafbb6fbb052c664c3ee7637e3f531739cc01bcbcbd025ead735922c70c0ae",
+      "mechanicsVersion": "m4-20260923-m27-v2",
+      "recordSHA256": "c691c2a4082bec86bbde374745bd7e7dfe0f869d5abeaa313edc79f292de416c",
       "movementEvidence": "A1/A3 occupied paddle hand and free ball hand constrain possible signals; no three-person signal game observed.",
-      "jumviContradictionCheck": "Do not use a two-handed sign while one hand is strapped, teleport ball, or invent the third role.",
+      "jumviContradictionCheck": "Closed by explicit human final-mechanics decision. Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
       "poseMechanicsBrief": {
-        "status": "HOLD_HUMAN_DECISION",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Two-player signal intent is known.",
-          "HOLD three-player route and signal/reset frame order for H-M27."
+          "Choose simple paddle signal before play; 2-player alternating / 3-player A→B→C→A placement.",
+          "Sticky blue-front catch, then free-hand detach; ball stays in that free hand.",
+          "Strapped paddle hand briefly raises or gently tilts; next receiver sees signal.",
+          "Free hand tosses to that receiver; one ball; no hand/finger signal or signal-back demand."
         ],
-        "sequenceAssessment": "HOLD final sequence; no new circle/caller or two-player-only replacement."
+        "sequenceAssessment": "3-step core sequence: catch+detach / paddle signal / free-hand toss, with separate 2-/3-player route overview. No extra ball or simultaneous throws.",
+        "canonicalActionSource": [
+          "Make a sticky catch on the paddle’s blue front.",
+          "Remove the ball with your free hand and hold it in that hand.",
+          "Use your strapped paddle hand to show the chosen signal to the next receiver.",
+          "Once the signal has been seen, gently toss to the next player with your free hand. No signal means no throw."
+        ],
+        "canonicalConditions": "Keep the paddle signal simple and easy to see. No complicated hand or finger gesture is needed. There is only 1 ball.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1256,34 +1465,42 @@
         ]
       },
       "narration": {
-        "status": "HOLD_MECHANICS",
-        "mechanicsVersion": null,
-        "recordSHA256": "7beafbb6fbb052c664c3ee7637e3f531739cc01bcbcbd025ead735922c70c0ae",
+        "status": "CANONICAL_SCRIPT_READY_AUDIO_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m27-v2",
+        "recordSHA256": "c691c2a4082bec86bbde374745bd7e7dfe0f869d5abeaa313edc79f292de416c",
         "locales": [
           "en-US",
           "tr"
         ],
-        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "scriptSource": "missions.json locale setup/steps/goal/safety exactly; preserve every action/role/count exclusion. Recording acceptance is separate.",
         "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
         "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
-        "runtimeAsset": null
+        "runtimeAsset": null,
+        "special": "Say paddle signal, not hand signal; three-player next receiver, not signal back."
       },
       "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
     },
     {
       "id": "m28",
       "mechanicsVersion": "m4-20260923-m28-v1",
-      "recordSHA256": "12a5afad70b96f6fd3dec99aabdb30184d2f82841cb23f9f5097a63a5880015e",
+      "recordSHA256": "51d7946f74ecff9dfcefdb89b2df84aca401df058e22a1347d5d43941115556b",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Human thrower chooses left/right/center privately; no app randomizer.",
+          "Receiver predicts and positions paddle before toss during source pause.",
+          "Free-hand gentle toss and blue-front catch/reset; prediction target shown only per source, no invented body-target or skill claim."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Thrower secretly picks: LEFT, RIGHT, or CENTER",
+          "3-second pause — no hints!",
+          "Catcher predicts and positions paddle BEFORE the throw!"
+        ],
+        "canonicalConditions": "Soft, predictable distance — surprise only the direction.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1305,7 +1522,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m28-v1",
-        "recordSHA256": "12a5afad70b96f6fd3dec99aabdb30184d2f82841cb23f9f5097a63a5880015e",
+        "recordSHA256": "51d7946f74ecff9dfcefdb89b2df84aca401df058e22a1347d5d43941115556b",
         "locales": [
           "en-US",
           "tr"
@@ -1320,17 +1537,24 @@
     {
       "id": "m29",
       "mechanicsVersion": "m4-20260923-m29-v1",
-      "recordSHA256": "a9aae9eb762aaf6d2c24fd5a5ccc6643c24a5b3126966a2ae724f8f55ae82f7c",
+      "recordSHA256": "6068a39ba97764d24fa2f37fb02cd2ff7afa6e66664f17ca10b0b4815500a4f9",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Both players stand with planted feet and one ball.",
+          "Gentle free-hand toss and reachable blue-front catch; no chasing.",
+          "Free-hand detach and return; do not use legacy safest-in-any-space claim."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Both players: feet stuck to the floor",
+          "Soft tosses only",
+          "Catch and return — no chasing!"
+        ],
+        "canonicalConditions": "If throws get wild, slow down together.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1352,7 +1576,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m29-v1",
-        "recordSHA256": "a9aae9eb762aaf6d2c24fd5a5ccc6643c24a5b3126966a2ae724f8f55ae82f7c",
+        "recordSHA256": "6068a39ba97764d24fa2f37fb02cd2ff7afa6e66664f17ca10b0b4815500a4f9",
         "locales": [
           "en-US",
           "tr"
@@ -1366,18 +1590,29 @@
     },
     {
       "id": "m30",
-      "mechanicsVersion": "m4-20260923-m30-v1",
-      "recordSHA256": "65dd263483036ab5d39bdbf1ed5ce9c93a5ecc20421f925a176d4f96060b490a",
+      "mechanicsVersion": "m4-20260923-m30-v2",
+      "recordSHA256": "651ccbb3c4322ced5a47c72ae24c878c201c9df6530381ca39ca6dbac092411b",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
-      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "jumviContradictionCheck": "H-M30 closed by explicit user decision. Catcher-body left/right; blue face toward incoming; straight gentle path ends at called-side paddle; five caller challenge tosses exclude neutral returns.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Establish catcher-body LEFT/RIGHT, not viewer/caller sides; caller announces side.",
+          "Catcher positions paddle on called side with blue front toward incoming ball.",
+          "Straight gentle toss ends at blue-front sticky contact on called side, never body.",
+          "Free-hand detach, neutral return pass with no call and no count; same caller for five challenge tosses, then swap."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Separate called challenge and neutral return into labeled phases. Keep catcher orientation consistent across all frames; no mirrored camera jump that changes left/right.",
+        "canonicalActionSource": [
+          "Before each counted challenge toss, the caller says LEFT or RIGHT.",
+          "The catcher positions the paddle on that side, keeping its blue front toward the incoming ball.",
+          "The caller makes a straight, gentle toss toward the paddle target on the called side, never at the person’s body.",
+          "A correct catch counts only when the ball sticks to the blue front on the called side.",
+          "The catcher removes the ball with the free hand and makes a neutral reset pass back to the caller. Reset passes do not count and need no Left or Right call.",
+          "The same caller makes 5 counted challenge tosses, then roles switch. Only the caller’s challenge tosses count toward those 5."
+        ],
+        "canonicalConditions": "Aim at the blue paddle face on the called side, not at the person. Keep tosses straight and gentle.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1397,9 +1632,9 @@
         ]
       },
       "narration": {
-        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
-        "mechanicsVersion": "m4-20260923-m30-v1",
-        "recordSHA256": "65dd263483036ab5d39bdbf1ed5ce9c93a5ecc20421f925a176d4f96060b490a",
+        "status": "CANONICAL_SCRIPT_READY_AUDIO_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m30-v2",
+        "recordSHA256": "651ccbb3c4322ced5a47c72ae24c878c201c9df6530381ca39ca6dbac092411b",
         "locales": [
           "en-US",
           "tr"
@@ -1407,24 +1642,32 @@
         "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
         "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
         "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
-        "runtimeAsset": null
+        "runtimeAsset": null,
+        "special": "State catcher-body sides, called-side paddle target, neutral return without call/count, five caller tosses, goal eight correct catches."
       },
       "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
     },
     {
       "id": "m31",
       "mechanicsVersion": "m4-20260923-m31-v1",
-      "recordSHA256": "56e3ff921acb9c2aeedc3e70edb8466fc92c2a586c8a11e8c130828622587a84",
+      "recordSHA256": "d2bff48fd5ad263945a61cb05a1162b3d736e66956808eeff739ce09a2381a71",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Controlled high arc toward a paddle; no as-high-as-possible pose.",
+          "Receiver tracks descent, blue front meets approach; apex separated from head target.",
+          "Sticky retention then free-hand reset; no claimed safe height."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Stand 6 big steps apart.",
+          "Make a controlled high arc; do not aim at a face or head.",
+          "Watch the ball descend and catch it on the paddle’s blue front."
+        ],
+        "canonicalConditions": "The high arc is a flight path. The target is the paddle, not the person.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1446,7 +1689,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m31-v1",
-        "recordSHA256": "56e3ff921acb9c2aeedc3e70edb8466fc92c2a586c8a11e8c130828622587a84",
+        "recordSHA256": "d2bff48fd5ad263945a61cb05a1162b3d736e66956808eeff739ce09a2381a71",
         "locales": [
           "en-US",
           "tr"
@@ -1461,17 +1704,24 @@
     {
       "id": "m32",
       "mechanicsVersion": "m4-20260923-m32-v1",
-      "recordSHA256": "110630167895436fa113ed17c3d948dd60fffca27ec3a6d3fd08f6504ec66964",
+      "recordSHA256": "e83080ed5e02cd42e388715403abad12f4b0ad6d1c4388d708c41b008432e3b7",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Each player has source-selected flat home base, no new physical marker requirement.",
+          "Feet remain at base while free hand tosses and blue face receives.",
+          "Free-hand reset; leaving base is source miss rule, not physical inability or app sensor."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Each player picks a home base (shadow, sidewalk square, grass patch)",
+          "Throw and catch from your base — no moving feet!",
+          "Step off your base = miss"
+        ],
+        "canonicalConditions": "Pick safe, flat ground for your base.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1493,7 +1743,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m32-v1",
-        "recordSHA256": "110630167895436fa113ed17c3d948dd60fffca27ec3a6d3fd08f6504ec66964",
+        "recordSHA256": "e83080ed5e02cd42e388715403abad12f4b0ad6d1c4388d708c41b008432e3b7",
         "locales": [
           "en-US",
           "tr"
@@ -1508,17 +1758,24 @@
     {
       "id": "m33",
       "mechanicsVersion": "m4-20260923-m33-v1",
-      "recordSHA256": "52df78f8f5a81a35ab106600dd2c164fa7130f5ee60f69129e912be11239c54f",
+      "recordSHA256": "9effbbf3576b6ebe18afe78797f980863a62e2f11a88dc025fe2732bab32cac9",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Two players at source initial spacing with paddles/one ball.",
+          "Three clean sticky catches and resets before source two-step backward progression.",
+          "Controlled arcs toward paddle; no hard body-target throw or measured maximum range claim."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Start 6 big-kid steps apart",
+          "Get 3 clean catches, then BOTH step back 2 big steps",
+          "Keep going! Note your best distance!"
+        ],
+        "canonicalConditions": "Use controlled arcs toward the paddle at longer distances, not harder throws at a person.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1540,7 +1797,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m33-v1",
-        "recordSHA256": "52df78f8f5a81a35ab106600dd2c164fa7130f5ee60f69129e912be11239c54f",
+        "recordSHA256": "9effbbf3576b6ebe18afe78797f980863a62e2f11a88dc025fe2732bab32cac9",
         "locales": [
           "en-US",
           "tr"
@@ -1555,17 +1812,24 @@
     {
       "id": "m34",
       "mechanicsVersion": "m4-20260923-m34-v1",
-      "recordSHA256": "fb66c9e3251db6ad447b8b7f54af0c9fe9a9d8753cdae3d95d5551285b48adc3",
+      "recordSHA256": "60c9ff2b7aa47b39a24e3b038a30e639dee96f9a11cad5c29e062ca2f4487f96",
       "movementEvidence": "A2/A3 standing poses only; static sources do not validate running interception speed or spacing.",
       "jumviContradictionCheck": "Keep running catch as legacy mission intent; do not infer bare-hand catch, diving, extra ball or guaranteed reach.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Side view: gentle toss ahead into clear path, receiver looks toward ball.",
           "Receiver moves to meet it; distinguish ground movement from ball flight.",
           "Blue-front contact before landing, then controlled reset with free hand."
         ],
-        "sequenceAssessment": "3 frames; physical field validation required before final dynamic pose acceptance."
+        "sequenceAssessment": "3 frames; physical field validation required before final dynamic pose acceptance.",
+        "canonicalActionSource": [
+          "Thrower tosses the ball ahead of you — not too far!",
+          "Catcher runs to meet it",
+          "Catch with the paddle BEFORE it lands!"
+        ],
+        "canonicalConditions": "Pick a clear run zone — no obstacles!",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1587,7 +1851,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m34-v1",
-        "recordSHA256": "fb66c9e3251db6ad447b8b7f54af0c9fe9a9d8753cdae3d95d5551285b48adc3",
+        "recordSHA256": "60c9ff2b7aa47b39a24e3b038a30e639dee96f9a11cad5c29e062ca2f4487f96",
         "locales": [
           "en-US",
           "tr"
@@ -1602,17 +1866,24 @@
     {
       "id": "m35",
       "mechanicsVersion": "m4-20260923-m35-v1",
-      "recordSHA256": "8c41af619de7b778c82306fa76ae38b30ab123df9866b8c67191a5d5422e4348",
+      "recordSHA256": "c1c87e4e28c24a5bede5ebe24c6515482c4ecf39e0cf2ebfd12355abfffaff33",
       "movementEvidence": "A2 raised catcher stance only; no validated airborne-catch/landing sequence.",
       "jumviContradictionCheck": "High arc is not head target. Preserve small-above-reach jump intent, never maximal height or early jump.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
           "Receiver waits for toss; paddle reach/ball approach are visible.",
           "Airborne blue-front contact, head outside approach line.",
           "Landing before calm reset/toss; no paddle-hand ground support."
         ],
-        "sequenceAssessment": "3 frames; no numeric jump height, landing-force or all-ages suitability claim."
+        "sequenceAssessment": "3 frames; no numeric jump height, landing-force or all-ages suitability claim.",
+        "canonicalActionSource": [
+          "Aim just above the catcher’s normal paddle reach, not at their head. Do not throw too high.",
+          "Wait for the toss; do not jump before it.",
+          "Jump and catch on the blue front while in the air. Switch roles every 5 throws."
+        ],
+        "canonicalConditions": "Jump on flat soft ground — grass is best.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1634,7 +1905,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m35-v1",
-        "recordSHA256": "8c41af619de7b778c82306fa76ae38b30ab123df9866b8c67191a5d5422e4348",
+        "recordSHA256": "c1c87e4e28c24a5bede5ebe24c6515482c4ecf39e0cf2ebfd12355abfffaff33",
         "locales": [
           "en-US",
           "tr"
@@ -1649,17 +1920,24 @@
     {
       "id": "m36",
       "mechanicsVersion": "m4-20260923-m36-v1",
-      "recordSHA256": "5c08f2fa509d3e3013bb9fefffd888642a65db63641a3953a995d512b955674d",
+      "recordSHA256": "82ce7bdf02f6e871f9dfb9561faa29dd780306c7d9adf43639bfb4963c393e49",
       "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
       "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
       "poseMechanicsBrief": {
-        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "status": "FINAL_CANONICAL_POSE_SPEC_PHYSICAL_AND_ART_ACCEPTANCE_OPEN",
         "frames": [
-          "Show mission-specific setup and free-hand toss.",
-          "Ball approaches and sticks to blue front.",
-          "Free hand detaches and prepares next toss."
+          "Start closer with gentle free-hand exchange and blue-front catch.",
+          "Free-hand detach each time; after source five catches both step back one step.",
+          "Source target20 and stop increasing distance when control is lost; no app tracking or pressure graphic."
         ],
-        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+        "sequenceAssessment": "Three distinct teaching phases; source action text remains visible. No fixed three-frame rule may erase a required action. Mobile comprehension/physical use not validated.",
+        "canonicalActionSource": [
+          "Start close together — build a rally!",
+          "After every 5 clean catches, BOTH step back one big step",
+          "See how far you can stretch the rally!"
+        ],
+        "canonicalConditions": "Stop stepping back when throws get wild.",
+        "briefAcceptance": "Canonical specification complete; not final raster or physical validation."
       },
       "finalArt": {
         "status": "NOT_PRODUCED_THIS_PASS",
@@ -1681,7 +1959,7 @@
       "narration": {
         "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
         "mechanicsVersion": "m4-20260923-m36-v1",
-        "recordSHA256": "5c08f2fa509d3e3013bb9fefffd888642a65db63641a3953a995d512b955674d",
+        "recordSHA256": "82ce7bdf02f6e871f9dfb9561faa29dd780306c7d9adf43639bfb4963c393e49",
         "locales": [
           "en-US",
           "tr"

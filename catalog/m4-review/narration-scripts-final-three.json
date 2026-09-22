@@ -1,0 +1,179 @@
+{
+  "scope": "m04/m17/m27 plus follow-up m30: canonical script text, not generated audio. Existing LOCK08 text untouched.",
+  "scripts": [
+    {
+      "id": "m04",
+      "locale": "en-US",
+      "mechanicsVersion": "m4-20260923-m04-v2",
+      "recordSHA256": "d13134ad5f622ed44bdbc0f5fd0617fca7faaf89bd5c97dfaed4ad71f95c7d68",
+      "segments": [
+        "Switcharoo",
+        "2 players, 2 paddles, 1 ball. Begin with the paddle strapped to one hand.",
+        "Catch the ball on the blue front with your current paddle hand.",
+        "Take the ball off the paddle with your free hand.",
+        "Transfer the ball to your current paddle hand.",
+        "Safely slip that hand out of the strap.",
+        "Move the paddle to your other hand and secure that hand in the strap.",
+        "The hand holding the ball is now free of the paddle. Use it for a gentle toss.",
+        "Make your next catch with the new paddle hand. Repeat this hand-change sequence after every clean catch.",
+        "Be the first to make 12 alternating catches.",
+        "Change hands calmly and securely. Do not switch the paddle in the air or rush. Never change the strap hand while the ball is stuck to the paddle. There is no handle."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m04",
+      "locale": "tr",
+      "mechanicsVersion": "m4-20260923-m04-v2",
+      "recordSHA256": "d13134ad5f622ed44bdbc0f5fd0617fca7faaf89bd5c97dfaed4ad71f95c7d68",
+      "segments": [
+        "El Değiştir",
+        "2 oyuncu, 2 paddle, 1 top. Paddle bir elinde kayışla takılı olarak başla.",
+        "Mevcut paddle elinle topu mavi ön yüzde yapıştırarak yakala.",
+        "Boş elinle topu paddle’dan ayır.",
+        "Topu mevcut paddle eline aktar.",
+        "Bu elini kayıştan güvenli biçimde çıkar.",
+        "Paddle’ı diğer eline geçir ve elini kayışa güvenli biçimde tak.",
+        "Topu tutan elin artık paddle’dan boştadır. Bu elinle yumuşakça at.",
+        "Sonraki yakalamayı yeni paddle elinle yap. Her temiz yakalamadan sonra bu el değiştirme sırasını tekrarla.",
+        "Dönüşümlü 12 yakalamaya ilk ulaşan ol.",
+        "El değişimini sakin ve güvenli biçimde yap. Paddle’ı havada veya aceleyle el değiştirme. Top paddle’a yapışıkken kayış eli değiştirilmez. Paddle’ın sapı yoktur."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m17",
+      "locale": "en-US",
+      "mechanicsVersion": "m4-20260923-m17-v2",
+      "recordSHA256": "4c42bcd233ed62b57f74bcdb40158e9501d67487a0714cee9d73a719443768ae",
+      "segments": [
+        "Mirror Mode",
+        "2 players, 2 paddles, 1 ball. Choose comfortable high, low, or gently tilted paddle poses. Mirror the pose relative to your own body, not an identical angle in the room.",
+        "The leader shows a comfortable paddle pose.",
+        "The catcher takes the same pose relative to their own body.",
+        "The leader makes a gentle toss with their free hand.",
+        "The catcher makes a sticky catch on the blue front in the mirrored pose.",
+        "The catcher removes the ball with their free hand and returns it to the leader with a normal reset pass.",
+        "Keep the same leader for 5 counted throws. Reset passes do not count toward those 5. Then swap leader and follower roles.",
+        "Complete 8 mirror-and-catch rounds.",
+        "Keep poses within a comfortable range: high, low, or gentle tilt. Do not overstretch or tilt sharply. The blue front receives the ball."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m17",
+      "locale": "tr",
+      "mechanicsVersion": "m4-20260923-m17-v2",
+      "recordSHA256": "4c42bcd233ed62b57f74bcdb40158e9501d67487a0714cee9d73a719443768ae",
+      "segments": [
+        "Ayna Modu",
+        "2 oyuncu, 2 paddle, 1 top. Rahat bir yüksek, alçak veya hafif eğik paddle pozu seçin. Odanın içinde birebir aynı açıyı değil, kendi vücudunuza göre aynı pozu alın.",
+        "Lider rahat bir paddle pozu gösterir.",
+        "Yakalayan kendi vücuduna göre aynı pozu alır.",
+        "Lider boş eliyle yumuşakça atar.",
+        "Yakalayan aynalanmış pozdaki mavi ön yüzle topu yapıştırarak yakalar.",
+        "Yakalayan topu boş elle ayırır ve normal bir geri pasla lider’a verir.",
+        "Aynı oyuncu 5 sayılan atış boyunca lider olur. Geri paslar bu 5 atışa dahil değildir. Sonra lider ve takipçi rolleri değişir.",
+        "8 ayna-ve-yakala turu tamamlayın.",
+        "Rahat hareket aralığında yüksek, alçak veya hafif eğik pozlar kullanın. Aşırı uzanma veya eğim yoktur. Gelen topu mavi ön yüz karşılar."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m27",
+      "locale": "en-US",
+      "mechanicsVersion": "m4-20260923-m27-v2",
+      "recordSHA256": "c691c2a4082bec86bbde374745bd7e7dfe0f869d5abeaa313edc79f292de416c",
+      "segments": [
+        "Secret Signal",
+        "Use 1 ball. Before starting, choose a simple paddle signal, such as briefly raising the paddle or gently tilting it to the side. With 2 players, pass A ↔ B. With 3 players, pass A → B → C → A.",
+        "Make a sticky catch on the paddle’s blue front.",
+        "Remove the ball with your free hand and hold it in that hand.",
+        "Use your strapped paddle hand to show the chosen signal to the next receiver.",
+        "Once the signal has been seen, gently toss to the next player with your free hand. No signal means no throw.",
+        "Make 10 secret-signal catches.",
+        "Keep the paddle signal simple and easy to see. No complicated hand or finger gesture is needed. There is only 1 ball."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m27",
+      "locale": "tr",
+      "mechanicsVersion": "m4-20260923-m27-v2",
+      "recordSHA256": "c691c2a4082bec86bbde374745bd7e7dfe0f869d5abeaa313edc79f292de416c",
+      "segments": [
+        "Gizli İşaret",
+        "1 top kullanın. Başlamadan önce paddle’ı kısa süre kaldırmak veya hafif yana eğmek gibi basit bir paddle işareti seçin. 2 oyuncuda A ↔ B; 3 oyuncuda A → B → C → A sırasıyla pas verin.",
+        "Topu paddle’ın mavi ön yüzüne yapıştırarak yakala.",
+        "Boş elinle topu ayır ve o elinde tut.",
+        "Kayışlı paddle elinle seçtiğiniz işareti sıradaki yakalayana göster.",
+        "İşaret görüldükten sonra boş elinle sıradaki oyuncuya yumuşakça at. İşaret yoksa atış da yok.",
+        "10 gizli işaret yakalaması yapın.",
+        "Paddle işareti basit ve kolay görülür olsun. Karmaşık el veya parmak hareketi gerekmez. Yalnız 1 top vardır."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m30",
+      "locale": "en-US",
+      "mechanicsVersion": "m4-20260923-m30-v2",
+      "recordSHA256": "651ccbb3c4322ced5a47c72ae24c878c201c9df6530381ca39ca6dbac092411b",
+      "segments": [
+        "Left or Right!",
+        "2 players, 2 paddles, 1 ball. Left and right are from the catcher’s own body perspective.",
+        "Before each counted challenge toss, the caller says LEFT or RIGHT.",
+        "The catcher positions the paddle on that side, keeping its blue front toward the incoming ball.",
+        "The caller makes a straight, gentle toss toward the paddle target on the called side, never at the person’s body.",
+        "A correct catch counts only when the ball sticks to the blue front on the called side.",
+        "The catcher removes the ball with the free hand and makes a neutral reset pass back to the caller. Reset passes do not count and need no Left or Right call.",
+        "The same caller makes 5 counted challenge tosses, then roles switch. Only the caller’s challenge tosses count toward those 5.",
+        "Make 8 correct side catches.",
+        "Aim at the blue paddle face on the called side, not at the person. Keep tosses straight and gentle."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    },
+    {
+      "id": "m30",
+      "locale": "tr",
+      "mechanicsVersion": "m4-20260923-m30-v2",
+      "recordSHA256": "651ccbb3c4322ced5a47c72ae24c878c201c9df6530381ca39ca6dbac092411b",
+      "segments": [
+        "Sol mu Sağ mı?",
+        "2 oyuncu, 2 paddle, 1 top. Sol ve sağ, yakalayanın kendi vücuduna göre belirlenir.",
+        "Her sayılan görev atışından önce çağıran kişi SOL veya SAĞ der.",
+        "Yakalayan paddle’ı o tarafta konumlandırır; mavi ön yüz gelen topa dönük kalır.",
+        "Çağıran kişi topu söylenen taraftaki paddle hedefine düz ve yumuşak biçimde atar; kişinin gövdesini hedeflemez.",
+        "Top yalnız söylenen taraftaki mavi ön yüze yapışırsa doğru yakalama sayılır.",
+        "Yakalayan topu boş elle ayırır ve çağıran kişiye normal bir geri pas verir. Geri paslar sayılmaz; SOL veya SAĞ çağrısı gerektirmez.",
+        "Aynı kişi 5 sayılan görev atışı yapar, sonra roller değişir. Bu 5’e yalnız çağıran kişinin görev atışları dahildir.",
+        "Doğru tarafta 8 yakalama yapın.",
+        "Kişiyi değil söylenen taraftaki mavi paddle yüzünü hedefleyin. Düz ve yumuşak atın."
+      ],
+      "trigger": "Only existing LOCK08 explicit narration actions; no automatic play/resume/caller/result narration.",
+      "binary": null,
+      "recordingAcceptance": "NOT_RECORDED",
+      "scriptStatus": "CANONICAL_TRANSLATION_REVIEWED"
+    }
+  ]
+}

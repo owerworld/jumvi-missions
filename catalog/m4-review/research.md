@@ -45,6 +45,16 @@ The user’s canonical decision establishes sticky blue-front contact → free-h
 
 ## Required task-by-task review
 
-`briefs.json` contains evidence → JUMVI contradiction check → constrained pose brief for **all 36 IDs**, with dedicated evaluations for m03, m04, m12, m17, m20, m21, m23, m24, m27, m34 and m35. m04/m17/m27 remain **HOLD_HUMAN_DECISION**. The other briefs are bound to a mechanics version and record hash; that is not final artwork approval.
+`briefs.json` contains evidence → JUMVI contradiction check → constrained pose brief for **all 36 IDs**, with dedicated evaluations for m03, m04, m12, m17, m20, m21, m23, m24, m27, m34 and m35. At the time of that research pass m04/m17/m27 were **HOLD_HUMAN_DECISION**; the final human decision below supersedes those holds. The other briefs are bound to a mechanics version and record hash; that is not final artwork approval.
 
 The existing LOCK07 premium direction, 17-screen structure and LOCK06 dimensions stay unchanged. HF-01 uses a contextual mission image; HF-03 carries explicit steps when one frame cannot teach timing/contact/reset; HF-04 retains its calm help/stop hierarchy; result states cannot imply observed performance. No new screen, component or active-play narration is added.
+
+
+## Final-mechanics closure addendum — 2026-09-23
+
+Human decisions now close m04/m17/m27. Competitor observations have not changed and did not supply these game rules. m04 is an explicit exception to a fixed paddle-hand identity across a sequence: label hand A/B and show the approved transfer after detachment. Exact grip/strap fit is still unverified. m17 uses each player’s own body frame and excludes normal return passes from five counted throws. m27 uses a paddle signal with the detached ball in the free hand and a specified 2-/3-player route. See versioned final pose specs in briefs.json.
+
+H-M30 was raised from the historical content audit and subsequently closed by an explicit human answer: catcher-body sides, blue-face paddle target, five counted caller challenge tosses, neutral returns excluded, goal8. The legacy diagram did not supply that approval.
+
+
+R4 attempt: two m04 sequence candidates were generated with the built-in image tool using actual product front/back references and the locked reset style reference. Both failed panel3 hand/ball-transfer anatomy QA. They are archived as REJECTED, not used as physical evidence or production assets. A validated real-product transfer reference is needed to resolve that pose depiction without inventing grip/fit.

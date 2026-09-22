@@ -16,5 +16,10 @@
     "arc": "Yüksek yay, topun uçuş yolunu anlatır; yüz veya baş hedef değildir. Yakalama hedefi paddle’dır."
   },
   "rendering": "Shared content, not permission to add screens or mandatory onboarding. Mission-specific timing still applies, e.g. m05 freeze precedes reset.",
-  "success": "All goals are physical-play goals; the app does not observe or infer completion."
+  "success": "All goals are physical-play goals; the app does not observe or infer completion.",
+  "missionTimingNotes": {
+    "m04": "The hand holding the detached ball becomes the free hand after the approved strap transfer. Detach still precedes transfer; toss is still free-hand. No ball remains attached during strap change.",
+    "m17": "Counted pose/toss/catch and normal return pass are different phases. Return pass does not advance leader count.",
+    "m27": "Signal uses paddle while detached ball stays in free hand; receiving blue-front orientation is re-established for each catch."
+  }
 }
