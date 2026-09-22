@@ -1,0 +1,1697 @@
+{
+  "evidenceRef": "research.md",
+  "rule": "Higher-tier JUMVI source wins. Brief acceptance is not artwork/physical validation.",
+  "briefs": [
+    {
+      "id": "m01",
+      "mechanicsVersion": "m4-20260923-m01-v1",
+      "recordSHA256": "14255d2b12bfcf641ca1180757961332c691522039f546e23325cc3ce7e7f05c",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m01-v1",
+        "recordSHA256": "14255d2b12bfcf641ca1180757961332c691522039f546e23325cc3ce7e7f05c",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m02",
+      "mechanicsVersion": "m4-20260923-m02-v1",
+      "recordSHA256": "a79d0c459dbed6dfdfe9b97baea5045333c680a4e029874b923a6a770960d7c0",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m02-v1",
+        "recordSHA256": "a79d0c459dbed6dfdfe9b97baea5045333c680a4e029874b923a6a770960d7c0",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null,
+        "special": "Explain the human caller role; do not produce random Green/Red calls or timed prompts."
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m03",
+      "mechanicsVersion": "m4-20260923-m03-v1",
+      "recordSHA256": "420329c1d0fe4a1d2d5a3cbb13ea1666f8b07ceb1c0f1ee113c60b4cbc15b2e5",
+      "movementEvidence": "A1 rear strap + A2 free arm separate from receiving paddle; no actual tap/catch sequence observed.",
+      "jumviContradictionCheck": "Keep paddle strapped; free-hand light tap is human-approved, not a competitor rule. No handle, rebound or tapping with paddle hand.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Gentle incoming toss; receiver’s free hand makes one light tap on own paddle.",
+          "Free hand clears the catch face; incoming orange/blue ball meets blue front.",
+          "Ball retained; free hand detaches for next toss."
+        ],
+        "sequenceAssessment": "3 frames: tap/contact/reset. Do not superpose tap and contact or imply body spin."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m03-v1",
+        "recordSHA256": "420329c1d0fe4a1d2d5a3cbb13ea1666f8b07ceb1c0f1ee113c60b4cbc15b2e5",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m04",
+      "mechanicsVersion": null,
+      "recordSHA256": "137fcc77b2a9d75a22edd070e0d81e141a11ad70c3c81bc030fed86fea97d952",
+      "movementEvidence": "A1/A3 strap on back; no continuous two-hand transfer reference validated.",
+      "jumviContradictionCheck": "A strapped paddle cannot be depicted as an instant racket hand-off. Ball ownership must remain possible.",
+      "poseMechanicsBrief": {
+        "status": "HOLD_HUMAN_DECISION",
+        "frames": [
+          "Only nonsequential setup/blue-front contact is known.",
+          "HOLD transfer frames until H-M04."
+        ],
+        "sequenceAssessment": "HOLD: final sequence length/hand change cannot be settled before human decision."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "HOLD_MECHANICS",
+        "mechanicsVersion": null,
+        "recordSHA256": "137fcc77b2a9d75a22edd070e0d81e141a11ad70c3c81bc030fed86fea97d952",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m05",
+      "mechanicsVersion": "m4-20260923-m05-v1",
+      "recordSHA256": "263361c5366f022a77ac24bb9db71b80bd6708283a537c9ab2b14d7c543750f5",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m05-v1",
+        "recordSHA256": "263361c5366f022a77ac24bb9db71b80bd6708283a537c9ab2b14d7c543750f5",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m06",
+      "mechanicsVersion": "m4-20260923-m06-v1",
+      "recordSHA256": "048088a72854b4e7d255e7888e4da0420b1947ae83c6d9873f4e6cfb16e03ff5",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m06-v1",
+        "recordSHA256": "048088a72854b4e7d255e7888e4da0420b1947ae83c6d9873f4e6cfb16e03ff5",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m07",
+      "mechanicsVersion": "m4-20260923-m07-v1",
+      "recordSHA256": "c30cd097fd7a6cdc9282dfceb3a5e60e28ba62915b8ea1908150f73e08881eb2",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m07-v1",
+        "recordSHA256": "c30cd097fd7a6cdc9282dfceb3a5e60e28ba62915b8ea1908150f73e08881eb2",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m08",
+      "mechanicsVersion": "m4-20260923-m08-v1",
+      "recordSHA256": "326eb14251afcc8fd18bf55228fea917d246e06611f66087fe719a07625d3800",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m08-v1",
+        "recordSHA256": "326eb14251afcc8fd18bf55228fea917d246e06611f66087fe719a07625d3800",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m09",
+      "mechanicsVersion": "m4-20260923-m09-v1",
+      "recordSHA256": "c30908d6838ea9687efeb1e711f890a4d13ea99562aec4993188965a241e48a0",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m09-v1",
+        "recordSHA256": "c30908d6838ea9687efeb1e711f890a4d13ea99562aec4993188965a241e48a0",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m10",
+      "mechanicsVersion": "m4-20260923-m10-v1",
+      "recordSHA256": "beaa7e763e64988f921a85e973cfafaa60374cd010fb7b28fd679731c4e186d8",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m10-v1",
+        "recordSHA256": "beaa7e763e64988f921a85e973cfafaa60374cd010fb7b28fd679731c4e186d8",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m11",
+      "mechanicsVersion": "m4-20260923-m11-v1",
+      "recordSHA256": "b3908f68e4a5c4b75d0a704b26e34995980d781f76733b54b836196cd5135e8c",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m11-v1",
+        "recordSHA256": "b3908f68e4a5c4b75d0a704b26e34995980d781f76733b54b836196cd5135e8c",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m12",
+      "mechanicsVersion": "m4-20260923-m12-v1",
+      "recordSHA256": "96bdbdf05427e1f6847154148390abdd237a666f381d20b0424fb26724e05019",
+      "movementEvidence": "A2 receiver presents catching face outward; A3 hand behind catcher.",
+      "jumviContradictionCheck": "Chest height describes paddle height. Body/chest target or head-level contact is prohibited.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Wide shot shows receiver holding blue face at chest height, separated from torso.",
+          "Close contact shows ball meeting blue face; no arrow continues into body.",
+          "Free hand removes ball before returning it."
+        ],
+        "sequenceAssessment": "2–3 frames; contact inset can carry target distinction, reset included in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m12-v1",
+        "recordSHA256": "96bdbdf05427e1f6847154148390abdd237a666f381d20b0424fb26724e05019",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m13",
+      "mechanicsVersion": "m4-20260923-m13-v1",
+      "recordSHA256": "de8eb5f17b07e156b31a5e5e05ee28bee7b1f879e269d732ee0fd5c43f1aefe3",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m13-v1",
+        "recordSHA256": "de8eb5f17b07e156b31a5e5e05ee28bee7b1f879e269d732ee0fd5c43f1aefe3",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null,
+        "special": "Silence applies to players in active play. Explanation may be requested pre-play or through Help; no automatic narration on return."
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m14",
+      "mechanicsVersion": "m4-20260923-m14-v1",
+      "recordSHA256": "6afe42590d09dd0e5af513c4c1f67ba82965ec9e88bcd5e060337337c7384adf",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m14-v1",
+        "recordSHA256": "6afe42590d09dd0e5af513c4c1f67ba82965ec9e88bcd5e060337337c7384adf",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m15",
+      "mechanicsVersion": "m4-20260923-m15-v1",
+      "recordSHA256": "b337d9cf4f4f6405b9382326646ed3e5170a66dbd83cd4b8c5b70691ee4ce9ba",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m15-v1",
+        "recordSHA256": "b337d9cf4f4f6405b9382326646ed3e5170a66dbd83cd4b8c5b70691ee4ce9ba",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m16",
+      "mechanicsVersion": "m4-20260923-m16-v1",
+      "recordSHA256": "fce9d7261f5f3756e0f48824108257f1cf50b5d55d4290b3f1bcab2f982e0e48",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m16-v1",
+        "recordSHA256": "fce9d7261f5f3756e0f48824108257f1cf50b5d55d4290b3f1bcab2f982e0e48",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m17",
+      "mechanicsVersion": null,
+      "recordSHA256": "a5822450b429aa29d81335349f1949aba18378cdbf603f6410fbeef1b133a719",
+      "movementEvidence": "A1 back strap/A2 outward face demonstrate possible plane orientation, not a mirror game.",
+      "jumviContradictionCheck": "Exact world-plane mirroring could point one paddle away from incoming ball. Both receiving faces must remain usable.",
+      "poseMechanicsBrief": {
+        "status": "HOLD_HUMAN_DECISION",
+        "frames": [
+          "Comfortable high/low/tilted placement only; no extreme wrist fold.",
+          "HOLD leader, mirrored frame and return-pass storyboard for H-M17."
+        ],
+        "sequenceAssessment": "HOLD role sequence; a single mirrored pose cannot settle turn mechanics."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "HOLD_MECHANICS",
+        "mechanicsVersion": null,
+        "recordSHA256": "a5822450b429aa29d81335349f1949aba18378cdbf603f6410fbeef1b133a719",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m18",
+      "mechanicsVersion": "m4-20260923-m18-v1",
+      "recordSHA256": "40cce04fc107f49727523a18db171416d488510bf0c63bef450356a0ac88f93e",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m18-v1",
+        "recordSHA256": "40cce04fc107f49727523a18db171416d488510bf0c63bef450356a0ac88f93e",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m19",
+      "mechanicsVersion": "m4-20260923-m19-v1",
+      "recordSHA256": "63aed3eac8db552be314158a314948be0ca9b3357aa8cdad3806d9c40b509e01",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m19-v1",
+        "recordSHA256": "63aed3eac8db552be314158a314948be0ca9b3357aa8cdad3806d9c40b509e01",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m20",
+      "mechanicsVersion": "m4-20260923-m20-v1",
+      "recordSHA256": "3392fac599f15586ddbfa6898ed08cb0b8e599bec901d9037bcfcf536d3b8c1a",
+      "movementEvidence": "A2/A3 show standing postures, not a relay or sideways movement sequence.",
+      "jumviContradictionCheck": "Standing side-shuffle comes from human decision. No ground support on hands/paddles, crab-walk silhouette or second ball.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "4 players / 2 lines / 1 ball; make next recipient legible.",
+          "Blue-face catch then free-hand detach/toss to next player.",
+          "Previous player side-shuffles upright to line back; floor route distinct from ball path."
+        ],
+        "sequenceAssessment": "3-panel overview plus shared catch/reset detail. Do not invent lane dimensions or exact pass topology beyond approved next-player rule."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m20-v1",
+        "recordSHA256": "3392fac599f15586ddbfa6898ed08cb0b8e599bec901d9037bcfcf536d3b8c1a",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m21",
+      "mechanicsVersion": "m4-20260923-m21-v1",
+      "recordSHA256": "3708f1158bdd564c0028a31dfeb4e83107f01a7b469ec88fc8855a9c022f6ee7",
+      "movementEvidence": "A2 shows receiver-facing catcher; no middle-interception reference validated.",
+      "jumviContradictionCheck": "3 players/3 paddles/1 ball. Middle Defender only; no Captain Says pose or spoken instruction game.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Outer players face each other with middle position clear; toss below faces.",
+          "Middle player’s blue face retains the intercepted ball.",
+          "Middle and thrower walk to exchange places; no diving or second ball."
+        ],
+        "sequenceAssessment": "3 frames; walking swap uses ground marker, ball path ends at paddle. Receiver is not swapped."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m21-v1",
+        "recordSHA256": "3708f1158bdd564c0028a31dfeb4e83107f01a7b469ec88fc8855a9c022f6ee7",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m22",
+      "mechanicsVersion": "m4-20260923-m22-v1",
+      "recordSHA256": "372886cfe5090e71f22db80674089f8f0fcd9f3f65edb0f7ae41542ead439aec",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m22-v1",
+        "recordSHA256": "372886cfe5090e71f22db80674089f8f0fcd9f3f65edb0f7ae41542ead439aec",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m23",
+      "mechanicsVersion": "m4-20260923-m23-v1",
+      "recordSHA256": "9de75bf7ca21f6b7fea880a5920a98c262fe308a19d08f19a7c52b9f9738c266",
+      "movementEvidence": "A2 demonstrates one pair with space between; no four-player pairing-order evidence.",
+      "jumviContradictionCheck": "One active pair only. Six pairings is combinatorics from approved four-player rule; never prescribe an unapproved ordering.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "One active pair; remaining two wait away from toss path.",
+          "After 6 clean catches, ball is transferred to next pairing.",
+          "Show pair coverage as explanatory illustration, not two simultaneous rallies or a new app dashboard."
+        ],
+        "sequenceAssessment": "2–3 frames; exact pairing order not newly mandated. Do not render all 6 pairs as concurrent play."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m23-v1",
+        "recordSHA256": "9de75bf7ca21f6b7fea880a5920a98c262fe308a19d08f19a7c52b9f9738c266",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m24",
+      "mechanicsVersion": "m4-20260923-m24-v1",
+      "recordSHA256": "53b0360a8b52cc72914d85795b608bcb44be8695e05e7955cfcbab4a8b4237ad",
+      "movementEvidence": "A2 one-pair example; competitor pack quantity does not define simultaneous play.",
+      "jumviContradictionCheck": "Two teams alternate one ball after 5 catches; shared40. Four paddles do not mean four concurrent catchers.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Team A active with 1 ball; Team B waiting.",
+          "After 5 clean catches, transfer the same ball.",
+          "Team B active; Team A waiting."
+        ],
+        "sequenceAssessment": "3 frames with explicit active/waiting state; no ALL4 at once or new scoreboard UI."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m24-v1",
+        "recordSHA256": "53b0360a8b52cc72914d85795b608bcb44be8695e05e7955cfcbab4a8b4237ad",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m25",
+      "mechanicsVersion": "lock07p-m25-fixture-v1",
+      "recordSHA256": "54395c2828e71114abe1c8773ac92cf305649cfab623cb09e81c1ee8206deca6",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "EXISTING_LOCKED_FIXTURE_ONLY_UNCHANGED",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "lock07p-m25-fixture-v1",
+        "recordSHA256": "54395c2828e71114abe1c8773ac92cf305649cfab623cb09e81c1ee8206deca6",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Existing content/narration/lock08.json TR exact source preserved; no new recording declared.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m26",
+      "mechanicsVersion": "m4-20260923-m26-v1",
+      "recordSHA256": "e0a2141428754dd27a575d79184541fca1b95a93811b9aed2d68914900366a39",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m26-v1",
+        "recordSHA256": "e0a2141428754dd27a575d79184541fca1b95a93811b9aed2d68914900366a39",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m27",
+      "mechanicsVersion": null,
+      "recordSHA256": "7beafbb6fbb052c664c3ee7637e3f531739cc01bcbcbd025ead735922c70c0ae",
+      "movementEvidence": "A1/A3 occupied paddle hand and free ball hand constrain possible signals; no three-person signal game observed.",
+      "jumviContradictionCheck": "Do not use a two-handed sign while one hand is strapped, teleport ball, or invent the third role.",
+      "poseMechanicsBrief": {
+        "status": "HOLD_HUMAN_DECISION",
+        "frames": [
+          "Two-player signal intent is known.",
+          "HOLD three-player route and signal/reset frame order for H-M27."
+        ],
+        "sequenceAssessment": "HOLD final sequence; no new circle/caller or two-player-only replacement."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "HOLD_MECHANICS",
+        "mechanicsVersion": null,
+        "recordSHA256": "7beafbb6fbb052c664c3ee7637e3f531739cc01bcbcbd025ead735922c70c0ae",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m28",
+      "mechanicsVersion": "m4-20260923-m28-v1",
+      "recordSHA256": "12a5afad70b96f6fd3dec99aabdb30184d2f82841cb23f9f5097a63a5880015e",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m28-v1",
+        "recordSHA256": "12a5afad70b96f6fd3dec99aabdb30184d2f82841cb23f9f5097a63a5880015e",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m29",
+      "mechanicsVersion": "m4-20260923-m29-v1",
+      "recordSHA256": "a9aae9eb762aaf6d2c24fd5a5ccc6643c24a5b3126966a2ae724f8f55ae82f7c",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m29-v1",
+        "recordSHA256": "a9aae9eb762aaf6d2c24fd5a5ccc6643c24a5b3126966a2ae724f8f55ae82f7c",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m30",
+      "mechanicsVersion": "m4-20260923-m30-v1",
+      "recordSHA256": "65dd263483036ab5d39bdbf1ed5ce9c93a5ecc20421f925a176d4f96060b490a",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m30-v1",
+        "recordSHA256": "65dd263483036ab5d39bdbf1ed5ce9c93a5ecc20421f925a176d4f96060b490a",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m31",
+      "mechanicsVersion": "m4-20260923-m31-v1",
+      "recordSHA256": "56e3ff921acb9c2aeedc3e70edb8466fc92c2a586c8a11e8c130828622587a84",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m31-v1",
+        "recordSHA256": "56e3ff921acb9c2aeedc3e70edb8466fc92c2a586c8a11e8c130828622587a84",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m32",
+      "mechanicsVersion": "m4-20260923-m32-v1",
+      "recordSHA256": "110630167895436fa113ed17c3d948dd60fffca27ec3a6d3fd08f6504ec66964",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m32-v1",
+        "recordSHA256": "110630167895436fa113ed17c3d948dd60fffca27ec3a6d3fd08f6504ec66964",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m33",
+      "mechanicsVersion": "m4-20260923-m33-v1",
+      "recordSHA256": "52df78f8f5a81a35ab106600dd2c164fa7130f5ee60f69129e912be11239c54f",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m33-v1",
+        "recordSHA256": "52df78f8f5a81a35ab106600dd2c164fa7130f5ee60f69129e912be11239c54f",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m34",
+      "mechanicsVersion": "m4-20260923-m34-v1",
+      "recordSHA256": "fb66c9e3251db6ad447b8b7f54af0c9fe9a9d8753cdae3d95d5551285b48adc3",
+      "movementEvidence": "A2/A3 standing poses only; static sources do not validate running interception speed or spacing.",
+      "jumviContradictionCheck": "Keep running catch as legacy mission intent; do not infer bare-hand catch, diving, extra ball or guaranteed reach.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Side view: gentle toss ahead into clear path, receiver looks toward ball.",
+          "Receiver moves to meet it; distinguish ground movement from ball flight.",
+          "Blue-front contact before landing, then controlled reset with free hand."
+        ],
+        "sequenceAssessment": "3 frames; physical field validation required before final dynamic pose acceptance."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m34-v1",
+        "recordSHA256": "fb66c9e3251db6ad447b8b7f54af0c9fe9a9d8753cdae3d95d5551285b48adc3",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m35",
+      "mechanicsVersion": "m4-20260923-m35-v1",
+      "recordSHA256": "8c41af619de7b778c82306fa76ae38b30ab123df9866b8c67191a5d5422e4348",
+      "movementEvidence": "A2 raised catcher stance only; no validated airborne-catch/landing sequence.",
+      "jumviContradictionCheck": "High arc is not head target. Preserve small-above-reach jump intent, never maximal height or early jump.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Receiver waits for toss; paddle reach/ball approach are visible.",
+          "Airborne blue-front contact, head outside approach line.",
+          "Landing before calm reset/toss; no paddle-hand ground support."
+        ],
+        "sequenceAssessment": "3 frames; no numeric jump height, landing-force or all-ages suitability claim."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m35-v1",
+        "recordSHA256": "8c41af619de7b778c82306fa76ae38b30ab123df9866b8c67191a5d5422e4348",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    },
+    {
+      "id": "m36",
+      "mechanicsVersion": "m4-20260923-m36-v1",
+      "recordSHA256": "5c08f2fa509d3e3013bb9fefffd888642a65db63641a3953a995d512b955674d",
+      "movementEvidence": "A1/A2/A3 support separate hand roles and outward receiving face; mission-specific dynamics not observed.",
+      "jumviContradictionCheck": "Human global physical rules override source racket/target imagery. Do not add rules to fill an illustration.",
+      "poseMechanicsBrief": {
+        "status": "MECHANICS_CONSTRAINED_BRIEF_NOT_FINAL_ART_APPROVAL",
+        "frames": [
+          "Show mission-specific setup and free-hand toss.",
+          "Ball approaches and sticks to blue front.",
+          "Free hand detaches and prepares next toss."
+        ],
+        "sequenceAssessment": "Default 3-step teaching sequence; a static HF-01 context image may summarize only if critical meaning remains available in Help."
+      },
+      "finalArt": {
+        "status": "NOT_PRODUCED_THIS_PASS",
+        "legacyFallback": false,
+        "requiredChecks": [
+          "blue/lime front and red/black rear",
+          "same hand/strap continuity across frames",
+          "orange ball with wide blue bands",
+          "one physical ball per moment",
+          "front-face approach, visible plausible tangent contact, retained ball after catch",
+          "no through-paddle trajectory or rebound",
+          "free-hand detach and free-hand return toss",
+          "no weight-bearing on strapped hand",
+          "critical meaning survives mobile crop",
+          "mission/locale/version match",
+          "no result image claiming observed performance"
+        ]
+      },
+      "narration": {
+        "status": "SCRIPT_BRIEF_ONLY_UNRECORDED",
+        "mechanicsVersion": "m4-20260923-m36-v1",
+        "recordSHA256": "5c08f2fa509d3e3013bb9fefffd888642a65db63641a3953a995d512b955674d",
+        "locales": [
+          "en-US",
+          "tr"
+        ],
+        "scriptSource": "Exact accepted locale title/setup/steps/goal/safety plus physical-rules as needed; no rule may be added by voice artist. Final script rendition and audio acceptance still required.",
+        "delivery": "Use only the existing explicit narration actions allowed by LOCK08 for that screen/context, including pre-play/Help explanation. No automatic caller/timer/music/live coach, no automatic narration on resume, no HF-07 result narration and no TTS/legacy audio fallback. Existing explicit HF-04 sound behavior is not removed or expanded.",
+        "cancellation": "LOCK08 mission/locale/context generation invalidation unchanged",
+        "runtimeAsset": null
+      },
+      "physicalValidation": "OPEN; commercial photos are not child/device/product test evidence"
+    }
+  ]
+}

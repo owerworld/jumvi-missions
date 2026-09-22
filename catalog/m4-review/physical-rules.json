@@ -1,0 +1,20 @@
+{
+  "id": "human-m4-physical-v1",
+  "authority": "User HUMAN DECISION — M4 R1 / R2 CANONICAL CLOSURE, 2026-09-23",
+  "en-US": {
+    "setup": "Wear the paddle on one hand using the black strap on its red back.",
+    "catch": "Catch by letting the ball stick to the blue front of the paddle.",
+    "reset": "Take the ball off with your free hand. Use your free hand for the next toss.",
+    "boundary": "The paddle has no handle. Do not put body weight on a paddle-strapped hand on the ground.",
+    "arc": "A high arc describes the ball’s path, not a face or head target. The catch target is the paddle."
+  },
+  "tr": {
+    "setup": "Paddle’ı kırmızı arkasındaki siyah el kayışıyla bir eline tak.",
+    "catch": "Topu paddle’ın mavi ön yüzüne yapıştırarak yakala.",
+    "reset": "Topu boş elinle ayır. Sonraki atışı boş elinle yap.",
+    "boundary": "Paddle’ın sapı yoktur. Paddle takılı elinle yere basıp vücut ağırlığını taşıma.",
+    "arc": "Yüksek yay, topun uçuş yolunu anlatır; yüz veya baş hedef değildir. Yakalama hedefi paddle’dır."
+  },
+  "rendering": "Shared content, not permission to add screens or mandatory onboarding. Mission-specific timing still applies, e.g. m05 freeze precedes reset.",
+  "success": "All goals are physical-play goals; the app does not observe or infer completion."
+}

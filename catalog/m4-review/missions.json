@@ -1,0 +1,2333 @@
+{
+  "schemaVersion": 1,
+  "stage": "M4 partial canonical closure; HUMAN DECISION REQUIRED",
+  "buildPolicy": "Review-only new canonical content layer. Not imported or copied by production/staging build. Promote to content/missions only after mechanics and critical meaning gates pass.",
+  "records": [
+    {
+      "id": "m01",
+      "mechanicsVersion": "m4-20260923-m01-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Speed Demon",
+          "steps": [
+            "Stand 2 big-kid steps apart",
+            "Throw fast — but soft!",
+            "Catch and reset — go again!"
+          ],
+          "goal": "Catch as many as you can in 45 seconds — beat your best!",
+          "safety": "Throw under chin level — never aim at faces."
+        },
+        "tr": {
+          "title": "Hız Canavarı",
+          "steps": [
+            "Aranızda 2 büyük adım olsun",
+            "Hızlı at — ama yumuşak!",
+            "Yakala, hazır pozisyona dön ve tekrar!"
+          ],
+          "goal": "45 saniyede olabildiğince çok yakala — kendi rekorunu geç!",
+          "safety": "Topu çene hizasının altında at — asla yüze nişan alma."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:88",
+          "tr": "tr/i18n.js:11 missionTR[\"1\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "11d91b1d2bc558297f4bf0ab8687c16c9591bc7da976669887977727048bb16d",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m01",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      },
+      "timedGoalPolicy": "Physical source goal only. No app timer, live caller, elapsed-time success or automatic narration is introduced."
+    },
+    {
+      "id": "m02",
+      "mechanicsVersion": "m4-20260923-m02-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2–3",
+      "equipment": {
+        "paddles": [
+          2,
+          3
+        ],
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Red Light, Green Light",
+          "steps": [
+            "A person calls Green or Red. With 3 players, the third player can call; with 2, take turns being the caller.",
+            "Green: toss and catch. Red: freeze—do not toss or move.",
+            "The phone does not generate calls, a timer, or automatic sounds."
+          ],
+          "goal": "Play for 60 seconds without tossing on Red.",
+          "safety": "Freeze means freeze — no sneaky moves!"
+        },
+        "tr": {
+          "title": "Kırmızı Işık, Yeşil Işık",
+          "steps": [
+            "Yeşil veya Kırmızı çağrısını bir kişi yapar. 3 oyuncuda üçüncü kişi çağırabilir; 2 oyuncuda çağıran kişi sırayla değişir.",
+            "Yeşil: at ve yakala. Kırmızı: don—atma, hareket etme.",
+            "Telefon çağrı, sayaç veya otomatik ses üretmez."
+          ],
+          "goal": "60 saniye boyunca Kırmızı çağrısında top atmadan oyna.",
+          "safety": "Don demek gerçekten donmak demek — gizli hareket yok!"
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:93",
+          "tr": "tr/i18n.js:11 missionTR[\"2\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "e153fdbffcbe664dfea7e1a7f4bb4984f0efeb7450d836468c432bba00d8f7af",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m02",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      },
+      "timedGoalPolicy": "Physical source goal only. No app timer, live caller, elapsed-time success or automatic narration is introduced."
+    },
+    {
+      "id": "m03",
+      "mechanicsVersion": "m4-20260923-m03-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Quick Slap",
+          "steps": [
+            "Your partner makes a gentle toss. Keep your paddle strapped to one hand.",
+            "Lightly tap your own paddle once with your free hand.",
+            "Catch the ball on the blue front. Switch roles every 10 throws."
+          ],
+          "goal": "10 clean slap-catches each side wins!",
+          "safety": "Only your free hand makes the light tap. There is no handle."
+        },
+        "tr": {
+          "title": "Hızlı Dokun",
+          "steps": [
+            "Arkadaşın yumuşakça atsın. Paddle bir elinde kayışla takılı kalsın.",
+            "Boş elinle kendi paddle’ına bir kez hafifçe dokun.",
+            "Topu mavi ön yüzle yakala. Her 10 atışta rol değiştirin."
+          ],
+          "goal": "Her iki tarafta 10 temiz dokun-yakala yapınca görev tamam!",
+          "safety": "Hafif dokunuşu yalnız boş elinle yap. Paddle’ın sapı yoktur."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:98",
+          "tr": "tr/i18n.js:11 missionTR[\"3\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "5c4b1bd034a1d999c2ff93bb849d5cc14fcabb6abef5b099161c697669c8350c",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m03",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m04",
+      "mechanicsVersion": null,
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "blocked-human-mechanics",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": null,
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:103",
+          "tr": "tr/i18n.js:11 missionTR[\"4\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "b011a8f2b600e1b0e8720ce9161a0529edc119438c439b693eca439d74d70203",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "HUMAN_DECISION_REQUIRED",
+        "locales": "HOLD",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": {
+        "id": "H-M04",
+        "question_tr": "Paddle hangi sırada el değiştirecek: top henüz mavi yüzdeyken mi, boş elle ayrıldıktan sonra mı, geri atıştan sonra mı? Diğer oyuncu ne zaman bekler? Strap çıkarma/takma ve top kontrolü sırası onaylanmalı.",
+        "known": "Alternate paddle hands remains the legacy goal; no transfer sequence is approved.",
+        "blocked": [
+          "transfer sequence",
+          "ball control during strap change"
+        ]
+      },
+      "briefRef": "briefs.json#m04",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m05",
+      "mechanicsVersion": "m4-20260923-m05-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Statue Mode",
+          "steps": [
+            "Catch the ball — then FREEZE for 2 seconds",
+            "No moving — paddle, body, feet — all stone",
+            "Then throw it back!"
+          ],
+          "goal": "10 catches with a full freeze between each!",
+          "safety": "Truly no moving during the freeze."
+        },
+        "tr": {
+          "title": "Heykel Modu",
+          "steps": [
+            "Topu yakala — sonra 2 saniye DON",
+            "Hareket yok — paddle, beden, ayaklar; hepsi taş gibi",
+            "Sonra geri at!"
+          ],
+          "goal": "Her birinin arasında tam donarak 10 kez yakala!",
+          "safety": "Donma sırasında gerçekten hiç hareket etme."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:108",
+          "tr": "tr/i18n.js:11 missionTR[\"5\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "a3b7291d2d4391e853f82ed3e4d2e1b9b103c69350f2bd3bffa2933555a43666",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m05",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m06",
+      "mechanicsVersion": "m4-20260923-m06-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Number Echo",
+          "steps": [
+            "Throw and shout the number out loud",
+            "Catcher repeats the number, then throws back",
+            "Drop it? Restart from 1!"
+          ],
+          "goal": "Reach 15 in a row — count loud!",
+          "safety": "Stay relaxed if you miss — just restart."
+        },
+        "tr": {
+          "title": "Sayıyı Tekrarla",
+          "steps": [
+            "Topu atarken sayıyı yüksek sesle söyle",
+            "Yakalayan sayıyı tekrar edip topu geri atsın",
+            "Düştü mü? 1’den yeniden başlayın!"
+          ],
+          "goal": "Üst üste 15’e ulaş — yüksek sesle say!",
+          "safety": "Kaçırırsan gerilme — sadece yeniden başla."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:113",
+          "tr": "tr/i18n.js:11 missionTR[\"6\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "002d71ff4380c2e175b054ce060298bd3361cb84e7bbaa597aff2a2deb314718",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m06",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m07",
+      "mechanicsVersion": "m4-20260923-m07-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Rainbow Throws",
+          "steps": [
+            "Stand 5 big steps apart.",
+            "Make gentle high arcs toward your partner’s paddle, not their head.",
+            "Flat throws do not count. After 5 clean arcs, step back."
+          ],
+          "goal": "Beat 3 distance levels with 5 rainbows each!",
+          "safety": "Soft height, not power — let gravity do the work."
+        },
+        "tr": {
+          "title": "Gökkuşağı Atışları",
+          "steps": [
+            "Aranızda 5 büyük adım olsun.",
+            "Arkadaşının başını değil paddle’ını hedefleyen yumuşak, yüksek yaylı atışlar yap.",
+            "Düz atışlar sayılmaz. 5 temiz yaylı atıştan sonra geri adım atın."
+          ],
+          "goal": "Her seviyede 5 gökkuşağı atışıyla 3 mesafe seviyesini geç!",
+          "safety": "Güç değil, yumuşak yükseklik — bırak yerçekimi işini yapsın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:120",
+          "tr": "tr/i18n.js:11 missionTR[\"7\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "193ee7366e3f886337e47e2100b2b2af3c04fc48ccb817742d249d1044f8ad7d",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m07",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m08",
+      "mechanicsVersion": "m4-20260923-m08-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "The Landing Pad",
+          "steps": [
+            "Send a soft, high arc.",
+            "Hold the paddle flat and still with its blue front facing upward.",
+            "Let the ball stick to the blue front. Do not swing at it."
+          ],
+          "goal": "8 perfect landings wins!",
+          "safety": "Don't swat — let the velcro do the work."
+        },
+        "tr": {
+          "title": "İniş Pisti",
+          "steps": [
+            "Yumuşak, yüksek yaylı bir atış yap.",
+            "Paddle’ı mavi ön yüzü yukarı bakacak şekilde düz ve sabit tut.",
+            "Top mavi ön yüze yapışsın. Topa vurmak için paddle’ı sallama."
+          ],
+          "goal": "8 kusursuz iniş yap!",
+          "safety": "Topa vurma — cırt cırtın işini yapmasına izin ver."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:125",
+          "tr": "tr/i18n.js:11 missionTR[\"8\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "cd961e756349b098ed28068436e655635cefe124f53a1431986969c9fb0b71f2",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m08",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m09",
+      "mechanicsVersion": "m4-20260923-m09-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Step-Back Challenge",
+          "steps": [
+            "Start 1 big step apart, get 3 clean catches",
+            "Step back half a step — repeat",
+            "Climb the ladder up to 3 big steps apart!"
+          ],
+          "goal": "Reach the top with 3 clean catches at max distance!",
+          "safety": "Stop if throws start going wild."
+        },
+        "tr": {
+          "title": "Geri Adım Meydan Okuması",
+          "steps": [
+            "1 büyük adım arayla başlayın, 3 temiz yakalama yapın",
+            "Yarım adım geri gidin — tekrarlayın",
+            "Aranızda 3 büyük adım olana kadar devam edin!"
+          ],
+          "goal": "En uzak mesafede 3 temiz yakalamayla zirveye ulaş!",
+          "safety": "Atışlar kontrolden çıkmaya başlarsa durun."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:130",
+          "tr": "tr/i18n.js:11 missionTR[\"9\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "e63979a7288a70a3ff728854d7aeb4e3ae9ba6b4bb1dea710924090e947f0f3c",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m09",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m10",
+      "mechanicsVersion": "m4-20260923-m10-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Power Step",
+          "steps": [
+            "Start 6 big-kid steps apart",
+            "Step FORWARD as you throw — like a real athlete!",
+            "Catch, then step back to start. Partner's turn!"
+          ],
+          "goal": "10 clean step-throws each!",
+          "safety": "Throw soft — the step adds power on its own."
+        },
+        "tr": {
+          "title": "Güç Adımı",
+          "steps": [
+            "Aranızda 6 büyük adım olsun",
+            "Atarken ÖNE bir adım at — gerçek bir sporcu gibi!",
+            "Yakala, sonra başlangıç yerine geri adım at. Sıra arkadaşında!"
+          ],
+          "goal": "Kişi başı 10 temiz adımlı atış!",
+          "safety": "Yumuşak at — adım zaten kendi gücünü ekler."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:135",
+          "tr": "tr/i18n.js:11 missionTR[\"10\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "9367f1d9aff4361bbf4685a01165c11b2c67b8da7cd133ccda4c7c8bc783c72c",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m10",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m11",
+      "mechanicsVersion": "m4-20260923-m11-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Sky Floater",
+          "steps": [
+            "Make a gentle, controlled high arc toward the paddle.",
+            "The catcher waits for the ball without rushing.",
+            "Let the ball descend onto the paddle’s blue front."
+          ],
+          "goal": "10 patient sky catches!",
+          "safety": "Slow and patient wins — no swinging."
+        },
+        "tr": {
+          "title": "Gökyüzü Süzülüşü",
+          "steps": [
+            "Paddle’a doğru yumuşak ve kontrollü, yüksek yaylı bir atış yap.",
+            "Yakalayan kişi acele etmeden topu beklesin.",
+            "Top paddle’ın mavi ön yüzüne doğru alçalsın."
+          ],
+          "goal": "10 sabırlı gökyüzü yakalaması!",
+          "safety": "Yavaş ve sabırlı olan kazanır — paddle’ı savurma."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:140",
+          "tr": "tr/i18n.js:11 missionTR[\"11\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "ed94d9d56209eb46f7c21d268f439f91c4ac1b009c8849863852ebe3a5c64ccf",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m11",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m12",
+      "mechanicsVersion": "m4-20260923-m12-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Heart-High",
+          "steps": [
+            "Stand 6 big steps apart.",
+            "The catcher holds the paddle at chest height, with its blue front facing the incoming ball.",
+            "Toss toward that blue front—not the person’s chest. Too high or low is a miss."
+          ],
+          "goal": "Make 10 consecutive catches on the paddle at chest height.",
+          "safety": "Aim at the paddle’s blue front, never the person’s body."
+        },
+        "tr": {
+          "title": "Kalp Hizası",
+          "steps": [
+            "Aranızda 6 büyük adım olsun.",
+            "Yakalayan paddle’ı göğüs hizasında, mavi ön yüzü gelen topa dönük tutsun.",
+            "Kişinin göğsüne değil bu mavi ön yüze at. Fazla yüksek veya alçak atış sayılmaz."
+          ],
+          "goal": "Göğüs hizasındaki paddle ile üst üste 10 yakalama yap.",
+          "safety": "Kişinin gövdesini değil paddle’ın mavi ön yüzünü hedefle."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:145",
+          "tr": "tr/i18n.js:11 missionTR[\"12\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "c8ab2232e7f60e48bd8d4f5b8d61e75f898955c9fc11777e54ddaf5f72fb696d",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m12",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m13",
+      "mechanicsVersion": "m4-20260923-m13-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Silent Mode",
+          "steps": [
+            "Players stay silent during active physical play.",
+            "Show the count with your fingers after each catch. If someone speaks, restart from 1.",
+            "You may listen to an explanation before play or when you explicitly request Help. Returning to play does not start narration."
+          ],
+          "goal": "Reach 12 catches in pure silence!",
+          "safety": "Take a breath before each throw."
+        },
+        "tr": {
+          "title": "Sessiz Mod",
+          "steps": [
+            "Aktif fiziksel oyun sırasında oyuncular konuşmaz.",
+            "Her yakalamadan sonra sayıyı parmaklarınla göster. Biri konuşursa 1’den yeniden başlayın.",
+            "Oyun öncesinde veya açıkça Yardım istediğinde açıklamayı dinleyebilirsin. Oyuna dönmek anlatımı başlatmaz."
+          ],
+          "goal": "Tam sessizlikte 12 yakalamaya ulaş!",
+          "safety": "Her atıştan önce bir nefes al."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:152",
+          "tr": "tr/i18n.js:11 missionTR[\"13\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "e20bdd5b38e273ebc1c6ace46d2f83f4d11772f0ad0d44c29eb773448e5c1cc7",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m13",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false,
+        "silenceMeaning": "Player speech during active physical play; explicit pre-play/help explanation is allowed, no automatic narration on resume."
+      }
+    },
+    {
+      "id": "m14",
+      "mechanicsVersion": "m4-20260923-m14-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Tempo Master",
+          "steps": [
+            "5 super-slow throws",
+            "5 medium-speed throws",
+            "Repeat one cycle. Feet stay PLANTED!"
+          ],
+          "goal": "Finish all 20 throws — no drops!",
+          "safety": "Feet planted — only arms move."
+        },
+        "tr": {
+          "title": "Tempo Ustası",
+          "steps": [
+            "5 tane çok yavaş atış",
+            "5 tane orta hızlı atış",
+            "Bir tur daha tekrarla. Ayaklar YERDEN KIPIRDAMASIN!"
+          ],
+          "goal": "20 atışın tamamını düşürmeden bitir!",
+          "safety": "Ayaklar sabit — sadece kollar hareket etsin."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:157",
+          "tr": "tr/i18n.js:11 missionTR[\"14\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "ec862bde8eb21e1d57df0b4ed5deaa0a4c33f1c645300e74d50bb85805f18a49",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m14",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m15",
+      "mechanicsVersion": "m4-20260923-m15-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Spotlight Eyes",
+          "steps": [
+            "Before catching, shout: I SEE IT!",
+            "Partner throws after they hear you",
+            "Catch, say I SEE IT again, throw back"
+          ],
+          "goal": "Reach 15 spotlight catches!",
+          "safety": "Keep the same distance — no surprises."
+        },
+        "tr": {
+          "title": "Gözler Hedefte",
+          "steps": [
+            "Yakalamadan önce “GÖRDÜM!” diye seslen",
+            "Arkadaşın seni duyduktan sonra atsın",
+            "Yakala, tekrar “GÖRDÜM!” de ve geri at"
+          ],
+          "goal": "15 odaklı yakalamaya ulaş!",
+          "safety": "Mesafeyi aynı tutun — sürpriz yapmayın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:162",
+          "tr": "tr/i18n.js:11 missionTR[\"15\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "33f12f58e9bc61bc75f30bd2dbb5393e60f37ecf6d7207484a87f06254494534",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m15",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m16",
+      "mechanicsVersion": "m4-20260923-m16-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "1 — 2 — 3 — GO!",
+          "steps": [
+            "Thrower counts 1 — 2 — 3 out loud",
+            "Ball flies on 3, exactly!",
+            "Catcher counts 1 — 2 — 3 back, then throws"
+          ],
+          "goal": "10 perfectly-timed catches!",
+          "safety": "Calm count, steady rhythm."
+        },
+        "tr": {
+          "title": "1 — 2 — 3 — BAŞLA!",
+          "steps": [
+            "Atan kişi yüksek sesle 1 — 2 — 3 saysın",
+            "Top tam 3’te havalansın!",
+            "Yakalayan da 1 — 2 — 3 deyip geri atsın"
+          ],
+          "goal": "Tam zamanında 10 yakalama!",
+          "safety": "Sakin say, ritmi sabit tut."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:167",
+          "tr": "tr/i18n.js:11 missionTR[\"16\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "89159dccc233e7bbe053cdee2d33bdaa69678142971179ce8b6e230a1f1f5301",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m16",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m17",
+      "mechanicsVersion": null,
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "blocked-human-mechanics",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": null,
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:172",
+          "tr": "tr/i18n.js:11 missionTR[\"17\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "71ca9c13712808358c2df75ef63523aea2bdfd2bf33582be9736ae3b4e857159",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "HUMAN_DECISION_REQUIRED",
+        "locales": "HOLD",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": {
+        "id": "H-M17",
+        "question_tr": "Ayna, yakalayana göre aynı yükseklik/eğim mi demek? Beş atış boyunca aynı kişi mi pozu seçer; geri paslar da ayna atışı/sayımına girer mi?",
+        "known": "Comfortable high/low/tilted poses with blue front receiving are compatible; leader/return-pass/count semantics remain unspecified.",
+        "blocked": [
+          "mirror frame of reference",
+          "leader and return pass semantics"
+        ]
+      },
+      "briefRef": "briefs.json#m17",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m18",
+      "mechanicsVersion": "m4-20260923-m18-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Count to 10",
+          "steps": [
+            "Count every clean catch out loud TOGETHER",
+            "Drop = restart from 1",
+            "No pressure — just try again!"
+          ],
+          "goal": "Reach 10 catches with no drops!",
+          "safety": "Stress-free zone — restarting is part of the game."
+        },
+        "tr": {
+          "title": "10’a Kadar Say",
+          "steps": [
+            "Her temiz yakalamayı BİRLİKTE yüksek sesle sayın",
+            "Top düşerse 1’den yeniden başlayın",
+            "Baskı yok — tekrar deneyin!"
+          ],
+          "goal": "Topu düşürmeden 10 yakalamaya ulaş!",
+          "safety": "Burası stressiz bölge — yeniden başlamak oyunun bir parçası."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:177",
+          "tr": "tr/i18n.js:11 missionTR[\"18\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "a730ecd919898c04486297bac54cb710e43aaff68a83801d9dddb8c1fdab6cf8",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m18",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m19",
+      "mechanicsVersion": "m4-20260923-m19-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "3–4",
+      "equipment": {
+        "paddles": [
+          3,
+          4
+        ],
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Round Robin",
+          "steps": [
+            "Stand in a circle, each holding a paddle",
+            "Throw to ANYONE — but never twice in a row to the same person!",
+            "Keep all throws gentle"
+          ],
+          "goal": "2 full minutes — count drops, beat your record!",
+          "safety": "Stay spaced out — no crowding."
+        },
+        "tr": {
+          "title": "Sırayla Pas",
+          "steps": [
+            "Herkes bir paddle ile daire şeklinde dursun",
+            "Topu İSTEDİĞİN kişiye at — ama üst üste iki kez aynı kişiye değil!",
+            "Tüm atışlar yumuşak olsun"
+          ],
+          "goal": "2 dakika boyunca oynayın — düşenleri sayın ve rekorunuzu geçin!",
+          "safety": "Aranızda yeterli mesafe olsun — sıkışmayın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:184",
+          "tr": "tr/i18n.js:11 missionTR[\"19\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "3d52cc3cc7f929c21d667d4291bac820527c26aeb8f778e167db306198e8447f",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m19",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      },
+      "timedGoalPolicy": "Physical source goal only. No app timer, live caller, elapsed-time success or automatic narration is introduced."
+    },
+    {
+      "id": "m20",
+      "mechanicsVersion": "m4-20260923-m20-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Crab Shuffle Relay",
+          "steps": [
+            "4 players form 2 lines and use 1 ball.",
+            "Catch on the blue front, detach with your free hand, then toss to the next player.",
+            "After your catch/pass turn, stay standing and side-shuffle to the back of the line."
+          ],
+          "goal": "Reach a shared total of 20 passes across both lines.",
+          "safety": "Side-shuffle while standing. Do not crab-walk on your hands or put weight on a paddle-strapped hand. No running."
+        },
+        "tr": {
+          "title": "Yengeç Yan Adım Bayrak Oyunu",
+          "steps": [
+            "4 oyuncu 2 sıra oluşturur ve 1 top kullanır.",
+            "Mavi ön yüzle yakala, topu boş elinle ayır ve sıradaki oyuncuya at.",
+            "Yakala/pas ver sıran bitince ayakta kalarak yan adımlarla sıranın arkasına geç."
+          ],
+          "goal": "İki sıra birlikte toplam 20 pasa ulaşsın.",
+          "safety": "Ayakta yan adımlarla ilerle. Eller üzerinde yengeç yürüyüşü yapma; paddle takılı eline ağırlık verme. Koşma."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:189",
+          "tr": "tr/i18n.js:11 missionTR[\"20\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "ce1a6b5ab38d93cbb51af92c5e541cdc7cf8ea3412567c34c625c0a960de753d",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m20",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m21",
+      "mechanicsVersion": "m4-20260923-m21-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "3",
+      "equipment": {
+        "paddles": 3,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Middle Defender",
+          "steps": [
+            "3 players use 3 paddles and 1 ball. Two players face each other; the third stands between them.",
+            "The outer players toss to each other below face level.",
+            "If the middle player catches on the paddle, they swap places with the thrower by walking."
+          ],
+          "goal": "Make 6 middle catches; everyone gets a turn.",
+          "safety": "Keep tosses below face level. Walk when swapping; do not dive."
+        },
+        "tr": {
+          "title": "Ortadaki Savunmacı",
+          "steps": [
+            "3 oyuncu, 3 paddle ve 1 top kullanır. İki oyuncu karşılıklı, üçüncü oyuncu aralarında durur.",
+            "Dıştaki oyuncular yüz hizasının altında birbirine atar.",
+            "Ortadaki oyuncu paddle ile yakalarsa, atan oyuncuyla yürüyerek yer değiştirir."
+          ],
+          "goal": "Ortada 6 yakalama yapın; herkes sırayla oynasın.",
+          "safety": "Yüz hizasının altında atın. Yer değiştirirken yürüyün; atlamayın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:194",
+          "tr": "tr/i18n.js:11 missionTR[\"21\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "0fe8e11e2247e6d81c1e939824f143943279901169e4af4012549168020d4fe0",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m21",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m22",
+      "mechanicsVersion": "m4-20260923-m22-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Spin Squad",
+          "steps": [
+            "4 players in a square, each with a paddle",
+            "One player throws to anyone",
+            "EVERYONE steps clockwise after each catch — then throw again!"
+          ],
+          "goal": "20 catches with full team rotations!",
+          "safety": "Rotate calm — no bumping!"
+        },
+        "tr": {
+          "title": "Dönen Takım",
+          "steps": [
+            "4 oyuncu kare şeklinde dursun, herkesin paddle’ı olsun",
+            "Bir oyuncu topu istediği kişiye atsın",
+            "HERKES her yakalamadan sonra saat yönünde bir adım ilerlesin — sonra yeniden atın!"
+          ],
+          "goal": "Takım tam dönüşler yaparken 20 yakalamaya ulaş!",
+          "safety": "Sakin dönün — çarpışmak yok!"
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:199",
+          "tr": "tr/i18n.js:11 missionTR[\"22\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "7d2a46d804c4c09fa910bb70f0c8e624b85f265b74bb431739c3c7b60302f640",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m22",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m23",
+      "mechanicsVersion": "m4-20260923-m23-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Mix It Up",
+          "steps": [
+            "4 players use 1 ball. Only 1 pair plays at a time.",
+            "After the active pair makes 6 clean catches, the ball goes to the next pairing.",
+            "Complete every pairing of the 4 players once. There are 6 different pairs."
+          ],
+          "goal": "Complete all 6 pairings once, with 6 clean catches per pair.",
+          "safety": "Change pairs calmly. There is no second ball or simultaneous rally."
+        },
+        "tr": {
+          "title": "Eş Değiştir",
+          "steps": [
+            "4 oyuncu 1 top kullanır. Aynı anda yalnız 1 çift oynar.",
+            "Aktif çift 6 temiz yakalama yaptıktan sonra top sonraki eşleşmeye geçer.",
+            "Dört oyuncunun bütün ikili eşleşmelerini birer kez tamamlayın. Toplam 6 farklı çift vardır."
+          ],
+          "goal": "Her çift 6 temiz yakalama yaparak 6 eşleşmenin hepsini bir kez tamamlasın.",
+          "safety": "Sakin biçimde eş değiştirin. İkinci top veya eşzamanlı ralli yoktur."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:204",
+          "tr": "tr/i18n.js:11 missionTR[\"23\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "fdad7333c0735712f5809c284317f03b141fd7951ee494f2a1680a2e01160623",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m23",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      },
+      "pairCoverage": {
+        "unorderedPairs": 6,
+        "simultaneousPairs": 1,
+        "balls": 1,
+        "catchesPerPair": 6,
+        "order": "Not prescribed; no pairing-order rule invented."
+      }
+    },
+    {
+      "id": "m24",
+      "mechanicsVersion": "m4-20260923-m24-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "human-mechanics-approved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "2v2 Squad Count",
+          "steps": [
+            "Make 2 teams of 2. Both teams share 1 ball and take turns.",
+            "The active team makes 5 clean catches, then passes the ball to the other team.",
+            "Add both teams’ catches to one shared total."
+          ],
+          "goal": "Reach 40 catches together.",
+          "safety": "Only one team plays at a time. Four paddles may be used; there are no simultaneous rallies."
+        },
+        "tr": {
+          "title": "2v2 Takım Sayacı",
+          "steps": [
+            "İkişer kişilik 2 takım olun. İki takım 1 topu sırayla kullanır.",
+            "Aktif takım 5 temiz yakalama yapınca top diğer takıma geçer.",
+            "İki takımın yakalamalarını ortak toplama ekleyin."
+          ],
+          "goal": "Birlikte toplam 40 yakalamaya ulaşın.",
+          "safety": "Aynı anda yalnız bir takım oynar. Dört paddle kullanılabilir; eşzamanlı ralli yoktur."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:209",
+          "tr": "tr/i18n.js:11 missionTR[\"24\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "a1ab7c8f33f8c83d6dc6dc39a954a0cbe1386b76002f6302cc4c7b3f987551ed",
+        "authority": "explicit user M4 decision + global physical rule",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m24",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      },
+      "teamPolicy": {
+        "teams": 2,
+        "playersPerTeam": 2,
+        "simultaneousTeams": 1,
+        "balls": 1,
+        "catchesPerTurn": 5,
+        "sharedGoal": 40
+      }
+    },
+    {
+      "id": "m25",
+      "mechanicsVersion": "lock07p-m25-fixture-v1",
+      "localeContentVersion": "lock07p-v1",
+      "status": "locked-m25-fixture-preserved",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "tr": {
+          "mission": "Sakin Yakala",
+          "indoor": "Evde oyun · 3+",
+          "materials": "2 oyuncu · 2 paddle · 1 top",
+          "help": "Yardım",
+          "sound": "Ses: Kapalı",
+          "access": "Erişilebilirlik yardımı",
+          "setup": "Yere veya sandalyeye oturun; kalkmadan oynayın. Paddle’ı arkadaki el kayışıyla takın.",
+          "toss": "Boş elle kısa ve yumuşak atın.",
+          "catch": "Top mavi ön yüze yapışınca ayırıp geri atın.",
+          "goal": "Hedef: Oturarak 15 temiz yakalama!",
+          "safe": "Yüz hizasının altında, yumuşak atın. Aranızda 1–3 metre olsun; bir yetişkin gözetiminde oynayın. Kırılabilecek eşyaları kaldırın.",
+          "start": "Başla",
+          "another": "Başka uygun görev",
+          "how": "Açıklama / yardım",
+          "report": "Oyun sonrası bildirim",
+          "players": "Oyuncu işlemleri",
+          "adult": "Yetişkinler",
+          "back": "Tura dön",
+          "backMission": "Göreve dön",
+          "stepsTitle": "At · yakala · ayır",
+          "step1": "Boş elle yumuşak at",
+          "step1body": "Kısa atışlar yapın. İkiniz de oturarak oynayın.",
+          "step2": "Mavi ön yüzle yakala",
+          "step2body": "Top, paddle’ın mavi ön yüzüne yapışarak tutulur.",
+          "step3": "Sonraki atış için ayır",
+          "step3body": "Topu boş elinle ayır. Sonra yumuşakça geri at.",
+          "againExplain": "Yeniden açıkla",
+          "ask": "Bir yetişkinden yardım al",
+          "stop": "Turu durdur",
+          "activeTitle": "Oyun zamanı",
+          "state": "Tur başlatıldı",
+          "activeCopy": "Oturarak, kısa ve yumuşak atışlar.",
+          "activeCatch": "Mavi ön yüzle yakala.",
+          "activeHelp": "Yardım / açıklama",
+          "thanks": "Teşekkürler!",
+          "reported": "Görevi tamamladığını bildirdin.",
+          "notSaved": "Henüz kişisel geçmişe eklenmedi.",
+          "edit": "Bildirimi düzelt",
+          "again": "Yeniden oyna",
+          "other": "Başka görev",
+          "leave": "Ayrıl",
+          "save": "Kişisel geçmişe ekle"
+        },
+        "en-US": {
+          "mission": "Chill Catch",
+          "indoor": "Indoor play · Ages 3+",
+          "materials": "2 players · 2 paddles · 1 ball",
+          "help": "Help",
+          "sound": "Sound: Off",
+          "access": "Accessibility help",
+          "setup": "Sit on the floor or a chair and stay seated. Put on your paddle using the hand strap on the back.",
+          "toss": "Make short, gentle tosses with your free hand.",
+          "catch": "Let the ball stick to the blue front. Then take it off and gently toss it back.",
+          "goal": "Goal: 15 clean catches while seated!",
+          "safe": "Keep tosses gentle and below face level. Stay 1–3 meters apart, with adult supervision. Clear away breakable objects.",
+          "start": "Start",
+          "another": "Find another suitable mission",
+          "how": "How to play / help",
+          "report": "Report after playing",
+          "players": "Player options",
+          "adult": "Grown-ups",
+          "back": "Back to this round",
+          "backMission": "Back to the mission",
+          "stepsTitle": "Toss · catch · remove",
+          "step1": "Toss gently with your free hand",
+          "step1body": "Make short tosses. Both players stay seated.",
+          "step2": "Catch with the blue front",
+          "step2body": "The ball sticks to the paddle’s blue front.",
+          "step3": "Take the ball off for the next toss",
+          "step3body": "Take the ball off with your free hand. Then gently toss it back.",
+          "againExplain": "Explain again",
+          "ask": "Ask a grown-up for help",
+          "stop": "Stop this round",
+          "activeTitle": "Time to play",
+          "state": "Round started",
+          "activeCopy": "Stay seated. Make short, gentle tosses.",
+          "activeCatch": "Catch with the blue front.",
+          "activeHelp": "Help / how to play",
+          "thanks": "Thanks for sharing!",
+          "reported": "You reported completing this mission.",
+          "notSaved": "This report hasn’t been added to a player’s history yet.",
+          "edit": "Edit this report",
+          "again": "Play again",
+          "other": "Another mission",
+          "leave": "Leave",
+          "save": "Add to a player’s history"
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:216",
+          "tr": "tr/i18n.js:11 missionTR[\"25\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "1aa46ee30a3b005f52b59f2c28c54c1f1730b8d65e6cbf7181af061fafc4568b",
+        "authority": "Existing locked m25 development fixture, copied exactly for reference; age/distance/physical validation still open",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision.",
+        "fixtureSHA256": "8a60774dc2aece5879087cf892ef930bdf01f41b31ef1fad0d1e3a45563257ae"
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "LOCKED_FIXTURE_ONLY",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "M25_FIXTURE_ONLY"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m25",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m26",
+      "mechanicsVersion": "m4-20260923-m26-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Tiny Space",
+          "steps": [
+            "Stand just 1 big step apart",
+            "Throw soft — no stepping forward!",
+            "Feet PLANTED the whole time"
+          ],
+          "goal": "12 clean catches in tiny range!",
+          "safety": "Watch out for lamps and shelves."
+        },
+        "tr": {
+          "title": "Mini Alan",
+          "steps": [
+            "Aranızda sadece 1 büyük adım olsun",
+            "Yumuşak at — öne adım atmak yok!",
+            "Ayaklar tüm oyun boyunca SABİT"
+          ],
+          "goal": "Mini alanda 12 temiz yakalama!",
+          "safety": "Lambalara ve raflara dikkat edin."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:221",
+          "tr": "tr/i18n.js:11 missionTR[\"26\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "a46a8da2aae4469e0968ece23d5e1595041593cd64c6e7b076ffa1f657442114",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m26",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m27",
+      "mechanicsVersion": null,
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "blocked-human-mechanics",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2–3",
+      "equipment": {
+        "paddles": [
+          2,
+          3
+        ],
+        "balls": 1
+      },
+      "locale": null,
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:226",
+          "tr": "tr/i18n.js:11 missionTR[\"27\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "b36f4ab5b15abace7ef4c85cb6082fa88bd6d1681aaf500fcbd6bd71fc23ece9",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "HUMAN_DECISION_REQUIRED",
+        "locales": "HOLD",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": {
+        "id": "H-M27",
+        "question_tr": "Üç oyunculu Gizli İşaret’te üçüncü kişi kime ve hangi sırada pas verir; sinyal kimden kime gider? Elinde top varken ve paddle takılıyken uygulanacak sinyal/reset sırası nedir?",
+        "known": "Signal before each throw; no signal means no throw. Two-player intent is known, three-player variant is not.",
+        "blocked": [
+          "third player role/order",
+          "signal with occupied hands sequence"
+        ]
+      },
+      "briefRef": "briefs.json#m27",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m28",
+      "mechanicsVersion": "m4-20260923-m28-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Mind Reader",
+          "steps": [
+            "Thrower secretly picks: LEFT, RIGHT, or CENTER",
+            "3-second pause — no hints!",
+            "Catcher predicts and positions paddle BEFORE the throw!"
+          ],
+          "goal": "Predict 8 out of 12 correctly!",
+          "safety": "Soft, predictable distance — surprise only the direction."
+        },
+        "tr": {
+          "title": "Zihin Okuyucu",
+          "steps": [
+            "Atan kişi içinden SOL, SAĞ veya ORTA seçsin",
+            "3 saniye bekle — ipucu vermek yok!",
+            "Yakalayan atıştan ÖNCE tahmin edip paddle’ı o yöne yerleştirsin!"
+          ],
+          "goal": "12 tahminden 8’ini doğru bil!",
+          "safety": "Mesafe sabit, atış yumuşak olsun — sürpriz sadece yönde."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:231",
+          "tr": "tr/i18n.js:11 missionTR[\"28\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "2275c148f6b2bfd4aa5e8e66ef022b0471e29d0a7b3c45d8646a6576d3092a5f",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m28",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m29",
+      "mechanicsVersion": "m4-20260923-m29-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Stuck-Foot Catch",
+          "steps": [
+            "Both players: feet stuck to the floor",
+            "Soft tosses only",
+            "Catch and return — no chasing!"
+          ],
+          "goal": "20 clean catches!",
+          "safety": "If throws get wild, slow down together."
+        },
+        "tr": {
+          "title": "Ayaklar Sabit",
+          "steps": [
+            "İki oyuncunun da ayakları yere yapışmış gibi dursun",
+            "Sadece yumuşak atışlar",
+            "Yakala ve geri gönder — topun peşinden koşmak yok!"
+          ],
+          "goal": "20 temiz yakalama!",
+          "safety": "Atışlar kontrolden çıkarsa birlikte yavaşlayın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:236",
+          "tr": "tr/i18n.js:11 missionTR[\"29\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "7ad0bb17742f62a2196adf2ba11af8ba3a3e699403b7ab5e217eae508868fe78",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m29",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m30",
+      "mechanicsVersion": "m4-20260923-m30-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Left or Right!",
+          "steps": [
+            "Caller shouts LEFT or RIGHT before throwing",
+            "Catcher turns paddle to that side and catches!",
+            "Wrong side = miss. Switch caller every 5"
+          ],
+          "goal": "Score 8 correct side catches!",
+          "safety": "Throws straight and gentle — direction is the puzzle."
+        },
+        "tr": {
+          "title": "Sol mu Sağ mı?",
+          "steps": [
+            "Atan kişi atmadan önce SOL veya SAĞ diye seslensin",
+            "Yakalayan paddle’ı o tarafa çevirip yakalasın!",
+            "Yanlış taraf = kaçtı. Her 5 atışta seslenen kişi değişsin"
+          ],
+          "goal": "Doğru tarafta 8 yakalama yap!",
+          "safety": "Atışlar düz ve yumuşak olsun — bulmaca sadece yön."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:241",
+          "tr": "tr/i18n.js:11 missionTR[\"30\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "589ebc79ad5a4722f4e98f2f89769470690990f2f8f7fb02635b44b200ae5e8a",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m30",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m31",
+      "mechanicsVersion": "m4-20260923-m31-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Cloud Chaser",
+          "steps": [
+            "Stand 6 big steps apart.",
+            "Make a controlled high arc; do not aim at a face or head.",
+            "Watch the ball descend and catch it on the paddle’s blue front."
+          ],
+          "goal": "10 sky catches!",
+          "safety": "The high arc is a flight path. The target is the paddle, not the person."
+        },
+        "tr": {
+          "title": "Bulut Avcısı",
+          "steps": [
+            "Aranızda 6 büyük adım olsun.",
+            "Kontrollü, yüksek yaylı bir atış yap; yüzü veya başı hedefleme.",
+            "Topun alçalışını izle ve paddle’ın mavi ön yüzüyle yakala."
+          ],
+          "goal": "10 gökyüzü yakalaması!",
+          "safety": "Yüksek yay topun uçuş yoludur. Hedef kişi değil paddle’dır."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:248",
+          "tr": "tr/i18n.js:11 missionTR[\"31\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "cf548f1321cc9281d314e99125efa9f16b783e738e3979b4cd2be67de1f1c603",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m31",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m32",
+      "mechanicsVersion": "m4-20260923-m32-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Home Base",
+          "steps": [
+            "Each player picks a home base (shadow, sidewalk square, grass patch)",
+            "Throw and catch from your base — no moving feet!",
+            "Step off your base = miss"
+          ],
+          "goal": "10 base-only catches!",
+          "safety": "Pick safe, flat ground for your base."
+        },
+        "tr": {
+          "title": "Ana Üs",
+          "steps": [
+            "Her oyuncu bir ana üs seçsin (gölge, kaldırım karesi, çim alan)",
+            "Üssünden at ve yakala — ayaklar hareket etmesin!",
+            "Üsten çıkarsan o atış sayılmaz"
+          ],
+          "goal": "Üsten çıkmadan 10 yakalama!",
+          "safety": "Üs için güvenli ve düz bir zemin seçin."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:253",
+          "tr": "tr/i18n.js:11 missionTR[\"32\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "99a6d3e2dd3980599861a64417733ef6d13a46937a89027bb032e78d4ec875a3",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m32",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m33",
+      "mechanicsVersion": "m4-20260923-m33-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "How Far Can You Throw?",
+          "steps": [
+            "Start 6 big-kid steps apart",
+            "Get 3 clean catches, then BOTH step back 2 big steps",
+            "Keep going! Note your best distance!"
+          ],
+          "goal": "Beat your previous distance record!",
+          "safety": "Use controlled arcs toward the paddle at longer distances, not harder throws at a person."
+        },
+        "tr": {
+          "title": "Ne Kadar Uzağa Atabilirsin?",
+          "steps": [
+            "Aranızda 6 büyük adım olsun",
+            "3 temiz yakalama yapın, sonra İKİNİZ de 2 büyük adım geri gidin",
+            "Devam edin! En iyi mesafenizi aklınızda tutun!"
+          ],
+          "goal": "Önceki mesafe rekorunu geç!",
+          "safety": "Uzakta kişiye daha sert atmak yerine paddle’a doğru kontrollü yaylı atışlar yap."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:258",
+          "tr": "tr/i18n.js:11 missionTR[\"33\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "ead7d7bb2a82313b23c8b1f9e30d0e84577cde25ac2d240dafbb8bfba7e44342",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m33",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m34",
+      "mechanicsVersion": "m4-20260923-m34-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Chase the Ball!",
+          "steps": [
+            "Thrower tosses the ball ahead of you — not too far!",
+            "Catcher runs to meet it",
+            "Catch with the paddle BEFORE it lands!"
+          ],
+          "goal": "7 running catches wins!",
+          "safety": "Pick a clear run zone — no obstacles!"
+        },
+        "tr": {
+          "title": "Topun Peşine!",
+          "steps": [
+            "Atan kişi topu önüne doğru atsın — çok uzağa değil!",
+            "Yakalayan topa doğru koşsun",
+            "Top yere düşmeden ÖNCE paddle ile yakala!"
+          ],
+          "goal": "Koşarak 7 yakalama yap!",
+          "safety": "Engelsiz ve açık bir koşu alanı seçin!"
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:263",
+          "tr": "tr/i18n.js:11 missionTR[\"34\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "d16b7d4fbf0124ae6eea2af9e217f3cdf8005f8d3c894ff84f6333937b9fbc3b",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m34",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m35",
+      "mechanicsVersion": "m4-20260923-m35-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Sky High Jump",
+          "steps": [
+            "Aim just above the catcher’s normal paddle reach, not at their head. Do not throw too high.",
+            "Wait for the toss; do not jump before it.",
+            "Jump and catch on the blue front while in the air. Switch roles every 5 throws."
+          ],
+          "goal": "8 jump catches!",
+          "safety": "Jump on flat soft ground — grass is best."
+        },
+        "tr": {
+          "title": "Zıplayarak Yakala",
+          "steps": [
+            "Yakalayanın paddle ile normal erişiminin biraz üstünü hedefle; başını hedefleme. Çok yükseğe atma.",
+            "Atışı bekle; top atılmadan zıplama.",
+            "Zıpla ve havadayken mavi ön yüzle yakala. Her 5 atışta rol değiştirin."
+          ],
+          "goal": "Zıplayarak 8 yakalama!",
+          "safety": "Düz ve yumuşak zeminde zıpla — çim en iyisi."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:268",
+          "tr": "tr/i18n.js:11 missionTR[\"35\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "7bfd27f266a84bf51bbf84ddc40ffd77041f8b0e4813da398ced37214ef42494",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m35",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    },
+    {
+      "id": "m36",
+      "mechanicsVersion": "m4-20260923-m36-v1",
+      "localeContentVersion": "m4-review-20260923-v1",
+      "status": "source-reconciled-copy-candidate",
+      "releaseEligible": false,
+      "globalRulesRef": "human-m4-physical-v1",
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "locale": {
+        "en-US": {
+          "title": "Marathon Rally",
+          "steps": [
+            "Start close together — build a rally!",
+            "After every 5 clean catches, BOTH step back one big step",
+            "See how far you can stretch the rally!"
+          ],
+          "goal": "Reach 20 catches without a drop!",
+          "safety": "Stop stepping back when throws get wild."
+        },
+        "tr": {
+          "title": "Maraton Serisi",
+          "steps": [
+            "Yakın başlayın — bir yakalama serisi oluşturun!",
+            "Her 5 temiz yakalamadan sonra İKİNİZ de bir büyük adım geri gidin",
+            "Seriyi ne kadar uzağa taşıyabileceğinizi görün!"
+          ],
+          "goal": "Topu düşürmeden 20 yakalamaya ulaş!",
+          "safety": "Atışlar kontrolden çıkınca geri gitmeyi bırakın."
+        }
+      },
+      "provenance": {
+        "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+        "sourceRefs": {
+          "en": "data.js:273",
+          "tr": "tr/i18n.js:11 missionTR[\"36\"] (tek uzun satır)"
+        },
+        "legacyRecordSHA256": "7ba598d791575c0600fbeac9e421fe9500215fcdb53e041df79e39ae88f1e1c5",
+        "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+        "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+      },
+      "readiness": {
+        "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+        "locales": "EN_TR_PAIRED_REVIEW",
+        "criticalArt": "NOT_PRODUCED",
+        "narration": "OPTIONAL_UNRECORDED",
+        "physicalValidation": "OPEN",
+        "runtime": "NOT_PUBLISHED"
+      },
+      "decisionGate": null,
+      "briefRef": "briefs.json#m36",
+      "legacyAssets": "reference paths only; no automatic reuse/approval",
+      "runtimeAudio": {
+        "mode": "optional-explicit-approved-prerecorded-only",
+        "automaticCaller": false,
+        "automaticTimer": false,
+        "automaticResumeNarration": false,
+        "successFromAudio": false
+      }
+    }
+  ]
+}
