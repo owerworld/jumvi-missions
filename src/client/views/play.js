@@ -13,7 +13,7 @@ export function playView(name,ctx) {
  const sound=()=>{const v=audio.snapshot();const n=button(v.preference?ui.soundOn:ui.soundOff,()=>send('SOUND'),{kind:'link'});const label=el('span',n.textContent);label.dataset.soundText='';n.replaceChildren(icon(v.preference?'volume-2':'volume-x'),label);n.dataset.sound='';n.setAttribute('aria-label',ui.soundLabel);n.setAttribute('aria-pressed',String(v.preference));return n;};
  const access=()=>b(cp.access,'ACCESS',{},'link');
  const ready=()=>{if(!state.mission.ready){const wrap=el('div');wrap.dataset.readiness='';const p=text(state.loadingAssets?ui.criticalLoading:ui.criticalMissing,'status');p.setAttribute('role','status');const retry=b(ui.retry,'RETRY_ASSETS');retry.hidden=!!state.loadingAssets;wrap.append(p,retry);s.append(wrap);}};
- const secondary=(report=false)=>{const r=el('nav',undefined,'secondary-access');r.setAttribute('aria-label',ui.titles.management);if(report)r.append(b(cp.report,'REPORT_OPEN',{},'link'));r.append(b(cp.players,'GO',{screen:'management'},'link'),b(cp.adult,'GO',{screen:'adult'},'link'));s.append(r);};
+ const secondary=(report=false)=>{const r=el('nav',undefined,'secondary-access');r.setAttribute('aria-label',ui.titles.management);if(report)r.append(b(cp.report,'REPORT_OPEN',{},'link'));r.append(b(cp.players,'GO',{screen:'management'},'link'),b(cp.adult,'GO',{screen:'adult'},'link'),b(ui.titles.returning,'GO',{screen:'returning'},'link'));s.append(r);};
  const action=(txt,type,kind='secondary',active=false)=>b(txt,type,{},kind,active);
  if(name==='entry'){
   brand();const sup=support();sup.classList.add('entry-support');s.append(sup,heading(cp.mission),text(cp.goal,'instruction goal'),art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch),text(cp.materials,'materials'),text(cp.indoor,'muted indoor'));
@@ -37,8 +37,8 @@ export function playView(name,ctx) {
   if(state.round&&!state.reportMode)row.append(action(ui.resume,'RESUME','primary'));
   row.append(text(ui.optional,'muted'),b(ui.complete,'REPORT',{value:'complete'}),b(ui.early,'REPORT',{value:'early'}));s.append(row);const next=controls();next.classList.add('secondary-access');next.append(action(cp.again,'REPLAY'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(next);
  }else if(name==='report'){
-  brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),art('product-still-v1','JUMVI','product-still'),text(cp.notSaved));
-  const row=controls();row.append(b(cp.edit,'EDIT_REPORT',{},'link'),action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(row);const r=el('div',undefined,'secondary-access');r.append(b(cp.save,'GO',{screen:'attribution'},'link'));s.append(r);
+  brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),art('product-still-v1','JUMVI','product-still'),text(ctx.isSaved?ui.savedReport:cp.notSaved));
+  const row=controls();row.append(b(cp.edit,'EDIT_REPORT',{},'link'),action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(row);const r=el('div',undefined,'secondary-access');r.append(b(cp.save,'GO',{screen:'attribution'},'link'),b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
  }
  return s;
 }

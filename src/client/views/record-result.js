@@ -1,2 +1,2 @@
-import {skeleton} from './skeleton.js';
-export default function view(ctx){return skeleton('record-result',ctx);}
+import {personalView} from './personal.js';
+export default ctx=>personalView('record-result',ctx);

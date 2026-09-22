@@ -1,3 +1,4 @@
+import {PersonalController} from './repository/controller.js';
 import {icon} from './components/icons.js';
 import {initialState,transition} from './state/app.js';import {views} from './views/index.js';import {routeLocale,installRouter} from './router.js';import {contextKey,contextMatches} from './context.js';import {AudioController} from './media/audio-controller.js';import {readResume,writeResume} from './resume.js';import {dialog} from './components/dialog.js';
 async function boot(){
@@ -8,22 +9,24 @@ async function boot(){
  let state=initialState({documentId:crypto.randomUUID(),locale,mission:{id:fixture.id,mechanicsVersion:fixture.mechanicsVersion,contentVersion:fixture.contentVersion,ready:false}}),router,helpTrigger=null;
  let storage;try{storage=sessionStorage;}catch{storage=null;}
  const audio=new AudioController({onChange:refreshAudio});
+ const personal=new PersonalController({getState:()=>state,navigate:screen=>dispatch({type:'GO',screen,revision:state.revision,documentId:state.documentId}),render,ui});
  function notice(message){const n=app.querySelector('.play-notice');if(n)n.textContent=message;}
  function refreshAudio(){const v=audio.snapshot();for(const n of app.querySelectorAll('[data-sound]')){n.querySelector('[data-sound-text]').textContent=v.preference?ui.soundOn:ui.soundOff;n.querySelector('svg')?.replaceWith(icon(v.preference?'volume-2':'volume-x'));n.setAttribute('aria-pressed',String(v.preference));}if(v.playback==='unavailable')notice(ui.soundUnavailable);else if(v.playback==='pending')notice(ui.soundPending);}
- function render(){const captured=state,send=(type,detail={},push=true)=>dispatch({type,...detail,revision:captured.revision,documentId:captured.documentId},push);
-  app.replaceChildren(views[state.screen]({state,ui,cp,assetManifest,audio,send}));const p=document.createElement('p');p.className='play-notice';p.setAttribute('role','status');p.setAttribute('aria-live','polite');app.append(p);app.setAttribute('aria-busy','false');placeUtilities();app.querySelector('h1')?.focus({preventScroll:true});refreshAudio();
+ function render({preserveFocus=false}={}){const focus=preserveFocus&&app.contains(document.activeElement)?{id:document.activeElement.id,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd}:null;const captured=state,send=(type,detail={},push=true)=>dispatch({type,...detail,revision:captured.revision,documentId:captured.documentId},push);
+  app.replaceChildren(views[state.screen]({state,ui,cp,assetManifest,audio,send,personal:personal.model,isSaved:personal.isSaved(state.report)}));const p=document.createElement('p');p.className='play-notice';p.setAttribute('role','status');p.setAttribute('aria-live','polite');app.append(p);app.setAttribute('aria-busy','false');placeUtilities();app.querySelector('h1')?.focus({preventScroll:true});refreshAudio();if(focus?.id){const target=document.getElementById(focus.id);target?.focus({preventScroll:true});if(target?.type==='text'&&focus.start!==null)target.setSelectionRange(focus.start,focus.end);}
  }
  function placeUtilities(){const section=app.querySelector('[data-view=entry]'),support=section?.querySelector('.entry-support');if(!support)return;const compact=innerWidth<24.375*parseFloat(getComputedStyle(document.documentElement).fontSize);(compact?section.querySelector('h1'):section.querySelector('.setup')).before(support);}
  function dispatch(e,push=true){
   if(!contextMatches(state,e))return;
+  if(personal.handle(e))return;
   if(e.type==='SOUND'){audio.toggle(null,contextKey(state));return;}
   if(e.type==='EXPLAIN'){app.querySelector('#first-step')?.focus();app.querySelector('#first-step')?.scrollIntoView({block:'start'});audio.replay(null,contextKey(state));return;}
   if(e.type==='ACCESS'||e.type==='ASK'){notice(e.type==='ACCESS'?ui.accessText:ui.askText);return;}
   if(e.type==='RETRY_ASSETS'){void retryAssets();return;}
-  if(state.report&&['LEAVE','REPLAY','START'].includes(e.type)&&!e.discardConfirmed){if(document.querySelector('dialog'))return;dialog({title:ui.discardTitle,body:ui.discardBody,cancelLabel:ui.cancel,confirmLabel:ui.discard,onConfirm:()=>dispatch({...e,discardConfirmed:true},push)});return;}
+  if(state.report&&!personal.isSaved(state.report)&&['LEAVE','REPLAY','START','PREVIOUS'].includes(e.type)&&!e.discardConfirmed){if(document.querySelector('dialog'))return;dialog({title:ui.discardTitle,body:ui.discardBody,cancelLabel:ui.cancel,confirmLabel:ui.discard,onConfirm:()=>dispatch({...e,discardConfirmed:true},push)});return;}
   if(e.type==='HELP')helpTrigger={screen:state.screen,label:e.trigger||document.activeElement?.textContent};
   const next=transition(state,{...e,id:e.id||crypto.randomUUID()});if(next===state)return;
-  audio.cancel({off:e.type==='GUEST'});state=next;const stored=writeResume(storage,state);render();if(!stored)notice(ui.storageUnavailable);
+  const previous=state.screen;audio.cancel({off:e.type==='GUEST'||e.type==='PREVIOUS'});state=next;personal.enter(state.screen,previous);const stored=writeResume(storage,state);render();if(!stored)notice(ui.storageUnavailable);
   if(e.type==='RETURN'&&helpTrigger?.screen===state.screen){[...app.querySelectorAll('button')].find(b=>b.textContent===helpTrigger.label)?.focus();helpTrigger=null;}
   if(push)router?.write();
  }
@@ -35,7 +38,7 @@ async function boot(){
  router=installRouter(()=>state,(type,d={},push=true)=>dispatch({type,...d,revision:state.revision,documentId:state.documentId},push));
  const sendCurrent=type=>dispatch({type,revision:state.revision,documentId:state.documentId},false);
  function interrupt(){audio.cancel();sendCurrent('INTERRUPT');}
- document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();});addEventListener('pagehide',interrupt);addEventListener('resize',placeUtilities);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();else personal.visible();});addEventListener('pagehide',interrupt);addEventListener('pageshow',()=>personal.visible());addEventListener('resize',placeUtilities);
  if(resume.kind==='known')dispatch({type:'RESTORE',round:resume.round,revision:state.revision,documentId:state.documentId},false);
  else if(resume.kind==='unknown'||router.unknown)sendCurrent('UNKNOWN');else render();
  state={...state,loadingAssets:false};void retryAssets();

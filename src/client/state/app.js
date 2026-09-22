@@ -4,7 +4,7 @@ import {explicitReport} from './report.js';
 import {recordBoundary} from './record.js';
 import {initialMedia, invalidateMedia} from './media.js';
 export function initialState({documentId, locale='tr', mission=null}={}) {
- return {documentId,locale,mission,revision:0,screen:'entry',round:null,report:null,record:recordBoundary,media:initialMedia(),returnContext:null,unknown:false,reportMode:false};
+ return {documentId,locale,mission,revision:0,screen:'entry',round:null,report:null,record:recordBoundary,media:initialMedia(),returnContext:null,unknown:false,reportMode:false,previous:null};
 }
 export function transition(s,e) {
  if (!contextMatches(s,e)) return s;
@@ -48,7 +48,11 @@ export function transition(s,e) {
   if(!report) return s;
   n={...s,screen:'report',report,reportMode:false};break;
  }
- case 'GUEST': n={...s,screen:'entry',round:null,report:null,record:recordBoundary,returnContext:null,unknown:false};break;
+ case 'REPORT_RETURN': n={...s,screen:s.report?'report':'entry'};break;
+ case 'PREVIOUS':
+  if(!s.previous)return s;
+  n={...s,...s.previous,screen:s.previous.report?'report':s.previous.round?.state||'entry',previous:null,record:recordBoundary};break;
+ case 'GUEST': n={...s,previous:s.round||s.report?{round:s.round?.state==='active'?changeRound(s.round,'interrupted'):s.round,report:s.report}:s.previous,screen:'entry',round:null,report:null,record:recordBoundary,returnContext:null,unknown:false};break;
  case 'LEAVE': n={...s,screen:'entry',round:null,report:null,returnContext:null,unknown:false};break;
  default: return s;
  }

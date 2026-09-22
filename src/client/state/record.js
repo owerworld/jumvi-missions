@@ -1,2 +1,2 @@
-// M3 gate: no personal data input, attribution, or persistence is available.
-export const recordBoundary = Object.freeze({status:'not-requested', enabled:false, gate:'R3'});
+// Personal saving remains a separate explicit operation after a report.
+export const recordBoundary = Object.freeze({status:'not-requested', enabled:true});

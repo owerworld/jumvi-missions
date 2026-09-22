@@ -1,2 +1,2 @@
-import {skeleton} from './skeleton.js';
-export default function view(ctx){return skeleton('adult',ctx);}
+import {personalView} from './personal.js';
+export default ctx=>personalView('adult',ctx);
