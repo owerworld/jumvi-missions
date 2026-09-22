@@ -1,4 +1,4 @@
-// M0 isolation adapter only. The production Worker is imported unchanged.
+// Staging isolation adapter. Never imports production code or resources.
 
 
 export default {
@@ -21,7 +21,7 @@ export default {
       return new Response('Unavailable in M0 staging', { status: 404, headers });
     }
     // Explicit allowlist prevents forwarding any accidental secrets/datasets.
-    const path = ['/tr','/tr/'].includes(url.pathname) ? '/tr/index.html' : url.pathname;
+    const path = url.pathname === '/' ? '/index.html' : (['/tr','/tr/'].includes(url.pathname) ? '/tr/index.html' : url.pathname);
     const response = await env.ASSETS.fetch(path === url.pathname ? request : new Request(new URL(path, url), request));
     const result = new Response(response.body, response);
     for (const [key, value] of Object.entries(headers)) result.headers.set(key, value);

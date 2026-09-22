@@ -36,7 +36,7 @@ jobs:
           assert.equal(c.preview_urls, false);
           assert.deepEqual(c.routes, []);
           assert.deepEqual(c.analytics_engine_datasets, []);
-          assert.deepEqual(c.assets, {directory: 'dist', binding: 'ASSETS', run_worker_first: true});
+          assert.deepEqual(c.assets, {directory: 'dist', binding: 'ASSETS', run_worker_first: true, html_handling: 'none'});
           const allowed = new Set(['$schema','name','main','compatibility_date','workers_dev','preview_urls','routes','assets','analytics_engine_datasets','observability']);
           for (const k of Object.keys(c)) assert(allowed.has(k), `Unexpected staging setting: ${k}`);
           JS
@@ -56,3 +56,5 @@ jobs:
         run: |
           test -n "$CLOUDFLARE_API_TOKEN"
           npx --yes wrangler@4.136.1 deploy --config wrangler.staging.json --message "M0 staging $GITHUB_SHA"
+      - name: Verify live staging routes and artifact
+        run: node tools/verify-staging.mjs

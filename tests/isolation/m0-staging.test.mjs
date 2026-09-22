@@ -62,7 +62,7 @@ test('config contains no data, secret, service or route bindings', () => {
   assert.equal(c.preview_urls, false);
   assert.deepEqual(c.routes, []);
   assert.deepEqual(c.analytics_engine_datasets, []);
-  assert.deepEqual(c.assets, { directory: 'dist', binding: 'ASSETS', run_worker_first: true });
+  assert.deepEqual(c.assets, { directory: 'dist', binding: 'ASSETS', run_worker_first: true, html_handling: 'none' });
   const allowed = new Set(['$schema', 'name', 'main', 'compatibility_date', 'workers_dev', 'preview_urls', 'routes', 'assets', 'analytics_engine_datasets', 'observability']);
   for (const key of Object.keys(c)) assert(allowed.has(key), key);
   assert.equal(c.observability.enabled, false);
@@ -74,4 +74,16 @@ test('packaged assets exclude operations, source and production reports', () => 
   for (const path of ['data', 'assets/analiz', 'assets/panel', 'src', 'tools', '.github', 'wrangler.jsonc', 'wrangler.staging.json']) {
     assert.equal(existsSync(new URL(path, root)), false, path);
   }
+});
+
+test('EN/TR entry routes resolve explicit HTML files with no redirect loop', async () => {
+ const c=JSON.parse(readFileSync('wrangler.staging.json'));
+ assert.equal(c.assets.html_handling,'none');
+ for(const [path,file] of [['/','/index.html'],['/index.html','/index.html'],['/tr','/tr/index.html'],['/tr/','/tr/index.html'],['/tr/index.html','/tr/index.html']]){
+  const res=await staging.fetch(new Request(origin+path),{ASSETS:{fetch:async request=>{
+   assert.equal(new URL(request.url).pathname,file);
+   return new Response('synthetic locale document');
+  }}});
+  assert.equal(res.status,200);assert.equal(res.headers.get('Location'),null);
+ }
 });

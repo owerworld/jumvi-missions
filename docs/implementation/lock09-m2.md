@@ -21,3 +21,7 @@ Real child, physical-product, outdoor and VoiceOver/TalkBack tests remain open. 
 ## M3 entry gate
 
 LOCK 09 §7 (line 183) and §17 R3, LOCK 07 premium exclusions, LOCK 08 HF-08a/14a/17a exclusions, and the human LOCK 09 register entry leave unresolved: minimum player fields, data notice/purpose, retention/deletion (including pending operation envelopes), and conditional real authorization/protection. No later human decision closes these in the supplied instructions. M3 must stop as **HUMAN DECISION REQUIRED — R3**. No name, age, PIN, date of birth, consent mechanism or indefinite retention is invented. M4–M6 cannot be skipped ahead to under the sequential master instruction.
+
+## Real staging regression closed
+
+Live smoke found that the default Cloudflare HTML canonicalization redirected the adapter's `/tr/index.html` fetch back to `/tr/`, creating a loop. The local file server had not reproduced that platform behavior. Staging now sets `assets.html_handling: "none"` and maps only the explicit English/Turkish entry paths to their HTML files; unrecognized paths remain 404. A route regression contract plus actual Wrangler local and live staging checks verify it. Production configuration remains unchanged. Reference: https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/
