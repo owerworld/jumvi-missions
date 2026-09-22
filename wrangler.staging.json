@@ -7,10 +7,12 @@
   "preview_urls": false,
   "routes": [],
   "assets": {
-    "directory": ".wrangler/m0-staging/assets",
+    "directory": "dist",
     "binding": "ASSETS",
     "run_worker_first": true
   },
   "analytics_engine_datasets": [],
-  "observability": { "enabled": false }
+  "observability": {
+    "enabled": false
+  }
 }

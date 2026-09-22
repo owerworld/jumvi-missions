@@ -9,3 +9,10 @@ node_modules/
 # results), not source. Never committed; see docs/JUMVI_MISSION_FACTORY.md.
 artifacts/mission-runs/*/
 !artifacts/mission-runs/.gitkeep
+
+# Isolated implementation artifacts
+dist/
+node_modules/
+
+.test-results/
+playwright-report/

@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
+      - name: Install pinned test tools
+        run: npm ci --ignore-scripts
       - name: Validate staging boundary
         run: |
           node --input-type=module <<'JS'
@@ -34,14 +36,18 @@ jobs:
           assert.equal(c.preview_urls, false);
           assert.deepEqual(c.routes, []);
           assert.deepEqual(c.analytics_engine_datasets, []);
-          assert.deepEqual(c.assets, {directory: '.wrangler/m0-staging/assets', binding: 'ASSETS', run_worker_first: true});
+          assert.deepEqual(c.assets, {directory: 'dist', binding: 'ASSETS', run_worker_first: true});
           const allowed = new Set(['$schema','name','main','compatibility_date','workers_dev','preview_urls','routes','assets','analytics_engine_datasets','observability']);
           for (const k of Object.keys(c)) assert(allowed.has(k), `Unexpected staging setting: ${k}`);
           JS
       - name: Package baseline public assets
-        run: node tools/build-m0-staging.mjs
+        run: node tools/build-app.mjs
       - name: Verify isolation contracts
-        run: node --test tests/isolation/m0-staging.test.mjs
+        run: npm test
+      - name: Browser smoke gate
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test --project=chromium
       - name: Deploy only staging Worker
         env:
           CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39

@@ -1,5 +1,5 @@
 // M0 isolation adapter only. The production Worker is imported unchanged.
-import baseline from './worker.js';
+
 
 export default {
   async fetch(request, env) {
@@ -21,7 +21,8 @@ export default {
       return new Response('Unavailable in M0 staging', { status: 404, headers });
     }
     // Explicit allowlist prevents forwarding any accidental secrets/datasets.
-    const response = await baseline.fetch(request, { ASSETS: env.ASSETS });
+    const path = ['/tr','/tr/'].includes(url.pathname) ? '/tr/index.html' : url.pathname;
+    const response = await env.ASSETS.fetch(path === url.pathname ? request : new Request(new URL(path, url), request));
     const result = new Response(response.body, response);
     for (const [key, value] of Object.entries(headers)) result.headers.set(key, value);
     result.headers.set('Content-Security-Policy', "connect-src 'self'; form-action 'self'");

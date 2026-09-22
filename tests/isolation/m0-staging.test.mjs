@@ -62,14 +62,14 @@ test('config contains no data, secret, service or route bindings', () => {
   assert.equal(c.preview_urls, false);
   assert.deepEqual(c.routes, []);
   assert.deepEqual(c.analytics_engine_datasets, []);
-  assert.deepEqual(c.assets, { directory: '.wrangler/m0-staging/assets', binding: 'ASSETS', run_worker_first: true });
+  assert.deepEqual(c.assets, { directory: 'dist', binding: 'ASSETS', run_worker_first: true });
   const allowed = new Set(['$schema', 'name', 'main', 'compatibility_date', 'workers_dev', 'preview_urls', 'routes', 'assets', 'analytics_engine_datasets', 'observability']);
   for (const key of Object.keys(c)) assert(allowed.has(key), key);
   assert.equal(c.observability.enabled, false);
 });
 
 test('packaged assets exclude operations, source and production reports', () => {
-  const root = new URL('../../.wrangler/m0-staging/assets/', import.meta.url);
+  const root = new URL('../../dist/', import.meta.url);
   assert(existsSync(new URL('index.html', root)));
   for (const path of ['data', 'assets/analiz', 'assets/panel', 'src', 'tools', '.github', 'wrangler.jsonc', 'wrangler.staging.json']) {
     assert.equal(existsSync(new URL(path, root)), false, path);

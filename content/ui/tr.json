@@ -1,0 +1,24 @@
+{
+  "titles": {
+    "entry": "Görev",
+    "discovery": "Başka görev",
+    "help": "Açıklama / yardım",
+    "active": "Oyun zamanı",
+    "interrupted": "Oyun kesintiye uğradı",
+    "stopped": "Tur durduruldu",
+    "report": "Oyun sonrası bildirim",
+    "attribution": "Kişisel geçmişe ekle",
+    "record-result": "Kayıt durumu",
+    "guest": "Kardeş / misafir",
+    "group": "Birlikte oyun",
+    "availability": "Görev içeriği",
+    "recovery": "Yardım",
+    "adult": "Yetişkinler",
+    "management": "Oyuncu işlemleri",
+    "returning": "Yeniden oyun",
+    "new-player": "Yeni oyuncu"
+  },
+  "back": "Göreve dön",
+  "pending": "Bu bölüm henüz kullanıma hazır değil.",
+  "gate": "Kişisel kayıt bu aşamada kullanılamıyor. Oyun rehberliğine dönebilirsin."
+}

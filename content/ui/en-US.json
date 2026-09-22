@@ -1,0 +1,24 @@
+{
+  "titles": {
+    "entry": "Mission",
+    "discovery": "Another mission",
+    "help": "How to play / help",
+    "active": "Time to play",
+    "interrupted": "Play interrupted",
+    "stopped": "Round stopped",
+    "report": "Report after playing",
+    "attribution": "Add to a player’s history",
+    "record-result": "Record status",
+    "guest": "Sibling / guest",
+    "group": "Play together",
+    "availability": "Mission content",
+    "recovery": "Help",
+    "adult": "Grown-ups",
+    "management": "Player options",
+    "returning": "Play again",
+    "new-player": "New player"
+  },
+  "back": "Back to the mission",
+  "pending": "This section is not ready yet.",
+  "gate": "Personal records are unavailable at this stage. You can return to the game instructions."
+}

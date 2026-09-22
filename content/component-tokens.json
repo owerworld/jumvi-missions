@@ -1,0 +1,148 @@
+{
+  "status": {
+    "radius": 8,
+    "border": 2,
+    "padding": 16
+  },
+  "scope": "LOCK 06 specification, not production implementation",
+  "units": "CSS px equivalents at a 16px default root; rem sizes scale with user settings; minimum heights grow with content",
+  "colors": {
+    "canvas": "#FAFAF5",
+    "surface": "#FFFFFF",
+    "ink": "#152D40",
+    "muted": "#43596B",
+    "brandSky": "#3DAAE5",
+    "brandLime": "#B9EB39",
+    "brandBall": "#F47F24",
+    "brandStripe": "#2163A6",
+    "action": "#075985",
+    "actionHover": "#06466A",
+    "actionPressed": "#053751",
+    "border": "#536C7C",
+    "infoSurface": "#EFF7FC",
+    "danger": "#A12525",
+    "dangerSurface": "#FFF1F0",
+    "success": "#17633D",
+    "successSurface": "#EFF9EF",
+    "warning": "#7A4B00",
+    "warningSurface": "#FFF3D6",
+    "disabledInk": "#52606B",
+    "disabledSurface": "#E6EBEE",
+    "focus": "#152D40",
+    "focusGap": "#FFFFFF"
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48
+  ],
+  "targetMin": {
+    "child": 56,
+    "activePlay": 64,
+    "adult": 48
+  },
+  "targetGapMin": 12,
+  "conflictingActionGapMin": 16,
+  "control": {
+    "radius": 12,
+    "border": 2,
+    "paddingInline": 20,
+    "paddingBlock": 12,
+    "iconTextGap": 12
+  },
+  "panel": {
+    "radius": 16,
+    "padding": 16,
+    "background": "surface"
+  },
+  "focus": {
+    "outline": 3,
+    "offset": 3,
+    "gapColor": "focusGap",
+    "outlineColor": "focus"
+  },
+  "type": {
+    "fontCandidate": "Atkinson Hyperlegible Next",
+    "fallback": [
+      "system-ui",
+      "sans-serif"
+    ],
+    "small": [
+      16,
+      24,
+      400
+    ],
+    "body": [
+      18,
+      27,
+      400
+    ],
+    "instruction": [
+      20,
+      30,
+      400
+    ],
+    "control": [
+      20,
+      28,
+      700
+    ],
+    "activeControl": [
+      24,
+      32,
+      700
+    ],
+    "section": [
+      28,
+      36,
+      700
+    ],
+    "mission": [
+      32,
+      40,
+      700
+    ]
+  },
+  "icon": {
+    "family": "Lucide",
+    "sourceTree": "266fd1c717905b2a64c8c38faf3a6aee99791121",
+    "viewBox": 24,
+    "stroke": 2,
+    "defaultSize": 24,
+    "activeSize": 32,
+    "names": [
+      "circle-question-mark",
+      "volume-2",
+      "volume-x",
+      "arrow-left",
+      "rotate-ccw",
+      "square",
+      "check",
+      "info",
+      "triangle-alert",
+      "undo-2",
+      "x"
+    ]
+  },
+  "layout": {
+    "pagePaddingMin": 16,
+    "singleColumnMax": 640,
+    "readingLineMax": "60ch",
+    "dialogMax": 480
+  },
+  "motion": {
+    "durations": "DEFERRED LOCK 08",
+    "staticEquivalentRequired": true
+  },
+  "notVerified": [
+    "child comprehension",
+    "outdoor/distance legibility",
+    "real device browser QA",
+    "physical color calibration",
+    "approved Leo appearance"
+  ]
+}

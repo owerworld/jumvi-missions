@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'tests/browser',outputDir:'.test-results',fullyParallel:false,reporter:[['list'],['json',{outputFile:'.test-results/results.json'}]],use:{baseURL:'http://127.0.0.1:8919',viewport:{width:390,height:844}},projects:[{name:'chromium',use:{browserName:'chromium'}},{name:'webkit',use:{browserName:'webkit'}}],webServer:{command:'node tools/serve-app.mjs',port:8919,reuseExistingServer:false}});

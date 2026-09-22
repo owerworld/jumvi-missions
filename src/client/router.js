@@ -1,0 +1,10 @@
+export function routeLocale(path) {return ['/tr','/tr/','/tr/index.html'].includes(path)?'tr':(['/','/index.html'].includes(path)?'en-US':null);}
+export function installRouter(getState,send) {
+ const initial=getState();const previous=history.state;
+ const unknown=!!previous?.jumvi;
+ const snapshot=()=>{const s=getState();return {jumvi:true,documentId:s.documentId,screen:s.screen,revision:s.revision};};
+ history.replaceState(snapshot(),'',location.pathname);
+ addEventListener('popstate',()=>send('BACK',{},false));
+ addEventListener('pageshow',e=>{if(e.persisted)send('INTERRUPT',{},false);});
+ return {unknown,write(){history.pushState(snapshot(),'',location.pathname);}};
+}
