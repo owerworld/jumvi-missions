@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "jumvi-missions-staging",
+  "main": "src/m0-staging-worker.mjs",
+  "compatibility_date": "2026-08-05",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [],
+  "assets": {
+    "directory": ".wrangler/m0-staging/assets",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "analytics_engine_datasets": [],
+  "observability": { "enabled": false }
+}
