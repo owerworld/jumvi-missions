@@ -1,2 +1,2 @@
-import {skeleton} from './skeleton.js';
-export default function view(ctx){return skeleton('report',ctx);}
+import {playView} from './play.js';
+export default ctx=>playView('report',ctx);

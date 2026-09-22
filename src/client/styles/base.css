@@ -1,4 +1,5 @@
 @import './tokens.css';
 @import './components.css';
 @import './screens.css';
+@font-face{font-family:'Atkinson Hyperlegible Next';src:url('../../assets/fonts/atkinson/AtkinsonHyperlegibleNext.ttf') format('truetype');font-weight:200 800;font-display:swap}
 *{box-sizing:border-box}html{font-size:100%;color:var(--ink);background:var(--canvas);font-family:'Atkinson Hyperlegible Next',system-ui,sans-serif}body{margin:0;font-size:var(--body-size);line-height:var(--body-line)}main{max-width:42rem;margin:auto;padding:1rem;padding-bottom:max(1rem,env(safe-area-inset-bottom))}h1{font-size:var(--mission-size);line-height:var(--mission-line);margin:0 0 1rem;font-weight:700}h2{font-size:var(--section-size);line-height:var(--section-line)}p{margin:0 0 1rem;max-width:60ch}button,input,select{font:inherit}img{max-width:100%;height:auto;display:block}h1:focus,h2:focus,main:focus{outline:none}.skip{position:absolute;left:1rem;top:-10rem}.skip:focus{top:1rem;background:var(--surface);padding:1rem;z-index:5}a{color:var(--action)}[hidden]{display:none!important}*{overflow-wrap:anywhere}
