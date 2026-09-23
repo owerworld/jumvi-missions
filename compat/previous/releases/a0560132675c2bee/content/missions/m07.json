@@ -1,0 +1,130 @@
+{
+  "id": "m07",
+  "mechanicsVersion": "m4-20260923-m07-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Rainbow Throws",
+      "steps": [
+        "Stand 5 big steps apart.",
+        "Make gentle high arcs toward your partner’s paddle, not their head.",
+        "Flat throws do not count. After 5 clean arcs, step back."
+      ],
+      "goal": "Beat 3 distance levels with 5 rainbows each!",
+      "safety": "Soft height, not power — let gravity do the work."
+    },
+    "tr": {
+      "title": "Gökkuşağı Atışları",
+      "steps": [
+        "Aranızda 5 büyük adım olsun.",
+        "Arkadaşının başını değil paddle’ını hedefleyen yumuşak, yüksek yaylı atışlar yap.",
+        "Düz atışlar sayılmaz. 5 temiz yaylı atıştan sonra geri adım atın."
+      ],
+      "goal": "Her seviyede 5 gökkuşağı atışıyla 3 mesafe seviyesini geç!",
+      "safety": "Güç değil, yumuşak yükseklik — bırak yerçekimi işini yapsın."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:120",
+      "tr": "tr/i18n.js:11 missionTR[\"7\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "193ee7366e3f886337e47e2100b2b2af3c04fc48ccb817742d249d1044f8ad7d",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m07",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m07/1-A.webp",
+          "assets/mission-illustrations/final/m07/1-B.webp"
+        ],
+        "caption": {
+          "tr": "Yumuşak yüksek yay · hedef paddle",
+          "en-US": "Soft high arc · paddle target"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m07/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m07/2-A.webp",
+          "assets/mission-illustrations/final/m07/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m07/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m07/3-A.webp",
+          "assets/mission-illustrations/final/m07/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m07/3-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m07/4-A.webp",
+          "assets/mission-illustrations/final/m07/4-B.webp"
+        ],
+        "caption": {
+          "tr": "5 temiz yaydan sonra mesafe artar",
+          "en-US": "Increase spacing after 5 clean arcs"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m07/4-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "4f21528d296fe05b4d3823d7619156507fe1c24febc2aa234172465f4204f773"
+  },
+  "narration": null
+}

@@ -6,3 +6,8 @@
 @media(min-width:24.375rem){.utilities{grid-template-columns:9.125rem minmax(0,1fr)}.entry-support{margin-bottom:1.5rem}.setup{margin-top:0}}
 /* Accepted mission assets retain full crop; no tile dashboard or automatic motion. */
 .frame-art{width:100%;max-width:36rem;margin-inline:auto}.frame-actors{display:flex;align-items:center;justify-content:center;gap:.5rem}.frame-actors img{min-width:0;width:0;flex:1;max-width:100%;height:auto;object-fit:contain}.frame-detail{display:block;width:100%;height:auto;margin-top:1rem}.active-contact .frame-art{max-width:16rem}.active-contact .frame-actors img{max-height:12rem;object-fit:contain}.mission-list{list-style:none;padding:0}.mission-list>li{border-bottom:1px solid var(--ink);padding-block:1.5rem}.canonical-steps li{margin-block:1rem}
+
+/* Match text-scaled utility layout to the DOM hierarchy; media-query rem units do not track root overrides. */
+.utilities.compact{grid-template-columns:minmax(0,1fr)}
+/* At enlarged text sizes, give the full button width to its label instead of splitting words beside an icon. */
+.compact-controls .control:has(.control-icon){flex-direction:column}

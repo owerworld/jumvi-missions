@@ -1,0 +1,130 @@
+{
+  "id": "m16",
+  "mechanicsVersion": "m4-20260923-m16-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "1 — 2 — 3 — GO!",
+      "steps": [
+        "Thrower counts 1 — 2 — 3 out loud",
+        "Ball flies on 3, exactly!",
+        "Catcher counts 1 — 2 — 3 back, then throws"
+      ],
+      "goal": "10 perfectly-timed catches!",
+      "safety": "Calm count, steady rhythm."
+    },
+    "tr": {
+      "title": "1 — 2 — 3 — BAŞLA!",
+      "steps": [
+        "Atan kişi yüksek sesle 1 — 2 — 3 saysın",
+        "Top tam 3’te havalansın!",
+        "Yakalayan da 1 — 2 — 3 deyip geri atsın"
+      ],
+      "goal": "Tam zamanında 10 yakalama!",
+      "safety": "Sakin say, ritmi sabit tut."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:167",
+      "tr": "tr/i18n.js:11 missionTR[\"16\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "89159dccc233e7bbe053cdee2d33bdaa69678142971179ce8b6e230a1f1f5301",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m16",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m16/1-A.webp",
+          "assets/mission-illustrations/final/m16/1-B.webp"
+        ],
+        "caption": {
+          "tr": "A insan olarak “1, 2” sayar; top sol elde",
+          "en-US": "A counts “1, 2”; ball stays in free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m16/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m16/2-A.webp",
+          "assets/mission-illustrations/final/m16/2-B.webp"
+        ],
+        "caption": {
+          "tr": "A “3” derken topu bırakır",
+          "en-US": "A releases on “3”"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m16/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m16/3-A.webp",
+          "assets/mission-illustrations/final/m16/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m16/3-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m16/4-A.webp",
+          "assets/mission-illustrations/final/m16/4-B.webp"
+        ],
+        "caption": {
+          "tr": "B ayırır; geri atıştan önce kendisi sayar",
+          "en-US": "B detaches; B counts before the return toss"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m16/4-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "463e28fbd18f04691c900f11aa6001ed515e3c99a702e77abba379b193fb526a"
+  },
+  "narration": null
+}

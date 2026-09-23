@@ -2,12 +2,13 @@ import {el,heading} from '../components/dom.js';
 import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
 import {playerLabel} from '../repository/local.js';
-export function personalView(name,{state,ui,cp,send,personal:p}){
+export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  p ||= {snapshot:null,status:'loading',name:'',selectedId:null,result:null};
  const s=el('section');s.dataset.view=name;const row=el('div',undefined,'controls conflicting');
  const b=(label,type,detail={},disabled=false)=>{const control=button(label,()=>send(type,detail),{disabled});if(type==='START')control.dataset.needsReady='';return control;};
  const go=(label,screen)=>b(label,'GO',{screen});
  const back=()=>go(ui.back,'returning');
+ const reportMission=report=>catalog?.missions.find(m=>m.id===report?.missionId)?.titles[state.locale]||(!report||report.missionId===state.mission?.id?cp.mission:report.missionId);
  const snap=p.snapshot,players=snap?.players||[],selected=players.find(x=>x.id===p.selectedId),editable=players.find(x=>x.id===p.editId);
  s.append(heading(name==='attribution'?ui.choosePlayer:name==='guest'?ui.guestTitle:ui.titles[name]));
  const status=el('p',p.message||'', 'personal-message');status.setAttribute('role','status');
@@ -31,7 +32,7 @@ export function personalView(name,{state,ui,cp,send,personal:p}){
  if(name==='attribution'){
   const r=p.correction?.report||state.report;
   if(!r)s.append(el('p',ui.noReport));else{
-   s.append(el('p',`${cp.mission} · ${r.value==='complete'?ui.recordComplete:ui.recordEarly}`),el('p',p.correction?ui.correctionInfo:ui.chooseInfo));disclosure();
+   s.append(el('p',`${reportMission(r)} · ${r.value==='complete'?ui.recordComplete:ui.recordEarly}`),el('p',p.correction?ui.correctionInfo:ui.chooseInfo));disclosure();
    if(!players.length&&p.status==='ready')s.append(el('p',ui.noPlayers));
    const group=el('fieldset');group.append(el('legend',ui.choosePlayer));for(const player of players)group.append(choice({group:'attribution',value:player.id,label:playerLabel(player),checked:player.id===p.selectedId,onSelect:id=>send('P_SELECT',{id})}));s.append(group);
    if(selected)s.append(el('p',playerLabel(selected),'selected-player'));
@@ -41,7 +42,7 @@ export function personalView(name,{state,ui,cp,send,personal:p}){
  }
  if(name==='record-result'){
   const result=p.result,record=snap?.records.find(x=>x.id===result?.id),op=snap?.operations.find(x=>x.id===result?.id),target=players.find(x=>x.id===(record?.targetId||op?.targetId||result?.targetId));
-  const verified=result?.status==='committed'&&record&&target;const storedReport=record?.report||op?.report||result?.report;const missionLabel=!storedReport||storedReport.missionId===state.mission?.id?cp.mission:storedReport.missionId;
+  const verified=result?.status==='committed'&&record&&target;const storedReport=record?.report||op?.report||result?.report;const missionLabel=reportMission(storedReport);
   s.append(el('p',target?`${playerLabel(target)} · ${missionLabel}`:missionLabel),el('p',verified?ui.saveVerified:p.busy?ui.savePending:ui.saveUnverified,'status'));
   if(verified)row.append(b(ui.correctAttribution,'P_CORRECT',{id:record.id}));else if(result)row.append(b(ui.retryRecord,'P_RETRY',{},p.busy));
   row.append(back(),go(ui.titles.management,'management'));
@@ -49,7 +50,7 @@ export function personalView(name,{state,ui,cp,send,personal:p}){
  if(name==='management'){
   disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
   if(!players.length&&p.status==='ready')s.append(el('p',ui.managementEmpty));
-  if(editable){s.append(el('h2',playerLabel(editable)),el('p',ui.nameInfo));form('P_RENAME',ui.saveName,p.name);const history=el('div');history.append(el('h2',ui.history));for(const record of snap.records.filter(r=>r.targetId===editable.id)){const item=el('div',undefined,'history-item');item.append(el('p',`${record.report.missionId===state.mission.id?cp.mission:record.report.missionId} · ${record.report.value==='complete'?ui.recordComplete:ui.recordEarly}`),b(ui.inspectRecord,'P_INSPECT',{id:record.id}));history.append(item);}s.append(history);row.append(b(ui.deletePlayer,'P_DELETE_ONE',{},p.busy));}
+  if(editable){s.append(el('h2',playerLabel(editable)),el('p',ui.nameInfo));form('P_RENAME',ui.saveName,p.name);const history=el('div');history.append(el('h2',ui.history));for(const record of snap.records.filter(r=>r.targetId===editable.id)){const item=el('div',undefined,'history-item');item.append(el('p',`${reportMission(record.report)} · ${record.report.value==='complete'?ui.recordComplete:ui.recordEarly}`),b(ui.inspectRecord,'P_INSPECT',{id:record.id}));history.append(item);}s.append(history);row.append(b(ui.deletePlayer,'P_DELETE_ONE',{},p.busy));}
   else for(const player of players)row.append(b(playerLabel(player),'P_EDIT',{id:player.id}));
   if(snap?.operations.some(o=>o.status==='pending')){s.append(el('h2',ui.pendingRecords));for(const op of snap.operations.filter(o=>o.status==='pending')){const owner=players.find(x=>x.id===op.targetId);s.append(b(`${ui.inspectRecord} · ${owner?playerLabel(owner):''}`,'P_INSPECT',{id:op.id}));}}
   row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'),go(cp.adult,'adult'),back());

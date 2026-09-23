@@ -1,0 +1,115 @@
+{
+  "id": "m15",
+  "mechanicsVersion": "m4-20260923-m15-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Spotlight Eyes",
+      "steps": [
+        "Before catching, shout: I SEE IT!",
+        "Partner throws after they hear you",
+        "Catch, say I SEE IT again, throw back"
+      ],
+      "goal": "Reach 15 spotlight catches!",
+      "safety": "Keep the same distance — no surprises."
+    },
+    "tr": {
+      "title": "Gözler Hedefte",
+      "steps": [
+        "Yakalamadan önce “GÖRDÜM!” diye seslen",
+        "Arkadaşın seni duyduktan sonra atsın",
+        "Yakala, tekrar “GÖRDÜM!” de ve geri at"
+      ],
+      "goal": "15 odaklı yakalamaya ulaş!",
+      "safety": "Mesafeyi aynı tutun — sürpriz yapmayın."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:162",
+      "tr": "tr/i18n.js:11 missionTR[\"15\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "33f12f58e9bc61bc75f30bd2dbb5393e60f37ecf6d7207484a87f06254494534",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m15",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m15/1-A.webp",
+          "assets/mission-illustrations/final/m15/1-B.webp"
+        ],
+        "caption": {
+          "tr": "B: “GÖRDÜM!” · A henüz atmaz",
+          "en-US": "B: “I SEE IT!” · A has not tossed yet"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m15/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m15/2-A.webp",
+          "assets/mission-illustrations/final/m15/2-B.webp"
+        ],
+        "caption": {
+          "tr": "A çağrıyı duyduktan sonra atar; B yakalar",
+          "en-US": "A tosses after hearing the call; B catches"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m15/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m15/3-A.webp",
+          "assets/mission-illustrations/final/m15/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B ayırır; dönüşte de hazır olma çağrısı korunur",
+          "en-US": "B detaches; keep the readiness call on the return"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m15/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "e301e979992bf232350e4333ff5d4bf65e0b7c88dc44d85483ee1b55d3775d84"
+  },
+  "narration": null
+}

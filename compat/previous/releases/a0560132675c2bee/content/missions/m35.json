@@ -1,0 +1,110 @@
+{
+  "id": "m35",
+  "mechanicsVersion": "m4-20260923-m35-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Sky High Jump",
+      "steps": [
+        "Aim just above the catcher’s normal paddle reach, not at their head. Do not throw too high.",
+        "Wait for the toss; do not jump before it.",
+        "Jump and catch on the blue front while in the air. Switch roles every 5 throws."
+      ],
+      "goal": "8 jump catches!",
+      "safety": "Jump on flat soft ground — grass is best."
+    },
+    "tr": {
+      "title": "Zıplayarak Yakala",
+      "steps": [
+        "Yakalayanın paddle ile normal erişiminin biraz üstünü hedefle; başını hedefleme. Çok yükseğe atma.",
+        "Atışı bekle; top atılmadan zıplama.",
+        "Zıpla ve havadayken mavi ön yüzle yakala. Her 5 atışta rol değiştirin."
+      ],
+      "goal": "Zıplayarak 8 yakalama!",
+      "safety": "Düz ve yumuşak zeminde zıpla — çim en iyisi."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:268",
+      "tr": "tr/i18n.js:11 missionTR[\"35\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "7bfd27f266a84bf51bbf84ddc40ffd77041f8b0e4813da398ced37214ef42494",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m35",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m35/1.webp"
+        ],
+        "caption": {
+          "tr": "1. hareket anı",
+          "en-US": "Moment 1"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m35/2.webp"
+        ],
+        "caption": {
+          "tr": "2. hareket anı",
+          "en-US": "Moment 2"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m35/3.webp"
+        ],
+        "caption": {
+          "tr": "3. hareket anı",
+          "en-US": "Moment 3"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m35/4.webp"
+        ],
+        "caption": {
+          "tr": "4. hareket anı",
+          "en-US": "Moment 4"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "c1c87e4e28c24a5bede5ebe24c6515482c4ecf39e0cf2ebfd12355abfffaff33"
+  },
+  "narration": null
+}

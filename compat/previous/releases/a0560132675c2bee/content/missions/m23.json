@@ -1,0 +1,117 @@
+{
+  "id": "m23",
+  "mechanicsVersion": "m4-20260923-m23-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "4",
+  "equipment": {
+    "paddles": 4,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Mix It Up",
+      "steps": [
+        "4 players use 1 ball. Only 1 pair plays at a time.",
+        "After the active pair makes 6 clean catches, the ball goes to the next pairing.",
+        "Complete every pairing of the 4 players once. There are 6 different pairs."
+      ],
+      "goal": "Complete all 6 pairings once, with 6 clean catches per pair.",
+      "safety": "Change pairs calmly. There is no second ball or simultaneous rally."
+    },
+    "tr": {
+      "title": "Eş Değiştir",
+      "steps": [
+        "4 oyuncu 1 top kullanır. Aynı anda yalnız 1 çift oynar.",
+        "Aktif çift 6 temiz yakalama yaptıktan sonra top sonraki eşleşmeye geçer.",
+        "Dört oyuncunun bütün ikili eşleşmelerini birer kez tamamlayın. Toplam 6 farklı çift vardır."
+      ],
+      "goal": "Her çift 6 temiz yakalama yaparak 6 eşleşmenin hepsini bir kez tamamlasın.",
+      "safety": "Sakin biçimde eş değiştirin. İkinci top veya eşzamanlı ralli yoktur."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:204",
+      "tr": "tr/i18n.js:11 missionTR[\"23\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "fdad7333c0735712f5809c284317f03b141fd7951ee494f2a1680a2e01160623",
+    "authority": "explicit user M4 decision + global physical rule",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m23",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "pairCoverage": {
+    "unorderedPairs": 6,
+    "simultaneousPairs": 1,
+    "balls": 1,
+    "catchesPerPair": 6,
+    "order": "Not prescribed; no pairing-order rule invented."
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m23/1.webp"
+        ],
+        "caption": {
+          "tr": "1. hareket anı",
+          "en-US": "Moment 1"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m23/2.webp"
+        ],
+        "caption": {
+          "tr": "2. hareket anı",
+          "en-US": "Moment 2"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m23/3.webp"
+        ],
+        "caption": {
+          "tr": "3. hareket anı",
+          "en-US": "Moment 3"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m23/4.webp"
+        ],
+        "caption": {
+          "tr": "4. hareket anı",
+          "en-US": "Moment 4"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "9de75bf7ca21f6b7fea880a5920a98c262fe308a19d08f19a7c52b9f9738c266"
+  },
+  "narration": null
+}

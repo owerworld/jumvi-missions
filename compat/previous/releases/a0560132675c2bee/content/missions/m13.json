@@ -1,0 +1,116 @@
+{
+  "id": "m13",
+  "mechanicsVersion": "m4-20260923-m13-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Silent Mode",
+      "steps": [
+        "Players stay silent during active physical play.",
+        "Show the count with your fingers after each catch. If someone speaks, restart from 1.",
+        "You may listen to an explanation before play or when you explicitly request Help. Returning to play does not start narration."
+      ],
+      "goal": "Reach 12 catches in pure silence!",
+      "safety": "Take a breath before each throw."
+    },
+    "tr": {
+      "title": "Sessiz Mod",
+      "steps": [
+        "Aktif fiziksel oyun sırasında oyuncular konuşmaz.",
+        "Her yakalamadan sonra sayıyı parmaklarınla göster. Biri konuşursa 1’den yeniden başlayın.",
+        "Oyun öncesinde veya açıkça Yardım istediğinde açıklamayı dinleyebilirsin. Oyuna dönmek anlatımı başlatmaz."
+      ],
+      "goal": "Tam sessizlikte 12 yakalamaya ulaş!",
+      "safety": "Her atıştan önce bir nefes al."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:152",
+      "tr": "tr/i18n.js:11 missionTR[\"13\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "e20bdd5b38e273ebc1c6ace46d2f83f4d11772f0ad0d44c29eb773448e5c1cc7",
+    "authority": "explicit user M4 decision + global physical rule",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m13",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false,
+    "silenceMeaning": "Player speech during active physical play; explicit pre-play/help explanation is allowed, no automatic narration on resume."
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m13/1-A.webp",
+          "assets/mission-illustrations/final/m13/1-B.webp"
+        ],
+        "caption": {
+          "tr": "B sessizce yakalar",
+          "en-US": "B catches silently"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m13/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m13/2-A.webp",
+          "assets/mission-illustrations/final/m13/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B boş sol elle sayıyı gösterir · örnek 5",
+          "en-US": "B shows the count with free left hand · example 5"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m13/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m13/3-A.webp",
+          "assets/mission-illustrations/final/m13/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B konuşmadan sol elle ayırır",
+          "en-US": "B detaches with the left hand without speaking"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m13/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "de8eb5f17b07e156b31a5e5e05ee28bee7b1f879e269d732ee0fd5c43f1aefe3"
+  },
+  "narration": null
+}

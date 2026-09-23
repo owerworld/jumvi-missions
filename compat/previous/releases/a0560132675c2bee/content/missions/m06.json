@@ -1,0 +1,115 @@
+{
+  "id": "m06",
+  "mechanicsVersion": "m4-20260923-m06-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Number Echo",
+      "steps": [
+        "Throw and shout the number out loud",
+        "Catcher repeats the number, then throws back",
+        "Drop it? Restart from 1!"
+      ],
+      "goal": "Reach 15 in a row — count loud!",
+      "safety": "Stay relaxed if you miss — just restart."
+    },
+    "tr": {
+      "title": "Sayıyı Tekrarla",
+      "steps": [
+        "Topu atarken sayıyı yüksek sesle söyle",
+        "Yakalayan sayıyı tekrar edip topu geri atsın",
+        "Düştü mü? 1’den yeniden başlayın!"
+      ],
+      "goal": "Üst üste 15’e ulaş — yüksek sesle say!",
+      "safety": "Kaçırırsan gerilme — sadece yeniden başla."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:113",
+      "tr": "tr/i18n.js:11 missionTR[\"6\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "002d71ff4380c2e175b054ce060298bd3361cb84e7bbaa597aff2a2deb314718",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m06",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m06/1-A.webp",
+          "assets/mission-illustrations/final/m06/1-B.webp"
+        ],
+        "caption": {
+          "tr": "A atarken bir sayı söyler: örnek 3",
+          "en-US": "A says a number while tossing: example 3"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m06/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m06/2-A.webp",
+          "assets/mission-illustrations/final/m06/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B yakalar ve aynı sayıyı tekrarlar: 3",
+          "en-US": "B catches and echoes the same number: 3"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m06/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m06/3-A.webp",
+          "assets/mission-illustrations/final/m06/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m06/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "e646f19705e9e0e646e261e284fd81050b7e532af015932a5a31b29306c33fd3"
+  },
+  "narration": null
+}

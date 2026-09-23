@@ -1,0 +1,100 @@
+{
+  "id": "m21",
+  "mechanicsVersion": "m4-20260923-m21-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "3",
+  "equipment": {
+    "paddles": 3,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Middle Defender",
+      "steps": [
+        "3 players use 3 paddles and 1 ball. Two players face each other; the third stands between them.",
+        "The outer players toss to each other below face level.",
+        "If the middle player catches on the paddle, they swap places with the thrower by walking."
+      ],
+      "goal": "Make 6 middle catches; everyone gets a turn.",
+      "safety": "Keep tosses below face level. Walk when swapping; do not dive."
+    },
+    "tr": {
+      "title": "Ortadaki Savunmacı",
+      "steps": [
+        "3 oyuncu, 3 paddle ve 1 top kullanır. İki oyuncu karşılıklı, üçüncü oyuncu aralarında durur.",
+        "Dıştaki oyuncular yüz hizasının altında birbirine atar.",
+        "Ortadaki oyuncu paddle ile yakalarsa, atan oyuncuyla yürüyerek yer değiştirir."
+      ],
+      "goal": "Ortada 6 yakalama yapın; herkes sırayla oynasın.",
+      "safety": "Yüz hizasının altında atın. Yer değiştirirken yürüyün; atlamayın."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:194",
+      "tr": "tr/i18n.js:11 missionTR[\"21\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "0fe8e11e2247e6d81c1e939824f143943279901169e4af4012549168020d4fe0",
+    "authority": "explicit user M4 decision + global physical rule",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m21",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m21/1.webp"
+        ],
+        "caption": {
+          "tr": "1. hareket anı",
+          "en-US": "Moment 1"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m21/2.webp"
+        ],
+        "caption": {
+          "tr": "2. hareket anı",
+          "en-US": "Moment 2"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m21/3.webp"
+        ],
+        "caption": {
+          "tr": "3. hareket anı",
+          "en-US": "Moment 3"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "3708f1158bdd564c0028a31dfeb4e83107f01a7b469ec88fc8855a9c022f6ee7"
+  },
+  "narration": null
+}

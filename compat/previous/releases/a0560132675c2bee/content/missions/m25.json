@@ -1,0 +1,184 @@
+{
+  "id": "m25",
+  "mechanicsVersion": "lock07p-m25-fixture-v1",
+  "localeContentVersion": "lock07p-v1",
+  "status": "locked-m25-fixture-preserved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "tr": {
+      "mission": "Sakin Yakala",
+      "indoor": "Evde oyun · 3+",
+      "materials": "2 oyuncu · 2 paddle · 1 top",
+      "help": "Yardım",
+      "sound": "Ses: Kapalı",
+      "access": "Erişilebilirlik yardımı",
+      "setup": "Yere veya sandalyeye oturun; kalkmadan oynayın. Paddle’ı arkadaki el kayışıyla takın.",
+      "toss": "Boş elle kısa ve yumuşak atın.",
+      "catch": "Top mavi ön yüze yapışınca ayırıp geri atın.",
+      "goal": "Hedef: Oturarak 15 temiz yakalama!",
+      "safe": "Yüz hizasının altında, yumuşak atın. Aranızda 1–3 metre olsun; bir yetişkin gözetiminde oynayın. Kırılabilecek eşyaları kaldırın.",
+      "start": "Başla",
+      "another": "Başka uygun görev",
+      "how": "Açıklama / yardım",
+      "report": "Oyun sonrası bildirim",
+      "players": "Oyuncu işlemleri",
+      "adult": "Yetişkinler",
+      "back": "Tura dön",
+      "backMission": "Göreve dön",
+      "stepsTitle": "At · yakala · ayır",
+      "step1": "Boş elle yumuşak at",
+      "step1body": "Kısa atışlar yapın. İkiniz de oturarak oynayın.",
+      "step2": "Mavi ön yüzle yakala",
+      "step2body": "Top, paddle’ın mavi ön yüzüne yapışarak tutulur.",
+      "step3": "Sonraki atış için ayır",
+      "step3body": "Topu boş elinle ayır. Sonra yumuşakça geri at.",
+      "againExplain": "Yeniden açıkla",
+      "ask": "Bir yetişkinden yardım al",
+      "stop": "Turu durdur",
+      "activeTitle": "Oyun zamanı",
+      "state": "Tur başlatıldı",
+      "activeCopy": "Oturarak, kısa ve yumuşak atışlar.",
+      "activeCatch": "Mavi ön yüzle yakala.",
+      "activeHelp": "Yardım / açıklama",
+      "thanks": "Teşekkürler!",
+      "reported": "Görevi tamamladığını bildirdin.",
+      "notSaved": "Henüz kişisel geçmişe eklenmedi.",
+      "edit": "Bildirimi düzelt",
+      "again": "Yeniden oyna",
+      "other": "Başka görev",
+      "leave": "Ayrıl",
+      "save": "Kişisel geçmişe ekle"
+    },
+    "en-US": {
+      "mission": "Chill Catch",
+      "indoor": "Indoor play · Ages 3+",
+      "materials": "2 players · 2 paddles · 1 ball",
+      "help": "Help",
+      "sound": "Sound: Off",
+      "access": "Accessibility help",
+      "setup": "Sit on the floor or a chair and stay seated. Put on your paddle using the hand strap on the back.",
+      "toss": "Make short, gentle tosses with your free hand.",
+      "catch": "Let the ball stick to the blue front. Then take it off and gently toss it back.",
+      "goal": "Goal: 15 clean catches while seated!",
+      "safe": "Keep tosses gentle and below face level. Stay 1–3 meters apart, with adult supervision. Clear away breakable objects.",
+      "start": "Start",
+      "another": "Find another suitable mission",
+      "how": "How to play / help",
+      "report": "Report after playing",
+      "players": "Player options",
+      "adult": "Grown-ups",
+      "back": "Back to this round",
+      "backMission": "Back to the mission",
+      "stepsTitle": "Toss · catch · remove",
+      "step1": "Toss gently with your free hand",
+      "step1body": "Make short tosses. Both players stay seated.",
+      "step2": "Catch with the blue front",
+      "step2body": "The ball sticks to the paddle’s blue front.",
+      "step3": "Take the ball off for the next toss",
+      "step3body": "Take the ball off with your free hand. Then gently toss it back.",
+      "againExplain": "Explain again",
+      "ask": "Ask a grown-up for help",
+      "stop": "Stop this round",
+      "activeTitle": "Time to play",
+      "state": "Round started",
+      "activeCopy": "Stay seated. Make short, gentle tosses.",
+      "activeCatch": "Catch with the blue front.",
+      "activeHelp": "Help / how to play",
+      "thanks": "Thanks for sharing!",
+      "reported": "You reported completing this mission.",
+      "notSaved": "This report hasn’t been added to a player’s history yet.",
+      "edit": "Edit this report",
+      "again": "Play again",
+      "other": "Another mission",
+      "leave": "Leave",
+      "save": "Add to a player’s history"
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:216",
+      "tr": "tr/i18n.js:11 missionTR[\"25\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "1aa46ee30a3b005f52b59f2c28c54c1f1730b8d65e6cbf7181af061fafc4568b",
+    "authority": "Existing locked m25 development fixture, copied exactly for reference; age/distance/physical validation still open",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision.",
+    "fixtureSHA256": "8a60774dc2aece5879087cf892ef930bdf01f41b31ef1fad0d1e3a45563257ae"
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m25",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "lock07p-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m25/1-A.webp",
+          "assets/mission-illustrations/final/m25/1-B.webp"
+        ],
+        "caption": {
+          "tr": "İkisi de otururken kısa, yumuşak atış",
+          "en-US": "Short gentle toss while both stay seated"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m25/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m25/2-A.webp",
+          "assets/mission-illustrations/final/m25/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m25/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m25/3-A.webp",
+          "assets/mission-illustrations/final/m25/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B oturmaya devam ederek sol elle ayırır",
+          "en-US": "B stays seated and detaches with the left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m25/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "54395c2828e71114abe1c8773ac92cf305649cfab623cb09e81c1ee8206deca6"
+  },
+  "narration": null
+}

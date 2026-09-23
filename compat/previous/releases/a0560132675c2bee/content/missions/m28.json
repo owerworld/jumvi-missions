@@ -1,0 +1,115 @@
+{
+  "id": "m28",
+  "mechanicsVersion": "m4-20260923-m28-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Mind Reader",
+      "steps": [
+        "Thrower secretly picks: LEFT, RIGHT, or CENTER",
+        "3-second pause — no hints!",
+        "Catcher predicts and positions paddle BEFORE the throw!"
+      ],
+      "goal": "Predict 8 out of 12 correctly!",
+      "safety": "Soft, predictable distance — surprise only the direction."
+    },
+    "tr": {
+      "title": "Zihin Okuyucu",
+      "steps": [
+        "Atan kişi içinden SOL, SAĞ veya ORTA seçsin",
+        "3 saniye bekle — ipucu vermek yok!",
+        "Yakalayan atıştan ÖNCE tahmin edip paddle’ı o yöne yerleştirsin!"
+      ],
+      "goal": "12 tahminden 8’ini doğru bil!",
+      "safety": "Mesafe sabit, atış yumuşak olsun — sürpriz sadece yönde."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:231",
+      "tr": "tr/i18n.js:11 missionTR[\"28\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "2275c148f6b2bfd4aa5e8e66ef022b0471e29d0a7b3c45d8646a6576d3092a5f",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m28",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m28/1-A.webp",
+          "assets/mission-illustrations/final/m28/1-B.webp"
+        ],
+        "caption": {
+          "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
+          "en-US": "A privately chooses; B predicts during 3 seconds"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m28/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m28/2-A.webp",
+          "assets/mission-illustrations/final/m28/2-B.webp"
+        ],
+        "caption": {
+          "tr": "Merkez seçiminin örneği · önceden ipucu yok",
+          "en-US": "A center-choice example · no advance hint"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m28/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m28/3-A.webp",
+          "assets/mission-illustrations/final/m28/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m28/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "51d7946f74ecff9dfcefdb89b2df84aca401df058e22a1347d5d43941115556b"
+  },
+  "narration": null
+}

@@ -1,0 +1,115 @@
+{
+  "id": "m05",
+  "mechanicsVersion": "m4-20260923-m05-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Statue Mode",
+      "steps": [
+        "Catch the ball — then FREEZE for 2 seconds",
+        "No moving — paddle, body, feet — all stone",
+        "Then throw it back!"
+      ],
+      "goal": "10 catches with a full freeze between each!",
+      "safety": "Truly no moving during the freeze."
+    },
+    "tr": {
+      "title": "Heykel Modu",
+      "steps": [
+        "Topu yakala — sonra 2 saniye DON",
+        "Hareket yok — paddle, beden, ayaklar; hepsi taş gibi",
+        "Sonra geri at!"
+      ],
+      "goal": "Her birinin arasında tam donarak 10 kez yakala!",
+      "safety": "Donma sırasında gerçekten hiç hareket etme."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:108",
+      "tr": "tr/i18n.js:11 missionTR[\"5\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "a3b7291d2d4391e853f82ed3e4d2e1b9b103c69350f2bd3bffa2933555a43666",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m05",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m05/1-A.webp",
+          "assets/mission-illustrations/final/m05/1-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m05/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m05/2-A.webp",
+          "assets/mission-illustrations/final/m05/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: 2 saniye tamamen sabit",
+          "en-US": "B: freeze the whole body for 2 seconds"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m05/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m05/3-A.webp",
+          "assets/mission-illustrations/final/m05/3-B.webp"
+        ],
+        "caption": {
+          "tr": "Donma bittikten sonra boş elle ayır",
+          "en-US": "Detach with the free hand after the freeze"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m05/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "5f48cc706e3d6c3b58d83cc0980da202833f60e966c5ea8beec5a111a51c7352"
+  },
+  "narration": null
+}

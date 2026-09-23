@@ -1,0 +1,156 @@
+{
+  "id": "m04",
+  "mechanicsVersion": "m4-20260923-m04-v2",
+  "localeContentVersion": "m4-final-mechanics-20260923-v2",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Switcharoo",
+      "setup": "2 players, 2 paddles, 1 ball. Begin with the paddle strapped to one hand.",
+      "steps": [
+        "Catch the ball on the blue front with your current paddle hand.",
+        "Take the ball off the paddle with your free hand.",
+        "Transfer the ball to your current paddle hand.",
+        "Safely slip that hand out of the strap.",
+        "Move the paddle to your other hand and secure that hand in the strap.",
+        "The hand holding the ball is now free of the paddle. Use it for a gentle toss.",
+        "Make your next catch with the new paddle hand. Repeat this hand-change sequence after every clean catch."
+      ],
+      "goal": "Be the first to make 12 alternating catches.",
+      "safety": "Change hands calmly and securely. Do not switch the paddle in the air or rush. Never change the strap hand while the ball is stuck to the paddle. There is no handle."
+    },
+    "tr": {
+      "title": "El Değiştir",
+      "setup": "2 oyuncu, 2 paddle, 1 top. Paddle bir elinde kayışla takılı olarak başla.",
+      "steps": [
+        "Mevcut paddle elinle topu mavi ön yüzde yapıştırarak yakala.",
+        "Boş elinle topu paddle’dan ayır.",
+        "Topu mevcut paddle eline aktar.",
+        "Bu elini kayıştan güvenli biçimde çıkar.",
+        "Paddle’ı diğer eline geçir ve elini kayışa güvenli biçimde tak.",
+        "Topu tutan elin artık paddle’dan boştadır. Bu elinle yumuşakça at.",
+        "Sonraki yakalamayı yeni paddle elinle yap. Her temiz yakalamadan sonra bu el değiştirme sırasını tekrarla."
+      ],
+      "goal": "Dönüşümlü 12 yakalamaya ilk ulaşan ol.",
+      "safety": "El değişimini sakin ve güvenli biçimde yap. Paddle’ı havada veya aceleyle el değiştirme. Top paddle’a yapışıkken kayış eli değiştirilmez. Paddle’ın sapı yoktur."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:103",
+      "tr": "tr/i18n.js:11 missionTR[\"4\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "b011a8f2b600e1b0e8720ce9161a0529edc119438c439b693eca439d74d70203",
+    "authority": "Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
+    "quantitativeRules": "Existing legacy goal retained; human decision supplies action order/roles. No app counter, timer, success detection or new target invented."
+  },
+  "readiness": {
+    "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "HUMAN_PASS_2026-09-23",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m04",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "mechanicsContract": {
+    "type": "hand-transfer-after-each-clean-catch",
+    "steps": [
+      "sticky_catch",
+      "free_hand_detach",
+      "ball_to_current_paddle_hand",
+      "old_hand_out_of_strap",
+      "paddle_secured_on_other_hand",
+      "new_free_hand_toss",
+      "next_catch_on_new_paddle_hand"
+    ],
+    "ballAttachedDuringStrapChange": false,
+    "airbornePaddleSwap": false,
+    "rushRequired": false,
+    "extraEquipmentRequired": false
+  },
+  "contentVersion": "m4-final-mechanics-20260923-v2",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m04/1.webp"
+        ],
+        "caption": {
+          "tr": "Mavi ön yüzde yakala",
+          "en-US": "Catch on the blue front"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m04/2.webp"
+        ],
+        "caption": {
+          "tr": "Boş elle ayır",
+          "en-US": "Detach with the free hand"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m04/3.webp"
+        ],
+        "caption": {
+          "tr": "Topu mevcut paddle eline aktar",
+          "en-US": "Transfer ball to current paddle hand"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m04/4.webp"
+        ],
+        "caption": {
+          "tr": "Topu tutarak elini kayıştan çıkar",
+          "en-US": "Retain ball and withdraw from strap"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m04/5.webp"
+        ],
+        "caption": {
+          "tr": "Paddle’ı diğer ele güvenle tak",
+          "en-US": "Secure paddle on the other hand"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m04/6.webp"
+        ],
+        "caption": {
+          "tr": "Artık boş olan elle yumuşakça at",
+          "en-US": "Toss gently with the now-free hand"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "d13134ad5f622ed44bdbc0f5fd0617fca7faaf89bd5c97dfaed4ad71f95c7d68"
+  },
+  "narration": null
+}

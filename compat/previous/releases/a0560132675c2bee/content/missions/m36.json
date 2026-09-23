@@ -1,0 +1,130 @@
+{
+  "id": "m36",
+  "mechanicsVersion": "m4-20260923-m36-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Marathon Rally",
+      "steps": [
+        "Start close together — build a rally!",
+        "After every 5 clean catches, BOTH step back one big step",
+        "See how far you can stretch the rally!"
+      ],
+      "goal": "Reach 20 catches without a drop!",
+      "safety": "Stop stepping back when throws get wild."
+    },
+    "tr": {
+      "title": "Maraton Serisi",
+      "steps": [
+        "Yakın başlayın — bir yakalama serisi oluşturun!",
+        "Her 5 temiz yakalamadan sonra İKİNİZ de bir büyük adım geri gidin",
+        "Seriyi ne kadar uzağa taşıyabileceğinizi görün!"
+      ],
+      "goal": "Topu düşürmeden 20 yakalamaya ulaş!",
+      "safety": "Atışlar kontrolden çıkınca geri gitmeyi bırakın."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:273",
+      "tr": "tr/i18n.js:11 missionTR[\"36\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "7ba598d791575c0600fbeac9e421fe9500215fcdb53e041df79e39ae88f1e1c5",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m36",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m36/1-A.webp",
+          "assets/mission-illustrations/final/m36/1-B.webp"
+        ],
+        "caption": {
+          "tr": "Yakın başlayın, yumuşak atış",
+          "en-US": "Start close with soft tosses"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m36/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m36/2-A.webp",
+          "assets/mission-illustrations/final/m36/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m36/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m36/3-A.webp",
+          "assets/mission-illustrations/final/m36/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m36/3-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m36/4-A.webp",
+          "assets/mission-illustrations/final/m36/4-B.webp"
+        ],
+        "caption": {
+          "tr": "Her 5 temiz catch sonrası ikisi de 1 adım geri",
+          "en-US": "After every 5 clean catches, both take 1 step back"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m36/4-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "82ce7bdf02f6e871f9dfb9561faa29dd780306c7d9adf43639bfb4963c393e49"
+  },
+  "narration": null
+}

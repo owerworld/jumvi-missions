@@ -99,7 +99,7 @@
   "previousInfo": "The previous round and unsaved report are kept separately in this open page. Closing the page may lose the report.",
   "guestStart": "Continue to a new unassigned game",
   "previousRound": "Return to the previous round",
-  "groupInfo": "This mission is played by two people. Neither needs a profile. Shared play is not automatically added to individual histories.",
+  "groupInfo": "No player needs a profile. Shared play is not automatically added to individual histories.",
   "returnInfo": "You have opened this mission again. No previous player is selected automatically; you can start a new game.",
   "managementEmpty": "There are no local players to manage. You can play without creating one."
 }

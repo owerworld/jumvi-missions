@@ -99,7 +99,7 @@
   "previousInfo": "Önceki tur ve kaydedilmemiş bildirim bu açık sayfada ayrı tutuluyor. Sayfa kapanırsa bildirim kaybolabilir.",
   "guestStart": "Oyuncusuz yeni oyuna geç",
   "previousRound": "Önceki tura dön",
-  "groupInfo": "Bu görev iki kişiyle oynanır. Her oyuncu için profil açmak gerekmez. Ortak oyun bireysel geçmişlere otomatik eklenmez.",
+  "groupInfo": "Her oyuncu için profil açmak gerekmez. Ortak oyun bireysel geçmişlere otomatik eklenmez.",
   "returnInfo": "Bu görevi yeniden açtın. Önceki oyuncu otomatik seçilmez; yeni oyuna başlayabilirsin.",
   "managementEmpty": "Yönetilecek yerel oyuncu yok. Oyuncu oluşturmadan oynayabilirsin."
 }

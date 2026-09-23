@@ -1,0 +1,2 @@
+import {heading,el} from '../components/dom.js';import {button} from '../components/button.js';
+export function skeleton(name,ctx) {const section=el('section');section.dataset.view=name;section.append(heading(ctx.ui.titles[name]),el('p', ['attribution','record-result','adult','management','new-player'].includes(name)?ctx.ui.gate:ctx.ui.pending));if(name!=='entry')section.append(button(ctx.ui.back,()=>ctx.send('BACK'),{kind:'link'}));return section;}

@@ -1,0 +1,115 @@
+{
+  "id": "m34",
+  "mechanicsVersion": "m4-20260923-m34-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Chase the Ball!",
+      "steps": [
+        "Thrower tosses the ball ahead of you — not too far!",
+        "Catcher runs to meet it",
+        "Catch with the paddle BEFORE it lands!"
+      ],
+      "goal": "7 running catches wins!",
+      "safety": "Pick a clear run zone — no obstacles!"
+    },
+    "tr": {
+      "title": "Topun Peşine!",
+      "steps": [
+        "Atan kişi topu önüne doğru atsın — çok uzağa değil!",
+        "Yakalayan topa doğru koşsun",
+        "Top yere düşmeden ÖNCE paddle ile yakala!"
+      ],
+      "goal": "Koşarak 7 yakalama yap!",
+      "safety": "Engelsiz ve açık bir koşu alanı seçin!"
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:263",
+      "tr": "tr/i18n.js:11 missionTR[\"34\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "d16b7d4fbf0124ae6eea2af9e217f3cdf8005f8d3c894ff84f6333937b9fbc3b",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "HUMAN_PASS_2026-09-23",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m34",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m34/1-A.webp",
+          "assets/mission-illustrations/final/m34/1-B.webp"
+        ],
+        "caption": {
+          "tr": "Top öne, açık koşu alanına · çok uzağa değil",
+          "en-US": "Toss ahead into the clear run zone · not too far"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m34/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m34/2-A.webp",
+          "assets/mission-illustrations/final/m34/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B top yere inmeden mavi yüzle yakalar",
+          "en-US": "B catches on blue front before the ball lands"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m34/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m34/3-A.webp",
+          "assets/mission-illustrations/final/m34/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B durduktan sonra boş elle ayırır",
+          "en-US": "B detaches with the free hand after coming to rest"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m34/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "60c9ff2b7aa47b39a24e3b038a30e639dee96f9a11cad5c29e062ca2f4487f96"
+  },
+  "narration": null
+}

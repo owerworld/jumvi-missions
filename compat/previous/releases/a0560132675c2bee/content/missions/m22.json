@@ -1,0 +1,146 @@
+{
+  "id": "m22",
+  "mechanicsVersion": "m4-20260923-m22-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "4",
+  "equipment": {
+    "paddles": 4,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Spin Squad",
+      "steps": [
+        "4 players in a square, each with a paddle",
+        "One player throws to anyone",
+        "EVERYONE steps clockwise after each catch — then throw again!"
+      ],
+      "goal": "20 catches with full team rotations!",
+      "safety": "Rotate calm — no bumping!"
+    },
+    "tr": {
+      "title": "Dönen Takım",
+      "steps": [
+        "4 oyuncu kare şeklinde dursun, herkesin paddle’ı olsun",
+        "Bir oyuncu topu istediği kişiye atsın",
+        "HERKES her yakalamadan sonra saat yönünde bir adım ilerlesin — sonra yeniden atın!"
+      ],
+      "goal": "Takım tam dönüşler yaparken 20 yakalamaya ulaş!",
+      "safety": "Sakin dönün — çarpışmak yok!"
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:199",
+      "tr": "tr/i18n.js:11 missionTR[\"22\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "7d2a46d804c4c09fa910bb70f0c8e624b85f265b74bb431739c3c7b60302f640",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m22",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m22/1-A.webp",
+          "assets/mission-illustrations/final/m22/1-B.webp",
+          "assets/mission-illustrations/final/m22/1-C.webp",
+          "assets/mission-illustrations/final/m22/1-D.webp"
+        ],
+        "caption": {
+          "tr": "4 oyuncu karede · B yakalar",
+          "en-US": "4 players in a square · B catches"
+        },
+        "players": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "detail": "assets/mission-illustrations/final/m22/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m22/2-A.webp",
+          "assets/mission-illustrations/final/m22/2-B.webp",
+          "assets/mission-illustrations/final/m22/2-C.webp",
+          "assets/mission-illustrations/final/m22/2-D.webp"
+        ],
+        "caption": {
+          "tr": "Herkes saat yönünde adım atar",
+          "en-US": "Everyone steps clockwise"
+        },
+        "players": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "detail": "assets/mission-illustrations/final/m22/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m22/3-A.webp",
+          "assets/mission-illustrations/final/m22/3-B.webp",
+          "assets/mission-illustrations/final/m22/3-C.webp",
+          "assets/mission-illustrations/final/m22/3-D.webp"
+        ],
+        "caption": {
+          "tr": "B topu boş elle ayırır",
+          "en-US": "B detaches with the free hand"
+        },
+        "players": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "detail": "assets/mission-illustrations/final/m22/3-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m22/4-A.webp",
+          "assets/mission-illustrations/final/m22/4-B.webp",
+          "assets/mission-illustrations/final/m22/4-C.webp",
+          "assets/mission-illustrations/final/m22/4-D.webp"
+        ],
+        "caption": {
+          "tr": "Örnek sonraki atış: B → C",
+          "en-US": "Example next toss: B → C"
+        },
+        "players": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "detail": "assets/mission-illustrations/final/m22/4-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "496a8dfb7e3ebf2bb6201a0d0a90c31ecb8b568229a289fb94f04d5bf2c89832"
+  },
+  "narration": null
+}

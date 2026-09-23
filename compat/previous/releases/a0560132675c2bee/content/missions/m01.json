@@ -1,0 +1,116 @@
+{
+  "id": "m01",
+  "mechanicsVersion": "m4-20260923-m01-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Speed Demon",
+      "steps": [
+        "Stand 2 big-kid steps apart",
+        "Throw fast — but soft!",
+        "Catch and reset — go again!"
+      ],
+      "goal": "Catch as many as you can in 45 seconds — beat your best!",
+      "safety": "Throw under chin level — never aim at faces."
+    },
+    "tr": {
+      "title": "Hız Canavarı",
+      "steps": [
+        "Aranızda 2 büyük adım olsun",
+        "Hızlı at — ama yumuşak!",
+        "Yakala, hazır pozisyona dön ve tekrar!"
+      ],
+      "goal": "45 saniyede olabildiğince çok yakala — kendi rekorunu geç!",
+      "safety": "Topu çene hizasının altında at — asla yüze nişan alma."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:88",
+      "tr": "tr/i18n.js:11 missionTR[\"1\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "11d91b1d2bc558297f4bf0ab8687c16c9591bc7da976669887977727048bb16d",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m01",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "timedGoalPolicy": "Physical source goal only. No app timer, live caller, elapsed-time success or automatic narration is introduced.",
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m01/1-A.webp",
+          "assets/mission-illustrations/final/m01/1-B.webp"
+        ],
+        "caption": {
+          "tr": "Hızlı sıra, yumuşak atış; çenenin altında",
+          "en-US": "Quick exchange, soft toss; below chin"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m01/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m01/2-A.webp",
+          "assets/mission-illustrations/final/m01/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m01/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m01/3-A.webp",
+          "assets/mission-illustrations/final/m01/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m01/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "9f2261df74ba607dbdf107fc96f7cfa9d792f84d547e2625f342fa2728d2abd2"
+  },
+  "narration": null
+}

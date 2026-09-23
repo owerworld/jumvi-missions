@@ -1,0 +1,115 @@
+{
+  "id": "m14",
+  "mechanicsVersion": "m4-20260923-m14-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Tempo Master",
+      "steps": [
+        "5 super-slow throws",
+        "5 medium-speed throws",
+        "Repeat one cycle. Feet stay PLANTED!"
+      ],
+      "goal": "Finish all 20 throws — no drops!",
+      "safety": "Feet planted — only arms move."
+    },
+    "tr": {
+      "title": "Tempo Ustası",
+      "steps": [
+        "5 tane çok yavaş atış",
+        "5 tane orta hızlı atış",
+        "Bir tur daha tekrarla. Ayaklar YERDEN KIPIRDAMASIN!"
+      ],
+      "goal": "20 atışın tamamını düşürmeden bitir!",
+      "safety": "Ayaklar sabit — sadece kollar hareket etsin."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:157",
+      "tr": "tr/i18n.js:11 missionTR[\"14\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "ec862bde8eb21e1d57df0b4ed5deaa0a4c33f1c645300e74d50bb85805f18a49",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m14",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m14/1-A.webp",
+          "assets/mission-illustrations/final/m14/1-B.webp"
+        ],
+        "caption": {
+          "tr": "5 çok yavaş → 5 orta tempolu · ayaklar sabit",
+          "en-US": "5 very slow → 5 medium pace · feet planted"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m14/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m14/2-A.webp",
+          "assets/mission-illustrations/final/m14/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m14/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m14/3-A.webp",
+          "assets/mission-illustrations/final/m14/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m14/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "804e6a88cf65beae3e9aecd08c5d585cabcc51594e43501e28a21a6c2f56fdec"
+  },
+  "narration": null
+}

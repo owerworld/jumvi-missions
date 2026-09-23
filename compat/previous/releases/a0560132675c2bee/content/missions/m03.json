@@ -1,0 +1,100 @@
+{
+  "id": "m03",
+  "mechanicsVersion": "m4-20260923-m03-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Quick Slap",
+      "steps": [
+        "Your partner makes a gentle toss. Keep your paddle strapped to one hand.",
+        "Lightly tap your own paddle once with your free hand.",
+        "Catch the ball on the blue front. Switch roles every 10 throws."
+      ],
+      "goal": "10 clean slap-catches each side wins!",
+      "safety": "Only your free hand makes the light tap. There is no handle."
+    },
+    "tr": {
+      "title": "Hızlı Dokun",
+      "steps": [
+        "Arkadaşın yumuşakça atsın. Paddle bir elinde kayışla takılı kalsın.",
+        "Boş elinle kendi paddle’ına bir kez hafifçe dokun.",
+        "Topu mavi ön yüzle yakala. Her 10 atışta rol değiştirin."
+      ],
+      "goal": "Her iki tarafta 10 temiz dokun-yakala yapınca görev tamam!",
+      "safety": "Hafif dokunuşu yalnız boş elinle yap. Paddle’ın sapı yoktur."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:98",
+      "tr": "tr/i18n.js:11 missionTR[\"3\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "5c4b1bd034a1d999c2ff93bb849d5cc14fcabb6abef5b099161c697669c8350c",
+    "authority": "explicit user M4 decision + global physical rule",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m03",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m03/1.webp"
+        ],
+        "caption": {
+          "tr": "Boş elle kendi paddle’ına hafif dokun",
+          "en-US": "Tap own paddle lightly with free hand"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m03/2.webp"
+        ],
+        "caption": {
+          "tr": "Mavi ön yüzde yakala",
+          "en-US": "Catch on blue front"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m03/3.webp"
+        ],
+        "caption": {
+          "tr": "Boş elle ayır",
+          "en-US": "Detach with free hand"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "420329c1d0fe4a1d2d5a3cbb13ea1666f8b07ceb1c0f1ee113c60b4cbc15b2e5"
+  },
+  "narration": null
+}

@@ -27,5 +27,10 @@ writeFileSync(join(out,'sw-release.json'),JSON.stringify({release,precache,missi
 // Compatibility resources are not imported by the new document or added to its SW cache.
 const compatibility=JSON.parse(readFileSync(join(root,'compat/v254-public-manifest.json')));
 for(const {path,sha256} of compatibility.files){const source=join(root,path);if(createHash('sha256').update(readFileSync(source)).digest('hex')!==sha256)throw Error('Legacy compatibility source changed: '+path);const dest=join(out,path);if(!existsSync(dest)){mkdirSync(dirname(dest),{recursive:true});cpSync(source,dest);}}
+// Preserve the reviewed previous release for still-open tabs; reject altered archived bytes.
+for(const name of readdirSync(join(root,'compat/previous')).filter(n=>n.endsWith('-manifest.json'))){
+ const previous=JSON.parse(readFileSync(join(root,'compat/previous',name)));
+ for(const file of previous.files){const source=join(root,'compat/previous',file.path);if(createHash('sha256').update(readFileSync(source)).digest('hex')!==file.sha256)throw Error('Previous release changed: '+file.path);}
+}
 cpSync(join(root,'compat/previous/releases'),join(out,'releases'),{recursive:true});
 const manifest={release,compatibilitySource:compatibility.sourceSHA,files:files(out).map(f=>({path:f.slice(out.length),sha256:createHash('sha256').update(readFileSync(f)).digest('hex'),bytes:readFileSync(f).length}))};writeFileSync(join(out,'release-manifest.json'),JSON.stringify(manifest,null,2));console.log(`Built ${release}: ${manifest.files.length} public files`);

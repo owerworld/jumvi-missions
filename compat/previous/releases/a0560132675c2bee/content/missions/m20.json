@@ -1,0 +1,110 @@
+{
+  "id": "m20",
+  "mechanicsVersion": "m4-20260923-m20-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "4",
+  "equipment": {
+    "paddles": 4,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Crab Shuffle Relay",
+      "steps": [
+        "4 players form 2 lines and use 1 ball.",
+        "Catch on the blue front, detach with your free hand, then toss to the next player.",
+        "After your catch/pass turn, stay standing and side-shuffle to the back of the line."
+      ],
+      "goal": "Reach a shared total of 20 passes across both lines.",
+      "safety": "Side-shuffle while standing. Do not crab-walk on your hands or put weight on a paddle-strapped hand. No running."
+    },
+    "tr": {
+      "title": "Yengeç Yan Adım Bayrak Oyunu",
+      "steps": [
+        "4 oyuncu 2 sıra oluşturur ve 1 top kullanır.",
+        "Mavi ön yüzle yakala, topu boş elinle ayır ve sıradaki oyuncuya at.",
+        "Yakala/pas ver sıran bitince ayakta kalarak yan adımlarla sıranın arkasına geç."
+      ],
+      "goal": "İki sıra birlikte toplam 20 pasa ulaşsın.",
+      "safety": "Ayakta yan adımlarla ilerle. Eller üzerinde yengeç yürüyüşü yapma; paddle takılı eline ağırlık verme. Koşma."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:189",
+      "tr": "tr/i18n.js:11 missionTR[\"20\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "ce1a6b5ab38d93cbb51af92c5e541cdc7cf8ea3412567c34c625c0a960de753d",
+    "authority": "explicit user M4 decision + global physical rule",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m20",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m20/1.webp"
+        ],
+        "caption": {
+          "tr": "1. hareket anı",
+          "en-US": "Moment 1"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m20/2.webp"
+        ],
+        "caption": {
+          "tr": "2. hareket anı",
+          "en-US": "Moment 2"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m20/3.webp"
+        ],
+        "caption": {
+          "tr": "3. hareket anı",
+          "en-US": "Moment 3"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m20/4.webp"
+        ],
+        "caption": {
+          "tr": "4. hareket anı",
+          "en-US": "Moment 4"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "3392fac599f15586ddbfa6898ed08cb0b8e599bec901d9037bcfcf536d3b8c1a"
+  },
+  "narration": null
+}

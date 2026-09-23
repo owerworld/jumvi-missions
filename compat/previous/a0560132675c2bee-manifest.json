@@ -1,0 +1,2017 @@
+{
+  "sourceSHA": "9f2e6a7445255a246d92a4a7698d67748af423d4",
+  "release": "a0560132675c2bee",
+  "sourceArtifactSHA256": "57faa05ea9bacb2e85dc3b0c7a3f6de0bea8c03c00bd5c45fa760dccba669717",
+  "files": [
+    {
+      "path": "/releases/a0560132675c2bee/assets/fonts/atkinson/AtkinsonHyperlegibleNext.ttf",
+      "sha256": "5a455d1cfa099b601ab70751bb9673e8fe1854dc4500c80e1a220d0d75e31745",
+      "bytes": 114552
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/fonts/atkinson/OFL.txt",
+      "sha256": "aca6a428580965d2297d1b718042dd427c2a9443ece3b0d02d758e161e0c4030",
+      "bytes": 4431
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m01/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/3-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/3-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m02/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m03/1.webp",
+      "sha256": "22ab741942c00937a4bcf8d56011615c159d419daf8425d76b918ea7c627f032",
+      "bytes": 82200
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m03/2.webp",
+      "sha256": "1435118acb6bbf65e880dd998bb8f6a4747f0f0daddeb538787407108070b5f6",
+      "bytes": 78018
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m03/3.webp",
+      "sha256": "102ff6f0c1ea2981cc8de6287518f75342360a16d84b977ace84f1f1fdf04081",
+      "bytes": 79892
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m04/1.webp",
+      "sha256": "73c9ee9c3871ee0c7a0127d6734f75953b079d802fcaf502468f54e720f04771",
+      "bytes": 31682
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m04/2.webp",
+      "sha256": "8773a44bfe763344055d80c7624c0d46489692d20e28ee98389f72b44eec61e3",
+      "bytes": 30108
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m04/3.webp",
+      "sha256": "efc1c04cf3dd320914e118089469cebfafa5eb63b170c0de599ffa862766c912",
+      "bytes": 33212
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m04/4.webp",
+      "sha256": "7de35e98024cd58f8458124d84153eed4605e8a8a751631f72ee4ccb00485a99",
+      "bytes": 30960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m04/5.webp",
+      "sha256": "eb5a4e3332c6305e138957abb45c747846a75f3b1cba7d2a2ca7f341541306f4",
+      "bytes": 34376
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m04/6.webp",
+      "sha256": "bae3a384a77f2d7bb4fe36cedcf3af8c678bfbef891d89e279cb2a3434c10f63",
+      "bytes": 29452
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m05/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m06/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "bytes": 38350
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "bytes": 27312
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m07/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/1-B.webp",
+      "sha256": "b0d900e505e4f0d80b766314255efd2bc7994dc2707cec7c69017ef257bf1ec3",
+      "bytes": 36248
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/1-detail.webp",
+      "sha256": "82aebbb4a6d0031f642433f698a8af377f431ddf418f205e987bcfa3deb7f20d",
+      "bytes": 17926
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/2-B.webp",
+      "sha256": "cc85241d9e4a7103f76c96c204caaebc704c947bf31a083161ddfa4441ccfaec",
+      "bytes": 36290
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/2-detail.webp",
+      "sha256": "6f86f6970088fb0ae89c582096cd432b21d3be8495aca664f0c8cb009f4844b1",
+      "bytes": 16996
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/3-B.webp",
+      "sha256": "4e8fa09b95b4286d782568d340dc2cfca94567499bf4f890aecdaf64806c8019",
+      "bytes": 49238
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m08/3-detail.webp",
+      "sha256": "091ea07fde1ac1ed4405e1379364cfb5161c85a1166ff72cda4e9404fda385c0",
+      "bytes": 25338
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/2-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/2-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m09/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/1-A.webp",
+      "sha256": "2189c1dda9e13133db6e38906faaf585fbc3b73a5435760e063695007446fc28",
+      "bytes": 53026
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/2-A.webp",
+      "sha256": "2189c1dda9e13133db6e38906faaf585fbc3b73a5435760e063695007446fc28",
+      "bytes": 53026
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/3-A.webp",
+      "sha256": "bd4695fe9e1fdcf7385648cb202e99ef6ecb49df876f3c4c19ac0a2489eb32fc",
+      "bytes": 62450
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/4-A.webp",
+      "sha256": "7f14c4640d1ae13f3ebf8fc6838af1c3d9174be58c0a022e9a5d6e81d49ffd68",
+      "bytes": 51258
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/4-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "bytes": 37078
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m10/4-detail.webp",
+      "sha256": "4b89c333e28f22748d6068941dbf473d34f5a8cb123ce950b7551d5882e3fe43",
+      "bytes": 40888
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "bytes": 38350
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "bytes": 27312
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m11/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m12/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/1-B.webp",
+      "sha256": "c7cdfbbebda3e800b13e72da40d9bf88c7adeb840478f9d377cda8ae7fa11e65",
+      "bytes": 43022
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/1-detail.webp",
+      "sha256": "956db6c587258ea0a019f5c4a7b795c141282aa7b76b309543827b179be3c798",
+      "bytes": 26136
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/2-B.webp",
+      "sha256": "b8894b956304339811524a6627a1bbfe2ca47e93f6fe1ea2f84ebb81c060af27",
+      "bytes": 49536
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/2-detail.webp",
+      "sha256": "8d30fbcffb6acda1138ddb6f92c923a5617c53cb81673d01db1a382b6ee952ad",
+      "bytes": 28966
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/3-B.webp",
+      "sha256": "1e0530be3b7ca1d1410f825f50f1b4d3c3485d9da8767fb2fef4ae4a265146b6",
+      "bytes": 38556
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m13/3-detail.webp",
+      "sha256": "ca1966de68c9f13cda90f6dcdaf2040fca3272666152c91d633c2184971df404",
+      "bytes": 22522
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m14/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/1-A.webp",
+      "sha256": "792393c334bae7be2582d2ed3adeea880f00f7ca1752844dda132b3d08ad277e",
+      "bytes": 50976
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/1-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "bytes": 37078
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/1-detail.webp",
+      "sha256": "45d4cddeae4f6ef967750811c24de1233f6424ddbc9b82d9d1e7585a5c23a4d4",
+      "bytes": 31866
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m15/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/1-A.webp",
+      "sha256": "792393c334bae7be2582d2ed3adeea880f00f7ca1752844dda132b3d08ad277e",
+      "bytes": 50976
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/1-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "bytes": 37078
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/1-detail.webp",
+      "sha256": "45d4cddeae4f6ef967750811c24de1233f6424ddbc9b82d9d1e7585a5c23a4d4",
+      "bytes": 31866
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/2-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/2-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/3-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/3-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m16/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m17/1.webp",
+      "sha256": "b2b10b60caffee446fb77a0894a1615a0b897a70b0e179bcdb23798465d5d2b4",
+      "bytes": 65092
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m17/2.webp",
+      "sha256": "dfbdb0d06010ecdf0ac3c9a1fee0685ca1a6265b0c268a1b7bb7e9c5aedb6161",
+      "bytes": 64946
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m17/3.webp",
+      "sha256": "4acabbe82f2a6b6ee86055ffeeb7dec15fab8462d34b29de2d504c1f54103c98",
+      "bytes": 63496
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m17/4.webp",
+      "sha256": "ba1443654a9296cf816fc1dba44f9112d84f22ddfb1966ef70b6b46b36168f05",
+      "bytes": 65194
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m18/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/1-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "bytes": 40182
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/2-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/2-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "bytes": 40182
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/2-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/3-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "bytes": 37078
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/3-C.webp",
+      "sha256": "675df8cb2574ad056e7cc07441cf99577b5b8669641c49c498b180d6f32dfa63",
+      "bytes": 40224
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m19/3-detail.webp",
+      "sha256": "789a2989fffd0b3633ceb3378153921475322715dac3cf0a64ec06c54df0f416",
+      "bytes": 33758
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m20/1.webp",
+      "sha256": "e5c2a1cb750e4983ee97f45e16f8a4a663a81f48713b688a0ed27d1baee0e56e",
+      "bytes": 68942
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m20/2.webp",
+      "sha256": "c7b31cf3a1d5ed0ac42ae298c341517459aa4b180b4eb03ef1ed85189b1895c0",
+      "bytes": 68654
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m20/3.webp",
+      "sha256": "27756881ae9f94a9577015462a81f4b053962d0b5bc04b71c485a5ba2840a465",
+      "bytes": 70208
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m20/4.webp",
+      "sha256": "3e81fe33015d5966284cda0ef8f39e44c4d2128f73a582e6e34e7b53fbde6df9",
+      "bytes": 71996
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m21/1.webp",
+      "sha256": "a65b376ea6b1568b1643a4fca2cbb5752b9c06c476a44313b6ac290d8cebe564",
+      "bytes": 64106
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m21/2.webp",
+      "sha256": "17573bbe00874002400e318744ba051595b195e15a0c105637f05c046142401c",
+      "bytes": 66142
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m21/3.webp",
+      "sha256": "3a7d32896f649abc069e84f50354371e6c1e5ca02449b738e0196ef51891ec9f",
+      "bytes": 65738
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/1-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "bytes": 40182
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/1-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "bytes": 31956
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/2-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "bytes": 40182
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/2-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "bytes": 31956
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/3-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "bytes": 40182
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/3-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "bytes": 31956
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/4-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "bytes": 37078
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/4-C.webp",
+      "sha256": "675df8cb2574ad056e7cc07441cf99577b5b8669641c49c498b180d6f32dfa63",
+      "bytes": 40224
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/4-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "bytes": 31956
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m22/4-detail.webp",
+      "sha256": "789a2989fffd0b3633ceb3378153921475322715dac3cf0a64ec06c54df0f416",
+      "bytes": 33758
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m23/1.webp",
+      "sha256": "9011cb2e6d48e16e252b18973f01afbccef1b7fd651761b58360c0a178c99bc1",
+      "bytes": 70524
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m23/2.webp",
+      "sha256": "6b9b77b797e9aa152569697cbc7cc8703c11ce7e4dff1c252f12450b1b279325",
+      "bytes": 68498
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m23/3.webp",
+      "sha256": "b4d4768f405ba5f9fc5e97c20f80084eab433ac7afaca09a4675648aaa345d67",
+      "bytes": 69510
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m23/4.webp",
+      "sha256": "ac7ea329753fb6f392373dff869917df29a9eb1d09a0652736d44b34b7446f51",
+      "bytes": 67834
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m24/1.webp",
+      "sha256": "9a382e338ca57f6b552e894b54c1614e41f8958a21519f259c618634098e029b",
+      "bytes": 73126
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m24/2.webp",
+      "sha256": "1fa461f9ecc7ab3f0c5aa101655db081e02dfad59a9a68eeab9299857bbea5cf",
+      "bytes": 68918
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m24/3.webp",
+      "sha256": "25c297c59e2efb5fe7b279ed58fca2a33842a09cca0e67fe5d2dbbe044e2830a",
+      "bytes": 71158
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m24/4.webp",
+      "sha256": "e703df579b4d6f934af8c8cc04f903b02d0e19d3226c1212573ff60166fa5ec0",
+      "bytes": 69108
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/1-A.webp",
+      "sha256": "bf98f29960d53e1370f65c251ccbfd11faafd3b1f1f1e4326ea954bd66d24141",
+      "bytes": 61342
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/1-B.webp",
+      "sha256": "8041a7bc00cfca38f0fea886e1c50eb6d0f119e742b89834dc2dc8bf4d14e27e",
+      "bytes": 48896
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/1-detail.webp",
+      "sha256": "19abe0caa27550763b45bcaff1bad43a95c314e65b826a516782d6a9696e6af5",
+      "bytes": 31372
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/2-A.webp",
+      "sha256": "bf98f29960d53e1370f65c251ccbfd11faafd3b1f1f1e4326ea954bd66d24141",
+      "bytes": 61342
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/2-B.webp",
+      "sha256": "a0378307c2b5a5848c2c495b54efec7213f61e0c0c9ca1631c688b6a119c1cc7",
+      "bytes": 47694
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/2-detail.webp",
+      "sha256": "eb01c2d1ea4433b44eb2712a629de860ae579ad31c9ccddba3fb04dbf118f84f",
+      "bytes": 29446
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/3-A.webp",
+      "sha256": "bf98f29960d53e1370f65c251ccbfd11faafd3b1f1f1e4326ea954bd66d24141",
+      "bytes": 61342
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/3-B.webp",
+      "sha256": "7061ce6c4a80dc17d6b59cd1c8699bf0d01ebbd489285acaf175d4d78218ab2f",
+      "bytes": 47930
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m25/3-detail.webp",
+      "sha256": "f794c91fe218b2470fa560f148425dcb6c0799deb12ad8e4b12edba3295dce89",
+      "bytes": 27848
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m26/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m27/1.webp",
+      "sha256": "845ec165d1a1f23d728490c6808c78785c677c5aa14ede2acdcfbc8dbadee760",
+      "bytes": 64328
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m27/2.webp",
+      "sha256": "4a2d22b0a2ca96cb1adacfab35eec648a80d4f012d269977c9a4cdb8120ff8a0",
+      "bytes": 62690
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m27/3.webp",
+      "sha256": "efa3e0977e7220d9b0256613c118859a69073949def1f5eabb2ea0040d325ff4",
+      "bytes": 65674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m27/4.webp",
+      "sha256": "f78816eb7d7b3e6abd711cb8e52286ffc7ab287690c373864d95c880c8226ab7",
+      "bytes": 65746
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/1-A.webp",
+      "sha256": "792393c334bae7be2582d2ed3adeea880f00f7ca1752844dda132b3d08ad277e",
+      "bytes": 50976
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/1-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "bytes": 37078
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/1-detail.webp",
+      "sha256": "45d4cddeae4f6ef967750811c24de1233f6424ddbc9b82d9d1e7585a5c23a4d4",
+      "bytes": 31866
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m28/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m29/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m30/1.webp",
+      "sha256": "160d6d58d5a7bcb627c2c47b51d0ec9edfe9a4e6a7035ab3348e14b2a4afdc15",
+      "bytes": 68522
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m30/2.webp",
+      "sha256": "956154d4b2e00a9dafbe51fbdfc025a18e1ae6fe0d7b7ff00e23f842f2e1cad1",
+      "bytes": 68908
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m30/3.webp",
+      "sha256": "16856e2ebd04d31d71b40f0d923dcde6c7f6fdfbaf5c9f498eb4d6ff7aef7f39",
+      "bytes": 69484
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "bytes": 38350
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "bytes": 27312
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m31/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/1-A.webp",
+      "sha256": "239f88082cc3c2b8c537315fd671250617006dafa581abef88b61d132fffd4f6",
+      "bytes": 53696
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/1-B.webp",
+      "sha256": "0e607823f231b5ad60f8e35ddc0770f4644a858a81507e5bfd6429ddc89a2516",
+      "bytes": 41324
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/2-A.webp",
+      "sha256": "239f88082cc3c2b8c537315fd671250617006dafa581abef88b61d132fffd4f6",
+      "bytes": 53696
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/2-B.webp",
+      "sha256": "e7ab56f18c75d0a805d0b4cc6ee31885f0a2efd3f30a8ea876f2d06be8d4c755",
+      "bytes": 40286
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/3-A.webp",
+      "sha256": "239f88082cc3c2b8c537315fd671250617006dafa581abef88b61d132fffd4f6",
+      "bytes": 53696
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/3-B.webp",
+      "sha256": "a289a0a508173792d7d2086f7bdb14b034185896a0ae2d275a750d0bc1e72210",
+      "bytes": 40618
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m32/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "bytes": 38350
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "bytes": 27312
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m33/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/1-B.webp",
+      "sha256": "e01a915fe6116c346c7089b82294da0fad8012cda7410ec09a72856a2edb1033",
+      "bytes": 20740
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/1-detail.webp",
+      "sha256": "a6cfae6a7ba79cea15316fc5a293aaae9a23621342d9f5aecdb14764d8671386",
+      "bytes": 13222
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/2-B.webp",
+      "sha256": "00cbe28b065bc4d485a79a3649b4e323e6d57482b51de64af626eef953b1a608",
+      "bytes": 20234
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/2-detail.webp",
+      "sha256": "a6e825043ae9148911f40699df98066608f19c189ae69a92a861ef8b8e74ffc0",
+      "bytes": 10822
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m34/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m35/1.webp",
+      "sha256": "7c8934c58379dd7184a524b9f26bb2ab7ded2f209713e7f68759cf630d3606a4",
+      "bytes": 70456
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m35/2.webp",
+      "sha256": "89e5a01bb16193b5528ae6ab91b6618f38187b03cd2d525417403d7448bc59a3",
+      "bytes": 70070
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m35/3.webp",
+      "sha256": "9e773f24ee0a6e9802530531d83ae2e9097d0a841ec37ac7cd653961c1fa3fc6",
+      "bytes": 68104
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m35/4.webp",
+      "sha256": "9edf61e8d365ee443d058b992a1ef284c56ef3ce018b1f55601810e6c9301b1b",
+      "bytes": 70072
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "bytes": 38334
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "bytes": 27634
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "bytes": 37296
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "bytes": 26086
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "bytes": 50960
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "bytes": 37674
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/final/m36/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "bytes": 22784
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/m25/contact-alpha-v1.webp",
+      "sha256": "1259fabd2075911e93984f868beb1f075b7c220e96462cc3692e7c8e9b98cc4b",
+      "bytes": 296012
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/m25/jumvi-logo.webp",
+      "sha256": "0a21b5e268e30902e04b0140a5537215e771751348ab3fc187b68c2547e4bcc8",
+      "bytes": 6990
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/m25/product-still-v1.webp",
+      "sha256": "0b48406a6fd47948baf0690a54270fdf65830533f7cdb699d1f850ed1250d230",
+      "bytes": 311758
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/m25/reset-alpha-v1.webp",
+      "sha256": "709cec056c2e712b20cba34869450435157224ca6418cc5de9acceea16aeb33d",
+      "bytes": 320724
+    },
+    {
+      "path": "/releases/a0560132675c2bee/assets/mission-illustrations/m25/seated-editorial-v1.webp",
+      "sha256": "dc673a156eef55da84b38326afc294fa8dcb29daa0052c38612e176310e1913b",
+      "bytes": 294800
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/catalog.js",
+      "sha256": "ea0a4d2a260978796d9beb18c93dca8200219a95fe29ee2275f2db05c88a7922",
+      "bytes": 1166
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/LUCIDE-LICENSE.txt",
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+      "bytes": 3208
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/button.js",
+      "sha256": "6548370585f098af1315543fbc5f491f804216ae2564b004a107001fd1019c3a",
+      "bytes": 872
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/choice.js",
+      "sha256": "b380f5d1672d6ba0f7782b304463a8d8716b4b0bbc036386d907bead5344e5bb",
+      "bytes": 459
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/dialog.js",
+      "sha256": "b33144f7c2c99e85a1a4821217e94698c0b00ecacd43351448a36538311f6712",
+      "bytes": 716
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/dom.js",
+      "sha256": "be1aad8e325e9be6bdb05a237bcc0756a47a232c7d154fc426fbaacf63a73649",
+      "bytes": 221
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/icons.js",
+      "sha256": "0271f385c35f5311416326990c4541bc0cb9622058ce5ab716740f9f1d97b7d9",
+      "bytes": 1363
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/components/status.js",
+      "sha256": "9dfa7f241bc6a6bc4405744f894b11287db3c7a2fddb610fc48c42bd87fe8cb1",
+      "bytes": 186
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/context.js",
+      "sha256": "ab1d04265c3485f50b937d26bbfb0bad9aaa9ee089bd8264aed61d5adce1cfa6",
+      "bytes": 489
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/main.js",
+      "sha256": "7b46af884ebf6e24107404e38b571a5907291afca697dc158dd2692c4edb9eb5",
+      "bytes": 10324
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/media/audio-controller.js",
+      "sha256": "3ebb654aa23f3af73cac9578303b828f55e08318401bc53fed73917d15a896ac",
+      "bytes": 1721
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/offline.js",
+      "sha256": "adde0ec9721371e4c4f17dcfde7f26c8b485bbb0e83cc787e6d951c00bbba850",
+      "bytes": 833
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/repository/controller.js",
+      "sha256": "5298d7e32ffed48ccaea9e68fc0c99b6a261304f24ca14a89749f16c604fb37a",
+      "bytes": 6442
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/repository/legacy.js",
+      "sha256": "9db2e95171f9ecc672a4c4b84033272f35687c87470f7c710d4db75a2954e820",
+      "bytes": 1303
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/repository/local.js",
+      "sha256": "b41b6689a653aee8319ac293771f7a80b3a7b634de0d7343909bb1e804a81812",
+      "bytes": 7298
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/resume.js",
+      "sha256": "fd88fbd6eee3091b5a5ce7b262c13a632c6eb98ca65b132a836af4eb9012332f",
+      "bytes": 891
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/router.js",
+      "sha256": "6bbb2056d6d4792c57f59b550c934f748df52810762e7928faa8d0cd2ad41d12",
+      "bytes": 830
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/state/app.js",
+      "sha256": "fb242d98b41de3f8a7a9686d93e538c4b179c097d1a6b78c9cd3c85f6e1523bc",
+      "bytes": 4402
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/state/media.js",
+      "sha256": "6d78bb7275e14c8ac8639ba7122c650e564aca77c548135e651474b3c3a84233",
+      "bytes": 264
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/state/record.js",
+      "sha256": "759110149eac3792b27f98d319dd06b0f31533503a49ba8a512bc05bd310a73f",
+      "bytes": 158
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/state/report.js",
+      "sha256": "c4e70d15fc58d84b2a6cef5cd72644c57b660925e1049f8bf4b045d1533fa4ea",
+      "bytes": 302
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/state/round.js",
+      "sha256": "155e0b2ea5b3341fe95c0789e9b22d4b3287bee2810f3e6b0d7567d1bfd47597",
+      "bytes": 226
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/styles/base.css",
+      "sha256": "0ffd5645caf7e630cd49932660843f7032f98c63841042126b52969e90282f5f",
+      "bytes": 1082
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/styles/components.css",
+      "sha256": "4f26f499182385bb6bfaedf491d5a46ef5fbbc5ab2e96c5dffbe8a38f580bcb2",
+      "bytes": 2416
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/styles/screens.css",
+      "sha256": "dbbcaa560f04f4df24694c8f34c63e9668b8f0cb8a7b48e66e37647819e65285",
+      "bytes": 2332
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/styles/tokens.css",
+      "sha256": "dda49f88d752085c8f1fcfe73fa13d0b7ca523e0336fafd9885f263eb64e8762",
+      "bytes": 856
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/active.js",
+      "sha256": "b54a28e0be78940ae82a6d0d093409d735f17e95632f9e54ecb104a8fa9c5c61",
+      "bytes": 80
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/adult.js",
+      "sha256": "235adb2385afb85119a481b5de592d17f8e107d06d5d4c7ec7f6b6d07da012b1",
+      "bytes": 91
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/attribution.js",
+      "sha256": "3204960e50791620cac32d18f4e7afc40de9e746bede24927ee761489ccd0887",
+      "bytes": 97
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/availability.js",
+      "sha256": "8b988f40101a33d241071727d335ffd40a02512a566df544ecd47293845f9242",
+      "bytes": 717
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/discovery.js",
+      "sha256": "0b0a086d1d268da4041f74ba8044f1d0e03b6f6d59a1ae5ce468dcd7d4345dcb",
+      "bytes": 945
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/entry.js",
+      "sha256": "8390df045d5f1d8df23b794861fc64d2af4ac46f86e28875f830245e5afc2ea0",
+      "bytes": 79
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/group.js",
+      "sha256": "87688fdf7f87f4cbbb139eec99d969cbc37de2a1e5383b407fd826a185b44b92",
+      "bytes": 91
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/guest.js",
+      "sha256": "afa9899571605c5ef209647d786614791c70247383f6699735c74f2d3db7b8c2",
+      "bytes": 91
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/help.js",
+      "sha256": "8e75ab4d68b31cd7b8cb9387ae3921012c43f6b2534d58ddb8a803ed84924013",
+      "bytes": 78
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/index.js",
+      "sha256": "0fd3ed770c3cfe04dab3eb8163ac71b472e38cfd504545994fd1f0f8411ac0b6",
+      "bytes": 818
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/interrupted.js",
+      "sha256": "0e6a2f94b340a08d4292ded5f3d10f50a625cab835f6fe91057c168487d029e6",
+      "bytes": 85
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/management.js",
+      "sha256": "4f72b97e95a5259df6d9d1bcae5d105791a51c1cc73a127a2803a460f0a2a3c7",
+      "bytes": 96
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/new-player.js",
+      "sha256": "0e387647ebf17e05a6d260c3e04591b4b2c680c1b56065767736177a209d8530",
+      "bytes": 96
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/personal.js",
+      "sha256": "bfcf8633e60040b62d4198a25b413570848e405d951d2053daa5fdddf9746ce1",
+      "bytes": 6391
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/play.js",
+      "sha256": "7eb5465c08b90766f0a871ae578f5d15feb6a5ceabde1326c891b3a5fbc0ff3e",
+      "bytes": 7776
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/record-result.js",
+      "sha256": "9659b2c415fe149e5458fe0c63e88cff04a7278b57eccb49276ff8c732203048",
+      "bytes": 99
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/recovery.js",
+      "sha256": "c4286bcced2907c0769379c6aaf8d6973c89fd82b3516a9d1961842044f02f5e",
+      "bytes": 594
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/report.js",
+      "sha256": "141dac02c132e1beeda18afedc23e075e08a1f8eceba47f7df2efba070df5ebc",
+      "bytes": 80
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/returning.js",
+      "sha256": "a755d475272f3716befea3418f3a35245b9fb74ee96459af787d6bb6dce39b0d",
+      "bytes": 95
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/skeleton.js",
+      "sha256": "65df44de5c56564da53b1d5bad75323108726873ec548fa736d237b4224445e7",
+      "bytes": 454
+    },
+    {
+      "path": "/releases/a0560132675c2bee/client/views/stopped.js",
+      "sha256": "32e8d901a242361d8316d1aae21d2e18099d71b88728733c3f7054466e7dca8b",
+      "bytes": 81
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/asset-manifest.json",
+      "sha256": "c0f4b2bdb28b378c31c10647352f85744b7d7ae72c9ec15785fb6e42dfa2357d",
+      "bytes": 150557
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/catalog.json",
+      "sha256": "bcade446927a61c0ce15b880ca5e923b1ff68e80fb377413abd2da9fbf736fdf",
+      "bytes": 14600
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/component-tokens.json",
+      "sha256": "d44b993a671242699dc8743b0bf9549958a9df1b4532009ed177d6d35ed44e82",
+      "bytes": 2766
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/icon-provenance.json",
+      "sha256": "73eb7fc6d218b7d240f474034844a1ecf19e09eb66f76d1989657d93ac07de14",
+      "bytes": 386
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m01.json",
+      "sha256": "2bfd55f224f30a10e619df6dd141c0f35c53a854b794bd8728eb1eb0e6929b73",
+      "bytes": 3978
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m02.json",
+      "sha256": "937f84fb6f623583674ad69820dfcf6941f2e0111b12701a58c1e242c5c063bc",
+      "bytes": 4697
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m03.json",
+      "sha256": "58314ea935662ac97a6d87a779a81be6684855751f0880c77c24b3aee68170f5",
+      "bytes": 3398
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m04.json",
+      "sha256": "3f6bd7df5fcd0a437b3d56d1bdcfedab29d5d1be9508581c226dc164b8f36a5e",
+      "bytes": 5651
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m05.json",
+      "sha256": "53822b1596b9e28596b2a0289f9a93dbef7022691cd3b797f0d21364732fccd0",
+      "bytes": 3811
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m06.json",
+      "sha256": "2c6e1fbbb54c4a0df05fe005fe29545fd3c20d14a30abe104392857705faaf14",
+      "bytes": 3851
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m07.json",
+      "sha256": "1e1560115d3729c1a70121f662efae6bd5530088552da6159e4e7019e634c1ad",
+      "bytes": 4457
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m08.json",
+      "sha256": "5dbe4785b5dd81f83d8897eb39779a6a39bf7ca8da90f5de140ca75b022898ba",
+      "bytes": 3918
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m09.json",
+      "sha256": "d79322775558b7c07792f770d7898bf137515e7d803f44db3ef742e0579c7ac1",
+      "bytes": 3919
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m10.json",
+      "sha256": "d5291c08b3b0c53e03437c49febe907ade89b6397550f19be031cabc19da44d9",
+      "bytes": 4345
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m11.json",
+      "sha256": "b39fea99b64b4b0661f8d6c7eea1531ff9a3ce734bd7e482809b6f0d9faef2f2",
+      "bytes": 3925
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m12.json",
+      "sha256": "2658bb11154f4e0a91db159866dcf810b3091b4c8e3008b37598c784246b87fd",
+      "bytes": 4035
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m13.json",
+      "sha256": "216f65b4a789d999bf5d426e7d69f90fd228bdb7fe23910ce82a6ade14240532",
+      "bytes": 4178
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m14.json",
+      "sha256": "a8d990fdc1dcd1712deebb9e5bc0de757185b42252d13d84e407b4feccd27a22",
+      "bytes": 3777
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m15.json",
+      "sha256": "914cd039d4d6bd02c238f507ad402e6486cea1a316d15f0b76ca2bbb6ab0a3e1",
+      "bytes": 3877
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m16.json",
+      "sha256": "64a32f88f54ddcd909f3d6d312030a3f1eeaf9110e15527f4b592975aa807a9b",
+      "bytes": 4254
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m17.json",
+      "sha256": "b0c168ca1935f2b3ea2b3ba9711e1b5123ad5a683059ace05bf659f4baea3169",
+      "bytes": 5074
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m18.json",
+      "sha256": "799a8ba8989ca59dc8f1df68a548d716f77b59363bb61067f5e91b2f1be513f6",
+      "bytes": 3838
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m19.json",
+      "sha256": "d5c014cd46da3474b440892fae5e294f3a25869855335b65e3f80826de8dc62b",
+      "bytes": 4268
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m20.json",
+      "sha256": "0f7c5034a887d9376d3604a6f0b730fb871a8524d00f34beb4ef2e63d4361b44",
+      "bytes": 3697
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m21.json",
+      "sha256": "7cb107cb24b3172ac1be2d08a0170c63eee4fa60c84b3bb1ec2f62d82601fdaf",
+      "bytes": 3436
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m22.json",
+      "sha256": "67cc61598104b0a2895c092e54da4930a267a4b550b8b89576e9ac0b31542902",
+      "bytes": 4909
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m23.json",
+      "sha256": "0cd86977b18c3182fe080aaac8d90303f4831107f47b6c4c39e83c53f2f3d266",
+      "bytes": 3835
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m24.json",
+      "sha256": "c722b45ba726b54b4416d7afb3c8df76583327b3b4cf55fa063fa88c601ee195",
+      "bytes": 3718
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m25.json",
+      "sha256": "6a9a2dfaa754282ac1e750bdfb46d08c7ca81675b61098e271efa8bb73c0c529",
+      "bytes": 7355
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m26.json",
+      "sha256": "00801958d6543f3766170f2177312111690fa6f1130a95f6d6941a0b053f3d7e",
+      "bytes": 3742
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m27.json",
+      "sha256": "e69766e1648a5c6e73a225483a300201ae2b3f7839d3b3d278c9523271ec48a1",
+      "bytes": 4907
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m28.json",
+      "sha256": "2b7c04ae02f7984a44c06eaf617a089e72b0228b8963390853e995112d7bb96a",
+      "bytes": 3944
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m29.json",
+      "sha256": "5eadff5d36b2154cce6eed3581eaf4ca280f979ed10f9d452dbeb3bd3b40e93c",
+      "bytes": 3772
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m30.json",
+      "sha256": "51d17a5cf2989d3636a474da566c1e5a0a4c5451e359fb403cb09fb4608bc540",
+      "bytes": 5993
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m31.json",
+      "sha256": "433580ed1faa66dadfe5def08acc505c461022b104039133e131baeef67558b9",
+      "bytes": 3934
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m32.json",
+      "sha256": "4c2d5f24ec108f99f397365da366acfd7d9ea136fdf66ba8ae0ea1e0b12e6d30",
+      "bytes": 3847
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m33.json",
+      "sha256": "b602b43f897444b8587605aadcbcce307e9a821b48989c1d615773c3270a0651",
+      "bytes": 4425
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m34.json",
+      "sha256": "c97f6b1288f7681bb0d23748f120e22eb3dfae464da01974841d31e0e4a872d6",
+      "bytes": 3826
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m35.json",
+      "sha256": "5aa1dd041948972132ef0a3ddd2e3c03974a5210baae2ce8ccb500268f66062e",
+      "bytes": 3580
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/missions/m36.json",
+      "sha256": "c455d1d24712d809ff8ccceb287563948ac3912e3368083006ebae13d1ef8084",
+      "bytes": 4365
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/narration/lock08.json",
+      "sha256": "0aeeed14cf1cca18b1541abd429517da87fd16190525bc6578a8b4fbcb849dc7",
+      "bytes": 5288
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/ui/en-US.json",
+      "sha256": "13eed00427cd815a24680e278488e0e8ef0f0d5f9e8c8b885d7c67d16d51b93b",
+      "bytes": 6876
+    },
+    {
+      "path": "/releases/a0560132675c2bee/content/ui/tr.json",
+      "sha256": "679df55ad1973c9eaf647b8d7522fa8bc01f27e4ee24ed5290925dac593035c0",
+      "bytes": 7025
+    }
+  ]
+}
