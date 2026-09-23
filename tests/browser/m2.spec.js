@@ -14,3 +14,14 @@ test('critical text appears while art is pending and readiness does not steal fo
 test('new document never restores a report or identity and old storage is untouched',async({page})=>{await page.addInitScript(()=>localStorage.setItem('jumvi_profile','synthetic sentinel'));await open(page);await page.getByRole('button',{name:'Oyun sonrası bildirim',exact:true}).click();await page.getByRole('button',{name:'Tamamladığımı bildir',exact:true}).click();await page.reload();await expect(page.locator('[data-view=entry]')).toBeVisible();await expect(page.getByText('Görevi tamamladığını bildirdin.',{exact:true})).toHaveCount(0);expect(await page.evaluate(()=>localStorage.getItem('jumvi_profile'))).toBe('synthetic sentinel');expect(await page.evaluate(()=>Object.keys(localStorage))).toEqual(['jumvi_profile']);});
 
 test('pre-play reload remains pre-play without inventing an interrupted round',async({page})=>{await open(page);await page.reload();await expect(page.locator('[data-start]')).toBeEnabled();await expect(page.locator('[data-view=interrupted]')).toHaveCount(0);expect(await resume(page)).toBeNull();});
+
+test('readiness completion cannot move a secondary control between pointer down and click',async({page})=>{
+ let release;const pending=new Promise(r=>release=r);
+ await page.route('**/assets/mission-illustrations/final/m25/*.webp',async r=>{await pending;await r.continue();});
+ await page.goto('/',{waitUntil:'domcontentloaded'});const control=page.getByRole('button',{name:'Player options',exact:true});
+ await control.scrollIntoViewIfNeeded();const box=await control.boundingBox();
+ await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();
+ release();await expect.poll(()=>page.locator('.frame-actors img').evaluateAll(xs=>xs.every(i=>i.complete&&i.naturalWidth>0))).toBe(true);
+ await expect(page.locator('[data-readiness]')).toBeVisible();
+ await page.mouse.up();await expect(page.locator('[data-view=management]')).toBeVisible();
+});

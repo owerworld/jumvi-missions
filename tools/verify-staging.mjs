@@ -22,3 +22,24 @@ for(let attempt=1;attempt<=5;attempt++){
  try{await verify();console.log(`Live staging routes and exact artifact ${local.release}: PASS (attempt ${attempt})`);break;}
  catch(error){if(attempt===5)throw error;console.log(`Staging not yet verified (attempt ${attempt}); rechecking in 10 seconds.`);await new Promise(resolve=>setTimeout(resolve,10000));}
 }
+
+// Verify the hosting MIME/response contract through a real installed Worker,
+// not merely through a matching deployment manifest. Fresh synthetic context.
+const {chromium,expect}=await import('@playwright/test');
+const browser=await chromium.launch();
+try{
+ const context=await browser.newContext(),page=await context.newPage();
+ await page.goto(origin+'/tr');
+ await expect(page.locator('[data-start]')).toBeEnabled({timeout:30000});
+ await expect.poll(()=>page.evaluate(async()=>!!(await navigator.serviceWorker.getRegistration())?.active),{timeout:60000}).toBe(true);
+ await page.reload();
+ await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller)).toBe(true);
+ await context.setOffline(true);
+ for(const [path,lang] of [['/tr','tr'],['/','en-US']]){
+  await page.goto(origin+path);
+  await expect(page.locator('html')).toHaveAttribute('lang',lang);
+  await expect(page.locator('[data-start]')).toBeEnabled({timeout:15000});
+ }
+ console.log(`Live staging SW installation and offline TR/EN ${local.release}: PASS`);
+ await context.close();
+}finally{await browser.close();}
