@@ -47,7 +47,7 @@
   "discardBody": "Bu bildirim henüz kişisel geçmişe eklenmedi. Ayrılırsan veya yeni tur başlatırsan kaydedilmemiş bildirim kaybolur.",
   "cancel": "Geri dön",
   "discard": "Kaydetmeden devam et",
-  "accessText": "Görev metnini ve üç adımlı açıklamayı okuyabilir, sayfayı büyütebilir veya bir yetişkinden yardım alabilirsin. Ses zorunlu değildir.",
+  "accessText": "Görev metnini ve tüm adımları okuyabilir, sayfayı büyütebilir veya bir yetişkinden yardım alabilirsin. Ses zorunlu değildir.",
   "askText": "Bir yetişkinden görev açıklamasını birlikte incelemesini isteyebilirsin.",
   "storageUnavailable": "Bu sekmede tur bilgisi korunamıyor. Sayfayı yeniden açarsan aynı turu sürdüremeyebilirsin.",
   "criticalLoading": "Görev görselleri yükleniyor…",
