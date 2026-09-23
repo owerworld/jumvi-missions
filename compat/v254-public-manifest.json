@@ -1,0 +1,1185 @@
+{
+  "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+  "files": [
+    {
+      "path": "app.js",
+      "sha256": "4493765e0f6579602d3a722743d09bd11b00a595dd0df20b8b83b17982cf7d10"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/countdown-1-en.mp3",
+      "sha256": "bfa1d00e30232191d98503aa9f707a250bcb85abef99a81651edce6aa80e0014"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/countdown-2-en.mp3",
+      "sha256": "759ed0fefee7fd698c42ce16dfeede5b347db8544331b252ecce39f60b785c26"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/countdown-3-en.mp3",
+      "sha256": "7907ca13f1a3fe5e30cefaf918dfa7fb836045687e3c2cd8a74397618ff22019"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/countdown-go-en.mp3",
+      "sha256": "6ce12f90d65fafe2c667fce16432028e2998332c3d183b70eca00a9c29b0bf77"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/great-job-en.mp3",
+      "sha256": "0d8db1e70f340cffc4fe7295ae3cb8821cf0e2ce26050317ffe3868906f52059"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/green-light-en.mp3",
+      "sha256": "51d24aa1decde8daa85ca8310265db778e6b2446cb0406b0f1a8c3cff9330fe4"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/keep-playing-en.mp3",
+      "sha256": "5f337e20fd0df5ba51c26c6a9ee711e826af1d2fbb4d7b127ec9525073803541"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/game-cues/red-light-en.mp3",
+      "sha256": "c47f16b6112b80ce6c357a44fac7a5ebb826411220e577b3d74e7df6863b4380"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/hub/hub-bubble-1-en.mp3",
+      "sha256": "ed8a4aae51ee3930ac3936e80aac373ffa1eaf73dddce672f4c76007532eb85a"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/hub/hub-greeting-1-en.mp3",
+      "sha256": "d395fe4ffcc559b98dcaebb339a7d2948f552ee9932ee42fd89edc72fd8d3fbf"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/01-speed-demon-en.mp3",
+      "sha256": "2732379b68a70160330850292e6a6a8b01f862ed039bf0ce8b4e85edb20d825b"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/03-quick-slap-en.mp3",
+      "sha256": "b61439e13b7b029d3f83ec54a32a58b4f8e5b4ba0bd579c9d5d901081f24c6d0"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/04-switcharoo-en.mp3",
+      "sha256": "521ce9bbb49d9ad24da9e852a487069ae6a2459727e17d628c74e99281d120fa"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/05-statue-mode-en.mp3",
+      "sha256": "b1fba61afaecf78361e92d7944a2c956a34ff5cf270d2eaf804f583484008678"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/06-number-echo-en.mp3",
+      "sha256": "03f414cd83499aee5483fab328a97e7ac9b50c2724e2e3e7ee53328b1926a710"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/07-rainbow-throws-en.mp3",
+      "sha256": "1d207edb1c1d5c47863d2419370431b4a26587be134b5218f458eba27d238307"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/08-the-landing-pad-en.mp3",
+      "sha256": "c945c9dcfad6efc9719b26d7d6840e9919bb82d33928b1bd41de86ebfa41609b"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/09-step-back-challenge-en.mp3",
+      "sha256": "7ef34f7bf5d8a300695c5473c1eb3acb312132cf5c2dfbdfa1f9112978f2175c"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/10-power-step-en.mp3",
+      "sha256": "aef65aff5cc31728805bb69422ef90694c74a85deb9b251508618e43d229c082"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/11-sky-floater-en.mp3",
+      "sha256": "f1cb9423c6afc4664a9a8ab0bd225dc77fbb9898e13ea029605dc27010c361ab"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/12-heart-high-en.mp3",
+      "sha256": "6a87c624147d6de906a0af0f95ef5d22a59d1ebcd971de7656f8de593602d771"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/14-tempo-master-en.mp3",
+      "sha256": "86323231d056ae431a1a80ee9af2b262b7be8904fd290904e72183777225b064"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/15-spotlight-eyes-en.mp3",
+      "sha256": "c107b980901f14d4ec557560fd0ffbd29060b90ae21d4cb51cd840486f681bf0"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/16-1-2-3-go-en.mp3",
+      "sha256": "cb512170c1796c4869212b99d45a5f80e426e8e970549e87143ee27252c83d36"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/17-mirror-mode-en.mp3",
+      "sha256": "cab54aaa931ac505e54038b4ef998c65ca82ab041b4c5f920b87b5f84bc54811"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/18-count-to-10-en.mp3",
+      "sha256": "e918f79b23c617d929bbd6ef6b2a0eda00dcf38e19b3cd03d96bf162abf103b8"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/19-round-robin-a-en.mp3",
+      "sha256": "6c74f944ae03084049aee7f8f0031cfcbd650dabff3cd9e9bffbf2cb82590383"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/19-round-robin-b-en.mp3",
+      "sha256": "f3c9135a4d9a09d90e8a19b7158a3f762546db9f6f4f53ba9001a5c34fb0338c"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/20-crab-walk-relay-a-en.mp3",
+      "sha256": "55affa408a03633e4ade836f8cb68ad49a30799f22f84449db81043d093bf5ae"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/20-crab-walk-relay-b-en.mp3",
+      "sha256": "8adb36fa2d5e8380e792fd180c3d7e33afa664340e71a57e502c85ec136ed349"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/21-middle-defender-a-en.mp3",
+      "sha256": "6855e6d214459b63c75945622a206532dfe61c6c7943c74b2643c09141582b7c"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/21-middle-defender-b-en.mp3",
+      "sha256": "c796e4a52da4eae4dde1cc016a5989af461c2491655dd641f93c75d7b4d6f867"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/22-spin-squad-a-en.mp3",
+      "sha256": "1e6f0eac7dba4f0706cf3b3a9d5aa45259a45760c94b1afff43739de74ba89f0"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/22-spin-squad-b-en.mp3",
+      "sha256": "12d13c789b316ff930d5a14abc3dc770bffe367cac3708e1ef9f876c333b2ba8"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/23-mix-it-up-a-en.mp3",
+      "sha256": "72eb0f92382ccf4755476bc4036128a7cf1cdf7764b1abeed1683c37881e4477"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/23-mix-it-up-b-en.mp3",
+      "sha256": "c89f4d8daecfdaa949434ec05fcdf7a5b09abed33807ba27160f5644a88c4a8e"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/24-2v2-squad-count-a-en.mp3",
+      "sha256": "4522af2d974a8beaf82e2148ab35b4da5d7e8e657aedc9371881549b394b0851"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/24-2v2-squad-count-b-en.mp3",
+      "sha256": "2f507565b9f0a9cfaac62b31d4b572a479a8e3adf4170c2c9e8dc5aeb30d5e06"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/25-chill-catch-en.mp3",
+      "sha256": "16789d29f57b47b42948ffca45e35ca2badfe138c180e741fc26098c4146ecba"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/26-tiny-space-en.mp3",
+      "sha256": "231affc586c09049117f81e8fa261c41b93f8c44a3ff44d3c2e4277735668c85"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/27-secret-signal-en.mp3",
+      "sha256": "75b561a1f3d84eeb77d7439bbc699ca3e9b04ed62c6619d2255cbe537336e285"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/28-mind-reader-en.mp3",
+      "sha256": "3473b4555bda7176b2f6e5cea54be8d83c5da9f181e694eb60bbfd0f0a689f4f"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/29-stuck-foot-catch-en.mp3",
+      "sha256": "cbcd71a91ac3f5a1af900ffbdb5379566229d51351a9fd76599ba8b36fc824fb"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/30-left-or-right-en.mp3",
+      "sha256": "d0553c50dc412b14136275dc155b01e560954d7bc835d038147a665426416d75"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/31-cloud-chaser-en.mp3",
+      "sha256": "e57893a621a6a21ed6a222bc3da80d948485082b880ae22c412d40cdc7ef1463"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/32-home-base-en.mp3",
+      "sha256": "d56d20cce76ccb4a3888fd7da5ebcfd10f896a9bb113b8dbfef260cb9e464401"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/33-how-far-can-you-throw-en.mp3",
+      "sha256": "d40703777cbd63e7d4a41adcacd292795a0a864eda3306a49d98691c955e3f55"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/34-chase-the-ball-en.mp3",
+      "sha256": "b1e10e8d14c66fa4c80704ff915bf401141499a40a86bb01be488da7ac1c9622"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/35-sky-high-jump-en.mp3",
+      "sha256": "e03c437e8c04ed542583123698cf31f0f319c3348d5614bd4432283f54333f70"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/mission-coaching/36-marathon-rally-en.mp3",
+      "sha256": "854e6caeda71943d7a7a4e4ab2b658d14578eb114e72e05e1f15e72fee6cbf6b"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/01-speed-demon-en.mp3",
+      "sha256": "7de031a2ac86c1280c70d977310396f1240adc1e50fd2c753bab7c1388d6ab3c"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/02-red-light-green-light-en.mp3",
+      "sha256": "484d845b91b4aa31af2a4ae5ece1fb019a372619c273741cd2278f4dc39af03e"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/03-quick-slap-en.mp3",
+      "sha256": "42cb1016452eb5e0a5b08b60a38f13e2a4bb47f435dfe00903bdefaf3d1a183e"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/04-switcharoo-en.mp3",
+      "sha256": "1474be426a4ef623f996aef8b517db588d4f072085714d566707509875f5bc51"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/05-statue-mode-en.mp3",
+      "sha256": "0f7fd458f3d84c979c1ad949e79aaccbf8532203e97b6923e7ee0f900291f4b3"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/06-number-echo-en.mp3",
+      "sha256": "8c7c60366c40323857662b2572386a5f8fd50d338a1c8f6b73dfc4e7beb099a1"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/07-rainbow-throws-en.mp3",
+      "sha256": "aa1cf3d9cbc8e1ce4b5284c3f2c888a2d19486b0cb82a3e6964213c0ded96de9"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/08-the-landing-pad-en.mp3",
+      "sha256": "f0c97cb1e0330d7948dac720488b444cdb67fe4c61e73094ecbd4492d5399a90"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/09-step-back-challenge-en.mp3",
+      "sha256": "41572fc3995cc6a258bedefad0c16c206af3c5afc768764f8f991f77419dcbda"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/10-power-step-en.mp3",
+      "sha256": "503be6a386f1004a77ba22725471613b7244e041ce76eb94e66aec7952c583c4"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/11-sky-floater-en.mp3",
+      "sha256": "5e9478562b6c033ed06d6baebddd8dcdd813e16140322ff4a8e4642e2e41c9cb"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/12-heart-high-en.mp3",
+      "sha256": "7f5ccf07ed8c253bc451ff8cbbc1b566532a56bf54c20f6a64b72e0f27fc763c"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/13-silent-mode-en.mp3",
+      "sha256": "453fcf3dbc9cadd938ec410ec136d88a17a38378b16a10eb30b07e89150fed92"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/14-tempo-master-en.mp3",
+      "sha256": "ca6264a939d103c0faaf701b8cf553d531c48c303fb67fc4e0f20bbaf8e82848"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/15-spotlight-eyes-en.mp3",
+      "sha256": "a7f0f66a47941e612650d091439cbf0bde34c639cf5c909854bad664f7f95b9f"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/16-1-2-3-go-en.mp3",
+      "sha256": "3ebb0915d49f779cee73d36bbe68b8844dd6adc7b9effd4a11e1fe77ccb7bdd6"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/17-mirror-mode-en.mp3",
+      "sha256": "8f46bfcdd6f39daaaf693befb0ac2720b42963a30626eed8316391ff74029b79"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/18-count-to-10-en.mp3",
+      "sha256": "33e321a45bf77f505b939c5ad3cc6169500887b29689aaa21544aeef88f7c345"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/19-round-robin-en.mp3",
+      "sha256": "cfd775deb5e9ece06b85e48d345de64ed46d74fdaee30eb77899350b675c4d55"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/20-crab-walk-relay-en.mp3",
+      "sha256": "914a377b2e5763d9c32a3712c060afa09433fd516b75e261b7c66c88b40bf70c"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/21-middle-defender-en.mp3",
+      "sha256": "8fbd82e0b1e4634b202dc1269a3d96e4c58d7f6211e915abf792cea39083b801"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/22-spin-squad-en.mp3",
+      "sha256": "11ac2e1172b78b4f07d3faa7630595ee9720930a2b08ef67e8d13e5ad84ccb10"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/23-mix-it-up-en.mp3",
+      "sha256": "fa83e045e3599694545325495bf9a45198ad3146ecce894587d61dc32c4c171b"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/24-2v2-squad-count-en.mp3",
+      "sha256": "d260aa63b435c22fd05e559308a4bfd1d0e3605f825d0cd39ed74e6001c398b8"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/25-chill-catch-en.mp3",
+      "sha256": "00535c2f2d779e5deac0f4343f685811ed5093cdd625bb430555e8eed11a687e"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/26-tiny-space-en.mp3",
+      "sha256": "692a3d641721cbc3acfc8b8a2af79a218ddc6671a550bd2689e4d71f5e85ac1a"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/27-secret-signal-en.mp3",
+      "sha256": "ebc481c8caa4c11596c67ebb57e68d9c8c0d81fcb23c5f6ffd328b99fcadf729"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/28-mind-reader-en.mp3",
+      "sha256": "7f261866bed9f95c1ff83293c38213e7fc79e8c43dcbf6c54d626a99ff812a36"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/29-stuck-foot-catch-en.mp3",
+      "sha256": "972b5c416e91eea8b05f4a50a90e46dad98f46eaa83d13865e0d8d56cb654f04"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/30-left-or-right-en.mp3",
+      "sha256": "d1a518a11c16becacfba915ddf1aa53e08680b13250d35e5951fddb4f1c38e35"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/31-cloud-chaser-en.mp3",
+      "sha256": "d693926fea7cedd0d1913e17e40a7f6616cb7b9952ccf182019ec73ad60b39e2"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/32-home-base-en.mp3",
+      "sha256": "1773729427d992984ff44fa23c47379cbe87f88dd5d2f4005a6cc8ff801a06d0"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/33-how-far-can-you-throw-en.mp3",
+      "sha256": "8350f3ab0788c88aa0933e86c68c5633fe788a51580f807a4be1cccceb9f17db"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/34-chase-the-ball-en.mp3",
+      "sha256": "8d6369adfaae6334195c8b74005d3f5df687e0327b7f996377c3148292303b50"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/35-sky-high-jump-en.mp3",
+      "sha256": "60ea52680cca3d7caab309932a971aa03099e2f1a0b58fb45dcaa1cb85b7c824"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/missions/36-marathon-rally-en.mp3",
+      "sha256": "05f8eac2fa9a698578e03b2090ca157a496b3c583eb4f9c77dbc8c84bb8dccf9"
+    },
+    {
+      "path": "assets/audio/coach-leo/en/system/times-up-check-phone-en.mp3",
+      "sha256": "c611ef7f001738fbae2b958a05e0fd2409ed402b82bd758765dbfe63e5229bf7"
+    },
+    {
+      "path": "assets/audio/music/JUMVI_FRAGMAN_A_mobil_EQ.mp3",
+      "sha256": "f4ee666130c94418d9c9800d6e027ee2103d70c6b534794ae5dd7793dae94bf2"
+    },
+    {
+      "path": "assets/audio/music/JUMVI_FRAGMAN_B-alt_mobil_EQ.mp3",
+      "sha256": "9ba2f4bd89df6b076ddd015e9a67ab0240bd9eb6c160b3305cd0c06c60807b2f"
+    },
+    {
+      "path": "assets/equipment/jumvi-ball-128.png",
+      "sha256": "1f6e25951cc164df7010f8404f82cbf6646436fd5c7d9c1f266af56ec2725ea1"
+    },
+    {
+      "path": "assets/equipment/jumvi-ball-512.png",
+      "sha256": "a397e9cb2a2215c24a00bad735285c43b41e9a9de45c3403928bbb65154d94ca"
+    },
+    {
+      "path": "assets/equipment/jumvi-ball-alt-128.png",
+      "sha256": "2b7d909870429b2c5b84a0d014e8540d92faf22d8426e00431572d022afd8b5d"
+    },
+    {
+      "path": "assets/equipment/jumvi-ball-alt-512.png",
+      "sha256": "648550c6ca798d6cec4fc66686fae7eb56ca6dc09fd175b6f8547afb8be2cc46"
+    },
+    {
+      "path": "assets/equipment/jumvi-ball-real.webp",
+      "sha256": "0a5554b2872d235b87a65d74059dc62f7e556426b0ebd38a5ddf696a623e99d3"
+    },
+    {
+      "path": "assets/equipment/jumvi-catch-128.png",
+      "sha256": "dc493c6c868156c0852ced4f39f72bd1acd442d5534d6fcff8b59a676d468148"
+    },
+    {
+      "path": "assets/equipment/jumvi-catch-512.png",
+      "sha256": "874b11a54af423c3dbf01dd028b16cf1b01c9c3bc48cb432502068b6f18686ba"
+    },
+    {
+      "path": "assets/equipment/jumvi-paddle-128.png",
+      "sha256": "ad941e976aa325edcfd39ba7483266c8b00b981c38d4978f2893487507ee870e"
+    },
+    {
+      "path": "assets/equipment/jumvi-paddle-512.png",
+      "sha256": "4c29f289dba71ec2f7af4ce092a2619d78259f4160bc26d221b8b3d07d0b5b99"
+    },
+    {
+      "path": "assets/equipment/jumvi-paddle-back-real.webp",
+      "sha256": "669eba27ec7a1e94651df6b31117e0037aaad5e4f722b5ebb6d64d0f61009215"
+    },
+    {
+      "path": "assets/equipment/jumvi-paddle-real.webp",
+      "sha256": "114c9389176f988a6c4ebda59e0ff811a5889ff676d0383657d67e40fdef00c3"
+    },
+    {
+      "path": "assets/fonts/fredoka-var-latin-1.woff2",
+      "sha256": "27d49d7c8362279bf81267c615481f4be9548d7568d58889aeb1a6395dd6c070"
+    },
+    {
+      "path": "assets/fonts/fredoka-var-latin-ext-1.woff2",
+      "sha256": "337681f6b85d3ea22d9dd48c593d32a3a2588755a76ad9e3a4c64d014db51db1"
+    },
+    {
+      "path": "assets/hub3d-optimized/beach/golden_sun.glb",
+      "sha256": "95e98949c4c2c2f947b82391143a7a3d468489ede0f8a681ca8cc9376c845404"
+    },
+    {
+      "path": "assets/hub3d-optimized/beach/palm_tree.glb",
+      "sha256": "a289a50407816715c52af3a69b5addc2ff2dc0e0302d6b81028aaaaac79e7ecd"
+    },
+    {
+      "path": "assets/hub3d-optimized/beach/sandcastle.glb",
+      "sha256": "f3f24fa4f4fb981a8e68e117b1de301e6fcdfd459255e0b5b0c1b90e90076124"
+    },
+    {
+      "path": "assets/hub3d-optimized/beach/seashell.glb",
+      "sha256": "f86fb3b21e20850c7df12504a63c57d70d862665b1fe8aca7d9f8196ed8940d2"
+    },
+    {
+      "path": "assets/hub3d-optimized/energy/energy_orb.glb",
+      "sha256": "6bb7c3afaa839219e30f7592297565875f4e37370ca4f20bfd8e9ef41d6d6a8a"
+    },
+    {
+      "path": "assets/hub3d-optimized/energy/lightning_bolt.glb",
+      "sha256": "5e58d3fdf447f3bcd32af1820684365f1ed03582d854ecace86fbad3257520b4"
+    },
+    {
+      "path": "assets/hub3d-optimized/energy/power_pole.glb",
+      "sha256": "794666fec77b85aad548b29784edb93c863149e8879de5a6ce1d96f65a831bee"
+    },
+    {
+      "path": "assets/hub3d-optimized/home/flower_bed.glb",
+      "sha256": "2d4a2cdac1dd3643817309b1d100406123fb070f9cd9770666b30a16926a56af"
+    },
+    {
+      "path": "assets/hub3d-optimized/home/flower_crown.glb",
+      "sha256": "28abeba39a7ba29af17e9ce74e9ae40d9dadb2e82d16ffd484e8fd61d662d848"
+    },
+    {
+      "path": "assets/hub3d-optimized/home/swing.glb",
+      "sha256": "4dd955bcbbbc0206dc9e82cdd52c8ec284c9064e2e09a2742cc3b67cb398a6bc"
+    },
+    {
+      "path": "assets/hub3d-optimized/play/bench.glb",
+      "sha256": "770a3dda4fcd31b751809847e149f5e1d2790bc2110d49e1a3a9afd1ed3e10b2"
+    },
+    {
+      "path": "assets/hub3d-optimized/play/champion_flag.glb",
+      "sha256": "7ac8fbdacae50b6311a47887b119435fbfe923a84fbd8c383c2a10cd4610a8fa"
+    },
+    {
+      "path": "assets/hub3d-optimized/play/slide.glb",
+      "sha256": "160fa06741a41b85c31ca9b7a7471de3af63e2dd727f5511cb0a2653accd5892"
+    },
+    {
+      "path": "assets/hub3d-optimized/target/golden_target.glb",
+      "sha256": "df47459e637193eeea1ba8c74cf6a7c465f8d86efc5bd42332d8616d378cc17d"
+    },
+    {
+      "path": "assets/hub3d-optimized/target/target_board.glb",
+      "sha256": "0f4710df8632efb6f9c185e40d4981d33423ce14ba21e2100bea9324260922fc"
+    },
+    {
+      "path": "assets/hub3d-optimized/zen/bamboo.glb",
+      "sha256": "52aa489c66e64edd0c00fda9409c314c1ff5a91078d2b0c31b7367d275f0a882"
+    },
+    {
+      "path": "assets/hub3d-optimized/zen/golden_lantern.glb",
+      "sha256": "44ecb4ae4661dffdafef06b8c7a02ed9a4f82814662118e55d3c892201a73ff7"
+    },
+    {
+      "path": "assets/hub3d-optimized/zen/lotus_pond.glb",
+      "sha256": "11baedcf2c2fd8350b911e908081bc94b0e40fe15c50addb147958673f49af36"
+    },
+    {
+      "path": "assets/hub3d-optimized/zen/stone_lantern.glb",
+      "sha256": "f3081c77ba6e3e09dec112d24e756a094e9a139923675b7874aead87c0e3f7fa"
+    },
+    {
+      "path": "assets/hub3d/beach/golden_sun.glb",
+      "sha256": "95e98949c4c2c2f947b82391143a7a3d468489ede0f8a681ca8cc9376c845404"
+    },
+    {
+      "path": "assets/hub3d/beach/palm_tree.glb",
+      "sha256": "7c01ce3247ad49180a0d3e593d141dbbde978437459843f4b86b0b6410df5131"
+    },
+    {
+      "path": "assets/hub3d/beach/sandcastle.glb",
+      "sha256": "ce3b28cab5c4d1b4ad864d9b16dcd22d72b3a24411c995c5456eae7fc3c1d128"
+    },
+    {
+      "path": "assets/hub3d/beach/seashell.glb",
+      "sha256": "cc11f6d145971443f1dbda2828b601cbc7d33f99bb839b859810132a0e53e38e"
+    },
+    {
+      "path": "assets/hub3d/energy/energy_orb.glb",
+      "sha256": "6bb7c3afaa839219e30f7592297565875f4e37370ca4f20bfd8e9ef41d6d6a8a"
+    },
+    {
+      "path": "assets/hub3d/energy/lightning_bolt.glb",
+      "sha256": "5e58d3fdf447f3bcd32af1820684365f1ed03582d854ecace86fbad3257520b4"
+    },
+    {
+      "path": "assets/hub3d/energy/power_pole.glb",
+      "sha256": "4e6076005a4c7a06ff583329470efcf5618e1f7aa731d434a201371003620da9"
+    },
+    {
+      "path": "assets/hub3d/home/flower_bed.glb",
+      "sha256": "0515acc8bb3b52dcfd925ba13e23a130e87d6a961d1826471548bc48709fb0f3"
+    },
+    {
+      "path": "assets/hub3d/home/flower_crown.glb",
+      "sha256": "28abeba39a7ba29af17e9ce74e9ae40d9dadb2e82d16ffd484e8fd61d662d848"
+    },
+    {
+      "path": "assets/hub3d/home/swing.glb",
+      "sha256": "be79937c0e75b2982894efad4f55ee698b4d90ef919beb86ea51a249b8e8539f"
+    },
+    {
+      "path": "assets/hub3d/panorama/beach.webp",
+      "sha256": "04c66409d27bd66275ba2beebf59938e6bcfa754ab65a739c1784c45195a3c76"
+    },
+    {
+      "path": "assets/hub3d/panorama/energy.webp",
+      "sha256": "1f65ce1fbce7f56e6fbf1cfa847fa10789653a651803c3aa5183950691c83d72"
+    },
+    {
+      "path": "assets/hub3d/panorama/home.webp",
+      "sha256": "9d2ce925ff4e0e0c2c1152deb0df40f7e339bba33cdd75dac76510257363fd3d"
+    },
+    {
+      "path": "assets/hub3d/panorama/play.webp",
+      "sha256": "e367f9dbb91548e29299b78fc8d8eb89fee80c7602f31e21531bd5ddf4789498"
+    },
+    {
+      "path": "assets/hub3d/panorama/target.webp",
+      "sha256": "eadca58bad925498ec53fd164a4ae429e2e7357da83c5bcfa81802518d377410"
+    },
+    {
+      "path": "assets/hub3d/panorama/zen.webp",
+      "sha256": "4c6749178f4c7f757ad16f3a9b83d91335d92871ff4234c4d5c8217290749450"
+    },
+    {
+      "path": "assets/hub3d/play/bench.glb",
+      "sha256": "fe4611bfe40f0a9298f429209f8d1ccedc2a03fa1ae3c442982ff324e43f4295"
+    },
+    {
+      "path": "assets/hub3d/play/champion_flag.glb",
+      "sha256": "2f1f20b4ecf5c02bc3d8df22c7700023bccfec3d66aed1c1ebb749ab1c066010"
+    },
+    {
+      "path": "assets/hub3d/play/slide.glb",
+      "sha256": "2ddefbf8223e30e65dc2884a3a2e15e8f1d693c0d1a51c56fbce7a39d705f151"
+    },
+    {
+      "path": "assets/hub3d/target/golden_target.glb",
+      "sha256": "260d9e4c59339e47e451408d3f26dc2b3a87bb094440c512d6330b48649b17f0"
+    },
+    {
+      "path": "assets/hub3d/target/target_board.glb",
+      "sha256": "8f172eef52c9c609beaa849128a84bdb8b61cd3983d73e7654f012f7bf5921d1"
+    },
+    {
+      "path": "assets/hub3d/zen/bamboo.glb",
+      "sha256": "fd2b98c3e7bfa9ed8adb71c49ce59b8f9aec45163bb05c162b4b216107f52b6d"
+    },
+    {
+      "path": "assets/hub3d/zen/golden_lantern.glb",
+      "sha256": "d8b7785b5898b83b3fc2a9330e84958825c8e83f42f51205067611366c8d3bf7"
+    },
+    {
+      "path": "assets/hub3d/zen/lotus_pond.glb",
+      "sha256": "434fdd2b92074582e332281eeeb098d81ae21da3d4bfb012aefd43ccf6739e68"
+    },
+    {
+      "path": "assets/hub3d/zen/stone_lantern.glb",
+      "sha256": "99301ccd74b16a0c01462a4e4042f415dbd7edc15e4078768924457a4d675680"
+    },
+    {
+      "path": "assets/leo/coach-leo-optimized.glb",
+      "sha256": "f25034ba97b9329b3961b59260037f289b2dd81a83b24c4f1045a67b5dfcfe3c"
+    },
+    {
+      "path": "assets/leo/leo-celebrate-256.png",
+      "sha256": "49273a842fa24b9bffa5505d3edd70d3592c638ce9f6f00e201c41e0c5a24ae5"
+    },
+    {
+      "path": "assets/leo/leo-celebrate-256.webp",
+      "sha256": "9b68056eba06b5d45d7ab06803be1a3e9c8f82d9a9a319fb2b38e0b36f78dcc3"
+    },
+    {
+      "path": "assets/leo/leo-celebrate-512.png",
+      "sha256": "414f1b24984d21b8373d13d04191f6f4d78a19dce8e856e09a9ca8d48da4d1b5"
+    },
+    {
+      "path": "assets/leo/leo-celebrate-512.webp",
+      "sha256": "18a273406a97bc04f71b1345b6cd0a9fb82f3cb8481bb2e9eaa0d435ca1299a8"
+    },
+    {
+      "path": "assets/leo/leo-cheer-200.webp",
+      "sha256": "e1af14148b4079f93a2543a5660218b2ddfde175f046faee6f573c05abfb0f6b"
+    },
+    {
+      "path": "assets/leo/leo-cheer-200@2x.webp",
+      "sha256": "f29935d17d0a66ca347c2791948a531415111b897e5ba1260641348952634a61"
+    },
+    {
+      "path": "assets/leo/leo-encourage-256.png",
+      "sha256": "21d796db5a02cc0efc53bf9abb11333acd209965f4cb57f167fa396e1d6dd7f2"
+    },
+    {
+      "path": "assets/leo/leo-encourage-256.webp",
+      "sha256": "9837aef6dda096cc0d100a106922956e932980a68d0f9ad2c96fd0d98ea245eb"
+    },
+    {
+      "path": "assets/leo/leo-encourage-512.png",
+      "sha256": "3631acb69c50e5f3a20a5577173c6b9809d18461096bf648c75370c90e0cfa3e"
+    },
+    {
+      "path": "assets/leo/leo-encourage-512.webp",
+      "sha256": "45a30535cb9b8cd6eaf6afdfb39b4fb5baccdc59c6b4ca1f0ba1cb47e99dab87"
+    },
+    {
+      "path": "assets/leo/leo-face-64.webp",
+      "sha256": "c83229c780a4075c6b119d9d9828619472686e49d7f6e8975e2499308cca9896"
+    },
+    {
+      "path": "assets/leo/leo-face-64@2x.webp",
+      "sha256": "25f60ee095f9d4bcc7636b12d421ad5afb96d0617a00e7bce84233a41a77ef00"
+    },
+    {
+      "path": "assets/leo/leo-gentle-256.png",
+      "sha256": "53b0b798065695e78db23d3be8dc7346212fe84d71c80ea36299ef07afcc9721"
+    },
+    {
+      "path": "assets/leo/leo-gentle-256.webp",
+      "sha256": "cf64cb90597c8f1fc4ae59fcfc623a1245d887c2f5d1b4b764646bae9fba53bb"
+    },
+    {
+      "path": "assets/leo/leo-gentle-512.png",
+      "sha256": "eeb6de5aff91519d7d3c2570ec83b74c7a2350fe3f8f9249902af35a950ac50c"
+    },
+    {
+      "path": "assets/leo/leo-gentle-512.webp",
+      "sha256": "d67f73b8ea9801958a4b6908957090db5158f06b9f91270d4001465c8edcc351"
+    },
+    {
+      "path": "assets/leo/leo-guide-256.png",
+      "sha256": "d60a498d07a31738de5045fe68a44e86ce2fc625c8d1f44c3a2e8e3328448d4b"
+    },
+    {
+      "path": "assets/leo/leo-guide-256.webp",
+      "sha256": "cb741089b86a3ddcba93c2a28b585faad0800a30a8899f18e6d321e51a8dacc4"
+    },
+    {
+      "path": "assets/leo/leo-guide-512.png",
+      "sha256": "aa3ac458b1ba6dd594ddde84ea343d8361d595e9dd8246b737379a8e925cd5f1"
+    },
+    {
+      "path": "assets/leo/leo-guide-512.webp",
+      "sha256": "9dcae62fda9a2601b5c763229b48fc3c1832af92353a51b2d4c653ba3a58fd39"
+    },
+    {
+      "path": "assets/leo/leo-point-160.webp",
+      "sha256": "883092f0d6b0b83024ae67ef39024fe01f464437b38b77da37bb81cff1a6d066"
+    },
+    {
+      "path": "assets/leo/leo-point-160@2x.webp",
+      "sha256": "f32cb82c98546144ec14d611809ff75410c629166fe3535bae79adfff325c6fe"
+    },
+    {
+      "path": "assets/leo/leo-rest-256.png",
+      "sha256": "7e84b0c533e0c29cdca9da34a2e7702d6eb5d48f0ab04ee84f72d23f76748193"
+    },
+    {
+      "path": "assets/leo/leo-rest-256.webp",
+      "sha256": "b0bdaafa42200b92577dee5aab3cdaa6b74bc66806ae57af9a00e115de6c52fb"
+    },
+    {
+      "path": "assets/leo/leo-rest-512.png",
+      "sha256": "093d1e01a6bd743ee5db3fe1c889b093ff55ca6a692bcb9408ba870b8027ebaf"
+    },
+    {
+      "path": "assets/leo/leo-rest-512.webp",
+      "sha256": "6ee6d25c92ebd6949f8dcf7fc4519cee97a539ef3ca4282ba0f599cde4aa9101"
+    },
+    {
+      "path": "assets/leo/leo-wave-240.webp",
+      "sha256": "4696e4046260a61e0ccee3bada85ce83ab5ec88119e7f551752edc79e3d25a95"
+    },
+    {
+      "path": "assets/leo/leo-wave-240@2x.webp",
+      "sha256": "9d33a1b577baf9c153d926524b019b9cd07047c506177c89105a64e1c3ed16fd"
+    },
+    {
+      "path": "assets/logo/jumvi_logo_dark-192.webp",
+      "sha256": "0a21b5e268e30902e04b0140a5537215e771751348ab3fc187b68c2547e4bcc8"
+    },
+    {
+      "path": "assets/logo/jumvi_logo_dark-96.webp",
+      "sha256": "e928cb45667c052cc9a7442cb8cb5c04143732d373eda759267467b6a48c73aa"
+    },
+    {
+      "path": "assets/logo/jumvi_logo_light-192.webp",
+      "sha256": "d9df21780bd388edd52320e3a453d653d88ce2fe5f3013f135720975c840b195"
+    },
+    {
+      "path": "assets/logo/jumvi_logo_light-96.webp",
+      "sha256": "e93c097b25b81349508e49b26d0cacfc4d6af77075b84fdd47c3ab362db4f412"
+    },
+    {
+      "path": "assets/logo/source/jumvi_logo_dark.webp",
+      "sha256": "47cbfd12fdb1c1dd97356569ff1fbe8b44a25f249e80d382e01357ef06b4384d"
+    },
+    {
+      "path": "assets/logo/source/jumvi_logo_light.webp",
+      "sha256": "e944065cad178e8d096e03d5c448bfa57f7ed03aff5a7b0b104b5d90153d5334"
+    },
+    {
+      "path": "assets/og/cert-og.jpg",
+      "sha256": "71d2fb65675a9de9e75a317ab216f5a0dea5939a4389f6807bced91fd68d8295"
+    },
+    {
+      "path": "assets/og/cert-og.png",
+      "sha256": "f9a1c2d1d8017b0fc8b995bb61db62b31e16f2f3f73182b633953fd951e8a660"
+    },
+    {
+      "path": "assets/ui/avatars/alien.webp",
+      "sha256": "e22a427b1046bd586f68cbdaa648661521cca832eb4d78ba9511a19aea3ff54e"
+    },
+    {
+      "path": "assets/ui/avatars/butterfly.webp",
+      "sha256": "ddf9aa3b67640ac08a20ae14e6fb42b4704b0253cdd9a86733c02b976aea4ac8"
+    },
+    {
+      "path": "assets/ui/avatars/dinosaur.webp",
+      "sha256": "3e540c6a28089d02a1f9c2095b6b9994a65fdfe29b1080d4437aedb48b08188c"
+    },
+    {
+      "path": "assets/ui/avatars/dog.webp",
+      "sha256": "c05d2b8b48dabffa642694e95bd820c252d6106f76d97daf7a949adce92c3888"
+    },
+    {
+      "path": "assets/ui/avatars/fox.webp",
+      "sha256": "b191c8d2aca94f380e72686a7eca150a8cbf887fd528ceb16247ab94d3f12519"
+    },
+    {
+      "path": "assets/ui/avatars/frog.webp",
+      "sha256": "13466adae692c33361fe411028f5a4d0cd9a795536ea926173f2129808cd24c5"
+    },
+    {
+      "path": "assets/ui/avatars/koala.webp",
+      "sha256": "17ee84814c85fd1d2b69309d6875b78fd9e8731c6d10eb01cc296e20589ce5db"
+    },
+    {
+      "path": "assets/ui/avatars/monkey.webp",
+      "sha256": "10746f9ef7489e2e7e2da557272eba50a84f4a8aed06f7c12df2d1fcb085ec7c"
+    },
+    {
+      "path": "assets/ui/avatars/panda.webp",
+      "sha256": "74610c9127f1a42fe9aaff47b980b82913df338383eb35dc351147759ca4e08e"
+    },
+    {
+      "path": "assets/ui/avatars/robot.webp",
+      "sha256": "51f0f3cf200c27f81c266dcb61ce09b579e81e270ca016ed71dc8dea40fe5598"
+    },
+    {
+      "path": "assets/ui/avatars/tiger.webp",
+      "sha256": "459533bd4513493428e0a6dff252f3da4bb31028b45d9196a130fa05bfa244ac"
+    },
+    {
+      "path": "assets/ui/avatars/unicorn.webp",
+      "sha256": "b33bfd402d8da4f544e025d1c7c84e08d90b08cca7d31ab5e8363300b2c59d5c"
+    },
+    {
+      "path": "assets/ui/badges/aim.webp",
+      "sha256": "96331ce261812530e98664b766c364af3fdc2b7c73b9d30a199c8d2bc86142a4"
+    },
+    {
+      "path": "assets/ui/badges/champ.webp",
+      "sha256": "b1f85dd657f9b950a95d6c1090196287b3070a632e247c926dd312756e8e2546"
+    },
+    {
+      "path": "assets/ui/badges/first.webp",
+      "sha256": "c294c9094edc5206fa347d0e9822e2fbfb590087c84049909f46342780e0aa15"
+    },
+    {
+      "path": "assets/ui/badges/indoor.webp",
+      "sha256": "310fa6ead313af11ab30f5677fc8736335d185db3365e4127eb828f6736b01e5"
+    },
+    {
+      "path": "assets/ui/badges/outdoor.webp",
+      "sha256": "b8899504a1106726c9ddf921b0030c416b4f29322525a409e73681c27bd599c9"
+    },
+    {
+      "path": "assets/ui/badges/reflex.webp",
+      "sha256": "1e84396745224c2b927d6bc11ce2fcbf1396b9602e6ad0ba01e134f239603a84"
+    },
+    {
+      "path": "assets/ui/badges/streak3.webp",
+      "sha256": "43967a197c722968a639f293a828ca3c6352d848ae03fef4b51ec979145bc03a"
+    },
+    {
+      "path": "assets/ui/badges/streak7.webp",
+      "sha256": "b5b26ab46e52a85a34b0daaa593bdf018bab730641c135c85e2376eabbf8c794"
+    },
+    {
+      "path": "assets/ui/badges/team.webp",
+      "sha256": "1d7520ea0c25fb9bbedb161889ad170bdb860d5aa9823cd154d3b59fa2dfa879"
+    },
+    {
+      "path": "assets/ui/badges/unlocked.webp",
+      "sha256": "b1a1fea467e45292a44e681ec3a47be86dc0e553b3abde224f7347a101db6d64"
+    },
+    {
+      "path": "assets/ui/badges/zen.webp",
+      "sha256": "e24ca63820321dfb1b4e2b8900fbbb7458b96ae3c4119796966a069d0158f3e7"
+    },
+    {
+      "path": "assets/ui/badges/zippy.webp",
+      "sha256": "4d4aa6b85753d84917e632387f956d8f4eae1c61565d9bdb1e39b8aa5f6cc016"
+    },
+    {
+      "path": "assets/ui/hero/home-hero-dark.webp",
+      "sha256": "ed0cf6840483a7c3f7c12507e7c1c91cc4bc8c7704c6c01c7b9fb294b0907beb"
+    },
+    {
+      "path": "assets/ui/hero/home-hero-light.webp",
+      "sha256": "785b58079f398ce6e9395749f2043ed082f8a75e73a063aeec0eac73322aba37"
+    },
+    {
+      "path": "assets/ui/missions/01-speed-demon.webp",
+      "sha256": "83358b896f0c892bd9eebe47f43a064f5a62dae5628e3ef494fae1efadef649f"
+    },
+    {
+      "path": "assets/ui/missions/02-red-light-green-light.webp",
+      "sha256": "b4d1b3eccff786013acefe10db31c55da9b256c45d7a4226fbf0752d15e710db"
+    },
+    {
+      "path": "assets/ui/missions/03-quick-slap.webp",
+      "sha256": "cd97eaf0056cfc19a2557b9c95c23f6176994d26d33ea632f44d5a04ce02b427"
+    },
+    {
+      "path": "assets/ui/missions/04-switcharoo.webp",
+      "sha256": "a5874f093291fd04b1e8deff617e7b06bbbcc0c05a4182fc7c3fe3174691f2f8"
+    },
+    {
+      "path": "assets/ui/missions/05-statue-mode.webp",
+      "sha256": "d8da561fac355e31d8b2785e117c21c63207161fb2100ada5133d23569385725"
+    },
+    {
+      "path": "assets/ui/missions/06-number-echo.webp",
+      "sha256": "3e4abd47d86175e328380ae85035128a3712477e0e91944581ae9fc9e3361c71"
+    },
+    {
+      "path": "assets/ui/missions/07-rainbow-throws.webp",
+      "sha256": "ac56bc1d36d17adda98f06ffd8d25e903fdf7c098887ca4bfdaf18d693dea614"
+    },
+    {
+      "path": "assets/ui/missions/08-the-landing-pad.webp",
+      "sha256": "1a4fb9f81897384ac5de98f3a45a3e243b31af1523c2da0a4ac9dda2748876d5"
+    },
+    {
+      "path": "assets/ui/missions/09-step-back-challenge.webp",
+      "sha256": "bba132e1b281ca1da8be2c4221b0d0bf155a354cd4631196c83510a526f04950"
+    },
+    {
+      "path": "assets/ui/missions/10-power-step.webp",
+      "sha256": "19f43d4d59ad55c7df61e19a69e954d008f95c5a98726eecb1d0e9b611106589"
+    },
+    {
+      "path": "assets/ui/missions/11-sky-floater.webp",
+      "sha256": "2a602562263de58301bdb75e9aab2c1e7dd97a568ed1af9919c2f5d0c7457e97"
+    },
+    {
+      "path": "assets/ui/missions/12-heart-high.webp",
+      "sha256": "961727eeb96c963bec3be50c6dfac8d0dabc79f7e340e3146df0eacfa9d79a6c"
+    },
+    {
+      "path": "assets/ui/missions/13-silent-mode.webp",
+      "sha256": "78aadd4314ace1b699cb9c848e010c07a386a19a590eec8602f3149a414aa862"
+    },
+    {
+      "path": "assets/ui/missions/14-tempo-master.webp",
+      "sha256": "9f747aba75c2b83133c47b7743864467c8b0fb1b804f003148aa2c8a07653e19"
+    },
+    {
+      "path": "assets/ui/missions/15-spotlight-eyes.webp",
+      "sha256": "c59e3b4f6ff492c30155bf85d5cb27842910516e54f4681e2e7c049b5967729b"
+    },
+    {
+      "path": "assets/ui/missions/16-1-2-3-go.webp",
+      "sha256": "d347824b22997b5dbd804c837f9c764a2f7454d0cd47092bd9f6ae0709458389"
+    },
+    {
+      "path": "assets/ui/missions/17-mirror-mode.webp",
+      "sha256": "7f79b2fc33660d891dc1607f928df3eb74a4d07c2e2505b70ee8224a5153017f"
+    },
+    {
+      "path": "assets/ui/missions/18-count-to-10.webp",
+      "sha256": "04f4cb96d99ea545c13bbad6d0e7eec3d9ba74f2eeb06c7fa9b7e639bd0c8bd4"
+    },
+    {
+      "path": "assets/ui/missions/19-round-robin.webp",
+      "sha256": "9e2ca81f666df972db70edc6104ab3f8d1ac57e425f086c72fd1e45ce7f48626"
+    },
+    {
+      "path": "assets/ui/missions/20-crab-walk-relay.webp",
+      "sha256": "a13f77427da9c79410e2c15727fcb4b101ae10795244fc147717463ba8f758fd"
+    },
+    {
+      "path": "assets/ui/missions/21-middle-defender.webp",
+      "sha256": "5784cb00499c6f1ff0ea200c5ab795eb87b94f8ef06a9957df738fa8600a8ab8"
+    },
+    {
+      "path": "assets/ui/missions/22-spin-squad.webp",
+      "sha256": "37d042cd547c156b933a730c6cc738750e137ed13c7a5c9fe76fc288c7bc275b"
+    },
+    {
+      "path": "assets/ui/missions/23-mix-it-up.webp",
+      "sha256": "f409f7d3aa498b3ce1b25b3c62ed63a60fdc184480ba4beb9158cf9d90ea3ef7"
+    },
+    {
+      "path": "assets/ui/missions/24-2v2-squad-count.webp",
+      "sha256": "a3b45f05aa08f603251aac85f93727fc7d1be4fb7071cf8ae67ec9ce4c8cf4ef"
+    },
+    {
+      "path": "assets/ui/missions/25-chill-catch.webp",
+      "sha256": "3b8887056fb39ea5ef834fb42208c8f1fc67d4cf8593dae61b3a6648eb1f4092"
+    },
+    {
+      "path": "assets/ui/missions/26-tiny-space.webp",
+      "sha256": "727ad7ac0da23110cbd7a3f8d0ba96353017d3e0feb6f83451bc0e8f9345e02e"
+    },
+    {
+      "path": "assets/ui/missions/27-secret-signal.webp",
+      "sha256": "17a0c486992706efe1a41567ca933002f8ade71c2a32286a53f3ee13ecf09a5b"
+    },
+    {
+      "path": "assets/ui/missions/28-mind-reader.webp",
+      "sha256": "0f06ace70fd5c0db2e5aa12e3369985e7c5ffd03bc0fa097b5a9ec61b76daf09"
+    },
+    {
+      "path": "assets/ui/missions/29-stuck-foot-catch.webp",
+      "sha256": "e54bfee647c218fbb54dfa6ab0eac39e2c318125fbd017b3fa03954d1558a055"
+    },
+    {
+      "path": "assets/ui/missions/30-left-or-right.webp",
+      "sha256": "4f07ceb2d432fe4cfc3c62456aa6d882620a7603c600b96f9afe46e036fbc5e3"
+    },
+    {
+      "path": "assets/ui/missions/31-cloud-chaser.webp",
+      "sha256": "490448183dd13c491f1ee68073a40f67d2d527a168ae8b30d11514683d18b463"
+    },
+    {
+      "path": "assets/ui/missions/32-home-base.webp",
+      "sha256": "dff1455ace2ce04a497817ac5be485e234d14a5943144ef6f33bd631aaac30db"
+    },
+    {
+      "path": "assets/ui/missions/33-how-far-can-you-throw.webp",
+      "sha256": "319e8c1036dcc4e6661047952e7c4c41f1dbaabeba42d2b8dc05340c18bde527"
+    },
+    {
+      "path": "assets/ui/missions/34-chase-the-ball.webp",
+      "sha256": "e3e577643930395c2c0da3b89ef7fa935609ab6387fb4e70a28c6f5f3c795766"
+    },
+    {
+      "path": "assets/ui/missions/35-sky-high-jump.webp",
+      "sha256": "81ff83c4d3cd65f5cd395649210a383c11f460986553004c19d23b4b3d75b55c"
+    },
+    {
+      "path": "assets/ui/missions/36-marathon-rally.webp",
+      "sha256": "f7d11971c9d72137364b80370d0c07f9c3e3e6aabdd98d7610c25226a607edc0"
+    },
+    {
+      "path": "assets/ui/packs/aim-master.webp",
+      "sha256": "cf6e5dbe88f505859e8beb7ee9c05cb19162de86915aeb1a40844ffbc3105d83"
+    },
+    {
+      "path": "assets/ui/packs/beach-park.webp",
+      "sha256": "cf70ba7234aa1447469a21f0b50146e29aeb420573f82b6ce4a0bdc0c44867c3"
+    },
+    {
+      "path": "assets/ui/packs/focus-control.webp",
+      "sha256": "8610c11718e75f061b97b9dfe42afe65f619bf0b9a5fedf52d52e3b37b3fafb0"
+    },
+    {
+      "path": "assets/ui/packs/indoor-compact.webp",
+      "sha256": "85873b529e10b916fa8b25ad09a15ec894a000aa9939f9b753af90218ad54acb"
+    },
+    {
+      "path": "assets/ui/packs/reflex-rush.webp",
+      "sha256": "7aa6bcef4812a1e4ec13d9592de9a1a1b19ac34294e777d951f21511d31508a5"
+    },
+    {
+      "path": "assets/ui/packs/team-duo.webp",
+      "sha256": "a4cd45d1f9e884faa1459ab23fe7d9b027acb2e88280adb10ae987f8b46ff85f"
+    },
+    {
+      "path": "assets/ui/special/ages-3-5.webp",
+      "sha256": "7b2642fca8d1ba0f9ed4b1099e775d04b86a37eef429c4953069677e30af2a30"
+    },
+    {
+      "path": "assets/ui/special/ages-6-8.webp",
+      "sha256": "90ad169408cda067381106184ee15622a59be699dbb5ff7d5d3ebee773e4a511"
+    },
+    {
+      "path": "assets/ui/special/ages-8-up.webp",
+      "sha256": "2651c01dc77bd224494fbc36ebbee905ffd7eaaf2049c6f9a2b8d29cf126c513"
+    },
+    {
+      "path": "assets/ui/special/celebration.webp",
+      "sha256": "78e671056cfaa5544c15d8a3c917bc2f6aad899b320c2773c6b624139ae2b4d0"
+    },
+    {
+      "path": "assets/ui/special/leo-island.webp",
+      "sha256": "67629015fc38c14b1c48814de7017ee57ad1c15ee5844a4ae551950fc283726e"
+    },
+    {
+      "path": "assets/ui/special/streak.webp",
+      "sha256": "b60e65c93dc19d35badf279a8d31f247035fdd3c2f230cbe4ea72c88d916921b"
+    },
+    {
+      "path": "certificate-template.webp",
+      "sha256": "f95f3405dc8e1af9a9676c51cd9194a6a8b1489286573461f6c6ea40ef1a2672"
+    },
+    {
+      "path": "coach-leo-audio.js",
+      "sha256": "45376144aaf777debd4c9e7605d166eec543336cb82f2cc69be87134b49c240d"
+    },
+    {
+      "path": "confetti.min.js",
+      "sha256": "9c2ae7a7ca8e46486a560dd8c7dd965204a4b9164301f1115402b69f2fa58901"
+    },
+    {
+      "path": "data.js",
+      "sha256": "02a9743dfcee200a0c7530183c42ecd71b0251782857fec0e106b8db0fc66b44"
+    },
+    {
+      "path": "icons/apple-touch-icon.png",
+      "sha256": "6874e57c538c6d563bc27981e6b21d0a01c8fc847854d3e74f15814d41567df7"
+    },
+    {
+      "path": "icons/icon-192.png",
+      "sha256": "6ebac8ec9732f446d808365723879515f137e3cdac1306d23d36226853a86585"
+    },
+    {
+      "path": "icons/icon-512-maskable.png",
+      "sha256": "346ec2413109bf4aaf735418a4759517f18eb89d2fdaaa668eaa4d25bfbe340a"
+    },
+    {
+      "path": "icons/icon-512.png",
+      "sha256": "8a4c9bbba038894e63faeb1d6948408b3352339f4c9835bdb424ea3ee54ab541"
+    },
+    {
+      "path": "jumvi-art.js",
+      "sha256": "707fd2c245d62d227150a02e35275f13868cd723f3de4a45a330281cd081795b"
+    },
+    {
+      "path": "jumvi-hub-app.js",
+      "sha256": "8f39315075a6d2af5df4c54725b2507172dc3831eab773e78456b1fc16b815af"
+    },
+    {
+      "path": "jumvi-icons.css",
+      "sha256": "8114c16a9c8f42b052935e7ef55fca69678545d9bea43fac27dfafeeaf25f56d"
+    },
+    {
+      "path": "jumvi-leo.js",
+      "sha256": "cdfa65fcc8f989e9fd52907251fb0395f7de36dcbf397a8e4d92b30a5871d5a6"
+    },
+    {
+      "path": "jumvi-mission-icons.js",
+      "sha256": "2d9d9632b49de0f477143b98f552fe899763ce2a2172a357e613527c6413ce73"
+    },
+    {
+      "path": "jumvi-music-scheduler.js",
+      "sha256": "03d9db8fd06b97b0b606426ce13651834366ececd461d716b9db1f2c8858366a"
+    },
+    {
+      "path": "jumvi-redlight.js",
+      "sha256": "1786271a184bf0bf742f6b8ad470eb62d5d26438963dd2da8a5f766496461bc9"
+    },
+    {
+      "path": "jumvi-sonic-cues.js",
+      "sha256": "595fa3c58bb62f03a46cdd1bedecfe051f67c4f02da6ec6eb065d580e0ced0ec"
+    },
+    {
+      "path": "jumvi-world-ambience.js",
+      "sha256": "5276299df33fa7bf68d920c1f1ceac6d430156f4adfcfd95d685293e8a0135ca"
+    },
+    {
+      "path": "jumvi_logo.png",
+      "sha256": "92d8017b6091847bd87de3dde9c8711faf6f74cbf169d678d9a052920f5974f1"
+    },
+    {
+      "path": "jumvi_logo.webp",
+      "sha256": "7a7b510b1813103a6e8d57ab9d85c12971bc3f2d8ad3eb5be3d5a0df95c704d6"
+    },
+    {
+      "path": "leo-tour.css",
+      "sha256": "8034e94c1aead92a403a230e8a8910195d3c98d7181849e746467cbf7967ff9b"
+    },
+    {
+      "path": "leo-tour.js",
+      "sha256": "2ddfbc2da76d8571322dcb57e441c3d00e72254228630dbc26227a92eada201d"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "7208548d3773463c43f2a02108339f39f6135f487e6d5480e2bf51f27bb26dd1"
+    },
+    {
+      "path": "mission-book.pdf",
+      "sha256": "3eddc8f4f562629272ffff125ed2103c8fcb5777afcda21ab0d77893a33c7722"
+    },
+    {
+      "path": "mission-coaching.js",
+      "sha256": "4aea1be396dca6b849436d003ea35ba20f62cb00761a56b5798d2711334a1fe2"
+    },
+    {
+      "path": "style.css",
+      "sha256": "428fc68cb4740412f3b91bf768e391461f23bd6f5b13168b26532342b20ad8f6"
+    },
+    {
+      "path": "tr/certificate-template.webp",
+      "sha256": "d56e29350ba5cffdbaf96270867a524044020e902753f1e3e1bbe4b2fedbf1e2"
+    },
+    {
+      "path": "tr/i18n.js",
+      "sha256": "a764daf48a113e9ffb2655b8a6f5c3f3eade51e34bdac64d80e449f0bb007975"
+    },
+    {
+      "path": "tr/manifest.json",
+      "sha256": "b722771955957e8f38423fcb8570f6fa97e0312161a5e96c45d9e1451939ebbf"
+    },
+    {
+      "path": "vendor/jsm/libs/draco/draco_wasm_wrapper.js",
+      "sha256": "e8049906ef3f8f75d3456c22a3f31bfdfe5b5b5bd09ccdec613b9e9a49d554d8"
+    },
+    {
+      "path": "vendor/jsm/libs/meshopt_decoder.module.js",
+      "sha256": "01f48524f4bac6141eaba07e94cc36e7ee56f311796fa6117c159842941b0468"
+    },
+    {
+      "path": "vendor/jsm/loaders/DRACOLoader.js",
+      "sha256": "65c114ecb7b349cdc59c75b2c92d19cca672a138060dba0f60f64262fa40408c"
+    },
+    {
+      "path": "vendor/jsm/loaders/GLTFLoader.js",
+      "sha256": "d073b438e6a07e1359741dd5d6c76c953420cc0d4fd84eb1bdde94315540e6a3"
+    },
+    {
+      "path": "vendor/jsm/utils/BufferGeometryUtils.js",
+      "sha256": "9be041e96308775d00e2695cc607645b9a9b64fd7c0e759dd8f7c00a8d92becb"
+    },
+    {
+      "path": "vendor/jsm/utils/SkeletonUtils.js",
+      "sha256": "83748c5072a5ce96e9d68d8efda908a1f1a06c0b5fd2618edc3e54a361a8fd5b"
+    },
+    {
+      "path": "vendor/pdf-lib.min.js",
+      "sha256": "0f9a5cad07941f0826586c94e089d89b918c46e5c17cf2d5a3c6f666e3bc694f"
+    },
+    {
+      "path": "vendor/three.module.min.js",
+      "sha256": "3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6"
+    },
+    {
+      "path": "warm-toy.css",
+      "sha256": "d842b0ac49d5921cdf8618a595c2c48e0dca57d353f2a542b9a2b6248ba32a29"
+    }
+  ]
+}

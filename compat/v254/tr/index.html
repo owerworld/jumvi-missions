@@ -1,0 +1,1656 @@
+
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <!-- Every script/link/img reference on this page is a relative path
+       ("app.js", not "/app.js"). That is fine while the URL bar reads
+       qr.jumvi.co/ or qr.jumvi.co/index.html — but this SAME markup is
+       also served, byte-identical, at /tr and /tr/ (the Worker only
+       injects one extra script tag; it does not rewrite paths). With a
+       trailing slash the browser's relative-URL base becomes .../tr/, so
+       "app.js" resolves to .../tr/app.js — a 404 — and so does every
+       other asset on the page: style.css, data.js, the logos, Coach
+       Leo's sprites, all of it. A family whose link or bookmark happens
+       to end in /tr/ would get a blank, non-functional app with no error
+       they could act on. This one tag fixes every relative reference at
+       once, for the ones already on the page and any added later, rather
+       than requiring the leading "/" to be remembered on each one by
+       hand. It must stay this early in <head>, before any element that
+       references a relative URL, or those elements resolve against the
+       page's own path anyway. -->
+  <base href="/">
+  <!-- §1.2 — zoom is available (WCAG 2.2 SC 1.4.4). This tag used to carry
+       maximum-scale=1, user-scalable=no, backed by a disableZoom() guard in
+       app.js that cancelled pinch, double-tap and ctrl+wheel. The comment above
+       it said "pinch-zoom ENABLED" while the attributes said the opposite; the
+       stated reason was an accidental pinch on grass leaving the page zoomed.
+       That is a real annoyance, but the people it locks out — a parent who
+       needs to magnify a safety line, anyone with low vision — cannot work
+       around it, while an accidental zoom is undone with one pinch. Chrome and
+       Firefox on Android honour these hints, so this was a genuine block there,
+       not only on paper. viewport-fit keeps the notch safe area;
+       interactive-widget keeps the layout viewport from being resized out from
+       under the app when the keyboard opens for the child-name field. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>JUMVI Görevleri — Oyna, Yakala, Devam Et</title>
+  <meta name="description" content="JUMVI Toss & Catch için 36 eğlenceli görev. İlerlemeyi takip et, rozetleri kazan ve Koç Leo’nun 3D macerasını keşfet. Kayıt, hesap ve reklam yok." />
+  <meta name="keywords" content="JUMVI, paddle set, toss and catch, active kids games, paddle ball, kids missions, family games" />
+  <meta name="author" content="SAY23 LLC / JUMVI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://qr.jumvi.co/tr" />
+  <link rel="alternate" hreflang="en" href="https://qr.jumvi.co/" />
+  <link rel="alternate" hreflang="tr" href="https://qr.jumvi.co/tr" />
+  <link rel="alternate" hreflang="x-default" href="https://qr.jumvi.co/" />
+  <meta name="theme-color" content="#f5f9ff" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://qr.jumvi.co/tr" />
+  <meta property="og:title" content="JUMVI Görevleri — Çocuklar için 36 Toss & Catch Oyunu" />
+  <meta property="og:description" content="36 JUMVI görevi, ilerleme, rozetler ve Koç Leo’nun 3D macerası." />
+  <!-- §6.3 — achievement card instead of the bare wordmark. SPA can't vary OG
+       per view, so this is the site-wide image (README-og.md). Absolute URL. -->
+  <meta property="og:image" content="https://qr.jumvi.co/assets/og/cert-og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Coach Leo celebrating a completed JUMVI Champion Certificate" />
+  <meta property="og:site_name" content="JUMVI" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://qr.jumvi.co/tr" />
+  <meta name="twitter:title" content="JUMVI Görevleri — Çocuklar için Aktif Oyunlar" />
+  <meta name="twitter:description" content="Kısa ve hareketli Toss & Catch görevleri. Kuralları oku, telefonu bırak ve oyna." />
+  <meta name="twitter:image" content="https://qr.jumvi.co/assets/og/cert-og.jpg" />
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "inLanguage": "tr-TR",
+    "name": "JUMVI Görevleri",
+    "url": "https://qr.jumvi.co/tr",
+    "description": "JUMVI Toss & Catch Raket Seti için 36 kısa ve hareketli görev.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "audience": { "@type": "PeopleAudience", "suggestedMinAge": 3 },
+    "publisher": { "@type": "Organization", "name": "SAY23 LLC", "url": "https://jumvi.co" }
+  }
+  </script>
+
+  <link rel="manifest" href="/tr/manifest.json" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="JUMVI" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <script>
+    (function(){
+      try{
+        var mode = localStorage.getItem("jumvi_theme_v1") || "light";
+        var systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var useDark = mode === "dark" || (mode === "system" && systemDark);
+        document.documentElement.classList.add(useDark ? "theme--dark" : "theme--light");
+      }catch(_){ }
+    })();
+  </script>
+  <!-- §2.4 — preload only the LCP logo for the active theme (192px derivative,
+       ~6 KB). Was two unconditional 1024px webp (~121 KB) on the critical path. -->
+  <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_dark-192.webp" media="(prefers-color-scheme: light)" />
+  <link rel="preload" as="image" type="image/webp" href="assets/logo/jumvi_logo_light-192.webp" media="(prefers-color-scheme: dark)" />
+  <!-- §6 — the latin face is needed by the first heading painted; preloading it
+       removes the swap flash on a cold visit. crossorigin is required on font
+       preloads even same-origin, or the browser fetches it a second time. -->
+  <link rel="preload" href="assets/fonts/fredoka-var-latin-1.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css?v=20260827-1">
+  <!-- Mission motion-diagram icons (36) + Tabler outline icons for panel missions (13,19,20,22,23,27,28) -->
+  <link rel="stylesheet" href="jumvi-icons.css?v=20260904-1">
+  <link rel="stylesheet" href="leo-tour.css?v=20260711-3">
+  <link rel="stylesheet" href="warm-toy.css?v=20260917-1">
+  <!-- §5.1 — Tabler icon-webfont CDN removed. The 3 glyphs used (chevron-right,
+       hand-three-fingers, message-off) are now inline mask-image SVGs in
+       jumvi-icons.css, so mission icons render offline with no third-party font. -->
+  <script>
+    (function(){
+      try{
+        var meta = document.querySelector('meta[name="theme-color"]');
+        var getBg = function(){
+          var cs = getComputedStyle(document.documentElement);
+          return (cs.getPropertyValue('--page-bg') || '#0a1628').trim();
+        };
+        var update = function(){
+          if(meta) meta.setAttribute('content', getBg());
+        };
+        update();
+        window.addEventListener('themechange', update);
+      }catch(_){ }
+    })();
+  </script>
+
+  <!-- Import map for the 3D hub (jumvi-hub-app.js, lazy-loaded only when the
+       hub3d tab opens) and its optional GLTF Coach Leo model (jumvi-leo.js,
+       useModel:true) — GLTFLoader/the ES module Three.js build both need the
+       bare "three" specifier resolved. Inert for everyone else: nothing on
+       the normal page imports "three". -->
+  <!-- §4.6 — three.js served locally (was jsdelivr). Removes a third-party
+       dependency from the hub's critical path and lets the island work on
+       networks that block jsdelivr. GLTFLoader (loaded on hub entry) imports
+       the bare "three" specifier, which this map resolves to the local copy. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three.module.min.js"
+    }
+  }
+  </script>
+</head>
+
+<body class="tab-today">
+  <div class="bgLayer" aria-hidden="true"></div>
+
+  <!-- Welcome Overlay — shown once for new visitors -->
+  <div id="welcomeOverlay" class="welcomeOverlay" role="dialog" aria-modal="true" aria-label="Welcome to JUMVI Missions">
+    <div class="welcomePanel">
+      <!-- §1.1 — Everything above the CTA lives in its own scroll region so the
+           Start button can be a real flex footer instead of a sticky overlay.
+           It used to be position:sticky, which pinned it over whatever content
+           happened to sit at the bottom of the viewport: the mission count at
+           390x844, the level labels at 320x568 and in landscape. A footer that
+           is a sibling of the scroller cannot cover it at any scroll offset. -->
+      <div class="welcomeScroll" id="welcomeScroll">
+      <div class="welcomeBrandLine" aria-hidden="true">
+        <img class="welcomeLogo logoLight" src="assets/logo/jumvi_logo_dark-192.webp" width="96" height="96" alt="" decoding="async" />
+        <img class="welcomeLogo logoDark" src="assets/logo/jumvi_logo_light-192.webp" width="96" height="96" alt="" decoding="async" />
+        <picture class="welcomeMascot">
+          <img src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" alt="" width="240" height="240" decoding="async" fetchpriority="high" />
+        </picture>
+      </div>
+      <div class="welcomeTagline">Ready to play?</div>
+      <div class="welcomeSub">Grab your set. We&rsquo;ll pick a quick first game.</div>
+      <!-- This block answers ONE question: what do we pick up right now? It is
+           deliberately NOT a box-contents summary. It used to show ×4 / ×4 with
+           "First game: grab 2 paddles + 1 ball" directly underneath, which told
+           a parent two different numbers in the same glance. The set still ships
+           4 paddles and 4 balls — that inventory lives in Adults ▸ product care
+           and on the Quick Play screen, where it is the true answer. -->
+      <div class="welcomeKitLabel">Grab your kit</div>
+      <div class="welcomeGear" aria-label="For your first game: two paddles and one soft ball">
+        <div class="welcomeGearItem">
+          <span class="welcomeProductVisual" aria-hidden="true">
+            <img src="assets/equipment/jumvi-paddle-real.webp" alt="" width="80" height="80">
+            <span class="welcomeGearCount">×2</span>
+          </span>
+          <strong>2 paddles</strong>
+        </div>
+        <span class="welcomeGearPlus" aria-hidden="true">+</span>
+        <div class="welcomeGearItem">
+          <span class="welcomeProductVisual welcomeProductBall" aria-hidden="true">
+            <img src="assets/equipment/jumvi-ball-real.webp" alt="" width="72" height="72">
+            <span class="welcomeGearCount">×1</span>
+          </span>
+          <strong>1 soft ball</strong>
+        </div>
+      </div>
+      <div class="welcomeFirstGame">That&rsquo;s all you need to start.</div>
+      <div class="welcomeNote"><i class="ico i-check" aria-hidden="true"></i> No app &nbsp;·&nbsp; No account &nbsp;·&nbsp; No ads</div>
+      <div class="welcomeDivider" aria-hidden="true"></div>
+      <div class="welcomeAgesHeading">Choose a play level</div>
+      <div class="welcomeAges" id="welcomeAges">
+        <button class="ageBtn" data-diff="Easy" data-band="just-starting" type="button"><img class="ageArt" src="assets/ui/special/ages-3-5.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Just starting</span><span class="ageBtnHint">easy first games</span></span></button>
+        <button class="ageBtn" data-diff="Medium" data-band="some-practice" type="button"><img class="ageArt" src="assets/ui/special/ages-6-8.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Some practice</span><span class="ageBtnHint">a little more challenge</span></span></button>
+        <button class="ageBtn" data-diff="all" data-band="any-challenge" type="button"><img class="ageArt" src="assets/ui/special/ages-8-up.webp" alt="" width="256" height="256"><span class="ageBtnText"><span class="ageBtnLabel">Any challenge</span><span class="ageBtnHint">show me the full mix</span></span></button>
+      </div>
+      <div class="welcomeMissionCount" id="welcomeMissionCount" aria-live="polite">&nbsp;</div>
+      </div><!-- /.welcomeScroll -->
+      <button class="btn btnPrimary welcomeStart" id="btnWelcomeStart" type="button"><i class="ico i-play" aria-hidden="true"></i> Start My First Mission</button>
+    </div>
+  </div>
+
+  <div class="app-shell" id="app-wrapper">
+
+  <!-- §5.3 — offline status band. SW keeps the app openable offline, but the
+       user needs to know why the island won't load. Shown only when offline. -->
+  <div class="offlineBanner" id="offlineBanner" role="status" aria-live="polite" hidden>
+    <span class="offlineDot" aria-hidden="true"></span>
+    Offline — missions still work. Island needs a connection.
+  </div>
+
+  <!-- v32 app header. The FINAL v32 design has no logo/brand bar: every tab
+       leads with its own title and keeps the player switcher on the same
+       row, right-aligned. The brand marks stay in the DOM (hidden) because
+       the install/A2HS and tour code reads them, and the logo still ships
+       via the manifest/icons. #avatarBtn is the SAME element and handler as
+       before — only its container changed. -->
+  <div class="sticky">
+    <div class="topbar appHead">
+      <div class="brand" hidden aria-hidden="true">
+        <div class="logoWrap" title="JUMVI">
+          <img class="logoImg logoLight" src="assets/logo/jumvi_logo_dark-96.webp" srcset="assets/logo/jumvi_logo_dark-96.webp 1x, assets/logo/jumvi_logo_dark-192.webp 2x" width="36" height="36" alt="JUMVI logo" decoding="async" fetchpriority="high" />
+          <img class="logoImg logoDark" src="assets/logo/jumvi_logo_light-96.webp" srcset="assets/logo/jumvi_logo_light-96.webp 1x, assets/logo/jumvi_logo_light-192.webp 2x" width="36" height="36" alt="" decoding="async" aria-hidden="true" />
+        </div>
+        <div class="brandText">
+          <div class="brandTitle">JUMVI</div>
+          <div class="brandSub">Missions</div>
+        </div>
+      </div>
+      <div class="appHeadCopy">
+        <p class="appHeadOver" id="appHeadOver">Welcome back</p>
+        <h1 class="appHeadTitle" id="appHeadTitle">Let&rsquo;s play</h1>
+        <p class="appHeadSub" id="appHeadSub" hidden></p>
+      </div>
+      <div class="topbarActions">
+        <button class="tourHelpBtn" id="btnTourHelp" type="button" aria-label="How to play — start the guided tour">?</button>
+        <button class="profilePill" id="avatarBtn" type="button" aria-label="Switch player or settings">
+          <span class="profilePillAvatar" id="profilePillAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></span>
+          <span class="profilePillName" id="profilePillName">Player</span>
+          <span class="profilePillChevron"><i class="jic jic-arrow-right" aria-hidden="true"></i></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="hero">
+      <!-- ============== TAB: TODAY ============== -->
+      <div class="tabPanel" id="tabToday" data-tab="today">
+        <!-- Legacy Today hero. FINAL v32 carries the greeting in the app
+             header instead, so this is hidden — but it stays in the DOM
+             because renderTodayContinuity() writes the live continuity copy
+             into #todayHeroTitle/#todayHeroSub and the /tr locale layer
+             observes them. Nothing that reads or writes these IDs changed. -->
+        <div class="todayHeroStage" hidden aria-hidden="true">
+          <div class="todayHeroCopy">
+            <div class="h1Row">
+              <img class="h1Leo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="52" height="52" alt="Coach Leo" decoding="async">
+              <h1 class="h1" id="todayHeroTitle">Ready to play?</h1>
+            </div>
+            <p class="sub" id="todayHeroSub">Pick a mission, learn the rules, then focus on the ball&mdash;not the screen.</p>
+          </div>
+          <div class="todayHeroArt" aria-hidden="true"></div>
+        </div>
+
+        <!-- §4.1 — the Leo's Island card moved BELOW #dailyBox (was above it,
+             so a 5-year-old tapped a 9.4 MB silent wall before the mission).
+             The mission comes first now; the island is the reward after. -->
+
+        <!-- Your Progress — derived XP, no separate XP storage.
+             Existing progress/streak IDs stay intact for backward JS compatibility.
+             Moved above #continueHint/#dailyBox (v0 v32 parity pass): v0's
+             information hierarchy shows the compact progress summary before
+             the mission-of-the-day card. Pure DOM position move — no ID or
+             logic changes; nothing depends on source order here. -->
+        <!-- FINAL v32 progress: ONE compact card — a single "Level N · Title"
+             line with the mission count opposite it, the 36-mission bar, and
+             two quiet facts (streak, today's goal). Production's richer XP
+             bar, badge tile and team picker stay in the DOM below (hidden) so
+             updateProgress(), renderTeamXpPicker() and the level/XP writers
+             all keep their targets — v32 simply doesn't surface raw XP or the
+             team picker on Home; teams live on the Family tab. -->
+        <section class="statsCompact xpProgressCard" id="xpProgressCard" aria-labelledby="xpLevelLabel">
+          <div class="xpTopRow">
+            <span class="xpLevelCopy">
+              <span class="xpLevelLabel" id="xpLevelLabel">Level 1</span>
+              <span class="xpLevelDot" aria-hidden="true">&middot;</span>
+              <span class="xpLevelName" id="xpLevelName">Rookie Player</span>
+            </span>
+            <span class="xpMissionCount" id="xpMissionCount">0 / 36 missions</span>
+          </div>
+
+          <div class="bar" role="progressbar" aria-labelledby="progressText" aria-valuemin="0" aria-valuemax="36">
+            <div id="progressBarFill"></div>
+          </div>
+
+          <div class="xpFactRow">
+            <span class="xpFact xpFactStreak">
+              <i class="jic jic-flame" aria-hidden="true"></i>
+              <span class="streakPill" id="streakPill">0</span>
+            </span>
+            <span class="todayGoalBadge" id="todayGoalBadge" title="Today's goal"><i class="jic jic-star" aria-hidden="true"></i> 0/1 today</span>
+          </div>
+
+          <!-- Runtime-compat block: hidden on Home per v32, never removed. -->
+          <div class="xpLegacyCompat" hidden aria-hidden="true">
+            <div class="xpCardEyebrow" id="xpCardTitle">Your Progress</div>
+            <span class="statsCompactText" id="progressText">0 of 36 missions complete</span>
+            <button class="xpTeamPicker" id="xpTeamPicker" type="button">
+              <span class="xpTeamPickerIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+              <span class="xpTeamPickerCopy">
+                <strong id="xpTeamPickerLabel">Choose team</strong>
+                <small id="xpTeamPickerSub">Optional &middot; JUMVI remembers</small>
+              </span>
+              <i class="jic jic-arrow-right xpTeamPickerArrow" aria-hidden="true"></i>
+            </button>
+            <div class="xpLevelRow">
+              <div class="xpLevelEmblem" aria-hidden="true"><i class="jic jic-star"></i></div>
+              <div class="xpBar" id="xpBar" role="progressbar" aria-labelledby="xpLevelLabel xpValue" aria-valuemin="0" aria-valuemax="80" aria-valuenow="0">
+                <div class="xpBarFill" id="xpBarFill"></div>
+              </div>
+              <div class="xpValue" id="xpValue">0 / 80 XP</div>
+            </div>
+            <button class="xpMiniCard xpMiniBadges" type="button" data-go-tab="stats">
+              <span class="xpMiniIcon"><i class="ico i-medal" aria-hidden="true"></i></span>
+              <span class="xpMiniBody">
+                <span class="xpMiniLabel">Badges</span>
+                <strong class="xpBadgeCount" id="xpBadgeCount">0 / 10</strong>
+              </span>
+              <i class="jic jic-arrow-right xpMiniArrow" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- FINAL v32 "Play now": the mission is a hero card — a full-bleed
+             tinted art band with the Leo's Pick chip overlaid on it and Coach
+             Leo peeking over its lower edge, then a left-aligned content block
+             (pack · title · win line · chips) and a two-button action row.
+             Every runtime ID is unchanged; #dailyPack and #dailyWin are new
+             presentation slots fed by renderDailyUI() from the same mission
+             record that already drove #dailyName/#dailyMeta. -->
+        <div class="jvSectionLabel" id="todayPlayNowLabel">Play now</div>
+        <div class="dailyBox dailyBoxPromoted" id="dailyBox">
+          <div class="dailyHeroBand">
+            <div class="dailyIconBig" id="dailyIcon"></div>
+            <!-- Leo picks. He had no job before: a face on the welcome screen
+                 and a speaker button, but the thing he is actually for —
+                 knowing what to play next — was credited to nobody. -->
+            <div class="dailyEyebrow"><img class="eyebrowLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="20" height="20" alt="" decoding="async"> <span id="dailyEyebrowText">LEO&rsquo;S PICK</span></div>
+            <img class="dailyHeroLeo" src="assets/leo/leo-point-160.webp" srcset="assets/leo/leo-point-160.webp 1x, assets/leo/leo-point-160@2x.webp 2x" width="54" height="54" alt="" aria-hidden="true" decoding="async">
+          </div>
+          <div class="dailyBody">
+            <div class="dailyPack" id="dailyPack"></div>
+            <div class="dailyName" id="dailyName">&mdash;</div>
+            <div class="dailyWin" id="dailyWin"></div>
+            <div class="dailyMeta" id="dailyMeta">&mdash;</div>
+            <!-- Shown only once this mission is finished. Progress is stated in
+                 words, not colour, so it survives a sunlit screen and a
+                 colour-blind reader. -->
+            <div class="dailyDoneNote" id="dailyDoneNote" style="display:none"><i class="jic jic-circle-check" aria-hidden="true"></i> Mission complete</div>
+            <!-- Order is the hierarchy: after a mission is done the primary
+                 action moves the family through the 36, and replaying drops to
+                 secondary. Before it is done there is only one action here. -->
+            <div class="dailyActionsBig">
+              <!-- No aria-label on purpose: this button's label changes with state
+                   ("Start Mission" → "Next: <mission>"), and a JS-set aria-label
+                   would (a) silently stay English on /tr, because the locale
+                   layer observes childList/characterData but not attributes, and
+                   (b) override the visible text, breaking WCAG 2.5.3 Label in
+                   Name. The visible label IS the accessible name. -->
+              <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play dailyPlayBig" id="btnDailyPlay" type="button"><i class="ico i-play" aria-hidden="true"></i> Start Mission</button>
+              <button class="dailyNewSmall jv-btn jv-btn--text" id="btnDailyReplay" type="button" style="display:none"><i class="jic jic-loop" aria-hidden="true"></i> Play Again</button>
+              <button class="dailyNewSmall jv-btn jv-btn--secondary" id="btnDailyNew" aria-label="Choose another mission" type="button">Choose another</button>
+            </div>
+            <!-- Stub for backward JS compat -->
+            <button id="btnPlayToday" type="button" style="display:none" aria-hidden="true"></button>
+            <div class="dailyTitle" style="display:none">Today's Mission</div>
+          </div>
+        </div>
+
+        <!-- Continue where you left off (rendered by JS when applicable).
+             v32 places resume AFTER the hero, not before it. -->
+        <div class="continueHint" id="continueHint" style="display:none">
+          <span class="continueHintIcon"><i class="jic jic-arrow-back-up" aria-hidden="true"></i></span>
+          <span class="continueHintText">Continue where you left off: <b id="continueHintName">&mdash;</b></span>
+          <button class="continueHintBtn" id="btnContinue" type="button">Resume</button>
+        </div>
+
+
+        <!-- Coach Leo's Smart Pick — recommendation card -->
+        <div class="coachPick" id="coachPick" style="display:none">
+          <div class="coachPickHeader">
+            <span class="coachPickAvatar"><img src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="44" height="44" alt="Coach Leo" decoding="async"></span>
+            <div class="coachPickInfo">
+              <div class="coachPickEyebrow">Coach Leo's pick</div>
+              <div class="coachPickReason" id="coachPickReason">Try something new!</div>
+            </div>
+          </div>
+          <button class="coachPickCard" id="coachPickCard" type="button">
+            <span class="coachPickIcon" id="coachPickIcon"></span>
+            <span class="coachPickBody">
+              <span class="coachPickName" id="coachPickName">—</span>
+              <span class="coachPickMeta" id="coachPickMeta">—</span>
+            </span>
+            <span class="coachPickArrow"><i class="ico i-play" aria-hidden="true"></i></span>
+          </button>
+        </div>
+
+        <!-- Daily Mini-Challenge: today's goal -->
+        <div class="dailyChallenge" id="dailyChallenge">
+          <div class="dailyChallengeHeader">
+            <span class="dailyChallengeIcon"><i class="ico i-star" aria-hidden="true"></i></span>
+            <span class="dailyChallengeTitle">Today's Goal</span>
+            <span class="dailyChallengeStatus" id="dailyChallengeStatus">0 / 1</span>
+          </div>
+          <div class="dailyChallengeBar">
+            <div class="dailyChallengeFill" id="dailyChallengeFill"></div>
+          </div>
+          <div class="dailyChallengeReward" id="dailyChallengeReward">Play 1 mission → earn the Daily Champion star</div>
+        </div>
+
+        <!-- Hidden helpers for JS backward compatibility -->
+        <div class="pSubBox" style="display:none">
+          <div class="pSub" id="progressSub"></div>
+          <div class="pExtra" id="progressExtra"></div>
+        </div>
+
+        <!-- Optional reward after real-world play; hidden until one mission is complete. -->
+        <div class="jvSectionLabel" id="todayExploreLabel">Explore</div>
+        <button class="advCard" id="advModeCard" type="button" aria-label="Explore Leo's Island, an optional 3D adventure">
+          <span class="advCardEmoji"><img class="specialArt" src="assets/ui/special/leo-island.webp" alt="" width="256" height="256" loading="lazy" decoding="async"></span>
+          <span class="advCardText">
+            <span class="advCardTitle">Explore Leo&rsquo;s Island</span>
+            <span class="advCardSub">Bonus 3D adventure · optional</span>
+          </span>
+          <span class="advCardArrow"><i class="ico i-play" aria-hidden="true"></i></span>
+        </button>
+
+        <!-- One-time engagement nudge. Inline and in normal flow on purpose:
+             not a modal, not a toast, not viewport-attached. It sits after the
+             island card so it is below every play CTA in the hierarchy, and it
+             only becomes eligible once a family has actually finished a
+             mission. -->
+        <section class="keepCard" id="keepCard" hidden aria-labelledby="keepCardTitle">
+          <div class="keepCardBody">
+            <span class="keepCardIcon"><i class="jic jic-device-mobile-down" aria-hidden="true"></i></span>
+            <div class="keepCardCopy">
+              <div class="keepCardTitle" id="keepCardTitle">Keep JUMVI one tap away</div>
+              <div class="keepCardSub">Add it to your Home Screen for full-screen play.</div>
+            </div>
+          </div>
+          <div class="keepCardActions">
+            <button class="btn keepCardAdd" id="btnKeepAdd" type="button">Add to Home Screen</button>
+            <button class="btn keepCardLater" id="btnKeepLater" type="button">Maybe later</button>
+          </div>
+        </section>
+
+        <!-- §3.4 — "Surprise me" moved to Browse (it duplicated "Pick another"
+             on Today and encouraged card-spinning over playing). -->
+      </div>
+
+      <!-- ============== TAB: BROWSE (Path Tree only) ============== -->
+      <div class="tabPanel" id="tabBrowse" data-tab="browse" style="display:none">
+        <h2 class="tabHeading"><i class="jic jic-map" aria-hidden="true"></i> All Missions</h2>
+        <p class="tabIntro">36 games in 6 skill packs. Tap any mission to see how to play.</p>
+
+        <!-- Path view — sade grid -->
+        <div class="missionPath" id="missionPath"></div>
+
+        <!-- §3.4 — random pick remains available in Browse, after the pack
+             path so the first viewport keeps v32's progress-to-packs order. -->
+        <button class="todayQuickAction" id="btnRandomAll" type="button" aria-label="Pick a random mission">
+          <span class="todayQuickIcon"><i class="ico i-dice" aria-hidden="true"></i></span>
+          <span class="todayQuickText">Pick one for me</span>
+        </button>
+
+        <div class="missionsBookAction">
+          <a class="missionsBookLink linkBtn" data-optional-file="mission-book.pdf" href="mission-book.pdf"
+             target="_blank" rel="noopener" aria-label="Open Mission Book PDF">
+            <i class="jic jic-book" aria-hidden="true"></i>
+            <span>Mission Book</span>
+          </a>
+        </div>
+
+        <!-- §2.1 — the hidden search/filter stubs that used to sit here are
+             gone. They were eight display:none, 0x0, aria-hidden elements kept
+             "for JS compatibility": a search input nobody could type in, a
+             Filters toggle nobody could press, and chip rows rendered into
+             containers that are never displayed. v32 replaced the flat list
+             with the pack path above, and #list is display:none by design —
+             renderList() returns early on purpose, for the QR first-paint.
+             Making them visible would mean reinstating the retired list view,
+             which is a product decision, not a defect fix; so they are removed
+             instead, along with the bindings that could never fire. The state
+             they used to drive is handled where it is still read — see the
+             note on getVisibleMissions() in app.js. -->
+      </div>
+      <!-- ============== TAB: FAMILY ==============
+           Internal route remains "modes" for backward compatibility (analytics,
+           localStorage, existing button handlers). Visible destination is now
+           "Family" per the v0 v32 4-tab IA — it absorbs what used to live under
+           the removed 5th "stats" nav tab (family insights, parent dashboard,
+           badges preview): those blocks were physically moved here from
+           #tabStats, same IDs, same render functions, nothing duplicated. The
+           existing family board (#teamsNowCard → .familyBoardGrid, built in
+           renderTeamsHub()) already covers the "Family Board" surface — a real
+           36-mission tile grid over real completion state — so it stays here
+           rather than being rebuilt as a separate view. -->
+      <div class="tabPanel teamsHub" id="tabModes" data-tab="modes" style="display:none">
+        <div class="teamsHubHeader">
+          <div class="teamsHubKicker jv-eyebrow"><i class="jic jic-users" aria-hidden="true"></i> <span id="teamsHubKicker">FAMILY CHALLENGE</span></div>
+          <h2 class="tabHeading teamsHubTitle jv-title" id="teamsHubTitle">Family Teams</h2>
+          <p class="tabIntro teamsHubIntro jv-helper" id="teamsHubIntro">Complete missions together. Every team has its own XP, level, and streak.</p>
+        </div>
+
+        <!-- §4.1 — the third question this screen has to answer.
+             Family told a parent who is playing and what they had finished,
+             but the only visible actions were "Add a player", "No team yet"
+             and "View all": nothing here started a game. Uses the existing
+             [data-go-tab] binding rather than a new handler, so it lands on
+             Play exactly like every other cross-tab link in the app. -->
+        <button class="btn btnPrimary jv-btn jv-btn--primary familyPickMission" data-go-tab="today" type="button">
+          <i class="ico i-play" aria-hidden="true"></i> Pick a Mission
+        </button>
+
+        <!-- Family Insights — moved from the old #tabStats (>1 profile only) -->
+        <div class="familyInsights jv-card" id="familyInsights" style="display:none">
+          <div class="familyInsightsHeader">
+            <span class="familyInsightsIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+            <span class="familyInsightsTitle jv-card-title">Family Stats</span>
+          </div>
+          <div class="familyInsightsGrid" id="familyInsightsGrid"></div>
+          <div class="familyStreak jv-helper" id="familyStreak"><i class="jic jic-flame" aria-hidden="true"></i> Family streak: 0 days</div>
+        </div>
+
+        <!-- v32 puts "Add a player" directly under the roster. Opens the same
+             Kids & Settings sheet #avatarBtn does — no new surface. -->
+        <button class="familyAddPlayer jv-btn jv-btn--text" id="btnFamilyAddPlayer" type="button">
+          <i class="jic jic-plus" aria-hidden="true"></i> Add a player
+        </button>
+
+        <!-- v32 "Family progress": one restrained block of REAL aggregates,
+             filled by renderFamilyProgressCard() from the same per-profile
+             storage the roster uses. No invented family score. -->
+        <section class="familyProgressCard jv-card" id="familyProgressCard">
+          <span class="familyProgressTitle jv-card-title">Family progress</span>
+          <div class="familyProgressLines" id="familyProgressLines"></div>
+        </section>
+
+        <!-- v32 teams preview: compact overview row. The full team standings
+             and the family board stay further down, unchanged. -->
+        <button class="familyTeamsPreview jv-card-2" id="familyTeamsPreview" type="button">
+          <span class="familyTeamsIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+          <span class="familyTeamsCopy">
+            <span class="familyTeamsTitle" id="familyTeamsTitle">No team yet</span>
+            <span class="familyTeamsSub" id="familyTeamsSub">Play missions together</span>
+          </span>
+          <span class="familyTeamsCta" id="familyTeamsCta">Create a team</span>
+        </button>
+
+        <!-- v32 "Achievements": heading + View all, then a 3-column preview
+             grid of the REAL badges. Full detail still opens the existing
+             #badgesBackdrop modal via #btnBadgesRow. -->
+        <div class="achievementsHead">
+          <span class="achievementsTitle jv-card-title">Achievements</span>
+          <button class="badgesHint jv-btn jv-btn--text" id="btnBadgesRow" type="button">View all</button>
+        </div>
+        <div class="statsBadgesSection jv-card">
+          <h3 class="statsSectionTitle jv-section" hidden aria-hidden="true"><i class="ico i-medal" aria-hidden="true"></i> Badges</h3>
+          <div class="badgeRow" id="badgesRow" aria-label="badges"></div>
+        </div>
+
+        <!-- Empty state — kept below the v32 achievements preview so a new
+             family's first viewport does not become a blank stats card. -->
+        <div class="emptyState jv-card" id="statsEmptyState" style="display:none">
+          <div class="emptyStateIcon"><i class="ico i-chart" aria-hidden="true"></i></div>
+          <div class="emptyStateTitle jv-card-title">Your stats will appear here</div>
+          <div class="emptyStateDesc jv-helper">Finish your first game and your progress will show up here.</div>
+          <button class="btn btnPrimary jv-btn jv-btn--primary emptyStateBtn" data-go-tab="today" type="button"><i class="ico i-play" aria-hidden="true"></i> Pick a Mission</button>
+        </div>
+
+        <!-- Parent Dashboard — real production surface with no v32 equivalent;
+             kept, but below the v32 blocks so the top of the tab matches. -->
+        <div class="dashCard jv-card" id="parentDashboard" aria-label="This Week's Progress">
+          <div class="dashHeader">
+            <div class="dashTitle jv-card-title"><i class="ico i-chart" aria-hidden="true"></i> This Week's Progress</div>
+            <div class="dashSub jv-helper" id="dashDynSub">Keep playing to see your child's skills grow!</div>
+          </div>
+          <div class="dashReport" id="dashReport"></div>
+          <div class="dashStats" id="dashStats"></div>
+          <div class="dashBars" id="dashBars"></div>
+          <div class="dashFooter">
+            <div class="dashShareWrap">
+              <div class="dashShareTitle jv-meta">Share progress with family</div>
+              <div class="dashShareBtns">
+                <button class="dashShareBtn dashShareWA jv-btn jv-btn--secondary" id="btnDashShareWA" type="button"><i class="jic jic-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
+                <button class="dashShareBtn dashShareCopy jv-btn jv-btn--ghost" id="btnDashShareCopy" type="button"><i class="jic jic-link" aria-hidden="true"></i> Copy</button>
+              </div>
+            </div>
+            <!-- Eski print buton stub — JS uyumlulugu icin -->
+            <button id="btnDashPrint" type="button" style="display:none" aria-hidden="true"></button>
+          </div>
+        </div>
+
+        <section class="teamsNowCard" id="teamsNowCard" aria-live="polite"></section>
+
+        <div class="teamsStandingsHead" id="teamsStandingsHead" hidden>
+          <div>
+            <div class="teamsStandingsTitle jv-card-title" id="teamsStandingsTitle">Team Standings</div>
+            <div class="teamsStandingsSub jv-helper" id="teamsStandingsSub">Who is climbing the JUMVI levels?</div>
+          </div>
+          <!-- No trophy here on purpose: this list is who is playing, not who
+               is winning. A cup icon reinstates the race the board removes. -->
+        </div>
+        <div class="teamsHubList" id="teamsHubList"></div>
+
+        <button class="btn btnPrimary jv-btn jv-btn--primary teamsCreateBtn" id="btnTeamsCreate" type="button">
+          <i class="jic jic-users" aria-hidden="true"></i>
+          <span id="btnTeamsCreateLabel">Create a Team</span>
+        </button>
+
+      </div>
+
+
+
+      <!-- ============== TAB: STATS (compatibility shell only) ==============
+           No longer a nav destination (v0 v32 4-tab IA). Its real content
+           (family insights, parent dashboard, badges preview, certificate)
+           was physically moved — same IDs — into #tabModes (Family) and
+           #tabProfile (Grown-ups). switchTab() remaps any "stats" request to
+           "modes", so this panel is never shown; it only still hosts the
+           handful of hidden compat stubs app.js queries directly. -->
+      <div class="tabPanel" id="tabStats" data-tab="stats" style="display:none">
+        <!-- Hidden share card (used by JS) -->
+        <div class="shareScoreCard" id="shareScoreCard" style="display:none" aria-label="Share your score">
+          <div class="shareScoreLeft">
+            <div class="shareScoreNum" id="shareScoreNum">0</div>
+            <div class="shareScoreMeta">/ 36 missions</div>
+            <div class="shareScoreBadge" id="shareScoreBadge"></div>
+          </div>
+          <div class="shareScoreRight">
+            <div class="shareScoreTitle">Share with family!</div>
+            <div class="shareScoreBtns">
+              <button class="btn shareWhatsAppBtn" id="btnShareWhatsApp" type="button"><i class="jic jic-brand-whatsapp" aria-hidden="true"></i> WhatsApp</button>
+              <button class="btn btnGhost shareCopyBtn" id="btnShareCopy" type="button"><i class="jic jic-link" aria-hidden="true"></i> Copy Link</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden seasonal card (deprecated UI but JS still references) -->
+        <div class="seasonalCard" id="seasonalCard" style="display:none" aria-label="Where to Play">
+          <div class="seasonalHeader">
+            <div class="seasonalTitle">Where to Play</div>
+            <div class="seasonalRow">
+              <button id="btnSeasonalIndoor" type="button" style="display:none" aria-hidden="true"></button>
+              <button id="btnSeasonalOutdoor" type="button" style="display:none" aria-hidden="true"></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stub for badges quick button (used by JS) -->
+        <button id="btnBadges" type="button" style="display:none" aria-hidden="true"></button>
+      </div>
+
+      <!-- ============== TAB: PROFILE ============== -->
+      <div class="tabPanel" id="tabProfile" data-tab="profile" style="display:none">
+        <h2 class="tabHeading">For Grown-ups</h2>
+        <p class="tabIntro" id="grownupsIntro">Names, avatars, app settings, product care, privacy, and support.</p>
+
+        <!-- v32 groups the grown-up utilities under plain sentence-case
+             labels. The rows themselves are the existing runtime elements. -->
+        <div class="jvSectionLabel jvGroupLabel">Kids &amp; settings</div>
+
+        <!-- Active profile preview card -->
+        <div class="profileCard" id="profileCard">
+          <div class="profileCardAvatar" id="profileCardAvatar"><img class="avatarArt" src="assets/ui/avatars/monkey.webp" alt="" width="256" height="256"></div>
+          <div class="profileCardBody">
+            <div class="profileCardName" id="profileCardName">Kid</div>
+            <div class="profileCardStats" id="profileCardStats">Set a name and choose an avatar</div>
+          </div>
+        </div>
+
+        <!-- Primary action: switch/manage profiles -->
+        <button class="profileTabOpenBtn btn btnPrimary jv-btn jv-btn--primary" id="btnOpenProfileFromTab" type="button">
+          <i class="jic jic-users" aria-hidden="true"></i> Kids &amp; Settings
+        </button>
+
+        <div class="jvSectionLabel jvGroupLabel">Progress &amp; play</div>
+
+        <!-- Champion Certificate — moved here from the old #tabStats. Same
+             IDs (#certBox/#certProgressFill/#certSub/#certBtn), same
+             updateCertificatePreview()/openCertificate() pipeline; visual
+             only. -->
+        <div class="certBox jv-card" id="certBox">
+          <div class="certLeft">
+            <div class="certIcon"><i class="ico i-trophy" aria-hidden="true"></i></div>
+            <div class="certText">
+              <b>Mission Champion Certificate</b>
+              <div class="certProgressWrap">
+                <div class="certProgressBar jv-progress"><div class="certProgressFill jv-progress__fill jv-progress__fill--lime" id="certProgressFill"></div></div>
+                <div class="certProgressText jv-helper" id="certSub">Complete all missions to unlock.</div>
+              </div>
+            </div>
+          </div>
+          <button class="certBtn locked jv-chip jv-chip--neutral" id="certBtn" type="button" aria-disabled="true">Locked</button>
+        </div>
+
+        <!-- Quick links -->
+        <div class="profileQuickLinks">
+          <!-- Adding a site to the Home Screen is not an App Store download, so
+               this never says "install our app" — the product promise stays
+               "No app · No account · No ads". Hidden entirely when JUMVI is
+               already running standalone, or when the browser offers no real
+               path, so there is never a dead button here. -->
+          <button class="profileQuickLink" id="btnKeepOnPhone" type="button" hidden>
+            <span class="profileQuickIcon"><i class="jic jic-device-mobile-down" aria-hidden="true"></i></span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Keep JUMVI on this phone</div>
+              <div class="profileQuickSub">Full-screen play · One tap from your Home Screen</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+          <a class="profileQuickLink" id="btnMissionBook" href="mission-book.pdf" target="_blank" rel="noopener">
+            <span class="profileQuickIcon"><i class="jic jic-book" aria-hidden="true"></i></span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Mission Book PDF</div>
+              <div class="profileQuickSub">Printable list for parents</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </a>
+        </div>
+
+        <div class="jvSectionLabel jvGroupLabel">Care &amp; trust</div>
+        <div class="profileQuickLinks">
+          <button class="profileQuickLink" id="privacyLink" type="button">
+            <span class="profileQuickIcon"><i class="ico i-lock" aria-hidden="true"></i></span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Privacy &amp; Safety</div>
+              <div class="profileQuickSub">No account, ads, or personal data</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+        </div>
+
+        <div class="jvSectionLabel jvGroupLabel">Need a hand?</div>
+        <div class="profileQuickLinks">
+          <button class="profileQuickLink" id="helpSupportLink" type="button">
+            <span class="profileQuickIcon" aria-hidden="true">?</span>
+            <div class="profileQuickInfo">
+              <div class="profileQuickTitle">Help &amp; Support</div>
+              <div class="profileQuickSub">Guided tour, answers, and contact</div>
+            </div>
+            <span class="profileQuickArrow">›</span>
+          </button>
+        </div>
+
+        <details class="productCareSection">
+          <summary class="productCareSummary"><i class="jic jic-tool" aria-hidden="true"></i> Product Care &amp; Quick Help</summary>
+          <div class="productCareBody">
+            <h3 class="productCareTitle">Keeping your set working</h3>
+
+            <!-- Order is by when a family actually hits the problem, not by
+                 component. The first three are the questions of the first ten
+                 minutes with the set — a child who cannot catch anything, a
+                 family playing in the living room because it is raining, and a
+                 ball that will not stick — and a parent asking one of them is
+                 mid-session with a disappointed kid. Cleaning, strap fit and
+                 replacement parts are all later, calmer questions, so they
+                 come after.
+                 data-topic is what the product_care_open beacon reports; the
+                 attribute travels with the item, so reordering never changes
+                 what an item is called in the analytics. -->
+            <details class="productHelpItem" data-topic="missing_catches">
+              <summary>My child is missing most catches</summary>
+              <p>Move to 3&ndash;4 ft apart and use slow, underhand tosses toward the center. Get one easy catch, then take one small step back.</p>
+            </details>
+            <details class="productHelpItem" data-topic="indoor_play">
+              <summary>Can we play indoors?</summary>
+              <p>Yes. Clear breakables, start close, and toss gently below face level. Move outdoors before adding speed or distance.</p>
+            </details>
+            <details class="productHelpItem" data-topic="ball_not_sticking">
+              <summary>The ball won&rsquo;t stick</summary>
+              <p>Use the blue catching face. Remove visible lint, grass, or sand with a soft, dry brush; let every piece dry fully; then move closer and aim a soft toss at the center.</p>
+            </details>
+            <details class="productHelpItem" data-topic="ball_hard_to_remove">
+              <summary>The ball is hard to remove</summary>
+              <p>Peel it slowly from one edge instead of pulling straight up. Younger players may need a grown-up&rsquo;s help. Don&rsquo;t yank the ball or twist the paddle.</p>
+            </details>
+            <details class="productHelpItem" data-topic="strap_fit">
+              <summary>How should the hand strap fit?</summary>
+              <img class="strapFitPhoto" src="assets/equipment/jumvi-paddle-back-real.webp" alt="Back of a JUMVI paddle showing the hand strap" width="160" height="174" loading="lazy">
+              <p>Loosen it first, slide your hand under the strap, then make it snug&mdash;not tight. It is a hand strap only; never attach it to furniture, a tree, a wall, or a person.</p>
+            </details>
+            <details class="productHelpItem" data-topic="cleaning_storage">
+              <summary>How do I clean and store the set?</summary>
+              <p>Use a soft, dry brush for dirt and lint. Wipe non-catching surfaces lightly, air-dry everything fully, then store all 4 paddles and 4 balls in the carry bag. Don&rsquo;t machine wash or soak the set.</p>
+            </details>
+            <details class="productHelpItem" data-topic="damaged_missing">
+              <summary>Something is damaged or missing</summary>
+              <p>Stop using any torn or cracked piece. Ask a grown-up to email <a href="mailto:support@jumvi.co">support@jumvi.co</a> with the order number and a photo.</p>
+            </details>
+          </div>
+        </details>
+
+        <!-- A device that never does a real reload/relaunch can sit on an old
+             build indefinitely — the service worker's own update check runs
+             on navigation, and this screen doesn't force one. This gives a
+             grown-up a direct, self-service way to trigger that check instead
+             of needing to know anything about caches or reinstalling. -->
+        <button class="profileQuickLink" id="btnCheckUpdate" type="button">
+          <span class="profileQuickIcon"><i class="jic jic-refresh" aria-hidden="true"></i></span>
+          <div class="profileQuickInfo">
+            <div class="profileQuickTitle" id="btnCheckUpdateTitle">Check for Updates</div>
+            <div class="profileQuickSub" id="btnCheckUpdateSub">Get the newest version of JUMVI</div>
+          </div>
+        </button>
+
+        <button class="profileQuickLink profileResetLink" id="btnReset" type="button">
+          <span class="profileQuickIcon"><i class="jic jic-trash" aria-hidden="true"></i></span>
+          <div class="profileQuickInfo">
+            <div class="profileQuickTitle">Reset Progress</div>
+            <div class="profileQuickSub">Press and hold to clear this device</div>
+          </div>
+        </button>
+
+        <!-- Trust + support -->
+        <div class="profileFooterInfo">
+          <div class="trustBadges">
+            <span><i class="ico i-check" aria-hidden="true"></i> No account</span>
+            <span><i class="ico i-lock" aria-hidden="true"></i> No ads</span>
+            <span><i class="ico i-heart" aria-hidden="true"></i> Progress stays here</span>
+          </div>
+          <div class="profileSupport">
+            Questions or missing parts? <a href="mailto:support@jumvi.co">support@jumvi.co</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission list — only shown when tab is browse -->
+    <section class="list" id="list" aria-label="missions"></section>
+
+    <!-- Immutable-cache compatibility: an older app.js can remain in a
+         returning browser's HTTP cache while this new HTML arrives. Keep its
+         legacy footer bindings valid without putting those controls back into
+         the visible layout. -->
+    <div class="legacyFooterCompat" hidden aria-hidden="true" style="display:none !important">
+      <button id="btnShare" type="button" tabindex="-1"></button>
+      <button id="btnResetBottom" type="button" tabindex="-1"></button>
+      <button id="btnKidsMode" type="button" tabindex="-1"></button>
+    </div>
+
+  </div>
+
+  <!-- Team XP picker — optional, remembered; never shown before every mission. -->
+  <div class="teamXpBackdrop jvFullSurface" id="teamXpBackdrop" role="dialog" aria-modal="true"
+       aria-labelledby="teamXpTitle" aria-describedby="teamXpSub"
+       aria-hidden="true" inert hidden>
+    <div class="teamXpSheet" role="document">
+      <div class="teamXpHandle" aria-hidden="true"></div>
+      <div class="teamXpHead">
+        <div>
+          <p class="teamXpEyebrow" id="teamXpEyebrow">Family &middot; Teams</p>
+          <h2 id="teamXpTitle">Create a Team</h2>
+          <p id="teamXpSub">Choose who is playing together.</p>
+        </div>
+        <button class="teamXpClose" id="teamXpClose" type="button" aria-label="Close">
+          <i class="ico i-x" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="teamXpSection" id="teamXpExistingSection" hidden>
+        <div class="teamXpSectionTitle" id="teamXpExistingTitle">Playing as</div>
+        <div class="teamXpExistingList" id="teamXpExistingList"></div>
+      </div>
+
+      <div class="teamXpSection">
+        <div class="teamXpSectionTitle" id="teamXpCreateTitle">Who is playing together?</div>
+        <div class="teamXpPartnerGrid" id="teamXpPartnerGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission Modal -->
+  <div class="backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-hidden="true" inert>
+    <div class="sheet" id="sheet">
+      <div class="sheetHandle" aria-hidden="true"></div>
+      <div class="sheetTop">
+        <div>
+          <!-- v32 leads the sheet with the pack name above the mission title. -->
+          <div class="sheetPack" id="mPack"></div>
+          <div class="sheetTitle" id="mTitle">Mission</div>
+          <div class="sheetMeta" id="mMeta"></div>
+        </div>
+        <button class="close" id="btnClose" aria-label="Close mission"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="sheetBody" id="sheetBody">
+      <!-- Mission motion-diagram icon (per-mission, populated in openMission) -->
+      <div class="jmv missionIconWrap" id="missionIconWrap" aria-hidden="true"></div>
+
+      <!-- "You need" kit row — openMission renders the current mission's
+           equipment metadata while keeping the approved product artwork. -->
+      <div class="mSectionLabel">You need</div>
+      <div class="missionKitRow" id="missionKitRow"></div>
+
+      <!-- New: Timer UI (Hidden by default) -->
+      <div id="timerUI">
+        <div id="timerDisplay">60s</div>
+        <div id="timerBar"><div id="timerFill"></div></div>
+      </div>
+
+      <div class="screenSmartCue">
+        <i class="jic jic-device-mobile" aria-hidden="true"></i>
+        <span><b>Read it together.</b> When play starts, eyes on the ball&mdash;not the screen.</span>
+      </div>
+
+      <!-- Story Banner — opsiyonel hayal katmanı -->
+      <div class="storyBanner" id="storyBanner" style="display:none">
+        <div class="storyBannerInner">
+          <div class="storyEmoji" id="storyEmoji"></div>
+          <div class="storyText">
+            <div class="storyTitle" id="storyTitle">Lightning Strike</div>
+            <div class="storyTagline" id="storyTagline">Catch the lightning!</div>
+          </div>
+          <button class="storyToggle" id="storyToggle" aria-label="Hide story" title="Hide story">×</button>
+        </div>
+      </div>
+
+      <!-- Steps + Win — birincil bilgi -->
+      <div class="kv" id="mSteps"></div>
+      <div class="kv kvWin" id="mWin"></div>
+
+      <!-- Caller hint — populated only for missions that have a phone-driven mode (e.g. mission 2). Hidden by default. -->
+      <div class="callerHint" id="callerHint" style="display:none" aria-hidden="true">
+        <span class="callerHintLight" aria-hidden="true">
+          <span class="callerHintDot callerHintDot-r"></span>
+          <span class="callerHintDot callerHintDot-y"></span>
+          <span class="callerHintDot callerHintDot-g"></span>
+        </span>
+        <div class="callerHintText">
+          <b id="callerHintTitle"><i class="jic jic-device-mobile" aria-hidden="true"></i> Phone calls the lights</b>
+          <span id="callerHintSub">Random Green/Red with voice + screen — tap Start, then play!</span>
+        </div>
+      </div>
+
+      <!-- §3.3 — safety line, always visible (was hidden inside a closed
+           accordion). Verbatim brief wording. Detailed tips stay in the
+           "More tips & safety" accordion below. -->
+      <p class="missionSafetyLine">Throw below face level · Stand 1–3 m apart · Adult nearby</p>
+
+      <!-- Player count — deliberately inline and skippable. Faz 1 spec: this
+           must NOT become a blocking step before mission selection; a gate
+           here would cost more starts than the datapoint is worth. -->
+      <div class="playerCount" id="playerCount">
+        <span class="playerCountLabel">Playing with</span>
+        <div class="playerCountOpts" role="group" aria-label="How many players">
+          <button class="playerCountBtn" type="button" data-n="2">2</button>
+          <button class="playerCountBtn" type="button" data-n="3">3</button>
+          <button class="playerCountBtn" type="button" data-n="4">4</button>
+        </div>
+      </div>
+
+      <!-- §3.3/§3.5 — pre-play card. Two things a family needs BEFORE the
+           first throw and cannot get from the steps: who is doing what when
+           more than two people are playing, and a gentler way in for the
+           games that ask for height or distance. Rendered by
+           renderMissionPreflight() in app.js; empty and hidden for missions
+           that need neither. -->
+      <section class="missionPreflight" id="missionPreflight" hidden>
+        <div class="preflightRoles" id="missionRoleCard" hidden></div>
+        <div class="preflightEasier" id="missionEasier" hidden></div>
+      </section>
+
+      <!-- Score Tracker — sadece tracking açıksa görünür -->
+      <div class="scoreTracker" id="scoreTracker" style="display:none">
+        <div class="scoreTrackerHeader">
+          <div class="scoreTrackerLabel">Your catches</div>
+          <div class="scoreTrackerBest" id="scoreTrackerBest">Best: 0</div>
+        </div>
+        <div class="scoreTrackerNumber" id="scoreTrackerNumber">0</div>
+        <button class="scoreTrackerTap" id="scoreTrackerTap" type="button" aria-label="Add one to score">
+          <span class="scoreTrackerTapIcon">+1</span>
+          <span class="scoreTrackerTapHint">Tap on every catch</span>
+        </button>
+        <div class="scoreTrackerActions">
+          <button class="scoreTrackerReset" id="scoreTrackerReset" type="button">↺ Reset</button>
+          <!-- Auto-count kaldirildi -->
+          <button id="scoreTrackerAuto" type="button" style="display:none" aria-hidden="true"></button>
+        </div>
+        <div class="scoreTrackerSummary" id="scoreTrackerSummary" style="display:none"></div>
+      </div>
+
+      <!-- Hint box (3+ deneme sonrası açılan ipucu) -->
+      <div class="kv hintBox" id="mHint" style="display:none"></div>
+
+      <!-- More info akordion — secondary content (Tip, Kids, Safety) -->
+      <details class="moreInfoDetails">
+        <summary>
+          <span class="moreInfoSummaryText"><i class="jic jic-books" aria-hidden="true"></i> More tips &amp; safety</span>
+          <span class="moreInfoSummaryArrow"><i class="jic jic-arrow-right" aria-hidden="true"></i></span>
+        </summary>
+        <div class="moreInfoContent">
+          <div class="kv" id="mTip"></div>
+          <div class="kv" id="mKidsTip"></div>
+          <div class="kv" id="mSafety"></div>
+          <details class="safetyDetails modalSafetyDetails">
+            <summary><i class="jic jic-alert-triangle" aria-hidden="true"></i> General safe play tips</summary>
+            Throw below face level · keep 1–3 m distance · adult supervision required.
+          </details>
+        </div>
+      </details>
+
+      <!-- Mission help stays concise; full product care lives in Grown-ups. -->
+      <div class="missionHelp">
+        <button class="missionHelpTrigger" id="btnMissionHelp" type="button"
+                aria-expanded="false" aria-controls="missionHelpPanel">
+          <i class="jic jic-tool" aria-hidden="true"></i> Need quick help?
+        </button>
+        <div class="missionHelpPanel" id="missionHelpPanel" hidden>
+          <button class="missionHelpOpt" type="button" data-help-only="ball_wont_stick">The ball won&rsquo;t stick</button>
+          <button class="missionHelpOpt" type="button" data-reason="ball_hard_to_remove">The ball is hard to remove</button>
+          <button class="missionHelpOpt" type="button" data-reason="strap_uncomfortable">The strap doesn&rsquo;t feel right</button>
+          <button class="missionHelpOpt" type="button" data-reason="mission_too_hard">My child is missing most catches</button>
+          <!-- These two carry tips and a schema slot since Faz 1 but had no way
+               to be picked, so "we need more room" and "the steps aren't clear"
+               could never show up in the data. They are the two most
+               actionable product signals in the enum. -->
+          <button class="missionHelpOpt" type="button" data-reason="need_more_space">We don&rsquo;t have enough space</button>
+          <button class="missionHelpOpt" type="button" data-reason="instructions_unclear">The steps aren&rsquo;t clear</button>
+          <!-- A button, not an anchor with a bare "#": the click handler
+               already cancels the navigation, but /tr is served with a base
+               element pointing at the root, so "#" resolves to the ENGLISH
+               root. A middle-click, a ctrl-click, "open in new tab", or a tap
+               landing before app.js binds would drop a Turkish visitor onto /.
+               Nothing here navigates, so the anchor was never right. -->
+          <button class="missionHelpMore" id="btnMoreProductHelp" type="button">More product help</button>
+          <p class="missionHelpTip" id="missionHelpTip" role="status" hidden></p>
+        </div>
+      </div>
+
+      <div class="small" id="mSmall"></div>
+      </div>
+
+      <!-- FINAL v32 "playing" / "gate complete" panel. Purely presentational:
+           it is driven by updateToggleDoneGateUI() from the SAME gate state
+           the completion button already uses (missionGateRemainingMs plus
+           whether the timer was actually started), and it changes no timing,
+           no thresholds and no handlers. The real flow is untouched:
+           Start -> physical play -> gate opens -> one tap "We Finished!"
+           (#btnToggleDone). There is no hold-to-finish, and no Undo bar: the
+           same button becomes "Mark as Not Done" to reverse a completion. -->
+      <section class="missionPlayPanel" id="missionPlayPanel" hidden aria-live="polite">
+        <span class="playPanelChip" id="playPanelChip"></span>
+        <img class="playPanelLeo" src="assets/leo/leo-wave-240.webp" srcset="assets/leo/leo-wave-240.webp 1x, assets/leo/leo-wave-240@2x.webp 2x" width="120" height="120" alt="" aria-hidden="true" decoding="async">
+        <div class="playPanelTitle" id="playPanelTitle">Eyes on the ball!</div>
+        <div class="playPanelSub" id="playPanelSub">Put the phone down &mdash; Leo will let you know.</div>
+        <div class="playPanelStateRow">
+          <!-- §3.6 — the dial is rewritten every second while the gate counts
+               down, and it sits inside this panel's aria-live region: measured
+               at 30 mutations in 10 seconds of play, i.e. a screen reader
+               re-announcing the panel roughly three times a second at exactly
+               the moment the product is telling the family to put the phone
+               down. The number is not lost — the completion button carries the
+               same countdown as its label, and that is a real control the user
+               can navigate to. The chip and the state line still change once,
+               on the gate transition, which is the announcement worth making. -->
+          <span class="playPanelDial" id="playPanelDial" aria-hidden="true"></span>
+          <span class="playPanelStateText" id="playPanelStateText"></span>
+        </div>
+      </section>
+
+      <!-- Phase 2E: completion reward stays inline in the mission sheet.
+           It is NOT a second modal, so badge/score celebrations can coexist. -->
+      <section class="missionXpReward" id="missionXpReward" hidden aria-live="polite">
+        <div class="missionXpRewardTop">
+          <div class="missionXpRewardIcon" aria-hidden="true"><img class="rewardLeo" src="assets/leo/leo-face-64.webp" srcset="assets/leo/leo-face-64.webp 1x, assets/leo/leo-face-64@2x.webp 2x" width="30" height="30" alt="" decoding="async"></div>
+          <div class="missionXpRewardHeading">
+            <div class="missionXpRewardKicker" id="missionXpRewardKicker">MISSION COMPLETE</div>
+            <div class="missionXpRewardTeam" id="missionXpRewardTeam">Great job!</div>
+          </div>
+          <div class="missionXpRewardGain" id="missionXpRewardGain">+20 Team XP</div>
+        </div>
+        <div class="missionXpRewardMath" id="missionXpRewardMath">120 → 140 XP</div>
+        <div class="missionXpRewardProgress" id="missionXpRewardProgress">
+          <div class="missionXpRewardBar" id="missionXpRewardBar" role="progressbar"
+               aria-label="Team XP level progress" aria-valuemin="0" aria-valuemax="80" aria-valuenow="0">
+            <div class="missionXpRewardBarFill" id="missionXpRewardBarFill"></div>
+          </div>
+          <div class="missionXpRewardNext" id="missionXpRewardNext">40 XP to Level 2</div>
+        </div>
+        <div class="missionXpRewardRule" id="missionXpRewardRule">Team XP is earned once per mission.</div>
+      </section>
+
+      <div class="sheetActions">
+        <div class="missionPrimary">
+          <button class="btn btnPrimary jv-btn jv-btn--primary jv-btn--play missionStartBtn" id="btnStartTimer" aria-label="Start timer"><i class="ico i-play" aria-hidden="true"></i> Start</button>
+          <button class="missionIconBtn jv-btn jv-btn--icon" id="btnScoreToggle" aria-label="Track catches" aria-pressed="false" title="Track catches"><i class="ico i-chart" aria-hidden="true"></i></button>
+        </div>
+        <button class="btn btnPrimary jv-btn jv-btn--ready jv-btn--play holdBtn" id="btnToggleDone" aria-label="Mark mission done"><i class="ico i-check" aria-hidden="true"></i> Mark as Done</button>
+        <button class="btn btnGhost jv-btn jv-btn--ghost" id="btnNext" aria-label="Next mission"><i class="jic jic-arrow-right" aria-hidden="true"></i> Next Mission</button>
+        <!-- "Random from Pack" gizli stub — JS uyumlulugu icin -->
+        <button id="btnRandomPack" type="button" style="display:none" aria-hidden="true"></button>
+      </div>
+      <div class="small holdHint" id="holdHint" style="display:none">Hold "Mark as Done" to finish.</div>
+
+      
+    </div>
+  </div>
+
+  <!-- Repeatable Play Mode detail. Separate from Missions and all progress state. -->
+
+  <!-- Badges Modal -->
+  <div class="backdrop jvFullSurface" id="badgesBackdrop" role="dialog" aria-modal="true" aria-label="Badges">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle"><i class="ico i-medal" aria-hidden="true"></i> Badges</div>
+          <div class="small">See what you've earned</div>
+        </div>
+        <button class="close" id="btnBadgesClose" aria-label="Close badges"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="kv" id="badgesList"></div>
+      <div class="small">Badges update automatically on this phone.</div>
+    </div>
+  </div>
+
+  <!-- Seasonal Modal -->
+  <div class="backdrop" id="seasonalBackdrop" role="dialog" aria-modal="true" aria-label="Where to Play">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle">Where to Play</div>
+          <div class="small" id="seasonalSub">Fresh ways to play all year.</div>
+        </div>
+        <button class="close" id="btnSeasonalClose" aria-label="Close seasonal packs"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="kv" id="seasonalList"></div>
+      <div class="small">Tap a mission to open it.</div>
+    </div>
+  </div>
+
+  <!-- Privacy & Safety Modal (parent-facing; COPPA-conscious) -->
+  <div class="backdrop" id="privacyBackdrop" role="dialog" aria-modal="true" aria-label="Privacy and Safety">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle"><i class="ico i-lock" aria-hidden="true"></i> Privacy &amp; Safety</div>
+          <div class="small">Made for kids — built for parents' peace of mind.</div>
+        </div>
+        <button class="close" id="btnPrivacyClose" aria-label="Close privacy and safety"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="privacyBody" style="font-size:14px;line-height:1.5;color:var(--jv-text,#334155);display:flex;flex-direction:column;gap:12px;">
+        <!-- §4.5 / Faz 5 — this first layer used to be eight items and roughly
+             six hundred words, which meant a parent standing in a doorway read
+             the first two and closed it. It is now five decisions, each one
+             line, and NOT ONE COMMITMENT WAS DROPPED: the eight old items were
+             regrouped, not trimmed. Anything that was a sentence of detail
+             rather than a decision moved behind a disclosure, where it is still
+             open to anyone who wants it and still legally on the page. If you
+             edit this block, move text between the layers — never delete it. -->
+        <div>
+          <b><i class="jic jic-user-off" aria-hidden="true"></i> No sign-up, no account.</b><br/>
+          No login, no password. We never ask for an email address, phone number, photos, or location. Just open and play.
+        </div>
+        <div>
+          <b><i class="jic jic-device-mobile" aria-hidden="true"></i> Everything stays on this device.</b><br/>
+          A child&rsquo;s name and avatar, mission progress and badges are saved only in this browser, on this device &mdash; never uploaded to JUMVI.
+          <details class="privacyDisclosure">
+            <summary>What that covers</summary>
+            <div class="privacyDisclosureBody">
+              If you choose to add a child name or avatar, it is stored only in this browser on this
+              device. It is not uploaded to JUMVI. Mission progress and badges are saved only in
+              this browser, on this device, and are never uploaded to a server. The optional
+              certificate name you type is used only to draw the image on your device &mdash; it is
+              not sent anywhere.
+            </div>
+          </details>
+        </div>
+        <div>
+          <b><i class="jic jic-ban" aria-hidden="true"></i> No ads. No third-party trackers. No data selling &mdash; ever. No microphone, ever.</b><br/>
+          JUMVI never asks for microphone access and never records audio.
+          <details class="privacyDisclosure">
+            <summary>About read-aloud</summary>
+            <div class="privacyDisclosureBody">
+              The only sound JUMVI produces is optional read-aloud text, generated by your
+              device&rsquo;s own built-in voice (the browser&rsquo;s text-to-speech) &mdash; it
+              plays out loud but is never captured, saved, or sent anywhere.
+            </div>
+          </details>
+        </div>
+        <div>
+          <b><i class="jic jic-shield" aria-hidden="true"></i> Anonymous play analytics.</b><br/>
+          A short, fixed list of anonymous events &mdash; never tied to a name, a profile, a device
+          or an IP address.
+          <details class="privacyDisclosure">
+            <summary>Exactly what is measured</summary>
+            <div class="privacyDisclosureBody">
+              We measure a short, fixed list of anonymous events to see which missions work and
+              where kids get stuck: the app being opened, missions started and completed, which
+              help topic a parent opened, the player count, pack and badge milestones, whether an
+              optional feature was used at all (certificate, sharing, read-aloud, the timer, the
+              score tracker, the dashboard, the mission book), progress through the 3D Hub, and a
+              few fixed return-visit milestones. Every event is just an event name plus, at most,
+              one small value &mdash; a mission number, a pack or badge name, a player count, or a
+              fixed option such as which help topic or which share button. Anything not on that
+              list is discarded without being stored. We never attach a name, account, email
+              address, the certificate name you type, a profile name, an IP address, a device ID,
+              or any other identifier to this data. This is measured using our own infrastructure,
+              not a third-party analytics service.
+            </div>
+          </details>
+        </div>
+        <div>
+          <b><i class="jic jic-shield" aria-hidden="true"></i> Made for kids &mdash; and for safe play.</b><br/>
+          These missions involve real, active paddle play. Please provide adult supervision and play in a safe, open space clear of obstacles. We do not knowingly collect personal information from children under&nbsp;13.
+          <details class="privacyDisclosure">
+            <summary>COPPA &amp; children&rsquo;s privacy</summary>
+            <div class="privacyDisclosureBody">
+              This app is designed to align with the U.S. Children&rsquo;s Online Privacy
+              Protection Act (COPPA). We do not knowingly collect personal information from
+              children under 13. If you believe we have, contact us and we will address it
+              promptly.
+            </div>
+          </details>
+        </div>
+        <div class="small" style="border-top:1px solid var(--jv-line,#e5e7eb);padding-top:10px;">
+          JUMVI is a product of <b>SAY23 LLC</b>. Questions or requests: <a href="mailto:support@jumvi.co">support@jumvi.co</a>.<br/>
+          Effective August 2026 · qr.jumvi.co
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help & Support Modal (v0 v32 Grown-ups IA) — reuses the real guided
+       tour (window.leoTour.start(), leo-tour.js) and the real support email.
+       Does not touch the in-mission "Need quick help?" reason-code panel
+       (#missionHelpPanel) — that stays in the mission sheet, unchanged. -->
+  <div class="backdrop" id="helpBackdrop" role="dialog" aria-modal="true" aria-label="Help and Support">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle jv-title">Help &amp; Support</div>
+          <div class="small jv-helper">Get help quickly.</div>
+        </div>
+        <button class="close" id="btnHelpClose" aria-label="Close help and support"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="helpBody" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="jv-card" style="padding:14px;">
+          <p class="jv-card-title" style="margin:0 0 6px;">Coach Leo guided tour</p>
+          <p class="jv-helper" style="margin:0 0 12px;">Replay the basics whenever you need them.</p>
+          <button class="btn btnPrimary jv-btn jv-btn--primary" id="btnHelpReplayTour" type="button" style="width:100%;">Replay guided tour</button>
+        </div>
+        <a class="profileQuickLink" href="mailto:support@jumvi.co">
+          <span class="profileQuickIcon"><i class="ico i-lock" aria-hidden="true"></i></span>
+          <div class="profileQuickInfo">
+            <div class="profileQuickTitle">Email JUMVI support</div>
+            <div class="profileQuickSub">support@jumvi.co</div>
+          </div>
+          <span class="profileQuickArrow">›</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Certificate Modal -->
+  <div class="backdrop" id="certBackdrop" role="dialog" aria-modal="true" aria-label="Certificate">
+    <div class="sheet" id="certSheet">
+
+      <!-- Header -->
+      <div class="sheetTop certSheetTop">
+        <div class="sheetTitle certSheetTitle"><i class="ico i-trophy" aria-hidden="true"></i> Champion Certificate</div>
+        <button class="close certCloseBtn" id="btnCertClose" aria-label="Close certificate"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+
+      <div class="certWrap">
+
+        <!-- Child name input (label-less; placeholder is self-explanatory) -->
+        <div class="certNameRow">
+          <input id="certNameInput" class="certNameInput" type="text" placeholder="Type child’s name (optional)" autocomplete="off" aria-label="Child’s name" />
+        </div>
+
+        <!-- Certificate preview (date + ID already embedded on the image itself) -->
+        <div class="certPreviewWrap">
+          <img id="certPreviewImg" alt="Certificate preview" loading="lazy" decoding="async" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" />
+        </div>
+
+        <!-- Primary CTA -->
+        <button class="btn btnCertPrimary" id="btnCertSavePng" aria-label="Save certificate as image"><i class="jic jic-download" aria-hidden="true"></i> Save to Photos</button>
+
+        <!-- Secondary CTA — Share opens the OS share sheet (WhatsApp, Messages, Mail, etc. all in one) -->
+        <button class="btn certShareBtn" id="btnCertShare" aria-label="Share certificate"><i class="jic jic-share" aria-hidden="true"></i> Share with family</button>
+
+        <!-- Tertiary: PDF text link -->
+        <button class="btn certPdfBtn" id="btnCertSavePdf" aria-label="Save as PDF">Or save as PDF</button>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Profile Sheet (multi-child) -->
+  <div class="backdrop jvFullSurface" id="profileBackdrop" role="dialog" aria-modal="true" aria-label="Kids and settings">
+    <div class="sheet">
+      <div class="sheetTop">
+        <div>
+          <div class="sheetTitle" id="profileSurfaceTitle"><i class="jic jic-users" aria-hidden="true"></i> Choose a child</div>
+          <div class="small" id="profileSurfaceSub">Local players on this device.</div>
+        </div>
+        <button class="close" id="btnProfileClose" aria-label="Close kids and settings"><i class="ico i-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="profileList" id="profileList"></div>
+      <button class="profileModeRow" id="btnProfileOpenAdd" type="button">
+        <span class="profileModeRowIcon"><i class="jic jic-plus" aria-hidden="true"></i></span>
+        <span>Add a child</span>
+        <i class="jic jic-arrow-right" aria-hidden="true"></i>
+      </button>
+      <button class="btn btnGhost profileEditSelectedBtn" id="btnProfileEditSelected" type="button"><i class="jic jic-pencil" aria-hidden="true"></i> Edit selected child</button>
+
+      <!-- Edit panel (shown when editing a profile) -->
+      <div class="profileEditSection" id="profileEditSection" style="display:none">
+        <div class="profileSectionTitle" id="profileEditTitle"><i class="jic jic-pencil" aria-hidden="true"></i> Edit child</div>
+        <!-- §4.2 — a real label. The placeholder disappears the moment a parent
+             starts typing, and several screen readers never announce one at
+             all, so "Child's name" was the field's only name and it was not a
+             name at all. The error slot is empty until validation fails; it is
+             referenced by aria-describedby up front so the association exists
+             before there is anything to read. -->
+        <label class="profileFieldLabel" for="profileEditName">Child&rsquo;s name</label>
+        <input id="profileEditName" class="profileNameInput" type="text" placeholder="Child's name" maxlength="20"
+               autocomplete="off" aria-describedby="profileEditNameError" />
+        <p class="profileFieldError" id="profileEditNameError" role="alert" hidden></p>
+        <div class="profileAvatarPicker" id="profileEditAvatarPicker"></div>
+        <div class="profileEditActions">
+          <button class="btn btnGhost profileEditCancelBtn" id="btnProfileEditCancel" type="button">Cancel</button>
+          <button class="btn btnPrimary profileEditSaveBtn" id="btnProfileEditSave" type="button">Save</button>
+        </div>
+        <button class="profileDeleteBtn" id="btnProfileDelete" type="button"><i class="jic jic-trash" aria-hidden="true"></i> Delete this child</button>
+      </div>
+
+      <div class="profileAddSection" id="profileAddSection" style="display:none">
+        <div class="profileSectionTitle"><i class="jic jic-plus" aria-hidden="true"></i> Add a new child</div>
+        <label class="profileFieldLabel" for="profileNewName">Child&rsquo;s name</label>
+        <input id="profileNewName" class="profileNameInput" type="text" placeholder="Child's name (e.g. Ali)" maxlength="20"
+               autocomplete="off" aria-describedby="profileNewNameError" />
+        <p class="profileFieldError" id="profileNewNameError" role="alert" hidden></p>
+        <div class="profileAvatarPicker" id="profileAvatarPicker"></div>
+        <button class="btn btnPrimary profileAddBtn" id="btnProfileAdd" type="button">+ Add Child</button>
+      </div>
+
+      <!-- Settings section -->
+      <div class="profileSettingsSection">
+        <div class="profileSettingsHint">These settings apply to the whole JUMVI app on this device.</div>
+        <div class="profileSectionTitle"><i class="jic jic-settings" aria-hidden="true"></i> Settings</div>
+        <button class="profileSettingRow" id="profileThemeBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon" id="profileThemeIcon"><i class="jic jic-moon-stars" aria-hidden="true"></i></span>
+            <span class="profileSettingText">Theme</span>
+          </span>
+          <span class="profileSettingValue" id="profileThemeValue">System</span>
+        </button>
+        <button class="profileSettingRow" id="profileSoundBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon" id="profileSoundIcon"><i class="jic jic-volume" aria-hidden="true"></i></span>
+            <span class="profileSettingText">Sound</span>
+          </span>
+          <span class="profileSettingValue" id="profileSoundValue">On</span>
+        </button>
+        <!-- §3.1 — auto read-aloud toggle (default on; matters most for ages 3–5) -->
+        <button class="profileSettingRow" id="profileTtsBtn" type="button">
+          <span class="profileSettingLabel">
+            <span class="profileSettingIcon"><i class="jic jic-speakerphone" aria-hidden="true"></i></span>
+            <span class="profileSettingText">Read missions aloud</span>
+          </span>
+          <span class="profileSettingValue" id="profileTtsValue">On</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- First-time Guided Tutorial (3-step spotlight) -->
+  <div id="tutorialOverlay" class="tutorialOverlay" aria-hidden="true">
+    <div class="tutorialSpotlight" id="tutorialSpotlight"></div>
+    <div class="tutorialCard" id="tutorialCard">
+      <div class="tutorialStep" id="tutorialStep">1 / 3</div>
+      <div class="tutorialTitle" id="tutorialTitle"></div>
+      <div class="tutorialDesc" id="tutorialDesc"></div>
+      <div class="tutorialBtns">
+        <button class="tutorialSkip" id="tutorialSkip" type="button">Skip</button>
+        <button class="tutorialNext" id="tutorialNext" type="button">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Badge Unlock Modal -->
+  <div class="badgeUnlockModal" id="badgeUnlockModal" role="dialog" aria-modal="true" aria-labelledby="badgeUnlockTitle" aria-hidden="true" inert hidden>
+    <div class="badgeUnlockPanel">
+      <div class="badgeUnlockEmoji" id="badgeUnlockEmoji"><img class="badgeArt" src="assets/ui/badges/unlocked.webp" alt="" width="256" height="256"></div>
+      <div class="badgeUnlockTitle" id="badgeUnlockTitle">Badge Unlocked!</div>
+      <div class="badgeUnlockName" id="badgeUnlockName"></div>
+      <div class="badgeUnlockReq" id="badgeUnlockReq"></div>
+      <button class="badgeUnlockBtn" id="badgeUnlockClose" type="button">Awesome!</button>
+    </div>
+  </div>
+
+  <!-- Timer Countdown Overlay (Ready, Set, GO!) -->
+  <div id="timerCountdown" class="timerCountdown" aria-hidden="true" tabindex="0" role="button" aria-label="Cancel countdown">
+    <div class="timerCountdownNum">3</div>
+    <div class="timerCountdownLabel">Get ready! <span>Tap to cancel</span></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottomNav" id="bottomNav" aria-label="Main navigation">
+    <button class="navTab active" data-tab="today" type="button">
+      <span class="navTabIcon"><i class="ico i-calendar" aria-hidden="true"></i></span>
+      <span class="navTabLabel">Play</span>
+    </button>
+    <button class="navTab" data-tab="browse" type="button">
+      <span class="navTabIcon"><i class="ico i-target" aria-hidden="true"></i></span>
+      <span class="navTabLabel">Missions</span>
+    </button>
+    <!-- v0 v32 4-tab IA: "modes" (internal key, unchanged for analytics/
+         localStorage continuity) is the visible "Family" destination. It now
+         carries what used to live under the removed 5th "stats" tab (family
+         insights, badges preview, parent dashboard) — see switchTab(). The
+         #tabStats panel and its render functions still exist for
+         compatibility; they are just never reachable from the nav bar. -->
+    <button class="navTab" data-tab="modes" type="button">
+      <span class="navTabIcon"><i class="jic jic-users" aria-hidden="true"></i></span>
+      <span class="navTabLabel"><span id="navTeamsLabel">Family</span></span>
+    </button>
+    <button class="navTab" data-tab="profile" type="button">
+      <span class="navTabIcon"><i class="ico i-user" aria-hidden="true"></i></span>
+      <span class="navTabLabel">Grown-ups</span>
+    </button>
+  </nav>
+
+  <!-- Floating sound toggle -->
+  <!-- Floating sound toggle gizli — Profile tab > Settings'te zaten var -->
+  <button class="soundToggle" id="soundToggle" aria-label="Toggle sound" title="Toggle sound" style="display:none" aria-hidden="true"><i class="jic jic-volume" aria-hidden="true"></i></button>
+  <div id="statusLive" class="sr-only" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast" aria-hidden="true"></div>
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <!-- iOS-friendly Save overlay (no extra main buttons) -->
+  <div class="saveOverlay" id="saveOverlay" aria-hidden="true">
+    <div class="savePanel">
+      <div class="saveRow">
+        <div>
+          <div class="saveHint">Save to Photos</div>
+          <div class="saveSub" id="saveSub">Tap and hold the image → Save Image</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="saveOpenBtn" id="saveOpenBtn" aria-label="Open image" type="button">Open Image</button>
+          <button class="saveCloseBtn" id="saveOverlayClose" aria-label="Close save overlay" type="button"><i class="ico i-x" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <img id="saveImg" alt="Certificate image" loading="lazy" decoding="async" />
+    </div>
+  </div>
+
+  <!-- Fallback modal: image generation failed -->
+  <!-- Add-to-Home-Screen guidance.
+       A DELIBERATELY SEPARATE dialog, not the mission #sheet. The sheet's
+       scroll and safe-area ownership is settled and proven on hardware; this
+       feature has no business reaching into it. Own classes, own markup, and
+       it borrows only colour/border tokens. Generic wording on purpose —
+       the Share menu is worded differently across iOS browsers, so naming a
+       specific label would be wrong somewhere. -->
+  <div class="installDlg" id="installDlg" role="dialog" aria-modal="true" aria-labelledby="installDlgTitle" hidden>
+    <div class="installDlgPanel">
+      <div class="installDlgIcon"><i class="jic jic-device-mobile-down" aria-hidden="true"></i></div>
+      <h2 class="installDlgTitle" id="installDlgTitle">Add JUMVI to your Home Screen</h2>
+      <ol class="installDlgSteps">
+        <li>Tap <b>Share</b></li>
+        <li>Choose <b>Add to Home Screen</b></li>
+        <li>Tap <b>Add</b></li>
+      </ol>
+      <p class="installDlgFoot">It stays a website — no app store, no account.</p>
+      <button class="btn btnPrimary installDlgClose" id="btnInstallDlgClose" type="button">Got it</button>
+    </div>
+  </div>
+
+  <div class="backdrop fallbackBackdrop" id="fallbackBackdrop" role="dialog" aria-modal="true" aria-label="Image generation failed">
+    <div class="sheet fallbackSheet">
+      <div class="fallbackIcon"><i class="jic jic-photo" aria-hidden="true"></i></div>
+      <div class="fallbackTitle">Image couldn’t be created</div>
+      <div class="fallbackMsg"></div>
+      <div class="fallbackActions">
+        <button class="btn btnPrimary" id="fallbackCloseBtn" type="button">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Hub view — empty until showHub3D() lazy-loads Three.js + jumvi-hub-app.js into it.
+       Must stay INSIDE #app-wrapper: #app-wrapper is `position:fixed`, which (per spec)
+       always creates its own stacking context regardless of z-index — so a sibling of
+       #app-wrapper can never out-stack bottomNav/#backdrop no matter how high its z-index
+       is, since the whole #app-wrapper subtree paints as one z-index:auto unit. Being a
+       child instead lets this compete directly against bottomNav (9500) and the mission
+       modal (80) on equal footing. -->
+  <div id="hub3dOverlay" role="region" aria-label="JUMVI Adventure Hub" aria-hidden="true" tabindex="-1" style="display:none"></div>
+  <!-- #hub3dOverlay backdrop rule moved to style.css (carry-over B) -->
+</div>
+
+<script src="confetti.min.js?v=20260524-29" defer></script>
+<script src="data.js?v=20260831-1" defer></script>
+<script src="/tr/i18n.js?v=20260904-1" defer></script>
+  <script src="mission-coaching.js?v=20260814-4" defer></script>
+  <!-- Must load BEFORE jumvi-mission-icons.js: that file's brandEquipment()
+       runs on execution and swaps the placeholder paddle/ball in both icon
+       sets, so these have to exist by then. -->
+<script src="jumvi-mission-icons.js?v=20260827-1" defer></script>
+<!-- Prerecorded English Coach Leo narration (live pilot). Must load BEFORE
+     jumvi-redlight.js and app.js — both call window.CoachLeoAudio. -->
+<script src="coach-leo-audio.js?v=20260827-1" defer></script>
+<!-- Ambient audio system: world-ambience MUST load before music-scheduler
+     (the scheduler looks up window.JumviWorldAmbience at start() time). -->
+<script src="jumvi-world-ambience.js?v=20260917-1" defer></script>
+<script src="jumvi-music-scheduler.js?v=20260814-1" defer></script>
+<script src="jumvi-sonic-cues.js?v=20260814-1" defer></script>
+<script src="jumvi-redlight.js?v=20260819-1" defer></script>
+<script src="jumvi-art.js?v=20260905-1" defer></script>
+<script src="app.js?v=20260904-1" defer></script>
+<!-- Coach Leo onboarding tour — lazy, self-initialising, once per device -->
+<script src="leo-tour.js?v=20260722-1" defer></script>
+<script>
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("/service-worker.js?v=20260920-1", { updateViaCache: "none" })
+        .then((reg)=>{
+          // §5.4 — returning-browser freshness. skipWaiting()+clients.claim()
+          // in service-worker.js already hand a NEW worker control of every
+          // open tab the instant it installs — but the tab itself keeps
+          // running the OLD app.js/style.css it already loaded into memory.
+          // That mismatch (new network layer under old, already-executed
+          // JS) is what shows up on a family's phone as "old version, some
+          // buttons broken": the DOM the old script expects and the DOM/CSS
+          // a fresh release ships no longer agree. A full reload once
+          // control switches puts the tab back in sync with whatever it's
+          // actually being served — but only at a moment that won't cut off
+          // a child mid-mission, so it waits out any open sheet/modal.
+          // A brand new visitor's very first load has no controller yet —
+          // the worker that installs and calls clients.claim() a moment
+          // later is claiming this page for the FIRST time, not superseding
+          // an older one. That first claim also fires controllerchange (null
+          // -> a worker still counts as "changed"), so without this guard
+          // every first-time visitor got an unnecessary reload a second or
+          // two after landing — including anyone who had already tapped
+          // "Start My First Mission" in that window. Only a controller that
+          // was ALREADY set and then changes to a DIFFERENT one, at any
+          // point later in the session, is an actual new release taking
+          // over — so this tracks "have we been controlled at all yet"
+          // rather than a one-time snapshot, or a genuine update arriving
+          // later in a first-time visitor's own session would go uncaught.
+          let hasBeenControlled = !!navigator.serviceWorker.controller;
+          let reloadArmed = false, reloaded = false, pollId = null;
+          function reloadWhenSafe(){
+            if(reloaded) return;
+            const busy = document.visibilityState === "visible" && document.querySelector(".backdrop.show");
+            if(busy) return;
+            reloaded = true;
+            if(pollId) clearInterval(pollId);
+            location.reload();
+          }
+          navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+            if(!hasBeenControlled){ hasBeenControlled = true; return; }
+            if(reloadArmed) return;
+            reloadArmed = true;
+            reloadWhenSafe();
+            document.addEventListener("visibilitychange", reloadWhenSafe);
+            pollId = setInterval(reloadWhenSafe, 4000);
+          });
+
+          // Browsers only check a service worker for updates on navigation.
+          // A phone that resumes the same tab from the home screen for days
+          // without a real reload can sit on a stale worker indefinitely —
+          // so nudge a check every time the app is actually looked at again.
+          document.addEventListener("visibilitychange", ()=>{
+            if(document.visibilityState === "visible") reg.update().catch(()=>{});
+          });
+        })
+        .catch((e)=>{ if(window.__jumviFallback) window.__jumviFallback("sw_register_failed", "offline support unavailable: " + (e && e.name)); });
+    });
+  }
+</script>
+
+<!-- §6 — field frame probe. Inert unless the URL carries ?perfprobe=1.
+     Everything below the guard is dead weight for a normal visitor: one
+     indexOf on location.search at parse time, nothing else. No listener, no
+     timer, no global, no network.
+
+     Why it exists: "iPhone 13 stutters" could not be reproduced to a cause in
+     headless WebKit. Every real scroll frame there costs ~45ms against
+     Chromium's 17ms on the identical page, and thirty-five hypotheses
+     (every paint property, rule count up to 12,588 rules, layer promotion,
+     containment, the sticky header, image decode, overdraw) each came back
+     flat. That renderer rasterises on the CPU with no GPU at all, so the one
+     reading it cannot give is what an A15 actually does. This asks the phone.
+
+     Open https://qr.jumvi.co/?perfprobe=1 on the device, scroll normally with
+     a finger, and read the numbers off the screen. -->
+<script>
+  if (location.search.indexOf("perfprobe") > -1) (function () {
+    var box = document.createElement("div");
+    box.setAttribute("aria-hidden", "true");
+    box.style.cssText = "position:fixed;left:8px;right:8px;bottom:84px;z-index:99999;" +
+      "background:rgba(10,22,40,.92);color:#fff;font:12px/1.45 ui-monospace,Menlo,monospace;" +
+      "padding:10px 12px;border-radius:12px;pointer-events:none;white-space:pre";
+    box.textContent = "frame probe — scroll with your finger";
+    document.addEventListener("DOMContentLoaded", function () { document.body.appendChild(box); });
+
+    /* Only frames during which the page actually moved are frames the renderer
+     * had to do scrolling work for. A gap recorded while nothing moved says
+     * nothing about scroll cost, and counting it was the mistake that made the
+     * headless benchmark look worse than it was. */
+    var gaps = [], last = performance.now(), lastY = -1, moving = false;
+    addEventListener("scroll", function () { moving = true; }, { passive: true });
+
+    var pct = function (a, q) { return a.length ? a[Math.min(a.length - 1, Math.floor(a.length * q))] : 0; };
+    (function tick(now) {
+      var dt = now - last; last = now;
+      var y = (document.scrollingElement || document.documentElement).scrollTop;
+      if (moving && y !== lastY && dt < 400) gaps.push(dt);
+      lastY = y; moving = false;
+      if (gaps.length > 600) gaps.splice(0, gaps.length - 600);
+      if (gaps.length && gaps.length % 10 === 0) {
+        var s = gaps.slice().sort(function (a, b) { return a - b; });
+        var over = 0;
+        for (var i = 0; i < gaps.length; i++) if (gaps[i] > 32) over++;
+        box.textContent =
+          "scrolled frames  " + gaps.length +
+          "\nmedian           " + pct(s, 0.5).toFixed(1) + " ms" +
+          "\np95              " + pct(s, 0.95).toFixed(1) + " ms" +
+          "\nworst            " + s[s.length - 1].toFixed(1) + " ms" +
+          "\ndropped (>32ms)  " + over + "  (" + Math.round(over / gaps.length * 100) + "%)" +
+          "\ndpr " + devicePixelRatio + "  " + innerWidth + "x" + innerHeight;
+      }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  })();
+</script>
+
+</body>
+</html>

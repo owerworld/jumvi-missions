@@ -1,5 +1,5 @@
 {
-  "scope": "LOCK07 premium m25 derivatives",
+  "scope": "M4 accepted mission sequences; optional audio unavailable",
   "assets": [
     {
       "path": "assets/mission-illustrations/m25/seated-editorial-v1.webp",
@@ -9,7 +9,7 @@
       "width": 720,
       "height": 480,
       "bytes": 294800,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/reset-alpha-v1.webp",
@@ -19,7 +19,7 @@
       "width": 720,
       "height": 480,
       "bytes": 320724,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/contact-alpha-v1.webp",
@@ -29,7 +29,7 @@
       "width": 720,
       "height": 480,
       "bytes": 296012,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/product-still-v1.webp",
@@ -39,7 +39,3057 @@
       "width": 720,
       "height": 480,
       "bytes": 311758,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m01/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/3-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-03-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/3-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-03-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-04-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-04-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m02/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-04-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/1.webp",
+      "sha256": "22ab741942c00937a4bcf8d56011615c159d419daf8425d76b918ea7c627f032",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m03-01.png",
+      "sourceSha256": "b8f779b737beb7d246ca754d7aba55b010251ce173316081f6e24816f46cfa2a",
+      "width": 600,
+      "height": 887,
+      "bytes": 82200,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/2.webp",
+      "sha256": "1435118acb6bbf65e880dd998bb8f6a4747f0f0daddeb538787407108070b5f6",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m03-02.png",
+      "sourceSha256": "e5bf1164f9b3e11e0a488d2a726beda4129f3cf7fcc8b247e5e8ec6dbec80ec9",
+      "width": 600,
+      "height": 887,
+      "bytes": 78018,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/3.webp",
+      "sha256": "102ff6f0c1ea2981cc8de6287518f75342360a16d84b977ace84f1f1fdf04081",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m03-03.png",
+      "sourceSha256": "54bb807ffcf8ba6ecc1d3d69dc8f703c4271967bd12b509e53ccd78028deade0",
+      "width": 600,
+      "height": 887,
+      "bytes": 79892,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/1.webp",
+      "sha256": "73c9ee9c3871ee0c7a0127d6734f75953b079d802fcaf502468f54e720f04771",
+      "source": "outputs/M4_FINAL_PHYSICAL_CLOSURE/m04-final-sequence.png",
+      "sourceSha256": "9b7a375f7c2d0c3cdd39d99d5687bdbf50b34a88d699be1ee21fdaec482d024c",
+      "width": 512,
+      "height": 512,
+      "bytes": 31682,
+      "transform": "Individual storyboard moment, exact rectangular panel extraction; WebP .92"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/2.webp",
+      "sha256": "8773a44bfe763344055d80c7624c0d46489692d20e28ee98389f72b44eec61e3",
+      "source": "outputs/M4_FINAL_PHYSICAL_CLOSURE/m04-final-sequence.png",
+      "sourceSha256": "9b7a375f7c2d0c3cdd39d99d5687bdbf50b34a88d699be1ee21fdaec482d024c",
+      "width": 512,
+      "height": 512,
+      "bytes": 30108,
+      "transform": "Individual storyboard moment, exact rectangular panel extraction; WebP .92"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/3.webp",
+      "sha256": "efc1c04cf3dd320914e118089469cebfafa5eb63b170c0de599ffa862766c912",
+      "source": "outputs/M4_FINAL_PHYSICAL_CLOSURE/m04-final-sequence.png",
+      "sourceSha256": "9b7a375f7c2d0c3cdd39d99d5687bdbf50b34a88d699be1ee21fdaec482d024c",
+      "width": 512,
+      "height": 512,
+      "bytes": 33212,
+      "transform": "Individual storyboard moment, exact rectangular panel extraction; WebP .92"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/4.webp",
+      "sha256": "7de35e98024cd58f8458124d84153eed4605e8a8a751631f72ee4ccb00485a99",
+      "source": "outputs/M4_FINAL_PHYSICAL_CLOSURE/m04-final-sequence.png",
+      "sourceSha256": "9b7a375f7c2d0c3cdd39d99d5687bdbf50b34a88d699be1ee21fdaec482d024c",
+      "width": 512,
+      "height": 512,
+      "bytes": 30960,
+      "transform": "Individual storyboard moment, exact rectangular panel extraction; WebP .92"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/5.webp",
+      "sha256": "eb5a4e3332c6305e138957abb45c747846a75f3b1cba7d2a2ca7f341541306f4",
+      "source": "outputs/M4_FINAL_PHYSICAL_CLOSURE/m04-final-sequence.png",
+      "sourceSha256": "9b7a375f7c2d0c3cdd39d99d5687bdbf50b34a88d699be1ee21fdaec482d024c",
+      "width": 512,
+      "height": 512,
+      "bytes": 34376,
+      "transform": "Individual storyboard moment, exact rectangular panel extraction; WebP .92"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/6.webp",
+      "sha256": "bae3a384a77f2d7bb4fe36cedcf3af8c678bfbef891d89e279cb2a3434c10f63",
+      "source": "outputs/M4_FINAL_PHYSICAL_CLOSURE/m04-final-sequence.png",
+      "sourceSha256": "9b7a375f7c2d0c3cdd39d99d5687bdbf50b34a88d699be1ee21fdaec482d024c",
+      "width": 512,
+      "height": 512,
+      "bytes": 29452,
+      "transform": "Individual storyboard moment, exact rectangular panel extraction; WebP .92"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-01-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-01-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m05/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m06/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-01-B.png",
+      "sourceSha256": "93fc46bb8c6f91a96edb0958c8a045451d7187152f4f97d4ad373914c1fe33a2",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38350,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-01-detail.png",
+      "sourceSha256": "112c9ec59e16b42b7eeceeb14eed8e0e0cd7dc0fd4cf2f8198cf2e0fe0b6784b",
+      "width": 600,
+      "height": 514,
+      "bytes": 27312,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-04-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-04-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m07/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-04-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/1-B.webp",
+      "sha256": "b0d900e505e4f0d80b766314255efd2bc7994dc2707cec7c69017ef257bf1ec3",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-01-B.png",
+      "sourceSha256": "0200ed888a1fc369ef74a01adfdcb0a3a565a0ba126e29aadf289b455a779e54",
+      "width": 600,
+      "height": 1024,
+      "bytes": 36248,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/1-detail.webp",
+      "sha256": "82aebbb4a6d0031f642433f698a8af377f431ddf418f205e987bcfa3deb7f20d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-01-detail.png",
+      "sourceSha256": "7bbbda9b93d441c5d278c714641bdd4402716edc829ecf1a9deec5179c2bd902",
+      "width": 600,
+      "height": 514,
+      "bytes": 17926,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/2-B.webp",
+      "sha256": "cc85241d9e4a7103f76c96c204caaebc704c947bf31a083161ddfa4441ccfaec",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-02-B.png",
+      "sourceSha256": "ccd6d8e2cf8755c7a769001ef55b6562243442429bb2d1584e67a01bf369611c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 36290,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/2-detail.webp",
+      "sha256": "6f86f6970088fb0ae89c582096cd432b21d3be8495aca664f0c8cb009f4844b1",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-02-detail.png",
+      "sourceSha256": "83d1abc30a04c764bc440988bac444cac24868d968b35aa4aec58611fb98ad61",
+      "width": 600,
+      "height": 514,
+      "bytes": 16996,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/3-B.webp",
+      "sha256": "4e8fa09b95b4286d782568d340dc2cfca94567499bf4f890aecdaf64806c8019",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-03-B.png",
+      "sourceSha256": "6fd551b0fca7daa48af2b66a97094fd37adc29a992a61ef7c13c87c292d3bdf5",
+      "width": 600,
+      "height": 1024,
+      "bytes": 49238,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/3-detail.webp",
+      "sha256": "091ea07fde1ac1ed4405e1379364cfb5161c85a1166ff72cda4e9404fda385c0",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-03-detail.png",
+      "sourceSha256": "c39503aad05ddb17cfed9c5d901b063c739d619b173a45ce008262a59c349cb7",
+      "width": 600,
+      "height": 525,
+      "bytes": 25338,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-01-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-01-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/2-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-02-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/2-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-02-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m09/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/1-A.webp",
+      "sha256": "2189c1dda9e13133db6e38906faaf585fbc3b73a5435760e063695007446fc28",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-01-A.png",
+      "sourceSha256": "031a89957b6357f3867f92a01c7acd4c2588b47a715e427a9e4a7690d569f15b",
+      "width": 600,
+      "height": 1024,
+      "bytes": 53026,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/2-A.webp",
+      "sha256": "2189c1dda9e13133db6e38906faaf585fbc3b73a5435760e063695007446fc28",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-02-A.png",
+      "sourceSha256": "031a89957b6357f3867f92a01c7acd4c2588b47a715e427a9e4a7690d569f15b",
+      "width": 600,
+      "height": 1024,
+      "bytes": 53026,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/3-A.webp",
+      "sha256": "bd4695fe9e1fdcf7385648cb202e99ef6ecb49df876f3c4c19ac0a2489eb32fc",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-03-A.png",
+      "sourceSha256": "7a2bb0488f325ad1ae3ff5b68b64f2f581115be51b9f0028ac03686f4baa2677",
+      "width": 600,
+      "height": 1024,
+      "bytes": 62450,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/4-A.webp",
+      "sha256": "7f14c4640d1ae13f3ebf8fc6838af1c3d9174be58c0a022e9a5d6e81d49ffd68",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-04-A.png",
+      "sourceSha256": "365906128a3a1d362a6e1d7ff4c6f5d2ac76f1745f9c7357b95ce18b0aeaf84a",
+      "width": 600,
+      "height": 1024,
+      "bytes": 51258,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/4-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-04-B.png",
+      "sourceSha256": "5deb02f31c259f7169fddefc029b2ae26bdfbe799a1cf4ece0e55a1f5e5c633e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37078,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m10/4-detail.webp",
+      "sha256": "4b89c333e28f22748d6068941dbf473d34f5a8cb123ce950b7551d5882e3fe43",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-04-detail.png",
+      "sourceSha256": "fa2efad64582b5ed8ff4ba2083dd7bd4e7222cac4af277197d9e0fa89023fadf",
+      "width": 600,
+      "height": 514,
+      "bytes": 40888,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-01-B.png",
+      "sourceSha256": "93fc46bb8c6f91a96edb0958c8a045451d7187152f4f97d4ad373914c1fe33a2",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38350,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-01-detail.png",
+      "sourceSha256": "112c9ec59e16b42b7eeceeb14eed8e0e0cd7dc0fd4cf2f8198cf2e0fe0b6784b",
+      "width": 600,
+      "height": 514,
+      "bytes": 27312,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m11/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m12/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/1-B.webp",
+      "sha256": "c7cdfbbebda3e800b13e72da40d9bf88c7adeb840478f9d377cda8ae7fa11e65",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-01-B.png",
+      "sourceSha256": "a3d2c21a6ae705ea957a712ccbbb8d1512989b4155322ead151e288f533c0f84",
+      "width": 600,
+      "height": 1024,
+      "bytes": 43022,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/1-detail.webp",
+      "sha256": "956db6c587258ea0a019f5c4a7b795c141282aa7b76b309543827b179be3c798",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-01-detail.png",
+      "sourceSha256": "309288655f061de50a678f5952ac86efbc78b6b6242a52ada41fdb3520b440f0",
+      "width": 600,
+      "height": 514,
+      "bytes": 26136,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/2-B.webp",
+      "sha256": "b8894b956304339811524a6627a1bbfe2ca47e93f6fe1ea2f84ebb81c060af27",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-02-B.png",
+      "sourceSha256": "07de644ba891bfb17abb46a68db928b1b7e9c5a6a82d698b1d7dde5943489aee",
+      "width": 600,
+      "height": 1024,
+      "bytes": 49536,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/2-detail.webp",
+      "sha256": "8d30fbcffb6acda1138ddb6f92c923a5617c53cb81673d01db1a382b6ee952ad",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-02-detail.png",
+      "sourceSha256": "5e4d74ecd7337578a361f62c8590a20885998e91c18d2744bbe46a28efafbd72",
+      "width": 600,
+      "height": 514,
+      "bytes": 28966,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/3-B.webp",
+      "sha256": "1e0530be3b7ca1d1410f825f50f1b4d3c3485d9da8767fb2fef4ae4a265146b6",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-03-B.png",
+      "sourceSha256": "d0184648417fa6109954dd31302c78bd401809d735fe93a684d20de543575c5a",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38556,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m13/3-detail.webp",
+      "sha256": "ca1966de68c9f13cda90f6dcdaf2040fca3272666152c91d633c2184971df404",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-03-detail.png",
+      "sourceSha256": "344df7b155c7bde6aea3e939349c85a9e67dbc2822742a283270ac130ac6e469",
+      "width": 600,
+      "height": 364,
+      "bytes": 22522,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m14/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/1-A.webp",
+      "sha256": "792393c334bae7be2582d2ed3adeea880f00f7ca1752844dda132b3d08ad277e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-01-A.png",
+      "sourceSha256": "2af82908fae215df524d46f787097057533ee6e0935c6bf49c795780b89dd882",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50976,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/1-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-01-B.png",
+      "sourceSha256": "5deb02f31c259f7169fddefc029b2ae26bdfbe799a1cf4ece0e55a1f5e5c633e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37078,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/1-detail.webp",
+      "sha256": "45d4cddeae4f6ef967750811c24de1233f6424ddbc9b82d9d1e7585a5c23a4d4",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-01-detail.png",
+      "sourceSha256": "e464a0f24d51a1a4c34aa5ee1276942fbd49deacdf8467b8359c2baa422a6f16",
+      "width": 600,
+      "height": 459,
+      "bytes": 31866,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m15/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/1-A.webp",
+      "sha256": "792393c334bae7be2582d2ed3adeea880f00f7ca1752844dda132b3d08ad277e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-01-A.png",
+      "sourceSha256": "2af82908fae215df524d46f787097057533ee6e0935c6bf49c795780b89dd882",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50976,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/1-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-01-B.png",
+      "sourceSha256": "5deb02f31c259f7169fddefc029b2ae26bdfbe799a1cf4ece0e55a1f5e5c633e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37078,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/1-detail.webp",
+      "sha256": "45d4cddeae4f6ef967750811c24de1233f6424ddbc9b82d9d1e7585a5c23a4d4",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-01-detail.png",
+      "sourceSha256": "e464a0f24d51a1a4c34aa5ee1276942fbd49deacdf8467b8359c2baa422a6f16",
+      "width": 600,
+      "height": 459,
+      "bytes": 31866,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/2-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-02-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/2-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-02-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/3-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-03-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/3-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-03-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-04-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-04-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m16/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-04-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m17/1.webp",
+      "sha256": "b2b10b60caffee446fb77a0894a1615a0b897a70b0e179bcdb23798465d5d2b4",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-01.png",
+      "sourceSha256": "347f9a7485d61b6205da193335aa543b7533a8304fd1c2ff583c5f79a3404b7b",
+      "width": 1000,
+      "height": 781,
+      "bytes": 65092,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m17/2.webp",
+      "sha256": "dfbdb0d06010ecdf0ac3c9a1fee0685ca1a6265b0c268a1b7bb7e9c5aedb6161",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-02.png",
+      "sourceSha256": "ab5ac64e792033ed5f34d0f746faeb8c0a14519e44eacdd4a1da83dd9e9f713a",
+      "width": 1000,
+      "height": 781,
+      "bytes": 64946,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m17/3.webp",
+      "sha256": "4acabbe82f2a6b6ee86055ffeeb7dec15fab8462d34b29de2d504c1f54103c98",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-03.png",
+      "sourceSha256": "8c55322ca6c0105e187765fa2e3c33acbec77fd3ce28988847b59fb0c7baa2b0",
+      "width": 1000,
+      "height": 781,
+      "bytes": 63496,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m17/4.webp",
+      "sha256": "ba1443654a9296cf816fc1dba44f9112d84f22ddfb1966ef70b6b46b36168f05",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-04.png",
+      "sourceSha256": "065693253698c26ea0aaecde902c4fc1858b1037f1eba9be32f59c976968f7bf",
+      "width": 1000,
+      "height": 781,
+      "bytes": 65194,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m18/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/1-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-C.png",
+      "sourceSha256": "f913c7127d9c7ac33322baf9a5937c87a054414c3369a67982b8e2bfd25d02c3",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40182,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/2-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/2-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-C.png",
+      "sourceSha256": "f913c7127d9c7ac33322baf9a5937c87a054414c3369a67982b8e2bfd25d02c3",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40182,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/2-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/3-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-B.png",
+      "sourceSha256": "5deb02f31c259f7169fddefc029b2ae26bdfbe799a1cf4ece0e55a1f5e5c633e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37078,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/3-C.webp",
+      "sha256": "675df8cb2574ad056e7cc07441cf99577b5b8669641c49c498b180d6f32dfa63",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-C.png",
+      "sourceSha256": "108a6a60d79ecbe916b290b01d9a9ab99654e4947cddb4e40192cba0bd6fd79a",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40224,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m19/3-detail.webp",
+      "sha256": "789a2989fffd0b3633ceb3378153921475322715dac3cf0a64ec06c54df0f416",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-detail.png",
+      "sourceSha256": "a072f185a6f1170fdbf287f2803561d646c5f1a980b971c07871c3f2466a05dd",
+      "width": 600,
+      "height": 514,
+      "bytes": 33758,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m20/1.webp",
+      "sha256": "e5c2a1cb750e4983ee97f45e16f8a4a663a81f48713b688a0ed27d1baee0e56e",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m20-panel-01.png",
+      "sourceSha256": "3ff0b30235cf934bdb5f7f2ebf35265551fc4562f49bcc192fb6eddb88f6013c",
+      "width": 1000,
+      "height": 703,
+      "bytes": 68942,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m20/2.webp",
+      "sha256": "c7b31cf3a1d5ed0ac42ae298c341517459aa4b180b4eb03ef1ed85189b1895c0",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m20-panel-02.png",
+      "sourceSha256": "da6e91af9e93a5ba543dcaecc750d8d821afbdca1fde961eb083064c05bfd32a",
+      "width": 1000,
+      "height": 703,
+      "bytes": 68654,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m20/3.webp",
+      "sha256": "27756881ae9f94a9577015462a81f4b053962d0b5bc04b71c485a5ba2840a465",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m20-panel-03.png",
+      "sourceSha256": "a448bcc8bdc37a02aad86badbee61b3ea1ac94729994203875b488f76565ad71",
+      "width": 1000,
+      "height": 703,
+      "bytes": 70208,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m20/4.webp",
+      "sha256": "3e81fe33015d5966284cda0ef8f39e44c4d2128f73a582e6e34e7b53fbde6df9",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m20-panel-04.png",
+      "sourceSha256": "53390b04a434193fffae2ea62a237e70f48a05e588d21bd9dbeecfd4eab0ce7f",
+      "width": 1000,
+      "height": 703,
+      "bytes": 71996,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m21/1.webp",
+      "sha256": "a65b376ea6b1568b1643a4fca2cbb5752b9c06c476a44313b6ac290d8cebe564",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m21-panel-01.png",
+      "sourceSha256": "5f3e1344a2251e44e7e4f7c446c3b5fcdd29477a3efb0714b55d4e6f297455c7",
+      "width": 1000,
+      "height": 703,
+      "bytes": 64106,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m21/2.webp",
+      "sha256": "17573bbe00874002400e318744ba051595b195e15a0c105637f05c046142401c",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m21-panel-02.png",
+      "sourceSha256": "19416b34b802ad856479574e94d793e78fd5482e97a6e3ee05ef6bf7100ae2cc",
+      "width": 1000,
+      "height": 703,
+      "bytes": 66142,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m21/3.webp",
+      "sha256": "3a7d32896f649abc069e84f50354371e6c1e5ca02449b738e0196ef51891ec9f",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m21-panel-03.png",
+      "sourceSha256": "eb2ef4ad7e407cb689ea96e0ed51c8f25b6d719e5108a5ee6c1b77d29562b07e",
+      "width": 1000,
+      "height": 703,
+      "bytes": 65738,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/1-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/1-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-C.png",
+      "sourceSha256": "f913c7127d9c7ac33322baf9a5937c87a054414c3369a67982b8e2bfd25d02c3",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40182,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/1-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-D.png",
+      "sourceSha256": "195edb52bba776f0f2f6ee38ac37ec836a37af7a4c545aa0707d26ad0b812258",
+      "width": 600,
+      "height": 1024,
+      "bytes": 31956,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/1-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/2-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-C.png",
+      "sourceSha256": "f913c7127d9c7ac33322baf9a5937c87a054414c3369a67982b8e2bfd25d02c3",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40182,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/2-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-D.png",
+      "sourceSha256": "195edb52bba776f0f2f6ee38ac37ec836a37af7a4c545aa0707d26ad0b812258",
+      "width": 600,
+      "height": 1024,
+      "bytes": 31956,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/3-C.webp",
+      "sha256": "87cfeb9573daf52eca0d2bd17424bef70c14c2901363274442bf77bd51d2a0ea",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-C.png",
+      "sourceSha256": "f913c7127d9c7ac33322baf9a5937c87a054414c3369a67982b8e2bfd25d02c3",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40182,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/3-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-D.png",
+      "sourceSha256": "195edb52bba776f0f2f6ee38ac37ec836a37af7a4c545aa0707d26ad0b812258",
+      "width": 600,
+      "height": 1024,
+      "bytes": 31956,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/4-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-B.png",
+      "sourceSha256": "5deb02f31c259f7169fddefc029b2ae26bdfbe799a1cf4ece0e55a1f5e5c633e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37078,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/4-C.webp",
+      "sha256": "675df8cb2574ad056e7cc07441cf99577b5b8669641c49c498b180d6f32dfa63",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-C.png",
+      "sourceSha256": "108a6a60d79ecbe916b290b01d9a9ab99654e4947cddb4e40192cba0bd6fd79a",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40224,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/4-D.webp",
+      "sha256": "46ba3cc85c2d7cface7c7bb271761dd371d794bff6211236637242387a3e349e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-D.png",
+      "sourceSha256": "195edb52bba776f0f2f6ee38ac37ec836a37af7a4c545aa0707d26ad0b812258",
+      "width": 600,
+      "height": 1024,
+      "bytes": 31956,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m22/4-detail.webp",
+      "sha256": "789a2989fffd0b3633ceb3378153921475322715dac3cf0a64ec06c54df0f416",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-detail.png",
+      "sourceSha256": "a072f185a6f1170fdbf287f2803561d646c5f1a980b971c07871c3f2466a05dd",
+      "width": 600,
+      "height": 514,
+      "bytes": 33758,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m23/1.webp",
+      "sha256": "9011cb2e6d48e16e252b18973f01afbccef1b7fd651761b58360c0a178c99bc1",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-01.png",
+      "sourceSha256": "f58830131363ad1af81207fe1abac9e7b3da3a9f6f765e28f6d22868242ab22f",
+      "width": 1000,
+      "height": 703,
+      "bytes": 70524,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m23/2.webp",
+      "sha256": "6b9b77b797e9aa152569697cbc7cc8703c11ce7e4dff1c252f12450b1b279325",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-02.png",
+      "sourceSha256": "aef3f469a5b5d8837c53191fe1e2920f1f073512ac4fde83d0cbd5fc720099f1",
+      "width": 1000,
+      "height": 703,
+      "bytes": 68498,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m23/3.webp",
+      "sha256": "b4d4768f405ba5f9fc5e97c20f80084eab433ac7afaca09a4675648aaa345d67",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-03.png",
+      "sourceSha256": "baaaa5edee17a1822b7e608379c9dc5aded456322bda8ce602fd07ae455966ba",
+      "width": 1000,
+      "height": 703,
+      "bytes": 69510,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m23/4.webp",
+      "sha256": "ac7ea329753fb6f392373dff869917df29a9eb1d09a0652736d44b34b7446f51",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-04.png",
+      "sourceSha256": "6af1e7bd8b836d16644b49a42357402173f28164f4e99e8ebec9bfe04669ab95",
+      "width": 1000,
+      "height": 703,
+      "bytes": 67834,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m24/1.webp",
+      "sha256": "9a382e338ca57f6b552e894b54c1614e41f8958a21519f259c618634098e029b",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-01.png",
+      "sourceSha256": "50cf3f44b732d8bef9040785b63aa7231f9a169e6689b1ceec1dc9214ae8b0f1",
+      "width": 1000,
+      "height": 703,
+      "bytes": 73126,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m24/2.webp",
+      "sha256": "1fa461f9ecc7ab3f0c5aa101655db081e02dfad59a9a68eeab9299857bbea5cf",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-02.png",
+      "sourceSha256": "77fda99f89bd2ade85a7fcd17d3d5c9858ff9e61d0cd7e6a42b6aa495e28950b",
+      "width": 1000,
+      "height": 703,
+      "bytes": 68918,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m24/3.webp",
+      "sha256": "25c297c59e2efb5fe7b279ed58fca2a33842a09cca0e67fe5d2dbbe044e2830a",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-03.png",
+      "sourceSha256": "6cf39f454d15c9b364fa2d52cffc20aed16bd07879ad1dfe7418dfd29590590d",
+      "width": 1000,
+      "height": 703,
+      "bytes": 71158,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m24/4.webp",
+      "sha256": "e703df579b4d6f934af8c8cc04f903b02d0e19d3226c1212573ff60166fa5ec0",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-04.png",
+      "sourceSha256": "30fc1fa312ca1160d1dff0249a667ce9d7a0c249f689dbc3404b66bfca93be53",
+      "width": 1000,
+      "height": 703,
+      "bytes": 69108,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/1-A.webp",
+      "sha256": "bf98f29960d53e1370f65c251ccbfd11faafd3b1f1f1e4326ea954bd66d24141",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-01-A.png",
+      "sourceSha256": "ad80c982f326d093c9be846cb5375eba523570a034fbde4048a91ee3b7eadcac",
+      "width": 600,
+      "height": 1024,
+      "bytes": 61342,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/1-B.webp",
+      "sha256": "8041a7bc00cfca38f0fea886e1c50eb6d0f119e742b89834dc2dc8bf4d14e27e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-01-B.png",
+      "sourceSha256": "390c78c9ff8f17c5963a3c2f3dab4f325414365bd9331583b13f4e69ee71d642",
+      "width": 600,
+      "height": 1024,
+      "bytes": 48896,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/1-detail.webp",
+      "sha256": "19abe0caa27550763b45bcaff1bad43a95c314e65b826a516782d6a9696e6af5",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-01-detail.png",
+      "sourceSha256": "4cf22314036acd6107258fd0e13c582b6b900a41fb50653b510b5dd696d02ff8",
+      "width": 600,
+      "height": 514,
+      "bytes": 31372,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/2-A.webp",
+      "sha256": "bf98f29960d53e1370f65c251ccbfd11faafd3b1f1f1e4326ea954bd66d24141",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-02-A.png",
+      "sourceSha256": "ad80c982f326d093c9be846cb5375eba523570a034fbde4048a91ee3b7eadcac",
+      "width": 600,
+      "height": 1024,
+      "bytes": 61342,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/2-B.webp",
+      "sha256": "a0378307c2b5a5848c2c495b54efec7213f61e0c0c9ca1631c688b6a119c1cc7",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-02-B.png",
+      "sourceSha256": "1d0e48aded3b6d40ee884409d6f63d2d37dc647d6f06daeebb58846812c6416e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 47694,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/2-detail.webp",
+      "sha256": "eb01c2d1ea4433b44eb2712a629de860ae579ad31c9ccddba3fb04dbf118f84f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-02-detail.png",
+      "sourceSha256": "c0d0b45045d0e67ba05edcaafba03040b1f4b0e628d2ff1420b60861a4fa89f8",
+      "width": 600,
+      "height": 514,
+      "bytes": 29446,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/3-A.webp",
+      "sha256": "bf98f29960d53e1370f65c251ccbfd11faafd3b1f1f1e4326ea954bd66d24141",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-03-A.png",
+      "sourceSha256": "ad80c982f326d093c9be846cb5375eba523570a034fbde4048a91ee3b7eadcac",
+      "width": 600,
+      "height": 1024,
+      "bytes": 61342,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/3-B.webp",
+      "sha256": "7061ce6c4a80dc17d6b59cd1c8699bf0d01ebbd489285acaf175d4d78218ab2f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-03-B.png",
+      "sourceSha256": "ffb235ae5a4a173c18f15a6f3700db26519485ef6c4a7ba4a769594813fbe99c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 47930,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m25/3-detail.webp",
+      "sha256": "f794c91fe218b2470fa560f148425dcb6c0799deb12ad8e4b12edba3295dce89",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m25-03-detail.png",
+      "sourceSha256": "10f6be08f717421e0df6a6d5036cf5547a9bff9d562957eecae51ad91ea834fe",
+      "width": 600,
+      "height": 476,
+      "bytes": 27848,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m26/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m27/1.webp",
+      "sha256": "845ec165d1a1f23d728490c6808c78785c677c5aa14ede2acdcfbc8dbadee760",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-01.png",
+      "sourceSha256": "0912907da4cb58935999ff8748d0b2a8e0d8c68d69bb78c585c364ee3fcf3349",
+      "width": 1000,
+      "height": 703,
+      "bytes": 64328,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m27/2.webp",
+      "sha256": "4a2d22b0a2ca96cb1adacfab35eec648a80d4f012d269977c9a4cdb8120ff8a0",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-02.png",
+      "sourceSha256": "305ec9da1bca1d5311b0809174b62fd642e3498d0980aaadd6697281f692981f",
+      "width": 1000,
+      "height": 703,
+      "bytes": 62690,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m27/3.webp",
+      "sha256": "efa3e0977e7220d9b0256613c118859a69073949def1f5eabb2ea0040d325ff4",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-03.png",
+      "sourceSha256": "fe289034fdb3adb473bb41b2bb5b8925f57b2a892014eb5276d264435450117d",
+      "width": 1000,
+      "height": 703,
+      "bytes": 65674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m27/4.webp",
+      "sha256": "f78816eb7d7b3e6abd711cb8e52286ffc7ab287690c373864d95c880c8226ab7",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-04.png",
+      "sourceSha256": "b144a68af12d2e3731bb529f3330a27acaffd1fb6e7dfc71e6ce3cc832dc99ae",
+      "width": 1000,
+      "height": 703,
+      "bytes": 65746,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/1-A.webp",
+      "sha256": "792393c334bae7be2582d2ed3adeea880f00f7ca1752844dda132b3d08ad277e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-01-A.png",
+      "sourceSha256": "2af82908fae215df524d46f787097057533ee6e0935c6bf49c795780b89dd882",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50976,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/1-B.webp",
+      "sha256": "7b16683254f6ed199773a770903ee1edcfb593f6469680c7e8676fa99dfcae0e",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-01-B.png",
+      "sourceSha256": "5deb02f31c259f7169fddefc029b2ae26bdfbe799a1cf4ece0e55a1f5e5c633e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37078,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/1-detail.webp",
+      "sha256": "45d4cddeae4f6ef967750811c24de1233f6424ddbc9b82d9d1e7585a5c23a4d4",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-01-detail.png",
+      "sourceSha256": "e464a0f24d51a1a4c34aa5ee1276942fbd49deacdf8467b8359c2baa422a6f16",
+      "width": 600,
+      "height": 459,
+      "bytes": 31866,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m28/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m29/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m30/1.webp",
+      "sha256": "160d6d58d5a7bcb627c2c47b51d0ec9edfe9a4e6a7035ab3348e14b2a4afdc15",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m30-panel-01.png",
+      "sourceSha256": "1e6b3f95a7415cfa647364dc8b116ebd4ed928c362b4b4507009cf078a31e227",
+      "width": 1000,
+      "height": 781,
+      "bytes": 68522,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m30/2.webp",
+      "sha256": "956154d4b2e00a9dafbe51fbdfc025a18e1ae6fe0d7b7ff00e23f842f2e1cad1",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m30-panel-02.png",
+      "sourceSha256": "ed1bd4b0bdb1eb67b1157e562867127c5b0c7feb222d3aabec4077d82d58f29d",
+      "width": 1000,
+      "height": 781,
+      "bytes": 68908,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m30/3.webp",
+      "sha256": "16856e2ebd04d31d71b40f0d923dcde6c7f6fdfbaf5c9f498eb4d6ff7aef7f39",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m30-panel-03.png",
+      "sourceSha256": "b769438785021f64f42382eeb9dd547dfd0251cd8c38fafa627ed9a6697ba63a",
+      "width": 1000,
+      "height": 781,
+      "bytes": 69484,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-01-B.png",
+      "sourceSha256": "93fc46bb8c6f91a96edb0958c8a045451d7187152f4f97d4ad373914c1fe33a2",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38350,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-01-detail.png",
+      "sourceSha256": "112c9ec59e16b42b7eeceeb14eed8e0e0cd7dc0fd4cf2f8198cf2e0fe0b6784b",
+      "width": 600,
+      "height": 514,
+      "bytes": 27312,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m31/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/1-A.webp",
+      "sha256": "239f88082cc3c2b8c537315fd671250617006dafa581abef88b61d132fffd4f6",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-01-A.png",
+      "sourceSha256": "b7359fb37d368401bd732750e744c141612bcc7ad3071337f15a62710f443e5c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 53696,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/1-B.webp",
+      "sha256": "0e607823f231b5ad60f8e35ddc0770f4644a858a81507e5bfd6429ddc89a2516",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-01-B.png",
+      "sourceSha256": "8693e01e9159da8e2d4990f10155315ac93ac9dd4fd5867fc2a4278277c349dd",
+      "width": 600,
+      "height": 1024,
+      "bytes": 41324,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/2-A.webp",
+      "sha256": "239f88082cc3c2b8c537315fd671250617006dafa581abef88b61d132fffd4f6",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-02-A.png",
+      "sourceSha256": "b7359fb37d368401bd732750e744c141612bcc7ad3071337f15a62710f443e5c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 53696,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/2-B.webp",
+      "sha256": "e7ab56f18c75d0a805d0b4cc6ee31885f0a2efd3f30a8ea876f2d06be8d4c755",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-02-B.png",
+      "sourceSha256": "f25fed4e9f88706f775fe3ed9474220376deda3a4a39b190c98466ef353ac29f",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40286,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/3-A.webp",
+      "sha256": "239f88082cc3c2b8c537315fd671250617006dafa581abef88b61d132fffd4f6",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-03-A.png",
+      "sourceSha256": "b7359fb37d368401bd732750e744c141612bcc7ad3071337f15a62710f443e5c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 53696,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/3-B.webp",
+      "sha256": "a289a0a508173792d7d2086f7bdb14b034185896a0ae2d275a750d0bc1e72210",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-03-B.png",
+      "sourceSha256": "a081b82f24c7de7633731d3e24204a2ecd9785dd02777fff86dd616479ba9c00",
+      "width": 600,
+      "height": 1024,
+      "bytes": 40618,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m32/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/1-B.webp",
+      "sha256": "fe49c8f86131054c446f3a69a7a18032408da2104f5f22f0d6a59338450364ca",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-01-B.png",
+      "sourceSha256": "93fc46bb8c6f91a96edb0958c8a045451d7187152f4f97d4ad373914c1fe33a2",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38350,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/1-detail.webp",
+      "sha256": "5014e1b39eabbb9c0d252dcbad7626e81b3d6727a3c9a8713b0e0ab9c580ca40",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-01-detail.png",
+      "sourceSha256": "112c9ec59e16b42b7eeceeb14eed8e0e0cd7dc0fd4cf2f8198cf2e0fe0b6784b",
+      "width": 600,
+      "height": 514,
+      "bytes": 27312,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-04-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-04-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m33/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-04-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/1-B.webp",
+      "sha256": "e01a915fe6116c346c7089b82294da0fad8012cda7410ec09a72856a2edb1033",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-01-B.png",
+      "sourceSha256": "9bca22a412acb388d1ce3b6a1ccd525fe0f5983079b76611c0f95de83437912e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 20740,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/1-detail.webp",
+      "sha256": "a6cfae6a7ba79cea15316fc5a293aaae9a23621342d9f5aecdb14764d8671386",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-01-detail.png",
+      "sourceSha256": "34a0a707cbf6101d861495aff461c3c2bec0be63a030ec0a7ceb3955a482b53c",
+      "width": 600,
+      "height": 514,
+      "bytes": 13222,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/2-B.webp",
+      "sha256": "00cbe28b065bc4d485a79a3649b4e323e6d57482b51de64af626eef953b1a608",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-02-B.png",
+      "sourceSha256": "fe1ed5787ffbafbaa2e3ea39daaef4537b36052f8b73d6fe82356eadca0d2e82",
+      "width": 600,
+      "height": 1024,
+      "bytes": 20234,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/2-detail.webp",
+      "sha256": "a6e825043ae9148911f40699df98066608f19c189ae69a92a861ef8b8e74ffc0",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-02-detail.png",
+      "sourceSha256": "97daf2cf85f65a17ea3aaa71a1f36afa3b33b807f3dbec73b69577d6b4449431",
+      "width": 600,
+      "height": 514,
+      "bytes": 10822,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m34/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m35/1.webp",
+      "sha256": "7c8934c58379dd7184a524b9f26bb2ab7ded2f209713e7f68759cf630d3606a4",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-01.png",
+      "sourceSha256": "9e660230e3af4b59515aa8b8498ea880f647e6df0223b7be6464d4c2fa774acc",
+      "width": 1000,
+      "height": 781,
+      "bytes": 70456,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m35/2.webp",
+      "sha256": "89e5a01bb16193b5528ae6ab91b6618f38187b03cd2d525417403d7448bc59a3",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-02.png",
+      "sourceSha256": "4457fe120a6ab8df4d10774ea91fb8ea0660309cf8531bed61a318c8403317bd",
+      "width": 1000,
+      "height": 781,
+      "bytes": 70070,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m35/3.webp",
+      "sha256": "9e773f24ee0a6e9802530531d83ae2e9097d0a841ec37ac7cd653961c1fa3fc6",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-03.png",
+      "sourceSha256": "a46307990c313385e03644323e1fd2f8857826088beaee16fb94e8f21e666b80",
+      "width": 1000,
+      "height": 781,
+      "bytes": 68104,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m35/4.webp",
+      "sha256": "9edf61e8d365ee443d058b992a1ef284c56ef3ce018b1f55601810e6c9301b1b",
+      "source": "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-04.png",
+      "sourceSha256": "8069139f0e2a98f5af9f1c273cd5ef25617281f02bd619150e89f249d6d59f78",
+      "width": 1000,
+      "height": 781,
+      "bytes": 70072,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/1-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-01-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/1-B.webp",
+      "sha256": "5119eff349a05cc73d3b02b2904c15a9f00c015520a8096f437267de820c321f",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-01-B.png",
+      "sourceSha256": "6efe39d77342ca83e5d26580f373e5f22ddd81a60a95a8e2750e76f8d19ce150",
+      "width": 600,
+      "height": 1024,
+      "bytes": 38334,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/1-detail.webp",
+      "sha256": "abf0ee2fb28903eb5ddf4f29f3a7ba0341f0981c1087e3a7acbc5dcfd16e3288",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-01-detail.png",
+      "sourceSha256": "1dcff3decf05fc0e559e9a19c500e627b951fcf272bf5f27c8db392b39a7885e",
+      "width": 600,
+      "height": 514,
+      "bytes": 27634,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/2-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-02-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/2-B.webp",
+      "sha256": "1dc76857fc3a25279c8061daf5d3bafd5736ec84484190498681f1d6f59d2824",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-02-B.png",
+      "sourceSha256": "2d0c4a9a77f393ee8ae65ec63200de965ff400da94b3fdef83db8f4a4c887e7e",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37296,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/2-detail.webp",
+      "sha256": "186226bca1e2fb2256b81b0e1d6167a12f848aa6f334da42e91eecf6ea624023",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-02-detail.png",
+      "sourceSha256": "830ba52f712bc4983dcbee0869a58b883f91bf76df10027cac1929ed83f4c5d6",
+      "width": 600,
+      "height": 514,
+      "bytes": 26086,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/3-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-03-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/3-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-03-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/3-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-03-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/4-A.webp",
+      "sha256": "dad6b35651b47e5d3fd1c8c6adc48221e2ef576aee07825ff3d9dbaf4530b42a",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-04-A.png",
+      "sourceSha256": "66251f8e183a6bce7a8eb96c4af642a60237dba1be77315708acdcebbb9f4449",
+      "width": 600,
+      "height": 1024,
+      "bytes": 50960,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/4-B.webp",
+      "sha256": "272895c8bb680896cd71e55d92cd686576fa8df10e08518b4d06164c10a4203d",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-04-B.png",
+      "sourceSha256": "969244acacaf5ccdeb0588898dcce3d5183e292a46f5912d241bf59a2dcf1d7c",
+      "width": 600,
+      "height": 1024,
+      "bytes": 37674,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
+    },
+    {
+      "path": "assets/mission-illustrations/final/m36/4-detail.webp",
+      "sha256": "524526e26ba716e4f00633ed0c7642e2f0c72ceefb1ad3b38469b92b04f71918",
+      "source": "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-04-detail.png",
+      "sourceSha256": "a90d65fb636a20d5a5907f15f9fd84b5e016282fe04edb7e09d54012ae66df0e",
+      "width": 600,
+      "height": 466,
+      "bytes": 22784,
+      "transform": "Full frame proportional resize max1000px; WebP .92; no pose/equipment editing"
     }
   ]
 }

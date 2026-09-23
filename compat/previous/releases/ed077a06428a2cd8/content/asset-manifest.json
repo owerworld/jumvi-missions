@@ -1,0 +1,45 @@
+{
+  "scope": "LOCK07 premium m25 derivatives",
+  "assets": [
+    {
+      "path": "assets/mission-illustrations/m25/seated-editorial-v1.webp",
+      "source": "outputs/LOCK07_PREMIUM_ASSETS/seated-editorial-v1.png",
+      "sourceSha256": "a4b087c173d9397eb35e766e45fc13184328e60663382c1c153b042fc04b5153",
+      "sha256": "dc673a156eef55da84b38326afc294fa8dcb29daa0052c38612e176310e1913b",
+      "width": 720,
+      "height": 480,
+      "bytes": 294800,
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+    },
+    {
+      "path": "assets/mission-illustrations/m25/reset-alpha-v1.webp",
+      "source": "outputs/LOCK07_PREMIUM_ASSETS/reset-alpha-v1.png",
+      "sourceSha256": "5b14667bfd75a19eb3f11acc2bdeb96768b73ddad8f7387d230574b879fced5e",
+      "sha256": "709cec056c2e712b20cba34869450435157224ca6418cc5de9acceea16aeb33d",
+      "width": 720,
+      "height": 480,
+      "bytes": 320724,
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+    },
+    {
+      "path": "assets/mission-illustrations/m25/contact-alpha-v1.webp",
+      "source": "outputs/LOCK07_PREMIUM_ASSETS/contact-alpha-v1.png",
+      "sourceSha256": "24e07006ff138ca46e03fd6b1af3c96f36b57aa3d590d559d2190e8b91426386",
+      "sha256": "1259fabd2075911e93984f868beb1f075b7c220e96462cc3692e7c8e9b98cc4b",
+      "width": 720,
+      "height": 480,
+      "bytes": 296012,
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+    },
+    {
+      "path": "assets/mission-illustrations/m25/product-still-v1.webp",
+      "source": "outputs/LOCK07_PREMIUM_ASSETS/product-still-v1.png",
+      "sourceSha256": "4f2a3683e0f1359711045a58936b9fa05fe49c30192d19ba276fc1b4de910dc6",
+      "sha256": "0b48406a6fd47948baf0690a54270fdf65830533f7cdb699d1f850ed1250d230",
+      "width": 720,
+      "height": 480,
+      "bytes": 311758,
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+    }
+  ]
+}

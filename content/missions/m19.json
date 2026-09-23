@@ -1,0 +1,125 @@
+{
+  "id": "m19",
+  "mechanicsVersion": "m4-20260923-m19-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "3–4",
+  "equipment": {
+    "paddles": [
+      3,
+      4
+    ],
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Round Robin",
+      "steps": [
+        "Stand in a circle, each holding a paddle",
+        "Throw to ANYONE — but never twice in a row to the same person!",
+        "Keep all throws gentle"
+      ],
+      "goal": "2 full minutes — count drops, beat your record!",
+      "safety": "Stay spaced out — no crowding."
+    },
+    "tr": {
+      "title": "Sırayla Pas",
+      "steps": [
+        "Herkes bir paddle ile daire şeklinde dursun",
+        "Topu İSTEDİĞİN kişiye at — ama üst üste iki kez aynı kişiye değil!",
+        "Tüm atışlar yumuşak olsun"
+      ],
+      "goal": "2 dakika boyunca oynayın — düşenleri sayın ve rekorunuzu geçin!",
+      "safety": "Aranızda yeterli mesafe olsun — sıkışmayın."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:184",
+      "tr": "tr/i18n.js:11 missionTR[\"19\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "3d52cc3cc7f929c21d667d4291bac820527c26aeb8f778e167db306198e8447f",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m19",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "timedGoalPolicy": "Physical source goal only. No app timer, live caller, elapsed-time success or automatic narration is introduced.",
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m19/1-A.webp",
+          "assets/mission-illustrations/final/m19/1-B.webp",
+          "assets/mission-illustrations/final/m19/1-C.webp"
+        ],
+        "caption": {
+          "tr": "3 oyunculu örnek: A’dan B’ye",
+          "en-US": "Three-player example: A to B"
+        },
+        "players": [
+          "A",
+          "B",
+          "C"
+        ],
+        "detail": "assets/mission-illustrations/final/m19/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m19/2-A.webp",
+          "assets/mission-illustrations/final/m19/2-B.webp",
+          "assets/mission-illustrations/final/m19/2-C.webp"
+        ],
+        "caption": {
+          "tr": "B boş elle ayırır",
+          "en-US": "B detaches with the free hand"
+        },
+        "players": [
+          "A",
+          "B",
+          "C"
+        ],
+        "detail": "assets/mission-illustrations/final/m19/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m19/3-A.webp",
+          "assets/mission-illustrations/final/m19/3-B.webp",
+          "assets/mission-illustrations/final/m19/3-C.webp"
+        ],
+        "caption": {
+          "tr": "Örnek sonraki pas: B’den C’ye",
+          "en-US": "Example next pass: B to C"
+        },
+        "players": [
+          "A",
+          "B",
+          "C"
+        ],
+        "detail": "assets/mission-illustrations/final/m19/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "415aa658fb883f654e5d73298b2a0e1a017da8fafdf9b8ee153e56f034ac891c"
+  },
+  "narration": null
+}

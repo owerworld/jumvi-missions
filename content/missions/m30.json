@@ -1,0 +1,149 @@
+{
+  "id": "m30",
+  "mechanicsVersion": "m4-20260923-m30-v2",
+  "localeContentVersion": "m4-final-mechanics-20260923-v2",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Left or Right!",
+      "setup": "2 players, 2 paddles, 1 ball. Left and right are from the catcher’s own body perspective.",
+      "steps": [
+        "Before each counted challenge toss, the caller says LEFT or RIGHT.",
+        "The catcher positions the paddle on that side, keeping its blue front toward the incoming ball.",
+        "The caller makes a straight, gentle toss toward the paddle target on the called side, never at the person’s body.",
+        "A correct catch counts only when the ball sticks to the blue front on the called side.",
+        "The catcher removes the ball with the free hand and makes a neutral reset pass back to the caller. Reset passes do not count and need no Left or Right call.",
+        "The same caller makes 5 counted challenge tosses, then roles switch. Only the caller’s challenge tosses count toward those 5."
+      ],
+      "goal": "Make 8 correct side catches.",
+      "safety": "Aim at the blue paddle face on the called side, not at the person. Keep tosses straight and gentle."
+    },
+    "tr": {
+      "title": "Sol mu Sağ mı?",
+      "setup": "2 oyuncu, 2 paddle, 1 top. Sol ve sağ, yakalayanın kendi vücuduna göre belirlenir.",
+      "steps": [
+        "Her sayılan görev atışından önce çağıran kişi SOL veya SAĞ der.",
+        "Yakalayan paddle’ı o tarafta konumlandırır; mavi ön yüz gelen topa dönük kalır.",
+        "Çağıran kişi topu söylenen taraftaki paddle hedefine düz ve yumuşak biçimde atar; kişinin gövdesini hedeflemez.",
+        "Top yalnız söylenen taraftaki mavi ön yüze yapışırsa doğru yakalama sayılır.",
+        "Yakalayan topu boş elle ayırır ve çağıran kişiye normal bir geri pas verir. Geri paslar sayılmaz; SOL veya SAĞ çağrısı gerektirmez.",
+        "Aynı kişi 5 sayılan görev atışı yapar, sonra roller değişir. Bu 5’e yalnız çağıran kişinin görev atışları dahildir."
+      ],
+      "goal": "Doğru tarafta 8 yakalama yapın.",
+      "safety": "Kişiyi değil söylenen taraftaki mavi paddle yüzünü hedefleyin. Düz ve yumuşak atın."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:241",
+      "tr": "tr/i18n.js:11 missionTR[\"30\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "589ebc79ad5a4722f4e98f2f89769470690990f2f8f7fb02635b44b200ae5e8a",
+    "authority": "Explicit user m30 canonical decision in response to H-M30, 2026-09-23",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m30",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "sourceCandidateLocale": {
+    "en-US": {
+      "title": "Left or Right!",
+      "steps": [
+        "Caller shouts LEFT or RIGHT before throwing",
+        "Catcher turns paddle to that side and catches!",
+        "Wrong side = miss. Switch caller every 5"
+      ],
+      "goal": "Score 8 correct side catches!",
+      "safety": "Throws straight and gentle — direction is the puzzle."
+    },
+    "tr": {
+      "title": "Sol mu Sağ mı?",
+      "steps": [
+        "Atan kişi atmadan önce SOL veya SAĞ diye seslensin",
+        "Yakalayan paddle’ı o tarafa çevirip yakalasın!",
+        "Yanlış taraf = kaçtı. Her 5 atışta seslenen kişi değişsin"
+      ],
+      "goal": "Doğru tarafta 8 yakalama yap!",
+      "safety": "Atışlar düz ve yumuşak olsun — bulmaca sadece yön."
+    }
+  },
+  "mechanicsContract": {
+    "sideReference": "catcher-own-body",
+    "blueFaceTowardIncoming": true,
+    "target": "paddle-on-called-side",
+    "bodyTarget": false,
+    "callerCountedTosses": 5,
+    "returnPassCounts": false,
+    "returnPassNeedsCall": false,
+    "correctCatch": "sticky-blue-front-on-called-side",
+    "goalCorrectCatches": 8,
+    "steps": [
+      "call_side",
+      "position_paddle_with_blue_front_toward_incoming",
+      "straight_gentle_toss_to_paddle",
+      "correct_side_sticky_catch",
+      "free_hand_detach",
+      "neutral_uncounted_reset_pass"
+    ]
+  },
+  "contentVersion": "m4-final-mechanics-20260923-v2",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m30/1.webp"
+        ],
+        "caption": {
+          "tr": "1. hareket anı",
+          "en-US": "Moment 1"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m30/2.webp"
+        ],
+        "caption": {
+          "tr": "2. hareket anı",
+          "en-US": "Moment 2"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m30/3.webp"
+        ],
+        "caption": {
+          "tr": "3. hareket anı",
+          "en-US": "Moment 3"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "651ccbb3c4322ced5a47c72ae24c878c201c9df6530381ca39ca6dbac092411b"
+  },
+  "narration": null
+}

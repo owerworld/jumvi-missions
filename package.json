@@ -8,6 +8,6 @@
     "test": "node --test tests/state/*.test.mjs tests/a11y/*.test.mjs tests/isolation/*.test.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "1.56.1"
+    "@playwright/test": "1.63.0"
   }
 }

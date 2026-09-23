@@ -6,5 +6,5 @@ export function installRouter(getState,send) {
  history.replaceState(snapshot(),'',location.pathname);
  addEventListener('popstate',()=>send('BACK',{},false));
  addEventListener('pageshow',e=>{if(e.persisted)send('INTERRUPT',{},false);});
- return {unknown,write(){history.pushState(snapshot(),'',location.pathname);}};
+ return {unknown,write(){try{history.pushState(snapshot(),'',location.pathname);return true;}catch{return false;}}};
 }

@@ -1,0 +1,115 @@
+{
+  "id": "m18",
+  "mechanicsVersion": "m4-20260923-m18-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Count to 10",
+      "steps": [
+        "Count every clean catch out loud TOGETHER",
+        "Drop = restart from 1",
+        "No pressure — just try again!"
+      ],
+      "goal": "Reach 10 catches with no drops!",
+      "safety": "Stress-free zone — restarting is part of the game."
+    },
+    "tr": {
+      "title": "10’a Kadar Say",
+      "steps": [
+        "Her temiz yakalamayı BİRLİKTE yüksek sesle sayın",
+        "Top düşerse 1’den yeniden başlayın",
+        "Baskı yok — tekrar deneyin!"
+      ],
+      "goal": "Topu düşürmeden 10 yakalamaya ulaş!",
+      "safety": "Burası stressiz bölge — yeniden başlamak oyunun bir parçası."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:177",
+      "tr": "tr/i18n.js:11 missionTR[\"18\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "a730ecd919898c04486297bac54cb710e43aaff68a83801d9dddb8c1fdab6cf8",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m18",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m18/1-A.webp",
+          "assets/mission-illustrations/final/m18/1-B.webp"
+        ],
+        "caption": {
+          "tr": "A: sol boş elle yumuşak atış",
+          "en-US": "A: gentle toss from the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m18/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m18/2-A.webp",
+          "assets/mission-illustrations/final/m18/2-B.webp"
+        ],
+        "caption": {
+          "tr": "Temiz catch sonrası birlikte sayın",
+          "en-US": "Count together after a clean catch"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m18/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m18/3-A.webp",
+          "assets/mission-illustrations/final/m18/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m18/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "961d0097a6c0ca2f9ad675154b339c25ffebe15a645bad1f9ad3586089ba57e5"
+  },
+  "narration": null
+}

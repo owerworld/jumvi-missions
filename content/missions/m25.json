@@ -1,8 +1,15 @@
 {
   "id": "m25",
   "mechanicsVersion": "lock07p-m25-fixture-v1",
-  "contentVersion": "lock07p-v1",
-  "scope": "synthetic development fixture; not canonical catalogue or physical validation",
+  "localeContentVersion": "lock07p-v1",
+  "status": "locked-m25-fixture-preserved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
   "locale": {
     "tr": {
       "mission": "Sakin Yakala",
@@ -92,6 +99,86 @@
       "leave": "Leave",
       "save": "Add to a player’s history"
     }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:216",
+      "tr": "tr/i18n.js:11 missionTR[\"25\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "1aa46ee30a3b005f52b59f2c28c54c1f1730b8d65e6cbf7181af061fafc4568b",
+    "authority": "Existing locked m25 development fixture, copied exactly for reference; age/distance/physical validation still open",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision.",
+    "fixtureSHA256": "8a60774dc2aece5879087cf892ef930bdf01f41b31ef1fad0d1e3a45563257ae"
+  },
+  "readiness": {
+    "mechanics": "RECONCILED_NOT_PHYSICALLY_VALIDATED",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m25",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "lock07p-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m25/1-A.webp",
+          "assets/mission-illustrations/final/m25/1-B.webp"
+        ],
+        "caption": {
+          "tr": "İkisi de otururken kısa, yumuşak atış",
+          "en-US": "Short gentle toss while both stay seated"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m25/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m25/2-A.webp",
+          "assets/mission-illustrations/final/m25/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m25/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m25/3-A.webp",
+          "assets/mission-illustrations/final/m25/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B oturmaya devam ederek sol elle ayırır",
+          "en-US": "B stays seated and detaches with the left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m25/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "54395c2828e71114abe1c8773ac92cf305649cfab623cb09e81c1ee8206deca6"
   },
   "narration": null
 }

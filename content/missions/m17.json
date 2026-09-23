@@ -1,0 +1,137 @@
+{
+  "id": "m17",
+  "mechanicsVersion": "m4-20260923-m17-v2",
+  "localeContentVersion": "m4-final-mechanics-20260923-v2",
+  "status": "human-mechanics-approved",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Mirror Mode",
+      "setup": "2 players, 2 paddles, 1 ball. Choose comfortable high, low, or gently tilted paddle poses. Mirror the pose relative to your own body, not an identical angle in the room.",
+      "steps": [
+        "The leader shows a comfortable paddle pose.",
+        "The catcher takes the same pose relative to their own body.",
+        "The leader makes a gentle toss with their free hand.",
+        "The catcher makes a sticky catch on the blue front in the mirrored pose.",
+        "The catcher removes the ball with their free hand and returns it to the leader with a normal reset pass.",
+        "Keep the same leader for 5 counted throws. Reset passes do not count toward those 5. Then swap leader and follower roles."
+      ],
+      "goal": "Complete 8 mirror-and-catch rounds.",
+      "safety": "Keep poses within a comfortable range: high, low, or gentle tilt. Do not overstretch or tilt sharply. The blue front receives the ball."
+    },
+    "tr": {
+      "title": "Ayna Modu",
+      "setup": "2 oyuncu, 2 paddle, 1 top. Rahat bir yüksek, alçak veya hafif eğik paddle pozu seçin. Odanın içinde birebir aynı açıyı değil, kendi vücudunuza göre aynı pozu alın.",
+      "steps": [
+        "Lider rahat bir paddle pozu gösterir.",
+        "Yakalayan kendi vücuduna göre aynı pozu alır.",
+        "Lider boş eliyle yumuşakça atar.",
+        "Yakalayan aynalanmış pozdaki mavi ön yüzle topu yapıştırarak yakalar.",
+        "Yakalayan topu boş elle ayırır ve normal bir geri pasla lider’a verir.",
+        "Aynı oyuncu 5 sayılan atış boyunca lider olur. Geri paslar bu 5 atışa dahil değildir. Sonra lider ve takipçi rolleri değişir."
+      ],
+      "goal": "8 ayna-ve-yakala turu tamamlayın.",
+      "safety": "Rahat hareket aralığında yüksek, alçak veya hafif eğik pozlar kullanın. Aşırı uzanma veya eğim yoktur. Gelen topu mavi ön yüz karşılar."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:172",
+      "tr": "tr/i18n.js:11 missionTR[\"17\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "71ca9c13712808358c2df75ef63523aea2bdfd2bf33582be9736ae3b4e857159",
+    "authority": "Explicit user HUMAN DECISION — M4 FINAL MECHANICS CLOSURE; 2026-09-23",
+    "quantitativeRules": "Existing legacy goal retained; human decision supplies action order/roles. No app counter, timer, success detection or new target invented."
+  },
+  "readiness": {
+    "mechanics": "HUMAN_CANONICAL_CLOSED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m17",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "mechanicsContract": {
+    "poseFrame": "each-player-own-body",
+    "poseCategories": [
+      "high",
+      "low",
+      "gentle-tilt"
+    ],
+    "leaderCountedThrows": 5,
+    "returnPassCounts": false,
+    "countedAttempt": [
+      "leader_pose",
+      "follower_body_relative_pose",
+      "leader_free_hand_toss",
+      "follower_sticky_catch",
+      "free_hand_detach",
+      "normal_return_pass"
+    ],
+    "autoCaller": false
+  },
+  "contentVersion": "m4-final-mechanics-20260923-v2",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m17/1.webp"
+        ],
+        "caption": {
+          "tr": "1. hareket anı",
+          "en-US": "Moment 1"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m17/2.webp"
+        ],
+        "caption": {
+          "tr": "2. hareket anı",
+          "en-US": "Moment 2"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m17/3.webp"
+        ],
+        "caption": {
+          "tr": "3. hareket anı",
+          "en-US": "Moment 3"
+        },
+        "detail": null
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m17/4.webp"
+        ],
+        "caption": {
+          "tr": "4. hareket anı",
+          "en-US": "Moment 4"
+        },
+        "detail": null
+      }
+    ],
+    "sourceRecordSHA256": "4c42bcd233ed62b57f74bcdb40158e9501d67487a0714cee9d73a719443768ae"
+  },
+  "narration": null
+}

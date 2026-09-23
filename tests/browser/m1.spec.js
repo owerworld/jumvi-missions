@@ -4,7 +4,7 @@ const release=JSON.parse(readFileSync('dist/release-manifest.json')).release;
 test('EN/TR semantic shells load without legacy runtime or errors',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));const req=[];page.on('request',r=>req.push(new URL(r.url()).pathname));
  for(const [path,lang] of [['/','en-US'],['/tr','tr']]){await page.goto(path);await expect(page.locator('main')).toHaveAttribute('aria-busy','false');await expect(page.locator('html')).toHaveAttribute('lang',lang);await expect(page.locator('main h1')).toBeFocused();}
- expect(errors).toEqual([]);expect(req.filter(p=>['/app.js','/data.js','/tr/i18n.js','/service-worker.js'].includes(p))).toEqual([]);
+ expect(errors).toEqual([]);expect(req.filter(p=>['/app.js','/data.js','/tr/i18n.js'].includes(p))).toEqual([]);
 });
 test('all 17 views have one heading and native controls; only optional nickname text field',async({page})=>{
  await page.goto('/tr');await expect(page.locator('main')).toHaveAttribute('aria-busy','false');

@@ -1,0 +1,115 @@
+{
+  "id": "m32",
+  "mechanicsVersion": "m4-20260923-m32-v1",
+  "localeContentVersion": "m4-review-20260923-v1",
+  "status": "canonical-source-reconciled",
+  "releaseEligible": true,
+  "globalRulesRef": "human-m4-physical-v1",
+  "players": "2",
+  "equipment": {
+    "paddles": 2,
+    "balls": 1
+  },
+  "locale": {
+    "en-US": {
+      "title": "Home Base",
+      "steps": [
+        "Each player picks a home base (shadow, sidewalk square, grass patch)",
+        "Throw and catch from your base — no moving feet!",
+        "Step off your base = miss"
+      ],
+      "goal": "10 base-only catches!",
+      "safety": "Pick safe, flat ground for your base."
+    },
+    "tr": {
+      "title": "Ana Üs",
+      "steps": [
+        "Her oyuncu bir ana üs seçsin (gölge, kaldırım karesi, çim alan)",
+        "Üssünden at ve yakala — ayaklar hareket etmesin!",
+        "Üsten çıkarsan o atış sayılmaz"
+      ],
+      "goal": "Üsten çıkmadan 10 yakalama!",
+      "safety": "Üs için güvenli ve düz bir zemin seçin."
+    }
+  },
+  "provenance": {
+    "sourceSHA": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+    "sourceRefs": {
+      "en": "data.js:253",
+      "tr": "tr/i18n.js:11 missionTR[\"32\"] (tek uzun satır)"
+    },
+    "legacyRecordSHA256": "99a6d3e2dd3980599861a64417733ef6d13a46937a89027bb032e78d4ec875a3",
+    "authority": "reviewed legacy intent, constrained by human global physical/high-arc rules; not new human approval",
+    "quantitativeRules": "Unchanged legacy goals/distances are retained as source rules, not age/space/safety validation; m23 completion criterion replaced by explicit human decision."
+  },
+  "readiness": {
+    "mechanics": "SOURCE_INTENT_RECONCILED_PHYSICAL_VALIDATION_OPEN",
+    "locales": "EN_TR_PAIRED_REVIEW",
+    "criticalArt": "ACCEPTED",
+    "narration": "OPTIONAL_UNRECORDED",
+    "physicalValidation": "scope-limited art acceptance; general child/field QA remains release condition",
+    "runtime": "RELEASE_CANDIDATE"
+  },
+  "decisionGate": null,
+  "briefRef": "briefs.json#m32",
+  "legacyAssets": "reference paths only; no automatic reuse/approval",
+  "runtimeAudio": {
+    "mode": "optional-explicit-approved-prerecorded-only",
+    "automaticCaller": false,
+    "automaticTimer": false,
+    "automaticResumeNarration": false,
+    "successFromAudio": false
+  },
+  "contentVersion": "m4-review-20260923-v1",
+  "art": {
+    "frames": [
+      {
+        "images": [
+          "assets/mission-illustrations/final/m32/1-A.webp",
+          "assets/mission-illustrations/final/m32/1-B.webp"
+        ],
+        "caption": {
+          "tr": "Ayaklar kendi düz üs alanında kalır",
+          "en-US": "Feet stay within each flat home base"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m32/1-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m32/2-A.webp",
+          "assets/mission-illustrations/final/m32/2-B.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m32/2-detail.webp"
+      },
+      {
+        "images": [
+          "assets/mission-illustrations/final/m32/3-A.webp",
+          "assets/mission-illustrations/final/m32/3-B.webp"
+        ],
+        "caption": {
+          "tr": "B: topu sol boş elle ayır",
+          "en-US": "B: detach with the free left hand"
+        },
+        "players": [
+          "A",
+          "B"
+        ],
+        "detail": "assets/mission-illustrations/final/m32/3-detail.webp"
+      }
+    ],
+    "sourceRecordSHA256": "e83080ed5e02cd42e388715403abad12f4b0ad6d1c4388d708c41b008432e3b7"
+  },
+  "narration": null
+}

@@ -10,6 +10,9 @@ export function transition(s,e) {
  if (!contextMatches(s,e)) return s;
  let n=s;
  switch(e.type) {
+ case 'SELECT':
+  if(!e.mission || !/^m(?:0[1-9]|[12][0-9]|3[0-6])$/.test(e.mission.id) || ['active','help','interrupted'].includes(s.screen))return s;
+  n={...s,mission:e.mission,screen:'entry',round:null,report:null,returnContext:null,unknown:false,reportMode:false,previous:null};break;
  case 'GO':
   if (!screens.includes(e.screen) || ['active','stopped','report'].includes(e.screen)) return s;
   n={...s,screen:e.screen,round:s.round?.state==='active'?changeRound(s.round,'interrupted'):s.round};break;
@@ -31,7 +34,7 @@ export function transition(s,e) {
   if (!s.mission?.ready || !e.id || (e.type==='START' && !['entry','returning','group'].includes(s.screen)) || (e.type==='REPLAY' && !['report','stopped','interrupted'].includes(s.screen))) return s;
   n={...s,screen:'active',resumed:false,round:createRound(e.id,s.mission),report:null,unknown:false,reportMode:false};break;
  case 'STOP':
-  if (!s.round || !['active','help'].includes(s.screen) || s.round.state!=='active') return s;
+  if (!s.round || !['active','help','recovery'].includes(s.screen) || s.round.state!=='active') return s;
   n={...s,screen:'stopped',round:changeRound(s.round,'stopped'),returnContext:null,reportMode:false};break;
  case 'RESUME':
   if (!s.round || !['stopped','interrupted'].includes(s.screen) || !['stopped','interrupted'].includes(s.round.state) || !s.mission?.ready || s.round.mechanicsVersion!==s.mission.mechanicsVersion || s.round.missionId!==s.mission.id || s.unknown) return s;

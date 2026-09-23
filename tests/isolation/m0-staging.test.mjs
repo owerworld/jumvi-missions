@@ -87,3 +87,5 @@ test('EN/TR entry routes resolve explicit HTML files with no redirect loop', asy
   assert.equal(res.status,200);assert.equal(res.headers.get('Location'),null);
  }
 });
+
+test('authenticated and unsupported methods fail before asset access; immutable releases and SW headers are explicit',async()=>{const e=environment();for(const headers of [{Authorization:'Bearer synthetic'},{Cookie:'synthetic=1'}])assert.equal((await staging.fetch(new Request(origin+'/',{headers}),e.env)).status,403);assert.equal((await staging.fetch(new Request(origin+'/',{method:'POST'}),e.env)).status,405);assert.equal(e.calls(),0);const asset=await staging.fetch(new Request(origin+'/releases/0123456789abcdef/client/main.js'),e.env);assert.equal(asset.headers.get('cache-control'),'public, max-age=31536000, immutable');const sw=await staging.fetch(new Request(origin+'/service-worker.js'),e.env);assert.equal(sw.headers.get('cache-control'),'no-store');assert.equal(sw.headers.get('service-worker-allowed'),'/');assert.equal(sw.headers.get('x-content-type-options'),'nosniff');});

@@ -1,0 +1,555 @@
+{
+  "version": "m4-final-20260923",
+  "defaultMission": "m25",
+  "missions": [
+    {
+      "id": "m01",
+      "mechanicsVersion": "m4-20260923-m01-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Speed Demon",
+        "tr": "Hız Canavarı"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "2bfd55f224f30a10e619df6dd141c0f35c53a854b794bd8728eb1eb0e6929b73"
+    },
+    {
+      "id": "m02",
+      "mechanicsVersion": "m4-20260923-m02-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Red Light, Green Light",
+        "tr": "Kırmızı Işık, Yeşil Işık"
+      },
+      "players": "2–3",
+      "equipment": {
+        "paddles": [
+          2,
+          3
+        ],
+        "balls": 1
+      },
+      "sha256": "937f84fb6f623583674ad69820dfcf6941f2e0111b12701a58c1e242c5c063bc"
+    },
+    {
+      "id": "m03",
+      "mechanicsVersion": "m4-20260923-m03-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Quick Slap",
+        "tr": "Hızlı Dokun"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "58314ea935662ac97a6d87a779a81be6684855751f0880c77c24b3aee68170f5"
+    },
+    {
+      "id": "m04",
+      "mechanicsVersion": "m4-20260923-m04-v2",
+      "contentVersion": "m4-final-mechanics-20260923-v2",
+      "titles": {
+        "en-US": "Switcharoo",
+        "tr": "El Değiştir"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "3f6bd7df5fcd0a437b3d56d1bdcfedab29d5d1be9508581c226dc164b8f36a5e"
+    },
+    {
+      "id": "m05",
+      "mechanicsVersion": "m4-20260923-m05-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Statue Mode",
+        "tr": "Heykel Modu"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "53822b1596b9e28596b2a0289f9a93dbef7022691cd3b797f0d21364732fccd0"
+    },
+    {
+      "id": "m06",
+      "mechanicsVersion": "m4-20260923-m06-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Number Echo",
+        "tr": "Sayıyı Tekrarla"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "2c6e1fbbb54c4a0df05fe005fe29545fd3c20d14a30abe104392857705faaf14"
+    },
+    {
+      "id": "m07",
+      "mechanicsVersion": "m4-20260923-m07-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Rainbow Throws",
+        "tr": "Gökkuşağı Atışları"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "1e1560115d3729c1a70121f662efae6bd5530088552da6159e4e7019e634c1ad"
+    },
+    {
+      "id": "m08",
+      "mechanicsVersion": "m4-20260923-m08-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "The Landing Pad",
+        "tr": "İniş Pisti"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "5dbe4785b5dd81f83d8897eb39779a6a39bf7ca8da90f5de140ca75b022898ba"
+    },
+    {
+      "id": "m09",
+      "mechanicsVersion": "m4-20260923-m09-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Step-Back Challenge",
+        "tr": "Geri Adım Meydan Okuması"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "d79322775558b7c07792f770d7898bf137515e7d803f44db3ef742e0579c7ac1"
+    },
+    {
+      "id": "m10",
+      "mechanicsVersion": "m4-20260923-m10-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Power Step",
+        "tr": "Güç Adımı"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "d5291c08b3b0c53e03437c49febe907ade89b6397550f19be031cabc19da44d9"
+    },
+    {
+      "id": "m11",
+      "mechanicsVersion": "m4-20260923-m11-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Sky Floater",
+        "tr": "Gökyüzü Süzülüşü"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "b39fea99b64b4b0661f8d6c7eea1531ff9a3ce734bd7e482809b6f0d9faef2f2"
+    },
+    {
+      "id": "m12",
+      "mechanicsVersion": "m4-20260923-m12-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Heart-High",
+        "tr": "Kalp Hizası"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "2658bb11154f4e0a91db159866dcf810b3091b4c8e3008b37598c784246b87fd"
+    },
+    {
+      "id": "m13",
+      "mechanicsVersion": "m4-20260923-m13-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Silent Mode",
+        "tr": "Sessiz Mod"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "216f65b4a789d999bf5d426e7d69f90fd228bdb7fe23910ce82a6ade14240532"
+    },
+    {
+      "id": "m14",
+      "mechanicsVersion": "m4-20260923-m14-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Tempo Master",
+        "tr": "Tempo Ustası"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "a8d990fdc1dcd1712deebb9e5bc0de757185b42252d13d84e407b4feccd27a22"
+    },
+    {
+      "id": "m15",
+      "mechanicsVersion": "m4-20260923-m15-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Spotlight Eyes",
+        "tr": "Gözler Hedefte"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "914cd039d4d6bd02c238f507ad402e6486cea1a316d15f0b76ca2bbb6ab0a3e1"
+    },
+    {
+      "id": "m16",
+      "mechanicsVersion": "m4-20260923-m16-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "1 — 2 — 3 — GO!",
+        "tr": "1 — 2 — 3 — BAŞLA!"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "64a32f88f54ddcd909f3d6d312030a3f1eeaf9110e15527f4b592975aa807a9b"
+    },
+    {
+      "id": "m17",
+      "mechanicsVersion": "m4-20260923-m17-v2",
+      "contentVersion": "m4-final-mechanics-20260923-v2",
+      "titles": {
+        "en-US": "Mirror Mode",
+        "tr": "Ayna Modu"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "b0c168ca1935f2b3ea2b3ba9711e1b5123ad5a683059ace05bf659f4baea3169"
+    },
+    {
+      "id": "m18",
+      "mechanicsVersion": "m4-20260923-m18-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Count to 10",
+        "tr": "10’a Kadar Say"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "799a8ba8989ca59dc8f1df68a548d716f77b59363bb61067f5e91b2f1be513f6"
+    },
+    {
+      "id": "m19",
+      "mechanicsVersion": "m4-20260923-m19-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Round Robin",
+        "tr": "Sırayla Pas"
+      },
+      "players": "3–4",
+      "equipment": {
+        "paddles": [
+          3,
+          4
+        ],
+        "balls": 1
+      },
+      "sha256": "d5c014cd46da3474b440892fae5e294f3a25869855335b65e3f80826de8dc62b"
+    },
+    {
+      "id": "m20",
+      "mechanicsVersion": "m4-20260923-m20-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Crab Shuffle Relay",
+        "tr": "Yengeç Yan Adım Bayrak Oyunu"
+      },
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "sha256": "0f7c5034a887d9376d3604a6f0b730fb871a8524d00f34beb4ef2e63d4361b44"
+    },
+    {
+      "id": "m21",
+      "mechanicsVersion": "m4-20260923-m21-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Middle Defender",
+        "tr": "Ortadaki Savunmacı"
+      },
+      "players": "3",
+      "equipment": {
+        "paddles": 3,
+        "balls": 1
+      },
+      "sha256": "7cb107cb24b3172ac1be2d08a0170c63eee4fa60c84b3bb1ec2f62d82601fdaf"
+    },
+    {
+      "id": "m22",
+      "mechanicsVersion": "m4-20260923-m22-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Spin Squad",
+        "tr": "Dönen Takım"
+      },
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "sha256": "67cc61598104b0a2895c092e54da4930a267a4b550b8b89576e9ac0b31542902"
+    },
+    {
+      "id": "m23",
+      "mechanicsVersion": "m4-20260923-m23-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Mix It Up",
+        "tr": "Eş Değiştir"
+      },
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "sha256": "0cd86977b18c3182fe080aaac8d90303f4831107f47b6c4c39e83c53f2f3d266"
+    },
+    {
+      "id": "m24",
+      "mechanicsVersion": "m4-20260923-m24-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "2v2 Squad Count",
+        "tr": "2v2 Takım Sayacı"
+      },
+      "players": "4",
+      "equipment": {
+        "paddles": 4,
+        "balls": 1
+      },
+      "sha256": "c722b45ba726b54b4416d7afb3c8df76583327b3b4cf55fa063fa88c601ee195"
+    },
+    {
+      "id": "m25",
+      "mechanicsVersion": "lock07p-m25-fixture-v1",
+      "contentVersion": "lock07p-v1",
+      "titles": {
+        "tr": "Sakin Yakala",
+        "en-US": "Chill Catch"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "6a9a2dfaa754282ac1e750bdfb46d08c7ca81675b61098e271efa8bb73c0c529"
+    },
+    {
+      "id": "m26",
+      "mechanicsVersion": "m4-20260923-m26-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Tiny Space",
+        "tr": "Mini Alan"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "00801958d6543f3766170f2177312111690fa6f1130a95f6d6941a0b053f3d7e"
+    },
+    {
+      "id": "m27",
+      "mechanicsVersion": "m4-20260923-m27-v2",
+      "contentVersion": "m4-final-mechanics-20260923-v2",
+      "titles": {
+        "en-US": "Secret Signal",
+        "tr": "Gizli İşaret"
+      },
+      "players": "2–3",
+      "equipment": {
+        "paddles": [
+          2,
+          3
+        ],
+        "balls": 1
+      },
+      "sha256": "e69766e1648a5c6e73a225483a300201ae2b3f7839d3b3d278c9523271ec48a1"
+    },
+    {
+      "id": "m28",
+      "mechanicsVersion": "m4-20260923-m28-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Mind Reader",
+        "tr": "Zihin Okuyucu"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "2b7c04ae02f7984a44c06eaf617a089e72b0228b8963390853e995112d7bb96a"
+    },
+    {
+      "id": "m29",
+      "mechanicsVersion": "m4-20260923-m29-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Stuck-Foot Catch",
+        "tr": "Ayaklar Sabit"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "5eadff5d36b2154cce6eed3581eaf4ca280f979ed10f9d452dbeb3bd3b40e93c"
+    },
+    {
+      "id": "m30",
+      "mechanicsVersion": "m4-20260923-m30-v2",
+      "contentVersion": "m4-final-mechanics-20260923-v2",
+      "titles": {
+        "en-US": "Left or Right!",
+        "tr": "Sol mu Sağ mı?"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "51d17a5cf2989d3636a474da566c1e5a0a4c5451e359fb403cb09fb4608bc540"
+    },
+    {
+      "id": "m31",
+      "mechanicsVersion": "m4-20260923-m31-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Cloud Chaser",
+        "tr": "Bulut Avcısı"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "433580ed1faa66dadfe5def08acc505c461022b104039133e131baeef67558b9"
+    },
+    {
+      "id": "m32",
+      "mechanicsVersion": "m4-20260923-m32-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Home Base",
+        "tr": "Ana Üs"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "4c2d5f24ec108f99f397365da366acfd7d9ea136fdf66ba8ae0ea1e0b12e6d30"
+    },
+    {
+      "id": "m33",
+      "mechanicsVersion": "m4-20260923-m33-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "How Far Can You Throw?",
+        "tr": "Ne Kadar Uzağa Atabilirsin?"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "b602b43f897444b8587605aadcbcce307e9a821b48989c1d615773c3270a0651"
+    },
+    {
+      "id": "m34",
+      "mechanicsVersion": "m4-20260923-m34-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Chase the Ball!",
+        "tr": "Topun Peşine!"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "c97f6b1288f7681bb0d23748f120e22eb3dfae464da01974841d31e0e4a872d6"
+    },
+    {
+      "id": "m35",
+      "mechanicsVersion": "m4-20260923-m35-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Sky High Jump",
+        "tr": "Zıplayarak Yakala"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "5aa1dd041948972132ef0a3ddd2e3c03974a5210baae2ce8ccb500268f66062e"
+    },
+    {
+      "id": "m36",
+      "mechanicsVersion": "m4-20260923-m36-v1",
+      "contentVersion": "m4-review-20260923-v1",
+      "titles": {
+        "en-US": "Marathon Rally",
+        "tr": "Maraton Serisi"
+      },
+      "players": "2",
+      "equipment": {
+        "paddles": 2,
+        "balls": 1
+      },
+      "sha256": "c455d1d24712d809ff8ccceb287563948ac3912e3368083006ebae13d1ef8084"
+    }
+  ]
+}
