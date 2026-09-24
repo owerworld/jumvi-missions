@@ -35,3 +35,8 @@
 .presentation-pilot .mechanics-sequence{display:block}
 .presentation-pilot .panel-label{text-align:start;margin:.75rem 0 .25rem}
 .presentation-pilot .mechanics-sequence .frame-person+.frame-person{margin-top:.75rem}
+
+/* Static illustration speech/pacing cues: not controls, timers or measured progress. */
+.illustration-speech{border:2px solid var(--ink);border-radius:1rem;padding:.5rem;margin:.5rem 0;max-width:70%;font-weight:700;overflow-wrap:normal}
+.illustration-speech[data-speaker=B]{margin-left:auto}.illustration-speech[data-speaker="A + B"]{margin-inline:auto}
+.illustration-rhythm{display:grid;grid-template-columns:minmax(0,1fr);gap:.5rem}.illustration-rhythm p{margin-bottom:.25rem}.slow-marks{word-spacing:1.5rem}.medium-marks{word-spacing:.25rem}

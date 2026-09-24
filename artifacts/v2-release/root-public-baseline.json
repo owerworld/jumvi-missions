@@ -1,0 +1,75 @@
+{
+  "at": "2026-09-24T21:04:52.904Z",
+  "resources": [
+    {
+      "path": "/",
+      "status": 200,
+      "sha256": "b468527055d4cef35e252aaf4c60c28e1b5a49ff9b15092b16f9707ca25b9ee0",
+      "expected": "b468527055d4cef35e252aaf4c60c28e1b5a49ff9b15092b16f9707ca25b9ee0",
+      "matches": true
+    },
+    {
+      "path": "/tr",
+      "status": 200,
+      "sha256": "80d4d837cf0725f98217475fe157a3f9d4756a000ea927924c1c9f62809bd07c",
+      "expected": "80d4d837cf0725f98217475fe157a3f9d4756a000ea927924c1c9f62809bd07c",
+      "matches": true
+    },
+    {
+      "path": "/app.js?v=20260904-1",
+      "status": 200,
+      "sha256": "4493765e0f6579602d3a722743d09bd11b00a595dd0df20b8b83b17982cf7d10",
+      "expected": "4493765e0f6579602d3a722743d09bd11b00a595dd0df20b8b83b17982cf7d10",
+      "matches": true
+    },
+    {
+      "path": "/service-worker.js?v=20260920-1",
+      "status": 200,
+      "sha256": "bbe8854c6eb6d8750a5ad1cccd67e87ad3f09e718f45ac54adc620f715793e9c",
+      "expected": "bbe8854c6eb6d8750a5ad1cccd67e87ad3f09e718f45ac54adc620f715793e9c",
+      "matches": true
+    },
+    {
+      "path": "/style.css?v=20260827-1",
+      "status": 200,
+      "sha256": "428fc68cb4740412f3b91bf768e391461f23bd6f5b13168b26532342b20ad8f6",
+      "expected": "428fc68cb4740412f3b91bf768e391461f23bd6f5b13168b26532342b20ad8f6",
+      "matches": true
+    },
+    {
+      "path": "/warm-toy.css?v=20260917-1",
+      "status": 200,
+      "sha256": "d842b0ac49d5921cdf8618a595c2c48e0dca57d353f2a542b9a2b6248ba32a29",
+      "expected": "d842b0ac49d5921cdf8618a595c2c48e0dca57d353f2a542b9a2b6248ba32a29",
+      "matches": true
+    },
+    {
+      "path": "/data.js",
+      "status": 200,
+      "sha256": "02a9743dfcee200a0c7530183c42ecd71b0251782857fec0e106b8db0fc66b44",
+      "expected": "02a9743dfcee200a0c7530183c42ecd71b0251782857fec0e106b8db0fc66b44",
+      "matches": true
+    },
+    {
+      "path": "/tr/i18n.js?v=20260904-1",
+      "status": 200,
+      "sha256": "a764daf48a113e9ffb2655b8a6f5c3f3eade51e34bdac64d80e449f0bb007975",
+      "expected": "a764daf48a113e9ffb2655b8a6f5c3f3eade51e34bdac64d80e449f0bb007975",
+      "matches": true
+    },
+    {
+      "path": "/manifest.json",
+      "status": 200,
+      "sha256": "7208548d3773463c43f2a02108339f39f6135f487e6d5480e2bf51f27bb26dd1",
+      "expected": "7208548d3773463c43f2a02108339f39f6135f487e6d5480e2bf51f27bb26dd1",
+      "matches": true
+    },
+    {
+      "path": "/tr/manifest.json",
+      "status": 200,
+      "sha256": "b722771955957e8f38423fcb8570f6fa97e0312161a5e96c45d9e1451939ebbf",
+      "expected": "b722771955957e8f38423fcb8570f6fa97e0312161a5e96c45d9e1451939ebbf",
+      "matches": true
+    }
+  ]
+}

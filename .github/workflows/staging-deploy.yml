@@ -41,13 +41,17 @@ jobs:
           for (const k of Object.keys(c)) assert(allowed.has(k), `Unexpected staging setting: ${k}`);
           JS
       - name: Package baseline public assets
-        run: node tools/build-app.mjs
+        run: |
+          node tools/build-app.mjs
+          JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
+          node tools/build-v2-legacy-compat.mjs
+          node tools/package-v2-staging.mjs
       - name: Verify isolation contracts
         run: npm test
       - name: Browser smoke gate
         run: |
-          npx playwright install --with-deps chromium
-          npx playwright test --project=chromium
+          npx playwright install --with-deps chromium webkit
+          npx playwright test
       - name: Deploy only staging Worker
         env:
           CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39
@@ -57,4 +61,6 @@ jobs:
           test -n "$CLOUDFLARE_API_TOKEN"
           npx --yes wrangler@4.136.1 deploy --config wrangler.staging.json --message "M0 staging $GITHUB_SHA"
       - name: Verify live staging routes and artifact
-        run: node tools/verify-staging.mjs
+        run: |
+          node tools/verify-staging.mjs
+          node tools/verify-v2-staging.mjs

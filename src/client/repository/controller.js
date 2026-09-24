@@ -1,3 +1,4 @@
+import {storageName,IS_V2} from '../deployment.js';
 import {LocalRepository} from './local.js';
 import {legacyPresence,deleteLegacy} from './legacy.js';
 import {dialog} from '../components/dialog.js';
@@ -6,7 +7,7 @@ export class PersonalController {
  constructor({getState,navigate,render,ui}){
   Object.assign(this,{getState,navigate,render,ui});this.repo=new LocalRepository();this.ticket=0;
   this.model={snapshot:null,status:'loading',selectedId:null,editId:null,correction:null,result:null,name:'',message:'',busy:false,legacy:null};
-  try{this.channel=new BroadcastChannel('jumvi-local-invalidation-v1');this.channel.onmessage=()=>{if(localViews.has(this.getState().screen))void this.refresh();else this.model.snapshot=null;};}catch{}
+  try{this.channel=new BroadcastChannel(storageName('jumvi-local-invalidation-v1'));this.channel.onmessage=()=>{if(localViews.has(this.getState().screen))void this.refresh();else this.model.snapshot=null;};}catch{}
  }
  visible(){if(localViews.has(this.getState().screen))void this.refresh();}
  current(){const s=this.getState();return `${s.documentId}:${s.revision}`;}
@@ -20,7 +21,7 @@ export class PersonalController {
  }
  async refresh(){
   const key=this.current(),ticket=++this.ticket,p=this.model;
-  try{const snap=await this.repo.snapshot();if(key!==this.current()||ticket!==this.ticket)return;p.snapshot=snap;p.status='ready';p.legacy=legacyPresence();if(p.selectedId&&!snap.players.some(x=>x.id===p.selectedId))p.selectedId=null;if(p.editId&&!snap.players.some(x=>x.id===p.editId))p.editId=null;
+  try{const snap=await this.repo.snapshot();if(key!==this.current()||ticket!==this.ticket)return;p.snapshot=snap;p.status='ready';p.legacy=IS_V2?{available:true,count:0}:legacyPresence();if(p.selectedId&&!snap.players.some(x=>x.id===p.selectedId))p.selectedId=null;if(p.editId&&!snap.players.some(x=>x.id===p.editId))p.editId=null;
    if(p.result){const op=snap.operations.find(x=>x.id===p.result.id);p.result={...p.result,status:op?.status||'unknown'};}
   }catch{if(key!==this.current()||ticket!==this.ticket)return;p.status='unavailable';p.snapshot=null;}
   this.render({preserveFocus:true});
@@ -44,7 +45,7 @@ export class PersonalController {
    dialog({title,body:e.type==='P_DELETE_ALL'?ui.deleteAllBody:e.type==='P_MOVE'?`${ui.correctionInfo} ${selected.nickname||selected.label}`:ui.deletePlayerBody,cancelLabel:ui.cancel,confirmLabel:e.type==='P_MOVE'?ui.confirmCorrection:e.type==='P_DELETE_ALL'?ui.deleteAll:ui.deletePlayer,onConfirm:()=>{if(key!==this.current()||p.busy)return;void this.mutate(async()=>{
     if(e.type==='P_MOVE'){await this.repo.reattribute({id:correction.id,epoch:snap.epoch,revision:correction.revision,targetId:selected.id,targetRevision:selected.revision});if(key===this.current())p.result={id:correction.id,epoch:snap.epoch,status:'committed'};}
     else if(e.type==='P_DELETE_ONE')await this.repo.deletePlayer({epoch:snap.epoch,id:player.id,revision:player.revision});
-    else {await this.repo.deleteAll(snap.epoch);try{deleteLegacy();}catch{return ui.partialDelete;}}
+    else {await this.repo.deleteAll(snap.epoch);try{if(!IS_V2)deleteLegacy();}catch{return ui.partialDelete;}}
     return e.type==='P_MOVE'?ui.saveVerified:ui.deleted;
    },e.type==='P_MOVE'?'record-result':null);}});return true;
   }

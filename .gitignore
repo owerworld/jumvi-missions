@@ -16,3 +16,9 @@ node_modules/
 
 .test-results/
 playwright-report/
+
+dist-v2/
+.test-v2/
+
+# Local editable SVG masters are retained with source hashes; deploy uses WebP derivatives.
+artifacts/presentation-catalog-v3/*.svg

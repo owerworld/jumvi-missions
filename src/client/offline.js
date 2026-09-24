@@ -1,3 +1,4 @@
-const release=new URL(import.meta.url).pathname.split('/')[2];let registration;
-export async function setupOffline(){if(!('serviceWorker'in navigator))return;try{registration=await navigator.serviceWorker.register('/service-worker.js',{scope:'/',updateViaCache:'none'});}catch{/* Online play remains usable; no offline claim. */}}
+import {BASE,releaseId} from './deployment.js';
+const release=releaseId;let registration;
+export async function setupOffline(){if(!('serviceWorker'in navigator))return;try{registration=await navigator.serviceWorker.register(BASE+'service-worker.js',{scope:BASE,updateViaCache:'none'});}catch{/* Online play remains usable; no offline claim. */}}
 export async function prepareOffline(id){if(!registration)return false;const worker=registration.active||registration.waiting;if(!worker)return false;return new Promise(resolve=>{const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();resolve(false);},9000);channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data?.release===release&&e.data?.id===id&&e.data?.ready===true);};worker.postMessage({type:'CACHE_MISSION',release,id},[channel.port2]);});}

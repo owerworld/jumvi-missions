@@ -1,4 +1,5 @@
 // Staging isolation adapter. Never imports production code or resources.
+import review,{isV2Path} from "./v2-review-worker.mjs";
 
 
 export default {
@@ -7,6 +8,7 @@ export default {
     if (url.hostname !== 'jumvi-missions-staging.saykirtasiye.workers.dev') {
       return new Response('Staging origin only', { status: 403 });
     }
+    if(isV2Path(url.pathname))return review.fetch(request,env);
     const headers = {
       'X-Jumvi-Environment': 'm0-staging',
       'X-Jumvi-Analytics': 'disabled',

@@ -1,0 +1,10 @@
+{
+  "baseline": "03f70223f59d020a5c6ddc3b226c8ccb54218eb7",
+  "allowedLegacyFiles": [
+    "service-worker.js"
+  ],
+  "beforeSHA256": "bbe8854c6eb6d8750a5ad1cccd67e87ad3f09e718f45ac54adc620f715793e9c",
+  "afterSHA256": "4e3a4e32bd0a14370b07a2f0a25e883a08e98523d81b2c944e524394ea0a1286",
+  "status": "CANDIDATE — NOT DEPLOYED",
+  "scope": "SW own-cache cleanup and /v2 bypass only; preserve every CORE_ASSETS entry; no UI/content/data migration"
+}

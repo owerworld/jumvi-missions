@@ -1,0 +1,76 @@
+name: Fixed V2 review release
+on:
+  push:
+    branches: [codex/lock09-implementation]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: jumvi-v2-review-release
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation' && vars.V2_EXACT_SHA == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      V2_EXACT_SHA: ${{ vars.V2_EXACT_SHA }}
+      V2_EXACT_ARTIFACT: ${{ vars.V2_EXACT_ARTIFACT }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts
+      - run: |
+          node tools/build-app.mjs
+          JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
+          node tools/build-v2-legacy-compat.mjs
+          node tools/check-v2-release-gates.mjs
+          npm test
+          npx playwright install --with-deps chromium webkit
+          npx playwright test
+          node tools/verify-v2-staging.mjs
+  publish:
+    needs: verify
+    if: github.ref == 'refs/heads/codex/lock09-implementation' && vars.V2_EXACT_SHA == github.sha
+    runs-on: ubuntu-latest
+    environment: jumvi-v2-review
+    timeout-minutes: 15
+    env:
+      V2_EXACT_SHA: ${{ vars.V2_EXACT_SHA }}
+      V2_EXACT_ARTIFACT: ${{ vars.V2_EXACT_ARTIFACT }}
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: |
+          JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
+          node tools/build-v2-legacy-compat.mjs
+          node tools/check-v2-release-gates.mjs
+      - name: Publish only reviewed compatibility and V2 artifacts
+        env:
+          CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_V2_REVIEW_API_TOKEN }}
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          npx --yes wrangler@4.136.1 deploy --config wrangler.v2.compat.json --message "V2 coexistence $GITHUB_SHA"
+          npx --yes wrangler@4.136.1 deploy --config wrangler.v2.live.json --message "Fixed V2 review $GITHUB_SHA $V2_EXACT_ARTIFACT"
+      - name: Verify live V2; withdraw only V2 on failure
+        env:
+          V2_REVIEW_ORIGIN: https://qr.jumvi.co
+          CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_V2_REVIEW_API_TOKEN }}
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium webkit
+          if ! (node tools/verify-v2-staging.mjs && node tools/check-v2-root-protection.mjs); then
+            npx --yes wrangler@4.136.1 deploy --config wrangler.v2.withdrawn.json --message "Withdraw failed V2 review $GITHUB_SHA"
+            exit 1
+          fi

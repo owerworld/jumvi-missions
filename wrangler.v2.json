@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "jumvi-missions-v2-review",
+  "main": "src/v2-review-worker.mjs",
+  "compatibility_date": "2026-09-24",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [],
+  "assets": {"directory": "dist-v2", "binding": "ASSETS", "run_worker_first": true, "html_handling": "none"},
+  "analytics_engine_datasets": [],
+  "observability": {"enabled": false}
+}

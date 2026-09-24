@@ -1,4 +1,5 @@
-export function routeLocale(path) {return ['/tr','/tr/','/tr/index.html'].includes(path)?'tr':(['/','/index.html'].includes(path)?'en-US':null);}
+import {BASE} from './deployment.js';
+export function routeLocale(path) {if(BASE==='/v2/'){if(!path.startsWith(BASE))return null;path='/'+path.slice(BASE.length);}return ['/tr','/tr/','/tr/index.html'].includes(path)?'tr':(['/','/index.html'].includes(path)?'en-US':null);}
 // Route/reading snapshots live only in this document. No player, report or round is replayed.
 export function installRouter(getState,send,{capture=()=>({y:0}),restore}={}) {
  const previous=history.state;

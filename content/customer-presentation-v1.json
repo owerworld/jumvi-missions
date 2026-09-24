@@ -1,6 +1,6 @@
 {
-  "version": "customer-presentation-v2",
-  "status": "HUMAN_REVIEW_REQUIRED",
+  "version": "customer-presentation-v3",
+  "status": "TECHNICAL_REVIEW_REQUIRED — HUMAN ACCEPTANCE NOT IMPLIED",
   "missions": {
     "m25": {
       "hero": {
@@ -443,6 +443,2368 @@
       "entryCopy": {
         "tr": "Her görev atışından önce SOL veya SAĞ de. Yakalayan paddle’ı o tarafa alır; mavi yüz topa dönük kalır. Düz, yumuşak atışla o paddle’ı hedefle. Yalnız söylenen taraftaki mavi yüze yapışan top doğru yakalama sayılır. Boş elle ayırıp normal geri pas ver; geri pas sayılmaz ve çağrı gerektirmez. Aynı çağıranın 5 görev atışından sonra roller değişir; geri paslar bu 5’e dahil değildir.",
         "en-US": "Call LEFT or RIGHT before each challenge toss. The catcher moves the paddle to that side with its blue front facing the ball. Toss straight and gently at that paddle. Only a sticky catch on the called side counts as correct. Detach with the free hand and make a neutral return; it needs no call and does not count. Switch roles after the same caller’s 5 challenge tosses; returns are excluded."
+      }
+    },
+    "m01": {
+      "canonicalSHA256": "2bfd55f224f30a10e619df6dd141c0f35c53a854b794bd8728eb1eb0e6929b73",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m01-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m01-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "Hızlı sıra, yumuşak atış; çenenin altında",
+            "en-US": "Quick exchange, soft toss; below chin"
+          },
+          {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          }
+        ],
+        "caption": {
+          "tr": "Hızlı sıra, yumuşak atış; çenenin altında",
+          "en-US": "Quick exchange, soft toss; below chin"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m01/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m01-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Hızlı sıra, yumuşak atış; çenenin altında",
+            "en-US": "Quick exchange, soft toss; below chin"
+          },
+          "detail": "assets/mission-illustrations/final/m01/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m01-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m01/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m01-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m01/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m02": {
+      "canonicalSHA256": "937f84fb6f623583674ad69820dfcf6941f2e0111b12701a58c1e242c5c063bc",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m02-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m02-scene-3.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A insan çağıran: YEŞİL",
+            "en-US": "A is the human caller: GREEN"
+          },
+          {
+            "tr": "A: KIRMIZI · B donar; top paddle’da kalır",
+            "en-US": "A: RED · B freezes; ball stays on paddle"
+          }
+        ],
+        "caption": {
+          "tr": "A insan çağıran: YEŞİL",
+          "en-US": "A is the human caller: GREEN"
+        },
+        "speech": [
+          {
+            "speaker": "A",
+            "text": {
+              "tr": "YEŞİL",
+              "en-US": "GREEN"
+            }
+          },
+          {
+            "speaker": "A",
+            "text": {
+              "tr": "KIRMIZI",
+              "en-US": "RED"
+            }
+          }
+        ]
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m02/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m02-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A insan çağıran: YEŞİL",
+            "en-US": "A is the human caller: GREEN"
+          },
+          "detail": "assets/mission-illustrations/final/m02/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m02-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m02/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m02-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "A: KIRMIZI · B donar; top paddle’da kalır",
+            "en-US": "A: RED · B freezes; ball stays on paddle"
+          },
+          "detail": "assets/mission-illustrations/final/m02/3-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m02-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "Yeniden YEŞİL çağrısından sonra ayır",
+            "en-US": "Detach after the next human GREEN call"
+          },
+          "detail": "assets/mission-illustrations/final/m02/4-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m03": {
+      "canonicalSHA256": "58314ea935662ac97a6d87a779a81be6684855751f0880c77c24b3aee68170f5",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/final/m03/1.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "Boş elle kendi paddle’ına hafif dokun",
+            "en-US": "Tap own paddle lightly with free hand"
+          }
+        ],
+        "caption": {
+          "tr": "Boş elle kendi paddle’ına hafif dokun",
+          "en-US": "Tap own paddle lightly with free hand"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m03/2.webp"
+        ],
+        "caption": {
+          "tr": "Mavi ön yüzde yakala",
+          "en-US": "Catch on blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/final/m03/1.webp"
+          ],
+          "caption": {
+            "tr": "Boş elle kendi paddle’ına hafif dokun",
+            "en-US": "Tap own paddle lightly with free hand"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m03/2.webp"
+          ],
+          "caption": {
+            "tr": "Mavi ön yüzde yakala",
+            "en-US": "Catch on blue front"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m03/3.webp"
+          ],
+          "caption": {
+            "tr": "Boş elle ayır",
+            "en-US": "Detach with free hand"
+          },
+          "detail": null
+        }
+      ],
+      "activeCopy": {
+        "tr": "Mavi ön yüzde yakala",
+        "en-US": "Catch on blue front"
+      }
+    },
+    "m04": {
+      "canonicalSHA256": "3f6bd7df5fcd0a437b3d56d1bdcfedab29d5d1be9508581c226dc164b8f36a5e",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/final/m04/3.webp",
+          "assets/mission-illustrations/final/m04/5.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "Topu mevcut paddle eline aktar",
+            "en-US": "Transfer ball to current paddle hand"
+          },
+          {
+            "tr": "Paddle’ı diğer ele güvenle tak",
+            "en-US": "Secure paddle on the other hand"
+          }
+        ],
+        "caption": {
+          "tr": "Topu mevcut paddle eline aktar",
+          "en-US": "Transfer ball to current paddle hand"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m04/1.webp"
+        ],
+        "caption": {
+          "tr": "Mavi ön yüzde yakala",
+          "en-US": "Catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/final/m04/1.webp"
+          ],
+          "caption": {
+            "tr": "Mavi ön yüzde yakala",
+            "en-US": "Catch on the blue front"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m04/2.webp"
+          ],
+          "caption": {
+            "tr": "Boş elle ayır",
+            "en-US": "Detach with the free hand"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m04/3.webp"
+          ],
+          "caption": {
+            "tr": "Topu mevcut paddle eline aktar",
+            "en-US": "Transfer ball to current paddle hand"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m04/4.webp"
+          ],
+          "caption": {
+            "tr": "Topu tutarak elini kayıştan çıkar",
+            "en-US": "Retain ball and withdraw from strap"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m04/5.webp"
+          ],
+          "caption": {
+            "tr": "Paddle’ı diğer ele güvenle tak",
+            "en-US": "Secure paddle on the other hand"
+          },
+          "detail": null
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m04/6.webp"
+          ],
+          "caption": {
+            "tr": "Artık boş olan elle yumuşakça at",
+            "en-US": "Toss gently with the now-free hand"
+          },
+          "detail": null
+        }
+      ],
+      "activeCopy": {
+        "tr": "Mavi ön yüzde yakala",
+        "en-US": "Catch on the blue front"
+      }
+    },
+    "m05": {
+      "canonicalSHA256": "53822b1596b9e28596b2a0289f9a93dbef7022691cd3b797f0d21364732fccd0",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m05-scene-2.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "B: 2 saniye tamamen sabit",
+            "en-US": "B: freeze the whole body for 2 seconds"
+          }
+        ],
+        "caption": {
+          "tr": "B: 2 saniye tamamen sabit",
+          "en-US": "B: freeze the whole body for 2 seconds"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m05/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m05-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m05/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m05-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: 2 saniye tamamen sabit",
+            "en-US": "B: freeze the whole body for 2 seconds"
+          },
+          "detail": "assets/mission-illustrations/final/m05/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m05-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "Donma bittikten sonra boş elle ayır",
+            "en-US": "Detach with the free hand after the freeze"
+          },
+          "detail": "assets/mission-illustrations/final/m05/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m06": {
+      "canonicalSHA256": "2c6e1fbbb54c4a0df05fe005fe29545fd3c20d14a30abe104392857705faaf14",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m06-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m06-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A atarken bir sayı söyler: örnek 3",
+            "en-US": "A says a number while tossing: example 3"
+          },
+          {
+            "tr": "B yakalar ve aynı sayıyı tekrarlar: 3",
+            "en-US": "B catches and echoes the same number: 3"
+          }
+        ],
+        "caption": {
+          "tr": "A atarken bir sayı söyler: örnek 3",
+          "en-US": "A says a number while tossing: example 3"
+        },
+        "speech": [
+          {
+            "speaker": "A",
+            "text": {
+              "tr": "3",
+              "en-US": "3"
+            }
+          },
+          {
+            "speaker": "B",
+            "text": {
+              "tr": "3",
+              "en-US": "3"
+            }
+          }
+        ]
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m06/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B yakalar ve aynı sayıyı tekrarlar: 3",
+          "en-US": "B catches and echoes the same number: 3"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m06-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A atarken bir sayı söyler: örnek 3",
+            "en-US": "A says a number while tossing: example 3"
+          },
+          "detail": "assets/mission-illustrations/final/m06/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m06-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B yakalar ve aynı sayıyı tekrarlar: 3",
+            "en-US": "B catches and echoes the same number: 3"
+          },
+          "detail": "assets/mission-illustrations/final/m06/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m06-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m06/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B yakalar ve aynı sayıyı tekrarlar: 3",
+        "en-US": "B catches and echoes the same number: 3"
+      }
+    },
+    "m08": {
+      "canonicalSHA256": "5dbe4785b5dd81f83d8897eb39779a6a39bf7ca8da90f5de140ca75b022898ba",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/final/m08/2-detail.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "B: yatay, sabit mavi yüz üzerine iniş",
+            "en-US": "B: landing on the flat, still blue front"
+          }
+        ],
+        "caption": {
+          "tr": "B: yatay, sabit mavi yüz üzerine iniş",
+          "en-US": "B: landing on the flat, still blue front"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m08/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: yatay, sabit mavi yüz üzerine iniş",
+          "en-US": "B: landing on the flat, still blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m08-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Yumuşak yay; mavi yüz yukarı bakar",
+            "en-US": "Soft arc; blue face points upward"
+          },
+          "detail": "assets/mission-illustrations/final/m08/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m08-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: yatay, sabit mavi yüz üzerine iniş",
+            "en-US": "B: landing on the flat, still blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m08/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m08-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: sol elle yukarı doğru ayır",
+            "en-US": "B: lift off with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m08/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: yatay, sabit mavi yüz üzerine iniş",
+        "en-US": "B: landing on the flat, still blue front"
+      }
+    },
+    "m09": {
+      "canonicalSHA256": "d79322775558b7c07792f770d7898bf137515e7d803f44db3ef742e0579c7ac1",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m09-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m09-scene-3.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "Yakın başlangıç: mavi yüzde catch",
+            "en-US": "Close start: blue-front catch"
+          },
+          {
+            "tr": "3 temiz catch sonrası ikisi de yarım adım geri",
+            "en-US": "After 3 clean catches, both step half a step back"
+          }
+        ],
+        "caption": {
+          "tr": "Yakın başlangıç: mavi yüzde catch",
+          "en-US": "Close start: blue-front catch"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m09/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "Yakın başlangıç: mavi yüzde catch",
+          "en-US": "Close start: blue-front catch"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m09-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Yakın başlangıç: mavi yüzde catch",
+            "en-US": "Close start: blue-front catch"
+          },
+          "detail": "assets/mission-illustrations/final/m09/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m09-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m09/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m09-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "3 temiz catch sonrası ikisi de yarım adım geri",
+            "en-US": "After 3 clean catches, both step half a step back"
+          },
+          "detail": "assets/mission-illustrations/final/m09/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "Yakın başlangıç: mavi yüzde catch",
+        "en-US": "Close start: blue-front catch"
+      }
+    },
+    "m10": {
+      "canonicalSHA256": "d5291c08b3b0c53e03437c49febe907ade89b6397550f19be031cabc19da44d9",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m10-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m10-scene-3.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A: ileri adımla yumuşak atış",
+            "en-US": "A: step forward with a soft toss"
+          },
+          {
+            "tr": "A başlangıca döner; B boş elle ayırır",
+            "en-US": "A returns to start; B detaches with the free hand"
+          }
+        ],
+        "caption": {
+          "tr": "A: ileri adımla yumuşak atış",
+          "en-US": "A: step forward with a soft toss"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m10/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m10-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A: ileri adımla yumuşak atış",
+            "en-US": "A: step forward with a soft toss"
+          },
+          "detail": "assets/mission-illustrations/final/m10/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m10-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m10/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m10-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "A başlangıca döner; B boş elle ayırır",
+            "en-US": "A returns to start; B detaches with the free hand"
+          },
+          "detail": "assets/mission-illustrations/final/m10/3-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m10-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "Sonraki sıra: B atar, A paddle ile yakalar",
+            "en-US": "Next turn: B tosses, A catches on the paddle"
+          },
+          "detail": "assets/mission-illustrations/final/m10/4-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m11": {
+      "canonicalSHA256": "b39fea99b64b4b0661f8d6c7eea1531ff9a3ce734bd7e482809b6f0d9faef2f2",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m11-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m11-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "Yüksek yay · B acele etmeden bekler",
+            "en-US": "High arc · B waits without rushing"
+          },
+          {
+            "tr": "İnişte mavi yüzle catch; savurma yok",
+            "en-US": "Blue-front catch on descent; no swing"
+          }
+        ],
+        "caption": {
+          "tr": "Yüksek yay · B acele etmeden bekler",
+          "en-US": "High arc · B waits without rushing"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m11/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "İnişte mavi yüzle catch; savurma yok",
+          "en-US": "Blue-front catch on descent; no swing"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m11-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Yüksek yay · B acele etmeden bekler",
+            "en-US": "High arc · B waits without rushing"
+          },
+          "detail": "assets/mission-illustrations/final/m11/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m11-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "İnişte mavi yüzle catch; savurma yok",
+            "en-US": "Blue-front catch on descent; no swing"
+          },
+          "detail": "assets/mission-illustrations/final/m11/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m11-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m11/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "İnişte mavi yüzle catch; savurma yok",
+        "en-US": "Blue-front catch on descent; no swing"
+      }
+    },
+    "m12": {
+      "canonicalSHA256": "2658bb11154f4e0a91db159866dcf810b3091b4c8e3008b37598c784246b87fd",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/final/m12/2-detail.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "Top insan göğsüne değil mavi yüze yapışır",
+            "en-US": "Ball sticks to the blue front, not the chest"
+          }
+        ],
+        "caption": {
+          "tr": "Top insan göğsüne değil mavi yüze yapışır",
+          "en-US": "Ball sticks to the blue front, not the chest"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m12/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "Göğüs hizasındaki PADDLE hedef",
+          "en-US": "The chest-height PADDLE is the target"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m12-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Göğüs hizasındaki PADDLE hedef",
+            "en-US": "The chest-height PADDLE is the target"
+          },
+          "detail": "assets/mission-illustrations/final/m12/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m12-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "Top insan göğsüne değil mavi yüze yapışır",
+            "en-US": "Ball sticks to the blue front, not the chest"
+          },
+          "detail": "assets/mission-illustrations/final/m12/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m12-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m12/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "Göğüs hizasındaki PADDLE hedef",
+        "en-US": "The chest-height PADDLE is the target"
+      }
+    },
+    "m13": {
+      "canonicalSHA256": "216f65b4a789d999bf5d426e7d69f90fd228bdb7fe23910ce82a6ade14240532",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m13-scene-2.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "B boş sol elle sayıyı gösterir · örnek 5",
+            "en-US": "B shows the count with free left hand · example 5"
+          }
+        ],
+        "caption": {
+          "tr": "B boş sol elle sayıyı gösterir · örnek 5",
+          "en-US": "B shows the count with free left hand · example 5"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m13/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "B sessizce yakalar",
+          "en-US": "B catches silently"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m13-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "B sessizce yakalar",
+            "en-US": "B catches silently"
+          },
+          "detail": "assets/mission-illustrations/final/m13/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m13-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B boş sol elle sayıyı gösterir · örnek 5",
+            "en-US": "B shows the count with free left hand · example 5"
+          },
+          "detail": "assets/mission-illustrations/final/m13/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m13-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B konuşmadan sol elle ayırır",
+            "en-US": "B detaches with the left hand without speaking"
+          },
+          "detail": "assets/mission-illustrations/final/m13/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B sessizce yakalar",
+        "en-US": "B catches silently"
+      }
+    },
+    "m14": {
+      "canonicalSHA256": "a8d990fdc1dcd1712deebb9e5bc0de757185b42252d13d84e407b4feccd27a22",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m14-scene-1.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "5 çok yavaş → 5 orta tempolu · ayaklar sabit",
+            "en-US": "5 very slow → 5 medium pace · feet planted"
+          }
+        ],
+        "caption": {
+          "tr": "5 çok yavaş → 5 orta tempolu · ayaklar sabit",
+          "en-US": "5 very slow → 5 medium pace · feet planted"
+        },
+        "rhythm": {
+          "tr": [
+            "5 çok yavaş",
+            "5 orta tempolu"
+          ],
+          "en-US": [
+            "5 very slow",
+            "5 medium pace"
+          ]
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m14/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m14-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "5 çok yavaş → 5 orta tempolu · ayaklar sabit",
+            "en-US": "5 very slow → 5 medium pace · feet planted"
+          },
+          "detail": "assets/mission-illustrations/final/m14/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m14-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m14/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m14-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m14/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m15": {
+      "canonicalSHA256": "914cd039d4d6bd02c238f507ad402e6486cea1a316d15f0b76ca2bbb6ab0a3e1",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m15-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m15-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "B: “GÖRDÜM!” · A henüz atmaz",
+            "en-US": "B: “I SEE IT!” · A has not tossed yet"
+          },
+          {
+            "tr": "A çağrıyı duyduktan sonra atar; B yakalar",
+            "en-US": "A tosses after hearing the call; B catches"
+          }
+        ],
+        "caption": {
+          "tr": "B: “GÖRDÜM!” · A henüz atmaz",
+          "en-US": "B: “I SEE IT!” · A has not tossed yet"
+        },
+        "speech": [
+          {
+            "speaker": "B",
+            "text": {
+              "tr": "GÖRDÜM!",
+              "en-US": "I SEE IT!"
+            }
+          },
+          null
+        ]
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m15/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "A çağrıyı duyduktan sonra atar; B yakalar",
+          "en-US": "A tosses after hearing the call; B catches"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m15-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "B: “GÖRDÜM!” · A henüz atmaz",
+            "en-US": "B: “I SEE IT!” · A has not tossed yet"
+          },
+          "detail": "assets/mission-illustrations/final/m15/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m15-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "A çağrıyı duyduktan sonra atar; B yakalar",
+            "en-US": "A tosses after hearing the call; B catches"
+          },
+          "detail": "assets/mission-illustrations/final/m15/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m15-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B ayırır; dönüşte de hazır olma çağrısı korunur",
+            "en-US": "B detaches; keep the readiness call on the return"
+          },
+          "detail": "assets/mission-illustrations/final/m15/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "A çağrıyı duyduktan sonra atar; B yakalar",
+        "en-US": "A tosses after hearing the call; B catches"
+      }
+    },
+    "m16": {
+      "canonicalSHA256": "64a32f88f54ddcd909f3d6d312030a3f1eeaf9110e15527f4b592975aa807a9b",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m16-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m16-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A insan olarak “1, 2” sayar; top sol elde",
+            "en-US": "A counts “1, 2”; ball stays in free left hand"
+          },
+          {
+            "tr": "A “3” derken topu bırakır",
+            "en-US": "A releases on “3”"
+          }
+        ],
+        "caption": {
+          "tr": "A insan olarak “1, 2” sayar; top sol elde",
+          "en-US": "A counts “1, 2”; ball stays in free left hand"
+        },
+        "speech": [
+          {
+            "speaker": "A",
+            "text": {
+              "tr": "1, 2…",
+              "en-US": "1, 2…"
+            }
+          },
+          {
+            "speaker": "A",
+            "text": {
+              "tr": "3!",
+              "en-US": "3!"
+            }
+          }
+        ]
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m16/3-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m16-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A insan olarak “1, 2” sayar; top sol elde",
+            "en-US": "A counts “1, 2”; ball stays in free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m16/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m16-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "A “3” derken topu bırakır",
+            "en-US": "A releases on “3”"
+          },
+          "detail": "assets/mission-illustrations/final/m16/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m16-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m16/3-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m16-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "B ayırır; geri atıştan önce kendisi sayar",
+            "en-US": "B detaches; B counts before the return toss"
+          },
+          "detail": "assets/mission-illustrations/final/m16/4-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m17": {
+      "canonicalSHA256": "b0c168ca1935f2b3ea2b3ba9711e1b5123ad5a683059ace05bf659f4baea3169",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m17-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m17-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A lider: aynı rahat eğim",
+            "en-US": "A leads: same comfortable tilt"
+          },
+          {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: catch on the blue front"
+          }
+        ],
+        "caption": {
+          "tr": "A lider: aynı rahat eğim",
+          "en-US": "A leads: same comfortable tilt"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m17-scene-2.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m17-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A lider: aynı rahat eğim",
+            "en-US": "A leads: same comfortable tilt"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m17-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: catch on the blue front"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m17-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: boş elle ayır",
+            "en-US": "B: detach with the free hand"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m17-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "A: sayılmayan geri pası yakala",
+            "en-US": "A: receive the uncounted return"
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: catch on the blue front"
+      }
+    },
+    "m18": {
+      "canonicalSHA256": "799a8ba8989ca59dc8f1df68a548d716f77b59363bb61067f5e91b2f1be513f6",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m18-scene-2.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "Temiz catch sonrası birlikte sayın",
+            "en-US": "Count together after a clean catch"
+          }
+        ],
+        "caption": {
+          "tr": "Temiz catch sonrası birlikte sayın",
+          "en-US": "Count together after a clean catch"
+        },
+        "speech": [
+          {
+            "speaker": "A + B",
+            "text": {
+              "tr": "1, 2, 3…",
+              "en-US": "1, 2, 3…"
+            }
+          }
+        ]
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m18/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "Temiz catch sonrası birlikte sayın",
+          "en-US": "Count together after a clean catch"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m18-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A: sol boş elle yumuşak atış",
+            "en-US": "A: gentle toss from the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m18/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m18-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "Temiz catch sonrası birlikte sayın",
+            "en-US": "Count together after a clean catch"
+          },
+          "detail": "assets/mission-illustrations/final/m18/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m18-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m18/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "Temiz catch sonrası birlikte sayın",
+        "en-US": "Count together after a clean catch"
+      }
+    },
+    "m19": {
+      "canonicalSHA256": "d5c014cd46da3474b440892fae5e294f3a25869855335b65e3f80826de8dc62b",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m19-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m19-scene-3.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "3 oyunculu örnek: A’dan B’ye",
+            "en-US": "Three-player example: A to B"
+          },
+          {
+            "tr": "Örnek sonraki pas: B’den C’ye",
+            "en-US": "Example next pass: B to C"
+          }
+        ],
+        "caption": {
+          "tr": "3 oyunculu örnek: A’dan B’ye",
+          "en-US": "Three-player example: A to B"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m19/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "3 oyunculu örnek: A’dan B’ye",
+          "en-US": "Three-player example: A to B"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m19-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "3 oyunculu örnek: A’dan B’ye",
+            "en-US": "Three-player example: A to B"
+          },
+          "detail": "assets/mission-illustrations/final/m19/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m19-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B boş elle ayırır",
+            "en-US": "B detaches with the free hand"
+          },
+          "detail": "assets/mission-illustrations/final/m19/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m19-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "Örnek sonraki pas: B’den C’ye",
+            "en-US": "Example next pass: B to C"
+          },
+          "detail": "assets/mission-illustrations/final/m19/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "3 oyunculu örnek: A’dan B’ye",
+        "en-US": "Three-player example: A to B"
+      }
+    },
+    "m21": {
+      "canonicalSHA256": "7cb107cb24b3172ac1be2d08a0170c63eee4fa60c84b3bb1ec2f62d82601fdaf",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m21-scene-2.webp",
+          "assets/mission-illustrations/catalog-v3/m21-scene-3.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "C: yüzlerin altında paddle ile yakala",
+            "en-US": "C: catch below faces with the paddle"
+          },
+          {
+            "tr": "A ve C yürüyerek yer değiştirir",
+            "en-US": "A and C exchange places by walking"
+          }
+        ],
+        "caption": {
+          "tr": "C: yüzlerin altında paddle ile yakala",
+          "en-US": "C: catch below faces with the paddle"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m21-scene-2.webp"
+        ],
+        "caption": {
+          "tr": "C: yüzlerin altında paddle ile yakala",
+          "en-US": "C: catch below faces with the paddle"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m21-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A atacak; C ortada",
+            "en-US": "A will toss; C is in the middle"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m21-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "C: yüzlerin altında paddle ile yakala",
+            "en-US": "C: catch below faces with the paddle"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m21-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "A ve C yürüyerek yer değiştirir",
+            "en-US": "A and C exchange places by walking"
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "C: yüzlerin altında paddle ile yakala",
+        "en-US": "C: catch below faces with the paddle"
+      }
+    },
+    "m22": {
+      "canonicalSHA256": "67cc61598104b0a2895c092e54da4930a267a4b550b8b89576e9ac0b31542902",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m22-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m22-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "4 oyuncu karede · B yakalar",
+            "en-US": "4 players in a square · B catches"
+          },
+          {
+            "tr": "Herkes saat yönünde adım atar",
+            "en-US": "Everyone steps clockwise"
+          }
+        ],
+        "caption": {
+          "tr": "4 oyuncu karede · B yakalar",
+          "en-US": "4 players in a square · B catches"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m22/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "4 oyuncu karede · B yakalar",
+          "en-US": "4 players in a square · B catches"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m22-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "4 oyuncu karede · B yakalar",
+            "en-US": "4 players in a square · B catches"
+          },
+          "detail": "assets/mission-illustrations/final/m22/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m22-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "Herkes saat yönünde adım atar",
+            "en-US": "Everyone steps clockwise"
+          },
+          "detail": "assets/mission-illustrations/final/m22/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m22-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B topu boş elle ayırır",
+            "en-US": "B detaches with the free hand"
+          },
+          "detail": "assets/mission-illustrations/final/m22/3-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m22-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "Örnek sonraki atış: B → C",
+            "en-US": "Example next toss: B → C"
+          },
+          "detail": "assets/mission-illustrations/final/m22/4-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "4 oyuncu karede · B yakalar",
+        "en-US": "4 players in a square · B catches"
+      }
+    },
+    "m23": {
+      "canonicalSHA256": "0cd86977b18c3182fe080aaac8d90303f4831107f47b6c4c39e83c53f2f3d266",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m23-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m23-scene-4.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A–B oynar; diğerleri bekler",
+            "en-US": "A–B plays; the others wait"
+          },
+          {
+            "tr": "Sonraki çift oynar: C–D örneği",
+            "en-US": "Next pair plays: C–D example"
+          }
+        ],
+        "caption": {
+          "tr": "A–B oynar; diğerleri bekler",
+          "en-US": "A–B plays; the others wait"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m23-scene-1.webp"
+        ],
+        "caption": {
+          "tr": "A–B oynar; diğerleri bekler",
+          "en-US": "A–B plays; the others wait"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m23-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A–B oynar; diğerleri bekler",
+            "en-US": "A–B plays; the others wait"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m23-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: boş elle ayır",
+            "en-US": "B: detach with the free hand"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m23-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "Aynı topu sonraki çifte aktar",
+            "en-US": "Pass the same ball to the next pair"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m23-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "Sonraki çift oynar: C–D örneği",
+            "en-US": "Next pair plays: C–D example"
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "A–B oynar; diğerleri bekler",
+        "en-US": "A–B plays; the others wait"
+      }
+    },
+    "m24": {
+      "canonicalSHA256": "c722b45ba726b54b4416d7afb3c8df76583327b3b4cf55fa063fa88c601ee195",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m24-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m24-scene-4.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A–B takımı oynar; C–D bekler",
+            "en-US": "Team A–B plays; C–D waits"
+          },
+          {
+            "tr": "C–D takımı oynar; A–B bekler",
+            "en-US": "Team C–D plays; A–B waits"
+          }
+        ],
+        "caption": {
+          "tr": "A–B takımı oynar; C–D bekler",
+          "en-US": "Team A–B plays; C–D waits"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m24-scene-3.webp"
+        ],
+        "caption": {
+          "tr": "5 temiz yakalama sonrası aynı top diğer takıma",
+          "en-US": "After 5 clean catches, the same ball goes to the other team"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m24-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A–B takımı oynar; C–D bekler",
+            "en-US": "Team A–B plays; C–D waits"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m24-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: boş elle ayır",
+            "en-US": "B: detach with the free hand"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m24-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "5 temiz yakalama sonrası aynı top diğer takıma",
+            "en-US": "After 5 clean catches, the same ball goes to the other team"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m24-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "C–D takımı oynar; A–B bekler",
+            "en-US": "Team C–D plays; A–B waits"
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "5 temiz yakalama sonrası aynı top diğer takıma",
+        "en-US": "After 5 clean catches, the same ball goes to the other team"
+      }
+    },
+    "m26": {
+      "canonicalSHA256": "00801958d6543f3766170f2177312111690fa6f1130a95f6d6941a0b053f3d7e",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m26-scene-1.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "1 büyük adım aralık · ileri adım yok",
+            "en-US": "1 big step apart · no step forward"
+          }
+        ],
+        "caption": {
+          "tr": "1 büyük adım aralık · ileri adım yok",
+          "en-US": "1 big step apart · no step forward"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m26/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m26-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "1 büyük adım aralık · ileri adım yok",
+            "en-US": "1 big step apart · no step forward"
+          },
+          "detail": "assets/mission-illustrations/final/m26/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m26-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m26/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m26-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m26/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m27": {
+      "canonicalSHA256": "e69766e1648a5c6e73a225483a300201ae2b3f7839d3b3d278c9523271ec48a1",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m27-scene-3.webp",
+          "assets/mission-illustrations/catalog-v3/m27-scene-4.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A: top boş elde; paddle ile işaret ver",
+            "en-US": "A: ball in free hand; signal with the paddle"
+          },
+          {
+            "tr": "İşaret görüldükten sonra B’ye at",
+            "en-US": "Toss to B after the signal is seen"
+          }
+        ],
+        "caption": {
+          "tr": "A: top boş elde; paddle ile işaret ver",
+          "en-US": "A: ball in free hand; signal with the paddle"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m27-scene-1.webp"
+        ],
+        "caption": {
+          "tr": "A: mavi ön yüzde yakala",
+          "en-US": "A: catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m27-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A: mavi ön yüzde yakala",
+            "en-US": "A: catch on the blue front"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m27-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "A: topu boş elle ayır",
+            "en-US": "A: detach with the free hand"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m27-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "A: top boş elde; paddle ile işaret ver",
+            "en-US": "A: ball in free hand; signal with the paddle"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m27-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "İşaret görüldükten sonra B’ye at",
+            "en-US": "Toss to B after the signal is seen"
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "A: mavi ön yüzde yakala",
+        "en-US": "A: catch on the blue front"
+      }
+    },
+    "m28": {
+      "canonicalSHA256": "2b7c04ae02f7984a44c06eaf617a089e72b0228b8963390853e995112d7bb96a",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m28-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m28-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
+            "en-US": "A privately chooses; B predicts during 3 seconds"
+          },
+          {
+            "tr": "Merkez seçiminin örneği · önceden ipucu yok",
+            "en-US": "A center-choice example · no advance hint"
+          }
+        ],
+        "caption": {
+          "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
+          "en-US": "A privately chooses; B predicts during 3 seconds"
+        },
+        "speech": [
+          {
+            "speaker": "B",
+            "text": {
+              "tr": "?",
+              "en-US": "?"
+            }
+          },
+          null
+        ]
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m28/1-detail.webp"
+        ],
+        "caption": {
+          "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
+          "en-US": "A privately chooses; B predicts during 3 seconds"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m28-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
+            "en-US": "A privately chooses; B predicts during 3 seconds"
+          },
+          "detail": "assets/mission-illustrations/final/m28/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m28-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "Merkez seçiminin örneği · önceden ipucu yok",
+            "en-US": "A center-choice example · no advance hint"
+          },
+          "detail": "assets/mission-illustrations/final/m28/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m28-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m28/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
+        "en-US": "A privately chooses; B predicts during 3 seconds"
+      }
+    },
+    "m29": {
+      "canonicalSHA256": "5eadff5d36b2154cce6eed3581eaf4ca280f979ed10f9d452dbeb3bd3b40e93c",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m29-scene-1.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "Her iki ayağın yeri değişmez",
+            "en-US": "Both feet remain in their fixed places"
+          }
+        ],
+        "caption": {
+          "tr": "Her iki ayağın yeri değişmez",
+          "en-US": "Both feet remain in their fixed places"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m29/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m29-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Her iki ayağın yeri değişmez",
+            "en-US": "Both feet remain in their fixed places"
+          },
+          "detail": "assets/mission-illustrations/final/m29/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m29-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m29/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m29-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m29/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m31": {
+      "canonicalSHA256": "433580ed1faa66dadfe5def08acc505c461022b104039133e131baeef67558b9",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m31-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m31-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "Yüksek yay başa değil paddle’a iner",
+            "en-US": "High arc descends to the paddle, not the head"
+          },
+          {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          }
+        ],
+        "caption": {
+          "tr": "Yüksek yay başa değil paddle’a iner",
+          "en-US": "High arc descends to the paddle, not the head"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m31/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m31-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Yüksek yay başa değil paddle’a iner",
+            "en-US": "High arc descends to the paddle, not the head"
+          },
+          "detail": "assets/mission-illustrations/final/m31/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m31-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m31/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m31-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m31/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m32": {
+      "canonicalSHA256": "4c2d5f24ec108f99f397365da366acfd7d9ea136fdf66ba8ae0ea1e0b12e6d30",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m32-scene-1.webp"
+        ],
+        "sequence": false,
+        "panelLabels": [
+          {
+            "tr": "Ayaklar kendi düz üs alanında kalır",
+            "en-US": "Feet stay within each flat home base"
+          }
+        ],
+        "caption": {
+          "tr": "Ayaklar kendi düz üs alanında kalır",
+          "en-US": "Feet stay within each flat home base"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m32/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m32-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Ayaklar kendi düz üs alanında kalır",
+            "en-US": "Feet stay within each flat home base"
+          },
+          "detail": "assets/mission-illustrations/final/m32/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m32-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m32/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m32-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m32/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m33": {
+      "canonicalSHA256": "b602b43f897444b8587605aadcbcce307e9a821b48989c1d615773c3270a0651",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m33-scene-2.webp",
+          "assets/mission-illustrations/catalog-v3/m33-scene-4.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          {
+            "tr": "3 temiz catch sonrası ikisi de 2 büyük adım geri",
+            "en-US": "After 3 clean catches, both take 2 big steps back"
+          }
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m33/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m33-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Kontrollü yay · güç vuruşu yok",
+            "en-US": "Controlled arc · no power strike"
+          },
+          "detail": "assets/mission-illustrations/final/m33/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m33-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m33/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m33-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m33/3-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m33-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "3 temiz catch sonrası ikisi de 2 büyük adım geri",
+            "en-US": "After 3 clean catches, both take 2 big steps back"
+          },
+          "detail": "assets/mission-illustrations/final/m33/4-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
+      }
+    },
+    "m34": {
+      "canonicalSHA256": "c97f6b1288f7681bb0d23748f120e22eb3dfae464da01974841d31e0e4a872d6",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m34-scene-1.webp",
+          "assets/mission-illustrations/catalog-v3/m34-scene-2.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "Top öne, açık koşu alanına · çok uzağa değil",
+            "en-US": "Toss ahead into the clear run zone · not too far"
+          },
+          {
+            "tr": "B top yere inmeden mavi yüzle yakalar",
+            "en-US": "B catches on blue front before the ball lands"
+          }
+        ],
+        "caption": {
+          "tr": "Top öne, açık koşu alanına · çok uzağa değil",
+          "en-US": "Toss ahead into the clear run zone · not too far"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m34/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B top yere inmeden mavi yüzle yakalar",
+          "en-US": "B catches on blue front before the ball lands"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m34-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Top öne, açık koşu alanına · çok uzağa değil",
+            "en-US": "Toss ahead into the clear run zone · not too far"
+          },
+          "detail": "assets/mission-illustrations/final/m34/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m34-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B top yere inmeden mavi yüzle yakalar",
+            "en-US": "B catches on blue front before the ball lands"
+          },
+          "detail": "assets/mission-illustrations/final/m34/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m34-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B durduktan sonra boş elle ayırır",
+            "en-US": "B detaches with the free hand after coming to rest"
+          },
+          "detail": "assets/mission-illustrations/final/m34/3-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B top yere inmeden mavi yüzle yakalar",
+        "en-US": "B catches on blue front before the ball lands"
+      }
+    },
+    "m35": {
+      "canonicalSHA256": "5aa1dd041948972132ef0a3ddd2e3c03974a5210baae2ce8ccb500268f66062e",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m35-scene-2.webp",
+          "assets/mission-illustrations/catalog-v3/m35-scene-3.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "B: havadayken mavi ön yüzde yakala",
+            "en-US": "B: catch on the blue front while airborne"
+          },
+          {
+            "tr": "B: önce iki ayakla yere dön",
+            "en-US": "B: land on both feet first"
+          }
+        ],
+        "caption": {
+          "tr": "B: havadayken mavi ön yüzde yakala",
+          "en-US": "B: catch on the blue front while airborne"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m35-scene-2.webp"
+        ],
+        "caption": {
+          "tr": "B: havadayken mavi ön yüzde yakala",
+          "en-US": "B: catch on the blue front while airborne"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m35-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "B atışı bekler; ayaklar yerde",
+            "en-US": "B waits for the toss; feet grounded"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m35-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: havadayken mavi ön yüzde yakala",
+            "en-US": "B: catch on the blue front while airborne"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m35-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: önce iki ayakla yere dön",
+            "en-US": "B: land on both feet first"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m35-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "B: inişten sonra boş elle ayır",
+            "en-US": "B: detach after landing"
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: havadayken mavi ön yüzde yakala",
+        "en-US": "B: catch on the blue front while airborne"
+      }
+    },
+    "m36": {
+      "canonicalSHA256": "c455d1d24712d809ff8ccceb287563948ac3912e3368083006ebae13d1ef8084",
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/catalog-v3/m36-scene-2.webp",
+          "assets/mission-illustrations/catalog-v3/m36-scene-4.webp"
+        ],
+        "sequence": true,
+        "panelLabels": [
+          {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          {
+            "tr": "Her 5 temiz catch sonrası ikisi de 1 adım geri",
+            "en-US": "After every 5 clean catches, both take 1 step back"
+          }
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m36/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "B: mavi ön yüzde yakala",
+          "en-US": "B: sticky catch on the blue front"
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m36-scene-1.webp"
+          ],
+          "caption": {
+            "tr": "Yakın başlayın, yumuşak atış",
+            "en-US": "Start close with soft tosses"
+          },
+          "detail": "assets/mission-illustrations/final/m36/1-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m36-scene-2.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/final/m36/2-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m36-scene-3.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/final/m36/3-detail.webp"
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/catalog-v3/m36-scene-4.webp"
+          ],
+          "caption": {
+            "tr": "Her 5 temiz catch sonrası ikisi de 1 adım geri",
+            "en-US": "After every 5 clean catches, both take 1 step back"
+          },
+          "detail": "assets/mission-illustrations/final/m36/4-detail.webp"
+        }
+      ],
+      "activeCopy": {
+        "tr": "B: mavi ön yüzde yakala",
+        "en-US": "B: sticky catch on the blue front"
       }
     }
   }

@@ -1,0 +1,1392 @@
+[
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m17-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m17-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-01.svg"
+    ],
+    "sourceSHA256": [
+      "1b4290598077a277457eaee3eb32c4d004ad6dbe5f2c4ac9a6973b8531db475a"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m17-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m17-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-02.svg"
+    ],
+    "sourceSHA256": [
+      "dea131ce72f74e0cc0f6e169d79760e567783052676b88a67614413e8010e765"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m17-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m17-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-03.svg"
+    ],
+    "sourceSHA256": [
+      "3a0b466d1335c2bd2ad4eac2ef1100c4e0b8ba37b58649dfc5db532f5b0e0189"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m17-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m17-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m17-panel-04.svg"
+    ],
+    "sourceSHA256": [
+      "7b5143c90eadde1a82880d0ae64e89daafbb16018e3402cadc989f04f647ae17"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m21-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m21-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m21-panel-01.svg"
+    ],
+    "sourceSHA256": [
+      "781f03fc4cb23dfaa3ab9f809a22d5df71537627b96e40c310a43e1dfe44781b"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m21-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m21-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m21-panel-02.svg"
+    ],
+    "sourceSHA256": [
+      "45b6e934147cc6f6f3d2d5ca9536d369745c5b9b3d9cc9f128eb0b72c564a3fa"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m21-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m21-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m21-panel-03.svg"
+    ],
+    "sourceSHA256": [
+      "a062b45f029e476bcffb9b0f05aca495de124b652340d7f912bdde13d08106f2"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m23-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m23-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-01.svg"
+    ],
+    "sourceSHA256": [
+      "89d66cd8f179e9c9c2f260e0ab67786c8b1936a00a817ed6d49c2c63744f9a82"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m23-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m23-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-02.svg"
+    ],
+    "sourceSHA256": [
+      "1183bb5c590274d7d6440ea87e083b9dcced3c56142a4f8762e34e8c57fc5a14"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m23-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m23-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-03.svg"
+    ],
+    "sourceSHA256": [
+      "30a875e4a1ecc55c1ff6d28ea119d1d1ad43ad7ba218ed033886e2d1f41d3d63"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m23-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m23-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m23-panel-04.svg"
+    ],
+    "sourceSHA256": [
+      "cf2ef8b84e4c95290b6edf427cbe64622b1adc72b9d0bd2cad7088d0a38242ee"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m24-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m24-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-01.svg"
+    ],
+    "sourceSHA256": [
+      "11fba76218646853ff45510cddcf0edcfbda1b608a0b3d44fab817c065d8ab16"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m24-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m24-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-02.svg"
+    ],
+    "sourceSHA256": [
+      "8c4e8772115c307f099d64606bebb00bc6a4bda18be52d4d632be3d8f1c47b2e"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m24-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m24-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-03.svg"
+    ],
+    "sourceSHA256": [
+      "7c9f5f650751967b40a875043d2374e00a7f39af9a68526f0a914793002c7f61"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m24-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m24-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m24-panel-04.svg"
+    ],
+    "sourceSHA256": [
+      "4a09821872bb00f2259b2e3d3e491039150de01caf57ee6a4fa88978a05aa496"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m27-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m27-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-01.svg"
+    ],
+    "sourceSHA256": [
+      "f6fa9d2333d57c46922a9ab6368b83bf767166d2452dd7b2ec6b7603793a56d8"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m27-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m27-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-02.svg"
+    ],
+    "sourceSHA256": [
+      "a73e1dc1d736f317e16e3f2d567c5173dd4c3d33ace66d1f537fddbc07512841"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m27-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m27-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-03.svg"
+    ],
+    "sourceSHA256": [
+      "01a843b5c3bf6308cbf55259941660f871003203d923f7ce3570f6b3d053f262"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m27-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m27-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m27-panel-04.svg"
+    ],
+    "sourceSHA256": [
+      "de20ee69a2952b4d42b7595c6ff1590435e3df1b4dc94fb6ffe5402f98a9c707"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m35-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m35-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-01.svg"
+    ],
+    "sourceSHA256": [
+      "45b08ff17e76a401e8fd5aa54affa1b59a0e7c1aceae8caf3b6a66fa57290b11"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m35-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m35-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-02.svg"
+    ],
+    "sourceSHA256": [
+      "46bd934f48b3d50a85921df3c801f2ce04ca62e732c2ba6013dbd099fc680906"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m35-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m35-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-03.svg"
+    ],
+    "sourceSHA256": [
+      "4c50eed3baf26b7a6299350f726659d95443226d1894b81d14f263b8c3247702"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m35-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m35-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_CONTROLLED_RECOVERY/m35-panel-04.svg"
+    ],
+    "sourceSHA256": [
+      "56cb8b5f21038d0c69106c2ea6e77edac7fd462089f180de6360a8ee21c81a06"
+    ],
+    "reason": "Remove bilingual review-board text; retain all native player/product/ball nodes and temporal moment. Full-body relational scene, no mirroring.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m01-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m01-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "022543f2e5ffb69a277513f5da749c82e156410d82c9849526fa432449ec3c20",
+      "74f8ecd7c2774b13fe76e8c715e4868feeb02d54d2aa302f2d77d241aaf6852f"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m01-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m01-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "3d3c90ae37df523391ca310b644ac92227482ebb793db3833fab0c87a6eaec52",
+      "e9747f321c263a4364c9426d047adf1e094e1e52fbaa20102e1f8e14e96d77a5"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m01-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m01-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "7e45d5593d221856d41291afdfe9a6634551c7eab8e4ddc35cfb85b641c222a8",
+      "7d0618b629772baaafeed140142f876cbad5fc983531218e3e9f19a3d7117f74"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m02-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m02-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "955eaebdcc315333f25d624ac4bdb6047b6c48578d9c88a14fff9bde369be0a4",
+      "c0704e21a9008a400eacdf06dc52bd7fed54cd9a847b9fd55b27df988d1d5def"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m02-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m02-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "db3fcbbabc8b56b37dea49d4a9fbc89aa8a43086b03dc9b58ff4d9e3ba22b106",
+      "2048fe49ef1c9e42dcd8e77221fb66ea486d7b01af2693f67c16267562dec481"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m02-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m02-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "1719a5e81422a56a32af0e6414130783491c1eb4f15303f242b6105ce67e3132",
+      "7c222976b7af4b3466bd5961ed801b46052bad6b70453142a7c768caf13ae930"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m02-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m02-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-04-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-04-B.svg"
+    ],
+    "sourceSHA256": [
+      "ffb7753de236c69e90df471a57dbd1e4d9a44c754f0147a67f8e5793a06bb3f1",
+      "d520913069ad4642dcecc0ae549a3fdb498fedeff268f553803d0d5e3baa0194"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m05-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m05-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "93f4b84a37f5a4042b367b45a4396720cf3b583c6dc7f8fcf2d2940d3c6dd1f7",
+      "bea06cacdab479b8bdad8d6f2823665390013c9b7dc3bcd82c4ed9593308c257"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m05-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m05-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "1d463896a3ee4d8cb6332989c57489d1be80bbda5ff5ec8975f479dc6dc77a1f",
+      "dafe1c8a9b391ba0825382688d73184db40df939d9ccbeb71f9d2caf10484e6c"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m05-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m05-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "7b74b4515cdb69b828923864c731fa62e7c7bb31253dc576382d26664cb6e5f1",
+      "63e02302287909148df8846a2ff8117168843299a45a007584ea61365f35c5e9"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m06-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m06-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "3ce6fcb68f7773052da3663cc20b52c79f3bc8e632976b3718c4b4d26a5494f9",
+      "149326272b749d76d3dcfcb1ae2825166256cf6b99c1a696e25ccb94101dddde"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m06-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m06-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "fe7574e5a068ce92163deb20520a3fbb78b9814c9c163a47b14f2219d58a282e",
+      "bbdcf37bfbde264b5b991788c3274828a22a71080ec8c3eef50c2fd31733d029"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m06-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m06-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "43344fd331662c52c99fe2016d4ac5926b9873cb992bb45bd3ade425c5fcd3c0",
+      "438b9c9f6004be6bc74760df7d4ed647c7f4475698ccd9963394f81aa8234f06"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m08-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m08-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "c14ddd957f7ee65f2460f00c00a62552e2f0889a80e2451b2b72a57e16d4b68d",
+      "bec5d89827b8ab18d975fd4883c9767c8213041047289f4a3b9796ec99ac1af9"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m08-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m08-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "ad5dd434bc70b7cab1a5fc37a38b0ba13111b30a97befca2bc94717eb8a997da",
+      "7a6222404fea1694ac42e77a3b22e24296b83592fc1f2386757a65abc0978ce9"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m08-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m08-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m08-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "928c2b7bb37bbef2143ac79f6c558ad12a00e54ec17675c50ee3ad2ce6186fbd",
+      "c074f2b6674d30e8fe2dfed4a2ecfa08e09cd9dd20564cce2de9284f166cdfff"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m09-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m09-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "c866089a66bb3a93158627d7c2034bab00713df67d22041decfc26d4723a4fe0",
+      "9b4848a1de7d27c1396dc8777e8bb5a4c4222d485309b7c9e3492b6e61f8b1b7"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m09-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m09-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "96c80ea2c8bc7ac862e21eae05c28d427bbd3b2049fd5f982fac77a888cc262f",
+      "244c677827f7ba8ee662602aa2521f605ec8a3d161ee85b09f96f419c25e9fbb"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m09-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m09-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "bc605db75710a45d30746fe7ec0f34627b2570bcee130fe6975adeadeb3f25f6",
+      "2e210790e21612fb13f1ce0211bdb7d2530db5cb7e7942a19d0b094d6bbec8a5"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m10-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m10-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "1b6729308f61d273e1aecb71cfe99fd8e97e2546365fa84b9e496f94fb4965ea",
+      "9d0d088063739ba98d689b593f3a5fa92cd6177af3ea93a51a40e2a0e93b4696"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m10-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m10-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "c4a869c5dfc962964790ffaa1778976df290c615d916a0b3a63348cdd6d74354",
+      "f99621715c13089214a33d1b8149863cecd89ae40f255b54eb041167b807fa08"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m10-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m10-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "04d87079ffad44a3709826c4607ff3033af9e14f888b368b77e4b89a720418ea",
+      "fbca5af7a488a821872536dac90a0c57338e375fdfa6a7af88bfb531b4fbd95f"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m10-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m10-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-04-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-04-B.svg"
+    ],
+    "sourceSHA256": [
+      "7e379cb6fc21777d4017107c956dd9634169fc4cfa05d24a597ffef8289dbd38",
+      "bcccd786d1cd1c4836bb4f5f809762dc3482d3b16e39be99933e92632b08cc9b"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m11-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m11-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "5c54be207a0a277b5d078c6680bc72d0a2c21f102954255543ad5221a20e0e5a",
+      "b0e4727f870dabe31727b8db95af987b5bef87afa3bef1f39dda53241d7514db"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m11-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m11-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "67595b94c1cf2de3f36af7e806a9396a7d2331835c4ca622b2923ae768b77924",
+      "0072a499cff506fc822b4c156855e691277381c288fcc79748b7a304aaf88a41"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m11-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m11-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "4b3fa27885d7b79a90408b25c4ee917d45ded511aa8992ec2d8a9c2de1bbbc68",
+      "e11dcd45ec5d2443de0e15a8ff1c1a31bae996b2b15089c45c8a357e4bb2f1cd"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m12-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m12-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "a4da0cb34a99f3c74d44181b0aecf6f423aa282fddd0906fc923fa58f3cfe197",
+      "47583520c788dcb1df2a8a96e80d4cb4c037b110665d29cc0606b34640a388fb"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m12-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m12-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "2253c3446150e125140dacd7e8d4530585679bdfb0368ead6c17d83169091d98",
+      "c2d277c334b9e8a30fd4dcb567dc41b830625e8528d590c73aa3a55394044275"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m12-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m12-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "39c2a62eb8f65e146c9231258fe93a4f5a35556b9c9f61ac466dfbc6ef00ed6f",
+      "c948349aba9492441496513b465ba18268b8bab5a80d54de96299ea8ed169cba"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m13-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m13-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "4c001d5713f3355dff8e8e9d5491dc699b3c5a80bc7631a6c05c0d1c894f988e",
+      "a70327f15022f88a2616e287b7f675dd0aa6c46679cf2dad30d224211a386d52"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m13-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m13-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "ff59d1852df521106f37b6476a5ca9f6dba1471ac8946b245231ab7b66314ecd",
+      "f6fd1046986b50503c440667652bf0556c07f5fd95cff0741b202816d02859cb"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m13-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m13-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "d681a7d4ebc35684ce4f75c6ac860dd6b01159efeb32ac7a4f241e988f3391ef",
+      "f690435ef1bdfefad811ffd8c10f850bbbbd2447628934efce0db47be58a7129"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m14-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m14-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "eee97648c64b15130677c1d31ed947af6f7d3db812a32a6bd52a4298205c8d7b",
+      "cb4c5d954859f27756577198c3258302bd032c468cf4378c7469e5fe7c86f14b"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m14-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m14-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "e1d401edbc05124b5b1038efd6d5b6709b8fded649d8d58b73342ea94d8d0ebe",
+      "32d353fd56a006ebaa752e066bd4d97930f67ece57326ed7c5b7400501b50d34"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m14-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m14-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "f959cdaaa8a4f50ccf76a915ac22611413d1f42aaa8a739d0d5f83c667b66928",
+      "2c4232070863869dbf9357bdaac24d291d5c0fbe2a27ab93f5ee282f663e7a92"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m15-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m15-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "c591fd9b134b52f110707883825b4d4f1987810b81ca5f670bc3d768ddc45d04",
+      "5e6ebe2dff81b3f54cf641ffffb11a8cbbfb35a731c6c5f24c5e009148b0bae3"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m15-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m15-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "98a660fc48805f7e1b649eec1b8c13d7a854be5297d396c044674f1e0ea01565",
+      "3e241442cca2d5cf7692d1ca5fa67d8e3f26f1424f766a7b0df8aee78452634c"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m15-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m15-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "ae98e33f9f96eff6395dabecfb65f112f531a7b8b151ebba7529894659560e59",
+      "184b0d5691306ae6fcf7ca4103481b918fb8230639ea9a925e6aa1f66afaa1db"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m16-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m16-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "c7c3c332e01f9734a3a6e9dc1786798496131a397fbba6679add3009a55122ae",
+      "fef00b745b95a1acd6d757b218a58a4c5b61ab7cb13663ba5b50c0919fb18543"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m16-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m16-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "01c661fe432d533800859852ac7967912d9f352850fe6261e0ff0e1715a307ed",
+      "2fce5d292dc041744db3b64f3bdb8bdf5a971652059ddbc9d4632b0c5fc63e89"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m16-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m16-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "542819bed25907cbac8a213eb535a2c3e4a3a080a7cc2033935936ce9a9714bd",
+      "4885d21cf1ed1695bf6ac0c0ece744216aa5aa6783c2f02874cb12511309f59f"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m16-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m16-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-04-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-04-B.svg"
+    ],
+    "sourceSHA256": [
+      "8513c0fdb3cde72f6eb01f94ef0a3322bec96b30cb7ba08a62132e87f0cf86f0",
+      "bde075fc40323a02261fd27bfd642c70a9f0be551d1e377365b9da962657d02d"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m18-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m18-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "5f3613ce4399712a2e43cb17c6e950296afedb342f2f0c15483c7a0322116d50",
+      "962be8016a7342670f82f9e6511f0e36cb052983af40e514ed66c9d241f6dfa3"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m18-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m18-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "ac650ef2a8a374d0ee1fb91221c2183af01e82b08bd2235b7235bdca53dd1040",
+      "4e3c52352fb21f5c18125796318350b76f7d8a36749411cffb95156fb49f8b0b"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m18-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m18-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "49718ac8681c551cc8b19f697b2c755609eb0dfc196eb56468d353766362529b",
+      "71d02b2a4482df335cb0f17667e38eff9b10c018ed76097fe927ee79fa2247d9"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m19-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m19-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-C.svg"
+    ],
+    "sourceSHA256": [
+      "1cca97c90100736048d48e06c9fae6661eea48df85c255e776952aff0d69f9e0",
+      "e8774a5ef179a1fa7e15c00a3a5afe7b6473a1586b14bc327fded9153550a6c2",
+      "882745e0987f860d87369ea6f70b733ac5817d82f41ab62944efa973812e00a2"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m19-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m19-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-C.svg"
+    ],
+    "sourceSHA256": [
+      "718dcd67f1d867fdd1cb58660ecc3cff8a69a901d7307a2bcd30bc8f380ccce9",
+      "8d25a71d97194ff620048d81e0937ec9f99ea580e24ded4077c6a3246fd4dba1",
+      "f5daea2a03b3726c1451347e30d9ffd59ff4f93a7fdbb01507dd9b4c57908f60"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m19-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m19-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-C.svg"
+    ],
+    "sourceSHA256": [
+      "8aa82e1d4f2ff01e97e0490b8dc497e2d333b3b9f10ee88baa87af042c345ade",
+      "823b88e11795110e75188a283b8f6bc2360221856be2e4cacb09eb8989f9c1df",
+      "5b954505df3ce9dc7fed1713fb604232860b2efc2738f2fb0a95b416acaaedc6"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m22-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m22-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-C.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-D.svg"
+    ],
+    "sourceSHA256": [
+      "f62eadc230c96f77086ca4adbde41c69e5f56115f6af9b4f77f29ab09370ff87",
+      "eb99eb85ff3d671170e60a3cbe6cc52a6771c0e40cdf928358fa1a0c297c1315",
+      "dcdd3f9e9e2b5db94f7e6fcf9532c8bd836fcf13beb678c9c6f84059669dd4ff",
+      "b564aa619bad8a776573d4b5d61ce647e1b92e4508e8c89e505e0bfe0c324d62"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m22-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m22-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-C.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-D.svg"
+    ],
+    "sourceSHA256": [
+      "89eb0341ca44d05dd9c717ee7709672f8d116ecd13557d4bcd1f5ab0951d1ca0",
+      "ad22c51b9b1de8779716c53976dd8e46716b96c4e950b55d05fa2041f7effa33",
+      "a2fe2b420a62994cedb442a2c55d8bcb9c5fe9f77098db1496f2e58ec1c87163",
+      "d109e9d3a8f938421e1cd888ff3b115ff4b6d43ed21d1c8752763af04c97b4bc"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m22-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m22-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-C.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-D.svg"
+    ],
+    "sourceSHA256": [
+      "e7cc7344f82aa717b9bf1006dfd97182a829e3efba7ca9ad23284c35b3913c23",
+      "7dde907984b1ffcc4a35a4537a9ddddf7878d0d8b041b36e6d2ee39f9b8e8c60",
+      "e177636a5141d17298a3b3d929e46c8e572df6975e25ecb111ec3e043f3a72a2",
+      "f986a27104571e7f31988da9a7dc8001b9299750e89cdc9a3c81b62ab6cc446c"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m22-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m22-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-B.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-C.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-D.svg"
+    ],
+    "sourceSHA256": [
+      "83b9ed177148dbfae5968d92d692a3e01ba8b5a3c326cb44d8e667b173e983ea",
+      "c01b404b18d236ad52a43848a5dcacbe4349b6a23e68f72b35f48f2f980d3aad",
+      "6d906899ad06f84bc63f964d6ce33e48b528f690e55c0b9379ad68ed9700b1f2",
+      "c2e1dca779860d8f91b588dafd7d653c5ee5c6c3c98affe26488b627e4fa34e4"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m26-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m26-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "7a5a5328e76af19849ac324dd77ee8fe8a06aa1f4f172cd2409134f07eb7021c",
+      "505eae1978f7738864dca05ccbf37cff0cfbbac6056a038943fbd1be89ee913e"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m26-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m26-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "a66567e3f7e31f346d4ace1eafa9f0a4b73b812c91b74c70e3acd9767b9bd72f",
+      "c135faeffe6bca0c564581c0a29a8eba86962b32cccb1de13559246187f5fc33"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m26-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m26-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "cd11ff0ab205190b65bbd8febe2b8eb36b96b5f9904399129783a5720623b028",
+      "ab9e8441ab16e34bb769183ec093130d8dd00f65301389c11240d80082b42e73"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m28-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m28-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "f29b631ff4424b6ed55b33bb0385724ba454b6046f0468780c3327248837d301",
+      "8fc967b3255e51b4ab978c5119baa40f8d6c904a0cac2a255590863882c92ccf"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m28-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m28-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "197860873157fe1998895d0d17f4c615e0ed3669d0d055c17144498639597246",
+      "f77366ecc7815f99c4c57cf57955e80ba8943cf462dc85f5242e3dabecbfd554"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m28-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m28-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "18b0d1c9dc527863343658823d612c50df5d79eed7fff0ae7a78a1dc5d07f60b",
+      "e876d4179f75cf871de0fda0ebe835ae2eb71d0a80b9c1382f024407765d2aee"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m29-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m29-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "cee9136043ccf281db9154932b37cd24e6b5b71e8aa81fb322a549308ecff95a",
+      "dae6b94abd7c9610836f18ae3e2d3b4f4d3b1c368fd7f900ffb34bff2a283802"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m29-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m29-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "edd5be32db2b8655ad13685b2597e40e6557bf2b154acedae2b0a0acb27dcb1f",
+      "63027bbb8377597fa0c39a0d428c6da65d3a762355c67e2ac3da947a10a33132"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m29-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m29-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "77057d45c840d36c09b3f046d3bd1f051e0b5c34096236854129dd0fa5d01500",
+      "5df3c168d9f182cff448ed7937b061bd681c13ec3a17113ae5304cbb24b0b193"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m31-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m31-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "469c27e3c4fc6d01a4e010975be410ac07cb0de8104b7f38ae8480686083f4f9",
+      "3f5439ede909dbe6aa11560c993dbe7b6a761a6d61085b056922dabbaddc677d"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m31-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m31-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "6a46776b21178ccd23904706b64ca224d1f6e1e1300219aa1e52dcb38a9e9eef",
+      "eef397f8e386be3e7f9ae4580b83f85820510b20257cc5538fd1698f86b67fac"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m31-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m31-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "3f2a06758146202c3e14fa354efb9a5881b7e0905cd4e0721303d6d946dde6c5",
+      "a2a4691e5a877b5e59ce06cf96f50b6f8e2af0fa4f4405d3ba2a3c3f8e63f513"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m32-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m32-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "eb6fcfb7e980928bc3363625f7e49c2d824af4102ea503a3fbf2e63c42d89103",
+      "26fcbcd4825e2be87aba4d221011b98d73d01e3ed0a00e829bfd000089eb9cee"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m32-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m32-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "d1d18835c13309690e44919a167f5c8e4aa2424b4483d60bb007406b330b0cc8",
+      "3bb4d68b569b431a229fe212f16e1d2e78f72f5c656bcea2a1ab70a5471ffbff"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m32-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m32-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "49c9f136e7fbac4cc6bb0accf0a07872b6c7c1a18a819a1ff3c8caae1e841df2",
+      "f187a7de178927c2529d3231d9ae3852eadfca257385fd3a830c85d4f0eb1b96"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m33-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m33-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "4827f15e6472fb02f5b83e5b93972c708cb22f8c8a211a740845a9281c92e503",
+      "0bec06b2356869a0516103f4078015cc7f71d16810dc15fff51dae513bb89f6c"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m33-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m33-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "a63e91b3f7a89751405493cc98d08a7d9c6861ac76f51bf2625eb48a0973f90c",
+      "67e8a277779a1b3b680e2ec39d2cb2da86359cc04d4553fb087ffa6866e0d72e"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m33-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m33-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "4ffe54f7dc6cf36f034a9f0bc380578bb1fe501fdf52c1e603db4d7faca946a5",
+      "32294a88491d4e7f41c8c629c04f4387f99c3d7272b8ba5458ce5938354b3ac6"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m33-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m33-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-04-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-04-B.svg"
+    ],
+    "sourceSHA256": [
+      "db668b8bf6685e83ced13024ba6206b2e1d50e379a1a3daaf5c356818347d6c8",
+      "234a3a43ea33e99a7a67c9c08afd853f31a4e8fa0b3478ce4819c233a587bc6d"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m34-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m34-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "34daba54f6ee08fc8f511f3b8f6c49af654a486f1c7b8f64d0ccb9f8979aa7ff",
+      "19cbe4ad120dbb9d1de8a0e47337a97efb43d3a37188d449b09c4044c5196436"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m34-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m34-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "14706557541ae33294d6bb51a5ca793c3b346ab70320136f18eabeef62110a6b",
+      "02bb8c7c00369ce40d360f4745d5e7f5cc0da93e6f6582a2ce10c91961964568"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m34-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m34-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "eeb717ea8a9d856e2afb4ae68ecf6735cf44663c9a8285aebc9b41ebc9dd44c7",
+      "0139804452dae009f7f5f727d3987534448d2087766c5528d22bded59da42e0a"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m36-scene-1.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m36-scene-1.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-01-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-01-B.svg"
+    ],
+    "sourceSHA256": [
+      "3c277d27ca834cb1daa5a4c3a7abffa897caf1684af8a7cdb2338542e0016f82",
+      "5b43deab6f54963def74936923d08a92a3c09c0e500712ea9b428bcf4285ac7c"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m36-scene-2.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m36-scene-2.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-02-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-02-B.svg"
+    ],
+    "sourceSHA256": [
+      "bc454f9547b2808509ad66fee32c87ba2b3de25b3abb8ad0a1f7f53d6a3efd77",
+      "05aef07befe6f3f7917c77bbd4cb905d074061e370b5e9df26d210ab712d7af2"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m36-scene-3.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m36-scene-3.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-03-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-03-B.svg"
+    ],
+    "sourceSHA256": [
+      "73ce783db0b35bb18a15eed66ce1ec2c2770655741716028de13557f3972098c",
+      "8fe2b7b64946378af7c0409669933c994ec2bd037c13f49fe58ef8a2faf865df"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  },
+  {
+    "path": "assets/mission-illustrations/catalog-v3/m36-scene-4.webp",
+    "sourceSVG": "artifacts/presentation-catalog-v3/m36-scene-4.svg",
+    "sources": [
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-04-A.svg",
+      "outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-04-B.svg"
+    ],
+    "sourceSHA256": [
+      "e6439d1023289520009c7163b4224ee10380f934b27e53ecffa191706fdd352f",
+      "98a5478ac7d1cc3eab8f038bfef0270bc361e665317c658daa21167979727fd6"
+    ],
+    "reason": "Compose the approved same-moment players at full readable width; native labels outside artwork. Existing contact detail remains separate in Help. No new motion rule. Spatial refinement: canonical circle/square/order or distance/arc grammar, same immutable player/equipment nodes; no pose mirroring, second ball or new game rule.",
+    "status": "TECHNICAL_CANDIDATE — NOT HUMAN LOCK"
+  }
+]

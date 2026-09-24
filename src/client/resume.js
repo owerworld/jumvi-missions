@@ -1,4 +1,5 @@
-const KEY='jumvi.lock09.resume.v1';
+import {storageName} from './deployment.js';
+const KEY=storageName('jumvi.lock09.resume.v1');
 export function readResume(storage,mission) {
  try {const raw=storage.getItem(KEY);if(!raw)return {kind:'none'};const v=JSON.parse(raw);
  if(v.schema!==1 || typeof v.id!=='string' || !v.id || v.id.length>128 || v.missionId!==mission.id || v.mechanicsVersion!==mission.mechanicsVersion || !['active','stopped','interrupted'].includes(v.state))return {kind:'unknown'};

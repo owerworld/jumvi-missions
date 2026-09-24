@@ -1,5 +1,6 @@
 // R3: this module has no network, analytics, URL or browser-history dependency.
-export const DATABASE = 'jumvi-companion-v1';
+import {storageName} from '../deployment.js';
+export const DATABASE = storageName('jumvi-companion-v1');
 const stores = ['meta','players','operations','records'];
 const request = r => new Promise((resolve,reject)=>{r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
 const fail = code => {throw Object.assign(new Error(code),{code});};

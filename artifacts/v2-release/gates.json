@@ -1,0 +1,9 @@
+{
+  "status": "NOT AUTHORIZED TO EXECUTE UNTIL CONDITIONS VERIFIED",
+  "humanFeedback": "çalışıyor",
+  "R5_realDeviceCriticalJourney": "OPEN — no device/browser/enlargement detail supplied; do not infer",
+  "v2EnvironmentCredentialRoutePermissions": "OPEN — existing staging token not assumed valid",
+  "liveCoexistenceStagingExactArtifact": "PENDING",
+  "productionPublication": "NOT PERFORMED",
+  "rootPromotion": "NOT AUTHORIZED"
+}
