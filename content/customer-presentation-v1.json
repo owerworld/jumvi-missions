@@ -1,0 +1,468 @@
+{
+  "version": "customer-presentation-v1",
+  "status": "HUMAN_REVIEW_REQUIRED",
+  "missions": {
+    "m25": {
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/m25/seated-editorial-v1.webp"
+        ],
+        "caption": {
+          "tr": "İkiniz de oturarak, boş elle yumuşak atın.",
+          "en-US": "Both stay seated; toss gently with your free hand."
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/m25/contact-alpha-v1.webp"
+        ],
+        "caption": {
+          "tr": "Mavi ön yüzde yakala.",
+          "en-US": "Catch on the blue front."
+        }
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/m25/seated-editorial-v1.webp"
+          ],
+          "caption": {
+            "tr": "Boş elle yumuşak at",
+            "en-US": "Toss gently with your free hand"
+          },
+          "note": {
+            "tr": "Kısa atışlar yapın. İkiniz de oturarak oynayın.",
+            "en-US": "Make short tosses. Both players stay seated."
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/m25/contact-alpha-v1.webp"
+          ],
+          "caption": {
+            "tr": "Mavi ön yüzle yakala",
+            "en-US": "Catch with the blue front"
+          },
+          "note": {
+            "tr": "Top, paddle’ın mavi ön yüzüne yapışarak tutulur.",
+            "en-US": "The ball sticks to the paddle’s blue front."
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/m25/reset-alpha-v1.webp"
+          ],
+          "caption": {
+            "tr": "Sonraki atış için ayır",
+            "en-US": "Take the ball off for the next toss"
+          },
+          "note": {
+            "tr": "Topu boş elinle ayır. Sonra yumuşakça geri at.",
+            "en-US": "Take the ball off with your free hand. Then gently toss it back."
+          }
+        }
+      ],
+      "canonicalSHA256": "6a9a2dfaa754282ac1e750bdfb46d08c7ca81675b61098e271efa8bb73c0c529"
+    },
+    "m07": {
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/pilot-v1/m07-hero-v2.webp"
+        ],
+        "caption": {
+          "tr": "A sol boş eliyle yumuşak yaylı atış yapar; B sağ elindeki paddle’ın mavi ön yüzüyle yakalar.",
+          "en-US": "A makes a gentle arc with the free left hand; B catches with the blue front of the right-hand paddle."
+        },
+        "note": {
+          "tr": "5 temiz yaylı atıştan sonra geri adım atın.",
+          "en-US": "After 5 clean arcs, step back."
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/final/m07/2-detail.webp"
+        ],
+        "caption": {
+          "tr": "Mavi ön yüzde yakala.",
+          "en-US": "Catch on the blue front."
+        }
+      },
+      "activeCopy": {
+        "tr": "Yumuşak yüksek yay; hedef paddle.",
+        "en-US": "A soft high arc; aim for the paddle."
+      },
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/final/m07/1-A.webp",
+            "assets/mission-illustrations/final/m07/1-B.webp"
+          ],
+          "caption": {
+            "tr": "Yumuşak yüksek yay · hedef paddle",
+            "en-US": "Soft high arc · paddle target"
+          },
+          "players": [
+            "A",
+            "B"
+          ],
+          "detail": "assets/mission-illustrations/final/m07/1-detail.webp",
+          "handNote": true
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m07/2-A.webp",
+            "assets/mission-illustrations/final/m07/2-B.webp"
+          ],
+          "caption": {
+            "tr": "B: mavi ön yüzde yakala",
+            "en-US": "B: sticky catch on the blue front"
+          },
+          "players": [
+            "A",
+            "B"
+          ],
+          "detail": "assets/mission-illustrations/final/m07/2-detail.webp",
+          "handNote": true
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m07/3-A.webp",
+            "assets/mission-illustrations/final/m07/3-B.webp"
+          ],
+          "caption": {
+            "tr": "B: topu sol boş elle ayır",
+            "en-US": "B: detach with the free left hand"
+          },
+          "players": [
+            "A",
+            "B"
+          ],
+          "detail": "assets/mission-illustrations/final/m07/3-detail.webp",
+          "handNote": true
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/final/m07/4-A.webp",
+            "assets/mission-illustrations/final/m07/4-B.webp"
+          ],
+          "caption": {
+            "tr": "5 temiz yaydan sonra mesafe artar",
+            "en-US": "Increase spacing after 5 clean arcs"
+          },
+          "players": [
+            "A",
+            "B"
+          ],
+          "detail": "assets/mission-illustrations/final/m07/4-detail.webp",
+          "handNote": true
+        }
+      ],
+      "canonicalSHA256": "1e1560115d3729c1a70121f662efae6bd5530088552da6159e4e7019e634c1ad"
+    },
+    "m20": {
+      "frames": [
+        {
+          "images": [],
+          "groups": [
+            {
+              "caption": {
+                "tr": "Sıra 1",
+                "en-US": "Line 1"
+              },
+              "members": [
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-1-A.webp",
+                  "label": {
+                    "tr": "A · Ön",
+                    "en-US": "A · Front"
+                  }
+                },
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-1-C.webp",
+                  "label": {
+                    "tr": "C · Arka",
+                    "en-US": "C · Back"
+                  }
+                }
+              ]
+            },
+            {
+              "caption": {
+                "tr": "Sıra 2",
+                "en-US": "Line 2"
+              },
+              "members": [
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-1-B.webp",
+                  "label": {
+                    "tr": "B · Ön",
+                    "en-US": "B · Front"
+                  }
+                },
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-1-D.webp",
+                  "label": {
+                    "tr": "D · Arka",
+                    "en-US": "D · Back"
+                  }
+                }
+              ]
+            }
+          ],
+          "caption": {
+            "tr": "A: mavi ön yüzle yakala",
+            "en-US": "A: catch on the blue front"
+          },
+          "detail": "assets/mission-illustrations/pilot-v1/m20-1-A-detail.webp",
+          "handNote": true
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/pilot-v1/m20-2-A-detail.webp"
+          ],
+          "caption": {
+            "tr": "A: boş elle ayır",
+            "en-US": "A: detach with the free hand"
+          },
+          "handNote": true,
+          "note": {
+            "tr": "Diğer oyuncular kendi sıralarında bekler.",
+            "en-US": "The other players wait in their lines."
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/pilot-v1/m20-3-B-detail.webp"
+          ],
+          "caption": {
+            "tr": "A’dan B’ye pas; B yakalar",
+            "en-US": "Pass from A to B; B catches"
+          },
+          "handNote": true,
+          "note": {
+            "tr": "Diğer oyuncular kendi sıralarında bekler.",
+            "en-US": "The other players wait in their lines."
+          }
+        },
+        {
+          "images": [],
+          "groups": [
+            {
+              "caption": {
+                "tr": "Sıra 1",
+                "en-US": "Line 1"
+              },
+              "members": [
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-4-C.webp",
+                  "label": {
+                    "tr": "C · Ön",
+                    "en-US": "C · Front"
+                  }
+                },
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-4-A.webp",
+                  "label": {
+                    "tr": "A · Arka",
+                    "en-US": "A · Back"
+                  }
+                }
+              ]
+            },
+            {
+              "caption": {
+                "tr": "Sıra 2",
+                "en-US": "Line 2"
+              },
+              "members": [
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-4-B.webp",
+                  "label": {
+                    "tr": "B · Ön",
+                    "en-US": "B · Front"
+                  }
+                },
+                {
+                  "path": "assets/mission-illustrations/pilot-v1/m20-4-D.webp",
+                  "label": {
+                    "tr": "D · Arka",
+                    "en-US": "D · Back"
+                  }
+                }
+              ]
+            }
+          ],
+          "caption": {
+            "tr": "A ayakta yan adımlarla arkaya geçer",
+            "en-US": "A side-shuffles upright to the back"
+          },
+          "detail": "assets/mission-illustrations/pilot-v1/m20-4-B-detail.webp",
+          "handNote": true
+        }
+      ],
+      "activeCopy": {
+        "tr": "Pasın ardından ayakta yan adımlarla arkaya geç.",
+        "en-US": "After your pass, side-shuffle upright to the back."
+      },
+      "hero": {
+        "images": [],
+        "groups": [
+          {
+            "caption": {
+              "tr": "Sıra 1",
+              "en-US": "Line 1"
+            },
+            "members": [
+              {
+                "path": "assets/mission-illustrations/pilot-v1/m20-4-C.webp",
+                "label": {
+                  "tr": "C · Ön",
+                  "en-US": "C · Front"
+                }
+              },
+              {
+                "path": "assets/mission-illustrations/pilot-v1/m20-4-A.webp",
+                "label": {
+                  "tr": "A · Arka",
+                  "en-US": "A · Back"
+                }
+              }
+            ]
+          },
+          {
+            "caption": {
+              "tr": "Sıra 2",
+              "en-US": "Line 2"
+            },
+            "members": [
+              {
+                "path": "assets/mission-illustrations/pilot-v1/m20-4-B.webp",
+                "label": {
+                  "tr": "B · Ön",
+                  "en-US": "B · Front"
+                }
+              },
+              {
+                "path": "assets/mission-illustrations/pilot-v1/m20-4-D.webp",
+                "label": {
+                  "tr": "D · Arka",
+                  "en-US": "D · Back"
+                }
+              }
+            ]
+          }
+        ],
+        "caption": {
+          "tr": "İki sıra, tek top; pas ver, ayakta yan adımla arkaya geç.",
+          "en-US": "Two lines, one ball; pass, then side-shuffle to the back."
+        },
+        "handNote": true,
+        "note": {
+          "tr": "Pasını veren A, ayakta yan adımlarla C’nin arkasına geçmiştir. Tek top B’dedir.",
+          "en-US": "After passing, A has side-shuffled upright behind C. B has the one ball."
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/pilot-v1/m20-3-B-detail.webp"
+        ],
+        "caption": {
+          "tr": "B mavi ön yüzde yakalar.",
+          "en-US": "B catches on the blue front."
+        }
+      },
+      "canonicalSHA256": "0f7c5034a887d9376d3604a6f0b730fb871a8524d00f34beb4ef2e63d4361b44"
+    },
+    "m30": {
+      "frames": [
+        {
+          "images": [
+            "assets/mission-illustrations/pilot-v1/m30-1-A.webp",
+            "assets/mission-illustrations/pilot-v1/m30-1-B.webp"
+          ],
+          "players": [
+            "A",
+            "B"
+          ],
+          "caption": {
+            "tr": "B’nin kendi sağı: hedef paddle",
+            "en-US": "B’s own right: aim at the paddle"
+          },
+          "detail": "assets/mission-illustrations/pilot-v1/m30-1-B-detail.webp",
+          "handNote": true,
+          "note": {
+            "tr": "A: çağıran · B: yakalayan. Görev atışı önce söylenir; geri pas için çağrı gerekmez.",
+            "en-US": "A: caller · B: catcher. Call before a challenge toss; the reset pass needs no call."
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/pilot-v1/m30-2-A.webp",
+            "assets/mission-illustrations/pilot-v1/m30-2-B.webp"
+          ],
+          "players": [
+            "A",
+            "B"
+          ],
+          "caption": {
+            "tr": "B topu sol boş eliyle ayırır",
+            "en-US": "B detaches with the free left hand"
+          },
+          "detail": "assets/mission-illustrations/pilot-v1/m30-2-B-detail.webp",
+          "handNote": true,
+          "note": {
+            "tr": "A: çağıran · B: yakalayan. Görev atışı önce söylenir; geri pas için çağrı gerekmez.",
+            "en-US": "A: caller · B: catcher. Call before a challenge toss; the reset pass needs no call."
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/pilot-v1/m30-3-A.webp",
+            "assets/mission-illustrations/pilot-v1/m30-3-B.webp"
+          ],
+          "players": [
+            "A",
+            "B"
+          ],
+          "caption": {
+            "tr": "A’ya normal geri pas; bu pas sayılmaz",
+            "en-US": "Neutral return to A; this pass does not count"
+          },
+          "detail": "assets/mission-illustrations/pilot-v1/m30-3-A-detail.webp",
+          "handNote": true,
+          "note": {
+            "tr": "A: çağıran · B: yakalayan. Görev atışı önce söylenir; geri pas için çağrı gerekmez.",
+            "en-US": "A: caller · B: catcher. Call before a challenge toss; the reset pass needs no call."
+          }
+        }
+      ],
+      "activeCopy": {
+        "tr": "Söylenen taraftaki paddle’ı hedefle.",
+        "en-US": "Aim at the paddle on the called side."
+      },
+      "hero": {
+        "images": [
+          "assets/mission-illustrations/pilot-v1/m30-hero-body-right.webp"
+        ],
+        "caption": {
+          "tr": "B’nin kendi sağı: hedef paddle",
+          "en-US": "B’s own right: aim at the paddle"
+        },
+        "note": {
+          "tr": "SAĞ örneği: Yönü yakalayan B’nin vücuduna göre düşün. A, topu B’nin paddle’ına atar.",
+          "en-US": "RIGHT example: use catcher B’s body perspective. A tosses toward B’s paddle."
+        }
+      },
+      "active": {
+        "images": [
+          "assets/mission-illustrations/pilot-v1/m30-1-B-detail.webp"
+        ],
+        "caption": {
+          "tr": "B’nin kendi sağı: hedef paddle",
+          "en-US": "B’s own right: aim at the paddle"
+        }
+      },
+      "canonicalSHA256": "51d17a5cf2989d3636a474da566c1e5a0a4c5451e359fb403cb09fb4608bc540"
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import {criticalPaths} from '../src/client/catalog.js';
 import {readFileSync,writeFileSync,readdirSync,mkdirSync,rmSync,cpSync,existsSync} from 'node:fs';import {join,dirname} from 'node:path';import {createHash} from 'node:crypto';
 const root=new URL('../',import.meta.url).pathname, out=join(root,'dist');
 const tokens=JSON.parse(readFileSync(join(root,'content/component-tokens.json'))),vars=[];
@@ -17,9 +18,11 @@ const template=readFileSync(join(root,'index.html'),'utf8');
 for(const locale of ['en-US','tr']){const tr=locale==='tr',dest=join(out,tr?'tr/index.html':'index.html');mkdirSync(dirname(dest),{recursive:true});writeFileSync(dest,template.replaceAll('{{LOCALE}}',locale).replaceAll('{{RELEASE}}',`/releases/${release}`).replaceAll('{{SKIP}}',tr?'İçeriğe geç':'Skip to content').replaceAll('{{LOADING}}',tr?'Görev yükleniyor…':'Loading mission…').replaceAll('{{NOSCRIPT}}',tr?'Oyun rehberliği için JavaScript gerekiyor.':'JavaScript is needed for these game instructions.'));}
 const mime=p=>p.endsWith('.html')?'text/html':p.endsWith('.js')?'text/javascript':p.endsWith('.css')?'text/css':p.endsWith('.json')?'application/json':p.endsWith('.webp')?'image/webp':p.endsWith('.ttf')?'font/ttf':p.endsWith('.txt')?'text/plain':'application/octet-stream';
 const publicFiles=files(out).map(f=>({path:f.slice(out.length),sha256:createHash('sha256').update(readFileSync(f)).digest('hex'),bytes:readFileSync(f).length,mime:mime(f)}));
+const presentation=JSON.parse(readFileSync(join(root,'content/customer-presentation-v1.json')));
 const catalogue=JSON.parse(readFileSync(join(root,'content/catalog.json'))),missions={};
-for(const {id} of catalogue.missions){const m=JSON.parse(readFileSync(join(root,`content/missions/${id}.json`)));missions[id]=[`/releases/${release}/content/missions/${id}.json`,...m.art.frames.flatMap(f=>[...f.images,...(f.detail?[f.detail]:[])]).map(p=>`/releases/${release}/${p}`)];}
-const precache=publicFiles.filter(f=>f.path.endsWith('.html')||(f.path.includes('/client/')&&/\.(js|css)$/.test(f.path))||(f.path.includes('/assets/fonts/')&&/\.(ttf|woff2)$/.test(f.path))||['/content/catalog.json','/content/asset-manifest.json','/content/ui/tr.json','/content/ui/en-US.json'].some(p=>f.path.endsWith(p))).map(f=>f.path);
+for(const [id,pilot] of Object.entries(presentation.missions))if(pilot.canonicalSHA256!==catalogue.missions.find(m=>m.id===id)?.sha256)throw Error('Presentation canonical binding changed: '+id);
+for(const {id} of catalogue.missions){const m=JSON.parse(readFileSync(join(root,`content/missions/${id}.json`)));missions[id]=[`/releases/${release}/content/missions/${id}.json`,...criticalPaths(m,presentation).map(p=>`/releases/${release}/${p}`)];}
+const precache=publicFiles.filter(f=>f.path.endsWith('.html')||(f.path.includes('/client/')&&/\.(js|css)$/.test(f.path))||(f.path.includes('/assets/fonts/')&&/\.(ttf|woff2)$/.test(f.path))||['/content/customer-presentation-v1.json','/content/catalog.json','/content/asset-manifest.json','/content/ui/tr.json','/content/ui/en-US.json'].some(p=>f.path.endsWith(p))).map(f=>f.path);
 precache.push(...missions.m25);
 const swManifest={release,files:publicFiles,precache,missions};
 writeFileSync(join(out,'service-worker.js'),readFileSync(join(root,'src/offline/service-worker.js'),'utf8').replace('__MANIFEST__',JSON.stringify(swManifest)));

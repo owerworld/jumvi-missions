@@ -1,5 +1,5 @@
 export function button(label, action, {kind='secondary', active=false, disabled=false}={}) {
- const b=document.createElement('button');b.type='button';b.className=`control ${kind}${active?' active-control':''}`;b.textContent=label;b.disabled=disabled;
+ const b=document.createElement('button');b.type='button';b.className=`control ${kind}${active?' active-control':''}`;const text=document.createElement('span');text.className='control-label';text.textContent=label;b.append(text);b.disabled=disabled;
  let pointer=null, cancelled=false;
  b.addEventListener('pointerdown',e=>{pointer={id:e.pointerId,x:e.clientX,y:e.clientY};cancelled=false;});
  b.addEventListener('pointermove',e=>{if(pointer && Math.hypot(e.clientX-pointer.x,e.clientY-pointer.y)>8) cancelled=true;});
