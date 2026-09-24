@@ -1,9 +1,17 @@
 {
-  "status": "NOT AUTHORIZED TO EXECUTE UNTIL CONDITIONS VERIFIED",
+  "status": "PRE-RELEASE GATES VERIFIED — LIVE EDGE CHECK REQUIRED AFTER PUBLICATION",
   "humanFeedback": "çalışıyor",
-  "R5_realDeviceCriticalJourney": "OPEN — no device/browser/enlargement detail supplied; do not infer",
-  "v2EnvironmentCredentialRoutePermissions": "OPEN — existing staging token not assumed valid",
-  "liveCoexistenceStagingExactArtifact": "PENDING",
+  "humanCriticalJourneyReply": "Evet, ikisi de çalıştı",
+  "humanCriticalJourneyQuestion": "Telefonda göreve girince Başla’yı bulup oyunu açabilme; telefonun metin boyutunu büyütünce Yardım ve Durdur’a dokunabilme",
+  "R5_realDeviceCriticalJourney": "VERIFIED",
+  "v2EnvironmentCredentialRoutePermissions": "VERIFIED",
+  "preReleaseCoexistenceExactArtifact": "VERIFIED",
+  "liveEdgeCoexistenceAfterPublish": "PENDING",
+  "evidence": {
+    "R5_realDeviceCriticalJourney": "2026-09-25 direct user reply to both observed actions; device model, browser and exact enlargement factor not provided",
+    "v2EnvironmentCredentialRoutePermissions": "work/v2-review-release/access-setup-complete.json; scoped two-worker editor and jumvi.co route write; GitHub environment branch restricted",
+    "preReleaseCoexistenceExactArtifact": "GitHub Actions 36062672506; 546 exact staging V2 file hashes and Chromium/WebKit flows, plus local same-origin archived v254/V2 coexistence tests"
+  },
   "productionPublication": "NOT PERFORMED",
   "rootPromotion": "NOT AUTHORIZED"
 }
