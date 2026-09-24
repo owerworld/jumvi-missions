@@ -27,3 +27,11 @@
 .presentation-pilot .pilot-reminder .frame-actors img{max-height:none}
 .presentation-pilot .pilot-reminder .frame-person{width:100%}
 @media(max-width:24.374rem){.presentation-pilot .pilot-reminder .frame-art{margin-inline:auto}}
+/* R2: root text enlargement must use the same single-column contract as narrow screens. */
+.compact-controls .active-contact{display:block}
+.compact-controls .active-contact>.frame-art,.compact-controls .active-contact>.contact-art{margin:0 auto 1rem;max-width:100%}
+.compact-controls .active-contact>p{width:100%;max-width:none}
+/* R2 pilot scene sequence uses native text labels and distinct moments. */
+.presentation-pilot .mechanics-sequence{display:block}
+.presentation-pilot .panel-label{text-align:start;margin:.75rem 0 .25rem}
+.presentation-pilot .mechanics-sequence .frame-person+.frame-person{margin-top:.75rem}

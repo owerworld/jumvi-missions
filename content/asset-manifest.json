@@ -9,7 +9,7 @@
       "width": 720,
       "height": 480,
       "bytes": 294800,
-      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/reset-alpha-v1.webp",
@@ -19,7 +19,7 @@
       "width": 720,
       "height": 480,
       "bytes": 320724,
-      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/contact-alpha-v1.webp",
@@ -29,7 +29,7 @@
       "width": 720,
       "height": 480,
       "bytes": 296012,
-      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/product-still-v1.webp",
@@ -39,7 +39,7 @@
       "width": 720,
       "height": 480,
       "bytes": 311758,
-      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/final/m01/1-A.webp",
@@ -3462,6 +3462,42 @@
       "mime": "image/webp",
       "transform": "Native SVG upper-body viewBox includes head and both hands; no mirror, pose/equipment nodes unchanged. Native PNG references embedded verbatim; lossless WebP.",
       "status": "CUSTOMER_PRESENTATION_CANDIDATE"
+    },
+    {
+      "path": "assets/mission-illustrations/pilot-v2/m20-pass-v2.webp",
+      "width": 960,
+      "height": 650,
+      "bytes": 168638,
+      "sha256": "51caab5ed1bab10c1a59096d2656f163751e7d37f6e608abde068562d8d0f25e",
+      "mime": "image/webp",
+      "source": "artifacts/presentation-pilot-v2/m20-pass-v2.svg",
+      "sourceSha256": "9f2be328fb4845f86cfa59743dafe2a714a04c90108c9d8bb46aeba41760ce89",
+      "transform": "Recompose unchanged approved native SVG actor groups; uniform scaling/translation only; no mirroring. Separate ball path and ground movement path. Candidate, no new acceptance.",
+      "status": "HUMAN_REVIEW_REQUIRED"
+    },
+    {
+      "path": "assets/mission-illustrations/pilot-v2/m20-shuffle-v2.webp",
+      "width": 960,
+      "height": 700,
+      "bytes": 173298,
+      "sha256": "43271449a99cb665cbce1958a86b110a6f21e4e0554467bcfbc3187e1d8b16da",
+      "mime": "image/webp",
+      "source": "artifacts/presentation-pilot-v2/m20-shuffle-v2.svg",
+      "sourceSha256": "a84aca7890494aeb5c8893e86b60602cee537334007d781dcd63a53d34aa1100",
+      "transform": "Recompose unchanged approved native SVG actor groups; uniform scaling/translation only; no mirroring. Separate ball path and ground movement path. Candidate, no new acceptance.",
+      "status": "HUMAN_REVIEW_REQUIRED"
+    },
+    {
+      "path": "assets/mission-illustrations/pilot-v2/m30-caller-catch-v2.webp",
+      "width": 960,
+      "height": 590,
+      "bytes": 127500,
+      "sha256": "774509bf9914ba02c637464d99b281744c2608d36af772d5bcde0aabd500b6da",
+      "mime": "image/webp",
+      "source": "artifacts/presentation-pilot-v2/m30-caller-catch-v2.svg",
+      "sourceSha256": "392944dd264c6bbda696915157158155da7fcb8a80c80647baf1970034d9233e",
+      "transform": "Recompose unchanged approved native SVG actor groups; uniform scaling/translation only; no mirroring. Separate ball path and ground movement path. Candidate, no new acceptance.",
+      "status": "HUMAN_REVIEW_REQUIRED"
     }
   ]
 }

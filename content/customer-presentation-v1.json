@@ -1,5 +1,5 @@
 {
-  "version": "customer-presentation-v1",
+  "version": "customer-presentation-v2",
   "status": "HUMAN_REVIEW_REQUIRED",
   "missions": {
     "m25": {
@@ -305,62 +305,25 @@
         "en-US": "After your pass, side-shuffle upright to the back."
       },
       "hero": {
-        "images": [],
-        "groups": [
+        "images": [
+          "assets/mission-illustrations/pilot-v2/m20-pass-v2.webp",
+          "assets/mission-illustrations/pilot-v2/m20-shuffle-v2.webp"
+        ],
+        "sequence": true,
+        "caption": {
+          "tr": "A’dan B’ye pas, sonra A kendi sırasının arkasına.",
+          "en-US": "A passes to B, then moves to the back of A’s line."
+        },
+        "panelLabels": [
           {
-            "caption": {
-              "tr": "Sıra 1",
-              "en-US": "Line 1"
-            },
-            "members": [
-              {
-                "path": "assets/mission-illustrations/pilot-v1/m20-4-C.webp",
-                "label": {
-                  "tr": "C · Ön",
-                  "en-US": "C · Front"
-                }
-              },
-              {
-                "path": "assets/mission-illustrations/pilot-v1/m20-4-A.webp",
-                "label": {
-                  "tr": "A · Arka",
-                  "en-US": "A · Back"
-                }
-              }
-            ]
+            "tr": "1 · A → B: topun yolu",
+            "en-US": "1 · A → B: ball path"
           },
           {
-            "caption": {
-              "tr": "Sıra 2",
-              "en-US": "Line 2"
-            },
-            "members": [
-              {
-                "path": "assets/mission-illustrations/pilot-v1/m20-4-B.webp",
-                "label": {
-                  "tr": "B · Ön",
-                  "en-US": "B · Front"
-                }
-              },
-              {
-                "path": "assets/mission-illustrations/pilot-v1/m20-4-D.webp",
-                "label": {
-                  "tr": "D · Arka",
-                  "en-US": "D · Back"
-                }
-              }
-            ]
+            "tr": "2 · A: yan adımla C’nin arkasına",
+            "en-US": "2 · A: side-shuffle behind C"
           }
-        ],
-        "caption": {
-          "tr": "İki sıra, tek top; pas ver, ayakta yan adımla arkaya geç.",
-          "en-US": "Two lines, one ball; pass, then side-shuffle to the back."
-        },
-        "handNote": true,
-        "note": {
-          "tr": "Pasını veren A, ayakta yan adımlarla C’nin arkasına geçmiştir. Tek top B’dedir.",
-          "en-US": "After passing, A has side-shuffled upright behind C. B has the one ball."
-        }
+        ]
       },
       "active": {
         "images": [
@@ -371,7 +334,15 @@
           "en-US": "B catches on the blue front."
         }
       },
-      "canonicalSHA256": "0f7c5034a887d9376d3604a6f0b730fb871a8524d00f34beb4ef2e63d4361b44"
+      "canonicalSHA256": "0f7c5034a887d9376d3604a6f0b730fb871a8524d00f34beb4ef2e63d4361b44",
+      "entryCopy": {
+        "tr": "İki sıra oluşturun. Mavi ön yüzle yakala, topu boş elinle ayır ve sıradaki oyuncuya at. Pasından sonra ayakta yan adımlarla kendi sıranın arkasına geç.",
+        "en-US": "Form two lines. Catch on the blue front, detach with your free hand and toss to the next player. After passing, side-shuffle upright to the back of your line."
+      },
+      "entrySetup": {
+        "tr": "",
+        "en-US": ""
+      }
     },
     "m30": {
       "frames": [
@@ -442,16 +413,18 @@
       },
       "hero": {
         "images": [
-          "assets/mission-illustrations/pilot-v1/m30-hero-body-right.webp"
+          "assets/mission-illustrations/pilot-v2/m30-caller-catch-v2.webp"
         ],
         "caption": {
-          "tr": "B’nin kendi sağı: hedef paddle",
-          "en-US": "B’s own right: aim at the paddle"
+          "tr": "A çağırır ve atar; B kendi sağında mavi ön yüzle yakalar.",
+          "en-US": "A calls and tosses; B catches on the blue front on B’s own right."
         },
-        "note": {
-          "tr": "SAĞ örneği: Yönü yakalayan B’nin vücuduna göre düşün. A, topu B’nin paddle’ına atar.",
-          "en-US": "RIGHT example: use catcher B’s body perspective. A tosses toward B’s paddle."
-        }
+        "panelLabels": [
+          {
+            "tr": "SAĞ örneği · A: çağıran/atan · B: yakalayan",
+            "en-US": "RIGHT example · A: caller/thrower · B: catcher"
+          }
+        ]
       },
       "active": {
         "images": [
@@ -462,7 +435,15 @@
           "en-US": "B’s own right: aim at the paddle"
         }
       },
-      "canonicalSHA256": "51d17a5cf2989d3636a474da566c1e5a0a4c5451e359fb403cb09fb4608bc540"
+      "canonicalSHA256": "51d17a5cf2989d3636a474da566c1e5a0a4c5451e359fb403cb09fb4608bc540",
+      "entrySetup": {
+        "tr": "Sol ve sağ, yakalayanın kendi vücuduna göredir.",
+        "en-US": "Left and right are from the catcher’s own body perspective."
+      },
+      "entryCopy": {
+        "tr": "Her görev atışından önce SOL veya SAĞ de. Yakalayan paddle’ı o tarafa alır; mavi yüz topa dönük kalır. Düz, yumuşak atışla o paddle’ı hedefle. Yalnız söylenen taraftaki mavi yüze yapışan top doğru yakalama sayılır. Boş elle ayırıp normal geri pas ver; geri pas sayılmaz ve çağrı gerektirmez. Aynı çağıranın 5 görev atışından sonra roller değişir; geri paslar bu 5’e dahil değildir.",
+        "en-US": "Call LEFT or RIGHT before each challenge toss. The catcher moves the paddle to that side with its blue front facing the ball. Toss straight and gently at that paddle. Only a sticky catch on the called side counts as correct. Detach with the free hand and make a neutral return; it needs no call and does not count. Switch roles after the same caller’s 5 challenge tosses; returns are excluded."
+      }
     }
   }
 }

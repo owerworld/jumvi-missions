@@ -10,6 +10,9 @@ export function transition(s,e) {
  if (!contextMatches(s,e)) return s;
  let n=s;
  switch(e.type) {
+ case 'BROWSE_HISTORY':
+  if(s.round||s.report||!e.mission||!['entry','discovery','help'].includes(e.screen))return s;
+  n={...s,mission:e.mission,screen:e.screen,returnContext:e.returnContext,unknown:false,reportMode:false};break;
  case 'SELECT':
   if(!e.mission || !/^m(?:0[1-9]|[12][0-9]|3[0-6])$/.test(e.mission.id) || ['active','help','interrupted'].includes(s.screen))return s;
   n={...s,mission:e.mission,screen:'entry',round:null,report:null,returnContext:null,unknown:false,reportMode:false,previous:null};break;

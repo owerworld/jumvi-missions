@@ -3,3 +3,8 @@
 dialog{padding:1.5rem}dialog .controls{gap:1rem}form{display:grid;gap:.75rem;margin-block:1.5rem}input[type=text]{width:100%;min-height:var(--target-child);padding:.75rem;border:.125rem solid var(--border);border-radius:.5rem;background:var(--surface);color:var(--ink)}fieldset{min-width:0;display:grid;gap:.75rem;border:0;padding:0;margin:1rem 0}legend{margin-bottom:.75rem}.history-item{border-top:.125rem solid var(--border);padding-block:1rem}.personal-message:empty{display:none}
 
 .control-label{min-width:0;overflow-wrap:normal;word-break:normal;hyphens:none}
+/* R2: tracks and labels shrink to the available width; height remains content-driven.
+   The locked 20px horizontal inset stays 20px when text alone is enlarged. */
+.controls{grid-template-columns:minmax(0,1fr)}
+.control{min-width:0;padding-inline:20px}
+.control-label{max-width:100%;hyphens:auto;overflow-wrap:anywhere}

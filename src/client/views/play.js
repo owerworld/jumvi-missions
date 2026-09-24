@@ -13,7 +13,7 @@ export function playView(name,ctx) {
   const wrap=el('figure',undefined,'frame-art'),row=el('div',undefined,'frame-actors');
   const picture=(path,alt,cls)=>{const img=el('img'),entry=assetManifest.assets.find(a=>a.path===path);img.src=new URL('../../'+path,import.meta.url);img.alt=alt;if(cls)img.className=cls;if(entry){img.width=entry.width;img.height=entry.height;}return img;};
   if(frame.groups){const groups=el('div',undefined,'role-groups');for(const g of frame.groups){const group=el('div',undefined,'role-group');group.append(el('p',g.caption[state.locale],'role-heading'));for(const member of g.members){const person=el('figure',undefined,'role-person');person.append(picture(member.path,member.label[state.locale]),el('figcaption',member.label[state.locale]));group.append(person);}groups.append(group);}wrap.append(groups);}
-  else{for(let ix=0;ix<frame.images.length;ix++){const person=el('figure',undefined,'frame-person');person.append(picture(frame.images[ix],(frame.players?.[ix]?frame.players[ix]+': ':'')+frame.caption[state.locale]));if(frame.players?.[ix])person.append(el('figcaption',frame.players[ix]));row.append(person);}wrap.append(row);}
+  else{if(frame.sequence)row.classList.add('mechanics-sequence');for(let ix=0;ix<frame.images.length;ix++){const person=el('figure',undefined,'frame-person');if(frame.panelLabels?.[ix])person.append(el('figcaption',frame.panelLabels[ix][state.locale],'panel-label'));person.append(picture(frame.images[ix],(frame.players?.[ix]?frame.players[ix]+': ':'')+frame.caption[state.locale]));if(frame.players?.[ix])person.append(el('figcaption',frame.players[ix]));row.append(person);}wrap.append(row);}
   if(detail&&frame.detail){wrap.append(picture(frame.detail,state.locale==='tr'?'Aynı anın temas ve el ayrıntısı':'Contact and hand detail of the same moment','frame-detail'));}
   if(frame.handNote)wrap.append(el('figcaption',state.locale==='tr'?'Bu oyuncularda sağ el: paddle. Sol el: topu ayırır ve atar.':'These players use the right hand for the paddle; the left hand removes and tosses the ball.','art-note'));
   if(frame.note)wrap.append(el('figcaption',frame.note[state.locale],'art-note'));
@@ -28,7 +28,7 @@ export function playView(name,ctx) {
  const action=(txt,type,kind='secondary',active=false)=>b(txt,type,{},kind,active);
  if(name==='entry'){
   brand();const sup=support();sup.classList.add('entry-support');s.append(sup,heading(cp.mission),text(cp.goal,'instruction goal'),(cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch)),text(cp.materials,'materials'),text(cp.indoor,'muted indoor'));
-  s.append(text(cp.setup,'instruction setup'),text(cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));ready();
+  s.append(text(cp.entrySetup,'instruction setup'),text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));ready();
   const row=controls(),start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';row.append(start,b(cp.another,'GO',{screen:'discovery'},'link'),b(cp.how,'HELP',{},'link'),access());s.append(row);secondary(true);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;

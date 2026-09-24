@@ -34,8 +34,9 @@ async function boot(){
   if(e.type==='RETRY_ASSETS'){void retryAssets();return;}
   if(state.report&&!personal.isSaved(state.report)&&['LEAVE','REPLAY','START','PREVIOUS','SELECT_MISSION'].includes(e.type)&&!e.discardConfirmed){if(document.querySelector('dialog'))return;dialog({title:ui.discardTitle,body:ui.discardBody,cancelLabel:ui.cancel,confirmLabel:ui.discard,onConfirm:()=>dispatch({...e,discardConfirmed:true},push)});return;}
   if(e.type==='SELECT_MISSION'){void selectMission(e.missionId);return;}
+  if(push)router?.capture();
   const next=transition(state,{...e,id:e.id||crypto.randomUUID()});if(next===state)return;
-  navigation.transition(state,next,e.type);const previous=state.screen;audio.cancel({off:e.type==='GUEST'||e.type==='PREVIOUS'});state=next;personal.enter(state.screen,previous);const stored=writeResume(storage,state);render();if(!stored)notice(ui.storageUnavailable);
+  navigation.transition(state,next,e.type);if(e.type==='BROWSE_HISTORY')navigation.pending=e.position||{y:0};const previous=state.screen;audio.cancel({off:e.type==='GUEST'||e.type==='PREVIOUS'});state=next;personal.enter(state.screen,previous);const stored=writeResume(storage,state);render();if(!stored)notice(ui.storageUnavailable);
   if(push)router?.write();
  }
  async function assetsReady(current){const paths=criticalPaths(current,presentation);if(!paths.length)return false;try{return (await Promise.all(paths.map(async path=>{const asset=assetManifest.assets.find(a=>a.path===path);if(!asset)return false;const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);let r,bytes;try{r=await fetch(new URL('../'+path,import.meta.url),{credentials:'omit',signal:controller.signal});bytes=await r.arrayBuffer();}finally{clearTimeout(timer);}if(!r.ok||!r.headers.get('content-type')?.startsWith('image/'))return false;if(!await verifyAsset(bytes,asset))return false;const url=URL.createObjectURL(new Blob([bytes],{type:'image/webp'}));try{const img=new Image();img.src=url;await img.decode();return img.naturalWidth===asset.width&&img.naturalHeight===asset.height;}finally{URL.revokeObjectURL(url);}}))).every(Boolean);}catch{return false;}}
@@ -44,7 +45,13 @@ async function boot(){
  function refreshReadiness(){if(pointerInteraction)return;for(const n of app.querySelectorAll('[data-needs-ready]'))n.disabled=!state.mission.ready;for(const n of app.querySelectorAll('[data-readiness]')){if(state.mission.ready)n.remove();else{n.querySelector('p').textContent=state.loadingAssets?ui.criticalLoading:ui.criticalMissing;n.querySelector('button').hidden=state.loadingAssets;}}}
  state={...state,loadingAssets:true};
  const resume=readResume(storage,state.mission);
- router=installRouter(()=>state,(type,d={},push=true)=>dispatch({type,...d,revision:state.revision,documentId:state.documentId},push));
+ router=installRouter(()=>state,(type,d={},push=true)=>dispatch({type,...d,revision:state.revision,documentId:state.documentId},push),{capture:()=>navigation.capture(),restore:async({route,position})=>{
+  const gen=++loadGeneration,rev=state.revision;audio.cancel();
+  try{const meta=catalog.missions.find(m=>m.id===route.missionId);if(!meta)return;const next=record.id===meta.id?record:await load(`missions/${meta.id}.json`,meta.sha256);if(gen!==loadGeneration||rev!==state.revision)return;
+   record=next;cp=missionCopy(record,locale,labels,presentation);dispatch({type:'BROWSE_HISTORY',screen:route.screen,returnContext:route.returnContext,position,mission:{id:next.id,mechanicsVersion:next.mechanicsVersion,contentVersion:next.contentVersion,ready:false},revision:state.revision,documentId:state.documentId},false);
+   try{sessionStorage.setItem('jumvi.selected-mission.v1',next.id);}catch{}state={...state,loadingAssets:false};void retryAssets();
+  }catch{notice(ui.criticalMissing);}
+ }});
  const sendCurrent=type=>dispatch({type,revision:state.revision,documentId:state.documentId},false);
  function interrupt(){audio.cancel();sendCurrent('INTERRUPT');}
  document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();else personal.visible();});addEventListener('pagehide',interrupt);addEventListener('pageshow',()=>personal.visible());addEventListener('resize',placeUtilities);
