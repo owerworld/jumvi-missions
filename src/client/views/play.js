@@ -36,15 +36,17 @@ export function playView(name,ctx) {
   s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle),text(cp.setup,'instruction'));
   const list=el('ol',undefined,'steps');list.id='mission-steps';
   if(cp.frames){
-   // When each approved picture covers one canonical step, explain the action beside
-   // that picture once. More complex sequences retain the full canonical list.
-   const aligned=cp.canonicalSteps.length===cp.frames.length;
+   // Count equality is not semantic alignment: m03 has three rules and three
+   // pictures, but its first picture depicts the second rule.
+   const map=cp.frameStepMap;
+   const assigned=Array.isArray(map)&&map.length===cp.frames.length&&map.every(x=>Array.isArray(x))?map.flat():[];
+   const aligned=assigned.length===cp.canonicalSteps.length&&assigned.every((index,i)=>Number.isInteger(index)&&index>=0&&index<cp.canonicalSteps.length&&assigned.indexOf(index)===i);
    // m25's three approved captions/notes already cover its two short canonical
    // actions (toss, sticky catch/detach), so a second list adds no information.
    if(!aligned&&state.mission.id!=='m25'&&cp.canonicalSteps.length){const canonical=el('ol',undefined,'canonical-steps');for(const step of cp.canonicalSteps)canonical.append(el('li',step));s.append(canonical);}
    for(const [ix,fr] of cp.frames.entries()){
     const li=el('li'),h=el('h2',fr.caption[state.locale]);h.tabIndex=-1;if(ix===0)h.id='first-step';li.append(h,frameArt(fr,true));
-    if(aligned)li.append(text(cp.canonicalSteps[ix],'instruction'));
+    if(aligned)for(const stepIndex of map[ix])li.append(text(cp.canonicalSteps[stepIndex],'instruction'));
     list.append(li);
    }
   }else for(const [n,file] of [[1,'seated-editorial-v1'],[2,'contact-alpha-v1'],[3,'reset-alpha-v1']]){const li=el('li'),h=el('h2',cp['step'+n]);h.tabIndex=-1;if(n===1)h.id='first-step';li.append(h,art(file,cp['step'+n+'body']),text(cp['step'+n+'body'],'instruction'));list.append(li);}s.append(list,text(cp.goal,'instruction goal'),text(cp.safe,'safety'));ready();

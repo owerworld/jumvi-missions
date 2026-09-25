@@ -50,7 +50,10 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   row.append(back(),go(ui.titles.management,'management'));
  }
  if(name==='management'){
-  disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
+  // The player list already shows this disclosure before opening an individual
+  // history. Keep it on the list and the new-player form; avoid repeating two
+  // long paragraphs above the selected player's actual progress.
+  if(!editable)disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
   if(!players.length&&p.status==='ready')s.append(el('p',ui.managementEmpty));
   if(editable){
    s.append(el('h2',playerLabel(editable)));
@@ -60,8 +63,9 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
    if(summary.certificateEligible)certificate.append(b(ui.certificatePreview,'P_CERTIFICATE'));
    s.append(certificate);
    if(!p.historyOnly){s.append(el('p',ui.nameInfo));form('P_RENAME',ui.saveName,p.name);}
+   if(summary.byMission.size){const missions=el('section',undefined,'mission-progress');missions.append(el('h2',ui.missionProgress));for(const m of catalog.missions){const count=summary.byMission.get(m.id);if(count)missions.append(el('p',`${m.titles[state.locale]} · ${count===1&&ui.missionRepeatCountOne?ui.missionRepeatCountOne:ui.missionRepeatCount.replace('{count}',count)}`));}s.append(missions);}
    const history=el('div');history.append(el('h2',ui.history));
-   for(const record of snap.records.filter(r=>r.targetId===editable.id)){const item=el('div',undefined,'history-item');item.append(el('p',`${reportMission(record.report)} · ${record.report.value==='complete'?ui.recordComplete:ui.recordEarly}`));if(record.report.value==='complete')item.append(el('p',ui.missionRepeatCount.replace('{count}',summary.byMission.get(record.report.missionId)||0),'muted'));item.append(b(ui.inspectRecord,'P_INSPECT',{id:record.id}));history.append(item);}
+   for(const record of snap.records.filter(r=>r.targetId===editable.id)){const item=el('div',undefined,'history-item');item.append(el('p',`${reportMission(record.report)} · ${record.report.value==='complete'?ui.recordComplete:ui.recordEarly}`),b(ui.inspectRecord,'P_INSPECT',{id:record.id}));history.append(item);}
    s.append(history);if(p.historyOnly)row.append(b(ui.editPlayer,'P_EDIT',{id:editable.id}));row.append(b(ui.deletePlayer,'P_DELETE_ONE',{},p.busy));
   }
   else for(const player of players){
