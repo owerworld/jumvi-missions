@@ -28,14 +28,26 @@ export function playView(name,ctx) {
  const secondary=(report=false)=>{const r=el('nav',undefined,'secondary-access');r.setAttribute('aria-label',ui.titles.management);if(report)r.append(b(cp.report,'REPORT_OPEN',{},'link'));r.append(b(cp.players,'GO',{screen:'management'},'link'),b(cp.adult,'GO',{screen:'adult'},'link'),b(ui.titles.returning,'GO',{screen:'returning'},'link'));s.append(r);};
  const action=(txt,type,kind='secondary',active=false)=>b(txt,type,{},kind,active);
  if(name==='entry'){
-  brand();const sup=support();sup.classList.add('entry-support');s.append(sup,heading(cp.mission),text(cp.goal,'instruction goal'),(cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch)),text(cp.materials,'materials'),text(cp.indoor,'muted indoor'));
+  brand();const sup=support();sup.classList.add('entry-support');const hero=cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch);hero.classList.add('entry-hero');s.append(sup,heading(cp.mission),text(cp.goal,'instruction goal'),hero,text(cp.materials,'materials'),text(cp.indoor,'muted indoor'));
   s.append(text(cp.entrySetup,'instruction setup'),text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));ready();
   const row=controls(),start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';row.append(start,b(cp.another,'GO',{screen:'discovery'},'link'),b(cp.how,'HELP',{},'link'),access());s.append(row);secondary(true);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
   s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle),text(cp.setup,'instruction'));
   const list=el('ol',undefined,'steps');list.id='mission-steps';
-  if(cp.frames){const canonical=el('ol',undefined,'canonical-steps');for(const step of cp.canonicalSteps)canonical.append(el('li',step));s.append(canonical);for(const [ix,fr] of cp.frames.entries()){const li=el('li'),h=el('h2',fr.caption[state.locale]);h.tabIndex=-1;if(ix===0)h.id='first-step';li.append(h,frameArt(fr,true));list.append(li);}}else for(const [n,file] of [[1,'seated-editorial-v1'],[2,'contact-alpha-v1'],[3,'reset-alpha-v1']]){const li=el('li'),h=el('h2',cp['step'+n]);h.tabIndex=-1;if(n===1)h.id='first-step';li.append(h,art(file,cp['step'+n+'body']),text(cp['step'+n+'body'],'instruction'));list.append(li);}s.append(list,text(cp.goal,'instruction goal'),text(cp.safe,'safety'));ready();
+  if(cp.frames){
+   // When each approved picture covers one canonical step, explain the action beside
+   // that picture once. More complex sequences retain the full canonical list.
+   const aligned=cp.canonicalSteps.length===cp.frames.length;
+   // m25's three approved captions/notes already cover its two short canonical
+   // actions (toss, sticky catch/detach), so a second list adds no information.
+   if(!aligned&&state.mission.id!=='m25'&&cp.canonicalSteps.length){const canonical=el('ol',undefined,'canonical-steps');for(const step of cp.canonicalSteps)canonical.append(el('li',step));s.append(canonical);}
+   for(const [ix,fr] of cp.frames.entries()){
+    const li=el('li'),h=el('h2',fr.caption[state.locale]);h.tabIndex=-1;if(ix===0)h.id='first-step';li.append(h,frameArt(fr,true));
+    if(aligned)li.append(text(cp.canonicalSteps[ix],'instruction'));
+    list.append(li);
+   }
+  }else for(const [n,file] of [[1,'seated-editorial-v1'],[2,'contact-alpha-v1'],[3,'reset-alpha-v1']]){const li=el('li'),h=el('h2',cp['step'+n]);h.tabIndex=-1;if(n===1)h.id='first-step';li.append(h,art(file,cp['step'+n+'body']),text(cp['step'+n+'body'],'instruction'));list.append(li);}s.append(list,text(cp.goal,'instruction goal'),text(cp.safe,'safety'));ready();
   const row=controls();row.append(b(cp.againExplain,'EXPLAIN'),b(cp.ask,'ASK',{},'link'),b(back,'RETURN',{},'primary',hasRound));if(state.round?.state==='active')row.append(b(cp.stop,'STOP',{},'secondary',true));row.append(sound(),access());s.append(row);
  }else if(name==='active'){
   label();s.append(heading(cp.activeTitle),text(state.resumed?ui.resumed:cp.state,'muted'),text(cp.activeCopy,'instruction'));

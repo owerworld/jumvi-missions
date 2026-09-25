@@ -2,11 +2,13 @@ import {storageName,IS_V2} from '../deployment.js';
 import {LocalRepository} from './local.js';
 import {legacyPresence,deleteLegacy} from './legacy.js';
 import {dialog} from '../components/dialog.js';
+import {historySummary} from './history-summary.js';
+import {showCertificate} from '../certificate.js';
 const localViews=new Set(['attribution','record-result','management','new-player']);
 export class PersonalController {
- constructor({getState,navigate,render,ui}){
-  Object.assign(this,{getState,navigate,render,ui});this.repo=new LocalRepository();this.ticket=0;
-  this.model={snapshot:null,status:'loading',selectedId:null,editId:null,correction:null,result:null,name:'',message:'',busy:false,legacy:null};
+ constructor({getState,navigate,render,ui,catalog}){
+  Object.assign(this,{getState,navigate,render,ui,catalog});this.repo=new LocalRepository();this.ticket=0;
+  this.model={snapshot:null,status:'loading',selectedId:null,editId:null,historyOnly:false,correction:null,result:null,name:'',message:'',busy:false,legacy:null};
   try{this.channel=new BroadcastChannel(storageName('jumvi-local-invalidation-v1'));this.channel.onmessage=()=>{if(localViews.has(this.getState().screen))void this.refresh();else this.model.snapshot=null;};}catch{}
  }
  visible(){if(localViews.has(this.getState().screen))void this.refresh();}
@@ -22,7 +24,7 @@ export class PersonalController {
  async refresh(){
   const key=this.current(),ticket=++this.ticket,p=this.model;
   try{const snap=await this.repo.snapshot();if(key!==this.current()||ticket!==this.ticket)return;p.snapshot=snap;p.status='ready';p.legacy=IS_V2?{available:true,count:0}:legacyPresence();if(p.selectedId&&!snap.players.some(x=>x.id===p.selectedId))p.selectedId=null;if(p.editId&&!snap.players.some(x=>x.id===p.editId))p.editId=null;
-   if(p.result){const op=snap.operations.find(x=>x.id===p.result.id);p.result={...p.result,status:op?.status||'unknown'};}
+   if(p.result){const op=snap.operations.find(x=>x.id===p.result.id);p.result={...p.result,status:op?.status||(p.result.status==='correction-required'?'correction-required':'unknown')};}
   }catch{if(key!==this.current()||ticket!==this.ticket)return;p.status='unavailable';p.snapshot=null;}
   this.render({preserveFocus:true});
  }
@@ -33,8 +35,27 @@ export class PersonalController {
   if(e.type==='P_NAME'){p.name=e.value;return true;}
   if(e.type==='P_REFRESH'){void this.refresh();return true;}
   if(e.type==='P_SELECT'){p.selectedId=e.id;this.render({preserveFocus:true});return true;}
-  if(e.type==='P_EDIT'){const player=snap?.players.find(x=>x.id===e.id);if(player){p.editId=e.id;p.name=player.nickname;this.render();}return true;}
+  if(e.type==='P_EDIT'||e.type==='P_HISTORY'){const player=snap?.players.find(x=>x.id===e.id);if(player){p.editId=e.id;p.historyOnly=e.type==='P_HISTORY';p.name=player.nickname;this.render();}return true;}
+  if(e.type==='P_CERTIFICATE'){
+   if(p.busy||p.status!=='ready'||document.querySelector('dialog'))return true;
+   const player=snap?.players.find(x=>x.id===p.editId);if(!player)return true;
+   void (async()=>{try{
+    const fresh=await this.repo.snapshot(),same=fresh.players.find(x=>x.id===player.id);
+    const count=historySummary(fresh.records,player.id,this.catalog.missions.map(m=>m.id));
+    if(!same||!count.certificateEligible){p.message=ui.certificateUnavailable;this.render();return;}
+    await showCertificate(s.locale,same.nickname||same.label);
+   }catch{p.message=ui.certificateUnavailable;this.render();}})();return true;
+  }
   if(e.type==='P_CORRECT'){p.correction=snap?.records.find(x=>x.id===e.id)||null;p.selectedId=null;this.navigate('attribution');return true;}
+  if(e.type==='P_CHANGE_REPORT'){
+   const record=snap?.records.find(x=>x.id===e.id);
+   if(!record||p.busy||p.status!=='ready'||!['complete','early'].includes(e.value)||record.report.value===e.value||document.querySelector('dialog'))return true;
+   const key=this.current(),value=e.value,copy=value==='complete'?ui.recordComplete:ui.recordEarly;
+   dialog({title:ui.reportChangeTitle,body:`${ui.reportChangeBody} ${copy}`,cancelLabel:ui.cancel,confirmLabel:ui.confirmReportChange,onConfirm:()=>{
+    if(key!==this.current()||p.busy)return;
+    void this.mutate(()=>this.repo.correctReport({id:record.id,epoch:snap.epoch,revision:record.revision,value}).then(()=>ui.reportCorrected));
+   }});return true;
+  }
   if(e.type==='P_INSPECT'){const op=snap?.operations.find(x=>x.id===e.id);if(op){p.result={id:op.id,epoch:op.epoch,targetId:op.targetId,status:op.status};this.navigate('record-result');}return true;}
   if(p.busy||!snap||p.status!=='ready')return true;
   if(['P_DELETE_ONE','P_DELETE_ALL','P_MOVE'].includes(e.type)){
@@ -68,7 +89,7 @@ export class PersonalController {
  async save(envelope,prepare){
   const key=this.current(),p=this.model;p.busy=true;p.message='';this.render();
   try{let op=prepare?await this.repo.prepare(envelope):envelope;if(key===this.current())p.result={...p.result,id:op.id,epoch:op.epoch};const result=await this.repo.commit(op.id,op.epoch);this.invalidate();if(key===this.current())p.result={id:op.id,epoch:op.epoch,targetId:result.record.targetId,status:'committed'};}
-  catch{if(key===this.current())p.message=this.ui.saveUnverified;}
+  catch(e){if(key===this.current()){if(e.code==='correction-required'){p.result={...p.result,status:'correction-required'};p.message=this.ui.correctionRequired;}else p.message=this.ui.saveUnverified;}}
   finally{p.busy=false;if(localViews.has(this.getState().screen))await this.refresh();}
  }
 }

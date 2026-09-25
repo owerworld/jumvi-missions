@@ -19,7 +19,7 @@ async function boot(){
  for(const type of ['pointerup','pointercancel'])addEventListener(type,()=>{if(!pointerInteraction)return;pointerInteraction=false;requestAnimationFrame(()=>refreshReadiness());},true);
  let storage;try{storage=sessionStorage;}catch{storage=null;}
  const audio=new AudioController({onChange:refreshAudio});
- const personal=new PersonalController({getState:()=>state,navigate:screen=>dispatch({type:'GO',screen,revision:state.revision,documentId:state.documentId}),render,ui});
+ const personal=new PersonalController({getState:()=>state,navigate:screen=>dispatch({type:'GO',screen,revision:state.revision,documentId:state.documentId}),render,ui,catalog});
  function notice(message){const n=app.querySelector('.play-notice');if(n)n.textContent=message;}
  function refreshAudio(){const v=audio.snapshot();for(const n of app.querySelectorAll('[data-sound]')){n.querySelector('[data-sound-text]').textContent=v.preference?ui.soundOn:ui.soundOff;n.querySelector('svg')?.replaceWith(icon(v.preference?'volume-2':'volume-x'));n.setAttribute('aria-pressed',String(v.preference));}if(v.playback==='unavailable')notice(ui.soundUnavailable);else if(v.playback==='pending')notice(ui.soundPending);}
  function render({preserveFocus=false}={}){const priorPosition=navigation.capture();const focus=preserveFocus&&app.contains(document.activeElement)?{id:document.activeElement.id,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd}:null;const captured=state,send=(type,detail={},push=true)=>dispatch({type,...detail,revision:captured.revision,documentId:captured.documentId},push);

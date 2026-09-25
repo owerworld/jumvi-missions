@@ -13,6 +13,8 @@
 .compact-controls .control:has(.control-icon){flex-direction:column}
 /* Customer presentation v1: accepted source frames remain intact. */
 .presentation-pilot .frame-art,.presentation-pilot .frame-person,.presentation-pilot .role-person{margin:0}
+/* A single scene should stay legible without dominating a short desktop viewport. */
+@media(min-width:48rem){.presentation-pilot .entry-hero:has(.frame-person:only-child){max-width:30rem;margin-inline:auto}}
 .presentation-pilot .frame-person{min-width:0;flex:1;text-align:center}
 .presentation-pilot .frame-actors .frame-person img{width:100%;display:block}
 .presentation-pilot .frame-person figcaption{font-weight:700}

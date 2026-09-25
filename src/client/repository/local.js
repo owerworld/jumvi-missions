@@ -16,6 +16,7 @@ function reportPayload(r) {
  return {id:r.id,missionId:r.missionId,mechanicsVersion:r.mechanicsVersion,roundId:r.roundId,value:r.value,revision:r.revision};
 }
 const intent = (target,r) => JSON.stringify([target,r.id,r.revision]);
+const digestPayload=async payload=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(payload))))].map(b=>b.toString(16).padStart(2,'0')).join('');
 export class LocalRepository {
  constructor(factory){if(arguments.length===0){try{factory=globalThis.indexedDB;}catch{factory=null;}}this.factory=factory;this.connection=null;}
  async open(){
@@ -44,11 +45,14 @@ export class LocalRepository {
  async create({epoch,name='',id=crypto.randomUUID()}){const clean=nickname(name);return this.transaction('readwrite',async s=>{const c=await this.guard(s,epoch);if(await request(s.players.get(id)))fail('duplicate');const p={id,label:`Player ${c.next}`,nickname:clean,revision:1};await request(s.players.add(p));await request(s.meta.put({...c,next:c.next+1}));return p;});}
  async rename({epoch,id,revision,name}){const clean=nickname(name);return this.transaction('readwrite',async s=>{const p=await this.guard(s,epoch,id,revision);const updated={...p,nickname:clean,revision:p.revision+1};await request(s.players.put(updated));return updated;});}
  async prepare({id,epoch,targetId,targetRevision,report}){
-  const payload=reportPayload(report),canonical=JSON.stringify(payload),digest=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(canonical)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const payload=reportPayload(report),digest=await digestPayload(payload);
   return this.transaction('readwrite',async s=>{
    await this.guard(s,epoch,targetId,targetRevision);
    const key=intent(targetId,payload),existing=await request(s.operations.index('intent').get(key));
    if(existing){if(existing.digest!==digest)fail('conflict');return existing;}
+   // A revised declaration is a correction to an existing saved report, not a
+   // second round. It must use the explicit correction control below.
+   if((await request(s.operations.getAll())).some(o=>o.targetId===targetId&&o.report?.id===payload.id))fail('correction-required');
    const sameId=await request(s.operations.get(id));if(sameId)fail('conflict');
    const op={id,epoch,targetId,targetRevision,report:payload,digest,intent:key,status:'pending'};await request(s.operations.add(op));return op;
   });
@@ -65,6 +69,30 @@ export class LocalRepository {
  }
  async verify(id,epoch){return this.transaction('readonly',async s=>{await this.guard(s,epoch);const [op,record]=await Promise.all([request(s.operations.get(id)),request(s.records.get(id))]);if(!op)fail('deleted');if(op.status==='committed'&&record&&record.targetId===op.targetId)return {status:'committed',op,record};if(op.status==='pending'&&!record)return {status:'pending',op};fail('corrupt');});}
  async reattribute({id,epoch,revision,targetId,targetRevision}){return this.transaction('readwrite',async s=>{await this.guard(s,epoch,targetId,targetRevision);const record=await request(s.records.get(id));if(!record)fail('deleted');if(record.revision!==revision)fail('stale');const op=await request(s.operations.get(id));if(!op||op.status!=='committed')fail('corrupt');const key=intent(targetId,record.report);const duplicate=await request(s.operations.index('intent').get(key));if(duplicate&&duplicate.id!==id)fail('conflict');await request(s.records.put({...record,targetId,revision:record.revision+1}));await request(s.operations.put({...op,targetId,targetRevision,intent:key}));return id;});}
+ async correctReport({id,epoch,revision,value}){
+  if(!['complete','early'].includes(value))fail('invalid-report');
+  const before=await this.snapshot(),source=before.records.find(r=>r.id===id);
+  if(before.epoch!==epoch)fail('stale');
+  if(!source)fail('deleted');
+  if(source.revision!==revision)fail('stale');
+  if(source.report.value===value)return source;
+  const revisedReport=reportPayload({...source.report,value,revision:source.report.revision+1}),digest=await digestPayload(revisedReport);
+  return this.transaction('readwrite',async s=>{
+   await this.guard(s,epoch);
+   const record=await request(s.records.get(id)),op=await request(s.operations.get(id));
+   if(!record||!op||op.status!=='committed')fail('deleted');
+   if(record.revision!==revision)fail('stale');
+   const owner=await request(s.players.get(record.targetId));if(!owner)fail('deleted');
+   if(record.report.revision!==source.report.revision)fail('stale');
+   const report=revisedReport;
+   const key=intent(record.targetId,report),duplicate=await request(s.operations.index('intent').get(key));
+   if(duplicate&&duplicate.id!==id)fail('conflict');
+   const updated={...record,report,revision:record.revision+1};
+   await request(s.records.put(updated));
+   await request(s.operations.put({...op,report,targetRevision:owner.revision,intent:key,digest}));
+   return updated;
+  });
+ }
  async deletePlayer({epoch,id,revision}){return this.transaction('readwrite',async s=>{await this.guard(s,epoch,id,revision);for(const table of [s.records,s.operations]){for(const row of await request(table.getAll()))if(row.targetId===id)await request(table.delete(row.id));}await request(s.players.delete(id));});}
  async deleteAll(epoch){return this.transaction('readwrite',async s=>{await this.guard(s,epoch);for(const n of ['players','records','operations'])await request(s[n].clear());await request(s.meta.put({id:'control',epoch:crypto.randomUUID(),next:1}));});}
 }

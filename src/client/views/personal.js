@@ -2,6 +2,7 @@ import {el,heading} from '../components/dom.js';
 import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
 import {playerLabel} from '../repository/local.js';
+import {historySummary} from '../repository/history-summary.js';
 export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  p ||= {snapshot:null,status:'loading',name:'',selectedId:null,result:null};
  const s=el('section');s.dataset.view=name;const row=el('div',undefined,'controls conflicting');
@@ -43,15 +44,30 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  if(name==='record-result'){
   const result=p.result,record=snap?.records.find(x=>x.id===result?.id),op=snap?.operations.find(x=>x.id===result?.id),target=players.find(x=>x.id===(record?.targetId||op?.targetId||result?.targetId));
   const verified=result?.status==='committed'&&record&&target;const storedReport=record?.report||op?.report||result?.report;const missionLabel=reportMission(storedReport);
-  s.append(el('p',target?`${playerLabel(target)} · ${missionLabel}`:missionLabel),el('p',verified?ui.saveVerified:p.busy?ui.savePending:ui.saveUnverified,'status'));
-  if(verified)row.append(b(ui.correctAttribution,'P_CORRECT',{id:record.id}));else if(result)row.append(b(ui.retryRecord,'P_RETRY',{},p.busy));
+  s.append(el('p',target?`${playerLabel(target)} · ${missionLabel}`:missionLabel),el('p',verified?ui.saveVerified:result?.status==='correction-required'?ui.correctionRequired:p.busy?ui.savePending:ui.saveUnverified,'status'));
+  if(verified){row.append(b(ui.correctAttribution,'P_CORRECT',{id:record.id}));row.append(b(record.report.value==='complete'?ui.changeToEarly:ui.changeToComplete,'P_CHANGE_REPORT',{id:record.id,value:record.report.value==='complete'?'early':'complete'}));}
+  else if(result&&result.status!=='correction-required')row.append(b(ui.retryRecord,'P_RETRY',{},p.busy));
   row.append(back(),go(ui.titles.management,'management'));
  }
  if(name==='management'){
   disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
   if(!players.length&&p.status==='ready')s.append(el('p',ui.managementEmpty));
-  if(editable){s.append(el('h2',playerLabel(editable)),el('p',ui.nameInfo));form('P_RENAME',ui.saveName,p.name);const history=el('div');history.append(el('h2',ui.history));for(const record of snap.records.filter(r=>r.targetId===editable.id)){const item=el('div',undefined,'history-item');item.append(el('p',`${reportMission(record.report)} · ${record.report.value==='complete'?ui.recordComplete:ui.recordEarly}`),b(ui.inspectRecord,'P_INSPECT',{id:record.id}));history.append(item);}s.append(history);row.append(b(ui.deletePlayer,'P_DELETE_ONE',{},p.busy));}
-  else for(const player of players)row.append(b(playerLabel(player),'P_EDIT',{id:player.id}));
+  if(editable){
+   s.append(el('h2',playerLabel(editable)));
+   const summary=historySummary(snap.records,editable.id,catalog?.missions.map(m=>m.id));
+   s.append(el('p',ui.historySummary.replace('{distinct}',summary.distinct).replace('{completed}',summary.completed).replace('{early}',summary.early),'history-summary'),el('p',ui.historyHonesty,'muted'));
+   const certificate=el('section',undefined,'certificate-status');certificate.append(el('h2',ui.certificateTitle),el('p',ui.certificateProgress.replace('{count}',summary.certificateCount).replace('{total}',summary.certificateTotal)),el('p',ui.certificateScope,'muted'));
+   if(summary.certificateEligible)certificate.append(b(ui.certificatePreview,'P_CERTIFICATE'));
+   s.append(certificate);
+   if(!p.historyOnly){s.append(el('p',ui.nameInfo));form('P_RENAME',ui.saveName,p.name);}
+   const history=el('div');history.append(el('h2',ui.history));
+   for(const record of snap.records.filter(r=>r.targetId===editable.id)){const item=el('div',undefined,'history-item');item.append(el('p',`${reportMission(record.report)} · ${record.report.value==='complete'?ui.recordComplete:ui.recordEarly}`));if(record.report.value==='complete')item.append(el('p',ui.missionRepeatCount.replace('{count}',summary.byMission.get(record.report.missionId)||0),'muted'));item.append(b(ui.inspectRecord,'P_INSPECT',{id:record.id}));history.append(item);}
+   s.append(history);if(p.historyOnly)row.append(b(ui.editPlayer,'P_EDIT',{id:editable.id}));row.append(b(ui.deletePlayer,'P_DELETE_ONE',{},p.busy));
+  }
+  else for(const player of players){
+   const summary=historySummary(snap.records,player.id),item=el('div',undefined,'history-item');
+   item.append(el('h2',playerLabel(player)),el('p',ui.historySummary.replace('{distinct}',summary.distinct).replace('{completed}',summary.completed).replace('{early}',summary.early)),b(`${ui.viewHistory}: ${playerLabel(player)}`,'P_HISTORY',{id:player.id}),b(`${ui.editPlayer}: ${playerLabel(player)}`,'P_EDIT',{id:player.id}));s.append(item);
+  }
   if(snap?.operations.some(o=>o.status==='pending')){s.append(el('h2',ui.pendingRecords));for(const op of snap.operations.filter(o=>o.status==='pending')){const owner=players.find(x=>x.id===op.targetId);s.append(b(`${ui.inspectRecord} · ${owner?playerLabel(owner):''}`,'P_INSPECT',{id:op.id}));}}
   row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'),go(cp.adult,'adult'),back());
  }
