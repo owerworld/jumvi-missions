@@ -6,7 +6,7 @@ test('customer review captures are synthetic and keep real play optional',async(
  await page.setViewportSize({width:390,height:844});
  await page.goto('/tr');await expect(page.locator('[data-start]')).toBeEnabled();
  await page.screenshot({path:`${out}/entry-390-tr.png`,fullPage:true});
- await page.getByRole('button',{name:'Yardım',exact:true}).click();
+ await page.getByRole('button',{name:'Açıklama / yardım',exact:true}).click();
  await expect(page.locator('#first-step')).toBeVisible();
  await expect(page.locator('.canonical-steps')).toHaveCount(0);
  await page.screenshot({path:`${out}/help-390-tr.png`,fullPage:true});

@@ -93,3 +93,6 @@ main:has(>.customer-layout){padding:20px;background:#fff}
 .compact-controls .customer-layout .active-actions .control:has(.control-icon){flex-direction:column}
 .compact-controls .customer-layout .mission-card-body{padding:16px}
 @media(max-width:23rem){.customer-layout .entry-actions>.link+.link{border-left:0;border-top:1px solid var(--border)}.customer-layout .mission-card-body{padding:16px}.customer-layout .mission-thumbnail{width:100%;max-height:12rem;border-radius:1.25rem 1.25rem 0 0}}
+
+/* Keep the management inset fixed when text enlarges; labels retain full words. */
+.customer-layout .secondary-access{padding:16px}

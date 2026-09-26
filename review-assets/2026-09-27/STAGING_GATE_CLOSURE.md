@@ -1,0 +1,5 @@
+# Staging publication gate closure — 2026-09-27
+
+User requested a remotely reachable phone review build. Only isolated staging authorized; no production or main changes. Initial run 36274559695 failed before deployment (140 browser cases passed, 12 failed). Five failures per engine were stale test assumptions about the previously removed duplicate Help, search input and utility wrapper. One per engine found real 320px/200%-text internal overflow in the adult secondary-access control. Fixed its inset at 16px rather than scaling it to 32px; no clipping, smaller type, hidden controls or geometry changes. Updated tests target actual accessible labels/native search/current utilities while retaining focus, readiness, all 17 headings, minimum targets, pointer safety and no-overflow assertions.
+
+All 48 affected Chromium/WebKit cases passed locally after correction. 53 contracts passed. Full CI will rerun before staging deploy. Root 457c067326c5e5a4; V2 artifact recorded in final receipt. The first failed attempt never ran deployment. No production worker/version/domain/dataset/secret changes.
