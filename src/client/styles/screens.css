@@ -68,3 +68,28 @@ main:has(>.customer-layout){padding:20px;background:#fff}
 .customer-layout .active-contact,.customer-layout .mission-kit,.customer-layout .mission-filters{padding:16px}
 .compact-controls .customer-header{display:block}.compact-controls .customer-header .customer-eyebrow{display:block;text-align:left;margin-top:.75rem}
 @media(max-width:23rem){.customer-layout{padding:0}}
+/* Reference composition v2: introduction → scene → kit → main action. */
+.customer-layout .customer-header{margin-bottom:1rem;min-height:64px}
+.customer-layout .customer-header .brand{width:7rem;height:4rem;object-fit:contain;object-position:left center}
+.customer-layout .customer-header .customer-eyebrow{font-size:.65em;letter-spacing:.08em}
+.customer-layout .entry-brief{margin:0 0 .75rem}.customer-layout .entry-brief p{margin-bottom:.75rem}
+.customer-layout .entry-hero{border-radius:0;margin:0 -20px;padding:16px 20px 28px;background:linear-gradient(180deg,#fff 5%,var(--infoSurface) 90%)}
+.customer-layout .entry-hero img{max-height:26rem}.customer-layout .entry-hero .frame-person:only-child{width:100%}
+.customer-layout .mission-kit{margin:0 0 1rem;border-radius:1.25rem;background:var(--infoSurface);position:relative}
+.customer-layout .entry-actions{gap:0 1rem}.customer-layout .entry-actions>[data-start]{margin-bottom:.75rem;min-height:4rem;border-width:5px}
+.customer-layout .entry-actions>.link{border:0;border-radius:0;justify-content:center;background:transparent}
+.customer-layout .entry-actions>.link+.link{border-left:1px solid var(--border)}
+.customer-layout .entry-actions .control:has(.control-icon),.customer-layout .active-actions .control:has(.control-icon){flex-direction:row}
+.customer-layout .action-arrow{font-size:1.5em;line-height:1;flex:none}
+.customer-layout .active-contact{border-radius:0;margin-inline:-20px;padding:16px 20px;background:linear-gradient(180deg,#fff,var(--infoSurface))}
+.customer-layout .active-contact .frame-art{max-width:24rem}.customer-layout .active-contact .frame-actors img{max-height:18rem}
+.customer-layout .active-actions{margin-top:1.25rem}.customer-layout .active-actions .control{padding-inline:12px}
+.customer-layout .report-actions>.control:not(.primary){border:1px solid var(--border);background:#fff;justify-content:center;text-decoration:none}
+.customer-layout .report-actions>.control:last-child{border:0;background:transparent;justify-content:flex-start}
+.customer-layout .featured-mission{background:linear-gradient(135deg,var(--infoSurface),#fff);border-radius:1.75rem;padding:20px;margin:1.25rem 0 2rem;display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+.customer-layout .featured-mission h2{margin:0 0 .5rem}.customer-layout .featured-mission img{width:100%;max-height:18rem;object-fit:contain}.customer-layout .featured-mission .primary{width:auto;min-width:var(--target-child)}
+.customer-layout .mission-list>li{padding:0;overflow:visible;gap:12px}.customer-layout .mission-thumbnail{width:7rem;max-height:10rem;border-radius:1.25rem 0 0 1.25rem}.customer-layout .mission-card-body{padding:12px 12px 12px 0}.customer-layout .mission-card-body .control{background:var(--infoSurface);border:0}
+.compact-controls .customer-layout .entry-actions>.link+.link{border-left:0;border-top:1px solid var(--border)}
+.compact-controls .customer-layout .active-actions .control:has(.control-icon){flex-direction:column}
+.compact-controls .customer-layout .mission-card-body{padding:16px}
+@media(max-width:23rem){.customer-layout .entry-actions>.link+.link{border-left:0;border-top:1px solid var(--border)}.customer-layout .mission-card-body{padding:16px}.customer-layout .mission-thumbnail{width:100%;max-height:12rem;border-radius:1.25rem 1.25rem 0 0}}

@@ -20,7 +20,8 @@ export function playView(name,ctx) {
   if(frame.note)wrap.append(el('figcaption',frame.note[state.locale],'art-note'));
   return wrap;
  };
- const brand=()=>{const i=el('img');i.src=new URL('jumvi-logo.webp',assetRoot);i.alt='JUMVI';i.width=80;i.height=80;i.className='brand';const header=el('header',undefined,'customer-header');header.append(i,el('span',state.locale==='tr'?'OYUN ZAMANI':'TIME TO PLAY','customer-eyebrow'));s.append(header);};
+ const shortLabel=(node,label)=>{node.setAttribute('aria-label',node.getAttribute('aria-label')||node.textContent);node.querySelector('.control-label').textContent=label;return node;};
+ const brand=()=>{const i=el('img');i.src=new URL('jumvi-logo.webp',assetRoot);i.alt='JUMVI';i.width=80;i.height=80;i.className='brand';const header=el('header',undefined,'customer-header');header.append(i,el('span',state.locale==='tr'?'OYNA · HAREKET ET':'PLAY · MOVE','customer-eyebrow'));s.append(header);};
  const support=()=>{const r=controls();r.classList.add('utilities');r.append(b(cp.help,'HELP',{},'link'),sound());return r;};
  const sound=()=>{const v=audio.snapshot();const n=button(v.preference?ui.soundOn:ui.soundOff,()=>send('SOUND'),{kind:'link'});const label=el('span',n.textContent);label.dataset.soundText='';n.replaceChildren(icon(v.preference?'volume-2':'volume-x'),label);n.dataset.sound='';n.setAttribute('aria-label',ui.soundLabel);n.setAttribute('aria-pressed',String(v.preference));return n;};
  const access=()=>b(cp.access,'ACCESS',{},'link');
@@ -29,10 +30,10 @@ export function playView(name,ctx) {
  const action=(txt,type,kind='secondary',active=false)=>b(txt,type,{},kind,active);
  if(name==='entry'){
   brand();s.append(el('p',state.locale==='tr'?'GÖREVİN':'YOUR MISSION','customer-eyebrow'),heading(cp.mission),text(cp.goal,'instruction goal'));
-  const hero=cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch);hero.classList.add('entry-hero');s.append(hero);
-  const kit=el('div',undefined,'mission-kit');kit.append(text(cp.materials,'materials'));if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));s.append(kit);
-  const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));s.append(brief);ready();
-  const row=controls();row.classList.add('entry-actions');const start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';row.append(start,b(cp.another,'GO',{screen:'discovery'},'link'),b(cp.how,'HELP',{},'link'));s.append(row);
+  const hero=cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch);hero.classList.add('entry-hero');
+  const kit=el('div',undefined,'mission-kit');kit.append(text(cp.materials,'materials'));if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));
+  const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));s.append(brief,hero,kit);ready();
+  const row=controls();row.classList.add('entry-actions');const start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';const arrow=el('span','→','action-arrow');arrow.setAttribute('aria-hidden','true');start.append(arrow);row.append(start,shortLabel(b(cp.another,'GO',{screen:'discovery'},'link'),state.locale==='tr'?'Başka görev':'More missions'),shortLabel(b(cp.how,'HELP',{},'link'),state.locale==='tr'?'Yardım':'Help'));s.append(row);
   const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools);secondary(true);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
@@ -57,7 +58,7 @@ export function playView(name,ctx) {
  }else if(name==='active'){
   brand();label();s.append(heading(cp.activeTitle),text(state.resumed?ui.resumed:cp.state,'muted'),text(cp.activeCopy,'instruction'));
   const contact=el('div',undefined,'active-contact');contact.append(cp.activeArt?frameArt(cp.activeArt):cp.frames?frameArt(cp.frames[Math.min(1,cp.frames.length-1)]):art('contact-alpha-v1',cp.step2body,'contact-art'),text(cp.activeCatch,'instruction'));if(cp.activeArt)contact.classList.add('pilot-reminder');s.append(contact,text(cp.goal,'instruction goal'));
-  const row=controls();row.classList.add('active-actions');const stop=b(cp.stop,'STOP',{},'primary',true);stop.classList.add('stop-action');row.append(b(cp.activeHelp,'HELP',{},'secondary',true),stop);s.append(row);const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools);
+  const row=controls();row.classList.add('active-actions');const stop=b(cp.stop,'STOP',{},'primary',true);stop.classList.add('stop-action');row.append(shortLabel(b(cp.activeHelp,'HELP',{},'secondary',true),state.locale==='tr'?'Yardım':'Help'),shortLabel(stop,state.locale==='tr'?'Durdur':'Stop'));s.append(row);const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools);
  }else if(name==='interrupted'){
   label();s.append(heading(ui.interrupted));const p=text(state.unknown||!state.round?ui.unknown:ui.resumeInfo,'status');s.append(p);const row=controls();if(state.round&&!state.unknown)row.append(action(ui.resume,'RESUME','primary'));const n=action(ui.newRound,'REPLAY');n.disabled=!state.mission.ready;row.append(n);if(state.round)row.append(action(ui.end,'END'));row.append(action(cp.leave,'LEAVE','link'),b(cp.how,'HELP'));s.append(row);ready();
  }else if(name==='stopped'){
@@ -67,7 +68,7 @@ export function playView(name,ctx) {
   row.append(text(ui.optional,'muted'),b(ui.complete,'REPORT',{value:'complete'}),b(ui.early,'REPORT',{value:'early'}));s.append(row);const next=controls();next.classList.add('secondary-access');next.append(action(cp.again,'REPLAY'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(next);
  }else if(name==='report'){
   brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),cp.hero?frameArt(cp.hero):art('product-still-v1','JUMVI','product-still'),text(ctx.isSaved?ui.savedReport:cp.notSaved,'report-summary'));
-  const row=controls();row.append(action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'),b(cp.edit,'EDIT_REPORT',{},'link'));s.append(row);const r=el('div',undefined,'secondary-access');r.append(b(cp.save,'GO',{screen:'attribution'},'link'),b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
+  const row=controls();row.classList.add('report-actions');row.append(action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'),b(cp.edit,'EDIT_REPORT',{},'link'));s.append(row);const r=el('div',undefined,'secondary-access');r.append(b(cp.save,'GO',{screen:'attribution'},'link'),b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
  }
  return s;
 }

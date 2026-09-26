@@ -1,0 +1,9 @@
+# Screenshot composition revision — 2026-09-27
+
+User requested the actual screen/button composition of 23/43/122/4545.jpeg after the first layout revision.
+
+Entry now follows header → title/goal → required brief/safety → large edge-to-edge scene → equipment card → large blue/lime Start with arrow → inline More missions/Help pair. Actual canonical information remains present. Active has a large scene with blue surface fade and short visible Help/Stop labels in a horizontal pair normally, stacked at enlarged text. Original full accessible action names remain. Report secondary choices become outlined pills. Discovery adds an explicit current-mission featured card (not a personalized recommendation), followed by search/player filters and compact thumbnail rows. Profile-first behavior, fictitious counters and unsafe reference paddle mechanics were not introduced. Existing mission art remains intact.
+
+Verification: 53 contracts passed. Broad Chromium/WebKit suite: 60 passed; two former long-label assertions failed because the approved reference now displays short Help. Regression was updated to verify whole-word one-line containment of actual Yardım at 320px/200% text, full accessible name, and 128px enlarged touch target; both engines passed. No implementation failure was hidden by clipping/font reduction. 36 actual Chromium screenshots recorded TR/EN × 320/390/430 × normal/200% root-font text × entry/help/active; no overflow. Discovery/report flows captured; report is an explicit synthetic completion declaration, not inferred physical success or a real player record. Native browser-menu zoom and real phone/child field tests not performed.
+
+Root artifact 6f4557da0901e9b3; V2 artifact e5733bbd2a1f4838. Local work only: no push, staging/production deployment, lock/content change or audio production. Visual customer review remains pending; M6 PASS not claimed. Previous captures remain under reference-layout-*; new captures are ss-layout-*.

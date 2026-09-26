@@ -3,9 +3,12 @@ import {el,heading} from '../components/dom.js';import {button} from '../compone
 // Transient catalogue controls only: no player identity, telemetry or persistence.
 const filters=new Map();
 export function supportsPlayers(value,count){const digits=String(value).match(/\d+/g)?.map(Number)||[];return !count|| (String(value).includes('+')?count>=digits[0]:digits.length>1?count>=digits[0]&&count<=digits[1]:count===digits[0]);}
-export default function view({ui,state,send,presentation,assetManifest,catalog={missions:[]}}){
+export default function view({ui,state,send,cp,presentation,assetManifest,catalog={missions:[]}}){
  const tr=state.locale==='tr',s=el('section');s.dataset.view='discovery';s.classList.add('customer-layout');
+ const header=el('header',undefined,'customer-header'),logo=el('img');logo.src=new URL('../../assets/mission-illustrations/m25/jumvi-logo.webp',import.meta.url);logo.alt='JUMVI';logo.width=80;logo.height=80;logo.className='brand';header.append(logo,el('span',tr?'OYNA · HAREKET ET':'PLAY · MOVE','customer-eyebrow'));s.append(header);
  s.append(button(ui.back,()=>send('BACK'),{kind:'link'}),heading(ui.titles.discovery),el('p',tr?'Görev adına veya oyuncu sayısına göre uygun oyunu bul.':'Find a suitable game by mission name or player count.'));
+ const selected=catalog.missions.find(m=>m.id===state.mission.id),featuredPath=presentation?.missions?.[selected?.id]?.hero?.images?.[0];
+ if(selected&&featuredPath){const card=el('article',undefined,'featured-mission'),copy=el('div',undefined,'featured-copy');copy.append(el('p',tr?'OYUNA DEVAM':'KEEP PLAYING','customer-eyebrow'),el('h2',selected.titles[state.locale]),el('p',equipmentText(selected,state.locale)),button(tr?'Bu görevle oyna':'Play this mission',()=>send('SELECT_MISSION',{missionId:selected.id}),{kind:'primary'}));const image=el('img');image.src=new URL('../../'+featuredPath,import.meta.url);image.alt='';const metadata=assetManifest?.assets.find(x=>x.path===featuredPath);if(metadata){image.width=metadata.width;image.height=metadata.height;}card.append(copy,image);s.append(card);}
  const current=filters.get(state.locale)||{query:'',players:0},form=el('div',undefined,'mission-filters');
  const label=el('label',tr?'Görev ara':'Search missions'),search=el('input');search.id='mission-search';search.type='search';search.value=current.query;label.htmlFor=search.id;
  const playerLabel=el('label',tr?'Kaç oyuncu var?':'How many players?'),players=el('select');players.id='mission-player-filter';playerLabel.htmlFor=players.id;
