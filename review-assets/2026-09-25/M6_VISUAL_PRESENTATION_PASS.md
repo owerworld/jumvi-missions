@@ -4,7 +4,7 @@
 
 ## What actually changed
 
-- **Help structure:** 23 missions now put every canonical instruction next to the correct visual moment exactly once. An explicit per-mission `frameStepMap` replaces the unsound assumption that equal numbers of rules and frames mean the same sequence. m03's toss and paddle tap appear with frame 1, the sticky catch with frame 2, and frame 3 remains the detach moment. The other 13 missions retain their full canonical lists until safe frame alignment is known. No canonical mission JSON or rule changed.
+- **Help structure:** 25 missions now put every canonical instruction next to the correct visual moment exactly once. An explicit per-mission `frameStepMap` replaces the unsound assumption that equal numbers of rules and frames mean the same sequence. m03's toss and paddle tap appear with frame 1, the sticky catch with frame 2, and frame 3 remains the detach moment. The other 11 missions retain their full canonical lists until safe frame alignment is known. No canonical mission JSON or rule changed.
 - **Selected-player progress:** Each mission reported complete is now visible by name and saved report count before the long individual-record history. The certificate progress and, when eligible, preview button appear near the top of the selected player's mobile view. The two-paragraph privacy disclosure remains on player-list and new-player screens and is not repeated above the already-selected player's progress. Shorter TR/EN report-count copy reduces repeated document text.
 - **m03 art:** Original first frame remains packaged. A v3 product/motion candidate was substituted **only by local browser request interception** and captured at app scale in entry, Help, and active views. It distinguishes airborne toss from paddle tap better than the current frame; small-screen strap angle and timing still need human/physical visual acceptance.
 - **m05, m09, m13 art:** Original art remains packaged. Versioned separate candidates were generated, product/mechanics screened, and substituted only in isolated local browser contexts for entry, Help and active screenshots. m05 shows a one-ball blue-front catch with freeze posture; m09 shows one-ball backward steps; m13 shows closed mouths, a blue-front sticky catch and silent finger count. These are **candidates**, not production-ready assets. Rejected m09 two-ball, m13 open-mouth/black-background and m14 double-ball outputs were not wired in.
@@ -13,10 +13,10 @@
 
 | Measure | Before | After this pass |
 |---|---:|---:|
-| Repeated entry hero mappings in packaged app | 28 | **28**; original assets intentionally preserved |
+| Repeated entry hero mappings in packaged app | 28 | **26**; two local candidate replacements, original assets preserved |
 | Local replacement candidates viewed in real app layout | 0 | **3** (m05, m09, m13) |
 | Separate m03 timing candidate viewed in real app layout | 0 | **1** |
-| Help sequences with explicit canonical-to-frame mapping | 0 | **23** |
+| Help sequences with explicit canonical-to-frame mapping | 0 | **25** |
 | Human-accepted replacement hero art | 0 | **0** |
 
 The 28 mission-specific movement gaps remain release blockers until the required art is produced and accepted. `VISUAL_CORRECTION_REGISTER.md` records the specific action, why the current image fails, and the exact scene needed for each one. The other eight missions are not auto-accepted.
@@ -46,3 +46,17 @@ The 28 mission-specific movement gaps remain release blockers until the required
 | Test not performed | Real iPhone/Android, screen-reader gesture experience, outdoor device viewing, local Chrome 200% screenshot export. |
 
 **Decision:** M6 remains **PILOT / CUSTOMER PRESENTATION REVIEW REQUIRED**, not PASS. No expanded publication approval is inferred.
+
+## Local continuation — m05 / m10
+
+Two formerly repeated entry presentations now have complete, versioned local candidate sequences. **This closes no human acceptance gate.** m05: stationary blue-front catch/freeze → free-hand detach → free-hand return toward the partner’s blue face. m10: forward-step toss → sticky catch → reset/detach. Both retain canonical JSON hashes and existing small active-play reminders. Original approved source files remain untouched.
+
+The m05 hand-switched return variant was rejected. Its subsequent high-ball variant was rejected for approaching face height; the lower paddle-target variant is used only for local review. m10 reset/footwork readability remains a review condition; its image is not evidence of physical execution.
+
+Before → after: repeated packaged hero mappings **28 → 26**; accepted visual closure **0 of these 28**. The remaining 26 need concrete scene work, and both new source candidates still need human acceptance. m03, m09 and m13 have isolated-browser candidates; m14 continuity candidate rejected.
+
+Source-package captures: m05 and m10 each have 36 actual Chromium screenshots across TR/EN, 320/390/430 CSS px, normal/200% root-text enlargement, entry/Help/active. Text enlargement is not browser zoom. Desktop real 200% Chrome zoom was previously checked only for m25; new m05/m10 real zoom and phone/child/field checks remain NOT TESTED.
+
+A concurrent test run overlapped a package rebuild and was interrupted; it is excluded from acceptance. Final verification uses a stable build and one worker. No push or deploy occurred.
+
+Stable final local check: 53/53 state/accessibility/isolation, 25/25 Chromium catalogue/reflow/navigation, 4/4 WebKit content/asset integrity. Root package c075464171d7d94a; V2 package bef30ee3f78bf68e (554 public files). No staging/production publication. New source candidate real-device/child/field/native-zoom gates remain open.

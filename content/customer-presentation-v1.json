@@ -160,7 +160,18 @@
       "canonicalSHA256": "1e1560115d3729c1a70121f662efae6bd5530088552da6159e4e7019e634c1ad"
     },
     "m20": {
-      "frameStepMap": [[0],[1],[],[2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [],
+        [
+          2
+        ]
+      ],
       "frames": [
         {
           "images": [],
@@ -346,7 +357,20 @@
       }
     },
     "m30": {
-      "frameStepMap": [[0,1,2,3],[4],[5]],
+      "frameStepMap": [
+        [
+          0,
+          1,
+          2,
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
       "frames": [
         {
           "images": [
@@ -448,7 +472,16 @@
       }
     },
     "m01": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "2bfd55f224f30a10e619df6dd141c0f35c53a854b794bd8728eb1eb0e6929b73",
       "hero": {
         "images": [
@@ -613,7 +646,16 @@
       }
     },
     "m03": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "58314ea935662ac97a6d87a779a81be6684855751f0880c77c24b3aee68170f5",
       "hero": {
         "images": [
@@ -678,7 +720,27 @@
       }
     },
     "m04": {
-      "frameStepMap": [[0],[1],[2],[3],[4],[5,6]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5,
+          6
+        ]
+      ],
       "canonicalSHA256": "3f6bd7df5fcd0a437b3d56d1bdcfedab29d5d1be9508581c226dc164b8f36a5e",
       "hero": {
         "images": [
@@ -781,18 +843,12 @@
       "canonicalSHA256": "53822b1596b9e28596b2a0289f9a93dbef7022691cd3b797f0d21364732fccd0",
       "hero": {
         "images": [
-          "assets/mission-illustrations/catalog-v3/m05-scene-2.webp"
+          "assets/mission-illustrations/customer-v4/m05-freeze-v1.webp"
         ],
         "sequence": false,
-        "panelLabels": [
-          {
-            "tr": "B: 2 saniye tamamen sabit",
-            "en-US": "B: freeze the whole body for 2 seconds"
-          }
-        ],
         "caption": {
-          "tr": "B: 2 saniye tamamen sabit",
-          "en-US": "B: freeze the whole body for 2 seconds"
+          "tr": "Mavi yüzde yakala; beden ve ayaklar 2 saniye sabit",
+          "en-US": "Catch on the blue front; body and feet stay still for 2 seconds"
         }
       },
       "active": {
@@ -807,39 +863,47 @@
       "frames": [
         {
           "images": [
-            "assets/mission-illustrations/catalog-v3/m05-scene-1.webp"
+            "assets/mission-illustrations/customer-v4/m05-freeze-v1.webp"
           ],
           "caption": {
-            "tr": "B: mavi ön yüzde yakala",
-            "en-US": "B: sticky catch on the blue front"
-          },
-          "detail": "assets/mission-illustrations/final/m05/1-detail.webp"
+            "tr": "Mavi yüzde yakala; beden ve ayaklar 2 saniye sabit",
+            "en-US": "Catch on the blue front; body and feet stay still for 2 seconds"
+          }
         },
         {
           "images": [
-            "assets/mission-illustrations/catalog-v3/m05-scene-2.webp"
-          ],
-          "caption": {
-            "tr": "B: 2 saniye tamamen sabit",
-            "en-US": "B: freeze the whole body for 2 seconds"
-          },
-          "detail": "assets/mission-illustrations/final/m05/2-detail.webp"
-        },
-        {
-          "images": [
-            "assets/mission-illustrations/catalog-v3/m05-scene-3.webp"
+            "assets/mission-illustrations/customer-v4/m05-detach-v1.webp"
           ],
           "caption": {
             "tr": "Donma bittikten sonra boş elle ayır",
             "en-US": "Detach with the free hand after the freeze"
-          },
-          "detail": "assets/mission-illustrations/final/m05/3-detail.webp"
+          }
+        },
+        {
+          "images": [
+            "assets/mission-illustrations/customer-v4/m05-return-v1.webp"
+          ],
+          "caption": {
+            "tr": "Boş elle partnerinin mavi paddle yüzüne geri at",
+            "en-US": "Toss back with the free hand toward your partner’s blue paddle face"
+          }
         }
       ],
       "activeCopy": {
         "tr": "B: mavi ön yüzde yakala",
         "en-US": "B: sticky catch on the blue front"
-      }
+      },
+      "reviewStatus": "LOCAL_VISUAL_CANDIDATE — NOT HUMAN ACCEPTED",
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [],
+        [
+          2
+        ]
+      ]
     },
     "m06": {
       "canonicalSHA256": "2c6e1fbbb54c4a0df05fe005fe29545fd3c20d14a30abe104392857705faaf14",
@@ -927,7 +991,16 @@
       }
     },
     "m08": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "5dbe4785b5dd81f83d8897eb39779a6a39bf7ca8da90f5de140ca75b022898ba",
       "hero": {
         "images": [
@@ -992,7 +1065,16 @@
       }
     },
     "m09": {
-      "frameStepMap": [[0],[],[1,2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [],
+        [
+          1,
+          2
+        ]
+      ],
       "canonicalSHA256": "d79322775558b7c07792f770d7898bf137515e7d803f44db3ef742e0579c7ac1",
       "hero": {
         "images": [
@@ -1062,22 +1144,21 @@
       }
     },
     "m10": {
+      "reviewStatus": "LOCAL_VISUAL_CANDIDATE — NOT HUMAN ACCEPTED",
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [],
+        [
+          2
+        ]
+      ],
       "canonicalSHA256": "d5291c08b3b0c53e03437c49febe907ade89b6397550f19be031cabc19da44d9",
       "hero": {
         "images": [
-          "assets/mission-illustrations/catalog-v3/m10-scene-1.webp",
-          "assets/mission-illustrations/catalog-v3/m10-scene-3.webp"
-        ],
-        "sequence": true,
-        "panelLabels": [
-          {
-            "tr": "A: ileri adımla yumuşak atış",
-            "en-US": "A: step forward with a soft toss"
-          },
-          {
-            "tr": "A başlangıca döner; B boş elle ayırır",
-            "en-US": "A returns to start; B detaches with the free hand"
-          }
+          "assets/mission-illustrations/customer-v4/m10-toss-v1.webp"
         ],
         "caption": {
           "tr": "A: ileri adımla yumuşak atış",
@@ -1096,43 +1177,30 @@
       "frames": [
         {
           "images": [
-            "assets/mission-illustrations/catalog-v3/m10-scene-1.webp"
+            "assets/mission-illustrations/customer-v4/m10-toss-v1.webp"
           ],
           "caption": {
-            "tr": "A: ileri adımla yumuşak atış",
-            "en-US": "A: step forward with a soft toss"
-          },
-          "detail": "assets/mission-illustrations/final/m10/1-detail.webp"
+            "tr": "İleri adımla yumuşak at",
+            "en-US": "Step forward with a soft toss"
+          }
         },
         {
           "images": [
-            "assets/mission-illustrations/catalog-v3/m10-scene-2.webp"
+            "assets/mission-illustrations/customer-v4/m10-catch-v1.webp"
           ],
           "caption": {
-            "tr": "B: mavi ön yüzde yakala",
-            "en-US": "B: sticky catch on the blue front"
-          },
-          "detail": "assets/mission-illustrations/final/m10/2-detail.webp"
+            "tr": "Mavi ön yüzde yakala",
+            "en-US": "Catch on the blue front"
+          }
         },
         {
           "images": [
-            "assets/mission-illustrations/catalog-v3/m10-scene-3.webp"
+            "assets/mission-illustrations/customer-v4/m10-reset-v1.webp"
           ],
           "caption": {
-            "tr": "A başlangıca döner; B boş elle ayırır",
-            "en-US": "A returns to start; B detaches with the free hand"
-          },
-          "detail": "assets/mission-illustrations/final/m10/3-detail.webp"
-        },
-        {
-          "images": [
-            "assets/mission-illustrations/catalog-v3/m10-scene-4.webp"
-          ],
-          "caption": {
-            "tr": "Sonraki sıra: B atar, A paddle ile yakalar",
-            "en-US": "Next turn: B tosses, A catches on the paddle"
-          },
-          "detail": "assets/mission-illustrations/final/m10/4-detail.webp"
+            "tr": "Başlangıca dön; boş elle ayır",
+            "en-US": "Return to start; detach with the free hand"
+          }
         }
       ],
       "activeCopy": {
@@ -1141,7 +1209,16 @@
       }
     },
     "m11": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "b39fea99b64b4b0661f8d6c7eea1531ff9a3ce734bd7e482809b6f0d9faef2f2",
       "hero": {
         "images": [
@@ -1211,7 +1288,16 @@
       }
     },
     "m12": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "2658bb11154f4e0a91db159866dcf810b3091b4c8e3008b37598c784246b87fd",
       "hero": {
         "images": [
@@ -1414,7 +1500,17 @@
       }
     },
     "m15": {
-      "frameStepMap": [[0],[1],[2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
       "canonicalSHA256": "914cd039d4d6bd02c238f507ad402e6486cea1a316d15f0b76ca2bbb6ab0a3e1",
       "hero": {
         "images": [
@@ -1589,7 +1685,22 @@
       }
     },
     "m17": {
-      "frameStepMap": [[0,1,2],[3],[4],[5]],
+      "frameStepMap": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
       "canonicalSHA256": "b0c168ca1935f2b3ea2b3ba9711e1b5123ad5a683059ace05bf659f4baea3169",
       "hero": {
         "images": [
@@ -1738,7 +1849,16 @@
       }
     },
     "m19": {
-      "frameStepMap": [[0,1],[],[2]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [],
+        [
+          2
+        ]
+      ],
       "canonicalSHA256": "d5c014cd46da3474b440892fae5e294f3a25869855335b65e3f80826de8dc62b",
       "hero": {
         "images": [
@@ -1808,7 +1928,17 @@
       }
     },
     "m21": {
-      "frameStepMap": [[0],[1],[2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
       "canonicalSHA256": "7cb107cb24b3172ac1be2d08a0170c63eee4fa60c84b3bb1ec2f62d82601fdaf",
       "hero": {
         "images": [
@@ -1875,7 +2005,17 @@
       }
     },
     "m22": {
-      "frameStepMap": [[0,1],[2],[],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        [],
+        []
+      ],
       "canonicalSHA256": "67cc61598104b0a2895c092e54da4930a267a4b550b8b89576e9ac0b31542902",
       "hero": {
         "images": [
@@ -1955,7 +2095,18 @@
       }
     },
     "m23": {
-      "frameStepMap": [[0],[],[1],[2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [],
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
       "canonicalSHA256": "0cd86977b18c3182fe080aaac8d90303f4831107f47b6c4c39e83c53f2f3d266",
       "hero": {
         "images": [
@@ -2031,7 +2182,18 @@
       }
     },
     "m24": {
-      "frameStepMap": [[0],[],[1],[2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [],
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
       "canonicalSHA256": "c722b45ba726b54b4416d7afb3c8df76583327b3b4cf55fa063fa88c601ee195",
       "hero": {
         "images": [
@@ -2171,7 +2333,20 @@
       }
     },
     "m27": {
-      "frameStepMap": [[0],[1],[2],[3]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
       "canonicalSHA256": "e69766e1648a5c6e73a225483a300201ae2b3f7839d3b3d278c9523271ec48a1",
       "hero": {
         "images": [
@@ -2247,7 +2422,16 @@
       }
     },
     "m28": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "2b7c04ae02f7984a44c06eaf617a089e72b0228b8963390853e995112d7bb96a",
       "hero": {
         "images": [
@@ -2391,7 +2575,16 @@
       }
     },
     "m31": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "433580ed1faa66dadfe5def08acc505c461022b104039133e131baeef67558b9",
       "hero": {
         "images": [
@@ -2461,7 +2654,16 @@
       }
     },
     "m32": {
-      "frameStepMap": [[0],[1,2],[]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "4c2d5f24ec108f99f397365da366acfd7d9ea136fdf66ba8ae0ea1e0b12e6d30",
       "hero": {
         "images": [
@@ -2605,7 +2807,16 @@
       }
     },
     "m34": {
-      "frameStepMap": [[0,1],[2],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        []
+      ],
       "canonicalSHA256": "c97f6b1288f7681bb0d23748f120e22eb3dfae464da01974841d31e0e4a872d6",
       "hero": {
         "images": [
@@ -2675,7 +2886,17 @@
       }
     },
     "m35": {
-      "frameStepMap": [[0,1],[2],[],[]],
+      "frameStepMap": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        [],
+        []
+      ],
       "canonicalSHA256": "5aa1dd041948972132ef0a3ddd2e3c03974a5210baae2ce8ccb500268f66062e",
       "hero": {
         "images": [
@@ -2751,7 +2972,17 @@
       }
     },
     "m36": {
-      "frameStepMap": [[0],[],[],[1,2]],
+      "frameStepMap": [
+        [
+          0
+        ],
+        [],
+        [],
+        [
+          1,
+          2
+        ]
+      ],
       "canonicalSHA256": "c455d1d24712d809ff8ccceb287563948ac3912e3368083006ebae13d1ef8084",
       "hero": {
         "images": [

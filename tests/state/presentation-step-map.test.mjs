@@ -17,7 +17,15 @@ test('explicit illustrated help mappings preserve every canonical step in both l
    assert.deepEqual(indices,canonical.locale[locale].steps.map((_,i)=>i),`${id} ${locale} step order`);
   }
  }
- assert.equal(mapped,23);
+ assert.equal(mapped,25);
+});
+
+test('m10 revised art is explicitly a local candidate and keeps the canonical record binding',()=>{
+ const p=presentation.missions.m10;
+ assert.match(p.reviewStatus,/NOT HUMAN ACCEPTED/);
+ assert.equal(p.frames.length,3);
+ assert.ok(p.frames.every(f=>f.images.every(path=>path.startsWith('assets/mission-illustrations/customer-v4/m10-'))));
+ assert.deepEqual(p.frameStepMap,[[0,1],[],[2]]);
 });
 
 test('m03 toss and tap stay with first frame; sticky catch stays with second',()=>{

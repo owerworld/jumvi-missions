@@ -1,6 +1,6 @@
 # JUMVI M6 visual correction register — local review only
 
-The original `catalog-v3` and `final` files remain untouched. The baseline had **28 entry hero mappings** whose repeated upright actor did not make the mission movement legible. The current packaged app still has those 28 mappings; m05, m09 and m13 now have separate local, mobile-scale replacement **candidates**, not accepted replacement art. No art acceptance or deployment is implied.
+The original `catalog-v3` and `final` files remain untouched. The baseline had **28 entry hero mappings** whose repeated upright actor did not make the mission movement legible. The current local packaged app has 26 repeated mappings plus two unaccepted replacements; m05, m09 and m13 now have separate local, mobile-scale replacement **candidates**, not accepted replacement art. No art acceptance or deployment is implied.
 
 | Mission | Distinct action that must be visible | Current entry hero deficiency | Existing asset sufficient? / concrete correction |
 |---|---|---|---|
@@ -9,7 +9,7 @@ The original `catalog-v3` and `final` files remain untouched. The baseline had *
 | m05 Statue Mode | Ball sticks, then body and paddle freeze for two seconds | Standing actor could be any catch task | New `m05-freeze-candidate-v1` shows one blue-front catch and freeze posture in local app; strap-hand angle and two-second continuity still need review. |
 | m06 Number Echo | Thrower calls a number during a soft pass | Static actor does not connect speech to throw | No. Throw/reply moments with one ball and distinct speaking role. |
 | m09 Step-Back Challenge | After three catches, both players move a half-step back | Repeated stance and small annotation do not make the distance change legible | New `m09-backstep-candidate-v1` shows a one-ball reset and both backward steps locally; verify the receiving paddle/hand before acceptance. |
-| m10 Power Step | Forward step powers a controlled toss | Standing actor does not show footwork or release | No. Pre-step → gentle release sequence with one ball. |
+| m10 Power Step | Forward step powers a controlled toss | Standing actor does not show footwork or release | Local customer-v4 candidate: forward-step release → sticky contact → reset/detach; NOT HUMAN ACCEPTED. |
 | m11 Sky Floater | Controlled high flight arc, blue paddle target below face | Standing actor with path does not distinguish catch moment | No. Arc and paddle-facing incoming ball, not head target. |
 | m13 Silent Mode | Players remain silent during active physical play | Static actor and number cue do not distinguish silence | `m13-silent-candidate-v3` shows closed mouths, one blue-front sticky catch and free-hand finger count locally; open-mouth and black-background variants rejected. Strap-hand angle still needs review. |
 | m14 Tempo Master | Five slow then five medium-paced soft exchanges | Static single pose cannot express two tempos | No. Controlled slow/medium temporal sequence; generated double-ball variant rejected. |
@@ -35,4 +35,7 @@ The original `catalog-v3` and `final` files remain untouched. The baseline had *
 
 The other eight missions (m03, m04, m07, m08, m12, m20, m25, m30) are **not automatically accepted**. m03 has a confirmed timing ambiguity and a separately previewed v3 candidate. m04/m07/m08/m12/m20/m25/m30 have mission-specific art and remain on the previously recorded product/hand/strap/customer visual review path.
 
-In this local implementation pass, 23 Help sequences were explicitly mapped to canonical steps without changing mission rules. This removes one kind of repeated document text; it does **not** close the 28 hero-motion issues. Every mapped TR/EN canonical step was checked exactly once by test.
+In this local implementation pass, 25 Help sequences were explicitly mapped to canonical steps without changing mission rules. This removes one kind of repeated document text; it does **not** close the 28 hero-motion issues. Every mapped TR/EN canonical step was checked exactly once by test.
+
+### m05 local review candidate
+Versioned customer-v4 freeze/detach/return frames replace the repeated hero in the isolated local package. Same two actors, same paddle hands, one ball, blue-front contact, free-hand detach/toss. Hand-switched and high-ball return variants rejected. Not human accepted; no release eligibility inferred.

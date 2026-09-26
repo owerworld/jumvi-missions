@@ -4609,6 +4609,78 @@
       "source": "artifacts/presentation-catalog-v3/m36-scene-4.svg",
       "sourceSha256": "8d6112e59af2bb59ed2915f5e0eb7c1baf31428312edc40f9ab54487501c6fde",
       "status": "CUSTOMER_PRESENTATION_CANDIDATE"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-toss-v1.webp",
+      "width": 1374,
+      "height": 1145,
+      "bytes": 153478,
+      "sha256": "de8b4e8fdef2c96044370d1577ad87642dbc76d1225bee6cd7351dd5a7d0f3af",
+      "mime": "image/webp",
+      "source": "review-assets/2026-09-25/m10-forward-step-candidate-v1.png",
+      "sourceSha256": "68d33a054fb84021c2734b6b77618c09bce32061b91428783b680cd20254212b",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
+      "transform": "Format conversion only; generated scene preserved"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-catch-v1.webp",
+      "width": 1374,
+      "height": 1145,
+      "bytes": 149322,
+      "sha256": "7c20df150c94817c6e7b67f0c0f3f5aefd6d4118d4e5897bc4a91a159b39bc7c",
+      "mime": "image/webp",
+      "source": "review-assets/2026-09-25/m10-catch-candidate-v1.png",
+      "sourceSha256": "dab127d47111b19a99cc8fd62acf8a098f8d97e2a30a28668c40c739243e4530",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
+      "transform": "Format conversion only; generated scene preserved"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-reset-v1.webp",
+      "width": 1374,
+      "height": 1145,
+      "bytes": 144284,
+      "sha256": "4f720405737c652904c2aac0342cfe5ffe13fb52408fc550f10ea12d1f661779",
+      "mime": "image/webp",
+      "source": "review-assets/2026-09-25/m10-reset-candidate-v1.png",
+      "sourceSha256": "807077666c6f0b88924192ee683a2a8397e2796d6790492d1313339dfce7676c",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
+      "transform": "Format conversion only; generated scene preserved"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-freeze-v1.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 178018,
+      "sha256": "b8d0da35b087ca66a3d539f05bc7b2d7b67f09e4b7cd9e8fa21a200c7e0c582e",
+      "mime": "image/webp",
+      "source": "review-assets/2026-09-25/m05-freeze-candidate-v1.png",
+      "sourceSha256": "c0435d8955f89fb6c9ba4efeaf343d401b80a8a8290a988dab7306d982fa3ff1",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
+      "transform": "Format conversion only; generated scene preserved"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-detach-v1.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 171576,
+      "sha256": "1f8bf8cb8c9fa17cd262f282141c5074948a281b25c68ffba2b70a2fa3762928",
+      "mime": "image/webp",
+      "source": "review-assets/2026-09-25/m05-detach-candidate-v1.png",
+      "sourceSha256": "8cd8a2e7051a7c30e7471b8508ba1c3c5c439a313a7c90b961abd726f4f6b288",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
+      "transform": "Format conversion only; generated scene preserved"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-return-v1.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 148926,
+      "sha256": "87a1964a8c91f155e1c82b86cfc70ac9e08eb2d7a9937abca1c05e2bb3937a70",
+      "mime": "image/webp",
+      "source": "review-assets/2026-09-25/m05-return-candidate-v1.png",
+      "sourceSha256": "20ce3105f4ff5b7b684f3bd5d344ccf3e3614074e8e70b4d2d39d01f6e7baa03",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
+      "transform": "Format conversion only; generated scene preserved"
     }
   ]
 }
