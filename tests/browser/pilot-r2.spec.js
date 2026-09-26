@@ -4,7 +4,7 @@ const choose=async(page,id,tr=true)=>{await page.getByRole('button',{name:tr?'Ba
 for(const tr of [true,false])for(const width of [320,390,430])test(`R2 active text 200 reflow ${tr?'TR':'EN'} ${width}`,async({page})=>{
  await page.setViewportSize({width,height:844});await open(page,tr);await page.evaluate(()=>{document.documentElement.style.fontSize='200%';dispatchEvent(new Event('resize'));});await page.locator('[data-start]').click();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
- const boxes=await page.locator('.active-contact').evaluate(e=>{const a=e.firstElementChild.getBoundingClientRect(),p=e.querySelector('p').getBoundingClientRect();return {artBottom:a.bottom,textTop:p.top,textWidth:p.width,available:e.clientWidth};});
+ const boxes=await page.locator('.active-contact').evaluate(e=>{const a=e.firstElementChild.getBoundingClientRect(),p=e.querySelector('p').getBoundingClientRect();return {artBottom:a.bottom,textTop:p.top,textWidth:p.width,available:e.clientWidth-parseFloat(getComputedStyle(e).paddingLeft)-parseFloat(getComputedStyle(e).paddingRight)};});
  expect(boxes.textTop).toBeGreaterThanOrEqual(boxes.artBottom-1);expect(boxes.textWidth).toBeGreaterThanOrEqual(boxes.available-1);
  for(const b of await page.locator('.active-control').all()){const r=await b.boundingBox();expect(r.x+r.width).toBeLessThanOrEqual(width);expect(r.height).toBeGreaterThanOrEqual(128);}
 });
@@ -27,5 +27,5 @@ test('R2 help new-entry, in-app return, late image layout and safe round Back',a
 });
 test('R2 narrow Turkish Help wraps at a syllable, not a single orphan letter',async({page})=>{
  await page.setViewportSize({width:320,height:844});await open(page);await page.evaluate(()=>{document.documentElement.style.fontSize='200%';dispatchEvent(new Event('resize'));});await page.locator('[data-start]').click();const help=page.getByRole('button',{name:'Yardım / açıklama',exact:true});await expect(help).toHaveAccessibleName('Yardım / açıklama');expect(await help.locator('.control-label').textContent()).toContain('açık\u00adlama');
- const pieces=await help.locator('.control-label').evaluate(el=>{const n=el.firstChild,t=n.textContent,start=t.indexOf('açık');return [[start,start+4],[start+5,start+9]].map(([a,b])=>{const r=document.createRange();r.setStart(n,a);r.setEnd(n,b);return new Set([...r.getClientRects()].filter(x=>x.width>0).map(x=>x.y)).size;});});expect(pieces).toEqual([1,1]);
+ const pieces=await help.locator('.control-label').evaluate(el=>{const n=el.firstChild,t=n.textContent,start=t.indexOf('açık');return [[start,start+4],[start+5,start+9]].map(([a,b])=>{const r=document.createRange();r.setStart(n,a);r.setEnd(n,b);return new Set([...r.getClientRects()].filter(x=>x.width>0).map(x=>Math.round(x.y))).size;});});expect(pieces).toEqual([1,1]);
 });
