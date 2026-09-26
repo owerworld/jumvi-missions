@@ -22,22 +22,24 @@ export function certificateText(locale,label){
 
 export async function certificatePng(locale,label){
  const words=certificateText(locale,label),canvas=document.createElement('canvas');
- canvas.width=1200;canvas.height=850;
+ const background=new Image();background.src=new URL('../assets/certificate/legacy-stars-background-v1.webp',import.meta.url).href;
+ await background.decode();canvas.width=background.naturalWidth;canvas.height=background.naturalHeight;
  const c=canvas.getContext('2d');if(!c)throw new Error('canvas-unavailable');
- c.fillStyle='#fffdf5';c.fillRect(0,0,1200,850);
- c.strokeStyle='#082b50';c.lineWidth=14;c.strokeRect(36,36,1128,778);
- c.fillStyle='#082b50';c.font='bold 86px Arial, sans-serif';c.fillText('JUMVI',95,170);
- c.fillStyle='#a8e741';c.beginPath();c.arc(426,114,13,0,Math.PI*2);c.fill();
- c.fillStyle='#082b50';c.font='bold 41px Arial, sans-serif';c.fillText(words.title,95,275);
- c.fillStyle='#0879b4';c.fillRect(95,311,1010,5);
- c.fillStyle='#082b50';c.font='bold 58px Arial, sans-serif';
- const name=words.name.length>30?`${words.name.slice(0,29)}…`:words.name;
- c.fillText(name,95,405,1010);
- c.font='34px Arial, sans-serif';c.fillText(words.count,95,505,1010);
- c.font='29px Arial, sans-serif';c.fillText(words.scope,95,590,1010);
- c.fillText(words.honesty,95,645,1010);
- c.fillStyle='#f07c25';c.beginPath();c.arc(1030,690,42,0,Math.PI*2);c.fill();
- c.strokeStyle='#1487c7';c.lineWidth=13;c.beginPath();c.arc(1030,690,42,-0.7,0.7);c.stroke();
+ c.drawImage(background,0,0,canvas.width,canvas.height);c.scale(canvas.width/1376,canvas.height/768);
+ const tr=locale==='tr';c.textAlign='center';c.fillStyle='#082b50';
+ c.font='bold 42px Arial, sans-serif';c.fillText(tr?'BİRLİKTE OYNADIK!':'WE PLAYED TOGETHER!',665,115,340);
+ c.font='bold 38px Arial, sans-serif';c.fillText(words.title,688,235,990);
+ c.font='26px Arial, sans-serif';c.fillText(words.count,688,285,1060);
+ c.font='bold 23px Arial, sans-serif';c.fillText(tr?'36 farklı görev · Yerel oyun kaydı':'36 different missions · Local play record',365,361,515);
+ c.fillStyle='#0879b4';let nameSize=58;c.font=`bold ${nameSize}px Arial, sans-serif`;
+ while(c.measureText(words.name).width>925&&nameSize>28){nameSize--;c.font=`bold ${nameSize}px Arial, sans-serif`;}
+ c.fillText(words.name,688,452,925);
+ c.textAlign='left';c.fillStyle='#082b50';c.font='bold 22px Arial, sans-serif';
+ c.fillText(tr?'Tamamlandı bildirimi':'Completion reported',70,575,250);
+ c.font='20px Arial, sans-serif';c.fillText(tr?'36 / 36 farklı görev':'36 / 36 different missions',70,610,250);
+ c.textAlign='center';c.font='23px Arial, sans-serif';c.fillText(words.scope,820,601,760);
+ c.font='22px Arial, sans-serif';c.fillText(words.honesty,820,637,760);
+ c.font='bold 24px Arial, sans-serif';c.fillText(tr?'JUMVI EKİBİ':'JUMVI TEAM',1165,702,260);
  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
  if(!blob||blob.size<1000)throw new Error('png-unavailable');
  return {blob,words};
@@ -48,7 +50,7 @@ export async function showCertificate(locale,label){
  const d=document.createElement('dialog'),h=document.createElement('h2'),p=document.createElement('p'),img=document.createElement('img'),row=document.createElement('div');
  const previous=document.activeElement;
  h.id='certificate-title';h.textContent=words.preview;d.setAttribute('aria-labelledby',h.id);d.className='certificate-preview';
- p.textContent=words.honesty;img.src=url;img.alt=words.alt;img.width=1200;img.height=850;row.className='controls';
+ p.textContent=words.honesty;img.src=url;img.alt=words.alt;img.width=1376;img.height=768;row.className='controls';
  row.append(button(words.close,()=>d.close()),button(words.download,()=>{
   const a=document.createElement('a');a.href=url;a.download=`jumvi-play-record-${locale}.png`;document.body.append(a);a.click();a.remove();
  },{kind:'primary'}));

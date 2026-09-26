@@ -13,10 +13,11 @@ function files(p){return readdirSync(p,{withFileTypes:true}).flatMap(d=>d.isDire
 const inputs=[join(root,'tools/build-app.mjs'),join(root,'index.html'),...files(join(root,'src/client')),...files(join(root,'content')),...files(join(root,'src/offline'))];
 if(existsSync(join(root,'assets/mission-illustrations')))inputs.push(...files(join(root,'assets/mission-illustrations')));
 if(existsSync(join(root,'assets/fonts/atkinson')))inputs.push(...files(join(root,'assets/fonts/atkinson')));
+for(const p of ['assets/certificate'])if(existsSync(join(root,p)))inputs.push(...files(join(root,p)));
 const hash=createHash('sha256').update(base);for(const f of inputs)hash.update(f.slice(root.length)).update(readFileSync(f));const release=hash.digest('hex').slice(0,16);
 rmSync(output,{recursive:true,force:true});const releaseDir=join(out,'releases',release);mkdirSync(releaseDir,{recursive:true});
 cpSync(join(root,'src/client'),join(releaseDir,'client'),{recursive:true});cpSync(join(root,'content'),join(releaseDir,'content'),{recursive:true});
-for(const p of ['assets/mission-illustrations','assets/fonts/atkinson'])if(existsSync(join(root,p)))cpSync(join(root,p),join(releaseDir,p),{recursive:true});
+for(const p of ['assets/mission-illustrations','assets/fonts/atkinson','assets/certificate'])if(existsSync(join(root,p)))cpSync(join(root,p),join(releaseDir,p),{recursive:true});
 const template=readFileSync(join(root,'index.html'),'utf8');
 for(const locale of ['en-US','tr']){const tr=locale==='tr',dest=join(out,tr?'tr/index.html':'index.html');mkdirSync(dirname(dest),{recursive:true});writeFileSync(dest,template.replaceAll('{{LOCALE}}',locale).replaceAll('{{RELEASE}}',`${base}releases/${release}`).replaceAll('{{SKIP}}',tr?'İçeriğe geç':'Skip to content').replaceAll('{{LOADING}}',tr?'Görev yükleniyor…':'Loading mission…').replaceAll('{{NOSCRIPT}}',tr?'Oyun rehberliği için JavaScript gerekiyor.':'JavaScript is needed for these game instructions.'));}
 const mime=p=>p.endsWith('.html')?'text/html':p.endsWith('.js')?'text/javascript':p.endsWith('.css')?'text/css':p.endsWith('.json')?'application/json':p.endsWith('.webp')?'image/webp':p.endsWith('.ttf')?'font/ttf':p.endsWith('.txt')?'text/plain':'application/octet-stream';

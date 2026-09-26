@@ -42,3 +42,4 @@
 .illustration-speech{border:2px solid var(--ink);border-radius:1rem;padding:.5rem;margin:.5rem 0;max-width:70%;font-weight:700;overflow-wrap:normal}
 .illustration-speech[data-speaker=B]{margin-left:auto}.illustration-speech[data-speaker="A + B"]{margin-inline:auto}
 .illustration-rhythm{display:grid;grid-template-columns:minmax(0,1fr);gap:.5rem}.illustration-rhythm p{margin-bottom:.25rem}.slow-marks{word-spacing:1.5rem}.medium-marks{word-spacing:.25rem}
+.mission-filters{display:grid;gap:.75rem;margin-block:1.5rem}.mission-filters input,.mission-filters select{width:100%;min-width:0;min-height:var(--target-child);font:inherit;color:var(--ink);background:white;border:2px solid var(--border);border-radius:.5rem;padding:.75rem}.mission-filters label{font-weight:700}.mission-list>li[hidden]{display:none}

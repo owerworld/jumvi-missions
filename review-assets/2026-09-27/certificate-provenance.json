@@ -1,0 +1,10 @@
+{
+  "original": "tr/certificate-template.webp",
+  "originalSHA256": "d56e29350ba5cffdbaf96270867a524044020e902753f1e3e1bbe4b2fedbf1e2",
+  "derived": "assets/certificate/legacy-stars-background-v1.webp",
+  "derivedSHA256": "e190c9cc17ce3c28160cd394efc24eb2f29bb9a55ebcdd18ee90fadfaef78636",
+  "master": "review-assets/2026-09-25/certificate-background-candidate-v1.png",
+  "masterSHA256": "0e21ca339e0f028853aa7bff5dd8bb50624aa3df197a85e7243b2b0ccaa46ad8",
+  "transform": "Imagegen text removal; source artwork retained as reference, not pixel identical. WebP format conversion only after generation. Text drawn locally by certificate.js.",
+  "status": "LOCAL PRESENTATION REVIEW; NO DEPLOY; NO HUMAN ACCEPTANCE INFERRED"
+}
