@@ -23,11 +23,11 @@ export class PersonalController {
   if(localViews.has(screen))void this.refresh();
  }
  async refresh(){
-  const key=this.current(),ticket=++this.ticket,p=this.model,before=JSON.stringify([p.status,p.snapshot,p.result,p.actorId]);
+  const key=this.current(),ticket=++this.ticket,p=this.model,signature=()=>JSON.stringify(['entry','stopped'].includes(this.getState().screen)?[p.snapshot?.players||[],p.actorId]:[p.status,p.snapshot,p.result,p.actorId]),before=signature();
   try{const snap=await this.repo.snapshot();if(key!==this.current()||ticket!==this.ticket)return;p.snapshot=snap;p.status='ready';p.legacy=IS_V2?{available:true,count:0}:legacyPresence();if(p.actorId&&!snap.players.some(x=>x.id===p.actorId))p.actorId=null;if(p.selectedId&&!snap.players.some(x=>x.id===p.selectedId))p.selectedId=null;if(p.editId&&!snap.players.some(x=>x.id===p.editId))p.editId=null;
    if(p.result){const op=snap.operations.find(x=>x.id===p.result.id);p.result={...p.result,status:op?.status||(p.result.status==='correction-required'?'correction-required':'unknown')};}
   }catch{if(key!==this.current()||ticket!==this.ticket)return;p.status='unavailable';p.snapshot=null;p.actorId=null;}
-  if(before!==JSON.stringify([p.status,p.snapshot,p.result,p.actorId])){const modal=document.querySelector('dialog');if(modal)modal.addEventListener('close',()=>queueMicrotask(()=>this.render({preserveFocus:true})),{once:true});else this.render({preserveFocus:true});}
+  if(before!==signature()){const modal=document.querySelector('dialog');if(modal)modal.addEventListener('close',()=>queueMicrotask(()=>this.render({preserveFocus:true,background:true})),{once:true});else this.render({preserveFocus:true,background:true});}
  }
  isSaved(report){return !!report&&!!this.model.snapshot?.records.some(r=>r.report.id===report.id&&r.report.revision===report.revision);}
  handle(e){

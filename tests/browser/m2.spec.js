@@ -25,3 +25,10 @@ test('readiness completion cannot move a secondary control between pointer down 
  await expect(page.locator('[data-readiness]')).toBeVisible();
  await page.mouse.up();await expect(page.locator('[data-view=management]')).toBeVisible();
 });
+test('background player refresh preserves a pressed control until its click completes',async({page})=>{
+ await open(page,'/');await page.evaluate(async root=>{const {LocalRepository}=await import(root),r=new LocalRepository(),s=await r.snapshot();await r.create({epoch:s.epoch,name:'SYNTHETIC_POINTER'});const original=LocalRepository.prototype.snapshot;LocalRepository.prototype.snapshot=async function(){window.refreshStarted=true;await new Promise(resolve=>window.releaseRefresh=resolve);return original.call(this);};new BroadcastChannel('jumvi-local-invalidation-v1').postMessage('changed');},`/releases/${release}/client/repository/local.js`);
+ await expect.poll(()=>page.evaluate(()=>!!window.refreshStarted)).toBe(true);
+ const control=page.getByRole('button',{name:'Player options',exact:true});await control.scrollIntoViewIfNeeded();const box=await control.boundingBox();await control.evaluate(n=>window.pressedControl=n);await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();
+ await page.evaluate(()=>window.releaseRefresh());await page.waitForTimeout(100);expect(await page.evaluate(()=>window.pressedControl.isConnected)).toBe(true);
+ await page.mouse.up();await expect(page.locator('[data-view=management]')).toBeVisible();
+});
