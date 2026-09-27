@@ -29,15 +29,16 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  if(name==='adult'){s.append(el('p',ui.adultPurpose));disclosure();row.append(go(ui.continueManagement,'management'),back());s.append(row);return s;}
  if(p.status==='loading')s.append(el('p',ui.localLoading));
  if(p.status==='unavailable'){s.append(el('p',ui.localUnavailable));row.append(b(ui.retry,'P_REFRESH'));}
- if(name==='new-player'){s.append(el('p',ui.createInfo));disclosure();form('P_CREATE',ui.createPlayer,p.name);row.append(go(ui.cancel,state.report?'attribution':'management'));}
+ if(name==='new-player'){s.append(el('p',p.quick?(state.locale==='tr'?'Oyuncu oluşturmak isteğe bağlı. Bu görevin bildirimi oluşturduğun oyuncuya kaydedilecek.':'Creating a player is optional. This mission report will be saved to the player you create.'):ui.createInfo));disclosure();form('P_CREATE',p.quick?(state.locale==='tr'?'Oluştur ve bu görevi kaydet':'Create player and save this mission'):ui.createPlayer,p.name);row.append(go(ui.cancel,state.report?'attribution':'management'));}
  if(name==='attribution'){
   const r=p.correction?.report||state.report;
   if(!r)s.append(el('p',ui.noReport));else{
-   s.append(el('p',`${reportMission(r)} · ${r.value==='complete'?ui.recordComplete:ui.recordEarly}`),el('p',p.correction?ui.correctionInfo:ui.chooseInfo));disclosure();
+   s.append(el('p',`${reportMission(r)} · ${r.value==='complete'?ui.recordComplete:ui.recordEarly}`),el('p',p.correction?ui.correctionInfo:p.quick?(state.locale==='tr'?'Bu bildirimi kimin geçmişine kaydetmek istersin?':'Whose progress would you like to save this report to?'):ui.chooseInfo));disclosure();
    if(!players.length&&p.status==='ready')s.append(el('p',ui.noPlayers));
-   const group=el('fieldset');group.append(el('legend',ui.choosePlayer));for(const player of players)group.append(choice({group:'attribution',value:player.id,label:playerLabel(player),checked:player.id===p.selectedId,onSelect:id=>send('P_SELECT',{id})}));s.append(group);
+   if(p.quick&&!p.correction){for(const player of players)row.append(b(state.locale==='tr'?`${playerLabel(player)} için kaydet`:`Save for ${playerLabel(player)}`,'P_QUICK_SAVE',{id:player.id},p.busy||p.status!=='ready'));row.append(go(ui.newPlayer,'new-player'));}
+   else {const group=el('fieldset');group.append(el('legend',ui.choosePlayer));for(const player of players)group.append(choice({group:'attribution',value:player.id,label:playerLabel(player),checked:player.id===p.selectedId,onSelect:id=>send('P_SELECT',{id})}));s.append(group);
    if(selected)s.append(el('p',playerLabel(selected),'selected-player'));
-   row.append(go(ui.newPlayer,'new-player'),b(p.correction?ui.confirmCorrection:ui.saveRecord,p.correction?'P_MOVE':'P_SAVE',{},!selected||p.busy||p.status!=='ready'));
+   row.append(go(ui.newPlayer,'new-player'),b(p.correction?ui.confirmCorrection:ui.saveRecord,p.correction?'P_MOVE':'P_SAVE',{},!selected||p.busy||p.status!=='ready'));}
   }
   row.append(b(ui.backReport,'REPORT_RETURN'));
  }

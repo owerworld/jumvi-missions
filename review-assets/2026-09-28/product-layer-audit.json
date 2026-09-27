@@ -1,0 +1,982 @@
+{
+  "count": 195,
+  "result": "PASS",
+  "limits": "Layer/continuity invariants, not new child/field validation. m04 transfer and m08 horizontal landing artwork unchanged. Raster lifestyle assets were not regenerated.",
+  "assets": [
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-4-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-3-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-2-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-2-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-1-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-3-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-1-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-4-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-4-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m07-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-1-D-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-4-C-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-pass-v2-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-3-B-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-1-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-4-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-1-C-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-4-B-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-4-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-2-A-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-shuffle-v2-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-4-D-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-1-A-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m20-m20-1-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-1-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-2-B-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-1-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-3-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-2-A-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-2-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-3-B-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-1-B-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-caller-catch-v2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m30-m30-3-A-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m01-m01-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m01-m01-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m01-m01-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m01-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m01-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m01-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-m02-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-m02-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-4-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-m02-scene-4-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m02-m02-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m05-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m06-m06-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m06-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m06-m06-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m06-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m06-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m06-m06-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m09-m09-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m09-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m09-m09-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m09-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m09-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m09-m09-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m10-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m11-m11-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m11-m11-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m11-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m11-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m11-m11-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m11-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m12-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m12-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m12-m12-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m12-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m12-m12-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m12-m12-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m13-m13-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m13-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m13-m13-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m13-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m13-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m13-m13-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m14-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m14-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m14-m14-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m14-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m14-m14-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m14-m14-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m15-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m15-m15-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m15-m15-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m15-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m15-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m15-m15-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-m16-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-m16-scene-4-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-4-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-m16-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-m16-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m16-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m17-m17-scene-4-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m17-m17-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m17-m17-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m17-m17-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m18-m18-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m18-m18-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m18-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m18-m18-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m18-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m18-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m19-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m19-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m19-m19-scene-2-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m19-m19-scene-1-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m19-m19-scene-3-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m19-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m21-m21-scene-3-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m21-m21-scene-1-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m21-m21-scene-2-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-m22-scene-1-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-m22-scene-4-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-4-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-m22-scene-3-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m22-m22-scene-2-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m23-m23-scene-3-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m23-m23-scene-4-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m23-m23-scene-1-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m23-m23-scene-2-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m24-m24-scene-3-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m24-m24-scene-1-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m24-m24-scene-2-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m24-m24-scene-4-upright-v1.webp",
+      "productLayersRotated": 4,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m26-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m26-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m26-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m26-m26-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m26-m26-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m26-m26-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m27-m27-scene-3-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m27-m27-scene-1-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m27-m27-scene-2-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m27-m27-scene-4-upright-v1.webp",
+      "productLayersRotated": 3,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m28-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m28-m28-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m28-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m28-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m28-m28-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m28-m28-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m29-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m29-m29-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m29-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m29-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m29-m29-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m29-m29-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m31-m31-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m31-m31-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m31-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m31-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m31-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m31-m31-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m32-m32-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m32-m32-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m32-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m32-m32-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m32-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m32-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-m33-scene-4-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-4-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-m33-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-m33-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-m33-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m33-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m34-m34-scene-1-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m34-m34-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m34-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m34-m34-scene-2-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m35-m35-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m35-m35-scene-4-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m35-m35-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m35-m35-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-2-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-4-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-m36-scene-2-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-m36-scene-4-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-3-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-1-detail-upright-v1.webp",
+      "productLayersRotated": 1,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-m36-scene-3-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    },
+    {
+      "asset": "assets/mission-illustrations/upright-v1/m36-m36-scene-1-upright-v1.webp",
+      "productLayersRotated": 2,
+      "otherNodesUnchanged": true
+    }
+  ]
+}

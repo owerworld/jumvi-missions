@@ -96,3 +96,13 @@ main:has(>.customer-layout){padding:20px;background:#fff}
 
 /* Keep the management inset fixed when text enlarges; labels retain full words. */
 .customer-layout .secondary-access{padding:16px}
+
+/* Explicit, tab-local player choice. Optional and never a pre-play gate. */
+.player-context{margin-block:1rem;padding:1rem;border-radius:1.25rem;background:var(--infoSurface);min-width:0}
+.player-context:empty{display:none}
+.player-context label{display:block;font-weight:700;margin-bottom:.4rem}
+.player-context select{display:block;width:100%;max-width:100%;min-width:0;min-height:3.5rem;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.6rem}
+.player-context p{margin-block:.65rem 0}
+.player-context .control{margin-top:.75rem;width:100%}
+.journey-count{font-weight:700}
+.mission-completed{color:var(--success);background:var(--successSurface);border-radius:.6rem;padding:.3rem .65rem;display:inline-block;font-weight:700}

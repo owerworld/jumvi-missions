@@ -1,0 +1,677 @@
+{
+  "method": "Desktop browser CSS viewport; 200% root font size separately from normal. Not browser zoom or physical phone QA.",
+  "measurements": [
+    {
+      "locale": "tr",
+      "width": 320,
+      "text": 100,
+      "screen": "entry",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 320,
+      "text": 100,
+      "screen": "help",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 320,
+      "text": 100,
+      "screen": "active",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "16px",
+      "controls": [
+        {
+          "text": "Yardım",
+          "x": 20,
+          "y": 770.859375,
+          "width": 280,
+          "height": 104,
+          "top": 770.859375,
+          "right": 300,
+          "bottom": 874.859375,
+          "left": 20
+        },
+        {
+          "text": "Durdur",
+          "x": 20,
+          "y": 886.859375,
+          "width": 280,
+          "height": 108,
+          "top": 886.859375,
+          "right": 300,
+          "bottom": 994.859375,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "tr",
+      "width": 320,
+      "text": 200,
+      "screen": "entry",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 320,
+      "text": 200,
+      "screen": "help",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 320,
+      "text": 200,
+      "screen": "active",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "32px",
+      "controls": [
+        {
+          "text": "Yardım",
+          "x": 20,
+          "y": 1569.859375,
+          "width": 280,
+          "height": 208,
+          "top": 1569.859375,
+          "right": 300,
+          "bottom": 1777.859375,
+          "left": 20
+        },
+        {
+          "text": "Durdur",
+          "x": 20,
+          "y": 1801.859375,
+          "width": 280,
+          "height": 208,
+          "top": 1801.859375,
+          "right": 300,
+          "bottom": 2009.859375,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "tr",
+      "width": 390,
+      "text": 100,
+      "screen": "entry",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 390,
+      "text": 100,
+      "screen": "help",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 390,
+      "text": 100,
+      "screen": "active",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "16px",
+      "controls": [
+        {
+          "text": "Yardım",
+          "x": 20,
+          "y": 742,
+          "width": 169,
+          "height": 64,
+          "top": 742,
+          "right": 189,
+          "bottom": 806,
+          "left": 20
+        },
+        {
+          "text": "Durdur",
+          "x": 201,
+          "y": 742,
+          "width": 169,
+          "height": 64,
+          "top": 742,
+          "right": 370,
+          "bottom": 806,
+          "left": 201
+        }
+      ]
+    },
+    {
+      "locale": "tr",
+      "width": 390,
+      "text": 200,
+      "screen": "entry",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 390,
+      "text": 200,
+      "screen": "help",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 390,
+      "text": 200,
+      "screen": "active",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "32px",
+      "controls": [
+        {
+          "text": "Yardım",
+          "x": 20,
+          "y": 1553.828125,
+          "width": 350,
+          "height": 208,
+          "top": 1553.828125,
+          "right": 370,
+          "bottom": 1761.828125,
+          "left": 20
+        },
+        {
+          "text": "Durdur",
+          "x": 20,
+          "y": 1785.828125,
+          "width": 350,
+          "height": 208,
+          "top": 1785.828125,
+          "right": 370,
+          "bottom": 1993.828125,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "tr",
+      "width": 430,
+      "text": 100,
+      "screen": "entry",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 430,
+      "text": 100,
+      "screen": "help",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 430,
+      "text": 100,
+      "screen": "active",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "16px",
+      "controls": [
+        {
+          "text": "Yardım",
+          "x": 20,
+          "y": 742,
+          "width": 189,
+          "height": 64,
+          "top": 742,
+          "right": 209,
+          "bottom": 806,
+          "left": 20
+        },
+        {
+          "text": "Durdur",
+          "x": 221,
+          "y": 742,
+          "width": 189,
+          "height": 64,
+          "top": 742,
+          "right": 410,
+          "bottom": 806,
+          "left": 221
+        }
+      ]
+    },
+    {
+      "locale": "tr",
+      "width": 430,
+      "text": 200,
+      "screen": "entry",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 430,
+      "text": 200,
+      "screen": "help",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "tr",
+      "width": 430,
+      "text": 200,
+      "screen": "active",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "32px",
+      "controls": [
+        {
+          "text": "Yardım",
+          "x": 20,
+          "y": 1448.09375,
+          "width": 390,
+          "height": 208,
+          "top": 1448.09375,
+          "right": 410,
+          "bottom": 1656.09375,
+          "left": 20
+        },
+        {
+          "text": "Durdur",
+          "x": 20,
+          "y": 1680.09375,
+          "width": 390,
+          "height": 208,
+          "top": 1680.09375,
+          "right": 410,
+          "bottom": 1888.09375,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "text": 100,
+      "screen": "entry",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "text": 100,
+      "screen": "help",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "text": 100,
+      "screen": "active",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "16px",
+      "controls": [
+        {
+          "text": "Help",
+          "x": 20,
+          "y": 770.859375,
+          "width": 280,
+          "height": 104,
+          "top": 770.859375,
+          "right": 300,
+          "bottom": 874.859375,
+          "left": 20
+        },
+        {
+          "text": "Stop",
+          "x": 20,
+          "y": 886.859375,
+          "width": 280,
+          "height": 108,
+          "top": 886.859375,
+          "right": 300,
+          "bottom": 994.859375,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "text": 200,
+      "screen": "entry",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "text": 200,
+      "screen": "help",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 320,
+      "text": 200,
+      "screen": "active",
+      "innerWidth": 320,
+      "innerHeight": 844,
+      "scrollWidth": 320,
+      "fontSize": "32px",
+      "controls": [
+        {
+          "text": "Help",
+          "x": 20,
+          "y": 1629.859375,
+          "width": 280,
+          "height": 208,
+          "top": 1629.859375,
+          "right": 300,
+          "bottom": 1837.859375,
+          "left": 20
+        },
+        {
+          "text": "Stop",
+          "x": 20,
+          "y": 1861.859375,
+          "width": 280,
+          "height": 208,
+          "top": 1861.859375,
+          "right": 300,
+          "bottom": 2069.859375,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "width": 390,
+      "text": 100,
+      "screen": "entry",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 390,
+      "text": 100,
+      "screen": "help",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 390,
+      "text": 100,
+      "screen": "active",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "16px",
+      "controls": [
+        {
+          "text": "Help",
+          "x": 20,
+          "y": 772,
+          "width": 169,
+          "height": 64,
+          "top": 772,
+          "right": 189,
+          "bottom": 836,
+          "left": 20
+        },
+        {
+          "text": "Stop",
+          "x": 201,
+          "y": 772,
+          "width": 169,
+          "height": 64,
+          "top": 772,
+          "right": 370,
+          "bottom": 836,
+          "left": 201
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "width": 390,
+      "text": 200,
+      "screen": "entry",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 390,
+      "text": 200,
+      "screen": "help",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 390,
+      "text": 200,
+      "screen": "active",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "fontSize": "32px",
+      "controls": [
+        {
+          "text": "Help",
+          "x": 20,
+          "y": 1613.828125,
+          "width": 350,
+          "height": 208,
+          "top": 1613.828125,
+          "right": 370,
+          "bottom": 1821.828125,
+          "left": 20
+        },
+        {
+          "text": "Stop",
+          "x": 20,
+          "y": 1845.828125,
+          "width": 350,
+          "height": 208,
+          "top": 1845.828125,
+          "right": 370,
+          "bottom": 2053.828125,
+          "left": 20
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "width": 430,
+      "text": 100,
+      "screen": "entry",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 430,
+      "text": 100,
+      "screen": "help",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "16px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 430,
+      "text": 100,
+      "screen": "active",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "16px",
+      "controls": [
+        {
+          "text": "Help",
+          "x": 20,
+          "y": 742,
+          "width": 189,
+          "height": 64,
+          "top": 742,
+          "right": 209,
+          "bottom": 806,
+          "left": 20
+        },
+        {
+          "text": "Stop",
+          "x": 221,
+          "y": 742,
+          "width": 189,
+          "height": 64,
+          "top": 742,
+          "right": 410,
+          "bottom": 806,
+          "left": 221
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "width": 430,
+      "text": 200,
+      "screen": "entry",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 430,
+      "text": 200,
+      "screen": "help",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "32px",
+      "controls": []
+    },
+    {
+      "locale": "en-US",
+      "width": 430,
+      "text": 200,
+      "screen": "active",
+      "innerWidth": 430,
+      "innerHeight": 844,
+      "scrollWidth": 430,
+      "fontSize": "32px",
+      "controls": [
+        {
+          "text": "Help",
+          "x": 20,
+          "y": 1508.09375,
+          "width": 390,
+          "height": 208,
+          "top": 1508.09375,
+          "right": 410,
+          "bottom": 1716.09375,
+          "left": 20
+        },
+        {
+          "text": "Stop",
+          "x": 20,
+          "y": 1740.09375,
+          "width": 390,
+          "height": 208,
+          "top": 1740.09375,
+          "right": 410,
+          "bottom": 1948.09375,
+          "left": 20
+        }
+      ]
+    }
+  ]
+}

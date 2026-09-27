@@ -1,0 +1,4552 @@
+[
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-4-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/4-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m07-4-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-04-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-3-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/3-B.webp",
+    "source": "artifacts/presentation-upright-v1/m07-3-B-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-03-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-2-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/2-A.webp",
+    "source": "artifacts/presentation-upright-v1/m07-2-A-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-02-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-2-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/2-B.webp",
+    "source": "artifacts/presentation-upright-v1/m07-2-B-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-02-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-1-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/1-A.webp",
+    "source": "artifacts/presentation-upright-v1/m07-1-A-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-01-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m07-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-3-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/3-A.webp",
+    "source": "artifacts/presentation-upright-v1/m07-3-A-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-03-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m07-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-1-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/1-B.webp",
+    "source": "artifacts/presentation-upright-v1/m07-1-B-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-01-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-4-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/4-B.webp",
+    "source": "artifacts/presentation-upright-v1/m07-4-B-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-04-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-4-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/4-A.webp",
+    "source": "artifacts/presentation-upright-v1/m07-4-A-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-04-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m07-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m07/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m07-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m07-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-1-D-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-1-D.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-1-D-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-1-D.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-4-C-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-4-C.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-4-C-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-4-C.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-pass-v2-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v2/m20-pass-v2.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-pass-v2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-pilot-v2/m20-pass-v2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-3-B-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-3-B-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-3-B-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-3-B-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-1-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-1-A.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-1-A-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-1-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-4-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-4-A.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-4-A-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-4-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          94.0,
+          262.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-1-C-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-1-C.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-1-C-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-1-C.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-4-B-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-4-B-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-4-B-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-4-B-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-4-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-4-B.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-4-B-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-4-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-2-A-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-2-A-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-2-A-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-2-A-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          115.0,
+          254.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-shuffle-v2-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v2/m20-shuffle-v2.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-shuffle-v2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-pilot-v2/m20-shuffle-v2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          94.0,
+          262.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-4-D-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-4-D.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-4-D-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-4-D.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-1-A-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-1-A-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-1-A-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-1-A-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m20-m20-1-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m20-1-B.webp",
+    "source": "artifacts/presentation-upright-v1/m20-m20-1-B-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m20-1-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-1-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-1-A.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-1-A-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-1-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-2-B-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-2-B-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-2-B-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-2-B-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          142.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-1-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-1-B.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-1-B-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-1-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-3-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-3-A.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-3-A-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-3-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-2-A-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-2-A.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-2-A-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-2-A.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-2-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-2-B.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-2-B-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-2-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          142.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-3-B-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-3-B.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-3-B-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-3-B.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-1-B-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-1-B-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-1-B-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-1-B-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-caller-catch-v2-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v2/m30-caller-catch-v2.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-caller-catch-v2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-pilot-v2/m30-caller-catch-v2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m30-m30-3-A-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/pilot-v1/m30-3-A-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m30-m30-3-A-detail-upright-v1.svg",
+    "originalSource": "../../work/m6-pilot-20260924/native-derivatives/m30-3-A-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m01-m01-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m01-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m01-m01-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m01-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m01-m01-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m01-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m01-m01-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m01-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m01-m01-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m01-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m01-m01-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m01-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m01-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m01/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m01-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m01-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m01/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m01-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m01-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m01/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m01-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m01-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-m02-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m02-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m02-m02-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m02-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m02/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m02-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-m02-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m02-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m02-m02-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m02-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-4-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m02/4-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m02-4-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-04-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m02/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m02-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m02/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m02-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m02-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-m02-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m02-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m02-m02-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m02-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m02-m02-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m02-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m02-m02-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m02-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m05-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m05/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m05-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m05-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m06-m06-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m06-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m06-m06-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m06-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m06-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m06/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m06-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m06-m06-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m06-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m06-m06-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m06-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m06-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m06/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m06-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m06-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m06/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m06-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m06-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m06-m06-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m06-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m06-m06-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m06-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m09-m09-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m09-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m09-m09-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m09-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m09-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m09/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m09-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m09-m09-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m09-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m09-m09-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m09-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m09-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m09/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m09-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m09-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m09/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m09-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m09-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m09-m09-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m09-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m09-m09-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m09-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m10-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m10/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m10-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m10-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m11-m11-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m11-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m11-m11-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m11-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m11-m11-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m11-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m11-m11-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m11-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m11-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m11/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m11-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m11-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m11/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m11-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m11-m11-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m11-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m11-m11-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m11-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m11-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m11/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m11-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m11-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m12-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m12/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m12-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m12-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m12/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m12-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m12-m12-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m12-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m12-m12-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m12-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m12-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m12/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m12-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m12-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m12-m12-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m12-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m12-m12-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m12-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m12-m12-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m12-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m12-m12-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m12-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m13-m13-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m13-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m13-m13-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m13-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          690.0,
+          271.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m13-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m13/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m13-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          690.0,
+          271.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m13-m13-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m13-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m13-m13-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m13-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          198.0,
+          269.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m13-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m13/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m13-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          367.0,
+          406.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m13-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m13/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m13-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m13-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          198.0,
+          269.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m13-m13-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m13-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m13-m13-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m13-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          367.0,
+          406.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m14-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m14/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m14-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m14-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m14/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m14-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m14-m14-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m14-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m14-m14-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m14-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m14-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m14/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m14-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m14-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m14-m14-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m14-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m14-m14-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m14-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m14-m14-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m14-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m14-m14-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m14-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m15-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m15/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m15-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m15-m15-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m15-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m15-m15-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m15-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m15-m15-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m15-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m15-m15-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m15-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m15-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m15/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m15-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m15-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m15/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m15-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m15-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m15-m15-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m15-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m15-m15-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m15-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-m16-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m16-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m16-m16-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m16-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m16/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m16-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-m16-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m16-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m16-m16-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m16-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-4-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m16/4-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m16-4-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-04-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-m16-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m16-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m16-m16-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m16-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m16/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m16-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-m16-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m16-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m16-m16-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m16-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m16-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m16/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m16-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m16-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m17-m17-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m17-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m17-m17-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m17-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m17-m17-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m17-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m17-m17-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m17-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m17-m17-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m17-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m17-m17-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m17-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          142.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m17-m17-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m17-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m17-m17-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m17-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m18-m18-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m18-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m18-m18-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m18-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m18-m18-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m18-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m18-m18-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m18-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m18-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m18/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m18-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m18-m18-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m18-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m18-m18-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m18-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m18-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m18/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m18-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m18-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m18/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m18-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m18-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m19-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m19/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m19-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m19-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m19/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m19-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m19-m19-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m19-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m19-m19-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m19-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m19-m19-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m19-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m19-m19-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m19-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m19-m19-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m19-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m19-m19-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m19-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m19-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m19/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m19-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m19-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m21-m21-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m21-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m21-m21-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m21-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          121.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m21-m21-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m21-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m21-m21-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m21-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m21-m21-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m21-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m21-m21-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m21-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m22/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m22-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m22/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m22-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m22/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m22-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-m22-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m22-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m22-m22-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m22-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-m22-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m22-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m22-m22-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m22-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-4-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m22/4-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m22-4-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m22-04-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-m22-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m22-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m22-m22-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m22-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m22-m22-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m22-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m22-m22-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m22-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m23-m23-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m23-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m23-m23-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m23-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m23-m23-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m23-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m23-m23-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m23-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          129.0,
+          266.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m23-m23-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m23-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m23-m23-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m23-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m23-m23-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m23-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m23-m23-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m23-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          142.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m24-m24-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m24-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m24-m24-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m24-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m24-m24-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m24-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m24-m24-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m24-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m24-m24-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m24-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m24-m24-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m24-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          142.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m24-m24-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m24-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m24-m24-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m24-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          129.0,
+          266.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          168.0,
+          270.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m26-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m26/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m26-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m26-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m26/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m26-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m26-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m26/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m26-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m26-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m26-m26-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m26-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m26-m26-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m26-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m26-m26-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m26-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m26-m26-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m26-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m26-m26-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m26-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m26-m26-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m26-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m27-m27-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m27-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m27-m27-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m27-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m27-m27-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m27-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m27-m27-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m27-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m27-m27-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m27-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m27-m27-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m27-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          115.0,
+          254.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m27-m27-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m27-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m27-m27-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m27-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          171.0,
+          258.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m28-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m28/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m28-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m28-m28-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m28-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m28-m28-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m28-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m28-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m28/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m28-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m28-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m28/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m28-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m28-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m28-m28-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m28-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m28-m28-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m28-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m28-m28-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m28-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m28-m28-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m28-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m29-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m29/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m29-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m29-m29-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m29-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m29-m29-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m29-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m29-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m29/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m29-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m29-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m29/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m29-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m29-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m29-m29-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m29-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m29-m29-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m29-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m29-m29-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m29-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m29-m29-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m29-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m31-m31-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m31-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m31-m31-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m31-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m31-m31-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m31-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m31-m31-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m31-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m31-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m31/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m31-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m31-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m31/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m31-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m31-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m31/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m31-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m31-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m31-m31-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m31-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m31-m31-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m31-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m32-m32-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m32-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m32-m32-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m32-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m32-m32-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m32-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m32-m32-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m32-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m32-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m32/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m32-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m32-m32-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m32-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m32-m32-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m32-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m32-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m32/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m32-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m32-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m32/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m32-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m32-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m33/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m33-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-m33-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m33-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m33-m33-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m33-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-4-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m33/4-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m33-4-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-04-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-m33-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m33-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m33-m33-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m33-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-m33-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m33-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m33-m33-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m33-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m33/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m33-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-m33-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m33-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m33-m33-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m33-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m33-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m33/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m33-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m33-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m34-m34-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m34-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m34-m34-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m34-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m34-m34-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m34-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m34-m34-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m34-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m34-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m34/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m34-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m34-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m34-m34-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m34-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m34-m34-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m34-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m35-m35-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m35-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m35-m35-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m35-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          107.0,
+          122.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m35-m35-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m35-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m35-m35-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m35-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          142.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m35-m35-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m35-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m35-m35-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m35-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m35-m35-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m35-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m35-m35-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m35-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-2-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m36/2-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m36-2-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-02-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-4-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m36/4-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m36-4-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-04-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-m36-scene-2-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m36-scene-2.webp",
+    "source": "artifacts/presentation-upright-v1/m36-m36-scene-2-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m36-scene-2.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-m36-scene-4-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m36-scene-4.webp",
+    "source": "artifacts/presentation-upright-v1/m36-m36-scene-4-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m36-scene-4.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-3-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m36/3-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m36-3-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-03-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-1-detail-upright-v1.webp",
+    "original": "assets/mission-illustrations/final/m36/1-detail.webp",
+    "source": "artifacts/presentation-upright-v1/m36-1-detail-upright-v1.svg",
+    "originalSource": "../../outputs/M4_R4_FINAL_ACCEPTANCE_SWEEP/m36-01-detail.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-m36-scene-3-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m36-scene-3.webp",
+    "source": "artifacts/presentation-upright-v1/m36-m36-scene-3-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m36-scene-3.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  },
+  {
+    "path": "assets/mission-illustrations/upright-v1/m36-m36-scene-1-upright-v1.webp",
+    "original": "assets/mission-illustrations/catalog-v3/m36-scene-1.webp",
+    "source": "artifacts/presentation-upright-v1/m36-m36-scene-1-upright-v1.svg",
+    "originalSource": "artifacts/presentation-catalog-v3/masters/m36-scene-1.svg",
+    "productImageSHA256": "de37dd358e82ea4eae7cde1b74eef45eb75d1b25c1fc5521256526f48e3c4014",
+    "edits": [
+      {
+        "center": [
+          164.0,
+          250.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      },
+      {
+        "center": [
+          170.0,
+          268.0
+        ],
+        "turn": -90,
+        "originalTransform": ""
+      }
+    ],
+    "invariants": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit."
+  }
+]

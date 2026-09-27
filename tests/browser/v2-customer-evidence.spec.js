@@ -16,13 +16,12 @@ test('customer review captures are synthetic and keep real play optional',async(
  await page.screenshot({path:`${out}/active-390-tr.png`,fullPage:true});
  await page.getByRole('button',{name:'Turu durdur',exact:true}).click();
  await page.getByRole('button',{name:'Tamamladığımı bildir',exact:true}).click();
- await page.getByRole('button',{name:'Kişisel geçmişe ekle',exact:true}).click();
+ await page.getByRole('button',{name:'İlerlememi tut',exact:true}).click();
  await page.getByRole('button',{name:'Yeni oyuncu',exact:true}).click();
  await page.getByLabel('Takma ad (isteğe bağlı)').fill('QA ÖRNEK');
- await page.getByRole('button',{name:'Oyuncu oluştur',exact:true}).click();
- await page.getByRole('radio',{name:'QA ÖRNEK'}).check();
- await page.getByRole('button',{name:'Seçili oyuncuya kaydet',exact:true}).click();
- await expect(page.getByText(/seçili oyuncunun yerel geçmişine eklendi/)).toBeVisible();
+ await page.getByRole('button',{name:'Oluştur ve bu görevi kaydet',exact:true}).click();
+ await expect(page.locator('.journey-count')).toContainText('1/36');
+ await page.getByRole('button',{name:'Kayıt durumunu aç',exact:true}).click();
  await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
  await expect(page.getByText('1 farklı görev için 1 tamamlandı bildirimi · 0 erken bırakıldı bildirimi')).toBeVisible();
  await page.screenshot({path:`${out}/history-390-tr-synthetic.png`,fullPage:true});

@@ -1,3 +1,4 @@
+import {playerContext} from '../components/player-context.js';
 import {icon} from '../components/icons.js';
 import {el,heading} from '../components/dom.js';import {button} from '../components/button.js';
 const assetRoot=new URL('../../assets/mission-illustrations/m25/',import.meta.url);
@@ -34,7 +35,7 @@ export function playView(name,ctx) {
   const kit=el('div',undefined,'mission-kit');kit.append(text(cp.materials,'materials'));if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));
   const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));s.append(brief,hero,kit);ready();
   const row=controls();row.classList.add('entry-actions');const start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';const arrow=el('span','→','action-arrow');arrow.setAttribute('aria-hidden','true');start.append(arrow);row.append(start,shortLabel(b(cp.another,'GO',{screen:'discovery'},'link'),state.locale==='tr'?'Başka görev':'More missions'),shortLabel(b(cp.how,'HELP',{},'link'),state.locale==='tr'?'Yardım':'Help'));s.append(row);
-  const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools);secondary(true);
+  const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools,playerContext(ctx));secondary(true);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
   s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle),text(cp.setup,'instruction'));
@@ -65,10 +66,12 @@ export function playView(name,ctx) {
   label();s.append(heading(state.reportMode?cp.report:ui.stopped));
   s.append(text(state.reportMode&&state.report?cp.edit:(state.reportMode&&!state.round?ui.preReport:ui.unreported)));const row=controls();
   if(state.round&&!state.reportMode)row.append(action(ui.resume,'RESUME','primary'));
-  row.append(text(ui.optional,'muted'),b(ui.complete,'REPORT',{value:'complete'}),b(ui.early,'REPORT',{value:'early'}));s.append(row);const next=controls();next.classList.add('secondary-access');next.append(action(cp.again,'REPLAY'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(next);
+  s.append(playerContext(ctx));row.append(text(ui.optional,'muted'),shortLabel(b(ui.complete,'REPORT',{value:'complete'}),state.locale==='tr'?'Tamamladım':'I finished it'),b(ui.early,'REPORT',{value:'early'}));s.append(row);const next=controls();next.classList.add('secondary-access');next.append(action(cp.again,'REPLAY'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(next);
  }else if(name==='report'){
-  brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),cp.hero?frameArt(cp.hero):art('product-still-v1','JUMVI','product-still'),text(ctx.isSaved?ui.savedReport:cp.notSaved,'report-summary'));
-  const row=controls();row.classList.add('report-actions');row.append(action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'),b(cp.edit,'EDIT_REPORT',{},'link'));s.append(row);const r=el('div',undefined,'secondary-access');r.append(b(cp.save,'GO',{screen:'attribution'},'link'),b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
+  const savedRecord=ctx.personal?.snapshot?.records.find(x=>x.report.id===state.report?.id&&x.report.revision===state.report?.revision),savedOwner=ctx.personal?.snapshot?.players.find(x=>x.id===savedRecord?.targetId);
+  brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),cp.hero?frameArt(cp.hero):art('product-still-v1','JUMVI','product-still'),text(ctx.personal?.busy?ui.savePending:ctx.isSaved?(savedOwner?`${savedOwner.nickname||savedOwner.label} · ${ui.savedReport}`:ui.savedReport):cp.notSaved,'report-summary'));
+  s.append(playerContext(ctx,{progress:true}));if(ctx.personal?.message)s.append(text(ctx.personal?.message,'status'));
+  const row=controls();row.classList.add('report-actions');row.append(action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'),b(cp.edit,'EDIT_REPORT',{},'link'));s.append(row);const r=el('div',undefined,'secondary-access');if(!ctx.isSaved)r.append(b(state.locale==='tr'?'İlerlememi tut':'Keep my progress','P_TRACK',{},'link'));const saved=ctx.personal?.snapshot?.records.find(x=>x.report.id===state.report?.id);if(!saved&&ctx.personal?.result?.report?.id===state.report?.id)r.append(b(ui.inspectRecord,'P_INSPECT',{id:ctx.personal?.result.id},'link'));if(saved)r.append(b(ui.inspectRecord,'P_INSPECT',{id:saved.id},'link'));r.append(b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
  }
  return s;
 }
