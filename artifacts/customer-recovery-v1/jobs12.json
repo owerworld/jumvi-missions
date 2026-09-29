@@ -1,0 +1,17 @@
+[
+  {
+    "id": "m35-wait",
+    "ref": "/Users/ramo/Documents/Codex/2026-09-09/files-mentioned-by-the-user-jumvi/worktrees/jumvi-lock09/artifacts/customer-recovery-v1/m35-jump.png",
+    "prompt": "Controlled next variation, same identities and equipment, single PRE-TOSS moment. Girl B stands BOTH FEET flat on same grass, knees relaxed, right paddle raised within her comfortable standing reach, BLUE front facing boy A. No ball on paddle. Boy A has exactly one orange broad-blue-band sticky ball held in free LEFT hand, about to toss. His RIGHT paddle stays strapped at hip red rear visible. Girl LEFT hand empty balancing. Remove all trajectory arrows: ball has not been released and girl has not jumped. Full figures same clothes, positions, A/B labels. No handle, no extra ball. Show waiting before toss, no simultaneous events."
+  },
+  {
+    "id": "m35-land",
+    "ref": "/Users/ramo/Documents/Codex/2026-09-09/files-mentioned-by-the-user-jumvi/worktrees/jumvi-lock09/artifacts/customer-recovery-v1/m35-jump.png",
+    "prompt": "Change ONLY temporal moment to just AFTER landing. Girl B now has BOTH FEET flat on grass, knees softly bent and upright balanced body. Her right paddle now lowered comfortably to chest height; the ONE same orange broad-blue-band ball remains STUCK to its BLUE FRONT. Girl LEFT hand empty by side. Boy right paddle and empty left free hand unchanged. Remove arrow; no flight. Preserve faces, clothing, paddle hands, grass, A/B labels, exactly2paddles/1ball, handle-free geometry. No detach in this moment."
+  },
+  {
+    "id": "m34-contact",
+    "ref": "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-8acc113e-e3d4-4c71-b01e-38408323a833.png",
+    "prompt": "Precise object edit of this same running catch, no new scene. Move the ONE orange broad-blue-band ball from just above paddle onto the CENTER OF BLUE FRONT, visibly making sticky contact. It is still ahead of girl in her direction of travel (toward viewer left). Her right-hand paddle face should angle gently toward arriving ball; no handle, no rebound. Keep girl body/feet, right paddle hand, empty left hand, boy free-left toss, red-back strapped-right paddle, clothes, identities, A/Blabels, whitebackground. Trajectory ends at ball on blue front. One ball only."
+  }
+]

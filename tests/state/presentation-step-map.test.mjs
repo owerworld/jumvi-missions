@@ -17,7 +17,7 @@ test('explicit illustrated help mappings preserve every canonical step in both l
    assert.deepEqual(indices,canonical.locale[locale].steps.map((_,i)=>i),`${id} ${locale} step order`);
   }
  }
- assert.equal(mapped,25);
+ assert.equal(mapped,35); // Every multi-step canonical record has a complete semantic picture mapping; m25 uses its approved short captions.
 });
 
 test('m10 revised art is explicitly a local candidate and keeps the canonical record binding',()=>{

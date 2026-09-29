@@ -1,3 +1,4 @@
+import {productHelp} from '../components/product-help.js';
 import {playerContext} from '../components/player-context.js';
 import {icon} from '../components/icons.js';
 import {el,heading} from '../components/dom.js';import {button} from '../components/button.js';
@@ -33,7 +34,7 @@ export function playView(name,ctx) {
   brand();s.append(el('p',state.locale==='tr'?'GÖREVİN':'YOUR MISSION','customer-eyebrow'),heading(cp.mission),text(cp.goal,'instruction goal'));
   const hero=cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch);hero.classList.add('entry-hero');
   const kit=el('div',undefined,'mission-kit');kit.append(text(cp.materials,'materials'));if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));
-  const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'),text(cp.safe,'safety'));s.append(brief,hero,kit);ready();
+  const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));if(cp.entryRules){const rules=el('ol',undefined,'entry-rules');for(const rule of cp.entryRules)rules.append(el('li',rule));brief.append(rules);}else brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'));brief.append(text(cp.safe,'safety'));s.append(hero,brief,kit);ready();
   const row=controls();row.classList.add('entry-actions');const start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';const arrow=el('span','→','action-arrow');arrow.setAttribute('aria-hidden','true');start.append(arrow);row.append(start,shortLabel(b(cp.another,'GO',{screen:'discovery'},'link'),state.locale==='tr'?'Başka görev':'More missions'),shortLabel(b(cp.how,'HELP',{},'link'),state.locale==='tr'?'Yardım':'Help'));s.append(row);
   const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools,playerContext(ctx));secondary(true);
  }else if(name==='help'){
@@ -55,7 +56,7 @@ export function playView(name,ctx) {
     list.append(li);
    }
   }else for(const [n,file] of [[1,'seated-editorial-v1'],[2,'contact-alpha-v1'],[3,'reset-alpha-v1']]){const li=el('li'),h=el('h2',cp['step'+n]);h.tabIndex=-1;if(n===1)h.id='first-step';li.append(h,art(file,cp['step'+n+'body']),text(cp['step'+n+'body'],'instruction'));list.append(li);}s.append(list,text(cp.goal,'instruction goal'),text(cp.safe,'safety'));ready();
-  const row=controls();row.append(b(cp.againExplain,'EXPLAIN'),b(cp.ask,'ASK',{},'link'),b(back,'RETURN',{},'primary',hasRound));if(state.round?.state==='active')row.append(b(cp.stop,'STOP',{},'secondary',true));row.append(sound(),access());s.append(row);
+  const row=controls();row.append(b(cp.againExplain,'EXPLAIN'),b(cp.ask,'ASK',{},'link'),b(back,'RETURN',{},'primary',hasRound));if(state.round?.state==='active')row.append(b(cp.stop,'STOP',{},'secondary',true));row.append(sound(),access());s.append(row,productHelp(state.locale));
  }else if(name==='active'){
   brand();label();s.append(heading(cp.activeTitle),text(state.resumed?ui.resumed:cp.state,'muted'),text(cp.activeCopy,'instruction'));
   const contact=el('div',undefined,'active-contact');contact.append(cp.activeArt?frameArt(cp.activeArt):cp.frames?frameArt(cp.frames[Math.min(1,cp.frames.length-1)]):art('contact-alpha-v1',cp.step2body,'contact-art'),text(cp.activeCatch,'instruction'));if(cp.activeArt)contact.classList.add('pilot-reminder');s.append(contact,text(cp.goal,'instruction goal'));

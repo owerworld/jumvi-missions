@@ -9,7 +9,7 @@
       "width": 720,
       "height": 480,
       "bytes": 294800,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/reset-alpha-v1.webp",
@@ -19,7 +19,7 @@
       "width": 720,
       "height": 480,
       "bytes": 320724,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/contact-alpha-v1.webp",
@@ -29,7 +29,7 @@
       "width": 720,
       "height": 480,
       "bytes": 296012,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/m25/product-still-v1.webp",
@@ -39,7 +39,7 @@
       "width": 720,
       "height": 480,
       "bytes": 311758,
-      "transform": "Full-frame proportional 1536x1024 \u2192 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
+      "transform": "Full-frame proportional 1536x1024 → 720x480 Lanczos; no crop or redraw; lossless WebP encoding of resized pixels"
     },
     {
       "path": "assets/mission-illustrations/final/m01/1-A.webp",
@@ -4619,7 +4619,7 @@
       "mime": "image/webp",
       "source": "review-assets/2026-09-25/m10-forward-step-candidate-v1.png",
       "sourceSha256": "68d33a054fb84021c2734b6b77618c09bce32061b91428783b680cd20254212b",
-      "status": "LOCAL_VISUAL_CANDIDATE \u2014 HUMAN ACCEPTANCE REQUIRED",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
       "transform": "Format conversion only; generated scene preserved"
     },
     {
@@ -4631,7 +4631,7 @@
       "mime": "image/webp",
       "source": "review-assets/2026-09-25/m10-catch-candidate-v1.png",
       "sourceSha256": "dab127d47111b19a99cc8fd62acf8a098f8d97e2a30a28668c40c739243e4530",
-      "status": "LOCAL_VISUAL_CANDIDATE \u2014 HUMAN ACCEPTANCE REQUIRED",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
       "transform": "Format conversion only; generated scene preserved"
     },
     {
@@ -4643,7 +4643,7 @@
       "mime": "image/webp",
       "source": "review-assets/2026-09-25/m10-reset-candidate-v1.png",
       "sourceSha256": "807077666c6f0b88924192ee683a2a8397e2796d6790492d1313339dfce7676c",
-      "status": "LOCAL_VISUAL_CANDIDATE \u2014 HUMAN ACCEPTANCE REQUIRED",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
       "transform": "Format conversion only; generated scene preserved"
     },
     {
@@ -4655,7 +4655,7 @@
       "mime": "image/webp",
       "source": "review-assets/2026-09-25/m05-freeze-candidate-v1.png",
       "sourceSha256": "c0435d8955f89fb6c9ba4efeaf343d401b80a8a8290a988dab7306d982fa3ff1",
-      "status": "LOCAL_VISUAL_CANDIDATE \u2014 HUMAN ACCEPTANCE REQUIRED",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
       "transform": "Format conversion only; generated scene preserved"
     },
     {
@@ -4667,7 +4667,7 @@
       "mime": "image/webp",
       "source": "review-assets/2026-09-25/m05-detach-candidate-v1.png",
       "sourceSha256": "8cd8a2e7051a7c30e7471b8508ba1c3c5c439a313a7c90b961abd726f4f6b288",
-      "status": "LOCAL_VISUAL_CANDIDATE \u2014 HUMAN ACCEPTANCE REQUIRED",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
       "transform": "Format conversion only; generated scene preserved"
     },
     {
@@ -4679,7 +4679,7 @@
       "mime": "image/webp",
       "source": "review-assets/2026-09-25/m05-return-candidate-v1.png",
       "sourceSha256": "20ce3105f4ff5b7b684f3bd5d344ccf3e3614074e8e70b4d2d39d01f6e7baa03",
-      "status": "LOCAL_VISUAL_CANDIDATE \u2014 HUMAN ACCEPTANCE REQUIRED",
+      "status": "LOCAL_VISUAL_CANDIDATE — HUMAN ACCEPTANCE REQUIRED",
       "transform": "Format conversion only; generated scene preserved"
     },
     {
@@ -7021,6 +7021,456 @@
       "sourceSha256": "b39ef3c16b99e7e41f827f364dd7962e9e55bdad980334be3cdb6d46672ba34a",
       "transform": "Native product-layer rotation only; player/hand/ball/trajectory/role nodes unchanged. No mirror, shape stretch or body edit.",
       "status": "CUSTOMER_REQUESTED_ORIENTATION_REVIEW"
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m04-5.webp",
+      "source": "artifacts/customer-recovery-v1/m04-5.png",
+      "sourceSha256": "e078201af3fc581f3f785f05e810ae7e70445825f277b6e3ff1b26c59d448dbe",
+      "sha256": "23abe9f9f16e9f509c293f2e4f5530ad40962afe15f0d1386666634cf8a8a289",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 187766,
+      "transform": "Full-frame WebP encoding, no crop. New anatomy-corrected candidate; no physical validation inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m04-3.webp",
+      "source": "artifacts/customer-recovery-v1/m04-3.png",
+      "sourceSha256": "9268f4976be002ce9ed9d5bc845997527dc867c8b5874ff64a113b5af0381689",
+      "sha256": "726528f8d7a42bdd412cf7fa7d9254553af2bb898fb8a952e5069d7ca2f0425f",
+      "width": 900,
+      "height": 1200,
+      "bytes": 234952,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-pass.webp",
+      "source": "artifacts/customer-recovery-v1/m20-pass.png",
+      "sourceSha256": "c520563dc9ea944362d8ce1d3ea83c12076e0aff18b2ee9100eda88a45e392a1",
+      "sha256": "d4fd57d21d1ac965fd8bceb8992f6c7a4b0271afaf33348d0ea3373503c2e27e",
+      "width": 1200,
+      "height": 811,
+      "bytes": 151494,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-detach.webp",
+      "source": "artifacts/customer-recovery-v1/m20-detach.png",
+      "sourceSha256": "96214e32f598cf497e2dbed932cb85f0a8b032e566ce12c92719e43b19a0e2b9",
+      "sha256": "3071c8b671cc0f6fd883cd241368510cdaa38df82d3bf496bd20988808d3b296",
+      "width": 1200,
+      "height": 811,
+      "bytes": 149514,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-shuffle.webp",
+      "source": "artifacts/customer-recovery-v1/m20-shuffle.png",
+      "sourceSha256": "2f7f9b87c39aba55fc5a8a6db505da142ba3c3318875e575de7bee25c4eb44d2",
+      "sha256": "c76879404d5bca17e808bece9ae0cece24e0f3074aca32d42aa354d11e8eb58b",
+      "width": 1200,
+      "height": 811,
+      "bytes": 134980,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m17-low.webp",
+      "source": "artifacts/customer-recovery-v1/m17-low.png",
+      "sourceSha256": "8796dbf5ae208292c7d4a22c3cf393f06a5be0690b872e9d4185e0e9ba30df02",
+      "sha256": "0461a3fa8446da6bcbb1e89d4ffc607ed6bb08b330da4278ce18471d8fa46956",
+      "width": 1200,
+      "height": 800,
+      "bytes": 129254,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m30-right.webp",
+      "source": "artifacts/customer-recovery-v1/m30-right.png",
+      "sourceSha256": "93a0aa5c32bea3ae4dc615d06eae44a11f4ffa55e15e33d39269d4e13162d7c5",
+      "sha256": "21e59eae42e52b16136e4fa88311012eab7a122d4dadc71c075d6f61122ff606",
+      "width": 1200,
+      "height": 800,
+      "bytes": 126570,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-detach.webp",
+      "source": "artifacts/customer-recovery-v1/pair-detach.png",
+      "sourceSha256": "c0fdb0821ca4073f178735db92c03de67926c43c529f6c3e7a50a060442a93eb",
+      "sha256": "a72bebd2618b2ca904dd739890957bab3b4f73bcf554ffbd5af59e9a2d7ba1d8",
+      "width": 1200,
+      "height": 800,
+      "bytes": 133610,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-catch.webp",
+      "source": "artifacts/customer-recovery-v1/m21-catch.png",
+      "sourceSha256": "a18c2870865a3f8005a5ff3c9577a6d7cceb2179c178d4907f3619819883037a",
+      "sha256": "0338fa8e08247a34707bf168cbc6971df62518ac33b74f4e546c78db9cfdddfb",
+      "width": 1200,
+      "height": 800,
+      "bytes": 122634,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m07-catch.webp",
+      "source": "artifacts/customer-recovery-v1/m07-catch.png",
+      "sourceSha256": "478f923d7f8ec98a1511a11b6f9c8fe174de5f46cded5a7433a6fbf7be11dae0",
+      "sha256": "47233198cd174fd58d6960182d426f17c26ea38641fbb6ebc851492f890fca8f",
+      "width": 1200,
+      "height": 800,
+      "bytes": 127426,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-chestcatch.webp",
+      "source": "artifacts/customer-recovery-v1/pair-chestcatch.png",
+      "sourceSha256": "2c507b8a5ecdff0f58228bc12f031498f8d2caf14e168bec51c336f9d89280fa",
+      "sha256": "fe83caa006f36c611897e5a9985132a358792a192db54505f50e9263a6487146",
+      "width": 1200,
+      "height": 800,
+      "bytes": 124564,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m13-silent.webp",
+      "source": "artifacts/customer-recovery-v1/m13-silent.png",
+      "sourceSha256": "ece186ad5348181a573ac17b202db7652c4c0143e61c63345359f4d57ca947e0",
+      "sha256": "f3e443f86b24de8ee3a609a81a9fe9c9bb45c1df50a49495f84728155634848e",
+      "width": 1200,
+      "height": 800,
+      "bytes": 121966,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-stepback-fixed.webp",
+      "source": "artifacts/customer-recovery-v1/pair-stepback-fixed.png",
+      "sourceSha256": "a43cc8370b6749d815db6e16fb70efc817ae8d4594773ae1c87138fa89620c59",
+      "sha256": "0203fb1fe5d760c041853c7a1375fdbd5d3cc1d9be5dd2085b8563ebdf4f2ddc",
+      "width": 1200,
+      "height": 800,
+      "bytes": 107736,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-ready.webp",
+      "source": "artifacts/customer-recovery-v1/m21-ready.png",
+      "sourceSha256": "0c4fefaf5ef9681e372c7fcc0c24519ca7e49cad66b88e6f728c8d192d278d65",
+      "sha256": "373573095239371e7d1258602e4b683a3b4c54df03997a3c3068f4d45406a6ee",
+      "width": 1200,
+      "height": 800,
+      "bytes": 118170,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m17-ready-fixed.webp",
+      "source": "artifacts/customer-recovery-v1/m17-ready-fixed.png",
+      "sourceSha256": "910eee9a92fad398e487c844927c648d428b8f738c50c6524096a251426cbed5",
+      "sha256": "05a5bb2a208011f30d0769677002456e31652ebb35ce9b112c1b6eb6a11eeef4",
+      "width": 1200,
+      "height": 800,
+      "bytes": 117660,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-return-backview.webp",
+      "source": "artifacts/customer-recovery-v1/pair-return-backview.png",
+      "sourceSha256": "ddc0ddf16101a9d1dda4df9bc107eeaab25774fac845b9b17539c6fcf9d64aab",
+      "sha256": "9e262d071e025c6a80ebb75d74ff8674c0f1577729c826dfdfc4dd6c7c25d1a5",
+      "width": 1200,
+      "height": 800,
+      "bytes": 107364,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-swapped-ball.webp",
+      "source": "artifacts/customer-recovery-v1/m21-swapped-ball.png",
+      "sourceSha256": "2a40021ed79afdded2fcc0387e569ccdde04c6f85808279371e7de22413733e4",
+      "sha256": "bf1e6b7724e0ecbcacf457de425e0c2e567217a7c1b23564c402fa4efd065259",
+      "width": 1200,
+      "height": 800,
+      "bytes": 117098,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m13-detach-silent.webp",
+      "source": "artifacts/customer-recovery-v1/m13-detach-silent.png",
+      "sourceSha256": "1bc1bac434ebab3282f04539a3c325ed011d27d9a6255f1d1801182f24065a5a",
+      "sha256": "529107275d23ade47b648b0fcac584a4062dcfbe1f176e0b8fb6f00608bc5be2",
+      "width": 1200,
+      "height": 800,
+      "bytes": 127794,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-jump.webp",
+      "source": "artifacts/customer-recovery-v1/m35-jump.png",
+      "sourceSha256": "6a7db1691f5d8135bf2736a2f8bbc7ce9d3b0b14e6b24639fd6d63e4d7406f07",
+      "sha256": "3fe589f8c87178603695107f7602e881951f4855674d24ea95fe20001d12f3a2",
+      "width": 1200,
+      "height": 800,
+      "bytes": 212618,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m27-detach-A.webp",
+      "source": "artifacts/customer-recovery-v1/m27-detach-A.png",
+      "sourceSha256": "f553ed6d15279afb5287d81abd444abd0858d740e51fdd76309c5a49676561ad",
+      "sha256": "dc60319abfffcc4a0cedc8a79e89d23477adbafc19b29e3f598cbe485850dfef",
+      "width": 1200,
+      "height": 800,
+      "bytes": 106442,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m27-tilt.webp",
+      "source": "artifacts/customer-recovery-v1/m27-tilt.png",
+      "sourceSha256": "3e7c3cdca7f6ec41c15a18dbf872d3932893e7b62254f6fa78f1c8f65e46c87c",
+      "sha256": "39885d67a9f709e2fc191a18918ad00ea6b06dcaba69ff632bedae323a473184",
+      "width": 1200,
+      "height": 800,
+      "bytes": 116912,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-wait.webp",
+      "source": "artifacts/customer-recovery-v1/m35-wait.png",
+      "sourceSha256": "72fc6c855cd05eb24ba2a491a58a2b05a4bfa8ae0f084892affc2da18f57a869",
+      "sha256": "c2ce5093bcf1fd85236f03b3417ef839125b45e85dbe3eb8e6b78edd111364d8",
+      "width": 1200,
+      "height": 800,
+      "bytes": 189318,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-land.webp",
+      "source": "artifacts/customer-recovery-v1/m35-land.png",
+      "sourceSha256": "a11d20948a38c617ed9fa547cb7e23f2666368e42c22a03b071a80ca531c8f21",
+      "sha256": "4d496c93397d1587503f20ef0e641d0bf90828b4f71c832daa2528745e3cbc59",
+      "width": 1200,
+      "height": 800,
+      "bytes": 190796,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m34-contact.webp",
+      "source": "artifacts/customer-recovery-v1/m34-contact.png",
+      "sourceSha256": "5e821a3e0e2c20e129b8ff6ba1dca624fd1007ed5d00eb829355ebea5b567e58",
+      "sha256": "4b618fcdea1260032d3bdbd72fc004391866373c3d6b1e0494db9dadab1ddf7f",
+      "width": 1200,
+      "height": 800,
+      "bytes": 102884,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m34-running.webp",
+      "source": "artifacts/customer-recovery-v1/m34-running.png",
+      "sourceSha256": "95c98a6423a27cc60f42d9f3e4d3ce0332a65c01dd00912a631ed0ee4c59a124",
+      "sha256": "d4c86e7b5f6dcb5f78126b4a7b81bf97d4921e9e9542434b8766c1e9fffff1d0",
+      "width": 1200,
+      "height": 800,
+      "bytes": 104230,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-detach.webp",
+      "source": "artifacts/customer-recovery-v1/m35-detach.png",
+      "sourceSha256": "a3f9e16d041fea7eadc2c8c0fcbcac54c91de4b9d33553c67f59d89c0a45d5fc",
+      "sha256": "50c7c3b8891770d97e7149d3778f62154b32747d7e6ca7c1c3d7d15d3eaff6de",
+      "width": 1200,
+      "height": 800,
+      "bytes": 175482,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m19-catch.webp",
+      "source": "artifacts/customer-recovery-v1/m19-catch.png",
+      "sourceSha256": "308ce2ad8c4bbe89ff98d45c1ade44b996a91b188a707fe8985a57ed840fa3eb",
+      "sha256": "620f8acd7aca79bbd639e935be1193432cd49feecfce369a9d58700fe96ebdb6",
+      "width": 1200,
+      "height": 811,
+      "bytes": 128272,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m19-detach.webp",
+      "source": "artifacts/customer-recovery-v1/m19-detach.png",
+      "sourceSha256": "30fb7dad92829216ef916d2ee6115dd4558b6634cd8894856fb166961e3d21cd",
+      "sha256": "9282fffa1d93f59b7680ff809586cf68c7b7e8c6f02d67298300984019096054",
+      "width": 1200,
+      "height": 811,
+      "bytes": 121764,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-catch.webp",
+      "source": "artifacts/customer-recovery-v1/m22-catch.png",
+      "sourceSha256": "6f349d112da266a71a1b1dcab228082f39c6972904b719c3086dad8b140fc522",
+      "sha256": "0858cb31844b9e898d92fc25af68b74ed3ef40bd03aacdff555ed2bf477210f0",
+      "width": 1200,
+      "height": 800,
+      "bytes": 112908,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-step.webp",
+      "source": "artifacts/customer-recovery-v1/m22-step.png",
+      "sourceSha256": "0d8bbb063ad2e77aaf91343887fa1c034128c9f8b8234b91f05b361f53f812bf",
+      "sha256": "38714876df8f1d106439cd2cb4346bd87fb8c53b4771c500ff624c74516f9b15",
+      "width": 1200,
+      "height": 800,
+      "bytes": 105764,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-detach.webp",
+      "source": "artifacts/customer-recovery-v1/m22-detach.png",
+      "sourceSha256": "839df6202fd6abff3b961708eb0514872a6ab1e606437ba490fec83b82afe2ee",
+      "sha256": "52e30a1dcc025bab7033f8982fa7b6c7a30ff11d441c97bb79be1dcadfcf598d",
+      "width": 1200,
+      "height": 800,
+      "bytes": 99474,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-catch.webp",
+      "source": "artifacts/customer-recovery-v1/pairs-catch.png",
+      "sourceSha256": "b5c006449103b55b3867c841214f72007ffee8defb84b7612a038934c1d1aa96",
+      "sha256": "813df81f9af796a99c31eacdf828f91ce3f401d0817df0a8d8a83a2cba6e7656",
+      "width": 1200,
+      "height": 811,
+      "bytes": 148306,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-detach.webp",
+      "source": "artifacts/customer-recovery-v1/pairs-detach.png",
+      "sourceSha256": "373420653c0116e1602d606a3f36f457f15e11e1ca760719d31366577803303a",
+      "sha256": "a92c2971df31526dbb9dea7e2f98ccd09b92bbddf488ee308644445588bf75b7",
+      "width": 1200,
+      "height": 811,
+      "bytes": 143058,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-nextcatch.webp",
+      "source": "artifacts/customer-recovery-v1/pairs-nextcatch.png",
+      "sourceSha256": "9ae4629305082e0bcbbf5149fd8f71d8a66f111d1bf96aa5138b231efa7e84df",
+      "sha256": "3618a042829b134c6c02ed5c037a8f52d5cc43f5ce99d11d46b25a8498fa7f5b",
+      "width": 1200,
+      "height": 811,
+      "bytes": 130816,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-transfer-fixed.webp",
+      "source": "artifacts/customer-recovery-v1/pairs-transfer-fixed.png",
+      "sourceSha256": "1f7ad3b4730c3c813bf9d79a7d521dcd36df47afb86b0f3b38c83180306104d0",
+      "sha256": "6b1be17c8ecc4a4ef5715ff5bcb494e1ccaf6e88a4a445a14e73a71399513015",
+      "width": 1200,
+      "height": 811,
+      "bytes": 161140,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-ready-blue.webp",
+      "source": "artifacts/customer-recovery-v1/pair-ready-blue.png",
+      "sourceSha256": "745e464ef22c2977ff46b22cd4c0a4154b5af1224bfd783f6c3310806aea75ed",
+      "sha256": "2fc2f74980c895f1a5aaa3e74de49144904da60bb6649e9f08b04fb087e44d20",
+      "width": 1200,
+      "height": 800,
+      "bytes": 116290,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-flight.webp",
+      "source": "artifacts/customer-recovery-v1/pair-low-flight.png",
+      "sourceSha256": "2b6e1fb53ef85451964a337eb98df6737ba2f0bbc4a2a0eb744640f050d40f95",
+      "sha256": "431faeb01f2fd4d05f1241ba0b92cf336a2c3d7af9f6225b7cb12463449fe51f",
+      "width": 1200,
+      "height": 800,
+      "bytes": 119342,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-catch.webp",
+      "source": "artifacts/customer-recovery-v1/pair-low-catch.png",
+      "sourceSha256": "37ee17d55a873eecad0c4d38f3d433f90c54925fe4b8bf512a22ec5ee09bf4de",
+      "sha256": "30e0d9879498abaddc946beb3c7e45dfb7857012150c9220254b4b50569489b6",
+      "width": 1200,
+      "height": 800,
+      "bytes": 120796,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-high-flight.webp",
+      "source": "artifacts/customer-recovery-v1/pair-high-flight.png",
+      "sourceSha256": "b7155e7f767ff983ab5335b422131ef1765aa8cc90a6d7e43890ee2df74eb3aa",
+      "sha256": "cc847ed0d71af95582c49be83e5599d1d4b49f2b422f6f1603c328ef4f65d29e",
+      "width": 1200,
+      "height": 800,
+      "bytes": 109914,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m32-basecatch.webp",
+      "source": "artifacts/customer-recovery-v1/m32-basecatch.png",
+      "sourceSha256": "ce03e5a2e3b43e6326f090f88db2404c2a21e3e5558cde72135b335447deadce",
+      "sha256": "9260d69cc52629f26488004da315afdc2691ae812d7cac1374b4e6bf2e165ee4",
+      "width": 1200,
+      "height": 800,
+      "bytes": 189820,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m32-basedetach.webp",
+      "source": "artifacts/customer-recovery-v1/m32-basedetach.png",
+      "sourceSha256": "183b7d4475be290b38cb1577d36cf84e09ed0407569a177250ec6e12a8c440a7",
+      "sha256": "2dbdb292c99d7ac3b0a5560495517d5be93e3f61c186caf65e616d90b232b08d",
+      "width": 1200,
+      "height": 800,
+      "bytes": 165464,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-front.webp",
+      "source": "artifacts/customer-recovery-v1/pair-far-front.png",
+      "sourceSha256": "477b521a9f32e8715e447281e90d4f2adea79fe4f5bf5121eb976b337e90ac7d",
+      "sha256": "69e5f6b78d50aad176da19643bdcd8e4e093af03fbd81e61e8d938fbf99acc28",
+      "width": 1200,
+      "height": 800,
+      "bytes": 295760,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-detach.webp",
+      "source": "artifacts/customer-recovery-v1/pair-far-detach.png",
+      "sourceSha256": "c833027f6e20e0a8dfb7927201c271fa4da01efcbf1bc5aca8549ea75d10ed5c",
+      "sha256": "77e8800fd5fa7db799bc1afbd2ef68148cdeb70951fb3e1b72a60b288d8c0566",
+      "width": 1200,
+      "height": 800,
+      "bytes": 276898,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-stepback-fixed.webp",
+      "source": "artifacts/customer-recovery-v1/pair-far-stepback-fixed.png",
+      "sourceSha256": "7cd702a5ecc4f2c7430cf24625e0c1f609d365a4748724a1d6186dc9e4d9f1a1",
+      "sha256": "ced9c442b5a42f2fbbafaaab6c45e9ef58aa096c4685dcc33c2c69f155ad9ee3",
+      "width": 1200,
+      "height": 800,
+      "bytes": 273336,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m02-freeze.webp",
+      "source": "artifacts/customer-recovery-v1/m02-freeze.png",
+      "sourceSha256": "ed64f8bb32ce576a59e3af5380ea5f849585a501b1841de8da8ea60f15302c5d",
+      "sha256": "007e233131d4bb28fbf3555eabdf78ce54bed77a10a888d31f850c312e39cdd7",
+      "width": 1200,
+      "height": 800,
+      "bytes": 115768,
+      "transform": "Full-frame proportional fit <=1200px, WebP95. Inspected candidate, original sources preserved; no human/field acceptance inferred."
     }
   ]
 }

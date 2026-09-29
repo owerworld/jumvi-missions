@@ -1,0 +1,452 @@
+[
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m04-5.webp",
+    "master": "artifacts/customer-recovery-v1/m04-5.png",
+    "sha256": "23abe9f9f16e9f509c293f2e4f5530ad40962afe15f0d1386666634cf8a8a289",
+    "masterSha256": "e078201af3fc581f3f785f05e810ae7e70445825f277b6e3ff1b26c59d448dbe",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-ab261016-d6d3-4e9c-bfa2-92490621851b.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m04-3.webp",
+    "master": "artifacts/customer-recovery-v1/m04-3.png",
+    "sha256": "726528f8d7a42bdd412cf7fa7d9254553af2bb898fb8a952e5069d7ca2f0425f",
+    "masterSha256": "9268f4976be002ce9ed9d5bc845997527dc867c8b5874ff64a113b5af0381689",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-cfb59454-1dad-462e-878f-f53170ae0576.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m20-pass.webp",
+    "master": "artifacts/customer-recovery-v1/m20-pass.png",
+    "sha256": "d4fd57d21d1ac965fd8bceb8992f6c7a4b0271afaf33348d0ea3373503c2e27e",
+    "masterSha256": "c520563dc9ea944362d8ce1d3ea83c12076e0aff18b2ee9100eda88a45e392a1",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-85e64fae-60eb-4d6c-9cce-dd3c9c1154c5.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m20-detach.webp",
+    "master": "artifacts/customer-recovery-v1/m20-detach.png",
+    "sha256": "3071c8b671cc0f6fd883cd241368510cdaa38df82d3bf496bd20988808d3b296",
+    "masterSha256": "96214e32f598cf497e2dbed932cb85f0a8b032e566ce12c92719e43b19a0e2b9",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-a82a2426-0e7f-4788-9821-da8b650a69ac.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m20-shuffle.webp",
+    "master": "artifacts/customer-recovery-v1/m20-shuffle.png",
+    "sha256": "c76879404d5bca17e808bece9ae0cece24e0f3074aca32d42aa354d11e8eb58b",
+    "masterSha256": "2f7f9b87c39aba55fc5a8a6db505da142ba3c3318875e575de7bee25c4eb44d2",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-ae05a3c2-f1c7-4759-a55f-8cc82af9ed05.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m17-low.webp",
+    "master": "artifacts/customer-recovery-v1/m17-low.png",
+    "sha256": "0461a3fa8446da6bcbb1e89d4ffc607ed6bb08b330da4278ce18471d8fa46956",
+    "masterSha256": "8796dbf5ae208292c7d4a22c3cf393f06a5be0690b872e9d4185e0e9ba30df02",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-86535641-a26e-4675-9b8b-4240ac59c724.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m30-right.webp",
+    "master": "artifacts/customer-recovery-v1/m30-right.png",
+    "sha256": "21e59eae42e52b16136e4fa88311012eab7a122d4dadc71c075d6f61122ff606",
+    "masterSha256": "93a0aa5c32bea3ae4dc615d06eae44a11f4ffa55e15e33d39269d4e13162d7c5",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-618d577b-fd60-4ac3-ba27-6cd03b1635c5.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-detach.webp",
+    "master": "artifacts/customer-recovery-v1/pair-detach.png",
+    "sha256": "a72bebd2618b2ca904dd739890957bab3b4f73bcf554ffbd5af59e9a2d7ba1d8",
+    "masterSha256": "c0fdb0821ca4073f178735db92c03de67926c43c529f6c3e7a50a060442a93eb",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-81ec1a15-adc6-4b2a-9b83-483befed5d25.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m21-catch.webp",
+    "master": "artifacts/customer-recovery-v1/m21-catch.png",
+    "sha256": "0338fa8e08247a34707bf168cbc6971df62518ac33b74f4e546c78db9cfdddfb",
+    "masterSha256": "a18c2870865a3f8005a5ff3c9577a6d7cceb2179c178d4907f3619819883037a",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-3fb3229c-271e-4575-81e8-31a8df97fe30.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m07-catch.webp",
+    "master": "artifacts/customer-recovery-v1/m07-catch.png",
+    "sha256": "47233198cd174fd58d6960182d426f17c26ea38641fbb6ebc851492f890fca8f",
+    "masterSha256": "478f923d7f8ec98a1511a11b6f9c8fe174de5f46cded5a7433a6fbf7be11dae0",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-81147b0a-7605-47dd-b635-6d93539649bd.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-chestcatch.webp",
+    "master": "artifacts/customer-recovery-v1/pair-chestcatch.png",
+    "sha256": "fe83caa006f36c611897e5a9985132a358792a192db54505f50e9263a6487146",
+    "masterSha256": "2c507b8a5ecdff0f58228bc12f031498f8d2caf14e168bec51c336f9d89280fa",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-1a2a2893-438e-4aa0-b648-de40b948e26c.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m13-silent.webp",
+    "master": "artifacts/customer-recovery-v1/m13-silent.png",
+    "sha256": "f3e443f86b24de8ee3a609a81a9fe9c9bb45c1df50a49495f84728155634848e",
+    "masterSha256": "ece186ad5348181a573ac17b202db7652c4c0143e61c63345359f4d57ca947e0",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-90e2846a-4be3-42a8-8334-0453fbedcc3d.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-stepback-fixed.webp",
+    "master": "artifacts/customer-recovery-v1/pair-stepback-fixed.png",
+    "sha256": "0203fb1fe5d760c041853c7a1375fdbd5d3cc1d9be5dd2085b8563ebdf4f2ddc",
+    "masterSha256": "a43cc8370b6749d815db6e16fb70efc817ae8d4594773ae1c87138fa89620c59",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-1d8ed3d0-933c-432f-9772-75d48c609801.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m21-ready.webp",
+    "master": "artifacts/customer-recovery-v1/m21-ready.png",
+    "sha256": "373573095239371e7d1258602e4b683a3b4c54df03997a3c3068f4d45406a6ee",
+    "masterSha256": "0c4fefaf5ef9681e372c7fcc0c24519ca7e49cad66b88e6f728c8d192d278d65",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-698af32f-fbec-43ab-877b-3648e967a327.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m17-ready-fixed.webp",
+    "master": "artifacts/customer-recovery-v1/m17-ready-fixed.png",
+    "sha256": "05a5bb2a208011f30d0769677002456e31652ebb35ce9b112c1b6eb6a11eeef4",
+    "masterSha256": "910eee9a92fad398e487c844927c648d428b8f738c50c6524096a251426cbed5",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-dd917d24-53a4-4b0b-9e62-0420f8e91224.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-return-backview.webp",
+    "master": "artifacts/customer-recovery-v1/pair-return-backview.png",
+    "sha256": "9e262d071e025c6a80ebb75d74ff8674c0f1577729c826dfdfc4dd6c7c25d1a5",
+    "masterSha256": "ddc0ddf16101a9d1dda4df9bc107eeaab25774fac845b9b17539c6fcf9d64aab",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-a62caf29-db2a-4c9e-abe9-f2b456b2f14d.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m21-swapped-ball.webp",
+    "master": "artifacts/customer-recovery-v1/m21-swapped-ball.png",
+    "sha256": "bf1e6b7724e0ecbcacf457de425e0c2e567217a7c1b23564c402fa4efd065259",
+    "masterSha256": "2a40021ed79afdded2fcc0387e569ccdde04c6f85808279371e7de22413733e4",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-83975d0e-e552-4db6-83ab-7c40e0b6674b.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m13-detach-silent.webp",
+    "master": "artifacts/customer-recovery-v1/m13-detach-silent.png",
+    "sha256": "529107275d23ade47b648b0fcac584a4062dcfbe1f176e0b8fb6f00608bc5be2",
+    "masterSha256": "1bc1bac434ebab3282f04539a3c325ed011d27d9a6255f1d1801182f24065a5a",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-0981a887-4f6b-43e5-af3d-29196930c6fd.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m35-jump.webp",
+    "master": "artifacts/customer-recovery-v1/m35-jump.png",
+    "sha256": "3fe589f8c87178603695107f7602e881951f4855674d24ea95fe20001d12f3a2",
+    "masterSha256": "6a7db1691f5d8135bf2736a2f8bbc7ce9d3b0b14e6b24639fd6d63e4d7406f07",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-330186e8-69d5-457c-90cd-50b9fed34d34.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m27-detach-A.webp",
+    "master": "artifacts/customer-recovery-v1/m27-detach-A.png",
+    "sha256": "dc60319abfffcc4a0cedc8a79e89d23477adbafc19b29e3f598cbe485850dfef",
+    "masterSha256": "f553ed6d15279afb5287d81abd444abd0858d740e51fdd76309c5a49676561ad",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-a565f33a-9ebb-4a15-80a9-0fb3584226ff.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m27-tilt.webp",
+    "master": "artifacts/customer-recovery-v1/m27-tilt.png",
+    "sha256": "39885d67a9f709e2fc191a18918ad00ea6b06dcaba69ff632bedae323a473184",
+    "masterSha256": "3e7c3cdca7f6ec41c15a18dbf872d3932893e7b62254f6fa78f1c8f65e46c87c",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-2e760827-a550-4119-8488-b21e10c40a67.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m35-wait.webp",
+    "master": "artifacts/customer-recovery-v1/m35-wait.png",
+    "sha256": "c2ce5093bcf1fd85236f03b3417ef839125b45e85dbe3eb8e6b78edd111364d8",
+    "masterSha256": "72fc6c855cd05eb24ba2a491a58a2b05a4bfa8ae0f084892affc2da18f57a869",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-8e6980d3-35f6-4312-8597-26b4cb9910bb.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m35-land.webp",
+    "master": "artifacts/customer-recovery-v1/m35-land.png",
+    "sha256": "4d496c93397d1587503f20ef0e641d0bf90828b4f71c832daa2528745e3cbc59",
+    "masterSha256": "a11d20948a38c617ed9fa547cb7e23f2666368e42c22a03b071a80ca531c8f21",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-c13ec125-a1d1-48d9-8f8d-bec817382130.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m34-contact.webp",
+    "master": "artifacts/customer-recovery-v1/m34-contact.png",
+    "sha256": "4b618fcdea1260032d3bdbd72fc004391866373c3d6b1e0494db9dadab1ddf7f",
+    "masterSha256": "5e821a3e0e2c20e129b8ff6ba1dca624fd1007ed5d00eb829355ebea5b567e58",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-acb945b2-15e9-48b1-a3ca-7948b9d4c04f.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m34-running.webp",
+    "master": "artifacts/customer-recovery-v1/m34-running.png",
+    "sha256": "d4c86e7b5f6dcb5f78126b4a7b81bf97d4921e9e9542434b8766c1e9fffff1d0",
+    "masterSha256": "95c98a6423a27cc60f42d9f3e4d3ce0332a65c01dd00912a631ed0ee4c59a124",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-8acc113e-e3d4-4c71-b01e-38408323a833.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m35-detach.webp",
+    "master": "artifacts/customer-recovery-v1/m35-detach.png",
+    "sha256": "50c7c3b8891770d97e7149d3778f62154b32747d7e6ca7c1c3d7d15d3eaff6de",
+    "masterSha256": "a3f9e16d041fea7eadc2c8c0fcbcac54c91de4b9d33553c67f59d89c0a45d5fc",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-4ffa94a8-3aa6-41f7-a1e0-9b252e5cf6ee.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m19-catch.webp",
+    "master": "artifacts/customer-recovery-v1/m19-catch.png",
+    "sha256": "620f8acd7aca79bbd639e935be1193432cd49feecfce369a9d58700fe96ebdb6",
+    "masterSha256": "308ce2ad8c4bbe89ff98d45c1ade44b996a91b188a707fe8985a57ed840fa3eb",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-b04b7e97-3f59-4bb6-b80a-7cac65da12e2.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m19-detach.webp",
+    "master": "artifacts/customer-recovery-v1/m19-detach.png",
+    "sha256": "9282fffa1d93f59b7680ff809586cf68c7b7e8c6f02d67298300984019096054",
+    "masterSha256": "30fb7dad92829216ef916d2ee6115dd4558b6634cd8894856fb166961e3d21cd",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-db91adaa-7cc6-4067-bfae-13e32a0f9fcd.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m22-catch.webp",
+    "master": "artifacts/customer-recovery-v1/m22-catch.png",
+    "sha256": "0858cb31844b9e898d92fc25af68b74ed3ef40bd03aacdff555ed2bf477210f0",
+    "masterSha256": "6f349d112da266a71a1b1dcab228082f39c6972904b719c3086dad8b140fc522",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-73f50375-f282-43bb-8234-edf332e92cf0.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m22-step.webp",
+    "master": "artifacts/customer-recovery-v1/m22-step.png",
+    "sha256": "38714876df8f1d106439cd2cb4346bd87fb8c53b4771c500ff624c74516f9b15",
+    "masterSha256": "0d8bbb063ad2e77aaf91343887fa1c034128c9f8b8234b91f05b361f53f812bf",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-86df53a1-855a-44b7-a510-e318dadb2da8.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m22-detach.webp",
+    "master": "artifacts/customer-recovery-v1/m22-detach.png",
+    "sha256": "52e30a1dcc025bab7033f8982fa7b6c7a30ff11d441c97bb79be1dcadfcf598d",
+    "masterSha256": "839df6202fd6abff3b961708eb0514872a6ab1e606437ba490fec83b82afe2ee",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-e7e08646-f9f0-4f31-99e0-c1d427182320.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pairs-catch.webp",
+    "master": "artifacts/customer-recovery-v1/pairs-catch.png",
+    "sha256": "813df81f9af796a99c31eacdf828f91ce3f401d0817df0a8d8a83a2cba6e7656",
+    "masterSha256": "b5c006449103b55b3867c841214f72007ffee8defb84b7612a038934c1d1aa96",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-e8b7b812-b810-4bd9-af91-cb815f5cc1d5.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pairs-detach.webp",
+    "master": "artifacts/customer-recovery-v1/pairs-detach.png",
+    "sha256": "a92c2971df31526dbb9dea7e2f98ccd09b92bbddf488ee308644445588bf75b7",
+    "masterSha256": "373420653c0116e1602d606a3f36f457f15e11e1ca760719d31366577803303a",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-69722836-7750-461a-bcbf-3b6eb80c2312.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pairs-nextcatch.webp",
+    "master": "artifacts/customer-recovery-v1/pairs-nextcatch.png",
+    "sha256": "3618a042829b134c6c02ed5c037a8f52d5cc43f5ce99d11d46b25a8498fa7f5b",
+    "masterSha256": "9ae4629305082e0bcbbf5149fd8f71d8a66f111d1bf96aa5138b231efa7e84df",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-1fe9092d-5511-4318-b1fe-e28570b4ebbf.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pairs-transfer-fixed.webp",
+    "master": "artifacts/customer-recovery-v1/pairs-transfer-fixed.png",
+    "sha256": "6b1be17c8ecc4a4ef5715ff5bcb494e1ccaf6e88a4a445a14e73a71399513015",
+    "masterSha256": "1f7ad3b4730c3c813bf9d79a7d521dcd36df47afb86b0f3b38c83180306104d0",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-a9ebff32-70c1-4177-b4fa-0cfb7133f633.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-ready-blue.webp",
+    "master": "artifacts/customer-recovery-v1/pair-ready-blue.png",
+    "sha256": "2fc2f74980c895f1a5aaa3e74de49144904da60bb6649e9f08b04fb087e44d20",
+    "masterSha256": "745e464ef22c2977ff46b22cd4c0a4154b5af1224bfd783f6c3310806aea75ed",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-da5aa5e1-f631-43c7-b27c-5acd74252a26.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-flight.webp",
+    "master": "artifacts/customer-recovery-v1/pair-low-flight.png",
+    "sha256": "431faeb01f2fd4d05f1241ba0b92cf336a2c3d7af9f6225b7cb12463449fe51f",
+    "masterSha256": "2b6e1fb53ef85451964a337eb98df6737ba2f0bbc4a2a0eb744640f050d40f95",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-1c2f9702-77b8-4f6d-be73-55f60eabbe45.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-catch.webp",
+    "master": "artifacts/customer-recovery-v1/pair-low-catch.png",
+    "sha256": "30e0d9879498abaddc946beb3c7e45dfb7857012150c9220254b4b50569489b6",
+    "masterSha256": "37ee17d55a873eecad0c4d38f3d433f90c54925fe4b8bf512a22ec5ee09bf4de",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-f080ef67-ad14-4a0c-b21d-0fca960d0016.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-high-flight.webp",
+    "master": "artifacts/customer-recovery-v1/pair-high-flight.png",
+    "sha256": "cc847ed0d71af95582c49be83e5599d1d4b49f2b422f6f1603c328ef4f65d29e",
+    "masterSha256": "b7155e7f767ff983ab5335b422131ef1765aa8cc90a6d7e43890ee2df74eb3aa",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-56a9b7a1-715f-417d-9ea1-2a94a6fb449e.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m32-basecatch.webp",
+    "master": "artifacts/customer-recovery-v1/m32-basecatch.png",
+    "sha256": "9260d69cc52629f26488004da315afdc2691ae812d7cac1374b4e6bf2e165ee4",
+    "masterSha256": "ce03e5a2e3b43e6326f090f88db2404c2a21e3e5558cde72135b335447deadce",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-b4e520d0-47e9-4c5f-be16-cf547b24dfa5.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m32-basedetach.webp",
+    "master": "artifacts/customer-recovery-v1/m32-basedetach.png",
+    "sha256": "2dbdb292c99d7ac3b0a5560495517d5be93e3f61c186caf65e616d90b232b08d",
+    "masterSha256": "183b7d4475be290b38cb1577d36cf84e09ed0407569a177250ec6e12a8c440a7",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-e9b65931-04fc-4304-9295-05c61a6487d5.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-front.webp",
+    "master": "artifacts/customer-recovery-v1/pair-far-front.png",
+    "sha256": "69e5f6b78d50aad176da19643bdcd8e4e093af03fbd81e61e8d938fbf99acc28",
+    "masterSha256": "477b521a9f32e8715e447281e90d4f2adea79fe4f5bf5121eb976b337e90ac7d",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-a1d76d89-2546-4810-aa5a-09093d19833d.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-detach.webp",
+    "master": "artifacts/customer-recovery-v1/pair-far-detach.png",
+    "sha256": "77e8800fd5fa7db799bc1afbd2ef68148cdeb70951fb3e1b72a60b288d8c0566",
+    "masterSha256": "c833027f6e20e0a8dfb7927201c271fa4da01efcbf1bc5aca8549ea75d10ed5c",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-dfe56bd4-53bb-4477-9d0d-fa77d11477e4.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-stepback-fixed.webp",
+    "master": "artifacts/customer-recovery-v1/pair-far-stepback-fixed.png",
+    "sha256": "ced9c442b5a42f2fbbafaaab6c45e9ef58aa096c4685dcc33c2c69f155ad9ee3",
+    "masterSha256": "7cd702a5ecc4f2c7430cf24625e0c1f609d365a4748724a1d6186dc9e4d9f1a1",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-2b510637-16f4-4eb5-bb98-af32f09bfbfd.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  },
+  {
+    "path": "assets/mission-illustrations/customer-recovery-v1/m02-freeze.webp",
+    "master": "artifacts/customer-recovery-v1/m02-freeze.png",
+    "sha256": "007e233131d4bb28fbf3555eabdf78ce54bed77a10a888d31f850c312e39cdd7",
+    "masterSha256": "ed64f8bb32ce576a59e3af5380ea5f849585a501b1841de8da8ea60f15302c5d",
+    "generatedSource": [
+      "/Users/ramo/.codex/generated_images/01a08780-0cd5-7391-a7ac-4345dfbbc8a3/exec-0025272c-5291-48c4-b876-1286df490719.png"
+    ],
+    "status": "TECHNICAL_CANDIDATE — human/field acceptance not inferred"
+  }
+]
