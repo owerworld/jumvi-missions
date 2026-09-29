@@ -8,7 +8,7 @@ for(const tr of [false,true]){
   await expect(cards.nth(0)).not.toContainText(tr?'5 temiz yaydan sonra geri adım at.':'After 5 clean arcs, step back.');
   await expect(cards.nth(2)).toContainText(tr?'Boş elini kullan.':'Use your free hand.');
   await expect(cards.nth(3)).toContainText(tr?'5':'5');
-  await expect(page.locator('.product-help')).toBeVisible();
+  await expect(page.locator('.product-help')).toHaveCount(0);
   await page.getByRole('button',{name:tr?'Göreve dön':'Back to the mission',exact:true}).first().click();await expect(page.locator('[data-view=entry]')).toBeVisible();
  });
  test(`short Help keeps hand transfer, landing and reset boundaries ${tr?'TR':'EN'}`,async({page})=>{

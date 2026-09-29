@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-for(const tr of [true,false])test(`customer recovery: groups, essential rules and product help ${tr?'TR':'EN'}`,async({page})=>{
+for(const tr of [true,false])test(`customer recovery: groups, essential rules and focused mission help ${tr?'TR':'EN'}`,async({page})=>{
  await page.goto(tr?'/tr/':'/');await expect(page.locator('[data-start]')).toBeEnabled();
  await page.getByRole('button',{name:tr?'Başka uygun görev':'Find another suitable mission',exact:true}).click();
  await expect(page.locator('.mission-group')).toHaveCount(6);
@@ -7,8 +7,9 @@ for(const tr of [true,false])test(`customer recovery: groups, essential rules an
  await page.locator('[data-mission-id=m04] button').click();await expect(page.locator('[data-start]')).toBeEnabled();
  await expect(page.locator('.entry-rules li')).toHaveCount(5);
  await page.getByRole('button',{name:tr?'Açıklama / yardım':'How to play / help',exact:true}).click();
- await expect(page.locator('.product-help')).toBeVisible();
- const issue=page.locator('.product-help details').first();await issue.locator('summary').click();await expect(issue.locator('p')).toContainText(tr?'mavi':'blue');
+ await expect(page.locator('.product-help')).toHaveCount(0);
+ await expect(page.locator('#first-step')).toContainText(tr?'Mavi':'blue');
+ await expect(page.getByRole('button',{name:tr?'Göreve dön':'Back to the mission',exact:true}).first()).toBeVisible();
 });
 
 test('remaining filter respects the explicitly selected player and resets for guest',async({page})=>{

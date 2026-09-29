@@ -1,4 +1,3 @@
-import {productHelp} from '../components/product-help.js';
 import {el,heading} from '../components/dom.js';
 import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
@@ -27,7 +26,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   if(name==='returning'){s.append(el('p',ui.returnInfo),el('p',cp.mission));row.append(go(cp.backMission||ui.back,'entry'),go(ui.guestTitle,'guest'),go(ui.titles.group,'group'));if(state.previous)row.append(b(ui.previousRound,'PREVIOUS'));}
   row.append(b(cp.how,'HELP'),b(cp.leave,'LEAVE'));s.append(row);return s;
  }
- if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'),back());s.append(row,productHelp(state.locale));disclosure();return s;}
+ if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'),back());s.append(row);disclosure();return s;}
  if(p.status==='loading')s.append(el('p',ui.localLoading));
  if(p.status==='unavailable'){s.append(el('p',ui.localUnavailable));row.append(b(ui.retry,'P_REFRESH'));}
  if(name==='new-player'){s.append(el('p',p.quick?(state.locale==='tr'?'Oyuncu oluşturmak isteğe bağlı. Bu görevin bildirimi oluşturduğun oyuncuya kaydedilecek.':'Creating a player is optional. This mission report will be saved to the player you create.'):ui.createInfo));disclosure();form('P_CREATE',p.quick?(state.locale==='tr'?'Oluştur ve bu görevi kaydet':'Create player and save this mission'):ui.createPlayer,p.name);row.append(go(ui.cancel,state.report?'attribution':'management'));}

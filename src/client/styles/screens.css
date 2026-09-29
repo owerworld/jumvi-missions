@@ -113,10 +113,6 @@ main:has(>.customer-layout){padding:20px;background:#fff}
 .customer-layout .remaining-filter{display:flex;align-items:center;gap:.75rem;min-height:var(--target-child)}
 .customer-layout .remaining-filter input{width:1.5rem;height:1.5rem;min-height:1.5rem;flex:none;accent-color:var(--action)}
 .entry-rules{padding-left:1.5rem;margin:1rem 0}.entry-rules li{padding-left:.25rem;margin-bottom:.65rem}
-.product-help{margin-block:2rem}.product-help details{border-bottom:1px solid var(--border);padding-block:.5rem}
-.product-help summary{min-height:var(--target-child);padding:.75rem .25rem;cursor:pointer;font-weight:700}
-.product-help details p{margin:0 0 1rem;padding:.5rem .25rem;line-height:1.5}
-.product-help summary:focus-visible{outline:3px solid var(--action);outline-offset:3px}
 .pack-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;margin-bottom:1.5rem}
 .pack-shortcuts .control{background:var(--infoSurface);border:1px solid var(--border);text-align:center;justify-content:center}
 .compact-controls .pack-shortcuts{grid-template-columns:minmax(0,1fr)}
