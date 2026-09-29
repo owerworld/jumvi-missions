@@ -126,3 +126,19 @@ main:has(>.customer-layout){padding:20px;background:#fff}
 .customer-layout .remaining-filter span{min-width:0;flex:1 1 12rem}
 .mission-card-body h3{font-size:var(--body-size);line-height:var(--body-line);margin:0 0 .5rem}
 .pack-shortcuts .control[hidden]{display:none}
+
+/* Parent review: less decorative depth, same rules, type and target sizes. */
+.customer-layout .entry-hero{padding-block:8px 12px}
+.customer-layout .entry-rules{margin-block:.5rem}.customer-layout .entry-rules li{margin-bottom:.5rem}
+.customer-layout .mission-open{display:flex;gap:12px;align-items:center;padding:12px;border:0;border-radius:1.25rem;text-align:left;justify-content:flex-start;background:var(--surface);font-size:var(--body-size);line-height:var(--body-line)}
+.customer-layout .mission-open:hover{background:var(--infoSurface)}
+.customer-layout .mission-open .mission-thumbnail{width:5rem;max-height:6rem;border-radius:.75rem;margin:0;flex-shrink:0}
+.customer-layout .mission-open .mission-card-body{padding:0;min-width:0;flex:1}
+.mission-card-title{display:block;font-weight:700;margin-bottom:.35rem}
+.mission-card-kit{display:block;font-size:var(--body-size);line-height:var(--body-line);font-weight:400}
+.mission-card-arrow{flex:none;font-size:1.5em}.mission-open .mission-completed{margin-bottom:.35rem}
+.pack-shortcuts .control[aria-pressed=true]{background:var(--action);border-color:var(--action);color:var(--surface)}
+.local-details{margin-block:.5rem 1rem}.local-details summary{min-height:var(--target-adult);padding-block:.75rem;cursor:pointer;font-weight:700}.local-details p{margin-top:.75rem}
+.local-details summary:focus-visible{outline:3px solid var(--action);outline-offset:3px}
+@media(max-width:23rem){.customer-layout .mission-open{display:block}.customer-layout .mission-open .mission-thumbnail{width:100%;max-height:8rem;margin-bottom:.75rem}.mission-card-arrow{display:none}}
+.compact-controls .customer-layout .mission-open{display:block}.compact-controls .customer-layout .mission-open .mission-thumbnail{width:100%;max-height:8rem;margin-bottom:.75rem}.compact-controls .mission-card-arrow{display:none}

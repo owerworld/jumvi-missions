@@ -70,7 +70,15 @@
             "Catch on the blue side. Take the ball off with your free hand, then gently toss it back."
           ],
           "goal": "Make 15 clean catches while seated.",
-          "safety": "Keep tosses gentle and below face level. Stay 1–3 meters apart and play with a grown-up supervising. Move breakable things out of the way."
+          "safety": "Keep tosses gentle and below face level. Stay about 3–10 feet (1–3 meters) apart with a grown-up supervising. Clear away breakable things.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -82,6 +90,10 @@
           "Stay seated on the floor or a chair. Make a short, gentle toss with your free hand.",
           "Catch on the blue side. Take the ball off with your free hand, then gently toss it back."
         ]
+      },
+      "entrySetup": {
+        "en-US": "Wear the paddle using the strap on the back.",
+        "tr": "Paddle’ı arkadaki el kayışıyla tak."
       }
     },
     "m07": {
@@ -166,7 +178,15 @@
             "Flat tosses do not count. After 5 clean rainbow tosses, step back."
           ],
           "goal": "Complete 3 distance levels, with 5 rainbow tosses at each level.",
-          "safety": "Use a gentle arc, not a hard throw. Let the ball come down naturally."
+          "safety": "Use a gentle arc, not a hard throw. Let the ball come down naturally.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -280,7 +300,15 @@
             "After your catch-and-pass turn, stay standing and shuffle sideways to the back of your line."
           ],
           "goal": "Make 20 passes together across both lines.",
-          "safety": "Stay on your feet and move sideways. No running or crab-walking on your hands. Never put your weight on a hand wearing a paddle."
+          "safety": "Stay on your feet and move sideways. No running or crab-walking on your hands. Never put your weight on a hand wearing a paddle.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -418,7 +446,15 @@
           ],
           "goal": "Make 8 correct catches on the called side.",
           "safety": "Aim at the blue paddle face on the called side, never at the person. Keep tosses straight and gentle.",
-          "setup": "2 players, 2 paddles, 1 ball. Left and right mean the catcher’s own left and right."
+          "setup": "2 players, 2 paddles, 1 ball. Left and right mean the catcher’s own left and right.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -507,7 +543,15 @@
             "Catch on the blue side. Take the ball off with your free hand, then toss it back."
           ],
           "goal": "How many catches can you make in 45 seconds? Try to beat your own best.",
-          "safety": "Keep tosses below chin level. Never aim at anyone’s face."
+          "safety": "Keep tosses below chin level. Never aim at anyone’s face.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -629,7 +673,15 @@
             "A person makes the calls. The phone does not call colors, run a timer, or make automatic sounds."
           ],
           "goal": "Play for 60 seconds without tossing on Red.",
-          "safety": "When you hear Red, stop and stay still."
+          "safety": "When you hear Red, stop and stay still.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -738,7 +790,15 @@
             "Catch the ball on the blue side. Switch roles after every 10 throws."
           ],
           "goal": "Make 10 clean tap-and-catches each.",
-          "safety": "Tap gently with your free hand. Keep your paddle strapped on; it has no handle."
+          "safety": "Tap gently with your free hand. Keep your paddle strapped on; it has no handle.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -874,7 +934,15 @@
           ],
           "goal": "Be the first to make 12 catches, switching paddle hands after each one.",
           "safety": "Take your time switching hands. Never toss the paddle between hands or change hands with the ball still stuck to it. There is no handle.",
-          "setup": "2 players, 2 paddles, 1 ball. Begin with the paddle strapped to one hand."
+          "setup": "2 players, 2 paddles, 1 ball. Begin with the paddle strapped to one hand.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -971,7 +1039,15 @@
             "After the freeze, take the ball off with your free hand and toss it back."
           ],
           "goal": "Make 10 catches, with a full freeze after each one.",
-          "safety": "Stay completely still during each 2-second freeze."
+          "safety": "Stay completely still during each 2-second freeze.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1084,7 +1160,15 @@
             "If the ball drops, start counting again from 1."
           ],
           "goal": "Count out loud together and reach 15 catches in a row.",
-          "safety": "A missed catch is okay. Take a breath and start again."
+          "safety": "A missed catch is okay. Take a breath and start again.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1192,7 +1276,15 @@
             "Let the ball land and stick on the blue side. Do not swing at it."
           ],
           "goal": "Make 8 clean landings on the paddle.",
-          "safety": "Let the ball stick. Do not swat or hit it."
+          "safety": "Let the ball stick. Do not swat or hit it.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1279,7 +1371,15 @@
             "Keep going until you are 3 big steps apart."
           ],
           "goal": "Reach 3 big steps apart and make 3 clean catches there.",
-          "safety": "Stop if you can no longer keep your tosses controlled."
+          "safety": "Stop if you can no longer keep your tosses controlled.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1367,7 +1467,15 @@
             "After the catch, step back to your starting spot. Now it’s your partner’s turn."
           ],
           "goal": "Make 10 clean step-and-toss turns each.",
-          "safety": "Keep the toss gentle. The step already adds power."
+          "safety": "Keep the toss gentle. The step already adds power.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1454,7 +1562,15 @@
             "Catch it as it drops onto the blue side of the paddle."
           ],
           "goal": "Make 10 patient catches from high tosses.",
-          "safety": "Take your time. Do not swing the paddle at the ball."
+          "safety": "Take your time. Do not swing the paddle at the ball.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1544,7 +1660,15 @@
             "Toss toward the blue paddle face, never the person’s chest. A toss that is too high or too low does not count."
           ],
           "goal": "Make 10 catches in a row on the paddle at chest height.",
-          "safety": "Aim at the blue paddle face, never anyone’s body."
+          "safety": "Aim at the blue paddle face, never anyone’s body.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1621,7 +1745,15 @@
             "You can listen to instructions before playing or when you ask for Help. Going back to the game does not start the narration."
           ],
           "goal": "Make 12 catches without talking.",
-          "safety": "Take a breath before each toss."
+          "safety": "Take a breath before each toss.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1733,7 +1865,15 @@
             "Repeat those two sets once more. Keep your feet in place."
           ],
           "goal": "Finish all 20 throws without dropping the ball.",
-          "safety": "Keep your feet planted. Only your arms move."
+          "safety": "Keep your feet planted. Only your arms move.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1850,7 +1990,15 @@
             "Catch, say “I see it!” again, and toss the ball back."
           ],
           "goal": "Make 15 catches with the “I see it!” call.",
-          "safety": "Stay the same distance apart. No surprise tosses."
+          "safety": "Stay the same distance apart. No surprise tosses.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -1963,7 +2111,15 @@
             "The catcher counts “1, 2, 3” before tossing it back."
           ],
           "goal": "Make 10 catches with tosses timed to the count.",
-          "safety": "Count calmly and keep a steady rhythm."
+          "safety": "Count calmly and keep a steady rhythm.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2085,7 +2241,15 @@
           ],
           "goal": "Complete 8 mirror-and-catch rounds.",
           "safety": "Use comfortable poses. Do not stretch too far or tilt sharply. Catch on the blue side.",
-          "setup": "2 players, 2 paddles, 1 ball. Choose comfortable high, low, or gently tilted paddle poses. Match the pose on your own body; you do not need the same angle in the room."
+          "setup": "2 players, 2 paddles, 1 ball. Choose comfortable high, low, or gently tilted paddle poses. Match the pose on your own body; you do not need the same angle in the room.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2202,7 +2366,15 @@
             "No pressure. Have another go together."
           ],
           "goal": "Make 10 catches without dropping the ball.",
-          "safety": "Starting over is part of the game. Keep it relaxed."
+          "safety": "Starting over is part of the game. Keep it relaxed.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2289,7 +2461,15 @@
             "Keep every toss gentle."
           ],
           "goal": "Play for 2 full minutes. Count the drops and try to beat your own record.",
-          "safety": "Leave space between players. Do not crowd together."
+          "safety": "Leave space between players. Do not crowd together.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2377,7 +2557,15 @@
             "If the middle player catches the ball on the paddle, they walk over and trade places with the person who threw it."
           ],
           "goal": "Make 6 catches in the middle. Everyone gets a turn.",
-          "safety": "Keep tosses below face level. Walk when trading places. Do not dive for the ball."
+          "safety": "Keep tosses below face level. Walk when trading places. Do not dive for the ball.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2464,7 +2652,15 @@
             "After each catch, everyone steps clockwise. Then make the next toss."
           ],
           "goal": "Make 20 catches, with everyone moving after each catch.",
-          "safety": "Move calmly and leave room for each other."
+          "safety": "Move calmly and leave room for each other.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2566,7 +2762,15 @@
             "Play every pairing once. Four players make 6 different pairs."
           ],
           "goal": "Finish all 6 pairings, with 6 clean catches per pair.",
-          "safety": "Change partners calmly. Use only 1 ball, with only 1 pair playing at a time."
+          "safety": "Change partners calmly. Use only 1 ball, with only 1 pair playing at a time.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2668,7 +2872,15 @@
             "Add both teams’ catches to one shared total."
           ],
           "goal": "Reach 40 catches together.",
-          "safety": "Only one team plays at a time. You can use 4 paddles, but never run two games at once."
+          "safety": "Only one team plays at a time. You can use 4 paddles, but never run two games at once.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2752,7 +2964,15 @@
             "Keep your feet in place the whole time."
           ],
           "goal": "Make 12 clean catches in your small space.",
-          "safety": "Watch for lamps, shelves, and other nearby objects."
+          "safety": "Watch for lamps, shelves, and other nearby objects.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2864,7 +3084,15 @@
           ],
           "goal": "Make 10 catches with your secret signal.",
           "safety": "Choose a simple paddle signal that is easy to see. You do not need finger gestures. Use only 1 ball.",
-          "setup": "Use 1 ball. Before starting, choose a simple paddle signal, such as briefly raising the paddle or gently tilting it to the side. With 2 players, pass A ↔ B. With 3 players, pass A → B → C → A."
+          "setup": "Use 1 ball. Before starting, choose a simple paddle signal, such as briefly raising the paddle or gently tilting it to the side. With 2 players, pass A ↔ B. With 3 players, pass A → B → C → A.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -2957,7 +3185,15 @@
             "Before the toss, the catcher guesses and moves the paddle into position."
           ],
           "goal": "Guess correctly 8 times out of 12.",
-          "safety": "Keep tosses gentle and stay a predictable distance apart. Only the direction is a surprise."
+          "safety": "Keep tosses gentle and stay a predictable distance apart. Only the direction is a surprise.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3041,7 +3277,15 @@
             "Catch and toss back without chasing the ball."
           ],
           "goal": "Make 20 clean catches.",
-          "safety": "If tosses get hard to control, slow down together."
+          "safety": "If tosses get hard to control, slow down together.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3127,7 +3371,15 @@
             "Watch the ball come down and catch it on the blue side."
           ],
           "goal": "Make 10 catches from high tosses.",
-          "safety": "The ball travels in a high arc, but the target is always the paddle."
+          "safety": "The ball travels in a high arc, but the target is always the paddle.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3210,7 +3462,15 @@
             "Stepping off your base counts as a miss."
           ],
           "goal": "Make 10 catches while staying on your base.",
-          "safety": "Choose safe, flat ground for each base."
+          "safety": "Choose safe, flat ground for each base.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3287,7 +3547,15 @@
             "Keep going and remember your best distance."
           ],
           "goal": "Try to beat your own distance record.",
-          "safety": "As you move farther apart, use controlled arcs toward the paddle. Do not throw harder at a person."
+          "safety": "As you move farther apart, use controlled arcs toward the paddle. Do not throw harder at a person.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3384,7 +3652,15 @@
             "Catch it on the paddle before it reaches the ground."
           ],
           "goal": "Make 7 running catches.",
-          "safety": "Choose a clear running area with no obstacles."
+          "safety": "Choose a clear running area with no obstacles.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3481,7 +3757,15 @@
             "Jump and catch on the blue side while in the air. Switch roles every 5 throws."
           ],
           "goal": "Make 8 jumping catches.",
-          "safety": "Use flat, soft ground. Grass is best. Land on both feet before taking the ball off."
+          "safety": "Use flat, soft ground. Grass is best. Land on both feet before taking the ball off.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {
@@ -3578,7 +3862,15 @@
             "See how far apart you can get while keeping the rally going."
           ],
           "goal": "Reach 20 catches without dropping the ball.",
-          "safety": "Stop stepping back if you cannot keep the tosses controlled."
+          "safety": "Stop stepping back if you cannot keep the tosses controlled.",
+          "thanks": "Thanks for playing!",
+          "reported": "You marked this mission complete.",
+          "notSaved": "Not saved to a player yet. Keeping progress is optional."
+        },
+        "tr": {
+          "thanks": "Oynadığın için teşekkürler!",
+          "reported": "Bu görevi tamamladığını söyledin.",
+          "notSaved": "Henüz bir oyuncuya kaydedilmedi. İlerleme tutmak isteğe bağlı."
         }
       },
       "entryRules": {

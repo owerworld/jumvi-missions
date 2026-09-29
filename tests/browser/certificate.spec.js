@@ -17,7 +17,7 @@ test('synthetic 36-mission local reports unlock an honest PNG, then correction r
  },root);
  await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
  await page.getByRole('button',{name:'Geçmişi gör: QA ÖRNEK'}).click();
- await expect(page.getByText('35/36 farklı görev için kaydedilmiş tamamlandı bildirimi')).toBeVisible();
+ await expect(page.getByText('35/36 farklı görev tamamlandı olarak kaydedildi')).toBeVisible();
  await expect(page.getByRole('heading',{name:'Tamamlandığı bildirilen görevler'})).toBeVisible();
  await expect(page.locator('.mission-progress > p')).toHaveCount(35);
  await expect(page.locator('.mission-progress')).toContainText('1 tamamlandı bildirimi');
@@ -29,7 +29,7 @@ test('synthetic 36-mission local reports unlock an honest PNG, then correction r
   await r.correctReport({id:record.id,epoch:seed.epoch,revision:record.revision,value:'complete'});
   new BroadcastChannel('jumvi-local-invalidation-v1').postMessage('changed');r.close();
  },{root,seed});
- await expect(page.getByText('36/36 farklı görev için kaydedilmiş tamamlandı bildirimi')).toBeVisible();
+ await expect(page.getByText('36/36 farklı görev tamamlandı olarak kaydedildi')).toBeVisible();
  await expect(page.locator('.mission-progress > p')).toHaveCount(36);
  await page.screenshot({path:'review-assets/2026-09-25/screenshots/progress-36-of-36-viewport-synthetic-qa.png'});
  await page.screenshot({path:'review-assets/2026-09-25/screenshots/progress-36-of-36-synthetic-qa.png',fullPage:true});
@@ -47,7 +47,7 @@ test('synthetic 36-mission local reports unlock an honest PNG, then correction r
   await r.correctReport({id:record.id,epoch:seed.epoch,revision:record.revision,value:'early'});
   new BroadcastChannel('jumvi-local-invalidation-v1').postMessage('changed');r.close();
  },{root,seed});
- await expect(page.getByText('35/36 farklı görev için kaydedilmiş tamamlandı bildirimi')).toBeVisible();
+ await expect(page.getByText('35/36 farklı görev tamamlandı olarak kaydedildi')).toBeVisible();
  await expect(page.getByRole('button',{name:'Sertifikayı önizle'})).toHaveCount(0);
 });
 
@@ -93,7 +93,7 @@ test('EN player summary exposes distinct progress and optional certificate path 
  await page.getByRole('button',{name:'View history: QA SAMPLE'}).click();
  await expect(page.getByRole('heading',{name:'Missions reported complete'})).toBeVisible();
  await expect(page.locator('.mission-progress')).toContainText('1 completion report');
- await expect(page.getByText('Completion reports saved for 1/36 different missions')).toBeVisible();
+ await expect(page.getByText('1/36 different missions saved as completed')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(321);
  await page.screenshot({path:'review-assets/2026-09-25/screenshots/progress-en-320-synthetic-qa.png',fullPage:true});
 });

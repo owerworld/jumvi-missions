@@ -9,12 +9,12 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  const s=el('section');s.dataset.view=name;const row=el('div',undefined,'controls conflicting');
  const b=(label,type,detail={},disabled=false)=>{const control=button(label,()=>send(type,detail),{disabled});if(type==='START')control.dataset.needsReady='';return control;};
  const go=(label,screen)=>b(label,'GO',{screen});
- const back=()=>go(ui.back,'returning');
+ const back=()=>b(ui.back,'BACK');
  const reportMission=report=>catalog?.missions.find(m=>m.id===report?.missionId)?.titles[state.locale]||(!report||report.missionId===state.mission?.id?cp.mission:report.missionId);
  const snap=p.snapshot,players=snap?.players||[],selected=players.find(x=>x.id===p.selectedId),editable=players.find(x=>x.id===p.editId);
  s.append(heading(name==='attribution'?ui.choosePlayer:name==='guest'?ui.guestTitle:ui.titles[name]));
  const status=el('p',p.message||'', 'personal-message');status.setAttribute('role','status');
- const disclosure=()=>s.append(el('p',ui.localDisclosure),el('p',ui.localRetention,'muted'));
+ const disclosure=()=>{s.append(el('p',ui.localDisclosure));const more=el('details',undefined,'local-details');more.append(el('summary',ui.localDetails),el('p',ui.localRetention));s.append(more);};
  const form=(action,label,value)=>{
   const f=el('form'),l=el('label',ui.nickname),input=el('input'),help=el('p',ui.nicknameHelp),err=el('p');input.id='nickname';input.type='text';input.maxLength=64;input.autocomplete='off';input.spellcheck=false;input.value=value||'';l.htmlFor=input.id;help.id='nickname-help';err.id='nickname-error';err.setAttribute('role','alert');input.setAttribute('aria-describedby',help.id+' '+err.id);
   input.addEventListener('input',()=>send('P_NAME',{value:input.value}));
@@ -27,7 +27,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   if(name==='returning'){s.append(el('p',ui.returnInfo),el('p',cp.mission));row.append(go(cp.backMission||ui.back,'entry'),go(ui.guestTitle,'guest'),go(ui.titles.group,'group'));if(state.previous)row.append(b(ui.previousRound,'PREVIOUS'));}
   row.append(b(cp.how,'HELP'),b(cp.leave,'LEAVE'));s.append(row);return s;
  }
- if(name==='adult'){s.append(el('p',ui.adultPurpose));disclosure();row.append(go(ui.continueManagement,'management'),back());s.append(row,productHelp(state.locale));return s;}
+ if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'),back());s.append(row,productHelp(state.locale));disclosure();return s;}
  if(p.status==='loading')s.append(el('p',ui.localLoading));
  if(p.status==='unavailable'){s.append(el('p',ui.localUnavailable));row.append(b(ui.retry,'P_REFRESH'));}
  if(name==='new-player'){s.append(el('p',p.quick?(state.locale==='tr'?'Oyuncu oluşturmak isteğe bağlı. Bu görevin bildirimi oluşturduğun oyuncuya kaydedilecek.':'Creating a player is optional. This mission report will be saved to the player you create.'):ui.createInfo));disclosure();form('P_CREATE',p.quick?(state.locale==='tr'?'Oluştur ve bu görevi kaydet':'Create player and save this mission'):ui.createPlayer,p.name);row.append(go(ui.cancel,state.report?'attribution':'management'));}
@@ -56,7 +56,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   // history. Keep it on the list and the new-player form; avoid repeating two
   // long paragraphs above the selected player's actual progress.
   if(!editable)disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
-  if(!players.length&&p.status==='ready')s.append(el('p',ui.managementEmpty));
+  if(!players.length&&p.status==='ready'){s.append(el('p',ui.managementEmpty));const info=el('section',undefined,'certificate-status');info.append(el('h2',ui.certificateTitle),el('p',ui.certificateIntro));s.append(info);}
   if(editable){
    s.append(el('h2',playerLabel(editable)));
    const summary=historySummary(snap.records,editable.id,catalog?.missions.map(m=>m.id));
@@ -71,8 +71,8 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
    s.append(history);if(p.historyOnly)row.append(b(ui.editPlayer,'P_EDIT',{id:editable.id}));row.append(b(ui.deletePlayer,'P_DELETE_ONE',{},p.busy));
   }
   else for(const player of players){
-   const summary=historySummary(snap.records,player.id),item=el('div',undefined,'history-item');
-   item.append(el('h2',playerLabel(player)),el('p',ui.historySummary.replace('{distinct}',summary.distinct).replace('{completed}',summary.completed).replace('{early}',summary.early)),b(`${ui.viewHistory}: ${playerLabel(player)}`,'P_HISTORY',{id:player.id}),b(`${ui.editPlayer}: ${playerLabel(player)}`,'P_EDIT',{id:player.id}));s.append(item);
+   const summary=historySummary(snap.records,player.id,catalog?.missions.map(m=>m.id)),item=el('div',undefined,'history-item');
+   item.append(el('h2',playerLabel(player)),el('p',ui.historySummary.replace('{distinct}',summary.distinct).replace('{completed}',summary.completed).replace('{early}',summary.early)),el('p',ui.certificateProgress.replace('{count}',summary.certificateCount).replace('{total}',summary.certificateTotal),'journey-count'),b(`${ui.viewHistory}: ${playerLabel(player)}`,'P_HISTORY',{id:player.id}),b(`${ui.editPlayer}: ${playerLabel(player)}`,'P_EDIT',{id:player.id}));s.append(item);
   }
   if(snap?.operations.some(o=>o.status==='pending')){s.append(el('h2',ui.pendingRecords));for(const op of snap.operations.filter(o=>o.status==='pending')){const owner=players.find(x=>x.id===op.targetId);s.append(b(`${ui.inspectRecord} · ${owner?playerLabel(owner):''}`,'P_INSPECT',{id:op.id}));}}
   row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'),go(cp.adult,'adult'),back());
