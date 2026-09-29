@@ -110,7 +110,7 @@
   "deleted": "The selected local data was deleted.",
   "partialDelete": "New player and history data was deleted; deletion of legacy data could not be verified. You can retry deleting all local data.",
   "legacyNotice": "Legacy local player/history data is present. It is not imported as new personal records or verified success. Delete all local data includes it.",
-  "adultPurpose": "Find help with your paddle and ball, or manage players and progress on this device. This is not an online account or a parental-consent system.",
+  "adultPurpose": "Manage players and progress on this device. This is not an online account or a parental-consent system.",
   "continueManagement": "Players & progress",
   "guestTitle": "Someone else will play",
   "guestInfo": "The new game is not attributed to a player. No player is required; sound starts off.",

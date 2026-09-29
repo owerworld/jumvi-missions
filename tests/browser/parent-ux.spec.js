@@ -22,6 +22,7 @@ for(const tr of [false,true]){
  test(`parent UX: adult return preserves mission without intermediary and certificate is explained ${tr?'TR':'EN'}`,async({page})=>{
   await open(page);await page.getByRole('button',{name:tr?'Yetişkinler':'Grown-ups',exact:true}).click();
   await expect(page.locator('.product-help')).toHaveCount(0);
+  await expect(page.locator('[data-view=adult]')).not.toContainText(tr?'Paddle ve top':'paddle and ball');
   await page.getByRole('button',{name:tr?'Göreve dön':'Back to the mission',exact:true}).click();await expect(page.locator('[data-view=entry]')).toBeVisible();
   await page.getByRole('button',{name:tr?'Oyuncu işlemleri':'Player options',exact:true}).click();
   await expect(page.locator('.certificate-status')).toContainText('36');
