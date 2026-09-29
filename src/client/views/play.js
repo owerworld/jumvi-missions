@@ -39,7 +39,7 @@ export function playView(name,ctx) {
   const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools,playerContext(ctx));secondary(true);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
-  s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle),text(cp.setup,'instruction'));
+  s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle));if(cp.setup)s.append(text(cp.setup,'instruction'));
   const list=el('ol',undefined,'steps');list.id='mission-steps';
   if(cp.frames){
    // Count equality is not semantic alignment: m03 has three rules and three
@@ -51,7 +51,11 @@ export function playView(name,ctx) {
    // actions (toss, sticky catch/detach), so a second list adds no information.
    if(!aligned&&state.mission.id!=='m25'&&cp.canonicalSteps.length){const canonical=el('ol',undefined,'canonical-steps');for(const step of cp.canonicalSteps)canonical.append(el('li',step));s.append(canonical);}
    for(const [ix,fr] of cp.frames.entries()){
-    const li=el('li'),h=el('h2',fr.caption[state.locale]);h.tabIndex=-1;if(ix===0)h.id='first-step';li.append(h,frameArt(fr,true));
+    // Short visible titles are separate from the detailed, approved image
+    // descriptions. Keep role/hand geometry in alt text and canonical rules.
+    const li=el('li'),h=el('h2',(fr.helpTitle||fr.caption)[state.locale]);h.tabIndex=-1;if(ix===0)h.id='first-step';
+    const helpFrame=Object.hasOwn(fr,'helpNote')?{...fr,note:fr.helpNote}:fr;li.append(h,frameArt(helpFrame,true));
+    if(fr.helpBody?.[state.locale])li.append(text(fr.helpBody[state.locale],'instruction help-body'));
     if(aligned)for(const stepIndex of map[ix])li.append(text(cp.canonicalSteps[stepIndex],'instruction'));
     list.append(li);
    }

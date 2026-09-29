@@ -33,6 +33,14 @@
           "note": {
             "tr": "Kısa atışlar yapın. İkiniz de oturarak oynayın.",
             "en-US": "Make short tosses. Both players stay seated."
+          },
+          "helpTitle": {
+            "en-US": "Toss gently",
+            "tr": "Yumuşakça at"
+          },
+          "helpBody": {
+            "en-US": "Toss with your free hand.",
+            "tr": "Boş elinle at."
           }
         },
         {
@@ -46,6 +54,10 @@
           "note": {
             "tr": "Top, paddle’ın mavi ön yüzüne yapışarak tutulur.",
             "en-US": "The ball sticks to the paddle’s blue side."
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -59,6 +71,10 @@
           "note": {
             "tr": "Topu boş elinle ayır. Sonra yumuşakça geri at.",
             "en-US": "Take the ball off with your free hand. Then gently toss it back."
+          },
+          "helpTitle": {
+            "en-US": "Take it off, then toss back",
+            "tr": "Topu ayır, sonra geri at"
           }
         }
       ],
@@ -135,7 +151,16 @@
           "note": {
             "tr": "5 temiz yaylı atıştan sonra geri adım atın.",
             "en-US": "After 5 clean arcs, step back."
-          }
+          },
+          "helpTitle": {
+            "en-US": "Toss a gentle rainbow",
+            "tr": "Yumuşak bir yay çiz"
+          },
+          "helpBody": {
+            "en-US": "Toss with your free hand.",
+            "tr": "Boş elinle at."
+          },
+          "helpNote": null
         },
         {
           "images": [
@@ -144,6 +169,10 @@
           "caption": {
             "tr": "Mavi ön yüzde yakala",
             "en-US": "Catch on the blue front"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -153,6 +182,14 @@
           "caption": {
             "tr": "B: topu boş sol elle ayır",
             "en-US": "B: take the ball off with the free left hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -166,6 +203,10 @@
           "note": {
             "tr": "Top boş elde; geri adım sırasında yeni atış yok.",
             "en-US": "The ball is held in the free hand while the players step back."
+          },
+          "helpTitle": {
+            "en-US": "Step back after 5 clean arcs",
+            "tr": "5 temiz yaydan sonra geri adım at"
           }
         }
       ],
@@ -236,6 +277,14 @@
           "note": {
             "tr": "A ve C bir sıra; B ve D diğer sıra. Mavi ok topun yoludur.",
             "en-US": "A and C form one line; B and D form the other. The blue arrow is the ball’s path."
+          },
+          "helpTitle": {
+            "en-US": "A passes to B",
+            "tr": "A, B’ye pas verir"
+          },
+          "helpBody": {
+            "en-US": "B catches on the blue side.",
+            "tr": "B mavi yüzle yakalar."
           }
         },
         {
@@ -245,6 +294,10 @@
           "caption": {
             "tr": "B topu boş elle ayırır",
             "en-US": "B takes the ball off with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "B takes the ball off",
+            "tr": "B topu ayırır"
           }
         },
         {
@@ -258,6 +311,10 @@
           "note": {
             "tr": "Kesik ok A’nın ayak yoludur. B tek topu boş elde tutar; yeni atış gösterilmez.",
             "en-US": "The dashed arrow shows A’s foot movement. B holds the one ball in the free hand; no new toss is shown."
+          },
+          "helpTitle": {
+            "en-US": "A shuffles to the back",
+            "tr": "A yan adımla arkaya geçer"
           }
         }
       ],
@@ -360,7 +417,16 @@
           "note": {
             "tr": "Sağ/sol, B’nin kendi vücuduna göredir. Çağrı atıştan önce yapılır.",
             "en-US": "Left and right are relative to B’s own body. Call before the toss."
-          }
+          },
+          "helpTitle": {
+            "en-US": "Call, then toss to the paddle",
+            "tr": "Söyle, sonra paddle’a at"
+          },
+          "helpBody": {
+            "en-US": "Here A calls and tosses; B catches on their own right.",
+            "tr": "Bu örnekte A söyler ve atar; B kendi sağında yakalar."
+          },
+          "helpNote": null
         },
         {
           "images": [
@@ -369,6 +435,14 @@
           "caption": {
             "tr": "B: topu boş sol elle ayır",
             "en-US": "B: take the ball off with the free left hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -382,6 +456,10 @@
           "note": {
             "tr": "Kamera bu kez B’nin arkasında. Paddle yine sağ elde; atış boş sol elle.",
             "en-US": "This view is from behind B. The paddle stays on the right hand; the free left hand tosses."
+          },
+          "helpTitle": {
+            "en-US": "Return pass: no call, no count",
+            "tr": "Geri pas: çağrı yok, sayım yok"
           }
         }
       ],
@@ -510,6 +588,14 @@
           "caption": {
             "tr": "Hızlı sıra, yumuşak atış; çenenin altında",
             "en-US": "Quick exchange, soft toss; below chin"
+          },
+          "helpTitle": {
+            "en-US": "Quick, gentle tosses",
+            "tr": "Hızlı ama yumuşak at"
+          },
+          "helpBody": {
+            "en-US": "Keep tosses below chin level.",
+            "tr": "Çene hizasının altında at."
           }
         },
         {
@@ -519,6 +605,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "B catches on blue",
+            "tr": "B mavi yüzle yakalar"
           }
         },
         {
@@ -528,6 +618,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -613,7 +711,11 @@
                 "en-US": "GREEN"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "A calls Green",
+            "tr": "A “Yeşil” der"
+          }
         },
         {
           "images": [
@@ -622,6 +724,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "B catches on blue",
+            "tr": "B mavi yüzle yakalar"
           }
         },
         {
@@ -640,7 +746,15 @@
                 "en-US": "RED"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Freeze on Red",
+            "tr": "“Kırmızı” deyince don"
+          },
+          "helpBody": {
+            "en-US": "Keep the ball on the paddle.",
+            "tr": "Top paddle’da kalsın."
+          }
         },
         {
           "images": [
@@ -658,7 +772,11 @@
                 "en-US": "GREEN"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Wait for Green, then take it off",
+            "tr": "“Yeşil”i bekle, sonra topu ayır"
+          }
         }
       ],
       "activeCopy": {
@@ -755,7 +873,11 @@
             "tr": "Boş elle kendi paddle’ına hafif dokun",
             "en-US": "Tap own paddle lightly with free hand"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Tap your paddle once",
+            "tr": "Paddle’ına bir kez dokun"
+          }
         },
         {
           "images": [
@@ -765,7 +887,11 @@
             "tr": "Mavi ön yüzde yakala",
             "en-US": "Catch on blue side"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
+          }
         },
         {
           "images": [
@@ -775,7 +901,15 @@
             "tr": "Boş elle ayır",
             "en-US": "Take the ball off with free hand"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
+          }
         }
       ],
       "activeCopy": {
@@ -864,7 +998,11 @@
             "tr": "Mavi ön yüzde yakala",
             "en-US": "Catch on the blue side"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
+          }
         },
         {
           "images": [
@@ -874,7 +1012,15 @@
             "tr": "Boş elle ayır",
             "en-US": "Take the ball off with the free hand"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
+          }
         },
         {
           "images": [
@@ -884,7 +1030,11 @@
             "tr": "Topu mevcut paddle eline aktar",
             "en-US": "Transfer ball to current paddle hand"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Pass the ball to your paddle hand",
+            "tr": "Topu paddle eline aktar"
+          }
         },
         {
           "images": [
@@ -894,7 +1044,15 @@
             "tr": "Topu tutarak elini kayıştan çıkar",
             "en-US": "Retain ball and withdraw from strap"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Slide your hand out of the strap",
+            "tr": "Elini kayıştan çıkar"
+          },
+          "helpBody": {
+            "en-US": "Keep hold of the ball.",
+            "tr": "Topu tutmaya devam et."
+          }
         },
         {
           "images": [
@@ -904,7 +1062,11 @@
             "tr": "Paddle’ı diğer ele güvenle tak",
             "en-US": "Secure paddle on the other hand"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Put the paddle on your other hand",
+            "tr": "Paddle’ı diğer eline tak"
+          }
         },
         {
           "images": [
@@ -914,7 +1076,11 @@
             "tr": "Artık boş olan elle yumuşakça at",
             "en-US": "Toss gently with the now-free hand"
           },
-          "detail": null
+          "detail": null,
+          "helpTitle": {
+            "en-US": "Toss with your now-free hand",
+            "tr": "Artık boş olan elinle at"
+          }
         }
       ],
       "activeCopy": {
@@ -995,6 +1161,10 @@
           "caption": {
             "tr": "Mavi yüzde yakala; beden ve ayaklar 2 saniye sabit",
             "en-US": "Catch on the blue side; body and feet stay still for 2 seconds"
+          },
+          "helpTitle": {
+            "en-US": "Freeze for 2 seconds",
+            "tr": "2 saniye don"
           }
         },
         {
@@ -1004,6 +1174,14 @@
           "caption": {
             "tr": "Donma bittikten sonra boş elle ayır",
             "en-US": "Take the ball off with the free hand after the freeze"
+          },
+          "helpTitle": {
+            "en-US": "Take it off after the freeze",
+            "tr": "Donduktan sonra topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -1013,6 +1191,14 @@
           "caption": {
             "tr": "Boş elle partnerinin mavi paddle yüzüne geri at",
             "en-US": "Toss back with the free hand toward your partner’s blue paddle face"
+          },
+          "helpTitle": {
+            "en-US": "Toss gently back",
+            "tr": "Yumuşakça geri at"
+          },
+          "helpBody": {
+            "en-US": "Toss with your free hand toward your partner’s blue paddle face.",
+            "tr": "Boş elinle arkadaşının paddle’ının mavi yüzüne at."
           }
         }
       ],
@@ -1118,7 +1304,11 @@
                 "en-US": "3"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Say a number as you toss",
+            "tr": "Atarken bir sayı söyle"
+          }
         },
         {
           "images": [
@@ -1136,7 +1326,11 @@
                 "en-US": "3"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Catch and repeat the number",
+            "tr": "Yakala ve sayıyı tekrarla"
+          }
         },
         {
           "images": [
@@ -1145,6 +1339,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -1241,7 +1443,11 @@
             "tr": "Yumuşak yay; mavi yüz yukarı bakar",
             "en-US": "Soft arc; blue face points upward"
           },
-          "detail": "assets/mission-illustrations/final/m08/1-detail.webp"
+          "detail": "assets/mission-illustrations/final/m08/1-detail.webp",
+          "helpTitle": {
+            "en-US": "Toss a gentle arc",
+            "tr": "Yumuşak bir yay çiz"
+          }
         },
         {
           "images": [
@@ -1251,7 +1457,11 @@
             "tr": "B: yatay, sabit mavi yüz üzerine iniş",
             "en-US": "B: landing on the flat, still blue side"
           },
-          "detail": "assets/mission-illustrations/final/m08/2-detail.webp"
+          "detail": "assets/mission-illustrations/final/m08/2-detail.webp",
+          "helpTitle": {
+            "en-US": "Let it land on blue",
+            "tr": "Mavi yüze inmesini bekle"
+          }
         },
         {
           "images": [
@@ -1261,7 +1471,15 @@
             "tr": "B: sol elle yukarı doğru ayır",
             "en-US": "B: lift off with the free left hand"
           },
-          "detail": "assets/mission-illustrations/final/m08/3-detail.webp"
+          "detail": "assets/mission-illustrations/final/m08/3-detail.webp",
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
+          }
         }
       ],
       "activeCopy": {
@@ -1338,6 +1556,14 @@
           "caption": {
             "tr": "Yakın başlangıç: mavi yüzde catch",
             "en-US": "Close start: blue-front catch"
+          },
+          "helpTitle": {
+            "en-US": "Start close together",
+            "tr": "Yakından başla"
+          },
+          "helpBody": {
+            "en-US": "Catch on the blue side.",
+            "tr": "Mavi yüzle yakala."
           }
         },
         {
@@ -1347,6 +1573,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -1356,6 +1590,10 @@
           "caption": {
             "tr": "3 temiz catch sonrası ikisi de yarım adım geri",
             "en-US": "After 3 clean catches, both step half a step back"
+          },
+          "helpTitle": {
+            "en-US": "Take half a step back",
+            "tr": "Yarım adım geri git"
           }
         }
       ],
@@ -1434,6 +1672,10 @@
           "caption": {
             "tr": "İleri adımla yumuşak at",
             "en-US": "Step forward with a soft toss"
+          },
+          "helpTitle": {
+            "en-US": "Step forward as you toss",
+            "tr": "Atarken öne adım at"
           }
         },
         {
@@ -1443,6 +1685,10 @@
           "caption": {
             "tr": "Mavi ön yüzde yakala",
             "en-US": "Catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -1452,6 +1698,14 @@
           "caption": {
             "tr": "Başlangıca dön; boş elle ayır",
             "en-US": "Return to start; take the ball off with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "Step back and take the ball off",
+            "tr": "Geri adım at ve topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -1529,6 +1783,10 @@
           "caption": {
             "tr": "Yüksek yay · B acele etmeden bekler",
             "en-US": "High arc · B waits without rushing"
+          },
+          "helpTitle": {
+            "en-US": "Toss a gentle arc",
+            "tr": "Yumuşak bir yay çiz"
           }
         },
         {
@@ -1538,6 +1796,14 @@
           "caption": {
             "tr": "İnişte mavi yüzle catch; savurma yok",
             "en-US": "Blue-front catch on descent; no swing"
+          },
+          "helpTitle": {
+            "en-US": "Wait, then catch on blue",
+            "tr": "Bekle, sonra mavi yüzle yakala"
+          },
+          "helpBody": {
+            "en-US": "Let it land. Do not swing at the ball.",
+            "tr": "İnmesini bekle. Paddle’la topa vurma."
           }
         },
         {
@@ -1547,6 +1813,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -1623,6 +1897,10 @@
           "caption": {
             "tr": "Göğüs hizasındaki mavi paddle yüzüne at",
             "en-US": "Aim at the blue paddle face at chest height"
+          },
+          "helpTitle": {
+            "en-US": "Aim for the paddle",
+            "tr": "Paddle’ı hedefle"
           }
         },
         {
@@ -1632,6 +1910,14 @@
           "caption": {
             "tr": "B: topu boş sol elle ayır",
             "en-US": "B: take the ball off with the free left hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -1645,6 +1931,14 @@
           "note": {
             "tr": "Kamera bu kez B’nin arkasında. Paddle yine sağ elde; atış boş sol elle.",
             "en-US": "This view is from behind B. The paddle stays on the right hand; the free left hand tosses."
+          },
+          "helpTitle": {
+            "en-US": "Toss it back",
+            "tr": "Geri at"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand for the return pass.",
+            "tr": "Geri pası boş elinle at."
           }
         }
       ],
@@ -1712,6 +2006,10 @@
           "caption": {
             "tr": "Sessizce yakala ve sayıyı göster · örnek 1",
             "en-US": "Catch silently and show the count · example 1"
+          },
+          "helpTitle": {
+            "en-US": "Play without talking",
+            "tr": "Konuşmadan oyna"
           }
         },
         {
@@ -1721,6 +2019,10 @@
           "caption": {
             "tr": "B topu konuşmadan boş elle ayırır",
             "en-US": "B takes the ball off with the free hand without talking"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off quietly",
+            "tr": "Topu sessizce ayır"
           }
         },
         {
@@ -1730,6 +2032,14 @@
           "caption": {
             "tr": "Boş elle yumuşakça geri at",
             "en-US": "Toss gently back with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "Toss gently back",
+            "tr": "Yumuşakça geri at"
+          },
+          "helpBody": {
+            "en-US": "Toss with your free hand.",
+            "tr": "Boş elinle at."
           }
         }
       ],
@@ -1832,6 +2142,10 @@
           "caption": {
             "tr": "5 çok yavaş → 5 orta tempolu · ayaklar sabit",
             "en-US": "5 very slow → 5 medium pace · feet planted"
+          },
+          "helpTitle": {
+            "en-US": "Start with 5 slow tosses",
+            "tr": "Önce 5 yavaş atış yap"
           }
         },
         {
@@ -1841,6 +2155,10 @@
           "caption": {
             "tr": "5 yavaş atıştan sonra 5 orta tempolu atış",
             "en-US": "After 5 slow tosses, make 5 at a medium pace"
+          },
+          "helpTitle": {
+            "en-US": "Now make 5 medium tosses",
+            "tr": "Şimdi 5 orta tempolu atış yap"
           }
         },
         {
@@ -1850,6 +2168,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -1957,7 +2283,11 @@
                 "en-US": "I SEE IT!"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Say “I see it!”",
+            "tr": "“Gördüm!” de"
+          }
         },
         {
           "images": [
@@ -1966,6 +2296,10 @@
           "caption": {
             "tr": "A çağrıyı duyduktan sonra atar; B yakalar",
             "en-US": "A tosses after hearing the call; B catches"
+          },
+          "helpTitle": {
+            "en-US": "Toss after the call",
+            "tr": "Sözü duyduktan sonra at"
           }
         },
         {
@@ -1975,6 +2309,10 @@
           "caption": {
             "tr": "B ayırır; dönüşte de hazır olma çağrısı korunur",
             "en-US": "B takes the ball off; keep the readiness call on the return"
+          },
+          "helpTitle": {
+            "en-US": "Get ready to toss back",
+            "tr": "Geri atmaya hazırlan"
           }
         }
       ],
@@ -2060,7 +2398,15 @@
                 "en-US": "1, 2…"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Count “1, 2…”",
+            "tr": "“1, 2…” diye say"
+          },
+          "helpBody": {
+            "en-US": "Hold the ball in your free hand as you count.",
+            "tr": "Sayarken top boş elinde kalsın."
+          }
         },
         {
           "images": [
@@ -2078,7 +2424,11 @@
                 "en-US": "3!"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Toss on “3”",
+            "tr": "“3” deyince at"
+          }
         },
         {
           "images": [
@@ -2087,6 +2437,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -2096,6 +2450,10 @@
           "caption": {
             "tr": "B ayırır; geri atıştan önce kendisi sayar",
             "en-US": "B takes the ball off; B counts before the return toss"
+          },
+          "helpTitle": {
+            "en-US": "Take it off, then count",
+            "tr": "Topu ayır, sonra say"
           }
         }
       ],
@@ -2191,6 +2549,10 @@
           "caption": {
             "tr": "A gösterir, B aynı alçak pozu alır",
             "en-US": "A shows a low pose; B matches it"
+          },
+          "helpTitle": {
+            "en-US": "Copy the paddle pose",
+            "tr": "Paddle pozunu kopyala"
           }
         },
         {
@@ -2200,6 +2562,10 @@
           "caption": {
             "tr": "B alçak pozda mavi ön yüzle yakalar",
             "en-US": "B catches on blue while holding the low pose"
+          },
+          "helpTitle": {
+            "en-US": "Catch in that pose",
+            "tr": "O pozda yakala"
           }
         },
         {
@@ -2209,6 +2575,14 @@
           "caption": {
             "tr": "B: topu boş sol elle ayır",
             "en-US": "B: take the ball off with the free left hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -2222,6 +2596,10 @@
           "note": {
             "tr": "Kamera bu kez B’nin arkasında. Paddle yine sağ elde; atış boş sol elle.",
             "en-US": "This view is from behind B. The paddle stays on the right hand; the free left hand tosses."
+          },
+          "helpTitle": {
+            "en-US": "Return pass: no count",
+            "tr": "Geri pas sayılmaz"
           }
         }
       ],
@@ -2324,6 +2702,14 @@
           "caption": {
             "tr": "A: sol boş elle yumuşak atış",
             "en-US": "A: gentle toss from the free left hand"
+          },
+          "helpTitle": {
+            "en-US": "Toss gently",
+            "tr": "Yumuşakça at"
+          },
+          "helpBody": {
+            "en-US": "Toss with your free hand.",
+            "tr": "Boş elinle at."
           }
         },
         {
@@ -2342,7 +2728,11 @@
                 "en-US": "1!"
               }
             }
-          ]
+          ],
+          "helpTitle": {
+            "en-US": "Count each clean catch",
+            "tr": "Her temiz yakalamayı say"
+          }
         },
         {
           "images": [
@@ -2351,6 +2741,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -2437,6 +2835,10 @@
           "caption": {
             "tr": "Üç oyunculu örnek: A → B",
             "en-US": "Three-player example: A → B"
+          },
+          "helpTitle": {
+            "en-US": "A tosses to B",
+            "tr": "A, B’ye atar"
           }
         },
         {
@@ -2446,6 +2848,10 @@
           "caption": {
             "tr": "B boş elle ayırır; sıradaki alıcıyı seçer",
             "en-US": "B takes the ball off with the free hand, then chooses a receiver"
+          },
+          "helpTitle": {
+            "en-US": "Take it off, then choose a catcher",
+            "tr": "Topu ayır, sonra yakalayanı seç"
           }
         }
       ],
@@ -2524,6 +2930,10 @@
           "caption": {
             "tr": "A atacak; C ortada",
             "en-US": "A will toss; C is in the middle"
+          },
+          "helpTitle": {
+            "en-US": "C stands in the middle",
+            "tr": "C ortada durur"
           }
         },
         {
@@ -2533,6 +2943,10 @@
           "caption": {
             "tr": "C yüzlerin altında mavi ön yüzle yakalar",
             "en-US": "C catches below faces on the blue front"
+          },
+          "helpTitle": {
+            "en-US": "C catches on blue",
+            "tr": "C mavi yüzle yakalar"
           }
         },
         {
@@ -2542,6 +2956,10 @@
           "caption": {
             "tr": "C ve A yürüyerek yer değiştirir",
             "en-US": "C and A walk to trade places"
+          },
+          "helpTitle": {
+            "en-US": "C and A trade places",
+            "tr": "C ile A yer değiştirir"
           }
         }
       ],
@@ -2619,6 +3037,10 @@
           "caption": {
             "tr": "Örnek atış: A → B",
             "en-US": "Example toss: A → B"
+          },
+          "helpTitle": {
+            "en-US": "A tosses to B",
+            "tr": "A, B’ye atar"
           }
         },
         {
@@ -2628,6 +3050,14 @@
           "caption": {
             "tr": "Top B’de kalır; herkes saat yönünde adım atar",
             "en-US": "B keeps the ball; everyone steps clockwise"
+          },
+          "helpTitle": {
+            "en-US": "Everyone steps clockwise",
+            "tr": "Herkes saat yönünde adım atar"
+          },
+          "helpBody": {
+            "en-US": "B keeps the ball.",
+            "tr": "Top B’de kalır."
           }
         },
         {
@@ -2637,6 +3067,10 @@
           "caption": {
             "tr": "B boş elle ayırır; sonra yeni atış yapılır",
             "en-US": "B takes the ball off with the free hand; then comes the next toss"
+          },
+          "helpTitle": {
+            "en-US": "Take it off, then toss",
+            "tr": "Topu ayır, sonra at"
           }
         }
       ],
@@ -2716,6 +3150,10 @@
           "caption": {
             "tr": "A–B oynar; diğerleri bekler",
             "en-US": "A–B plays; the others wait"
+          },
+          "helpTitle": {
+            "en-US": "A–B play; C–D wait",
+            "tr": "A–B oynar; C–D bekler"
           }
         },
         {
@@ -2725,6 +3163,14 @@
           "caption": {
             "tr": "B: boş elle ayır",
             "en-US": "B: take the ball off with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "B takes the ball off",
+            "tr": "B topu ayırır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -2734,6 +3180,10 @@
           "caption": {
             "tr": "Aynı topu sonraki çifte aktar",
             "en-US": "Pass the same ball to the next pair"
+          },
+          "helpTitle": {
+            "en-US": "Pass to the next pair",
+            "tr": "Sonraki çifte pas ver"
           }
         },
         {
@@ -2747,6 +3197,10 @@
           "note": {
             "tr": "Altı eşleşme: A–B, A–C, A–D, B–C, B–D, C–D. Sıra size kalmış; her çift yalnız bir kez.",
             "en-US": "The six pairs: A–B, A–C, A–D, B–C, B–D, C–D. Choose any order; play each pairing once."
+          },
+          "helpTitle": {
+            "en-US": "Now C–D play",
+            "tr": "Şimdi C–D oynar"
           }
         }
       ],
@@ -2826,6 +3280,10 @@
           "caption": {
             "tr": "A–B takımı oynar; C–D bekler",
             "en-US": "Team A–B plays; C–D waits"
+          },
+          "helpTitle": {
+            "en-US": "A–B play; C–D wait",
+            "tr": "A–B oynar; C–D bekler"
           }
         },
         {
@@ -2835,6 +3293,14 @@
           "caption": {
             "tr": "B: boş elle ayır",
             "en-US": "B: take the ball off with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "B takes the ball off",
+            "tr": "B topu ayırır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -2844,6 +3310,10 @@
           "caption": {
             "tr": "5 temiz yakalama sonrası aynı top diğer takıma",
             "en-US": "After 5 clean catches, the same ball goes to the other team"
+          },
+          "helpTitle": {
+            "en-US": "Pass to the other team",
+            "tr": "Diğer takıma pas ver"
           }
         },
         {
@@ -2857,6 +3327,10 @@
           "note": {
             "tr": "Takımlar sabit: A–B ve C–D. Her 5 temiz yakalamadan sonra aynı top diğer takıma geçer. Ortak hedef 40.",
             "en-US": "Keep the same teams: A–B and C–D. Pass the same ball to the other team after every 5 clean catches. Work toward 40 together."
+          },
+          "helpTitle": {
+            "en-US": "C–D play; A–B wait",
+            "tr": "C–D oynar; A–B bekler"
           }
         }
       ],
@@ -2931,6 +3405,10 @@
           "caption": {
             "tr": "1 büyük adım aralık · ileri adım yok",
             "en-US": "1 big step apart · no step forward"
+          },
+          "helpTitle": {
+            "en-US": "Start 1 big step apart",
+            "tr": "1 büyük adım arayla başla"
           }
         },
         {
@@ -2940,6 +3418,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -2949,6 +3431,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -3040,6 +3530,10 @@
           "caption": {
             "tr": "A mavi ön yüzde yakalar",
             "en-US": "A catches on the blue front"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -3049,6 +3543,10 @@
           "caption": {
             "tr": "A topu boş sol elle ayırır",
             "en-US": "A takes the ball off with the free left hand"
+          },
+          "helpTitle": {
+            "en-US": "Hold it in your free hand",
+            "tr": "Topu boş elinde tut"
           }
         },
         {
@@ -3058,6 +3556,14 @@
           "caption": {
             "tr": "Top boş elde; A paddle ile hafif eğim işareti verir",
             "en-US": "Ball in free hand; A gives a gentle paddle-tilt signal"
+          },
+          "helpTitle": {
+            "en-US": "Show your paddle signal",
+            "tr": "Paddle işaretini göster"
+          },
+          "helpBody": {
+            "en-US": "Keep the ball in your free hand.",
+            "tr": "Top boş elinde kalsın."
           }
         },
         {
@@ -3067,6 +3573,14 @@
           "caption": {
             "tr": "İşaret görüldükten sonra A atar, B yakalar",
             "en-US": "After seeing the signal, A tosses and B catches"
+          },
+          "helpTitle": {
+            "en-US": "Toss once the signal is seen",
+            "tr": "İşaret görülünce at"
+          },
+          "helpBody": {
+            "en-US": "Here A tosses and B catches.",
+            "tr": "Bu örnekte A atar, B yakalar."
           }
         }
       ],
@@ -3152,6 +3666,10 @@
           "caption": {
             "tr": "A sessizce yön seçer; B 3 saniyede tahmin eder",
             "en-US": "A privately chooses; B predicts during 3 seconds"
+          },
+          "helpTitle": {
+            "en-US": "Choose secretly, then wait",
+            "tr": "Gizlice seç, sonra bekle"
           }
         },
         {
@@ -3161,6 +3679,14 @@
           "caption": {
             "tr": "Örnek: B kendi sağını tahmin etti; A önceden ipucu vermedi",
             "en-US": "Example: B chose their own right; A gave no advance hint"
+          },
+          "helpTitle": {
+            "en-US": "Guess before the toss",
+            "tr": "Atıştan önce tahmin et"
+          },
+          "helpBody": {
+            "en-US": "Here B chooses their own right. The thrower gives no hint.",
+            "tr": "Bu örnekte B kendi sağını seçer. Atan ipucu vermez."
           }
         },
         {
@@ -3170,6 +3696,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -3244,6 +3778,10 @@
           "caption": {
             "tr": "Her iki ayağın yeri değişmez",
             "en-US": "Both feet remain in their fixed places"
+          },
+          "helpTitle": {
+            "en-US": "Keep your feet in place",
+            "tr": "Ayakların yerinde kalsın"
           }
         },
         {
@@ -3253,6 +3791,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -3262,6 +3804,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -3347,6 +3897,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Watch the arc, catch on blue",
+            "tr": "Yayı izle, mavi yüzle yakala"
           }
         },
         {
@@ -3356,6 +3910,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -3438,6 +4000,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch from your home base",
+            "tr": "Üssünden yakala"
           }
         },
         {
@@ -3447,6 +4013,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -3514,6 +4088,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -3523,6 +4101,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -3532,6 +4118,10 @@
           "caption": {
             "tr": "3 temiz catch sonrası ikisi de 2 büyük adım geri",
             "en-US": "After 3 clean catches, both take 2 big steps back"
+          },
+          "helpTitle": {
+            "en-US": "After 3 catches, take 2 steps back",
+            "tr": "3 yakalamadan sonra 2 adım geri git"
           }
         }
       ],
@@ -3619,6 +4209,14 @@
           "caption": {
             "tr": "B önündeki topa doğru koşar",
             "en-US": "B moves toward the ball in the clear space ahead"
+          },
+          "helpTitle": {
+            "en-US": "Move to meet the ball",
+            "tr": "Topa doğru ilerle"
+          },
+          "helpBody": {
+            "en-US": "Move into the clear space ahead.",
+            "tr": "Önündeki açık alana ilerle."
           }
         },
         {
@@ -3628,6 +4226,10 @@
           "caption": {
             "tr": "Top yere inmeden mavi ön yüzde yakala",
             "en-US": "Catch on the blue front before the ball lands"
+          },
+          "helpTitle": {
+            "en-US": "Catch before it lands",
+            "tr": "Yere düşmeden yakala"
           }
         },
         {
@@ -3637,6 +4239,14 @@
           "caption": {
             "tr": "Durduktan sonra boş elle ayır",
             "en-US": "After coming to a stop, take the ball off with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "Stop, then take the ball off",
+            "tr": "Dur, sonra topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         }
       ],
@@ -3715,6 +4325,14 @@
           "caption": {
             "tr": "Atışı bekle; iki ayak yerde",
             "en-US": "Wait for the toss with both feet on the ground"
+          },
+          "helpTitle": {
+            "en-US": "Wait before you jump",
+            "tr": "Zıplamadan önce bekle"
+          },
+          "helpBody": {
+            "en-US": "Start with both feet on the ground.",
+            "tr": "İki ayağın da yerde olsun."
           }
         },
         {
@@ -3724,6 +4342,10 @@
           "caption": {
             "tr": "Havadayken mavi ön yüzle yakala",
             "en-US": "Catch on the blue front while airborne"
+          },
+          "helpTitle": {
+            "en-US": "Jump and catch on blue",
+            "tr": "Zıpla ve mavi yüzle yakala"
           }
         },
         {
@@ -3733,6 +4355,14 @@
           "caption": {
             "tr": "Top paddle’da; önce iki ayakla yere in",
             "en-US": "Keep the ball on the paddle; land on both feet first"
+          },
+          "helpTitle": {
+            "en-US": "Land on both feet",
+            "tr": "İki ayağınla yere in"
+          },
+          "helpBody": {
+            "en-US": "Keep the ball on the paddle until you land.",
+            "tr": "Yere inene kadar top paddle’da kalsın."
           }
         },
         {
@@ -3742,6 +4372,14 @@
           "caption": {
             "tr": "İnişten sonra boş elle ayır",
             "en-US": "After landing, take the ball off with the free hand"
+          },
+          "helpTitle": {
+            "en-US": "Now take the ball off",
+            "tr": "Şimdi topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand after landing.",
+            "tr": "Yere indikten sonra boş elini kullan."
           }
         }
       ],
@@ -3820,6 +4458,10 @@
           "caption": {
             "tr": "Yakın başlayın, yumuşak atış",
             "en-US": "Start close with soft tosses"
+          },
+          "helpTitle": {
+            "en-US": "Start close, toss gently",
+            "tr": "Yakından başla, yumuşakça at"
           }
         },
         {
@@ -3829,6 +4471,10 @@
           "caption": {
             "tr": "B: mavi ön yüzde yakala",
             "en-US": "B: catch on the blue side"
+          },
+          "helpTitle": {
+            "en-US": "Catch on blue",
+            "tr": "Mavi yüzle yakala"
           }
         },
         {
@@ -3838,6 +4484,14 @@
           "caption": {
             "tr": "B: topu sol boş elle ayır",
             "en-US": "B: take the ball off with your free hand"
+          },
+          "helpTitle": {
+            "en-US": "Take the ball off",
+            "tr": "Topu ayır"
+          },
+          "helpBody": {
+            "en-US": "Use your free hand.",
+            "tr": "Boş elini kullan."
           }
         },
         {
@@ -3847,6 +4501,10 @@
           "caption": {
             "tr": "Her 5 temiz catch sonrası ikisi de 1 adım geri",
             "en-US": "After every 5 clean catches, both take 1 step back"
+          },
+          "helpTitle": {
+            "en-US": "Step back after every 5 catches",
+            "tr": "Her 5 yakalamadan sonra geri adım at"
           }
         }
       ],
