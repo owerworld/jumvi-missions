@@ -1,4 +1,5 @@
 import {playerContext} from '../components/player-context.js';
+import {brandHeader} from '../components/brand-header.js';
 import {icon} from '../components/icons.js';
 import {el,heading} from '../components/dom.js';import {button} from '../components/button.js';
 const assetRoot=new URL('../../assets/mission-illustrations/m25/',import.meta.url);
@@ -22,7 +23,7 @@ export function playView(name,ctx) {
   return wrap;
  };
  const shortLabel=(node,label)=>{node.setAttribute('aria-label',node.getAttribute('aria-label')||node.textContent);node.querySelector('.control-label').textContent=label;return node;};
- const brand=()=>{const i=el('img');i.src=new URL('jumvi-logo.webp',assetRoot);i.alt='JUMVI';i.width=80;i.height=80;i.className='brand';const header=el('header',undefined,'customer-header');header.append(i,el('span',state.locale==='tr'?'OYNA · HAREKET ET':'PLAY · MOVE','customer-eyebrow'));s.append(header);};
+ const brand=()=>s.append(brandHeader(state.locale));
  const support=()=>{const r=controls();r.classList.add('utilities');r.append(b(cp.help,'HELP',{},'link'),sound());return r;};
  const sound=()=>{const v=audio.snapshot();const n=button(v.preference?ui.soundOn:ui.soundOff,()=>send('SOUND'),{kind:'link'});const label=el('span',n.textContent);label.dataset.soundText='';n.replaceChildren(icon(v.preference?'volume-2':'volume-x'),label);n.dataset.sound='';n.setAttribute('aria-label',ui.soundLabel);n.setAttribute('aria-pressed',String(v.preference));return n;};
  const access=()=>b(cp.access,'ACCESS',{},'link');
@@ -39,7 +40,7 @@ export function playView(name,ctx) {
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
   s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle));if(cp.setup)s.append(text(cp.setup,'instruction'));
-  const list=el('ol',undefined,'steps');list.id='mission-steps';
+  const list=el('ol',undefined,'steps');list.id='mission-steps';list.setAttribute('role','list');
   if(cp.frames){
    // Count equality is not semantic alignment: m03 has three rules and three
    // pictures, but its first picture depicts the second rule.
@@ -65,8 +66,10 @@ export function playView(name,ctx) {
   const contact=el('div',undefined,'active-contact');contact.append(cp.activeArt?frameArt(cp.activeArt):cp.frames?frameArt(cp.frames[Math.min(1,cp.frames.length-1)]):art('contact-alpha-v1',cp.step2body,'contact-art'),text(cp.activeCatch,'instruction'));if(cp.activeArt)contact.classList.add('pilot-reminder');s.append(contact,text(cp.goal,'instruction goal'));
   const row=controls();row.classList.add('active-actions');const stop=b(cp.stop,'STOP',{},'primary',true);stop.classList.add('stop-action');row.append(shortLabel(b(cp.activeHelp,'HELP',{},'secondary',true),state.locale==='tr'?'Yardım':'Help'),shortLabel(stop,state.locale==='tr'?'Durdur':'Stop'));s.append(row);const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());s.append(tools);
  }else if(name==='interrupted'){
+  brand();
   label();s.append(heading(ui.interrupted));const p=text(state.unknown||!state.round?ui.unknown:ui.resumeInfo,'status');s.append(p);const row=controls();if(state.round&&!state.unknown)row.append(action(ui.resume,'RESUME','primary'));const n=action(ui.newRound,'REPLAY');n.disabled=!state.mission.ready;row.append(n);if(state.round)row.append(action(ui.end,'END'));row.append(action(cp.leave,'LEAVE','link'),b(cp.how,'HELP'));s.append(row);ready();
  }else if(name==='stopped'){
+  brand();
   label();s.append(heading(state.reportMode?cp.report:ui.stopped));
   s.append(text(state.reportMode&&state.report?cp.edit:(state.reportMode&&!state.round?ui.preReport:ui.unreported)));const row=controls();
   if(state.round&&!state.reportMode)row.append(action(ui.resume,'RESUME','primary'));

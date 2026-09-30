@@ -3,10 +3,11 @@ import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
 import {playerLabel} from '../repository/local.js';
 import {historySummary} from '../repository/history-summary.js';
+import {brandHeader} from '../components/brand-header.js';
 export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  p ||= {snapshot:null,status:'loading',name:'',selectedId:null,result:null};
- const s=el('section');s.dataset.view=name;const row=el('div',undefined,'controls conflicting');
- const b=(label,type,detail={},disabled=false)=>{const control=button(label,()=>send(type,detail),{disabled});if(type==='START')control.dataset.needsReady='';return control;};
+ const s=el('section');s.dataset.view=name;s.classList.add('customer-layout');s.append(brandHeader(state.locale));const row=el('div',undefined,'controls conflicting');
+ const b=(label,type,detail={},disabled=false)=>{const control=button(label,()=>send(type,detail),{disabled});if(type==='START')control.dataset.needsReady='';if(['P_DELETE_ONE','P_DELETE_ALL'].includes(type))control.classList.add('danger-action');return control;};
  const go=(label,screen)=>b(label,'GO',{screen});
  const back=()=>b(ui.back,'BACK');
  const reportMission=report=>catalog?.missions.find(m=>m.id===report?.missionId)?.titles[state.locale]||(!report||report.missionId===state.mission?.id?cp.mission:report.missionId);

@@ -1,0 +1,86 @@
+/* Customer presentation refinement. All color, type and target-size contracts
+   still come from LOCK 05/06 tokens. No scene is cropped or animated. */
+main:has(>.customer-layout){background:var(--surface);padding:20px;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.customer-layout{padding:0;color:var(--ink)}
+.customer-layout .customer-header{min-height:72px;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid rgb(21 45 64 / .12);gap:16px}
+.customer-layout .customer-header .brand{width:7.5rem;height:4.5rem;object-fit:contain;object-position:left center;margin:0}
+.customer-layout .customer-eyebrow{color:var(--muted);letter-spacing:.12em}
+.customer-layout h1{font-weight:800;letter-spacing:-.025em;margin-bottom:12px}
+.customer-layout .mission-label{color:var(--muted);margin-bottom:8px}
+.customer-layout .goal{padding:12px 16px;border-left:4px solid var(--brandLime);background:var(--infoSurface);border-radius:0 16px 16px 0;margin-block:12px 16px}
+.customer-layout .entry-hero{margin:0 -20px 16px;padding:8px 20px 16px;background:linear-gradient(180deg,var(--surface),var(--infoSurface));border-radius:0 0 28px 28px}
+.customer-layout .entry-hero>.frame-actors{max-width:32rem;margin-inline:auto}
+.customer-layout .entry-brief{margin-block:0 16px}
+.customer-layout .entry-brief .setup{font-weight:700;margin-bottom:12px}
+.customer-layout .entry-rules{list-style:decimal;padding-left:1.5rem;margin-block:12px}
+.customer-layout .entry-rules li{margin-bottom:8px;padding-left:4px}
+.customer-layout .entry-rules li::marker{color:var(--action);font-weight:700}
+.customer-layout .safety{color:var(--muted);margin-block:12px 16px}
+.customer-layout .mission-kit{margin-block:0 16px;padding:16px;border:1px solid rgb(21 45 64 / .12);border-radius:20px;background:var(--infoSurface)}
+.customer-layout .mission-kit .indoor{margin-top:4px;font-weight:400}
+.customer-layout .primary{box-shadow:0 0 0 1px var(--border),0 4px 0 rgb(21 45 64 / .1)}
+.customer-layout .primary:focus-visible{outline:.1875rem solid var(--focus);outline-offset:.1875rem;box-shadow:0 0 0 .1875rem var(--focusGap)}
+.customer-layout .primary:disabled{box-shadow:none}
+.customer-layout .primary:active{background:var(--infoSurface);color:var(--ink);box-shadow:0 0 0 1px var(--border)}
+.customer-layout .entry-actions>[data-start]{margin-bottom:16px}
+.customer-layout .entry-actions .link{padding-block:12px}
+.customer-layout .customer-tools{margin-top:16px;padding-block:8px;border-top:1px solid rgb(21 45 64 / .12);gap:8px}
+.customer-layout .customer-tools>.control{background:transparent;text-align:left;justify-content:flex-start}
+.customer-layout .secondary-access{margin-top:16px;background:var(--surface);border:1px solid rgb(21 45 64 / .16);border-radius:20px;padding:8px 16px;gap:0}
+.customer-layout .secondary-access>.control+.control{border-top:1px solid rgb(21 45 64 / .12);border-radius:0}
+.customer-layout .active-contact{margin:16px -20px 0;padding:16px 20px 20px;border-radius:0 0 28px 28px;background:linear-gradient(180deg,var(--surface),var(--infoSurface))}
+.customer-layout .active-contact .frame-art{max-width:24rem}
+.customer-layout .active-contact p{color:var(--ink);font-weight:700;text-align:left}
+.customer-layout .active-actions{gap:16px;margin-top:20px}
+.customer-layout .active-actions>.secondary{border-color:var(--border);background:var(--infoSurface)}
+.customer-layout .stop-action{box-shadow:0 0 0 1px var(--border),0 4px 0 rgb(21 45 64 / .1)}
+.customer-layout .stop-action:active{background:var(--brandBall);color:var(--ink);box-shadow:0 0 0 1px var(--border)}
+
+/* Native numbered steps: one moment per card, readable text, intact imagery. */
+.customer-layout .steps{list-style:none;counter-reset:help-step;padding:0;margin-block:20px}
+.customer-layout .steps>li{counter-increment:help-step;position:relative;padding:16px;margin:0 0 20px;background:var(--infoSurface);border:1px solid rgb(21 45 64 / .12);border-radius:24px}
+.customer-layout .steps>li::before{content:counter(help-step);position:absolute;inset:16px auto auto 16px;display:grid;place-items:center;min-width:2.5rem;min-height:2.5rem;padding:4px;font-weight:800;background:var(--brandLime);color:var(--ink);border-radius:50%;font-size:var(--instruction-size);line-height:var(--instruction-line)}
+.customer-layout .steps>li>h2{padding-left:3.25rem;min-height:2.5rem;margin:0 0 16px}
+.customer-layout .steps .frame-art{margin:0 auto 16px}
+.customer-layout .steps .frame-person img,.customer-layout .steps .frame-detail{margin:0 auto 12px;border-radius:12px}
+.customer-layout .steps .instruction{margin-bottom:12px}
+.customer-layout .steps .instruction:last-child{margin-bottom:0}
+.customer-layout .steps .art-note{margin-block:12px}
+.customer-layout .steps .panel-label{margin-block:12px 8px;font-weight:700}
+
+/* Clear group hierarchy and compact, entire-row mission targets. */
+.customer-layout .mission-filters{background:var(--infoSurface);border:1px solid rgb(21 45 64 / .12);border-radius:20px;margin-block:20px 16px;gap:12px}
+.customer-layout .mission-filters select{border-radius:12px}
+.customer-layout .pack-shortcuts{gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,8rem),1fr))}
+.customer-layout .pack-shortcuts .control{border-radius:28px;background:var(--surface)}
+.customer-layout .pack-shortcuts .control[aria-pressed=true]{background:var(--action);color:var(--surface);border-color:var(--action)}
+.customer-layout .mission-group{margin-block:28px}
+.customer-layout .mission-group>h2{margin:0 0 4px;padding-bottom:8px;border-bottom:4px solid var(--brandLime)}
+.customer-layout .group-count{margin-bottom:16px}
+.customer-layout .mission-list{gap:12px;margin-block:0}
+.customer-layout .mission-list>li{border:1px solid var(--border);border-radius:20px;background:var(--surface)}
+.customer-layout .mission-open{border-radius:20px;padding:12px;gap:16px}
+.customer-layout .mission-open .mission-thumbnail{width:5rem;height:auto;max-height:6rem;object-fit:contain;background:var(--infoSurface);border-radius:12px}
+.customer-layout .mission-card-title{font-weight:800}
+.customer-layout .mission-card-kit{color:var(--muted)}
+.customer-layout .mission-completed{border:1px solid var(--success);border-radius:8px;padding:4px 8px;margin-block:4px 8px}
+.customer-layout .mission-card-arrow{color:var(--action);font-weight:700}
+.compact-controls .customer-layout .mission-open .mission-thumbnail{width:5rem;max-height:5rem;margin-bottom:12px}
+.compact-controls .customer-layout .mission-open .mission-card-body{padding:0}
+
+/* Optional local progress belongs to management/post-play, not a play gate. */
+.customer-layout .player-context{padding:16px;border:1px solid rgb(21 45 64 / .12);border-radius:20px;background:var(--infoSurface)}
+.customer-layout .report-summary{border-left:4px solid var(--brandLime);border-radius:0 16px 16px 0}
+.customer-layout .report-actions{gap:16px}
+.customer-layout .history-item,.customer-layout .certificate-status{border:1px solid rgb(21 45 64 / .2);background:var(--infoSurface);border-radius:20px;padding:16px;margin-block:16px}
+.customer-layout .history-item h2,.customer-layout .certificate-status h2{margin-top:0}
+.customer-layout .history-item>.control+.control{margin-top:12px}
+.customer-layout .local-details{border-bottom:1px solid rgb(21 45 64 / .12);padding-bottom:8px}
+.customer-layout .local-details summary{color:var(--action)}
+.customer-layout .danger-action{border-color:var(--danger);color:var(--danger);background:var(--dangerSurface)}
+.customer-layout input[type=text]{border-radius:12px}
+.customer-layout .selected-player{font-weight:700}
+.compact-controls .customer-layout .customer-header{display:block}
+.compact-controls .customer-layout .customer-header .customer-eyebrow{margin-top:8px;text-align:left}
+.compact-controls .customer-layout .steps>li{padding:16px}
+@media(min-width:48rem){main:has(>.customer-layout){margin-block:32px;padding:32px;border:1px solid rgb(21 45 64 / .14);border-radius:28px;box-shadow:0 12px 40px rgb(21 45 64 / .06)}.customer-layout .entry-hero,.customer-layout .active-contact{margin-inline:-32px;padding-inline:32px}.customer-layout .customer-header{margin-bottom:24px}}
