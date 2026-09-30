@@ -9,6 +9,20 @@ const hex=buf=>[...new Uint8Array(buf)].map(n=>n.toString(16).padStart(2,'0')).j
 async function valid(response,entry){if(response.status!==200||response.type==='opaque'||response.redirected||/private/i.test(response.headers.get('cache-control')||'')||/cookie|authorization/i.test(response.headers.get('vary')||''))return false;const mime=response.headers.get('content-type')||'';if(!mime.toLowerCase().startsWith(entry.mime))return false;const bytes=await response.clone().arrayBuffer();return bytes.byteLength===entry.bytes&&hex(await crypto.subtle.digest('SHA-256',bytes))===entry.sha256;}
 // Only immutable, hash-verified public bytes are normalized for our own cache.
 function cacheable(response){const headers=new Headers(response.headers);if(headers.get('Vary')==='*')headers.delete('Vary');return new Response(response.body,{status:response.status,statusText:response.statusText,headers});}
+// Media players request byte ranges. Cache only the verified complete recording;
+// construct partial responses from those bytes, never cache an unverified fragment.
+async function mediaResponse(response,request){
+ const range=request.headers.get('Range');if(!range||request.headers.has('If-Range'))return response;
+ const match=/^bytes=(\d*)-(\d*)$/.exec(range);if(!match||(!match[1]&&!match[2]))return response;
+ const bytes=await response.arrayBuffer(),size=bytes.byteLength,headers=new Headers(response.headers);
+ for(const key of ['content-length','content-encoding','transfer-encoding'])headers.delete(key);
+ headers.set('Accept-Ranges','bytes');
+ const start=match[1]?Number(match[1]):Math.max(0,size-Number(match[2]));
+ const end=match[1]?(match[2]?Math.min(Number(match[2]),size-1):size-1):size-1;
+ if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start>=size||end<start){headers.set('Content-Range',`bytes */${size}`);return new Response(null,{status:416,headers});}
+ headers.set('Content-Range',`bytes ${start}-${end}/${size}`);headers.set('Content-Length',String(end-start+1));
+ return new Response(bytes.slice(start,end+1),{status:206,headers});
+}
 const cacheName=path=>path.endsWith('.html')||path.includes('/client/')?SHELL:CONTENT;
 async function obtain(path){const key=shellKey(path),entry=known.get(key);if(!entry)throw Error('Not public');const cache=await caches.open(cacheName(key)),hit=await cache.match(key);if(hit&&await valid(hit,entry))return hit;const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(new Request(key,{credentials:'omit',cache:'no-store',signal:controller.signal}));if(!await valid(r,entry))throw Error('Release mismatch');await cache.put(key,cacheable(r.clone()));return r;}finally{clearTimeout(timer);}}
 self.addEventListener('install',event=>event.waitUntil((async()=>{try{for(const path of MANIFEST.precache)await obtain(path);}catch(e){await caches.delete(SHELL);await caches.delete(CONTENT);throw e;}})()));
@@ -17,5 +31,5 @@ self.addEventListener('activate',()=>{});
 self.addEventListener('message',event=>{if(event.data?.type!=='CACHE_MISSION'||event.data.release!==RELEASE)return;const ids=MANIFEST.missions[event.data.id];if(!ids)return;event.waitUntil((async()=>{try{for(const p of ids)await obtain(p);event.ports[0]?.postMessage({release:RELEASE,id:event.data.id,ready:true});}catch{event.ports[0]?.postMessage({release:RELEASE,id:event.data.id,ready:false});}})());});
 self.addEventListener('fetch',event=>{const req=event.request;if(!allowed(req))return;const url=new URL(req.url),key=shellKey(url.pathname),entry=known.get(key);
  if(key.endsWith('.html')){event.respondWith((async()=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(new Request(req,{cache:'no-store',signal:controller.signal}));if(BASE==='/v2/'&&r.status===410)return r;if(r.ok){if(await valid(r,entry))await (await caches.open(SHELL)).put(key,cacheable(r.clone()));return r;}}catch{}finally{clearTimeout(timer);}const hit=await (await caches.open(SHELL)).match(key);if(hit&&await valid(hit,entry)){const headers=new Headers(hit.headers);for(const key of ['content-length','transfer-encoding','connection','keep-alive'])headers.delete(key);return new Response(await hit.arrayBuffer(),{status:hit.status,statusText:hit.statusText,headers});}return new Response('Offline content unavailable',{status:503,headers:{'Content-Type':'text/plain','Cache-Control':'no-store'}});})());}
- else event.respondWith(obtain(key).catch(()=>new Response('This release asset is unavailable',{status:503,headers:{'Content-Type':'text/plain','Cache-Control':'no-store'}})));
+ else event.respondWith(obtain(key).then(r=>entry.mime==='audio/mpeg'?mediaResponse(r,req):r).catch(()=>new Response('This release asset is unavailable',{status:503,headers:{'Content-Type':'text/plain','Cache-Control':'no-store'}})));
 });

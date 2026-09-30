@@ -1,0 +1,223 @@
+{
+  "voice": "Jessica - Playful, Bright, Warm",
+  "model": "Eleven v4",
+  "locale": "en-US",
+  "missions": [
+    {
+      "id": "m01",
+      "full": "Ready for Speed Demon?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStand two big kid steps apart.\n\nToss quickly, but keep each toss gentle.\n\nCatch on the blue side. Take the ball off with your free hand, then toss it back.\n\nHow many catches can you make in forty-five seconds? Try to beat your own best.\n\nKeep tosses below chin level. Never aim at anyone’s face.\n\nTake your time and enjoy playing together!",
+      "active": "Keep tosses quick but gentle, below chin level. Catch on the blue side, take the ball off with your free hand, and toss it back.",
+      "sourceRecordSHA256": "2bfd55f224f30a10e619df6dd141c0f35c53a854b794bd8728eb1eb0e6929b73"
+    },
+    {
+      "id": "m02",
+      "full": "Ready for Red Light, Green Light?\n\nYou'll need two to three players, one paddle for each player, and one ball. Keep your paddle on with the hand strap on the back.\n\nChoose one of you to call Green or Red. With three players, the third person can call. With two players, take turns calling.\n\nGreen means toss and catch. Red means freeze. No tossing or moving on Red.\n\nYou make the calls and keep track of the sixty seconds. This recording explains the game; the phone does not call colors or time your round.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nPlay for sixty seconds without tossing on Red.\n\nWhen you hear Red, stop and stay still.\n\nTake your time and enjoy playing together!",
+      "active": "One of you calls the colors. Toss and catch on Green. Freeze on Red. The phone is not the caller.",
+      "sourceRecordSHA256": "937f84fb6f623583674ad69820dfcf6941f2e0111b12701a58c1e242c5c063bc"
+    },
+    {
+      "id": "m03",
+      "full": "Ready for Quick Slap?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nKeep the paddle strapped to one hand while your partner makes a gentle toss.\n\nUse your free hand to lightly tap your own paddle once.\n\nCatch the ball on the blue side. Switch roles after every ten throws.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten clean tap-and-catches each.\n\nTap gently with your free hand. Keep your paddle strapped on; it has no handle.\n\nTake your time and enjoy playing together!",
+      "active": "Keep your paddle strapped on. Tap your own paddle once, lightly, with your free hand, then catch on the blue side.",
+      "sourceRecordSHA256": "58314ea935662ac97a6d87a779a81be6684855751f0880c77c24b3aee68170f5"
+    },
+    {
+      "id": "m04",
+      "full": "Ready for Switcharoo?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nCatch the ball on the blue side with the hand wearing the paddle.\n\nUse your free hand to take the ball off.\n\nPass the ball to the hand that is still wearing the paddle.\n\nCarefully slide that hand out of the strap.\n\nPut the paddle on your other hand and secure the strap.\n\nThe hand holding the ball is now free. Use it to make a gentle toss.\n\nMake your next catch with the other paddle hand. Repeat this whole hand switch after every clean catch.\n\nBe the first to make twelve catches, switching paddle hands after each one.\n\nTake your time switching hands. Never toss the paddle between hands or change hands with the ball still stuck to it. There is no handle.",
+      "active": "After a clean catch, take the ball off first. Pass it to your paddle hand before removing that hand from the strap. Switch the paddle safely to your other hand.",
+      "sourceRecordSHA256": "3f6bd7df5fcd0a437b3d56d1bdcfedab29d5d1be9508581c226dc164b8f36a5e"
+    },
+    {
+      "id": "m05",
+      "full": "Ready for Statue Mode?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nCatch on the blue side, then freeze like a statue for two seconds.\n\nKeep your paddle, body, and feet still.\n\nWhen the freeze is over, take the ball off with your free hand and gently toss it back.\n\nMake ten catches, with a full freeze after each one.\n\nStay completely still during each two-second freeze.\n\nTake your time and enjoy playing together!",
+      "active": "Catch on the blue side and freeze for two seconds. Then take the ball off with your free hand and toss it back.",
+      "sourceRecordSHA256": "53822b1596b9e28596b2a0289f9a93dbef7022691cd3b797f0d21364732fccd0"
+    },
+    {
+      "id": "m06",
+      "full": "Ready for Number Echo?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nToss the ball and call out the number.\n\nThe catcher repeats the number, takes the ball off, and tosses it back.\n\nIf the ball drops, start counting again from one.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nCount out loud together and reach fifteen catches in a row.\n\nA missed catch is okay. Take a breath and start again.\n\nTake your time and enjoy playing together!",
+      "active": "Call the number as you toss. The catcher echoes it. If the ball drops, start again from one.",
+      "sourceRecordSHA256": "2c6e1fbbb54c4a0df05fe005fe29545fd3c20d14a30abe104392857705faaf14"
+    },
+    {
+      "id": "m07",
+      "full": "Ready for Rainbow Throws?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStand five big steps apart.\n\nMake gentle rainbow-shaped tosses toward your partner’s paddle, never their head.\n\nFlat tosses do not count. After five clean rainbow tosses, step back.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nComplete three distance levels, with five rainbow tosses at each level.\n\nUse a gentle arc, not a hard throw. Let the ball come down naturally.\n\nTake your time and enjoy playing together!",
+      "active": "Make gentle rainbow tosses toward the paddle. After five clean rainbow tosses, step back. Flat tosses do not count.",
+      "sourceRecordSHA256": "1e1560115d3729c1a70121f662efae6bd5530088552da6159e4e7019e634c1ad"
+    },
+    {
+      "id": "m08",
+      "full": "Ready for The Landing Pad?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nMake a gentle toss in a high arc.\n\nThe catcher holds the paddle flat and still, with the blue side facing up, like a landing pad.\n\nLet the ball come down, land, and stick on the blue side. Do not swing at it.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake eight clean landings on the paddle.\n\nLet the ball stick. Do not swat or hit it.\n\nTake your time and enjoy playing together!",
+      "active": "Hold the paddle flat and still, blue side up. Let the ball land and stick. Do not swing at it.",
+      "sourceRecordSHA256": "5dbe4785b5dd81f83d8897eb39779a6a39bf7ca8da90f5de140ca75b022898ba"
+    },
+    {
+      "id": "m09",
+      "full": "Ready for Step-Back Challenge?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStart one big step apart and make three clean catches.\n\nStep back half a step, then make another three clean catches.\n\nKeep going until you are three big steps apart.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nReach three big steps apart and make three clean catches there.\n\nStop if you can no longer keep your tosses controlled.\n\nTake your time and enjoy playing together!",
+      "active": "Make three clean catches before each half-step back. Stop if your tosses become hard to control.",
+      "sourceRecordSHA256": "d79322775558b7c07792f770d7898bf137515e7d803f44db3ef742e0579c7ac1"
+    },
+    {
+      "id": "m10",
+      "full": "Ready for Power Step?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStart six big kid steps apart.\n\nStep forward as you make a gentle toss.\n\nAfter the catch, step back to your starting spot. Now it’s your partner’s turn.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten clean step-and-toss turns each.\n\nKeep the toss gentle. The step already adds power.\n\nTake your time and enjoy playing together!",
+      "active": "Step forward with your gentle toss. After the catch, step back to your starting spot. Then it is your partner’s turn.",
+      "sourceRecordSHA256": "d5291c08b3b0c53e03437c49febe907ade89b6397550f19be031cabc19da44d9"
+    },
+    {
+      "id": "m11",
+      "full": "Ready for Sky Floater?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nMake a gentle, controlled high toss toward the paddle.\n\nThe catcher waits calmly for the ball to come down.\n\nCatch it as it drops onto the blue side of the paddle.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten patient catches from high tosses.\n\nTake your time. Do not swing the paddle at the ball.\n\nTake your time and enjoy playing together!",
+      "active": "Make a gentle, controlled high toss. Wait for the ball to come down onto the blue side. Do not swing.",
+      "sourceRecordSHA256": "b39fea99b64b4b0661f8d6c7eea1531ff9a3ce734bd7e482809b6f0d9faef2f2"
+    },
+    {
+      "id": "m12",
+      "full": "Ready for Heart-High?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStand six big steps apart.\n\nThe catcher holds the paddle at chest height, with its blue side facing the ball.\n\nToss toward the blue paddle face, never the person’s chest. A toss that is too high or too low does not count.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten catches in a row on the paddle at chest height.\n\nAim at the blue paddle face, never anyone’s body.\n\nTake your time and enjoy playing together!",
+      "active": "Hold the paddle at chest height. Aim at the blue paddle face, never the person’s chest.",
+      "sourceRecordSHA256": "2658bb11154f4e0a91db159866dcf810b3091b4c8e3008b37598c784246b87fd"
+    },
+    {
+      "id": "m13",
+      "full": "Ready for Silent Mode?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nWhile you play, no talking.\n\nAfter each catch, show the count with your fingers. If anyone speaks, start counting again from one.\n\nYou can listen before starting or when you ask for Help. When you return to the game, the narration stays quiet.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake twelve catches without talking.\n\nTake a breath before each toss.\n\nTake your time and enjoy playing together!",
+      "active": null,
+      "sourceRecordSHA256": "216f65b4a789d999bf5d426e7d69f90fd228bdb7fe23910ce82a6ade14240532"
+    },
+    {
+      "id": "m14",
+      "full": "Ready for Tempo Master?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nMake five very slow throws.\n\nThen make five throws at a medium pace.\n\nRepeat those two sets once more. Keep your feet in place.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nFinish all twenty throws without dropping the ball.\n\nKeep your feet planted. Only your arms move.\n\nTake your time and enjoy playing together!",
+      "active": "Five slow throws, then five at a medium pace. Repeat once. Keep your feet in place.",
+      "sourceRecordSHA256": "a8d990fdc1dcd1712deebb9e5bc0de757185b42252d13d84e407b4feccd27a22"
+    },
+    {
+      "id": "m15",
+      "full": "Ready for Spotlight Eyes?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nBefore a catch, the catcher calls, “I see it!”\n\nWait until you hear the call, then toss.\n\nCatch, say “I see it!” again, and toss the ball back.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake fifteen catches with the “I see it!” call.\n\nStay the same distance apart. No surprise tosses.\n\nTake your time and enjoy playing together!",
+      "active": "The catcher calls, I see it! Wait for the call before tossing. No surprise tosses.",
+      "sourceRecordSHA256": "914cd039d4d6bd02c238f507ad402e6486cea1a316d15f0b76ca2bbb6ab0a3e1"
+    },
+    {
+      "id": "m16",
+      "full": "Ready for One, Two, Three, Go!?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nThe thrower counts “one, two, three” out loud.\n\nRelease the ball right on “three.”\n\nThe catcher counts “one, two, three” before tossing it back.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten catches with tosses timed to the count.\n\nCount calmly and keep a steady rhythm.\n\nTake your time and enjoy playing together!",
+      "active": "Count one, two, three, and release right on three. Keep a calm, steady rhythm.",
+      "sourceRecordSHA256": "64a32f88f54ddcd909f3d6d312030a3f1eeaf9110e15527f4b592975aa807a9b"
+    },
+    {
+      "id": "m17",
+      "full": "Ready for Mirror Mode?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nChoose a leader. The leader shows a comfortable paddle pose: high, low, or gently tilted.\n\nThe catcher copies that pose on their own body. You do not need the same angle in the room.\n\nThe leader makes a gentle toss with their free hand. The catcher holds the matching pose and catches on the blue side.\n\nThe catcher takes the ball off with their free hand and gently tosses it back to the leader.\n\nThe same leader makes five challenge tosses, then you switch roles. Those return passes do not count toward the five.\n\nComplete eight mirror-and-catch rounds.\n\nUse comfortable poses. Do not stretch too far or tilt sharply. Catch on the blue side.",
+      "active": "Copy the comfortable paddle pose on your own body. Catch on the blue side. The same leader makes five challenge tosses; return passes do not count.",
+      "sourceRecordSHA256": "b0c168ca1935f2b3ea2b3ba9711e1b5123ad5a683059ace05bf659f4baea3169"
+    },
+    {
+      "id": "m18",
+      "full": "Ready for Count to ten?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nCount every clean catch out loud together.\n\nIf the ball drops, start again from one.\n\nNo pressure. Have another go together.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten catches without dropping the ball.\n\nStarting over is part of the game. Keep it relaxed.\n\nTake your time and enjoy playing together!",
+      "active": "Count clean catches together. If the ball drops, start again from one. No pressure.",
+      "sourceRecordSHA256": "799a8ba8989ca59dc8f1df68a548d716f77b59363bb61067f5e91b2f1be513f6"
+    },
+    {
+      "id": "m19",
+      "full": "Ready for Round Robin?\n\nYou'll need three to four players, one paddle for each player, and one ball. Keep your paddle on with the hand strap on the back.\n\nStand in a circle, each wearing a paddle.\n\nToss to anyone, but never to the same person twice in a row.\n\nKeep every toss gentle.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nPlay for two full minutes. Count the drops and try to beat your own record.\n\nLeave space between players. Do not crowd together.\n\nTake your time and enjoy playing together!",
+      "active": "Stay in your circle and toss gently. Do not toss to the same person twice in a row.",
+      "sourceRecordSHA256": "d5c014cd46da3474b440892fae5e294f3a25869855335b65e3f80826de8dc62b"
+    },
+    {
+      "id": "m20",
+      "full": "Ready for Crab Shuffle Relay?\n\nYou'll need four players, four paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nFour players make two lines. Share just one ball.\n\nCatch on the blue side. Take the ball off with your free hand, then toss it gently to the next player.\n\nAfter passing, stay on your feet and shuffle sideways to the back of your own line.\n\nMake twenty passes together across both lines.\n\nStay on your feet and move sideways. No running or crab-walking on your hands. Never put your weight on a hand wearing a paddle.\n\nTake your time and enjoy playing together!",
+      "active": "Catch, take the ball off, then toss to the next player. After your pass, shuffle sideways to the back of your line. Stay on your feet.",
+      "sourceRecordSHA256": "0f7c5034a887d9376d3604a6f0b730fb871a8524d00f34beb4ef2e63d4361b44"
+    },
+    {
+      "id": "m21",
+      "full": "Ready for Middle Defender?\n\nYou'll need three players, three paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nPlay with three people, three paddles, and one ball. Two players face each other, with the third in the middle.\n\nThe outside players toss to each other below face level.\n\nIf the middle player catches the ball on the paddle, they walk over and trade places with the person who threw it.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake six catches in the middle. Everyone gets a turn.\n\nKeep tosses below face level. Walk when trading places. Do not dive for the ball.\n\nTake your time and enjoy playing together!",
+      "active": "Outside players toss below face level. If the middle player catches on the blue side, walk and trade places with the thrower.",
+      "sourceRecordSHA256": "7cb107cb24b3172ac1be2d08a0170c63eee4fa60c84b3bb1ec2f62d82601fdaf"
+    },
+    {
+      "id": "m22",
+      "full": "Ready for Spin Squad?\n\nYou'll need four players, four paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nFour players stand in a square, each wearing a paddle.\n\nOne player tosses to anyone.\n\nAfter each catch, everyone steps clockwise. Then make the next toss.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake twenty catches, with everyone moving after each catch.\n\nMove calmly and leave room for each other.\n\nTake your time and enjoy playing together!",
+      "active": "After each catch, everyone steps clockwise. Make the next toss after the move. Leave room for each other.",
+      "sourceRecordSHA256": "67cc61598104b0a2895c092e54da4930a267a4b550b8b89576e9ac0b31542902"
+    },
+    {
+      "id": "m23",
+      "full": "Ready for Mix It Up?\n\nYou'll need four players, four paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nFour players share one ball. One pair plays while the others wait.\n\nThat pair makes six clean catches, then gives the ball to the next pair.\n\nPlay each pairing once. With four players, there are six different pairs.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nFinish all six pairings, with six clean catches per pair.\n\nChange partners calmly. Use only one ball, with only one pair playing at a time.\n\nTake your time and enjoy playing together!",
+      "active": "One pair plays with one ball. After six clean catches, give the ball to the next pair.",
+      "sourceRecordSHA256": "0cd86977b18c3182fe080aaac8d90303f4831107f47b6c4c39e83c53f2f3d266"
+    },
+    {
+      "id": "m24",
+      "full": "Ready for Two-on-Two Squad Count?\n\nYou'll need four players, four paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nMake two teams of two. Share one ball and take turns playing.\n\nOne team makes five clean catches, then gives the ball to the other team.\n\nAdd both teams' catches to one shared total. Only one team plays at a time.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nReach forty catches together.\n\nOnly one team plays at a time. You can use four paddles, but never run two games at once.\n\nTake your time and enjoy playing together!",
+      "active": "One team plays at a time. Five clean catches, then the other team takes the ball. Add catches toward your shared forty.",
+      "sourceRecordSHA256": "c722b45ba726b54b4416d7afb3c8df76583327b3b4cf55fa063fa88c601ee195"
+    },
+    {
+      "id": "m25",
+      "full": "Ready for Chill Catch?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStay seated on the floor or a chair. Make a short, gentle toss with your free hand.\n\nCatch on the blue side. Take the ball off with your free hand, then gently toss it back.\n\nMake fifteen clean catches while seated.\n\nKeep tosses gentle and below face level. Stay about three to ten feet, or one to three meters apart with a grown-up supervising. Clear away breakable things.\n\nTake your time and enjoy playing together!",
+      "active": "Stay seated. Make short, gentle tosses below face level. Catch on the blue side, take the ball off with your free hand, and toss it back.",
+      "sourceRecordSHA256": "6a9a2dfaa754282ac1e750bdfb46d08c7ca81675b61098e271efa8bb73c0c529"
+    },
+    {
+      "id": "m26",
+      "full": "Ready for Tiny Space?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStand just one big step apart.\n\nToss gently without stepping forward.\n\nKeep your feet in place the whole time.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake twelve clean catches in your small space.\n\nWatch for lamps, shelves, and other nearby objects.\n\nTake your time and enjoy playing together!",
+      "active": "Stay one big step apart. Keep your feet in place and toss gently without stepping forward.",
+      "sourceRecordSHA256": "00801958d6543f3766170f2177312111690fa6f1130a95f6d6941a0b053f3d7e"
+    },
+    {
+      "id": "m27",
+      "full": "Ready for Secret Signal?\n\nYou'll need two to three players, one paddle for each player, and one ball. Keep your paddle on with the hand strap on the back.\n\nBefore you start, choose a simple paddle signal. You could briefly raise your paddle or gently tilt it to the side.\n\nWith two players, pass back and forth. With three, pass around the circle from the first player to the second, then the third, then back to the first. Use just one ball.\n\nCatch on the blue side. Take the ball off with your free hand, and keep it in that hand.\n\nWith your paddle hand, show your signal to the next catcher.\n\nWait until they see it. Then make a gentle toss with your free hand. No signal means no toss.\n\nMake ten catches with your secret signal.\n\nChoose a simple paddle signal that is easy to see. You do not need finger gestures. Use only one ball.",
+      "active": "Take the ball off and hold it in your free hand. Show your paddle signal to the next catcher. No signal means no toss.",
+      "sourceRecordSHA256": "e69766e1648a5c6e73a225483a300201ae2b3f7839d3b3d278c9523271ec48a1"
+    },
+    {
+      "id": "m28",
+      "full": "Ready for Mind Reader?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nThe thrower secretly chooses left, right, or center.\n\nWait three seconds without giving any hints.\n\nBefore the toss, the catcher guesses and moves the paddle into position.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nGuess correctly eight times out of twelve.\n\nKeep tosses gentle and stay a predictable distance apart. Only the direction is a surprise.\n\nTake your time and enjoy playing together!",
+      "active": "Choose left, right, or center secretly. Wait three seconds. The catcher guesses and moves the paddle before the toss.",
+      "sourceRecordSHA256": "2b7c04ae02f7984a44c06eaf617a089e72b0228b8963390853e995112d7bb96a"
+    },
+    {
+      "id": "m29",
+      "full": "Ready for Stuck-Foot Catch?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nBoth players keep their feet in place.\n\nMake gentle tosses.\n\nCatch and toss back without chasing the ball.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake twenty clean catches.\n\nIf tosses get hard to control, slow down together.\n\nTake your time and enjoy playing together!",
+      "active": "Keep your feet in place. Make gentle tosses without chasing the ball. Slow down if you need to.",
+      "sourceRecordSHA256": "5eadff5d36b2154cce6eed3581eaf4ca280f979ed10f9d452dbeb3bd3b40e93c"
+    },
+    {
+      "id": "m30",
+      "full": "Ready for Left or Right!?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nChoose who calls and tosses first. Left and right always mean the catcher's own left and right.\n\nBefore each challenge toss, the caller says Left or Right.\n\nThe catcher moves the paddle to that side of their own body, keeping the blue side facing the incoming ball.\n\nThe caller makes a straight, gentle toss toward that paddle. Never aim at the person's body.\n\nA correct catch means the ball sticks to the blue side on the called side.\n\nThe catcher takes the ball off with their free hand and gently tosses it back. This return needs no call, and it does not count.\n\nThe same caller makes five challenge tosses, then you switch roles. Return passes do not count toward those five.\n\nMake eight correct catches on the called side.\n\nAim at the blue paddle face on the called side, never at the person. Keep tosses straight and gentle.",
+      "active": "Call before the challenge toss. Aim at the blue paddle face on the catcher’s own called side. Returns need no call and do not count. Switch after five challenge tosses.",
+      "sourceRecordSHA256": "51d17a5cf2989d3636a474da566c1e5a0a4c5451e359fb403cb09fb4608bc540"
+    },
+    {
+      "id": "m31",
+      "full": "Ready for Cloud Chaser?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStand six big steps apart.\n\nMake a controlled high toss. Never aim at anyone’s face or head.\n\nWatch the ball come down and catch it on the blue side.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten catches from high tosses.\n\nThe ball travels in a high arc, but the target is always the paddle.\n\nTake your time and enjoy playing together!",
+      "active": "Make controlled high tosses toward the paddle, never anyone’s head. Catch on the blue side as the ball comes down.",
+      "sourceRecordSHA256": "433580ed1faa66dadfe5def08acc505c461022b104039133e131baeef67558b9"
+    },
+    {
+      "id": "m32",
+      "full": "Ready for Home Base?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nEach player picks a home base, such as a shadow, sidewalk square, or patch of grass.\n\nToss and catch from your base. Keep your feet in place.\n\nStepping off your base counts as a miss.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake ten catches while staying on your base.\n\nChoose safe, flat ground for each base.\n\nTake your time and enjoy playing together!",
+      "active": "Stay on your home base. Keep your feet in place. Stepping off your base counts as a miss.",
+      "sourceRecordSHA256": "4c2d5f24ec108f99f397365da366acfd7d9ea136fdf66ba8ae0ea1e0b12e6d30"
+    },
+    {
+      "id": "m33",
+      "full": "Ready for How Far Can You Throw??\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStart six big kid steps apart.\n\nMake three clean catches, then both step back two big steps.\n\nKeep going and remember your best distance.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nTry to beat your own distance record.\n\nAs you move farther apart, use controlled arcs toward the paddle. Do not throw harder at a person.\n\nTake your time and enjoy playing together!",
+      "active": "Three clean catches, then both step back two big steps. Use controlled arcs toward the paddle, not harder throws at a person.",
+      "sourceRecordSHA256": "b602b43f897444b8587605aadcbcce307e9a821b48989c1d615773c3270a0651"
+    },
+    {
+      "id": "m34",
+      "full": "Ready for Chase the Ball!?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nThe thrower tosses a little ahead of the catcher, not too far.\n\nThe catcher runs to meet the ball.\n\nCatch it on the paddle before it reaches the ground.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nMake seven running catches.\n\nChoose a clear running area with no obstacles.\n\nTake your time and enjoy playing together!",
+      "active": "Toss just a little ahead. Run to meet the ball and catch on the blue side before it reaches the ground. Keep the path clear.",
+      "sourceRecordSHA256": "c97f6b1288f7681bb0d23748f120e22eb3dfae464da01974841d31e0e4a872d6"
+    },
+    {
+      "id": "m35",
+      "full": "Ready for Sky High Jump?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nToss just above the catcher's normal paddle reach, never at their head. Do not toss too high.\n\nThe catcher waits for the toss, then jumps and catches on the blue side while in the air.\n\nLand on both feet before taking the ball off with your free hand. Switch roles every five throws.\n\nMake eight jumping catches.\n\nUse flat, soft ground. Grass is best. Land on both feet before taking the ball off.\n\nTake your time and enjoy playing together!",
+      "active": "Wait for the toss, then jump and catch on the blue side. Land on both feet before taking the ball off.",
+      "sourceRecordSHA256": "5aa1dd041948972132ef0a3ddd2e3c03974a5210baae2ce8ccb500268f66062e"
+    },
+    {
+      "id": "m36",
+      "full": "Ready for Marathon Rally?\n\nYou'll need two players, two paddles, and one ball. Keep your paddle on with the hand strap on the back.\n\nStart close together and toss back and forth.\n\nAfter every five clean catches, both step back one big step.\n\nSee how far apart you can get while keeping the rally going.\n\nCatch by letting the ball stick to the blue front of your paddle. Take the ball off with your free hand, then make your next gentle toss with that hand.\n\nReach twenty catches without dropping the ball.\n\nStop stepping back if you cannot keep the tosses controlled.\n\nTake your time and enjoy playing together!",
+      "active": "After five clean catches, both step back one big step. Stop stepping back if your tosses get hard to control.",
+      "sourceRecordSHA256": "c455d1d24712d809ff8ccceb287563948ac3912e3368083006ebae13d1ef8084"
+    }
+  ]
+}

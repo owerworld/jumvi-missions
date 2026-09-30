@@ -1,3 +1,4 @@
+import {audioContext,narrationSource,presentationMatches} from './media/narration.js';
 import {storageName,IS_V2} from './deployment.js';
 import {NavigationPosition} from './navigation-position.js';
 import {setupOffline,prepareOffline} from './offline.js';
@@ -9,6 +10,7 @@ async function boot(){
  const app=document.querySelector('#app'),navigation=new NavigationPosition(app),locale=routeLocale(location.pathname)||'en-US';
  const load=async(path,sha256)=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(new URL('../content/'+path,import.meta.url),{credentials:'omit',signal:controller.signal});if(!r.ok||!r.headers.get('content-type')?.startsWith('application/json'))throw Error('Content unavailable');const bytes=await r.arrayBuffer();if(sha256&&!await verifyAsset(bytes,{bytes:bytes.byteLength,sha256}))throw Error('Content mismatch');return JSON.parse(new TextDecoder().decode(bytes));}finally{clearTimeout(timer);}};
  const [ui,assetManifest,catalog,presentation]=await Promise.all([load(`ui/${locale}.json`),load('asset-manifest.json'),load('catalog.json'),load('customer-presentation-v1.json')]);
+ const narrationValid=await presentationMatches(presentation);
  if(IS_V2)ui.deleteAllBody=locale==='tr'?'Bu tarayıcıdaki yalnız JUMVI V2 oyuncuları, takma adları, kişisel bildirimleri ve bekleyen kayıt işlemleri silinir. Eski JUMVI uygulamasının verileri korunur. Bu işlem geri alınamaz.':'Only JUMVI V2 players, nicknames, personal reports and pending record operations in this browser will be deleted. Data belonging to the older JUMVI app is preserved. This cannot be undone.';
  const fixture=await load('missions/m25.json',catalog.missions.find(m=>m.id==='m25').sha256);
  const labels=fixture.locale[locale];let selected='m25';try{const id=sessionStorage.getItem(storageName('jumvi.selected-mission.v1'));if(catalog.missions.some(m=>m.id===id))selected=id;}catch{}
@@ -18,10 +20,11 @@ async function boot(){
  app.addEventListener('pointerdown',()=>{pointerInteraction=true;},true);
  for(const type of ['pointerup','pointercancel'])addEventListener(type,()=>{if(!pointerInteraction)return;requestAnimationFrame(()=>{pointerInteraction=false;if(pendingPersonalRender)render({preserveFocus:true});refreshReadiness();});},true);
  let storage;try{storage=sessionStorage;}catch{storage=null;}
+ let audioNotice=false;
  const audio=new AudioController({onChange:refreshAudio});
  const personal=new PersonalController({getState:()=>state,navigate:screen=>dispatch({type:screen==='report'?'REPORT_RETURN':'GO',screen,revision:state.revision,documentId:state.documentId}),render,ui,catalog});
  function notice(message){const n=app.querySelector('.play-notice');if(n)n.textContent=message;}
- function refreshAudio(){const v=audio.snapshot();for(const n of app.querySelectorAll('[data-sound]')){n.querySelector('[data-sound-text]').textContent=v.preference?ui.soundOn:ui.soundOff;n.querySelector('svg')?.replaceWith(icon(v.preference?'volume-2':'volume-x'));n.setAttribute('aria-pressed',String(v.preference));}if(v.playback==='unavailable')notice(ui.soundUnavailable);else if(v.playback==='pending')notice(ui.soundPending);}
+ function refreshAudio(){const v=audio.snapshot();for(const n of app.querySelectorAll('[data-sound]')){n.querySelector('[data-sound-text]').textContent=v.preference?ui.soundOn:ui.soundOff;n.querySelector('svg')?.replaceWith(icon(v.preference?'volume-2':'volume-x'));n.setAttribute('aria-pressed',String(v.preference));}if(v.playback==='unavailable'){notice(ui.soundUnavailable);audioNotice=true;}else if(v.playback==='pending'){notice(ui.soundPending);audioNotice=true;}else if(audioNotice){notice('');audioNotice=false;}}
  function render({preserveFocus=false,background=false}={}){if(background&&pointerInteraction){pendingPersonalRender=true;return;}pendingPersonalRender=false;const previousMenu=app.querySelector('[data-view=entry] .entry-menu'),entryMenuOpen=previousMenu?.open&&previousMenu.dataset.entryMission===state.mission.id;const priorPosition=navigation.capture();const focus=preserveFocus&&app.contains(document.activeElement)?{id:document.activeElement.id,tag:document.activeElement.tagName,text:document.activeElement.textContent,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd}:null;const captured=state,send=(type,detail={},push=true)=>dispatch({type,...detail,revision:captured.revision,documentId:captured.documentId},push);
   app.replaceChildren(views[state.screen]({state,ui,cp,assetManifest,catalog,presentation,audio,send,personal:personal.model,isSaved:personal.isSaved(state.report)}));if(entryMenuOpen){const menu=app.querySelector('[data-view=entry] .entry-menu');if(menu)menu.open=true;}const p=document.createElement('p');p.className='play-notice';p.setAttribute('role','status');p.setAttribute('aria-live','polite');app.append(p);app.setAttribute('aria-busy','false');placeUtilities();navigation.render(state,priorPosition);refreshAudio();if(focus){const target=focus.id?document.getElementById(focus.id):[...app.querySelectorAll(focus.tag)].find(n=>n.textContent===focus.text);target?.focus({preventScroll:true});if(target?.type==='text'&&focus.start!==null)target.setSelectionRange(focus.start,focus.end);}
  }
@@ -29,8 +32,8 @@ async function boot(){
  function dispatch(e,push=true){
   if(!contextMatches(state,e))return;
   if(personal.handle(e))return;
-  if(e.type==='SOUND'){audio.toggle(null,contextKey(state));return;}
-  if(e.type==='EXPLAIN'){app.querySelector('#first-step')?.focus();app.querySelector('#first-step')?.scrollIntoView({block:'start'});audio.replay(null,contextKey(state));return;}
+  if(e.type==='SOUND'){audio.toggle(narrationSource(state,catalog,narrationValid),audioContext(state));return;}
+  if(e.type==='EXPLAIN'){app.querySelector('#first-step')?.focus();app.querySelector('#first-step')?.scrollIntoView({block:'start'});audio.replay(narrationSource(state,catalog,narrationValid),audioContext(state));return;}
   if(e.type==='ACCESS'||e.type==='ASK'){notice(e.type==='ACCESS'?ui.accessText:ui.askText);return;}
   if(e.type==='RETRY_MISSION'){if(pendingMission)void selectMission(pendingMission);return;}
   if(e.type==='RETRY_ASSETS'){void retryAssets();return;}
