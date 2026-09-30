@@ -26,7 +26,7 @@ for locale in ['en-US','tr']:
   c={**m['locale'][locale],**presentation['missions'].get(m['id'],{}).get('customerCopy',{}).get(locale,{})};data=[p(f"{int(m['id'][1:]):02} · {c.get('title',c.get('mission'))}",'mission')]
   if c.get('setup'):data += [p('HAZIRLIK' if tr else 'SETUP','label'),p(c['setup'])]
   option=lambda v: (' veya ' if tr else ' or ').join(map(str,v)) if isinstance(v,list) else str(v)
-  kit=f"{m['players']} {'oyuncu' if tr else 'players'} · {option(m['equipment']['paddles'])} paddles · {option(m['equipment']['balls'])} {'top' if tr else 'ball'}"
+  kit=f"{m['players']} {'oyuncu' if tr else 'players'} · {option(m['equipment']['paddles'])} {'paddle' if tr else 'paddles'} · {option(m['equipment']['balls'])} {'top' if tr else 'ball'}"
   data += [p(c.get('materials',kit),'small')]
   data += [p('ADIMLAR' if tr else 'STEPS','label')]
   for i,step in enumerate(c.get('steps',[c.get('toss',''),c.get('catch','')]),1):data.append(p(f'{i}. {step}'))
