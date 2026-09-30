@@ -36,7 +36,7 @@ test('synthetic 36-mission local reports unlock an honest PNG, then correction r
  await page.screenshot({path:'review-assets/2026-09-25/screenshots/progress-36-of-36-synthetic-qa.png',fullPage:true});
  await page.getByRole('button',{name:'Sertifikayı önizle'}).click();
  const modal=page.getByRole('dialog');await expect(modal).toBeVisible();
- await expect(modal.getByRole('img')).toHaveAttribute('alt',/QA ÖRNEK.*36 farklı görevin.*Fiziksel beceri ölçülmedi/);
+ await expect(modal.getByRole('img')).toHaveAttribute('alt',/QA ÖRNEK.*36 different missions.*Physical skill was not measured/);
  const downloadPromise=page.waitForEvent('download');await modal.getByRole('button',{name:'PNG olarak kaydet'}).click();const download=await downloadPromise;
  const buffer=await (await import('node:fs/promises')).readFile(await download.path());
  expect([...buffer.subarray(0,8)]).toEqual([137,80,78,71,13,10,26,10]);expect(buffer.length).toBeGreaterThan(10000);
@@ -97,4 +97,31 @@ test('EN player summary exposes distinct progress and optional certificate path 
  await expect(page.getByText('1/36 different missions saved as completed')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(321);
  await page.screenshot({path:'review-assets/2026-09-25/screenshots/progress-en-320-synthetic-qa.png',fullPage:true});
+});
+
+test('customer certificate uses the supplied English template in either review locale and changes pixels only in the name field',async({page})=>{
+ await page.goto('/tr');await expect(page.locator('[data-start]')).toBeEnabled();
+ const result=await page.evaluate(async root=>{
+  const {certificatePng}=await import(root+'/client/certificate.js');
+  const samples=[];
+  for(const [locale,label] of [['en-US','Avery'],['tr','Avery'],['en-US','WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW']]){
+   const rendered=await certificatePng(locale,label),bitmap=await createImageBitmap(rendered.blob),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;const c=canvas.getContext('2d');c.drawImage(bitmap,0,0);bitmap.close();samples.push({width:canvas.width,height:canvas.height,words:rendered.words,pixels:c.getImageData(0,0,canvas.width,canvas.height).data});
+  }
+  const same=samples[0].pixels.every((v,i)=>v===samples[1].pixels[i]);let outside=0,inside=0;
+  for(let n=0;n<samples[0].pixels.length;n+=4){if(![0,1,2,3].some(k=>samples[0].pixels[n+k]!==samples[2].pixels[n+k]))continue;const p=n/4,x=p%samples[0].width,y=Math.floor(p/samples[0].width);if(x<270||x>1156||y<525||y>654)outside++;else inside++;}
+  return {sizes:samples.map(s=>[s.width,s.height]),same,outside,inside,words:samples[1].words};
+ },root);
+ expect(result.sizes).toEqual([[1426,1103],[1426,1103],[1426,1103]]);expect(result.same).toBe(true);expect(result.outside).toBe(0);expect(result.inside).toBeGreaterThan(100);
+ expect(result.words.alt).toContain('Avery');expect(result.words.alt).toContain('Completion');expect(result.words.alt).not.toContain('için');
+});
+
+test('English-only certificate preview preserves supplied aspect ratio, download and close at mobile width',async({page})=>{
+ await page.setViewportSize({width:320,height:844});await page.goto('/');await expect(page.locator('[data-start]')).toBeEnabled();
+ await page.evaluate(async root=>{const {showCertificate}=await import(root+'/client/certificate.js');await showCertificate('en-US','Avery');},root);
+ const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();const image=dialog.getByRole('img');
+ await expect(image).toHaveAttribute('width','1426');await expect(image).toHaveAttribute('height','1103');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+ const pending=page.waitForEvent('download');await dialog.getByRole('button',{name:'Save as PNG'}).click();const download=await pending;expect(download.suggestedFilename()).toBe('jumvi-play-certificate.png');
+ const buffer=await(await import('node:fs/promises')).readFile(await download.path());mkdirSync('review-assets/2026-09-30/certificate-en-only',{recursive:true});writeFileSync('review-assets/2026-09-30/certificate-en-only/customer-avery.png',buffer);
+ await page.screenshot({path:'review-assets/2026-09-30/certificate-en-only/preview-en-320.png',fullPage:true});await dialog.getByRole('button',{name:'Close',exact:true}).click();await expect(dialog).toHaveCount(0);
 });
