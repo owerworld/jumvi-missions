@@ -11,7 +11,7 @@ export default function view({ui,state,send,cp,presentation,assetManifest,person
  const tr=state.locale==='tr',s=el('section');s.dataset.view='discovery';s.classList.add('customer-layout');
  s.append(brandHeader(state.locale));
  s.append(button(ui.back,()=>send('BACK'),{kind:'link'}),heading(ui.titles.discovery),el('p',tr?'Birlikte oynayacağınız görevi seç.':'Pick a game to play together.'));
- s.append(playerContext({state,personal,send,ui,catalog},{progress:true}));
+ s.append(playerContext({state,personal,send,ui,catalog},{progress:false}));
  const actor=personal?.snapshot?.players.find(p=>p.id===personal.actorId),completed=actor?historySummary(personal.snapshot.records,actor.id,catalog.missions.map(m=>m.id)).byMission:new Map();
  const current=filters.get(state.locale)||{players:0,remaining:false,pack:null},form=el('div',undefined,'mission-filters');
  const playerLabel=el('label',tr?'Kaç oyuncu var?':'How many players?'),players=el('select');players.id='mission-player-filter';playerLabel.htmlFor=players.id;

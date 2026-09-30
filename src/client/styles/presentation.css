@@ -9,7 +9,7 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout .mission-label{color:var(--muted);margin-bottom:8px}
 .customer-layout .goal{padding:12px 16px;border-left:4px solid var(--brandLime);background:var(--infoSurface);border-radius:0 16px 16px 0;margin-block:12px 16px}
 .customer-layout .entry-hero{margin:0 -20px 16px;padding:8px 20px 16px;background:linear-gradient(180deg,var(--surface),var(--infoSurface));border-radius:0 0 28px 28px}
-.customer-layout .entry-hero>.frame-actors{max-width:32rem;margin-inline:auto}
+.customer-layout .entry-hero>.frame-actors{max-width:18rem;margin-inline:auto}
 .customer-layout .entry-brief{margin-block:0 16px}
 .customer-layout .entry-brief .setup{font-weight:700;margin-bottom:12px}
 .customer-layout .entry-rules{list-style:decimal;padding-left:1.5rem;margin-block:12px}
@@ -84,3 +84,25 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .compact-controls .customer-layout .customer-header .customer-eyebrow{margin-top:8px;text-align:left}
 .compact-controls .customer-layout .steps>li{padding:16px}
 @media(min-width:48rem){main:has(>.customer-layout){margin-block:32px;padding:32px;border:1px solid rgb(21 45 64 / .14);border-radius:28px;box-shadow:0 12px 40px rgb(21 45 64 / .06)}.customer-layout .entry-hero,.customer-layout .active-contact{margin-inline:-32px;padding-inline:32px}.customer-layout .customer-header{margin-bottom:24px}}
+
+/* A single optional region follows the three pre-play actions. */
+.customer-layout .entry-hero img{max-height:18rem;object-fit:contain}
+.customer-layout[data-view=entry] .customer-header{margin-bottom:16px}
+.customer-layout .entry-menu{margin-top:20px;border-top:1px solid var(--border)}
+.customer-layout .entry-menu>summary,.customer-layout .parent-resources summary{min-height:var(--target-child);padding:16px 8px;cursor:pointer;color:var(--action);font-weight:700;overflow-wrap:normal}
+.customer-layout .entry-menu>summary:focus-visible,.customer-layout .parent-resources summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.customer-layout .entry-menu .customer-tools{border-top:0;margin-top:0}
+.customer-layout .parent-resources{margin-block:24px}
+.customer-layout .parent-resources h2{margin-bottom:12px}
+.customer-layout .parent-resource{padding:16px;border:1px solid var(--border);background:var(--infoSurface);border-radius:20px;margin-bottom:16px}
+.customer-layout .parent-resource p{margin-block:8px 16px}
+.customer-layout .parent-resource a{display:inline-flex;align-items:center;min-height:var(--target-child);padding:12px 16px;border:1px solid var(--action);border-radius:16px;color:var(--action);font-weight:700;overflow-wrap:anywhere}
+/* Compact pre-play spacing keeps the required rules and safety text intact. */
+.customer-layout[data-view=entry] .customer-header{min-height:64px;padding-bottom:0;border-bottom:0;margin-bottom:12px}
+.customer-layout[data-view=entry] .customer-header .brand{width:7rem;height:4rem}
+.customer-layout[data-view=entry] .goal{padding:0;border:0;background:transparent;border-radius:0;margin-block:8px 12px}
+.customer-layout[data-view=entry] .entry-hero>.frame-actors{max-width:16rem}
+.customer-layout[data-view=entry] .entry-hero{padding-block:4px 8px;margin-bottom:12px}
+.customer-layout[data-view=entry] .entry-brief .setup{font-weight:400;margin-bottom:8px}
+.customer-layout[data-view=entry] .entry-rules{margin-block:8px}
+.customer-layout[data-view=entry] .mission-kit{padding:12px 16px;margin-bottom:12px}

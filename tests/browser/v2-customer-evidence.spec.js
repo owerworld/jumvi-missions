@@ -1,3 +1,4 @@
+import {openEntryOptions} from './helpers/entry-options.js';
 import {test,expect} from '@playwright/test';
 import {mkdirSync} from 'node:fs';
 
@@ -22,7 +23,7 @@ test('customer review captures are synthetic and keep real play optional',async(
  await page.getByRole('button',{name:'Oluştur ve bu görevi kaydet',exact:true}).click();
  await expect(page.locator('.journey-count')).toContainText('1/36');
  await page.getByRole('button',{name:'Kayıt durumunu aç',exact:true}).click();
- await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
+ await openEntryOptions(page);await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
  await expect(page.getByText('1 farklı görev için 1 tamamlandı bildirimi · 0 erken bırakıldı bildirimi')).toBeVisible();
  await page.screenshot({path:`${out}/history-390-tr-synthetic.png`,fullPage:true});
  await page.getByRole('button',{name:'Geçmişi gör: QA ÖRNEK'}).click();
@@ -38,7 +39,7 @@ test('saved-report summary and history actions reflow at 320 CSS px with 200% te
   const {LocalRepository}=await import(root+'/client/repository/local.js');
   const r=new LocalRepository(),s=await r.snapshot();await r.create({epoch:s.epoch,name:'QA ÖRNEK'});r.close();
  });
- await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
+ await openEntryOptions(page);await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
  await expect(page.getByRole('button',{name:'Geçmişi gör: QA ÖRNEK'})).toBeVisible();
  const result=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,buttons:[...document.querySelectorAll('.history-item button')].map(b=>({text:b.textContent,rect:b.getBoundingClientRect().toJSON()}))}));
  expect(result.width).toBe(320);expect(result.scrollWidth).toBeLessThanOrEqual(321);

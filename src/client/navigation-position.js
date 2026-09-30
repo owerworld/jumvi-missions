@@ -5,7 +5,7 @@ export class NavigationPosition {
  constructor(root) { this.root = root; this.positions = new Map(); this.pending = null; this.rendered = null; }
  capture() {
   const node = document.activeElement;
-  return {y: window.scrollY, id: this.root.contains(node) ? node?.id : null, missionId: node?.closest?.('[data-mission-id]')?.dataset.missionId || null, label: this.root.contains(node) && node?.tagName === 'BUTTON' ? node.textContent : null};
+  return {menuOpen: !!this.root.querySelector('.entry-menu')?.open, y: window.scrollY, id: this.root.contains(node) ? node?.id : null, missionId: node?.closest?.('[data-mission-id]')?.dataset.missionId || null, label: this.root.contains(node) && node?.tagName === 'BUTTON' ? node.textContent : null};
  }
  transition(before, after, event) {
   if (context(before) === context(after)) return;
@@ -19,7 +19,8 @@ export class NavigationPosition {
   const target = position?.id ? document.getElementById(position.id) : null;
   const missionTrigger = position?.missionId ? this.root.querySelector(`[data-mission-id="${position.missionId}"] button`) : null;
   const trigger = target || missionTrigger || (position?.label && [...this.root.querySelectorAll('button')].find(b => b.textContent === position.label));
-  if (trigger) trigger.focus({preventScroll: true});
+  if(position?.menuOpen){const menu=this.root.querySelector('.entry-menu');if(menu)menu.open=true;}
+  if (trigger) { const menu=trigger.closest?.('.entry-menu');if(menu)menu.open=true;trigger.focus({preventScroll: true}); }
   else if (moved) this.root.querySelector('h1')?.focus({preventScroll: true});
   if (position) window.scrollTo({top: position.y, behavior: 'instant'});
   this.rendered = key; this.pending = null;

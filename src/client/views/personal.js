@@ -3,6 +3,7 @@ import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
 import {playerLabel} from '../repository/local.js';
 import {historySummary} from '../repository/history-summary.js';
+import {parentResources} from '../components/parent-resources.js';
 import {brandHeader} from '../components/brand-header.js';
 export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
  p ||= {snapshot:null,status:'loading',name:'',selectedId:null,result:null};
@@ -27,7 +28,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   if(name==='returning'){s.append(el('p',ui.returnInfo),el('p',cp.mission));row.append(go(cp.backMission||ui.back,'entry'),go(ui.guestTitle,'guest'),go(ui.titles.group,'group'));if(state.previous)row.append(b(ui.previousRound,'PREVIOUS'));}
   row.append(b(cp.how,'HELP'),b(cp.leave,'LEAVE'));s.append(row);return s;
  }
- if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'),back());s.append(row);disclosure();return s;}
+ if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'),back());s.append(row,parentResources(state.locale));const local=el('details',undefined,'local-details');local.append(el('summary',ui.localDetails),el('p',ui.localDisclosure),el('p',ui.localRetention));s.append(local);return s;}
  if(p.status==='loading')s.append(el('p',ui.localLoading));
  if(p.status==='unavailable'){s.append(el('p',ui.localUnavailable));row.append(b(ui.retry,'P_REFRESH'));}
  if(name==='new-player'){s.append(el('p',p.quick?(state.locale==='tr'?'Oyuncu oluşturmak isteğe bağlı. Bu görevin bildirimi oluşturduğun oyuncuya kaydedilecek.':'Creating a player is optional. This mission report will be saved to the player you create.'):ui.createInfo));disclosure();form('P_CREATE',p.quick?(state.locale==='tr'?'Oluştur ve bu görevi kaydet':'Create player and save this mission'):ui.createPlayer,p.name);row.append(go(ui.cancel,state.report?'attribution':'management'));}
@@ -56,7 +57,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   // history. Keep it on the list and the new-player form; avoid repeating two
   // long paragraphs above the selected player's actual progress.
   if(!editable)disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
-  if(!players.length&&p.status==='ready'){s.append(el('p',ui.managementEmpty));const info=el('section',undefined,'certificate-status');info.append(el('h2',ui.certificateTitle),el('p',ui.certificateIntro));s.append(info);}
+  if(!players.length&&p.status==='ready'){s.append(el('p',ui.managementEmpty));}
   if(editable){
    s.append(el('h2',playerLabel(editable)));
    const summary=historySummary(snap.records,editable.id,catalog?.missions.map(m=>m.id));

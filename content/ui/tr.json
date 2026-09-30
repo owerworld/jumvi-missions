@@ -109,7 +109,7 @@
   "deleted": "Seçilen yerel veriler silindi.",
   "partialDelete": "Yeni oyuncu ve geçmiş verileri silindi; eski sürüm verilerinin silinmesi doğrulanamadı. Bütün yerel veriyi silme işlemini yeniden deneyebilirsin.",
   "legacyNotice": "Eski sürümden yerel oyuncu/geçmiş verisi var. Yeni kişisel kayıtlara aktarılmaz veya doğrulanmış başarı sayılmaz. Bütün yerel veriyi sil seçeneği bu verileri de kapsar.",
-  "adultPurpose": "Bu cihazdaki oyuncuları ve ilerlemeyi yönet. Bu bir çevrimiçi hesap ya da ebeveyn onay sistemi değildir.",
+  "adultPurpose": "Görev kitabı, ürün bakımı ve destek. Oyuncu ve ilerleme kaydı isteğe bağlıdır.",
   "continueManagement": "Oyuncular ve ilerleme",
   "guestTitle": "Başka biri oynayacak",
   "guestInfo": "Yeni oyun oyuncuya bağlanmaz. Oyuncu oluşturmak gerekmez; ses kapalı başlar.",

@@ -1,3 +1,4 @@
+import {openEntryOptions} from './helpers/entry-options.js';
 import {test,expect} from '@playwright/test';
 for(const tr of [false,true]){
  const open=async page=>{await page.goto(tr?'/tr/':'/');await expect(page.locator('[data-start]')).toBeEnabled();};
@@ -19,13 +20,13 @@ for(const tr of [false,true]){
   await page.goBack();await expect(page.locator('.mission-list>li:visible')).toHaveCount(6);
   await group.getByRole('button',{name:tr?'Tüm görevler':'All missions',exact:true}).click();await expect(page.locator('.mission-list>li:visible')).toHaveCount(36);
  });
- test(`parent UX: adult return preserves mission without intermediary and certificate is explained ${tr?'TR':'EN'}`,async({page})=>{
-  await open(page);await page.getByRole('button',{name:tr?'Yetişkinler':'Grown-ups',exact:true}).click();
-  await expect(page.locator('.product-help')).toHaveCount(0);
+ test(`parent UX: adult return preserves mission without intermediary and parent resources stay outside the play flow ${tr?'TR':'EN'}`,async({page})=>{
+  await open(page);await openEntryOptions(page);await page.getByRole('button',{name:tr?'Yetişkinler':'Grown-ups',exact:true}).click();
+  await expect(page.locator('.product-help')).toHaveCount(0);await expect(page.locator('.parent-resources a').first()).toHaveAttribute('href',/mission-book-.*\.pdf$/);await expect(page.locator('.parent-resources a').last()).toHaveAttribute('href','mailto:support@jumvi.co');
   await expect(page.locator('[data-view=adult]')).not.toContainText(tr?'Paddle ve top':'paddle and ball');
   await page.getByRole('button',{name:tr?'Göreve dön':'Back to the mission',exact:true}).click();await expect(page.locator('[data-view=entry]')).toBeVisible();
-  await page.getByRole('button',{name:tr?'Oyuncu işlemleri':'Player options',exact:true}).click();
-  await expect(page.locator('.certificate-status')).toContainText('36');
+  await openEntryOptions(page);await page.getByRole('button',{name:tr?'Oyuncu işlemleri':'Player options',exact:true}).click();
+  await expect(page.locator('.certificate-status')).toHaveCount(0);
   await expect(page.getByRole('button',{name:tr?'Yeni oyuncu':'New player',exact:true})).toBeVisible();
  });
 }

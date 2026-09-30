@@ -1,3 +1,4 @@
+import {openEntryOptions} from './helpers/entry-options.js';
 import {test,expect} from '@playwright/test';
 import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
 const release=JSON.parse(readFileSync('dist/release-manifest.json')).release;
@@ -15,7 +16,7 @@ test('synthetic 36-mission local reports unlock an honest PNG, then correction r
   }
   r.close();return {playerId:player.id,epoch:snap.epoch};
  },root);
- await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
+ await openEntryOptions(page);await page.getByRole('button',{name:'Oyuncu işlemleri',exact:true}).click();
  await page.getByRole('button',{name:'Geçmişi gör: QA ÖRNEK'}).click();
  await expect(page.getByText('35/36 farklı görev tamamlandı olarak kaydedildi')).toBeVisible();
  await expect(page.getByRole('heading',{name:'Tamamlandığı bildirilen görevler'})).toBeVisible();
@@ -89,7 +90,7 @@ test('EN player summary exposes distinct progress and optional certificate path 
   await r.prepare({id:'qa-en-1',epoch:s.epoch,targetId:player.id,targetRevision:player.revision,report:{id:'qa-en-report-1',missionId:'m25',mechanicsVersion:'qa-fixture',roundId:'qa-en-round-1',value:'complete',revision:1}});
   await r.commit('qa-en-1',s.epoch);r.close();
  },root);
- await page.getByRole('button',{name:'Player options',exact:true}).click();
+ await openEntryOptions(page);await page.getByRole('button',{name:'Player options',exact:true}).click();
  await page.getByRole('button',{name:'View history: QA SAMPLE'}).click();
  await expect(page.getByRole('heading',{name:'Missions reported complete'})).toBeVisible();
  await expect(page.locator('.mission-progress')).toContainText('1 completion report');

@@ -1,5 +1,5 @@
 import http from 'node:http';import {readFileSync,existsSync,statSync} from 'node:fs';import {resolve,extname} from 'node:path';import {pathToFileURL} from 'node:url';import worker,{isV2Path} from '../src/v2-review-worker.mjs';
-const mime={'.txt':'text/plain','.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webp':'image/webp','.png':'image/png','.woff2':'font/woff2','.ttf':'font/ttf','.svg':'image/svg+xml'};
+const mime={'.txt':'text/plain','.pdf':'application/pdf','.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webp':'image/webp','.png':'image/png','.woff2':'font/woff2','.ttf':'font/ttf','.svg':'image/svg+xml'};
 export async function serveCoexist(port=8950,{legacySW='original',v2=true,offline=false}={}){
  const state={legacySW,v2,offline};
  const bytes=(root,p)=>{const f=resolve(root,'.'+p);if(!f.startsWith(resolve(root)+'/')||!existsSync(f)||!statSync(f).isFile())return new Response('Not found',{status:404});return new Response(readFileSync(f),{headers:{'Content-Type':mime[extname(f)]||'application/octet-stream','Cache-Control':'no-store'}});};
