@@ -106,3 +106,25 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout[data-view=entry] .entry-brief .setup{font-weight:400;margin-bottom:8px}
 .customer-layout[data-view=entry] .entry-rules{margin-block:8px}
 .customer-layout[data-view=entry] .mission-kit{padding:12px 16px;margin-bottom:12px}
+
+/* First-play refinement: compact decoration, full rules and original type sizes. */
+.customer-layout[data-view=entry] .customer-header{min-height:48px;margin-bottom:8px}
+.customer-layout[data-view=entry] .customer-header .brand{height:3rem;width:6rem}
+.customer-layout[data-view=entry]>.customer-eyebrow{margin-bottom:8px}
+.customer-layout[data-view=entry] .entry-hero>.frame-actors{max-width:14rem}
+.customer-layout[data-view=entry] .entry-hero img{max-height:10rem}
+.customer-layout[data-view=entry] .entry-hero{padding-block:0 4px;margin-bottom:8px}
+.customer-layout[data-view=entry] .entry-brief{margin-bottom:8px}
+.customer-layout[data-view=entry] .entry-brief .safety{margin-bottom:0}
+.customer-layout[data-view=entry] .mission-kit{padding:8px 12px;margin-bottom:8px}
+/* Filtering is optional; the catalogue itself is visible on entry. */
+.customer-layout .discovery-filters{border-block:1px solid var(--border);margin-block:16px 12px}
+.customer-layout .discovery-filters>summary{min-height:var(--target-child);padding:12px 8px;cursor:pointer;font-weight:700;color:var(--action)}
+.customer-layout .discovery-filters>summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.customer-layout .discovery-filters .mission-filters{margin-top:8px}
+.customer-layout .discovery-filters .pack-shortcuts{margin-bottom:16px}
+.customer-layout .help-listen{margin-block:0 16px}
+.customer-layout .help-listen .control{width:auto;max-width:100%;border:1px solid var(--border);background:var(--infoSurface)}
+.customer-layout .progress-intro{padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--infoSurface);margin-block:16px}
+.customer-layout .progress-intro h2{margin-top:0}
+.customer-layout .progress-intro p:last-child,.customer-layout .progress-hint{margin-bottom:0}

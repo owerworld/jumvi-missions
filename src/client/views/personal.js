@@ -57,7 +57,10 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   // history. Keep it on the list and the new-player form; avoid repeating two
   // long paragraphs above the selected player's actual progress.
   if(!editable)disclosure();if(p.legacy?.count)s.append(el('p',ui.legacyNotice));
-  if(!players.length&&p.status==='ready'){s.append(el('p',ui.managementEmpty));}
+  if(!players.length&&p.status==='ready'){
+   const intro=el('section',undefined,'progress-intro');intro.append(el('h2',state.locale==='tr'?'Oyna, kaydet, kutla':'Play. Save. Celebrate.'),el('p',state.locale==='tr'?'İlerleme kaydı isteğe bağlı. Bir oyuncu oluştur; oyun sonunda tamamladığın görevleri ona kaydet.':'Keeping progress is optional. Create a player, then save completed missions to them after playing.'),el('p',state.locale==='tr'?'Bu tarayıcıda aynı oyuncuya 36 farklı görev için “tamamladım” bildirimi kaydedilince İngilizce JUMVI sertifikası açılır. Tekrar oynanan görevler sayıyı artırmaz.':'Your English JUMVI certificate unlocks when 36 different missions are reported complete for the same player in this browser. Replaying a mission does not add another to the total.'));
+   s.append(intro,el('p',ui.managementEmpty));
+  }
   if(editable){
    s.append(el('h2',playerLabel(editable)));
    const summary=historySummary(snap.records,editable.id,catalog?.missions.map(m=>m.id));

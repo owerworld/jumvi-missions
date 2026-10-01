@@ -20,7 +20,7 @@ test('remaining filter respects the explicitly selected player and resets for gu
  await page.reload();await expect(page.locator('[data-start]')).toBeEnabled();await page.getByRole('button',{name:'Find another suitable mission',exact:true}).click();
  await expect(page.getByLabel('Not completed yet',{exact:true})).toBeDisabled();
  await openEntryOptions(page);await page.locator('#session-player').selectOption(ids[0]);await expect(page.locator('[data-mission-id=m25] .mission-completed')).toBeVisible();
- await page.getByLabel('Not completed yet',{exact:true}).check();await expect(page.locator('[data-mission-id=m25]')).toBeHidden();await expect(page.locator('.mission-list>li:visible')).toHaveCount(35);
+ await page.locator('.discovery-filters>summary').click();await page.getByLabel('Not completed yet',{exact:true}).check();await expect(page.locator('[data-mission-id=m25]')).toBeHidden();await expect(page.locator('.mission-list>li:visible')).toHaveCount(35);
  await openEntryOptions(page);await page.locator('#session-player').selectOption(ids[1]);await expect(page.locator('.mission-list>li:visible')).toHaveCount(36);await expect(page.locator('.mission-completed')).toHaveCount(0);
  await openEntryOptions(page);await page.locator('#session-player').selectOption('');await expect(page.getByLabel('Not completed yet',{exact:true})).not.toBeChecked();await expect(page.getByLabel('Not completed yet',{exact:true})).toBeDisabled();await expect(page.locator('.mission-list>li:visible')).toHaveCount(36);
 });

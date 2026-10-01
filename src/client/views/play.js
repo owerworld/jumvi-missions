@@ -39,7 +39,7 @@ export function playView(name,ctx) {
   const menu=el('details',undefined,'entry-menu'),summary=el('summary',state.locale==='tr'?'Diğer seçenekler':'More options');menu.dataset.entryMission=state.mission.id;menu.append(summary);const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());menu.append(tools,playerContext(ctx));secondary(true,menu);s.append(menu);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
-  s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle));if(cp.setup)s.append(text(cp.setup,'instruction'));
+  s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle));const listen=el('div',undefined,'help-listen');listen.append(sound());s.append(listen);if(cp.setup)s.append(text(cp.setup,'instruction'));
   const list=el('ol',undefined,'steps');list.id='mission-steps';list.setAttribute('role','list');
   if(cp.frames){
    // Count equality is not semantic alignment: m03 has three rules and three
@@ -60,7 +60,7 @@ export function playView(name,ctx) {
     list.append(li);
    }
   }else for(const [n,file] of [[1,'seated-editorial-v1'],[2,'contact-alpha-v1'],[3,'reset-alpha-v1']]){const li=el('li'),h=el('h2',cp['step'+n]);h.tabIndex=-1;if(n===1)h.id='first-step';li.append(h,art(file,cp['step'+n+'body']),text(cp['step'+n+'body'],'instruction'));list.append(li);}s.append(list,text(cp.goal,'instruction goal'),text(cp.safe,'safety'));ready();
-  const row=controls();row.append(b(cp.againExplain,'EXPLAIN'),b(cp.ask,'ASK',{},'link'),b(back,'RETURN',{},'primary',hasRound));if(state.round?.state==='active')row.append(b(cp.stop,'STOP',{},'secondary',true));row.append(sound(),access());s.append(row);
+  const row=controls();row.append(b(cp.againExplain,'EXPLAIN'),b(cp.ask,'ASK',{},'link'),b(back,'RETURN',{},'primary',hasRound));if(state.round?.state==='active')row.append(b(cp.stop,'STOP',{},'secondary',true));row.append(access());s.append(row);
  }else if(name==='active'){
   brand();label();s.append(heading(cp.activeTitle),text(state.resumed?ui.resumed:cp.state,'muted'),text(cp.activeCopy,'instruction'));
   const contact=el('div',undefined,'active-contact');contact.append(cp.activeArt?frameArt(cp.activeArt):cp.frames?frameArt(cp.frames[Math.min(1,cp.frames.length-1)]):art('contact-alpha-v1',cp.step2body,'contact-art'),text(cp.activeCatch,'instruction'));if(cp.activeArt)contact.classList.add('pilot-reminder');s.append(contact,text(cp.goal,'instruction goal'));
@@ -78,7 +78,7 @@ export function playView(name,ctx) {
   const savedRecord=ctx.personal?.snapshot?.records.find(x=>x.report.id===state.report?.id&&x.report.revision===state.report?.revision),savedOwner=ctx.personal?.snapshot?.players.find(x=>x.id===savedRecord?.targetId);
   brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),cp.hero?frameArt(cp.hero):art('product-still-v1','JUMVI','product-still'),text(ctx.personal?.busy?ui.savePending:ctx.isSaved?(savedOwner?`${savedOwner.nickname||savedOwner.label} · ${ui.savedReport}`:ui.savedReport):cp.notSaved,'report-summary'));
   s.append(playerContext(ctx,{progress:true}));if(ctx.personal?.message)s.append(text(ctx.personal?.message,'status'));
-  const row=controls();row.classList.add('report-actions');row.append(action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'),b(cp.edit,'EDIT_REPORT',{},'link'));s.append(row);const r=el('div',undefined,'secondary-access');if(!ctx.isSaved)r.append(b(state.locale==='tr'?'İlerlememi tut':'Keep my progress','P_TRACK',{},'link'));const saved=ctx.personal?.snapshot?.records.find(x=>x.report.id===state.report?.id);if(!saved&&ctx.personal?.result?.report?.id===state.report?.id)r.append(b(ui.inspectRecord,'P_INSPECT',{id:ctx.personal?.result.id},'link'));if(saved)r.append(b(ui.inspectRecord,'P_INSPECT',{id:saved.id},'link'));r.append(b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
+  const row=controls();row.classList.add('report-actions');row.append(action(cp.again,'REPLAY','primary'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'),b(cp.edit,'EDIT_REPORT',{},'link'));s.append(row);const r=el('div',undefined,'secondary-access');if(!ctx.isSaved){r.append(text(state.locale==='tr'?'İstersen bu bildirimi oyuncuna kaydet. Aynı oyuncuya 36 farklı görevi tamamladığın kaydedilince sertifikan açılır.':'Want a keepsake? Save completed missions to your player. Your certificate unlocks after 36 different missions are reported complete for that player.','progress-hint'));r.append(b(state.locale==='tr'?'İlerlememi tut':'Keep my progress','P_TRACK',{},'link'));}const saved=ctx.personal?.snapshot?.records.find(x=>x.report.id===state.report?.id);if(!saved&&ctx.personal?.result?.report?.id===state.report?.id)r.append(b(ui.inspectRecord,'P_INSPECT',{id:ctx.personal?.result.id},'link'));if(saved)r.append(b(ui.inspectRecord,'P_INSPECT',{id:saved.id},'link'));r.append(b(ui.guestTitle,'GO',{screen:'guest'},'link'));s.append(r);
  }
  return s;
 }

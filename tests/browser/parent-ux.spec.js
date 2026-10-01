@@ -12,6 +12,7 @@ for(const tr of [false,true]){
  test(`parent UX: optional group filtering and whole-card mission access ${tr?'TR':'EN'}`,async({page})=>{
   await open(page);await page.getByRole('button',{name:tr?'Başka uygun görev':'Find another suitable mission',exact:true}).click();
   await expect(page.locator('.featured-mission')).toHaveCount(0);
+  await page.locator('.discovery-filters>summary').click();
   const group=page.getByRole('navigation',{name:tr?'Görev grupları':'Mission groups'});
   await group.getByRole('button',{name:tr?'Takım oyunu':'Team Up',exact:true}).click();
   await expect(page.locator('.mission-list>li:visible')).toHaveCount(6);
