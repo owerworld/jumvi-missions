@@ -128,3 +128,33 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout .progress-intro{padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--infoSurface);margin-block:16px}
 .customer-layout .progress-intro h2{margin-top:0}
 .customer-layout .progress-intro p:last-child,.customer-layout .progress-hint{margin-bottom:0}
+
+/* Optional local-player access lives in the header; the open panel stays in
+   document flow so enlarged text never covers the mission or its controls. */
+.customer-layout .customer-header.has-profile-menu{display:block;position:relative;min-height:56px}
+.customer-layout .has-profile-menu>.brand{position:absolute;inset:0 auto auto 0;width:6rem;height:3.5rem}
+.customer-layout .has-profile-menu .profile-menu{margin:0;border:0;min-width:0;width:100%}
+.customer-layout .profile-menu>summary{display:flex;align-items:center;gap:8px;width:fit-content;max-width:calc(100% - 7rem);min-height:56px;margin-left:auto;padding:4px 0 4px 4px;list-style:none;color:var(--ink);font-size:var(--body-size);border-radius:28px}
+.customer-layout .profile-menu>summary::-webkit-details-marker{display:none}
+.customer-layout .profile-avatar{display:grid;place-items:center;flex:0 0 2.25rem;min-height:2.25rem;border-radius:50%;background:var(--brandLime);color:var(--ink);font-weight:800}
+.customer-layout .profile-name{min-width:0;overflow-wrap:anywhere;line-height:1.3}
+.customer-layout .profile-chevron{flex:none;color:var(--ink)}
+.customer-layout .profile-menu[open] .profile-chevron{transform:rotate(180deg)}
+.customer-layout .profile-panel{margin-top:12px;border:1px solid var(--border);border-top:4px solid var(--brandLime);border-radius:24px;background:var(--surface);padding:16px;box-shadow:0 8px 24px rgb(21 45 64 / .08)}
+.customer-layout .profile-title{font-weight:800;font-size:var(--section-size);margin:0 0 12px}
+.customer-layout .profile-panel .player-context:empty{display:none}
+.customer-layout .profile-panel .player-context{margin:0 0 12px;padding:12px}
+.customer-layout .profile-links{display:grid;gap:8px}
+.customer-layout .profile-links>.control{display:flex;align-items:center;justify-content:flex-start;gap:12px;text-align:left;width:100%;min-width:0;border:1px solid var(--border);border-radius:18px;padding:12px;background:var(--infoSurface)}
+.customer-layout .profile-link-badge{display:grid;place-items:center;flex:0 0 2rem;min-height:2rem;border-radius:12px;color:var(--ink);font-weight:800}
+.customer-layout .profile-link-badge.lime{background:var(--brandLime)}
+.customer-layout .profile-link-badge.blue{background:var(--infoSurface);border:1px solid var(--border)}
+.customer-layout .profile-link-badge.orange{background:var(--brandBall)}
+.customer-layout .profile-panel .customer-tools{display:grid;grid-template-columns:minmax(0,1fr);margin-top:12px}
+.customer-layout .profile-panel .customer-tools>.control{width:100%;min-width:0;text-align:left}
+.customer-layout .profile-panel select{width:100%;min-width:0;max-width:100%}
+.customer-layout .customer-header.has-profile-menu>.brand{width:96px;height:48px}
+.customer-layout .profile-menu>summary{max-width:calc(100% - 112px)}
+.customer-layout .profile-avatar{flex-basis:36px;min-height:36px}
+.compact-controls .customer-layout .profile-links>.control{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.compact-controls .customer-layout .profile-link-badge{width:2rem;justify-self:start}

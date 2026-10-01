@@ -1,4 +1,4 @@
-import {playerContext} from '../components/player-context.js';
+import {profileMenu} from '../components/profile-menu.js';
 import {brandHeader} from '../components/brand-header.js';
 import {historySummary} from '../repository/history-summary.js';
 import {equipmentText} from '../catalog.js';
@@ -9,9 +9,8 @@ const packs=[{ids:[7,8,9,10,11,12],tr:'Hedefe doğru',en:'Bullseye!'}, {ids:[13,
 export function supportsPlayers(value,count){const digits=String(value).match(/\d+/g)?.map(Number)||[];return !count|| (String(value).includes('+')?count>=digits[0]:digits.length>1?count>=digits[0]&&count<=digits[1]:count===digits[0]);}
 export default function view({ui,state,send,cp,presentation,assetManifest,personal,catalog={missions:[]}}){
  const tr=state.locale==='tr',s=el('section');s.dataset.view='discovery';s.classList.add('customer-layout');
- s.append(brandHeader(state.locale));
+ s.append(brandHeader(state.locale,profileMenu({state,personal,send,ui,catalog,cp})));
  s.append(button(ui.back,()=>send('BACK'),{kind:'link'}),heading(ui.titles.discovery),el('p',tr?'Birlikte oynayacağınız görevi seç.':'Pick a game to play together.'));
- s.append(playerContext({state,personal,send,ui,catalog},{progress:false}));
  const actor=personal?.snapshot?.players.find(p=>p.id===personal.actorId),completed=actor?historySummary(personal.snapshot.records,actor.id,catalog.missions.map(m=>m.id)).byMission:new Map();
  const current=filters.get(state.locale)||{players:0,remaining:false,pack:null,expanded:false},form=el('div',undefined,'mission-filters');
  const disclosure=el('details',undefined,'discovery-filters'),filterTitle=el('summary');disclosure.open=!!current.expanded;disclosure.append(filterTitle);disclosure.addEventListener('toggle',()=>{const saved=filters.get(state.locale);if(saved)saved.expanded=disclosure.open;});

@@ -1,4 +1,5 @@
 import {playerContext} from '../components/player-context.js';
+import {profileMenu} from '../components/profile-menu.js';
 import {brandHeader} from '../components/brand-header.js';
 import {icon} from '../components/icons.js';
 import {el,heading} from '../components/dom.js';import {button} from '../components/button.js';
@@ -31,12 +32,11 @@ export function playView(name,ctx) {
  const secondary=(report=false,target=s)=>{const r=el('nav',undefined,'secondary-access');r.setAttribute('aria-label',ui.titles.management);if(report)r.append(b(cp.report,'REPORT_OPEN',{},'link'));r.append(b(cp.players,'GO',{screen:'management'},'link'),b(cp.adult,'GO',{screen:'adult'},'link'),b(ui.titles.returning,'GO',{screen:'returning'},'link'));target.append(r);};
  const action=(txt,type,kind='secondary',active=false)=>b(txt,type,{},kind,active);
  if(name==='entry'){
-  brand();s.append(el('p',state.locale==='tr'?'GÖREVİN':'YOUR MISSION','customer-eyebrow'),heading(cp.mission),text(cp.goal,'instruction goal'));
+  s.append(brandHeader(state.locale,profileMenu(ctx,{tools:[sound(),access()],report:true})));s.append(el('p',state.locale==='tr'?'GÖREVİN':'YOUR MISSION','customer-eyebrow'),heading(cp.mission),text(cp.goal,'instruction goal'));
   const hero=cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch);hero.classList.add('entry-hero');
   const kit=el('div',undefined,'mission-kit');kit.append(text(cp.materials,'materials'));if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));
   const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));if(cp.entryRules){const rules=el('ol',undefined,'entry-rules');for(const rule of cp.entryRules)rules.append(el('li',rule));brief.append(rules);}else brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'));brief.append(text(cp.safe,'safety'));s.append(hero,brief,kit);ready();
   const row=controls();row.classList.add('entry-actions');const start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';const arrow=el('span','→','action-arrow');arrow.setAttribute('aria-hidden','true');start.append(arrow);row.append(start,shortLabel(b(cp.another,'GO',{screen:'discovery'},'link'),state.locale==='tr'?'Başka görev':'More missions'),shortLabel(b(cp.how,'HELP',{},'link'),state.locale==='tr'?'Yardım':'Help'));s.append(row);
-  const menu=el('details',undefined,'entry-menu'),summary=el('summary',state.locale==='tr'?'Diğer seçenekler':'More options');menu.dataset.entryMission=state.mission.id;menu.append(summary);const tools=el('div',undefined,'customer-tools');tools.append(sound(),access());menu.append(tools,playerContext(ctx));secondary(true,menu);s.append(menu);
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
   s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle));const listen=el('div',undefined,'help-listen');listen.append(sound());s.append(listen);if(cp.setup)s.append(text(cp.setup,'instruction'));

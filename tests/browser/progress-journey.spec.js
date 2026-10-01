@@ -19,7 +19,7 @@ for(const tr of [true,false])test(`optional quick progress, repeat, guest and co
  await page.addScriptTag({content:readFileSync('node_modules/axe-core/axe.min.js','utf8')});const axe=await page.evaluate(()=>window.axe.run(document.querySelector('main')));expect(axe.violations).toEqual([]);
  await page.setViewportSize({width:320,height:844});await page.evaluate(()=>{document.documentElement.style.fontSize='200%';dispatchEvent(new Event('resize'));});expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(321);
  // Changing to Guest clears the visible completion association; another tab never inherits it.
- await page.getByLabel(tr?'Bu oyunda':'Playing as',{exact:true}).selectOption('');await expect(page.locator('.mission-completed')).toHaveCount(0);
+ await openEntryOptions(page);await page.getByLabel(tr?'Bu oyunda':'Playing as',{exact:true}).selectOption('');await expect(page.locator('.mission-completed')).toHaveCount(0);
  const other=await context.newPage();await other.goto(tr?'/tr':'/');await expect(other.locator('#session-player')).toHaveValue('');
  expect(requests.join('\n')).not.toContain('SYNTHETIC_JOURNEY');
  expect(JSON.stringify(await page.evaluate(()=>({local:{...localStorage},session:{...sessionStorage},history:history.state})))).not.toContain('SYNTHETIC_JOURNEY');
