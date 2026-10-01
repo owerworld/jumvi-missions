@@ -17,7 +17,9 @@ for(const tr of [false,true]){
   await page.getByRole('button',{name:tr?'Başka uygun görev':'Find another suitable mission',exact:true}).click();
   await expect(page.locator('.discovery-filters')).not.toHaveAttribute('open');
   await expect(page.locator('.mission-list>li:visible')).toHaveCount(36);
-  expect((await page.locator('.mission-open').first().boundingBox()).y).toBeLessThan(650);
+  // The requested featured card provides the early action; all 36 rows remain available below.
+  expect((await page.locator('.featured-mission button').boundingBox()).y).toBeLessThan(650);
+  await expect(page.locator('.featured-kicker')).toHaveText(tr?'SEÇİLİ GÖREVİN':'YOUR CURRENT MISSION');
   await page.locator('.discovery-filters>summary').click();
   await page.getByLabel(tr?'Kaç oyuncu var?':'How many players?',{exact:true}).selectOption('4');
   await page.locator('[data-mission-id=m20] button').click();await expect(page.locator('[data-start]')).toBeEnabled();await page.goBack();

@@ -158,3 +158,73 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout .profile-avatar{flex-basis:36px;min-height:36px}
 .compact-controls .customer-layout .profile-links>.control{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
 .compact-controls .customer-layout .profile-link-badge{width:2rem;justify-self:start}
+
+/* Mission-page composition: a readable invitation, an intact scene and a clear
+   action area. The reference layouts never override canonical task content. */
+.customer-layout[data-view=entry] .entry-brief{margin-bottom:12px}
+.customer-layout[data-view=entry] .entry-hero{margin:0 0 12px;padding:8px 12px;background:linear-gradient(160deg,var(--surface),var(--infoSurface));border:1px solid rgb(21 45 64 / .12);border-radius:28px}
+.customer-layout[data-view=entry] .entry-hero>.frame-actors{max-width:100%}
+.customer-layout[data-view=entry] .entry-hero img{max-height:10rem}
+.customer-layout .mission-kit .kit-facts{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;font-size:var(--body-size);font-weight:700}
+.customer-layout .kit-facts>li{padding:4px 8px;text-align:center;overflow-wrap:normal;hyphens:auto}
+.customer-layout .kit-facts>li+li{border-left:1px solid var(--border)}
+.customer-layout .mission-kit .indoor{text-align:center;margin:8px 0 0}
+.customer-layout .entry-actions{gap:0 12px}
+.customer-layout .entry-actions>[data-start]{border-radius:999px;margin-bottom:8px}
+.customer-layout .entry-actions>.link{align-items:center;gap:8px}
+.customer-layout .entry-actions .control-icon{width:1.5rem;height:1.5rem}
+
+/* The selected mission stays honest: no “for you” or fake personalization. */
+.customer-layout .featured-mission{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:center;gap:12px;padding:16px;background:var(--infoSurface);border:1px solid rgb(21 45 64 / .16);border-radius:28px;margin:12px 0 20px}
+.customer-layout .featured-copy{min-width:0}
+.customer-layout .featured-kicker{font-size:var(--small-size);line-height:var(--small-line);font-weight:800;letter-spacing:.04em;margin:0 0 8px;color:var(--ink)}
+.customer-layout .featured-mission h2{font-size:var(--instruction-size);line-height:var(--instruction-line);font-weight:800;margin:0 0 8px}
+.customer-layout .featured-goal{margin:0;font-size:var(--body-size)}
+.customer-layout .featured-art{display:flex;align-items:center;justify-content:center;min-width:0;gap:4px}
+.customer-layout .featured-art img{min-width:0;width:100%;max-height:9rem;object-fit:contain}
+.customer-layout .featured-mission>.primary{grid-column:1/-1;border-radius:999px;min-width:0;justify-content:space-between;background:var(--brandSky);border-color:var(--border);color:var(--ink)}
+.customer-layout .featured-mission>.primary:hover{background:var(--brandLime)}
+.customer-layout[data-view=discovery]>.control.link:first-of-type{width:fit-content;padding-inline:0}
+.customer-layout .mission-group>h2{font-size:var(--section-size);border-bottom:0;padding:0;margin-bottom:4px}
+.customer-layout .group-count{margin-bottom:12px}
+.customer-layout .mission-list>li{border-color:rgb(21 45 64 / .22);box-shadow:0 3px 8px rgb(21 45 64 / .025)}
+.customer-layout .mission-open{padding:0;gap:12px;min-height:112px}
+.customer-layout .mission-open .mission-thumbnail{width:6rem;max-height:none;height:7rem;padding:6px;object-fit:contain;border-radius:20px 0 0 20px;background:var(--infoSurface)}
+.customer-layout .mission-open .mission-card-body{padding:12px 0}
+.customer-layout .mission-card-title{font-size:var(--instruction-size);line-height:var(--instruction-line);margin-bottom:4px}
+.customer-layout .mission-card-kit{font-size:var(--body-size);line-height:var(--body-line)}
+.customer-layout .mission-card-arrow{display:grid;place-items:center;align-self:center;width:32px;height:32px;margin-right:12px;border-radius:50%;background:var(--infoSurface);color:var(--ink);font-size:1.5rem}
+
+/* During play the reminder and controls form a single calm action area. */
+.customer-layout[data-view=active] .customer-header{min-height:48px;margin-bottom:12px;padding-bottom:0;border:0}
+.customer-layout[data-view=active] .customer-header .brand{width:96px;height:48px}
+.customer-layout[data-view=active]>h1{margin-bottom:8px}
+.customer-layout[data-view=active]>.goal{border:0;padding:0;margin:0 0 8px;background:transparent}
+.customer-layout[data-view=active]>.round-status{margin-bottom:8px}
+.customer-layout[data-view=active] .active-contact{margin:12px 0 0;padding:12px;border-radius:28px 28px 0 0}
+.customer-layout[data-view=active] .active-contact .frame-actors img{max-height:12rem}
+.customer-layout .phone-away{display:flex;align-items:center;gap:12px;background:var(--infoSurface);padding:16px;border-radius:0 0 24px 24px;margin:0 0 16px}
+.customer-layout .phone-away>.control-icon{width:2rem;height:2rem}
+.customer-layout .phone-away p{margin:4px 0 0;color:var(--muted)}
+.customer-layout .active-actions{margin-top:0;gap:12px}
+.customer-layout .active-actions>.control{border-radius:999px}
+.customer-layout .active-actions>.secondary{background:var(--infoSurface)}
+.compact-controls .customer-layout .featured-mission{grid-template-columns:minmax(0,1fr)}
+.compact-controls .customer-layout .featured-art img{max-height:8rem}
+.compact-controls .customer-layout .mission-kit .kit-facts{grid-template-columns:minmax(0,1fr)}
+.compact-controls .customer-layout .kit-facts>li{text-align:left;padding:8px 0}
+.compact-controls .customer-layout .kit-facts>li+li{border-left:0;border-top:1px solid rgb(21 45 64 / .16)}
+.compact-controls .customer-layout .mission-open{padding:12px}
+.compact-controls .customer-layout .mission-open .mission-thumbnail{width:100%;height:8rem;max-height:none;border-radius:16px;margin-bottom:8px}
+.compact-controls .customer-layout .mission-open .mission-card-body{padding:0}
+.compact-controls .customer-layout .mission-card-arrow{display:none}
+.compact-controls .customer-layout .phone-away{align-items:flex-start}
+.customer-layout[data-view=entry] .entry-rules{list-style:none;padding-left:0;margin-block:4px}
+.customer-layout[data-view=entry] .entry-rules>li{padding-left:0;margin-bottom:8px}
+.customer-layout[data-view=entry] .entry-rules .rule-number{display:inline-grid;place-items:center;width:1.5em;min-height:1.5em;margin-right:8px;border-radius:50%;background:var(--infoSurface);color:var(--action);font-weight:800}
+.customer-layout[data-view=entry] .entry-brief{margin-bottom:8px}
+.customer-layout[data-view=entry] .entry-hero{padding-block:4px;margin-bottom:8px}
+.customer-layout .featured-mission>.primary{border-width:2px;box-shadow:0 3px 0 rgb(21 45 64 / .1)}
+.customer-layout[data-view=entry] .entry-hero img{max-height:8.5rem}
+.customer-layout .mission-kit .indoor{margin-top:4px}
+.customer-layout .featured-kit{margin:8px 0 0;color:var(--muted);font-size:var(--small-size);line-height:var(--small-line)}

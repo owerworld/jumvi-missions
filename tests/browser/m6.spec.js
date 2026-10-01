@@ -7,7 +7,7 @@ test(`M6 group instructions preserve canonical player counts (${locale})`,async(
  await open(page,tr?'/tr':'/');
  for(const id of ['m20','m21','m27']){
   await page.getByRole('button',{name:tr?'Başka uygun görev':'Find another suitable mission',exact:true}).click();await page.locator(`[data-mission-id=${id}] button`).click();await expect(page.locator('[data-start]')).toBeEnabled();
-  const materials=await page.locator('.materials').innerText();await openEntryOptions(page);await page.getByRole('button',{name:tr?'Yeniden oyun':'Play again',exact:true}).click();await page.getByRole('button',{name:tr?'Birlikte oyun':'Play together',exact:true}).click();await expect(page.locator('main')).toContainText(materials);await expect(page.locator('main')).not.toContainText(tr?'Bu görev iki kişiyle oynanır.':'This mission is played by two people.');await page.getByRole('button',{name:tr?'Ayrıl':'Leave',exact:true}).click();
+  const materials=await page.locator('.materials').innerText();await openEntryOptions(page);await page.getByRole('button',{name:tr?'Yeniden oyun':'Play again',exact:true}).click();await page.getByRole('button',{name:tr?'Birlikte oyun':'Play together',exact:true}).click();for(const fact of materials.split('\n').filter(Boolean))await expect(page.locator('main')).toContainText(fact);await expect(page.locator('main')).not.toContainText(tr?'Bu görev iki kişiyle oynanır.':'This mission is played by two people.');await page.getByRole('button',{name:tr?'Ayrıl':'Leave',exact:true}).click();
  }
 });
 test(`M6 correcting an older mission shows and preserves the recorded mission (${locale})`,async({page})=>{
