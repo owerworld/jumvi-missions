@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';import {readFileSync} from 'node:fs';import {createHash} from 'node:crypto';import {serveCoexist} from '../../tools/serve-v2-coexist.mjs';
 const release=JSON.parse(readFileSync('dist-v2/v2/release-manifest.json')).release;
+const offline=JSON.parse(readFileSync('dist-v2/v2/sw-release.json'));
 const digest=s=>createHash('sha256').update(s).digest('hex');
 test('same origin: actual v254 first visit, compatibility SW, separate records/caches, rollback',async({browser})=>{
  test.setTimeout(240000);const {server,state,origin}=await serveCoexist(0);const context=await browser.newContext();await context.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());let root=await context.newPage(),v2;
@@ -13,6 +14,11 @@ test('same origin: actual v254 first visit, compatibility SW, separate records/c
   const names=await v2.evaluate(async rel=>{const {LocalRepository,DATABASE}=await import(`/v2/releases/${rel}/client/repository/local.js`);const r=new LocalRepository(),s=await r.snapshot();await r.create({epoch:s.epoch,name:'SYNTHETIC_V2'});await r.deleteAll(s.epoch);const empty=await r.snapshot();r.close();return {db:DATABASE,players:empty.players.length,legacy:localStorage.getItem('jumvi_profiles_v1'),foreign:localStorage.getItem('foreign-key')};},release);expect(names.db).toBe('jumvi-v2:jumvi-companion-v1');expect(names.players).toBe(0);expect(names.legacy).toContain('SYNTHETIC_LEGACY');expect(names.foreign).toBe('keep');
   state.legacySW='compat';await root.evaluate(async()=>{await (await navigator.serviceWorker.getRegistration('/')).update();});await expect.poll(()=>root.evaluate(()=>caches.has('jumvi-missions-v254-v2compat1')),{timeout:45000}).toBe(true);await expect.poll(()=>root.evaluate(()=>caches.has('jumvi-missions-v254'))).toBe(false);expect(await v2.evaluate(rel=>caches.has(`jumvi-v2-${rel}-shell`),release)).toBe(true);
   await v2.goto(origin+'/v2/');await expect(v2.locator('[data-start]')).toBeEnabled();await v2.goto(origin+'/v2/tr/');await expect(v2.locator('[data-start]')).toBeEnabled();
+  // Online readiness does not imply the background critical-asset cache is complete.
+  await expect.poll(()=>v2.evaluate(async({release,paths})=>{
+   const cache=await caches.open(`jumvi-v2-${release}-content`);
+   return (await Promise.all(paths.map(path=>cache.match(path)))).every(Boolean);
+  },{release,paths:offline.missions.m25}),{timeout:45000}).toBe(true);
   state.offline=true;await v2.reload();await expect(v2.locator('[data-start]')).toBeEnabled();await root.goto(origin+'/tr/');await expect(root.locator('html')).toHaveAttribute('lang','tr');await root.goto(origin);await expect(root.locator('html')).toHaveAttribute('lang',/en/);state.offline=false;
   state.v2=false;const withdrawn=await v2.reload();expect(withdrawn.status()).toBe(410);await expect(v2.locator('body')).toContainText('Review withdrawn');const fresh=await context.newPage();const response=await fresh.goto(origin+'/v2/not-cached');expect(response.status()).toBe(410);await fresh.goto(origin);await expect(fresh.locator('html')).toHaveAttribute('lang',/en/);expect(await fresh.evaluate(()=>localStorage.getItem('jumvi_profiles_v1'))).toContain('SYNTHETIC_LEGACY');
   for(const p of ['/api','/panel','/analiz','/v2/api','/v2/panel','/v2/analiz']){const cached=await v2.evaluate(async p=>{for(const n of await caches.keys())if(n.startsWith('jumvi-v2-')&&await(await caches.open(n)).match(p))return true;return false;},p);expect(cached).toBe(false);}
