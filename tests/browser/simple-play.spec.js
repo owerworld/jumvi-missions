@@ -2,8 +2,9 @@ import {test,expect} from '@playwright/test';
 import {openEntryOptions} from './helpers/entry-options.js';
 for(const tr of [true,false])test(`simple first QR; parent resources; help and post-play ${tr?'TR':'EN'}`,async({page})=>{
  await page.goto(tr?'/tr/':'/');await expect(page.locator('[data-start]')).toBeEnabled();
- const entry=page.locator('[data-view=entry]');await expect(entry.locator('button:visible')).toHaveCount(3);await expect(entry.locator('.entry-menu')).not.toHaveAttribute('open');
+ const entry=page.locator('[data-view=entry]');await expect(entry.locator('.entry-actions button:visible')).toHaveCount(3);await expect(entry.locator('.entry-menu')).not.toHaveAttribute('open');
  await expect(entry.locator('.journey-count,.certificate-status,.parent-resources')).toHaveCount(0);
+ await expect(entry.locator('.certificate-path')).toBeVisible();expect(await entry.evaluate(n=>n.querySelector('.certificate-path').getBoundingClientRect().top>=n.querySelector('.entry-actions').getBoundingClientRect().bottom)).toBe(true);
  const actions=entry.locator('.entry-actions button');await expect(actions.nth(0)).toHaveText(tr?'Başla→':'Start→');
  await openEntryOptions(page);await page.getByRole('button',{name:tr?'Yetişkinler':'Grown-ups',exact:true}).click();
  const parent=page.locator('[data-view=adult]');await expect(parent.locator('.parent-resources')).toBeVisible();await expect(parent.locator('.local-details')).not.toHaveAttribute('open');

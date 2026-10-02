@@ -25,7 +25,7 @@ export class PersonalController {
   if(localViews.has(screen))void this.refresh();
  }
  async refresh(){
-  const key=this.current(),ticket=++this.ticket,p=this.model,signature=()=>JSON.stringify(['entry','stopped'].includes(this.getState().screen)?[p.snapshot?.players||[],p.actorId]:[p.status,p.snapshot,p.result,p.actorId]),before=signature();
+  const key=this.current(),ticket=++this.ticket,p=this.model,signature=()=>JSON.stringify(['entry','stopped'].includes(this.getState().screen)?[p.status,p.snapshot?.players||[],p.actorId,this.getState().screen==='entry'?p.snapshot?.records:undefined]:[p.status,p.snapshot,p.result,p.actorId]),before=signature();
   try{const snap=await this.repo.snapshot();if(key!==this.current()||ticket!==this.ticket)return;p.snapshot=snap;p.status='ready';p.legacy=IS_V2?{available:true,count:0}:legacyPresence();if(p.actorId&&!snap.players.some(x=>x.id===p.actorId))p.actorId=null;if(p.selectedId&&!snap.players.some(x=>x.id===p.selectedId))p.selectedId=null;if(p.editId&&!snap.players.some(x=>x.id===p.editId))p.editId=null;
    if(p.result){const op=snap.operations.find(x=>x.id===p.result.id);p.result={...p.result,status:op?.status||(p.result.status==='correction-required'?'correction-required':'unknown')};}
   }catch{if(key!==this.current()||ticket!==this.ticket)return;p.status='unavailable';p.snapshot=null;p.actorId=null;}

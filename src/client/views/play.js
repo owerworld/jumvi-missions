@@ -1,4 +1,5 @@
 import {contextNavigation} from '../components/context-navigation.js';
+import {certificatePath} from '../components/certificate-path.js';
 import {playerContext} from '../components/player-context.js';
 import {profileMenu} from '../components/profile-menu.js';
 import {brandHeader} from '../components/brand-header.js';
@@ -38,6 +39,7 @@ export function playView(name,ctx) {
   const kit=el('div',undefined,'mission-kit'),facts=el('ul',undefined,'materials kit-facts');facts.setAttribute('aria-label',state.locale==='tr'?'Oyuna hazırlık':'Ready to play');for(const fact of cp.materials.split(' · '))facts.append(el('li',fact));kit.append(facts);if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));
   const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));if(cp.entryRules){const rules=el('ol',undefined,'entry-rules');rules.setAttribute('role','list');for(const [index,rule] of cp.entryRules.entries()){const item=el('li'),number=el('span',String(index+1),'rule-number');number.setAttribute('aria-hidden','true');item.append(number,document.createTextNode(rule));rules.append(item);}brief.append(rules);}else brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'));brief.append(text(cp.safe,'safety'));s.append(brief,hero,kit);ready();
   const row=controls();row.classList.add('entry-actions');const start=action(cp.start,'START','primary');start.disabled=!state.mission.ready;start.dataset.start='';const arrow=el('span','→','action-arrow');arrow.setAttribute('aria-hidden','true');start.append(arrow);row.append(start,shortLabel(b(cp.another,'GO',{screen:'discovery'},'link'),state.locale==='tr'?'Başka görev':'More missions'),shortLabel(b(cp.how,'HELP',{},'link'),state.locale==='tr'?'Yardım':'Help'));s.append(row);
+  s.append(certificatePath(ctx));
  }else if(name==='help'){
   brand();const hasRound=!!state.round,back=hasRound?cp.back:cp.backMission;
   s.append(b(back,'RETURN',{},'link',hasRound));label();s.append(heading(cp.stepsTitle));const listen=el('div',undefined,'help-listen');listen.append(sound());s.append(listen);if(cp.setup)s.append(text(cp.setup,'instruction'));
@@ -74,7 +76,7 @@ export function playView(name,ctx) {
   label();s.append(heading(state.reportMode?cp.report:ui.stopped));
   s.append(text(state.reportMode&&state.report?cp.edit:(state.reportMode&&!state.round?ui.preReport:ui.unreported)));const row=controls();
   if(state.round&&!state.reportMode)row.append(action(ui.resume,'RESUME','primary'));
-  s.append(playerContext(ctx));row.append(text(ui.optional,'muted'),shortLabel(b(ui.complete,'REPORT',{value:'complete'}),state.locale==='tr'?'Tamamladım':'I finished it'),b(ui.early,'REPORT',{value:'early'}));s.append(row);const next=controls();next.classList.add('secondary-access');next.append(action(cp.again,'REPLAY'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(next);
+  s.append(playerContext(ctx));row.append(text(ui.optional,'muted'),shortLabel(b(ui.complete,'REPORT',{value:'complete'}),state.locale==='tr'?'Tamamladım':'I finished it'),b(ui.early,'REPORT',{value:'early'}));s.append(row);const next=controls();next.classList.add('post-play-options');next.append(action(cp.again,'REPLAY'),b(cp.other,'GO',{screen:'discovery'}),action(cp.leave,'LEAVE','link'));s.append(next);
  }else if(name==='report'){
   const savedRecord=ctx.personal?.snapshot?.records.find(x=>x.report.id===state.report?.id&&x.report.revision===state.report?.revision),savedOwner=ctx.personal?.snapshot?.players.find(x=>x.id===savedRecord?.targetId);
   brand();label();s.append(heading(cp.thanks),text(state.report?.value==='early'?ui.reportedEarly:cp.reported,'instruction'),cp.hero?frameArt(cp.hero):art('product-still-v1','JUMVI','product-still'),text(ctx.personal?.busy?ui.savePending:ctx.isSaved?(savedOwner?`${savedOwner.nickname||savedOwner.label} · ${ui.savedReport}`:ui.savedReport):cp.notSaved,'report-summary'));
