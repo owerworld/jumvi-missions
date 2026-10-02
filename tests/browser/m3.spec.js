@@ -39,9 +39,9 @@ test('late commit cannot overwrite a changed screen, and a deletion in another t
  await open(page);await page.evaluate(async root=>{const {LocalRepository}=await import(root),r=new LocalRepository(),s=await r.snapshot();await r.create({epoch:s.epoch,name:'SYNTHETIC_LATE'});},root);await report(page);
  await page.evaluate(async root=>{const {LocalRepository}=await import(root);const commit=LocalRepository.prototype.commit;window.syntheticCommitGate=new Promise(resolve=>window.releaseSyntheticCommit=resolve);LocalRepository.prototype.commit=async function(...args){await window.syntheticCommitGate;return commit.apply(this,args);};},root);
  await page.getByRole('button',{name:'Save for SYNTHETIC_LATE',exact:true}).click();await page.getByRole('button',{name:'Open record status',exact:true}).click();await expect(page.getByText('Saving on this device… You can keep playing.',{exact:true})).toBeVisible();await expect.poll(async()=> (await snapshot(page)).operations.length).toBe(1);
- await page.getByRole('button',{name:'Back to the mission',exact:true}).click();await expect(page.locator('[data-view=entry]')).toBeVisible();
+ await page.getByRole('button',{name:'Back to my report',exact:true}).click();await expect(page.locator('[data-view=report]')).toBeVisible();
  const other=await context.newPage();await open(other);await other.evaluate(async root=>{const {LocalRepository}=await import(root);const r=new LocalRepository(),s=await r.snapshot();await r.deletePlayer({epoch:s.epoch,id:s.players[0].id,revision:s.players[0].revision});new BroadcastChannel('jumvi-local-invalidation-v1').postMessage('changed');r.close();},root);
- await page.evaluate(()=>window.releaseSyntheticCommit());await expect(page.locator('[data-view=entry]')).toBeVisible();await expect(page.getByText(/Saved to this player on this device/)).toHaveCount(0);
+ await page.evaluate(()=>window.releaseSyntheticCommit());await expect(page.locator('[data-view=report]')).toBeVisible();await expect(page.getByText(/Saved to this player on this device/)).toHaveCount(0);
  // The pending promise is settled by an explicit verification request, not an arbitrary sleep.
  await expect.poll(async()=> (await snapshot(page)).records.length).toBe(0);expect((await snapshot(page)).operations).toHaveLength(0);expect((await snapshot(page)).players).toHaveLength(0);
 });

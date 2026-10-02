@@ -17,6 +17,8 @@ export class PersonalController {
  enter(screen,previous){
   const p=this.model;p.message='';
   if(screen==='new-player')p.name='';
+  if(screen==='management'){const panel=this.getState().uiPanel,player=p.snapshot?.players.find(x=>x.id===panel?.editId);p.editId=player?.id||null;p.historyOnly=!!panel?.historyOnly;p.name=player?.nickname||'';}
+  if(screen==='record-result'&&this.getState().uiPanel?.resultId){const op=p.snapshot?.operations.find(x=>x.id===this.getState().uiPanel.resultId);p.result=op?{...op}:p.result?.id===this.getState().uiPanel.resultId?p.result:null;}
   if(['management','adult','guest','group'].includes(screen))p.quick=false;
   if(screen==='attribution'&&!['new-player','record-result'].includes(previous)){p.selectedId=null;p.correction=null;}
   if(!['attribution','new-player','record-result'].includes(screen)){p.selectedId=null;p.correction=null;}
@@ -39,7 +41,7 @@ export class PersonalController {
   if(e.type==='P_NAME'){p.name=e.value;return true;}
   if(e.type==='P_REFRESH'){void this.refresh();return true;}
   if(e.type==='P_SELECT'){p.selectedId=e.id;this.render({preserveFocus:true});return true;}
-  if(e.type==='P_EDIT'||e.type==='P_HISTORY'){const player=snap?.players.find(x=>x.id===e.id);if(player){p.editId=e.id;p.historyOnly=e.type==='P_HISTORY';p.name=player.nickname;this.render({preserveFocus:true});}return true;}
+  if(e.type==='P_EDIT'||e.type==='P_HISTORY'){const player=snap?.players.find(x=>x.id===e.id);if(player){p.editId=e.id;p.historyOnly=e.type==='P_HISTORY';p.name=player.nickname;this.navigate('management',{uiPanel:{editId:player.id,historyOnly:p.historyOnly}});}return true;}
   if(e.type==='P_CERTIFICATE'){
    if(p.busy||p.status!=='ready'||document.querySelector('dialog'))return true;
    const player=snap?.players.find(x=>x.id===(e.id||p.editId));if(!player)return true;
@@ -60,7 +62,7 @@ export class PersonalController {
     void this.mutate(()=>this.repo.correctReport({id:record.id,epoch:snap.epoch,revision:record.revision,value}).then(()=>ui.reportCorrected));
    }});return true;
   }
-  if(e.type==='P_INSPECT'){const op=snap?.operations.find(x=>x.id===e.id)||(p.result?.id===e.id?p.result:null);if(op){p.result={...op};this.navigate('record-result');}return true;}
+  if(e.type==='P_INSPECT'){const op=snap?.operations.find(x=>x.id===e.id)||(p.result?.id===e.id?p.result:null);if(op){p.result={...op};this.navigate('record-result',{uiPanel:{resultId:op.id}});}return true;}
   if(p.busy||!snap||p.status!=='ready')return true;
   if(['P_DELETE_ONE','P_DELETE_ALL','P_MOVE'].includes(e.type)){
    if(document.querySelector('dialog'))return true;

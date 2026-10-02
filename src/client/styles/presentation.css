@@ -228,3 +228,10 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout[data-view=entry] .entry-hero img{max-height:8.5rem}
 .customer-layout .mission-kit .indoor{margin-top:4px}
 .customer-layout .featured-kit{margin:8px 0 0;color:var(--muted);font-size:var(--small-size);line-height:var(--small-line)}
+
+/* Contextual return links stay in normal flow and grow with text. */
+.customer-layout .context-nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 16px}
+.customer-layout .context-nav>.control{width:auto;max-width:100%;min-width:0;gap:8px;text-align:left;white-space:normal;overflow-wrap:normal;hyphens:auto;padding-inline:0}
+.customer-layout .context-nav .context-mission{margin-left:auto}
+.compact-controls .customer-layout .context-nav{flex-direction:column;align-items:stretch}
+.compact-controls .customer-layout .context-nav>.control{width:100%;margin-left:0}

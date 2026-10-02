@@ -1,3 +1,4 @@
+import {browseScreens} from '../router.js';
 import {screens, contextMatches} from '../context.js';
 import {createRound, changeRound} from './round.js';
 import {explicitReport} from './report.js';
@@ -11,14 +12,14 @@ export function transition(s,e) {
  let n=s;
  switch(e.type) {
  case 'BROWSE_HISTORY':
-  if(s.round||s.report||!e.mission||!['entry','discovery','help'].includes(e.screen))return s;
-  n={...s,mission:e.mission,screen:e.screen,returnContext:e.returnContext,unknown:false,reportMode:false};break;
+  if(s.round||s.report||!e.mission||!browseScreens.includes(e.screen))return s;
+  n={...s,mission:e.mission,screen:e.screen,returnContext:e.returnContext,uiPanel:e.uiPanel||null,unknown:false,reportMode:false};break;
  case 'SELECT':
   if(!e.mission || !/^m(?:0[1-9]|[12][0-9]|3[0-6])$/.test(e.mission.id) || ['active','help','interrupted'].includes(s.screen))return s;
   n={...s,mission:e.mission,screen:'entry',round:null,report:null,returnContext:null,unknown:false,reportMode:false,previous:null};break;
  case 'GO':
   if (!screens.includes(e.screen) || ['active','stopped','report'].includes(e.screen)) return s;
-  n={...s,screen:e.screen,round:s.round?.state==='active'?changeRound(s.round,'interrupted'):s.round};break;
+  n={...s,screen:e.screen,uiPanel:e.uiPanel||null,round:s.round?.state==='active'?changeRound(s.round,'interrupted'):s.round};break;
  case 'RESTORE':
   if(!e.round || !s.mission || e.round.missionId!==s.mission.id || e.round.mechanicsVersion!==s.mission.mechanicsVersion || !['stopped','interrupted'].includes(e.round.state))return s;
   n={...s,screen:'interrupted',round:e.round,unknown:false};break;
@@ -54,6 +55,8 @@ export function transition(s,e) {
   if(!report) return s;
   n={...s,screen:'report',report,reportMode:false};break;
  }
+ case 'RETURN_TO_PLAY':
+  n={...s,screen:s.report?'report':s.round?.state==='active'?'interrupted':s.round?.state||'entry',round:s.round?.state==='active'?changeRound(s.round,'interrupted'):s.round,uiPanel:null,returnContext:null};break;
  case 'REPORT_RETURN': n={...s,screen:s.report?'report':'entry'};break;
  case 'PREVIOUS':
   if(!s.previous)return s;

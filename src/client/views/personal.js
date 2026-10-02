@@ -1,3 +1,4 @@
+import {contextNavigation} from '../components/context-navigation.js';
 import {el,heading} from '../components/dom.js';
 import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
@@ -5,14 +6,14 @@ import {playerLabel} from '../repository/local.js';
 import {historySummary} from '../repository/history-summary.js';
 import {parentResources} from '../components/parent-resources.js';
 import {brandHeader} from '../components/brand-header.js';
-export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
+export function personalView(name,{state,ui,cp,send,personal:p,catalog,navigation}){
  p ||= {snapshot:null,status:'loading',name:'',selectedId:null,result:null};
  const s=el('section');s.dataset.view=name;s.classList.add('customer-layout');s.append(brandHeader(state.locale));const row=el('div',undefined,'controls conflicting');
  const b=(label,type,detail={},disabled=false)=>{const control=button(label,()=>send(type,detail),{disabled});if(type==='START')control.dataset.needsReady='';if(['P_DELETE_ONE','P_DELETE_ALL'].includes(type))control.classList.add('danger-action');return control;};
  const go=(label,screen)=>b(label,'GO',{screen});
- const back=()=>b(ui.back,'BACK');
  const reportMission=report=>catalog?.missions.find(m=>m.id===report?.missionId)?.titles[state.locale]||(!report||report.missionId===state.mission?.id?cp.mission:report.missionId);
  const snap=p.snapshot,players=snap?.players||[],selected=players.find(x=>x.id===p.selectedId),editable=players.find(x=>x.id===p.editId);
+ s.append(contextNavigation({state,ui,cp,send,navigation}));
  s.append(heading(name==='attribution'?ui.choosePlayer:name==='guest'?ui.guestTitle:ui.titles[name]));
  const status=el('p',p.message||'', 'personal-message');status.setAttribute('role','status');
  const disclosure=()=>{s.append(el('p',ui.localDisclosure));const more=el('details',undefined,'local-details');more.append(el('summary',ui.localDetails),el('p',ui.localRetention));s.append(more);};
@@ -28,7 +29,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   if(name==='returning'){s.append(el('p',ui.returnInfo),el('p',cp.mission));row.append(go(cp.backMission||ui.back,'entry'),go(ui.guestTitle,'guest'),go(ui.titles.group,'group'));if(state.previous)row.append(b(ui.previousRound,'PREVIOUS'));}
   row.append(b(cp.how,'HELP'),b(cp.leave,'LEAVE'));s.append(row);return s;
  }
- if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'),back());s.append(row,parentResources(state.locale));const local=el('details',undefined,'local-details');local.append(el('summary',ui.localDetails),el('p',ui.localDisclosure),el('p',ui.localRetention));s.append(local);return s;}
+ if(name==='adult'){s.append(el('p',ui.adultPurpose));row.append(go(ui.continueManagement,'management'));s.append(row,parentResources(state.locale));const local=el('details',undefined,'local-details');local.append(el('summary',ui.localDetails),el('p',ui.localDisclosure),el('p',ui.localRetention));s.append(local);return s;}
  if(p.status==='loading')s.append(el('p',ui.localLoading));
  if(p.status==='unavailable'){s.append(el('p',ui.localUnavailable));row.append(b(ui.retry,'P_REFRESH'));}
  if(name==='new-player'){s.append(el('p',p.quick?(state.locale==='tr'?'Oyuncu oluşturmak isteğe bağlı. Bu görevin bildirimi oluşturduğun oyuncuya kaydedilecek.':'Creating a player is optional. This mission report will be saved to the player you create.'):ui.createInfo));disclosure();form('P_CREATE',p.quick?(state.locale==='tr'?'Oluştur ve bu görevi kaydet':'Create player and save this mission'):ui.createPlayer,p.name);row.append(go(ui.cancel,state.report?'attribution':'management'));}
@@ -50,7 +51,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
   s.append(el('p',target?`${playerLabel(target)} · ${missionLabel}`:missionLabel),el('p',verified?ui.saveVerified:result?.status==='correction-required'?ui.correctionRequired:p.busy?ui.savePending:ui.saveUnverified,'status'));
   if(verified){row.append(b(ui.correctAttribution,'P_CORRECT',{id:record.id}));row.append(b(record.report.value==='complete'?ui.changeToEarly:ui.changeToComplete,'P_CHANGE_REPORT',{id:record.id,value:record.report.value==='complete'?'early':'complete'}));}
   else if(result&&result.status!=='correction-required')row.append(b(ui.retryRecord,'P_RETRY',{},p.busy));
-  row.append(back(),go(ui.titles.management,'management'));
+  row.append(go(ui.titles.management,'management'));
  }
  if(name==='management'){
   // The player list already shows this disclosure before opening an individual
@@ -79,7 +80,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog}){
    item.append(el('h2',playerLabel(player)),el('p',ui.historySummary.replace('{distinct}',summary.distinct).replace('{completed}',summary.completed).replace('{early}',summary.early)),el('p',ui.certificateProgress.replace('{count}',summary.certificateCount).replace('{total}',summary.certificateTotal),'journey-count'),b(`${ui.viewHistory}: ${playerLabel(player)}`,'P_HISTORY',{id:player.id}),b(`${ui.editPlayer}: ${playerLabel(player)}`,'P_EDIT',{id:player.id}));s.append(item);
   }
   if(snap?.operations.some(o=>o.status==='pending')){s.append(el('h2',ui.pendingRecords));for(const op of snap.operations.filter(o=>o.status==='pending')){const owner=players.find(x=>x.id===op.targetId);s.append(b(`${ui.inspectRecord} · ${owner?playerLabel(owner):''}`,'P_INSPECT',{id:op.id}));}}
-  row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'),go(cp.adult,'adult'),back());
+  row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'),go(cp.adult,'adult'));
  }
  s.append(status,row);return s;
 }

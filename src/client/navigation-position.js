@@ -1,4 +1,4 @@
-const context = s => `${s.mission?.id}:${s.screen}:${s.round?.id || ''}`;
+const context = s => `${s.mission?.id}:${s.screen}:${s.round?.id || ''}${s.uiPanel?':'+JSON.stringify(s.uiPanel):''}`;
 
 // Reading positions are document-local UI state, never player history.
 export class NavigationPosition {

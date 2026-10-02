@@ -1,3 +1,4 @@
+import {contextNavigation} from '../components/context-navigation.js';
 import {playerContext} from '../components/player-context.js';
 import {profileMenu} from '../components/profile-menu.js';
 import {brandHeader} from '../components/brand-header.js';
@@ -32,7 +33,7 @@ export function playView(name,ctx) {
  const secondary=(report=false,target=s)=>{const r=el('nav',undefined,'secondary-access');r.setAttribute('aria-label',ui.titles.management);if(report)r.append(b(cp.report,'REPORT_OPEN',{},'link'));r.append(b(cp.players,'GO',{screen:'management'},'link'),b(cp.adult,'GO',{screen:'adult'},'link'),b(ui.titles.returning,'GO',{screen:'returning'},'link'));target.append(r);};
  const action=(txt,type,kind='secondary',active=false)=>b(txt,type,{},kind,active);
  if(name==='entry'){
-  s.append(brandHeader(state.locale,profileMenu(ctx,{tools:[sound(),access()],report:true})));s.append(el('p',state.locale==='tr'?'GÖREVİN':'YOUR MISSION','customer-eyebrow'),heading(cp.mission),text(cp.goal,'instruction goal'));
+  s.append(brandHeader(state.locale,profileMenu(ctx,{tools:[sound(),access()],report:true})));if(ctx.navigation?.parent?.screen==='discovery')s.append(contextNavigation(ctx,{missionShortcut:false}));s.append(el('p',state.locale==='tr'?'GÖREVİN':'YOUR MISSION','customer-eyebrow'),heading(cp.mission),text(cp.goal,'instruction goal'));
   const hero=cp.frames?frameArt(cp.hero||cp.frames[0]):art('seated-editorial-v1',cp.step1body+' '+cp.toss+' '+cp.catch);hero.classList.add('entry-hero');
   const kit=el('div',undefined,'mission-kit'),facts=el('ul',undefined,'materials kit-facts');facts.setAttribute('aria-label',state.locale==='tr'?'Oyuna hazırlık':'Ready to play');for(const fact of cp.materials.split(' · '))facts.append(el('li',fact));kit.append(facts);if(cp.indoor)kit.append(text(cp.indoor,'muted indoor'));
   const brief=el('div',undefined,'entry-brief');if(cp.entrySetup)brief.append(text(cp.entrySetup,'instruction setup'));if(cp.entryRules){const rules=el('ol',undefined,'entry-rules');rules.setAttribute('role','list');for(const [index,rule] of cp.entryRules.entries()){const item=el('li'),number=el('span',String(index+1),'rule-number');number.setAttribute('aria-hidden','true');item.append(number,document.createTextNode(rule));rules.append(item);}brief.append(rules);}else brief.append(text(cp.entryCopy||cp.toss+' '+cp.catch,'instruction toss'));brief.append(text(cp.safe,'safety'));s.append(brief,hero,kit);ready();
