@@ -1,4 +1,5 @@
 import {contextNavigation} from '../components/context-navigation.js';
+import {IS_V2} from '../deployment.js';
 import {el,heading} from '../components/dom.js';
 import {button} from '../components/button.js';
 import {choice} from '../components/choice.js';
@@ -81,7 +82,7 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog,navigatio
   }
   if(snap?.operations.some(o=>o.status==='pending')){s.append(el('h2',ui.pendingRecords));for(const op of snap.operations.filter(o=>o.status==='pending')){const owner=players.find(x=>x.id===op.targetId);s.append(b(`${ui.inspectRecord} · ${owner?playerLabel(owner):''}`,'P_INSPECT',{id:op.id}));}}
   const hasLocalData=players.length||snap?.records.length||snap?.operations.length||p.legacy?.count;
-  row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'||!hasLocalData),go(cp.adult,'adult'));
+  row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'||(IS_V2&&!hasLocalData)),go(cp.adult,'adult'));
  }
  s.append(status,row);return s;
 }

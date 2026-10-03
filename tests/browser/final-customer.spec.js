@@ -12,10 +12,12 @@ for(const tr of [false,true])test(`personal controls reflow with a long nickname
  const back=page.getByRole('button',{name:tr?'Kaydedilmemiş bildirimime dön':'Back to my unsaved report',exact:true});expect((await back.boundingBox()).height).toBeGreaterThanOrEqual(56);await back.click();await expect(page.locator('[data-view=report]')).toBeVisible();
 });
 test('empty local history does not offer an actionable delete-all operation',async({page})=>{
- await page.goto('/');await expect(page.locator('[data-start]')).toBeEnabled();await page.locator('#profile-menu-toggle').click();await page.getByRole('button',{name:'Player options',exact:true}).click();
+ const {serveCoexist}=await import('../../tools/serve-v2-coexist.mjs'),replica=await serveCoexist(0);
+ try{await page.goto(replica.origin+'/v2/');await expect(page.locator('[data-start]')).toBeEnabled();await page.locator('#profile-menu-toggle').click();await page.getByRole('button',{name:'Player options',exact:true}).click();
  await expect(page.getByRole('button',{name:'Delete all local player and history data',exact:true})).toBeDisabled();
  await page.getByRole('button',{name:'New player',exact:true}).click();await page.getByRole('button',{name:'Create player',exact:true}).click();
  await expect(page.getByRole('button',{name:'Delete all local player and history data',exact:true})).toBeEnabled();
+ }finally{await new Promise(ok=>replica.server.close(ok));}
 });
 
 for(const reason of ['navigation','corrected history'])test(`a slow certificate does not open after ${reason}`,async({page})=>{
