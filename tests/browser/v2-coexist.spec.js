@@ -3,7 +3,7 @@ const release=JSON.parse(readFileSync('dist-v2/v2/release-manifest.json')).relea
 const offline=JSON.parse(readFileSync('dist-v2/v2/sw-release.json'));
 const digest=s=>createHash('sha256').update(s).digest('hex');
 test('same origin: actual v254 first visit, compatibility SW, separate records/caches, rollback',async({browser})=>{
- test.setTimeout(240000);const {server,state,origin}=await serveCoexist(0);const context=await browser.newContext();await context.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());let root=await context.newPage(),v2;
+ test.setTimeout(240000);const {server,state,origin,stopOrigin,resumeOrigin}=await serveCoexist(0);const context=await browser.newContext();await context.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());let root=await context.newPage(),v2;
  try{
   await root.goto(origin);await root.evaluate(async()=>{localStorage.setItem('jumvi_profiles_v1','[{"id":"p1","name":"SYNTHETIC_LEGACY"}]');localStorage.setItem('foreign-key','keep');await navigator.serviceWorker.ready;});await expect.poll(()=>root.evaluate(()=>!!navigator.serviceWorker.controller).catch(()=>false)).toBe(true);
   await root.goto(origin+'/__qa.html'); // Keep old controlled tab without app re-registration/reload races.
@@ -19,7 +19,7 @@ test('same origin: actual v254 first visit, compatibility SW, separate records/c
    const cache=await caches.open(`jumvi-v2-${release}-content`);
    return (await Promise.all(paths.map(path=>cache.match(path)))).every(Boolean);
   },{release,paths:offline.missions.m25}),{timeout:45000}).toBe(true);
-  state.offline=true;await v2.reload();await expect(v2.locator('[data-start]')).toBeEnabled();await root.goto(origin+'/tr/');await expect(root.locator('html')).toHaveAttribute('lang','tr');await root.goto(origin);await expect(root.locator('html')).toHaveAttribute('lang',/en/);state.offline=false;
+  await stopOrigin();expect(server.listening).toBe(false);await expect(fetch(origin+'/__qa.html')).rejects.toThrow();await v2.reload();await expect(v2.locator('[data-start]')).toBeEnabled();await root.goto(origin+'/tr/');await expect(root.locator('html')).toHaveAttribute('lang','tr');await root.goto(origin);await expect(root.locator('html')).toHaveAttribute('lang',/en/);await resumeOrigin();
   state.v2=false;const withdrawn=await v2.reload();expect(withdrawn.status()).toBe(410);await expect(v2.locator('body')).toContainText('Review withdrawn');const fresh=await context.newPage();const response=await fresh.goto(origin+'/v2/not-cached');expect(response.status()).toBe(410);await fresh.goto(origin);await expect(fresh.locator('html')).toHaveAttribute('lang',/en/);expect(await fresh.evaluate(()=>localStorage.getItem('jumvi_profiles_v1'))).toContain('SYNTHETIC_LEGACY');
   for(const p of ['/api','/panel','/analiz','/v2/api','/v2/panel','/v2/analiz']){const cached=await v2.evaluate(async p=>{for(const n of await caches.keys())if(n.startsWith('jumvi-v2-')&&await(await caches.open(n)).match(p))return true;return false;},p);expect(cached).toBe(false);}
  }finally{await context.close();await new Promise(ok=>server.close(ok));}

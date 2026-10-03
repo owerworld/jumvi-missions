@@ -97,10 +97,11 @@ for (const engine of [chromium, webkit]) {
         await replicaPage.locator('[data-mission-id=m30] button').click();
         await expect(replicaPage.locator('[data-start]')).toBeEnabled({timeout: 45000});
         await readyForOffline(replicaPage);
-        replica.state.offline = true;
+        await replica.stopOrigin();
+        assert.equal(replica.server.listening, false);
         await assert.rejects(fetch(replica.origin + '/__qa.html'));
         await checkFallback(replicaPage, replica.origin);
-        console.log('webkit: same verified artifact, LOCAL origin socket outage TR/EN PASS (not live-origin offline emulation)');
+        console.log('webkit: same verified artifact, LOCAL origin shutdown TR/EN PASS (not live-origin offline emulation)');
       } finally {
         await replicaContext.close();
         replica.server.closeAllConnections();

@@ -11,6 +11,13 @@ export async function serveCoexist(port=8950,{legacySW='original',v2=true,offlin
   else {const path=u.pathname==='/'?'/index.html':['/tr','/tr/'].includes(u.pathname)?'/tr/index.html':u.pathname;response=['/index.html','/tr/index.html'].includes(path)?bytes('compat/v254',path):bytes('dist',path);}
   if(u.searchParams.get('__qa_text')==='200'&&(response.headers.get('Content-Type')||'').includes('text/html')){const html=await response.text();response=new Response(html.replace('</head>','<style>html{font-size:200%}</style></head>'),{status:response.status,headers:response.headers});}
   res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));
- }catch{res.writeHead(500);res.end('QA server error');}});await new Promise(ok=>server.listen(port,'127.0.0.1',ok));return {server,state,origin:`http://127.0.0.1:${server.address().port}`};
+ }catch{res.writeHead(500);res.end('QA server error');}});await new Promise(ok=>server.listen(port,'127.0.0.1',ok));
+ const boundPort=server.address().port,origin=`http://127.0.0.1:${boundPort}`;
+ // Stop the origin itself for browser offline fallback checks. Resetting every
+ // incoming TCP socket can surface as a WebKit navigation-process error instead
+ // of an ordinary unavailable-origin fetch rejection on Linux.
+ const stopOrigin=async()=>{if(!server.listening)return;const closed=new Promise((ok,no)=>server.close(e=>e?no(e):ok()));server.closeAllConnections();await closed;};
+ const resumeOrigin=async()=>{if(server.listening)return;await new Promise((ok,no)=>{server.once('error',no);server.listen(boundPort,'127.0.0.1',()=>{server.off('error',no);ok();});});};
+ return {server,state,origin,stopOrigin,resumeOrigin};
 }
 if(import.meta.url===pathToFileURL(process.argv[1]).href){console.log((await serveCoexist(Number(process.env.PORT||8950))).origin);}
