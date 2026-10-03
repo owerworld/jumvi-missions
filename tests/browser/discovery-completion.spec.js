@@ -1,0 +1,34 @@
+import {test,expect} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+const release=JSON.parse(readFileSync('dist/release-manifest.json')).release;
+const root=`/releases/${release}/client/repository/local.js`;
+for(const tr of [false,true])test(`catalogue makes saved and unsaved completion explicit ${tr?'TR':'EN'}`,async({page})=>{
+ await page.goto(tr?'/tr':'/');await expect(page.locator('[data-start]')).toBeEnabled();
+ await page.locator('[data-start]').click();await page.locator('.stop-action').click();
+ await page.getByRole('button',{name:tr?'Tamamladığımı bildir':'Report that I completed it',exact:true}).click();
+ await page.getByRole('button',{name:tr?'Başka görev':'Another mission',exact:true}).click();
+ await expect(page.locator('.discovery-progress')).toContainText(tr?'Henüz kaydedilmedi':'Not saved yet');
+ await expect(page.locator('.mission-completed')).toHaveCount(0);
+ await page.locator('.discovery-progress').getByRole('button',{name:tr?'Bu görevi kaydet':'Save this mission',exact:true}).click();
+ await page.getByRole('button',{name:tr?'Yeni oyuncu':'New player',exact:true}).click();
+ await page.getByLabel(tr?'Takma ad (isteğe bağlı)':'Nickname (optional)',{exact:true}).fill('SYNTHETIC_DONE');
+ await page.getByRole('button',{name:tr?'Oluştur ve bu görevi kaydet':'Create player and save this mission',exact:true}).click();
+ await expect(page.locator('.journey-count')).toContainText('1/36');
+ await page.getByRole('button',{name:tr?'Başka görev':'Another mission',exact:true}).click();
+ await expect(page.locator('.discovery-progress')).toContainText('1/36');
+ await expect(page.locator('.featured-completed')).toContainText(tr?'Tamamlandı':'Completed');
+ await expect(page.locator('[data-mission-id=m25] .mission-completed')).toBeVisible();
+ await expect(page.locator('[data-mission-id=m25] button')).toHaveAccessibleName(new RegExp(tr?'Tamamlandı':'Completed'));
+ await page.reload();await page.getByRole('button',{name:tr?'Ayrıl':'Leave',exact:true}).click();await expect(page.locator('[data-start]')).toBeEnabled();
+ await page.locator('.entry-actions button').nth(1).click();
+ await expect(page.locator('.discovery-progress select')).toBeVisible();
+ expect((await page.locator('.discovery-progress select').boundingBox()).height).toBeGreaterThanOrEqual(56);
+ await expect(page.locator('.mission-completed')).toHaveCount(0);
+ const id=await page.evaluate(async root=>{const {LocalRepository}=await import(root),r=new LocalRepository(),s=await r.snapshot();r.close();return s.players[0].id;},root);
+ await page.locator('.discovery-progress select').selectOption(id);
+ await expect(page.locator('[data-mission-id=m25] .mission-completed')).toBeVisible();
+ for(const width of [320,390,430]){await page.setViewportSize({width,height:844});await page.evaluate(()=>document.documentElement.style.fontSize='200%');expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);}
+ await page.evaluate(()=>document.documentElement.style.fontSize='100%');await page.setViewportSize({width:390,height:844});
+ await page.addScriptTag({content:readFileSync('node_modules/axe-core/axe.min.js','utf8')});expect((await page.evaluate(()=>window.axe.run(document.querySelector('main')))).violations).toEqual([]);
+ await page.screenshot({path:`review-assets/2026-10-03/completed-catalogue/${tr?'tr':'en'}-${test.info().project.name}.png`,fullPage:true});
+});

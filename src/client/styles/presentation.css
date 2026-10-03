@@ -249,3 +249,13 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout .certificate-path progress::-webkit-progress-value{background:var(--action);border-radius:999px}
 .customer-layout .certificate-path progress::-moz-progress-bar{background:var(--action);border-radius:999px}
 .customer-layout .certificate-path>.control{margin-top:12px}
+
+/* Completion is explicit and visible without opening the profile disclosure. */
+.customer-layout .discovery-progress{margin:16px 0;padding:16px;border:1px solid var(--border);border-radius:20px;background:var(--infoSurface);min-width:0}
+.customer-layout .discovery-progress h2{font-size:var(--instruction-size);margin:0 0 12px}
+.customer-layout .discovery-progress select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;display:block;width:100%;max-width:100%;min-width:0;min-height:var(--target-child);padding:12px 36px 12px 12px;margin-block:8px 12px;border:2px solid var(--border);border-radius:12px;background-color:var(--surface);color:var(--ink)}
+.customer-layout .discovery-progress-count{font-weight:800}
+.customer-layout .discovery-unsaved{border-top:1px solid var(--border);margin-top:12px;padding-top:12px}
+.customer-layout .discovery-unsaved .control{width:100%;min-width:0}
+.customer-layout .mission-list>.is-completed{border-inline-start:4px solid var(--success)}
+.customer-layout .mission-completed,.customer-layout .featured-completed{display:block;width:fit-content;max-width:100%;font-weight:800;background:var(--surface);color:var(--ink);border:2px solid var(--success);border-radius:10px;padding:4px 8px;white-space:normal}
