@@ -35,7 +35,7 @@ test('saved-report summary and history actions reflow at 320 CSS px with 200% te
  await page.setViewportSize({width:320,height:844});await page.goto('/tr');
  await page.evaluate(async()=>{
   document.documentElement.style.fontSize='200%';
-  const root=document.querySelector('script[type=module]').src.split('/client/')[0];
+  const root=document.querySelector('script[src$="/main.js"]').src.split('/client/')[0];
   const {LocalRepository}=await import(root+'/client/repository/local.js');
   const r=new LocalRepository(),s=await r.snapshot();await r.create({epoch:s.epoch,name:'QA ÖRNEK'});r.close();
  });

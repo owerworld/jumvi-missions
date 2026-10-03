@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 const release=JSON.parse(readFileSync('dist/release-manifest.json')).release;
 for(const tr of [false,true])test(`top-right player menu, keyboard, local identity and reflow ${tr?'TR':'EN'}`,async({page})=>{
  await page.goto(tr?'/tr/':'/');await expect(page.locator('[data-start]')).toBeEnabled();
- const menu=page.locator('.profile-menu'),summary=menu.locator('summary');
+ const menu=page.locator('.profile-menu'),summary=menu.locator(':scope > summary');
  await expect(page.locator('.customer-header .profile-menu')).toHaveCount(1);
  await expect(menu).not.toHaveAttribute('open');
  const logo=await page.locator('.brand').boundingBox(),box=await summary.boundingBox();expect(box.x).toBeGreaterThanOrEqual(logo.x+logo.width);expect(box.y).toBeLessThan(120);expect(box.height).toBeGreaterThanOrEqual(56);

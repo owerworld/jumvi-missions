@@ -1,0 +1,24 @@
+/* The default follows the device even before JavaScript starts. Product art is never inverted. */
+:root[data-theme=dark]{--canvas:#101C28;--surface:#182A38;--ink:#EDF5FA;--muted:#B7CBD9;--action:#8DD7FF;--actionHover:#ACE2FF;--actionPressed:#C8EDFF;--border:#819DAF;--infoSurface:#20394B;--danger:#FFB3AA;--dangerSurface:#48282B;--success:#A2E6B8;--successSurface:#193D32;--warning:#FFDB91;--warningSurface:#493A23;--disabledInk:#B8C5CE;--disabledSurface:#334554;--focus:#E3F5FF;--focusGap:#101C28;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme]){--canvas:#101C28;--surface:#182A38;--ink:#EDF5FA;--muted:#B7CBD9;--action:#8DD7FF;--border:#819DAF;--infoSurface:#20394B;color-scheme:dark}}
+.customer-layout{background:var(--surface)}
+.customer-layout .featured-mission{background:linear-gradient(135deg,var(--infoSurface),var(--surface))}
+.customer-layout .report-actions>.control:not(.primary),.mission-filters input,.mission-filters select,.player-context select{background:var(--surface);color:var(--ink)}
+dialog{color:var(--ink)}
+.customer-layout .primary,.customer-layout .stop-action,.customer-layout .profile-avatar,.customer-layout .profile-link-badge.lime,.customer-layout .profile-link-badge.orange,.customer-layout .steps>li::before{color:#152D40}
+.customer-layout .primary:hover,.customer-layout .primary:active{color:var(--ink)}
+.customer-layout .featured-mission>.primary:hover{color:#152D40}
+.customer-layout .primary:disabled{color:var(--disabledInk)}
+:root[data-theme=dark] .brand{background:#FAFAF5;border-radius:12px;padding:4px}
+.appearance-settings{display:grid;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.appearance-settings label{font-weight:700}
+.appearance-settings select{width:100%;min-width:0;min-height:var(--target-child);padding:12px;border:2px solid var(--border);border-radius:16px;background:var(--surface);color:var(--ink)}
+select:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.install-help{margin-top:16px;border-top:1px solid var(--border)}
+.install-help summary{min-height:var(--target-child);padding-block:16px;color:var(--action);font-weight:700;cursor:pointer}
+/* Safe-area padding grows in landscape and standalone. No fixed controls obscure the keyboard. */
+body{min-height:100vh;min-height:100dvh}
+main,main:has(>.customer-layout){padding-top:max(20px,env(safe-area-inset-top));padding-right:max(20px,env(safe-area-inset-right));padding-bottom:max(24px,env(safe-area-inset-bottom));padding-left:max(20px,env(safe-area-inset-left))}
+@media(min-width:48rem){main:has(>.customer-layout){padding-inline:max(32px,env(safe-area-inset-left)) max(32px,env(safe-area-inset-right))}}
+@media(display-mode:standalone){main:has(>.customer-layout){margin-block:0;min-height:100vh;min-height:100dvh}}
+.customer-layout .featured-mission>.primary{color:#152D40}

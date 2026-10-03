@@ -1,3 +1,4 @@
+import {appearance,setAppearance} from '../theme.js';
 import {el} from './dom.js';
 import {button} from './button.js';
 import {playerContext} from './player-context.js';
@@ -22,7 +23,14 @@ export function profileMenu(ctx,{tools=[],report=false}={}) {
  if(report)item(cp.report,'REPORT_OPEN',{},'✓','blue');
  panel.append(nav);
  if(tools.length){const utilities=el('div',undefined,'customer-tools');utilities.append(...tools);panel.append(utilities);}
- menu.append(panel);
+ const appearanceBox=el('div',undefined,'appearance-settings'),label=el('label',tr?'Görünüm':'Appearance');label.htmlFor='appearance';
+ const select=el('select');select.id='appearance';
+ for(const [value,text] of [['system',tr?'Sistem ayarı':'Use device setting'],['light',tr?'Açık':'Light'],['dark',tr?'Koyu':'Dark']]){const option=el('option',text);option.value=value;select.append(option);}
+ select.value=appearance();select.addEventListener('change',()=>setAppearance(select.value));appearanceBox.append(label,select);panel.append(appearanceBox);
+ const install=el('details',undefined,'install-help'),installTitle=el('summary',tr?'Ana ekrana ekle':'Add to Home Screen');install.append(installTitle);
+ install.append(el('p',tr?'iPhone: Safari’de Paylaş menüsünden Ana Ekrana Ekle’yi seç. Android: tarayıcı menüsünde Uygulamayı yükle veya Ana ekrana ekle seçeneğini kullan.':'iPhone: in Safari, open Share and choose Add to Home Screen. Android: open your browser menu and choose Install app or Add to Home screen.'));
+ install.append(el('p',tr?'İlk kez çevrimiçiyken aç. Çevrimdışı yalnız hazırlanmış görevler kullanılabilir. Ana ekran uygulamasındaki oyuncu geçmişi tarayıcıdakinden ayrı olabilir; kayıtlar cihazlar arasında eşitlenmez.':'Open it online first. Only prepared missions are available offline. Player history in the Home Screen app may be separate from your browser; records do not sync between devices.'));
+ panel.append(install);menu.append(panel);
  menu.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){e.preventDefault();e.stopPropagation();menu.open=false;summary.focus({preventScroll:true});}});
  return menu;
 }

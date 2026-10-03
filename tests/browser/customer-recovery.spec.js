@@ -15,7 +15,7 @@ for(const tr of [true,false])test(`customer recovery: groups, essential rules an
 
 test('remaining filter respects the explicitly selected player and resets for guest',async({page})=>{
  await page.goto('/');await expect(page.locator('[data-start]')).toBeEnabled();
- const moduleRoot=(await page.locator('script[type=module]').getAttribute('src')).split('/client/')[0];
+ const moduleRoot=(await page.locator('script[src$="/main.js"]').getAttribute('src')).split('/client/')[0];
  const ids=await page.evaluate(async prefix=>{const {LocalRepository}=await import(prefix+'/client/repository/local.js'),r=new LocalRepository(),s=await r.snapshot(),a=await r.create({epoch:s.epoch,name:'SYNTHETIC_FILTER_A'}),b=await r.create({epoch:s.epoch,name:'SYNTHETIC_FILTER_B'});const op=await r.prepare({id:'filter-complete',epoch:s.epoch,targetId:a.id,targetRevision:a.revision,report:{id:'filter-report',missionId:'m25',mechanicsVersion:'synthetic',revision:1,roundId:null,value:'complete'}});await r.commit(op.id,s.epoch);r.close();return [a.id,b.id];},moduleRoot);
  await page.reload();await expect(page.locator('[data-start]')).toBeEnabled();await page.getByRole('button',{name:'Find another suitable mission',exact:true}).click();
  await expect(page.getByLabel('Not completed yet',{exact:true})).toBeDisabled();

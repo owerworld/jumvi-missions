@@ -83,7 +83,7 @@ test('EN certificate copy renders locally without personal network requests',asy
 test('EN player summary exposes distinct progress and optional certificate path at narrow width',async({page})=>{
  await page.setViewportSize({width:320,height:844});await page.goto('/');
  await expect(page.locator('[data-start]')).toBeEnabled();
- const root=(await page.locator('script[type=module]').getAttribute('src')).split('/client/')[0];
+ const root=(await page.locator('script[src$="/main.js"]').getAttribute('src')).split('/client/')[0];
  await page.evaluate(async root=>{
   const {LocalRepository}=await import(root+'/client/repository/local.js');
   const r=new LocalRepository(),s=await r.snapshot(),player=await r.create({epoch:s.epoch,name:'QA SAMPLE'});
