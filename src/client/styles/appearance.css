@@ -9,7 +9,10 @@ dialog{color:var(--ink)}
 .customer-layout .primary:hover,.customer-layout .primary:active{color:var(--ink)}
 .customer-layout .featured-mission>.primary:hover{color:#152D40}
 .customer-layout .primary:disabled{color:var(--disabledInk)}
-:root[data-theme=dark] .brand{background:#FAFAF5;border-radius:12px;padding:4px}
+/* Only the monochrome wordmark changes to white; equipment/art retain their colors.
+   Keep its transparent background and identical dimensions in both appearances. */
+:root[data-theme=dark] .brand{filter:brightness(0) invert(1)}
+@media(prefers-color-scheme:dark){:root:not([data-theme]) .brand{filter:brightness(0) invert(1)}}
 .appearance-settings{display:grid;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
 .appearance-settings label{font-weight:700}
 .appearance-settings select{width:100%;min-width:0;min-height:var(--target-child);padding:12px;border:2px solid var(--border);border-radius:16px;background:var(--surface);color:var(--ink)}
