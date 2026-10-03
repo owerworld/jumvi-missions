@@ -80,7 +80,8 @@ export function personalView(name,{state,ui,cp,send,personal:p,catalog,navigatio
    item.append(el('h2',playerLabel(player)),el('p',ui.historySummary.replace('{distinct}',summary.distinct).replace('{completed}',summary.completed).replace('{early}',summary.early)),el('p',ui.certificateProgress.replace('{count}',summary.certificateCount).replace('{total}',summary.certificateTotal),'journey-count'),b(`${ui.viewHistory}: ${playerLabel(player)}`,'P_HISTORY',{id:player.id}),b(`${ui.editPlayer}: ${playerLabel(player)}`,'P_EDIT',{id:player.id}));s.append(item);
   }
   if(snap?.operations.some(o=>o.status==='pending')){s.append(el('h2',ui.pendingRecords));for(const op of snap.operations.filter(o=>o.status==='pending')){const owner=players.find(x=>x.id===op.targetId);s.append(b(`${ui.inspectRecord} · ${owner?playerLabel(owner):''}`,'P_INSPECT',{id:op.id}));}}
-  row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'),go(cp.adult,'adult'));
+  const hasLocalData=players.length||snap?.records.length||snap?.operations.length||p.legacy?.count;
+  row.append(go(ui.newPlayer,'new-player'),b(ui.deleteAll,'P_DELETE_ALL',{},p.busy||p.status!=='ready'||!hasLocalData),go(cp.adult,'adult'));
  }
  s.append(status,row);return s;
 }

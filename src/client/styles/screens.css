@@ -57,7 +57,7 @@
 @media(max-width:23rem){.customer-layout{padding:.75rem}.customer-header{gap:.5rem}.customer-layout .entry-actions,.customer-layout .active-actions{grid-template-columns:minmax(0,1fr)}}
 /* Preserve complete words alongside icons in the two-action reference layout. */
 .customer-layout .entry-actions .control:has(.control-icon),.customer-layout .active-actions .control:has(.control-icon){flex-direction:column}
-.customer-layout .control-label{overflow-wrap:normal;word-break:normal;hyphens:manual}
+.customer-layout .control-label{overflow-wrap:anywhere;word-break:normal;hyphens:auto}
 .customer-layout .mission-list,.customer-layout .mission-filters{grid-template-columns:minmax(0,1fr)}
 .customer-layout .primary,.customer-layout .stop-action{box-shadow:0 0 0 1px var(--border)}
 .customer-layout .active-actions>.secondary{border-color:var(--border)}

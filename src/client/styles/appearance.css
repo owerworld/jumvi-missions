@@ -23,3 +23,6 @@ main,main:has(>.customer-layout){padding-top:max(20px,env(safe-area-inset-top));
 @media(display-mode:standalone){main:has(>.customer-layout){margin-block:0;min-height:100vh;min-height:100dvh}}
 .customer-layout .featured-mission>.primary{color:#152D40}
 .customer-layout .stop-action:active{color:#152D40}
+/* Readiness changes foreground and background together. Interpolating only the
+   background briefly leaves dark text on the dark disabled surface. */
+.customer-layout .control[data-needs-ready]{transition:none}

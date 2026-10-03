@@ -43,14 +43,20 @@ export class PersonalController {
   if(e.type==='P_SELECT'){p.selectedId=e.id;this.render({preserveFocus:true});return true;}
   if(e.type==='P_EDIT'||e.type==='P_HISTORY'){const player=snap?.players.find(x=>x.id===e.id);if(player){p.editId=e.id;p.historyOnly=e.type==='P_HISTORY';p.name=player.nickname;this.navigate('management',{uiPanel:{editId:player.id,historyOnly:p.historyOnly}});}return true;}
   if(e.type==='P_CERTIFICATE'){
-   if(p.busy||p.status!=='ready'||document.querySelector('dialog'))return true;
+   if(p.busy||p.status!=='ready'||this.certificatePending||document.querySelector('dialog'))return true;
    const player=snap?.players.find(x=>x.id===(e.id||p.editId));if(!player)return true;
+   const key=this.current();this.certificatePending=true;
    void (async()=>{try{
     const fresh=await this.repo.snapshot(),same=fresh.players.find(x=>x.id===player.id);
+    if(key!==this.current())return;
     const count=historySummary(fresh.records,player.id,this.catalog.missions.map(m=>m.id));
     if(!same||!count.certificateEligible){p.message=ui.certificateUnavailable;this.render({preserveFocus:true});return;}
-    await showCertificate(s.locale,same.nickname||same.label);
-   }catch{p.message=ui.certificateUnavailable;this.render({preserveFocus:true});}})();return true;
+    await showCertificate(s.locale,same.nickname||same.label,{canShow:async()=>{
+     const latest=await this.repo.snapshot(),owner=latest.players.find(x=>x.id===same.id);
+     return key===this.current()&&latest.epoch===fresh.epoch&&owner?.revision===same.revision&&historySummary(latest.records,same.id,this.catalog.missions.map(m=>m.id)).certificateEligible;
+    }});
+   }catch{if(key===this.current()){p.message=ui.certificateUnavailable;this.render({preserveFocus:true});}}
+   finally{this.certificatePending=false;}})();return true;
   }
   if(e.type==='P_CORRECT'){p.quick=false;p.correction=snap?.records.find(x=>x.id===e.id)||null;p.selectedId=null;this.navigate('attribution');return true;}
   if(e.type==='P_CHANGE_REPORT'){

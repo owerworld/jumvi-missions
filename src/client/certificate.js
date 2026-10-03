@@ -30,8 +30,11 @@ export async function certificatePng(locale,label){
  return {blob,words,width:canvas.width,height:canvas.height};
 }
 
-export async function showCertificate(locale,label){
- const {blob,words,width,height}=await certificatePng(locale,label),url=URL.createObjectURL(blob);
+export async function showCertificate(locale,label,{canShow=()=>true}={}){
+ const {blob,words,width,height}=await certificatePng(locale,label);
+ // Loading the optional artwork can outlast navigation or a history correction.
+ if(!await canShow()||document.querySelector('dialog'))return;
+ const url=URL.createObjectURL(blob);
  const d=document.createElement('dialog'),h=document.createElement('h2'),p=document.createElement('p'),img=document.createElement('img'),row=document.createElement('div');
  const previous=document.activeElement;
  h.id='certificate-title';h.textContent=words.preview;d.setAttribute('aria-labelledby',h.id);d.className='certificate-preview';
