@@ -40,7 +40,10 @@ async function readyForOffline(page, mission = 'm30') {
 
 async function checkFallback(page, base) {
   for (const path of ['/v2/', '/v2/tr/']) {
-    const response = await page.goto(base + path, {waitUntil: 'domcontentloaded'});
+    // Complete each navigation before starting the next locale. Interrupting
+    // outstanding WebKit resource loads during the simulated socket outage can
+    // produce an internal navigation error rather than a fallback assertion.
+    const response = await page.goto(base + path, {waitUntil: 'load'});
     assert.equal(response.status(), 200);
     assert.equal(response.fromServiceWorker(), true);
     await expect(page.locator('[data-start]')).toBeEnabled({timeout: 30000});

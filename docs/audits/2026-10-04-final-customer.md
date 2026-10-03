@@ -25,3 +25,7 @@ Scope: existing English US customer experience, Turkish review locale, locked ga
 Desktop responsive/device emulation is not physical phone QA. New physical iOS/Android Home Screen installation, OS text scaling, mobile-width native browser-menu 200% zoom, VoiceOver/TalkBack and child usability testing are not claimed. WebKit live-origin offline emulation remains unsupported; the release suite checks the identical artifact with a local origin outage separately. No M6 PASS or measured 10/10 claim.
 
 Release only through the existing isolated branch/staging/exact-artifact V2 workflow. Preserve main, marketing and root experience; root service-worker compatibility is limited to the existing approved helper. Actual release receipt is recorded outside the source commit after verification.
+
+## Hosted verification follow-up
+
+Final staging passed 65 contracts, 278 browser cases and all 888 file hashes on attempt 2. Two subsequent release verification attempts also passed all 278 tests and hosted online flows, but WebKit's sequential local-outage EN→TR verification hit an internal navigation error. Both failed attempts are retained, and publishing was skipped. The verifier now waits for the full load event before the next locale, matching the passing coexistence test; response status, service-worker provenance, locale, Start readiness and real socket outage assertions are unchanged. This is a test sequencing hypothesis to verify in CI, not a proven browser root cause or a waived gate. Published application artifact remains byte-identical.
