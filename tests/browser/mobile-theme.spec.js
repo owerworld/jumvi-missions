@@ -26,7 +26,9 @@ test('dark appearance contrast in play, help, menu and discovery',async({page})=
  await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});await page.goto('/');await expect(page.locator('[data-start]')).toBeEnabled();
  const check=async()=>{await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});const r=await page.evaluate(()=>axe.run('#app',{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}}));expect(r.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}))).toEqual([]);};
  await check();await page.locator('#profile-menu-toggle').click();await check();await page.locator('#profile-menu-toggle').press('Escape');
- await page.locator('[data-start]').click();await check();await page.locator('.active-control').first().click();await check();
+ await page.locator('[data-start]').click();await check();
+ const stop=page.locator('.stop-action');await stop.scrollIntoViewIfNeeded();const box=await stop.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();expect(await stop.evaluate(n=>getComputedStyle(n).color)).toBe('rgb(21, 45, 64)');await page.mouse.move(0,0);await page.mouse.up();
+ await page.locator('.active-control').first().click();await check();
  await page.getByRole('button',{name:'Back to this round',exact:true}).first().click();await page.locator('.stop-action').click();await check();await page.getByRole('button',{name:'Another mission',exact:true}).click();await check();
 });
 
