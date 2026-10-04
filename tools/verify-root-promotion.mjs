@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import {readFileSync,writeFileSync} from 'node:fs';import {createHash} from 'node:crypto';import {chromium,webkit,expect} from '@playwright/test';
+const origin=process.env.PROMOTION_ORIGIN||'https://jumvi-missions-staging.saykirtasiye.workers.dev';
+assert(['https://qr.jumvi.co','https://jumvi-missions-staging.saykirtasiye.workers.dev'].includes(origin));
+const local=JSON.parse(readFileSync('artifacts/root-promotion/promotion-manifest.json'));
+const remote=await fetch(origin+'/promotion-manifest.json').then(r=>r.json());assert.deepEqual(remote,local);
+for(const f of local.files){const r=await fetch(origin+f.path);assert.equal(r.status,200,f.path);const b=Buffer.from(await r.arrayBuffer());assert.equal(createHash('sha256').update(b).digest('hex'),f.sha256,f.path);}
+for(const [p,tr,v1] of [['/',false,false],['/tr/',true,false],['/v1/',false,true],['/v1/tr/',true,true]]){const r=await fetch(origin+p);assert.equal(r.status,200);assert.equal(r.url,origin+p);const html=await r.text();assert(html.includes(`lang="${tr?'tr':v1?'en':'en-US'}"`));assert.equal(html.includes('data-jumvi-home="true"'),!v1);}
+// Synthetic disposable browser contexts only; never user profiles or actual activity records.
+for(const engine of [chromium,webkit]){const b=await engine.launch();const c=await b.newContext({viewport:{width:390,height:844}});await c.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());const p=await c.newPage();try{
+ for(const tr of [false,true]){await p.goto(origin+(tr?'/tr/':'/'));await expect(p.locator('[data-start]')).toBeEnabled({timeout:45000});await expect(p.locator('html')).toHaveAttribute('lang',tr?'tr':'en-US');await p.getByRole('button',{name:tr?'Açıklama / yardım':'How to play / help',exact:true}).click();await expect(p.locator('#first-step')).toBeVisible();await p.getByRole('button',{name:tr?'Göreve dön':'Back to the mission',exact:true}).first().click();await p.locator('[data-start]').click();await p.locator('.active-control').nth(1).click();await expect(p.locator('[data-view=stopped]')).toBeVisible();}
+ await expect.poll(()=>p.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration('/');return !!r?.active&&new URL(r.scope).pathname==='/';}),{timeout:60000}).toBe(true);
+ for(const tr of [false,true]){await p.goto(origin+(tr?'/v1/tr/':'/v1/'));await expect(p.locator('html')).toHaveAttribute('lang',tr?'tr':'en');await expect(p.locator('#todayHeroTitle').or(p.locator('#btnWelcomeStart')).filter({visible:true}).first()).toBeVisible();await expect.poll(()=>p.evaluate(async()=>{const r=await navigator.serviceWorker.getRegistration('/v1/');return !!r?.active&&new URL(r.scope).pathname==='/v1/';}),{timeout:60000}).toBe(true);}
+ console.log(engine.name()+': root/V1 EN/TR UI, Help/Start/Stop, separate SW scopes PASS');
+ }finally{await c.close();await b.close();}}
+console.log('Exact root promotion '+local.sourceSHA+' / '+local.v2Release+' PASS; no physical-device claim');

@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    if: inputs.prepare_withdrawal != true && github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation' && vars.V2_EXACT_SHA == github.sha
+    if: vars.ROOT_PROMOTION_ACTIVE != 'true' && inputs.prepare_withdrawal != true && github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation' && vars.V2_EXACT_SHA == github.sha
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -33,6 +33,7 @@ jobs:
           node tools/build-app.mjs
           JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
           node tools/build-v2-legacy-compat.mjs
+          node tools/build-root-promotion.mjs
           node tools/check-v2-release-gates.mjs
           npm test
           npx playwright install --with-deps chromium webkit
@@ -40,7 +41,7 @@ jobs:
           node tools/verify-v2-staging.mjs
   publish:
     needs: verify
-    if: inputs.prepare_withdrawal != true && github.ref == 'refs/heads/codex/lock09-implementation' && vars.V2_EXACT_SHA == github.sha
+    if: vars.ROOT_PROMOTION_ACTIVE != 'true' && inputs.prepare_withdrawal != true && github.ref == 'refs/heads/codex/lock09-implementation' && vars.V2_EXACT_SHA == github.sha
     runs-on: ubuntu-latest
     environment: jumvi-v2-review
     timeout-minutes: 15
@@ -58,6 +59,7 @@ jobs:
       - run: |
           JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
           node tools/build-v2-legacy-compat.mjs
+          node tools/build-root-promotion.mjs
           node tools/check-v2-release-gates.mjs
       - name: Publish only reviewed compatibility and V2 artifacts
         env:
@@ -80,7 +82,7 @@ jobs:
             exit 1
           fi
   prepare-withdrawal:
-    if: github.event_name == 'workflow_dispatch' && inputs.prepare_withdrawal == true && github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation'
+    if: vars.ROOT_PROMOTION_ACTIVE != 'true' && github.event_name == 'workflow_dispatch' && inputs.prepare_withdrawal == true && github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation'
     runs-on: ubuntu-latest
     environment: jumvi-v2-review
     timeout-minutes: 15

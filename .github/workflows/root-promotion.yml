@@ -1,0 +1,104 @@
+name: Reviewed root promotion
+on:
+  push:
+    branches: [codex/lock09-implementation]
+  workflow_dispatch:
+    inputs:
+      phase:
+        type: choice
+        options: [staging, publish]
+        required: true
+        default: staging
+permissions:
+  contents: read
+jobs:
+  staging:
+    if: (github.event_name == 'push' || inputs.phase == 'staging') && github.ref == 'refs/heads/codex/lock09-implementation' && vars.ROOT_EXACT_SHA == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency: jumvi-missions-staging
+    environment: jumvi-staging
+    env:
+      PROMOTION_EXACT_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - run: |
+          npm ci --ignore-scripts
+          node tools/build-app.mjs
+          JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
+          node tools/build-v2-legacy-compat.mjs
+          node tools/build-root-promotion.mjs
+          node tools/check-root-promotion-gates.mjs
+          npm test
+          npx playwright install --with-deps chromium webkit
+          npx playwright test
+        env:
+          ROOT_EXACT_ARTIFACT: ${{ vars.ROOT_EXACT_ARTIFACT }}
+      - name: Deploy isolated promotion staging
+        env:
+          CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_STAGING_API_TOKEN }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx --yes wrangler@4.136.1 deploy --config wrangler.root-promotion.staging.json --message "Root promotion staging $GITHUB_SHA"
+      - run: |
+          node tools/verify-root-promotion.mjs
+          node tools/verify-v2-staging.mjs
+  publish:
+    if: inputs.phase == 'publish' && github.ref == 'refs/heads/codex/lock09-implementation' && vars.ROOT_EXACT_SHA == github.sha && vars.ROOT_STAGING_VERIFIED_SHA == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency: jumvi-v2-review-release
+    environment: jumvi-v2-review
+    env:
+      PROMOTION_EXACT_SHA: ${{ github.sha }}
+      ROOT_EXACT_ARTIFACT: ${{ vars.ROOT_EXACT_ARTIFACT }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Verify exact tested staging before root change
+        run: |
+          npm ci --ignore-scripts
+          node tools/build-app.mjs
+          JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
+          node tools/build-root-promotion.mjs
+          node tools/check-root-promotion-gates.mjs
+          npx playwright install --with-deps chromium webkit
+          node tools/verify-root-promotion.mjs
+          node tools/verify-v2-staging.mjs
+      - name: Publish approved root and V1 mapping
+        id: deploy
+        env:
+          CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_V2_REVIEW_API_TOKEN }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          npx --yes wrangler@4.136.1 deploy --config wrangler.v2.live.json --message "Promoted V2 assets $GITHUB_SHA"
+          npx --yes wrangler@4.136.1 deploy --config wrangler.root-promotion.json --message "Approved root and V1 $GITHUB_SHA"
+      - name: Verify live root and V1
+        env:
+          PROMOTION_ORIGIN: https://qr.jumvi.co
+          V2_REVIEW_ORIGIN: https://qr.jumvi.co
+        run: |
+          node tools/verify-root-promotion.mjs
+          node tools/verify-v2-staging.mjs
+      - name: Restore previous routing and V2 on publication failure
+        if: failure() && steps.deploy.outcome != 'skipped'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: b6967726a2532e18ddfd79a1b21f4e39
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_V2_REVIEW_API_TOKEN }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/jumvi-root-rollback" c71cd2d47a4ba69f9900b60e4b3fc6a496b89a42
+          cd "$RUNNER_TEMP/jumvi-root-rollback"
+          JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
+          node tools/build-v2-legacy-compat.mjs
+          npx --yes wrangler@4.136.1 deploy --config wrangler.v2.compat.json --message "Restore pre-promotion root routing"
+          npx --yes wrangler@4.136.1 deploy --config wrangler.v2.live.json --message "Restore pre-promotion V2"
+          node tools/check-v2-root-protection.mjs

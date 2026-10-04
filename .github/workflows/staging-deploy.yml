@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   staging:
-    if: github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation'
+    if: vars.ROOT_PROMOTION_ACTIVE != 'true' && github.repository == 'owerworld/jumvi-missions' && github.ref == 'refs/heads/codex/lock09-implementation'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -45,6 +45,7 @@ jobs:
           node tools/build-app.mjs
           JUMVI_BASE_PATH=/v2/ node tools/build-app.mjs
           node tools/build-v2-legacy-compat.mjs
+          node tools/build-root-promotion.mjs
           node tools/package-v2-staging.mjs
       - name: Verify isolation contracts
         run: npm test

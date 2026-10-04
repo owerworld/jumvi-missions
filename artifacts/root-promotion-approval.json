@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-05",
+  "humanAuthorization": "ve sorunsuz şekilde artık onaylayıp test edip normal sitenin yerini alsın sitemiz direk ana domaine eskiside /v1/ olarak kalsın",
+  "scope": "Promote the reviewed V2 experience to qr.jumvi.co root; preserve original experience under /v1/ and TR equivalents; retain /v2/ links.",
+  "excluded": ["jumvi.co marketing site", "main push or merge", "production analytics or secret copying", "mission mechanics or locked Product DNA changes"],
+  "previousSource": "c71cd2d47a4ba69f9900b60e4b3fc6a496b89a42",
+  "previousV2Artifact": "96605df8acf28db8",
+  "previousV2Version": "139f05b7-3858-453b-a9ad-763d183b1321",
+  "previousCompatibilityVersion": "9665f359-373b-4e39-9af0-a9ef2f252c73",
+  "originalRootWorkerUnchanged": "jumvi-missions",
+  "mechanism": "Scoped existing compatibility Worker becomes entry router; original root Custom Domain Worker remains the origin for unchanged public assets and protected endpoints. No service or production data bindings added.",
+  "gates": ["73 contracts", "full Chromium/WebKit suite", "old v254 and compatibility worker transition", "same V2 IndexedDB records at root", "root/V1/V2 cache boundaries", "isolated staging exact artifact checks", "live post-publication exact hashes and bilingual flows"],
+  "limits": ["Desktop browser emulation is not physical iOS/Android installation QA", "Existing open rounds are not forcibly reloaded; offline-only clients update after reconnecting", "Private repository protection and disabled analytics review remain separate"]
+}

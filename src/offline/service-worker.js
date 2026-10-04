@@ -1,7 +1,7 @@
 /* Immutable release manifest is embedded by the build. No forced activation or client takeover. */
 const MANIFEST=__MANIFEST__;
 const BASE=MANIFEST.base||'/';
-const RELEASE=MANIFEST.release,PREFIX=BASE==='/v2/'?'jumvi-v2-':'jumvi-lock09-',SHELL=PREFIX+RELEASE+'-shell',CONTENT=PREFIX+RELEASE+'-content';
+const RELEASE=MANIFEST.release,PREFIX=MANIFEST.namespace||(BASE==='/v2/'?'jumvi-v2-':'jumvi-lock09-'),SHELL=PREFIX+RELEASE+'-shell',CONTENT=PREFIX+RELEASE+'-content';
 const known=new Map(MANIFEST.files.map(f=>[f.path,f]));
 const shellKey=p=>[BASE,BASE+'index.html'].includes(p)?BASE+'index.html':[BASE+'tr',BASE+'tr/',BASE+'tr/index.html'].includes(p)?BASE+'tr/index.html':p;
 function allowed(request){const u=new URL(request.url);return request.method==='GET'&&u.origin===self.location.origin&&!u.search&&!request.headers.has('Authorization')&&known.has(shellKey(u.pathname));}
