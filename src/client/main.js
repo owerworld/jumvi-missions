@@ -1,5 +1,6 @@
 import {audioContext,narrationSource,presentationMatches} from './media/narration.js';
 import {storageName,IS_V2} from './deployment.js';
+import {createUsageCounter,usageTransition,USAGE_COLLECTION_ENABLED} from './media/usage-counts.js';
 import {NavigationPosition} from './navigation-position.js';
 import {setupOffline,prepareOffline} from './offline.js';
 import {missionCopy,criticalPaths,verifyAsset} from './catalog.js';
@@ -8,6 +9,7 @@ import {icon} from './components/icons.js';
 import {initialState,transition} from './state/app.js';import {views} from './views/index.js';import {routeLocale,installRouter} from './router.js';import {contextKey,contextMatches} from './context.js';import {AudioController} from './media/audio-controller.js';import {readResume,writeResume} from './resume.js';import {dialog} from './components/dialog.js';
 async function boot(){
  const app=document.querySelector('#app'),navigation=new NavigationPosition(app),locale=routeLocale(location.pathname)||'en-US';
+ const countUsage=createUsageCounter({enabled:IS_V2&&USAGE_COLLECTION_ENABLED,locale});
  const load=async(path,sha256)=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(new URL('../content/'+path,import.meta.url),{credentials:'omit',signal:controller.signal});if(!r.ok||!r.headers.get('content-type')?.startsWith('application/json'))throw Error('Content unavailable');const bytes=await r.arrayBuffer();if(sha256&&!await verifyAsset(bytes,{bytes:bytes.byteLength,sha256}))throw Error('Content mismatch');return JSON.parse(new TextDecoder().decode(bytes));}finally{clearTimeout(timer);}};
  const [ui,assetManifest,catalog,presentation]=await Promise.all([load(`ui/${locale}.json`),load('asset-manifest.json'),load('catalog.json'),load('customer-presentation-v1.json')]);
  const narrationValid=await presentationMatches(presentation);
@@ -43,6 +45,7 @@ async function boot(){
   if(e.type==='SELECT_MISSION'){void selectMission(e.missionId);return;}
   if(push)router?.capture();
   const next=transition(state,{...e,id:e.id||crypto.randomUUID()});if(next===state)return;
+  const usage=usageTransition(e.type,next.screen,state.screen,next.report?.value==='complete',state.report?.value==='complete');if(usage)countUsage(usage,next.mission.id);
   navigation.transition(state,next,e.type);if(e.type==='BROWSE_HISTORY')navigation.pending=e.position||{y:0};const previous=state.screen;audio.cancel({off:e.type==='GUEST'||e.type==='PREVIOUS'});state=next;if(['GUEST','PREVIOUS','LEAVE'].includes(e.type)||e.type==='GO'&&['group','guest'].includes(e.screen))personal.clearActor();personal.enter(state.screen,previous);const stored=writeResume(storage,state);if(push)router?.write();render();if(!stored)notice(ui.storageUnavailable);
   if(e.type==='REPORT')personal.saveExplicitReport();
  }
@@ -65,5 +68,6 @@ async function boot(){
  if(resume.kind==='known')dispatch({type:'RESTORE',round:resume.round,revision:state.revision,documentId:state.documentId},false);
  else if(resume.kind==='unknown'||router.unknown)sendCurrent('UNKNOWN');else render();
  state={...state,loadingAssets:false};personal.visible();void retryAssets();void setupOffline().then(()=>prepareOffline(record.id));
+ countUsage('app_open');countUsage('mission_open',record.id);
 }
 boot().catch(()=>{const app=document.querySelector('#app');app.setAttribute('aria-busy','false');const h=document.createElement('h1'),p=document.createElement('p');h.textContent='JUMVI';h.tabIndex=-1;p.setAttribute('role','status');p.textContent=document.documentElement.lang==='tr'?'Görev içeriği yüklenemedi. Bağlantını kontrol edip sayfayı yeniden açabilirsin.':'Mission content could not load. Check your connection and reopen this page.';app.replaceChildren(h,p);h.focus();});
