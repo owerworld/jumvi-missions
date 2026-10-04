@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';import {readFileSync,writeFileSync} from
 const origin=process.env.PROMOTION_ORIGIN||'https://jumvi-missions-staging.saykirtasiye.workers.dev';
 assert(['https://qr.jumvi.co','https://jumvi-missions-staging.saykirtasiye.workers.dev'].includes(origin));
 const local=JSON.parse(readFileSync('artifacts/root-promotion/promotion-manifest.json'));
-const remote=await fetch(origin+'/promotion-manifest.json').then(r=>r.json());assert.deepEqual(remote,local);
+// A newly changed route may still return the prior origin immediately after deploy.
+// Wait within a fixed bound; require the complete exact manifest before any PASS.
+await expect(async()=>{const r=await fetch(origin+'/promotion-manifest.json',{cache:'no-store'});assert.equal(r.status,200,'promotion manifest HTTP status');assert.deepEqual(await r.json(),local);}).toPass({timeout:90000,intervals:[1000,2000,5000]});
 for(const f of local.files){const r=await fetch(origin+f.path);assert.equal(r.status,200,f.path);const b=Buffer.from(await r.arrayBuffer());assert.equal(createHash('sha256').update(b).digest('hex'),f.sha256,f.path);}
 for(const [p,tr,v1] of [['/',false,false],['/tr/',true,false],['/v1/',false,true],['/v1/tr/',true,true]]){const r=await fetch(origin+p);assert.equal(r.status,200);assert.equal(r.url,origin+p);const html=await r.text();assert(html.includes(`lang="${tr?'tr':v1?'en':'en-US'}"`));assert.equal(html.includes('data-jumvi-home="true"'),!v1);}
 // Synthetic disposable browser contexts only; never user profiles or actual activity records.
