@@ -64,3 +64,13 @@ test('event mapping excludes auto-interruption, history, save and repeated repor
  for(const type of ['INTERRUPT','BROWSE_HISTORY','SAVE','RESTORE','RETURN'])assert.equal(usageTransition(type,'active','entry',false,false),null);
  assert.equal(usageTransition('REPORT','report','stopped',true,false),'completion_reported');assert.equal(usageTransition('REPORT','report','report',true,true),null);assert.equal(usageTransition('REPORT','report','stopped',false,false),null);assert.equal(usageTransition('START','active','entry',false,false),'round_start');
 });
+
+test('evidence export preserves totals, filters and partial-month scope without inventing unique people',async()=>{
+ const {evidenceReport,reportCSV}=await import('../report.mjs');const rows=[{day:'2026-09-30',locale:'en-US',mission:'m25',event:'mission_open',count:7},{day:'2026-10-04',locale:'en-US',mission:'m25',event:'mission_open',count:3},{day:'2026-10-04',locale:'tr',mission:'m25',event:'mission_open',count:99},{day:'2020-01-01',locale:'en-US',mission:'m25',event:'mission_open',count:888}];
+ const r=evidenceReport(rows,7,'en-US','demo',now);assert.equal(r.synthetic,true);assert.equal(r.totals.mission_open,10);assert.equal(r.rows.length,2);assert.deepEqual(r.monthlyWithinWindow.map(x=>x.count),[7,3]);assert.match(r.collectionCoverage,/Not independently verified/);assert.equal(r.activeRetentionDays,90);assert.equal('uniquePeople' in r,false);assert.match(reportCSV(r),/"demo"/);assert.doesNotMatch(reportCSV(r),/"99"|"888"/);assert.equal(reportCSV(r).trim().split('\r\n').length,3);
+});
+test('exports are protected, bounded, no-store and clearly marked when collection disabled',async()=>{
+ const e=env();e.COLLECTION_ENABLED='false';const w=createWorker(async()=>true);
+ for(const format of ['csv','json']){const url=e.DASHBOARD_ORIGIN+'/api/report?days=7&locale=en-US&format='+format;assert.equal((await createWorker().fetch(new Request(url),e)).status,401);const r=await w.fetch(new Request(url),e);assert.equal(r.status,200);assert.equal(r.headers.get('Cache-Control'),'no-store');assert.match(r.headers.get('Content-Disposition'),/disabled/);if(format==='json'){const data=await r.json();assert.equal(data.mode,'disabled');assert.equal(data.rows.length,0);}}
+ for(const query of ['format=html','days=365','locale=fr','sql=SELECT'])assert.equal((await w.fetch(new Request(e.DASHBOARD_ORIGIN+'/api/report?'+query),e)).status,400);
+});

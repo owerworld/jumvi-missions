@@ -1,3 +1,4 @@
+import {packageProtectedArt} from './package-protected-art.mjs';
 import {criticalPaths} from '../src/client/catalog.js';
 import {readFileSync,writeFileSync,readdirSync,mkdirSync,rmSync,cpSync,existsSync} from 'node:fs';import {join,dirname} from 'node:path';import {createHash} from 'node:crypto';
 const root=new URL('../',import.meta.url).pathname, base=process.env.JUMVI_BASE_PATH||'/';
@@ -10,14 +11,15 @@ for(const [k,v] of Object.entries(tokens.targetMin))vars.push(`--target-${k}:${v
 for(const [k,v] of Object.entries(tokens.type))if(Array.isArray(v)&&typeof v[0]==='number'){vars.push(`--${k}-size:${v[0]/16}rem`,`--${k}-line:${v[1]/16}rem`);}
 writeFileSync(join(root,'src/client/styles/tokens.css'),`:root{${vars.join(';')}}\n`);
 function files(p){return readdirSync(p,{withFileTypes:true}).flatMap(d=>d.isDirectory()?files(join(p,d.name)):[join(p,d.name)]).sort();}
-const inputs=[join(root,'tools/build-app.mjs'),join(root,'index.html'),...files(join(root,'icons')),...files(join(root,'src/client')),...files(join(root,'content')),...files(join(root,'src/offline'))];
+const inputs=[join(root,'tools/package-protected-art.mjs'),...files(join(root,'artifacts/art-protection-v1')),join(root,'tools/build-app.mjs'),join(root,'index.html'),...files(join(root,'icons')),...files(join(root,'src/client')),...files(join(root,'content')),...files(join(root,'src/offline'))];
 if(existsSync(join(root,'assets/mission-illustrations')))inputs.push(...files(join(root,'assets/mission-illustrations')));
 if(existsSync(join(root,'assets/fonts/atkinson')))inputs.push(...files(join(root,'assets/fonts/atkinson')));
 for(const p of ['assets/certificate','assets/parents','assets/narration'])if(existsSync(join(root,p)))inputs.push(...files(join(root,p)));
 const hash=createHash('sha256').update(base);for(const f of inputs)hash.update(f.slice(root.length)).update(readFileSync(f));const release=hash.digest('hex').slice(0,16);
 rmSync(output,{recursive:true,force:true});const releaseDir=join(out,'releases',release);mkdirSync(releaseDir,{recursive:true});
 cpSync(join(root,'src/client'),join(releaseDir,'client'),{recursive:true});cpSync(join(root,'content'),join(releaseDir,'content'),{recursive:true});
-for(const p of ['assets/mission-illustrations','assets/fonts/atkinson','assets/certificate','assets/parents','assets/narration'])if(existsSync(join(root,p)))cpSync(join(root,p),join(releaseDir,p),{recursive:true});
+for(const p of ['assets/fonts/atkinson','assets/certificate','assets/parents','assets/narration'])if(existsSync(join(root,p)))cpSync(join(root,p),join(releaseDir,p),{recursive:true});
+packageProtectedArt(root,releaseDir);
 if(v2)cpSync(join(root,'icons'),join(releaseDir,'assets/app-icons'),{recursive:true});
 const template=readFileSync(join(root,'index.html'),'utf8');
 for(const locale of ['en-US','tr']){const tr=locale==='tr',dest=join(out,tr?'tr/index.html':'index.html');mkdirSync(dirname(dest),{recursive:true});writeFileSync(dest,template.replaceAll('{{LOCALE}}',locale).replaceAll('{{RELEASE}}',`${base}releases/${release}`).replaceAll('{{SKIP}}',tr?'İçeriğe geç':'Skip to content').replaceAll('{{LOADING}}',tr?'Görev yükleniyor…':'Loading mission…').replaceAll('{{NOSCRIPT}}',tr?'Oyun rehberliği için JavaScript gerekiyor.':'JavaScript is needed for these game instructions.'));}

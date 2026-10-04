@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "source": "JUMVI_Mission_Book_Two_PDFs.zip",
+  "integrationDate": "2026-10-04",
+  "bytePreserved": true,
+  "optionalDownloadOnly": true,
+  "taggedPDF": false,
+  "digitalCertificateEligibilityUnchanged": true,
+  "editions": {
+    "home-print": {
+      "path": "assets/parents/mission-book-home-print-en-US-v2.pdf",
+      "bytes": 25872999,
+      "sha256": "a2a7a4546c6ec2fa32ef0e226dda288226ca87e46606af807649b0820af5c916",
+      "pages": 44,
+      "language": "en-US",
+      "paper": "US Letter",
+      "bleedInches": 0
+    },
+    "print-master": {
+      "path": "assets/parents/mission-book-print-master-en-US-v2.pdf",
+      "bytes": 26038811,
+      "sha256": "4fb22f7af43769d0e5571e6166179a1f3262a33be4b050eb98f593fe123c3beb",
+      "pages": 44,
+      "language": "en-US",
+      "paper": "US Letter",
+      "bleedInches": 0.125
+    }
+  }
+}

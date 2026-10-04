@@ -3,12 +3,13 @@ let data=null,catalog={},generation=0;
 async function getJSON(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const r=await fetch(url,{cache:'no-store',signal:controller.signal});if(!r.ok)throw Error('unavailable');return await r.json();}finally{clearTimeout(timer);}}
 const el=(tag,text,className)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;};
 async function load(){
- const gen=++generation;$('refresh').disabled=true;$('results').setAttribute('aria-busy','true');$('error').hidden=true;
+ const gen=++generation;for(const id of ['export-csv','export-json'])$(id).hidden=true;$('refresh').disabled=true;$('results').setAttribute('aria-busy','true');$('error').hidden=true;
  try{const result=await getJSON('/api/summary?'+new URLSearchParams({days:$('days').value,locale:$('locale').value}));if(gen!==generation)return;data=result;render();}
  catch{if(gen!==generation)return;$('error').textContent='Veriler alınamadı. Oturumunu ve bağlantını kontrol edip Yenile’ye basabilirsin. Önceki sayılar güncel olmayabilir.';$('error').hidden=false;}
  finally{if(gen===generation){$('refresh').disabled=false;$('results').setAttribute('aria-busy','false');}}
 }
 function render(){
+ for(const format of ['csv','json']){const link=$('export-'+format);link.href='/api/report?'+new URLSearchParams({days:data.days,locale:data.locale,format});link.hidden=false;}
  $('mode').textContent=data.mode==='demo'?'ÖRNEK VERİ · Bu önizlemedeki sayılar sentetiktir. Gerçek müşteri verisi toplanmıyor.':data.mode==='live'?'ABD · Yalnız günlük kullanım toplamları. Kişisel müşteri listesi tutulmaz.':'VERİ TOPLAMA KAPALI · Panel hazır; gerçek ölçüm henüz etkin değil.';
  $('range').textContent=`${data.start} — ${data.end} · Gün sınırı UTC · ${data.locale==='all'?'Tüm arayüz dilleri':data.locale}`;
  $('actions').textContent=`Yardım açılışı: ${fmt(data.totals.help_open)} · Durdurma: ${fmt(data.totals.round_stop)} · Devam etme: ${fmt(data.totals.round_resume)}`;

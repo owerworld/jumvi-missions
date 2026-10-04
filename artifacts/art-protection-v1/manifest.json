@@ -1,0 +1,1597 @@
+{
+  "version": 1,
+  "method": "Two translucent perimeter JUMVI imprints + XMP attribution; lossless decoded pixels outside imprint mask",
+  "exempt": [
+    "assets/mission-illustrations/m25/jumvi-logo.webp"
+  ],
+  "fontSHA256": "5a455d1cfa099b601ab70751bb9673e8fe1854dc4500c80e1a220d0d75e31745",
+  "assets": [
+    {
+      "path": "assets/mission-illustrations/catalog-v3/m08-scene-1.webp",
+      "sourceSHA256": "07d88a2b7a7bb6b2805c776b95e9ed49796501f2d978e1882e9be7dd080ff719",
+      "sha256": "212c50bb2e243c74fc5d7610e42940eaf2438274c7d1e212be9b5a653f8d63ce",
+      "bytes": 155014,
+      "width": 960,
+      "height": 560,
+      "watermarkBoxes": [
+        [
+          9,
+          9,
+          80,
+          27
+        ],
+        [
+          877,
+          530,
+          948,
+          548
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/catalog-v3/m08-scene-2.webp",
+      "sourceSHA256": "43926c167a5f221abe298c9a8394ab35612d1b35844f3fb90df0e5d3640dcb21",
+      "sha256": "8252da67a76a63f0e47dc22d639413d29c9375508a9c7ac4a586cd304d74a4ee",
+      "bytes": 154748,
+      "width": 960,
+      "height": 560,
+      "watermarkBoxes": [
+        [
+          9,
+          9,
+          80,
+          27
+        ],
+        [
+          877,
+          530,
+          948,
+          548
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/catalog-v3/m08-scene-3.webp",
+      "sourceSHA256": "d4a51fb61ad28dd132f2e224236110129b9bed3ebec3402067ba418e5e2dd154",
+      "sha256": "58f82f89807c4fedb9a58df38520e9973d5dd3a0e0691aab85186a519b7f6b0a",
+      "bytes": 150970,
+      "width": 960,
+      "height": 560,
+      "watermarkBoxes": [
+        [
+          9,
+          9,
+          80,
+          27
+        ],
+        [
+          877,
+          530,
+          948,
+          548
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m02-freeze.webp",
+      "sourceSHA256": "007e233131d4bb28fbf3555eabdf78ce54bed77a10a888d31f850c312e39cdd7",
+      "sha256": "2d6b22f97bba6a216317d3e236ea44f2d46595a95db998c60fddeaea2faed528",
+      "bytes": 391288,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m04-3.webp",
+      "sourceSHA256": "726528f8d7a42bdd412cf7fa7d9254553af2bb898fb8a952e5069d7ca2f0425f",
+      "sha256": "4aa8e6732f137015e4259772c0ed2dbaa40d53996a1d16e8f2855ad5b31092c1",
+      "bytes": 735826,
+      "width": 900,
+      "height": 1200,
+      "watermarkBoxes": [
+        [
+          14,
+          14,
+          82,
+          32
+        ],
+        [
+          815,
+          1165,
+          883,
+          1183
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m04-5.webp",
+      "sourceSHA256": "23abe9f9f16e9f509c293f2e4f5530ad40962afe15f0d1386666634cf8a8a289",
+      "sha256": "e133d6232e75b8a676c96c6a2c12a1827b364cb20d52cc99c5f0e6462d8a679d",
+      "bytes": 714836,
+      "width": 1254,
+      "height": 1254,
+      "watermarkBoxes": [
+        [
+          20,
+          20,
+          111,
+          43
+        ],
+        [
+          1140,
+          1208,
+          1231,
+          1231
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m07-catch.webp",
+      "sourceSHA256": "47233198cd174fd58d6960182d426f17c26ea38641fbb6ebc851492f890fca8f",
+      "sha256": "03546abc3b6838fb13ef9d8a03227e1a109876a1eb76000d40c7a2d099685e70",
+      "bytes": 427080,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m13-detach-silent.webp",
+      "sourceSHA256": "529107275d23ade47b648b0fcac584a4062dcfbe1f176e0b8fb6f00608bc5be2",
+      "sha256": "cdb308cf26e68d14b6364d4f20a7557b3ac72b1874cd2b741fbca082bd03735b",
+      "bytes": 411350,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m13-silent.webp",
+      "sourceSHA256": "f3e443f86b24de8ee3a609a81a9fe9c9bb45c1df50a49495f84728155634848e",
+      "sha256": "5a52f6e66cdc76b4db558327bd428e1e728dc8e7121098107bce9c6eb4684ece",
+      "bytes": 420226,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m17-low.webp",
+      "sourceSHA256": "0461a3fa8446da6bcbb1e89d4ffc607ed6bb08b330da4278ce18471d8fa46956",
+      "sha256": "1418cf74918c444f0f2ee5a137d3980474b4f46f0b3a870b136ba6d5d026e6e5",
+      "bytes": 416794,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m17-ready-fixed.webp",
+      "sourceSHA256": "05a5bb2a208011f30d0769677002456e31652ebb35ce9b112c1b6eb6a11eeef4",
+      "sha256": "84b0e1a739d60e1141861b9c51e7080bc83ec29f64121fef7edd7e93fabdf2fb",
+      "bytes": 402436,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m19-catch.webp",
+      "sourceSHA256": "620f8acd7aca79bbd639e935be1193432cd49feecfce369a9d58700fe96ebdb6",
+      "sha256": "39376ea207f33aadd7a2a2323163ba57891c0277e890ebbc11b1bb7f099dc263",
+      "bytes": 418816,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m19-detach.webp",
+      "sourceSHA256": "9282fffa1d93f59b7680ff809586cf68c7b7e8c6f02d67298300984019096054",
+      "sha256": "f55b04ed7b5973591cf1dd0a805fd171483516f0f9c278e042c1dab97a10c9bb",
+      "bytes": 401622,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-detach.webp",
+      "sourceSHA256": "3071c8b671cc0f6fd883cd241368510cdaa38df82d3bf496bd20988808d3b296",
+      "sha256": "bc7df1fe64e3daa05bf92eff88f2c4dd14e61a85c4ab143a54ab94bd9debef78",
+      "bytes": 495006,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-pass.webp",
+      "sourceSHA256": "d4fd57d21d1ac965fd8bceb8992f6c7a4b0271afaf33348d0ea3373503c2e27e",
+      "sha256": "f24dc3208dbec61e5ed0915324631fbc55c66e5060091e764396dd16a8a3d451",
+      "bytes": 498226,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-shuffle.webp",
+      "sourceSHA256": "c76879404d5bca17e808bece9ae0cece24e0f3074aca32d42aa354d11e8eb58b",
+      "sha256": "d903f2437a416c2f2b99e493356f1f7266b293c9502d243678d0ddf9bb67da44",
+      "bytes": 452550,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-catch.webp",
+      "sourceSHA256": "0338fa8e08247a34707bf168cbc6971df62518ac33b74f4e546c78db9cfdddfb",
+      "sha256": "5069340afc753c58cf9aa512b22398efc570297600ccaf88b874eac898e48d93",
+      "bytes": 392602,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-ready.webp",
+      "sourceSHA256": "373573095239371e7d1258602e4b683a3b4c54df03997a3c3068f4d45406a6ee",
+      "sha256": "77c15a7fd59bd8b4a514aa4f86efc205e3eb8c01d0161344020e5d04ff080fa5",
+      "bytes": 384050,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-swapped-ball.webp",
+      "sourceSHA256": "bf1e6b7724e0ecbcacf457de425e0c2e567217a7c1b23564c402fa4efd065259",
+      "sha256": "95a6da4d3e981d55bf131bcee3ddf14bf31e19028f9e42117f182ceeb4c4d84b",
+      "bytes": 384234,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-catch.webp",
+      "sourceSHA256": "0858cb31844b9e898d92fc25af68b74ed3ef40bd03aacdff555ed2bf477210f0",
+      "sha256": "e1760e7841251ea4fe69126ad9a773bb747012645fcf8036bba330d85224684e",
+      "bytes": 356302,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-detach.webp",
+      "sourceSHA256": "52e30a1dcc025bab7033f8982fa7b6c7a30ff11d441c97bb79be1dcadfcf598d",
+      "sha256": "07ba8859a6a8418056e3e92dba07bf4425cbe3b9ba6e49927a37328e8974c75e",
+      "bytes": 323856,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-step.webp",
+      "sourceSHA256": "38714876df8f1d106439cd2cb4346bd87fb8c53b4771c500ff624c74516f9b15",
+      "sha256": "04dd26ebe12fbc9d7bcb9136972035b3fdb67749db7dd6aa339e09b81b26149f",
+      "bytes": 336256,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m27-detach-A.webp",
+      "sourceSHA256": "dc60319abfffcc4a0cedc8a79e89d23477adbafc19b29e3f598cbe485850dfef",
+      "sha256": "be89fa84610035c766c9293f2c43e1fc24ee020fe4a8b73d6ecbeafe98742515",
+      "bytes": 361870,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m27-tilt.webp",
+      "sourceSHA256": "39885d67a9f709e2fc191a18918ad00ea6b06dcaba69ff632bedae323a473184",
+      "sha256": "1924f36df1e94728ae6f2cf88287dcf9011b8c069e72c6f44243724e5cb14ba1",
+      "bytes": 402830,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m30-right.webp",
+      "sourceSHA256": "21e59eae42e52b16136e4fa88311012eab7a122d4dadc71c075d6f61122ff606",
+      "sha256": "5253ca7df8a9f4f3b0c9a232455b2d3eb36f56cd14c46e57d0db0d736029b58b",
+      "bytes": 415858,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m32-basecatch.webp",
+      "sourceSHA256": "9260d69cc52629f26488004da315afdc2691ae812d7cac1374b4e6bf2e165ee4",
+      "sha256": "78da7d3466187664faadf32ec8ce618ebd023c47be90e7b8634862d8bd25f070",
+      "bytes": 642864,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m32-basedetach.webp",
+      "sourceSHA256": "2dbdb292c99d7ac3b0a5560495517d5be93e3f61c186caf65e616d90b232b08d",
+      "sha256": "309160b8edf4fc3a5dc2f45eb0de29a9b5140bef1df3ba7295e7e244fb236473",
+      "bytes": 591504,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m34-contact.webp",
+      "sourceSHA256": "4b618fcdea1260032d3bdbd72fc004391866373c3d6b1e0494db9dadab1ddf7f",
+      "sha256": "8b0d2b3cf47fb18fdd1cea3795bbf00e96b0de0db45546d02cea5d5561edf0dd",
+      "bytes": 334776,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m34-running.webp",
+      "sourceSHA256": "d4c86e7b5f6dcb5f78126b4a7b81bf97d4921e9e9542434b8766c1e9fffff1d0",
+      "sha256": "57ff3b181c3b62c0b12f10a907e1fe49aef531d9e816df7f493f36a3991c3822",
+      "bytes": 335858,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-detach.webp",
+      "sourceSHA256": "50c7c3b8891770d97e7149d3778f62154b32747d7e6ca7c1c3d7d15d3eaff6de",
+      "sha256": "76a108631535a9fd4acfe1b3eae716e77c721944dc5f5db77540631c5e99211d",
+      "bytes": 559618,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-jump.webp",
+      "sourceSHA256": "3fe589f8c87178603695107f7602e881951f4855674d24ea95fe20001d12f3a2",
+      "sha256": "d5cb0e715529bef2c03380134e4cd1688876d70df07b929c4323a340bdd783f4",
+      "bytes": 610628,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-land.webp",
+      "sourceSHA256": "4d496c93397d1587503f20ef0e641d0bf90828b4f71c832daa2528745e3cbc59",
+      "sha256": "a55e0a43532e0c7295d9a14a9ac5213a103845176cb7ed7f5f174c08f353e629",
+      "bytes": 589824,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-wait.webp",
+      "sourceSHA256": "c2ce5093bcf1fd85236f03b3417ef839125b45e85dbe3eb8e6b78edd111364d8",
+      "sha256": "26bbe4c8458dbb9eba45e67b3a616653cf5a1a71a825007e1e6edd8a0cab8a06",
+      "bytes": 586810,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-chestcatch.webp",
+      "sourceSHA256": "fe83caa006f36c611897e5a9985132a358792a192db54505f50e9263a6487146",
+      "sha256": "63a471c85ad9c71cea51d68e8433da3f5fec5e794358f71301673dba729ecd26",
+      "bytes": 405614,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-detach.webp",
+      "sourceSHA256": "a72bebd2618b2ca904dd739890957bab3b4f73bcf554ffbd5af59e9a2d7ba1d8",
+      "sha256": "134cb89136079387d2015d79d3b54e198d8365e7c8083b78803d8318d15dccfe",
+      "bytes": 421888,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-detach.webp",
+      "sourceSHA256": "77e8800fd5fa7db799bc1afbd2ef68148cdeb70951fb3e1b72a60b288d8c0566",
+      "sha256": "d922b517af83dd7b4078cb13f4555f07199f05960521ac1d0a8b78106ae6d570",
+      "bytes": 887270,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-front.webp",
+      "sourceSHA256": "69e5f6b78d50aad176da19643bdcd8e4e093af03fbd81e61e8d938fbf99acc28",
+      "sha256": "56a617357c9767ce496969da6eeb6e19ff5155ea823b484892c7fab040001323",
+      "bytes": 918470,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-stepback-fixed.webp",
+      "sourceSHA256": "ced9c442b5a42f2fbbafaaab6c45e9ef58aa096c4685dcc33c2c69f155ad9ee3",
+      "sha256": "75919738bd853b6a4a82994f86b771510ded11820d13686d2a8a809fa8fe2ceb",
+      "bytes": 884042,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-high-flight.webp",
+      "sourceSHA256": "cc847ed0d71af95582c49be83e5599d1d4b49f2b422f6f1603c328ef4f65d29e",
+      "sha256": "0f2603429dffaaf2450194598d8d77597671c6c3e371b3a029af8026beae91ca",
+      "bytes": 352678,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-catch.webp",
+      "sourceSHA256": "30e0d9879498abaddc946beb3c7e45dfb7857012150c9220254b4b50569489b6",
+      "sha256": "7c5b523a0c1949ce825a968fbcb0c549d203cb885a944e720b637ac89a6a961f",
+      "bytes": 402392,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-flight.webp",
+      "sourceSHA256": "431faeb01f2fd4d05f1241ba0b92cf336a2c3d7af9f6225b7cb12463449fe51f",
+      "sha256": "257c8e1adf3f04aac7cd93d850e7749cf37bde6cfae9a64b8c7b134ca6169f2f",
+      "bytes": 398080,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-ready-blue.webp",
+      "sourceSHA256": "2fc2f74980c895f1a5aaa3e74de49144904da60bb6649e9f08b04fb087e44d20",
+      "sha256": "a2e8c3d5091530349ab1700e9e5f7650297b3aec0584be9d29e57753c91915da",
+      "bytes": 384896,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-return-backview.webp",
+      "sourceSHA256": "9e262d071e025c6a80ebb75d74ff8674c0f1577729c826dfdfc4dd6c7c25d1a5",
+      "sha256": "de77759c96115bf8c0e005b8da43ac1208cf3fd6cbd2d5c424a4885603bb2748",
+      "bytes": 359874,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-stepback-fixed.webp",
+      "sourceSHA256": "0203fb1fe5d760c041853c7a1375fdbd5d3cc1d9be5dd2085b8563ebdf4f2ddc",
+      "sha256": "aad3b111d6bd67bc5789379013aebe662094016c3b07b107c03722bec502e0df",
+      "bytes": 347412,
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-catch.webp",
+      "sourceSHA256": "813df81f9af796a99c31eacdf828f91ce3f401d0817df0a8d8a83a2cba6e7656",
+      "sha256": "9ab2758ffe213014223d5e8240acd0dc6bcbc31076acfd65bd6ce93588a36709",
+      "bytes": 488360,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-detach.webp",
+      "sourceSHA256": "a92c2971df31526dbb9dea7e2f98ccd09b92bbddf488ee308644445588bf75b7",
+      "sha256": "1c32d0bbe88b24ee4edcd138747fd4cec00cea6d413cc7f9036973c127ba0168",
+      "bytes": 475054,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-nextcatch.webp",
+      "sourceSHA256": "3618a042829b134c6c02ed5c037a8f52d5cc43f5ce99d11d46b25a8498fa7f5b",
+      "sha256": "3bcfa7fc35f30eab32c46351bf6830e9b235e8212e2d0170c2d192c5294b0b50",
+      "bytes": 438516,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-transfer-fixed.webp",
+      "sourceSHA256": "6b1be17c8ecc4a4ef5715ff5bcb494e1ccaf6e88a4a445a14e73a71399513015",
+      "sha256": "8dd2111d90f90c53f44e5eba5d8afef915d2d958654a194d0e5cc7f9f0b372bd",
+      "bytes": 548076,
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-detach-v1.webp",
+      "sourceSHA256": "1f8bf8cb8c9fa17cd262f282141c5074948a281b25c68ffba2b70a2fa3762928",
+      "sha256": "16adc05f2b9f20c5fb376433e12bf2af6ef1bed09e644ff19177ddf033cc9c60",
+      "bytes": 708820,
+      "width": 1024,
+      "height": 1536,
+      "watermarkBoxes": [
+        [
+          16,
+          16,
+          92,
+          35
+        ],
+        [
+          929,
+          1498,
+          1005,
+          1517
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-freeze-v1.webp",
+      "sourceSHA256": "b8d0da35b087ca66a3d539f05bc7b2d7b67f09e4b7cd9e8fa21a200c7e0c582e",
+      "sha256": "915c2b2e592a566fb71bd889ea6be4d712c6fcf3cdf0c1ebfbd17ca99fcd2ed7",
+      "bytes": 720684,
+      "width": 1024,
+      "height": 1536,
+      "watermarkBoxes": [
+        [
+          16,
+          16,
+          92,
+          35
+        ],
+        [
+          929,
+          1498,
+          1005,
+          1517
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-return-v1.webp",
+      "sourceSHA256": "87a1964a8c91f155e1c82b86cfc70ac9e08eb2d7a9937abca1c05e2bb3937a70",
+      "sha256": "e807de156ddbca4f6172a91907b7bfb367a0fa119f63132124fd7449f6a8b26b",
+      "bytes": 670660,
+      "width": 1024,
+      "height": 1536,
+      "watermarkBoxes": [
+        [
+          16,
+          16,
+          92,
+          35
+        ],
+        [
+          929,
+          1498,
+          1005,
+          1517
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-catch-v1.webp",
+      "sourceSHA256": "7c20df150c94817c6e7b67f0c0f3f5aefd6d4118d4e5897bc4a91a159b39bc7c",
+      "sha256": "5ca84f3815a6a7f66031858a87bafba1c411dc5900c0cda12cc98c74768fb351",
+      "bytes": 691718,
+      "width": 1374,
+      "height": 1145,
+      "watermarkBoxes": [
+        [
+          18,
+          18,
+          117,
+          42
+        ],
+        [
+          1254,
+          1100,
+          1353,
+          1124
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-reset-v1.webp",
+      "sourceSHA256": "4f720405737c652904c2aac0342cfe5ffe13fb52408fc550f10ea12d1f661779",
+      "sha256": "9200b29772731c23b2dc68c4e4c2c10169aff2543cbe41189bd45ffd2c610059",
+      "bytes": 665056,
+      "width": 1374,
+      "height": 1145,
+      "watermarkBoxes": [
+        [
+          18,
+          18,
+          117,
+          42
+        ],
+        [
+          1254,
+          1100,
+          1353,
+          1124
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-toss-v1.webp",
+      "sourceSHA256": "de8b4e8fdef2c96044370d1577ad87642dbc76d1225bee6cd7351dd5a7d0f3af",
+      "sha256": "e9dafed5d69bd69db5b86119e1e0b79633b570d356670590ed22593b870f45d1",
+      "bytes": 704106,
+      "width": 1374,
+      "height": 1145,
+      "watermarkBoxes": [
+        [
+          18,
+          18,
+          117,
+          42
+        ],
+        [
+          1254,
+          1100,
+          1353,
+          1124
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/1.webp",
+      "sourceSHA256": "22ab741942c00937a4bcf8d56011615c159d419daf8425d76b918ea7c627f032",
+      "sha256": "54ca3cec9335ab395a43c7e74bd1c523f7ac02cdbbfdf6cc75955a653b02362f",
+      "bytes": 306622,
+      "width": 600,
+      "height": 887,
+      "watermarkBoxes": [
+        [
+          10,
+          10,
+          54,
+          22
+        ],
+        [
+          543,
+          862,
+          587,
+          874
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/2.webp",
+      "sourceSHA256": "1435118acb6bbf65e880dd998bb8f6a4747f0f0daddeb538787407108070b5f6",
+      "sha256": "572498021c7c7a15db19c32fb6929eb6b14b7d5d06421886e05d105db0ab564f",
+      "bytes": 293456,
+      "width": 600,
+      "height": 887,
+      "watermarkBoxes": [
+        [
+          10,
+          10,
+          54,
+          22
+        ],
+        [
+          543,
+          862,
+          587,
+          874
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/3.webp",
+      "sourceSHA256": "102ff6f0c1ea2981cc8de6287518f75342360a16d84b977ace84f1f1fdf04081",
+      "sha256": "fb0600680cc2334d5c564a9287d14ff0c39c24eb90e0260029f65bc5e7e16f8f",
+      "bytes": 299672,
+      "width": 600,
+      "height": 887,
+      "watermarkBoxes": [
+        [
+          10,
+          10,
+          54,
+          22
+        ],
+        [
+          543,
+          862,
+          587,
+          874
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/1.webp",
+      "sourceSHA256": "73c9ee9c3871ee0c7a0127d6734f75953b079d802fcaf502468f54e720f04771",
+      "sha256": "39640ca181055349d48d90e3be228d78b189bbad7f1551e0183994815dcfb288",
+      "bytes": 136536,
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/2.webp",
+      "sourceSHA256": "8773a44bfe763344055d80c7624c0d46489692d20e28ee98389f72b44eec61e3",
+      "sha256": "ac4ee7db64240c917246b70e944578f1e7158caee36a8c771c9904bd30bb6df8",
+      "bytes": 126586,
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/4.webp",
+      "sourceSHA256": "7de35e98024cd58f8458124d84153eed4605e8a8a751631f72ee4ccb00485a99",
+      "sha256": "058873bb6c21867fb5f98385019f82e3ca27641b52345067ce69c55bc6dab6b5",
+      "bytes": 134050,
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/6.webp",
+      "sourceSHA256": "bae3a384a77f2d7bb4fe36cedcf3af8c678bfbef891d89e279cb2a3434c10f63",
+      "sha256": "0897d0f361329b85d658a36fa475437faaed1def951f8513591856b1d0935d70",
+      "bytes": 124638,
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/1-detail.webp",
+      "sourceSHA256": "82aebbb4a6d0031f642433f698a8af377f431ddf418f205e987bcfa3deb7f20d",
+      "sha256": "e68979425b396512b6d958f1afa128c60ba027a7727454a02cc102b0c9abba51",
+      "bytes": 75466,
+      "width": 600,
+      "height": 514,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          52,
+          20
+        ],
+        [
+          545,
+          491,
+          589,
+          503
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/2-detail.webp",
+      "sourceSHA256": "6f86f6970088fb0ae89c582096cd432b21d3be8495aca664f0c8cb009f4844b1",
+      "sha256": "44d5c5b5229879cae02c79511ef1fefa8a2c462181e7b476ea1a3f6449546d50",
+      "bytes": 71692,
+      "width": 600,
+      "height": 514,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          52,
+          20
+        ],
+        [
+          545,
+          491,
+          589,
+          503
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/3-detail.webp",
+      "sourceSHA256": "091ea07fde1ac1ed4405e1379364cfb5161c85a1166ff72cda4e9404fda385c0",
+      "sha256": "7cbedf18fbae6dad2a17fd4cfce951aee8db213144c89a062d16ace2d8a272fa",
+      "bytes": 115572,
+      "width": 600,
+      "height": 525,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          52,
+          20
+        ],
+        [
+          545,
+          502,
+          589,
+          514
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/m25/contact-alpha-v1.webp",
+      "sourceSHA256": "1259fabd2075911e93984f868beb1f075b7c220e96462cc3692e7c8e9b98cc4b",
+      "sha256": "6c7d028b36f29480f08aa879f8564cd022163e3996b9c508b61adda37f58e5a5",
+      "bytes": 288450,
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/m25/product-still-v1.webp",
+      "sourceSHA256": "0b48406a6fd47948baf0690a54270fdf65830533f7cdb699d1f850ed1250d230",
+      "sha256": "0cb66f40251048bd984911b4ae5296152246877d20604deb12df261ca7612387",
+      "bytes": 306598,
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/m25/reset-alpha-v1.webp",
+      "sourceSHA256": "709cec056c2e712b20cba34869450435157224ca6418cc5de9acceea16aeb33d",
+      "sha256": "06ca92ea926e32bc65dffa453a41120aec96dd19bd4afd73217ef08acef27566",
+      "bytes": 312016,
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/m25/seated-editorial-v1.webp",
+      "sourceSHA256": "dc673a156eef55da84b38326afc294fa8dcb29daa0052c38612e176310e1913b",
+      "sha256": "cc9cdbe09e99af5d4af43414c3b2d6022a5c4c120d33b037f6a337e5a25fb51d",
+      "bytes": 294916,
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    },
+    {
+      "path": "assets/mission-illustrations/pilot-v1/m07-hero-v2.webp",
+      "sourceSHA256": "dd6f89884dfab184e544de2918085617907e0b0b7c07f3c1fb7afbe2f365468c",
+      "sha256": "0d9b6ba5d14c171645b732f3ab2798e734c4452175417218cc815ae1c0ef5291",
+      "bytes": 279818,
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "outsideMaskPixelsExact": true
+    }
+  ]
+}

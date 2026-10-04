@@ -7,5 +7,11 @@ test('parent print books bind all 36 canonical records and approved presentation
  for(const locale of ['tr','en-US']){const book=m.books[locale],bytes=read(book.path);assert.equal(hash(bytes),book.sha256);assert.equal(bytes.length,book.bytes);assert.equal(bytes.subarray(0,5).toString(),'%PDF-');}
 });
 test('parent PDFs are packaged as optional resources, outside critical mission precache',()=>{
- for(const dir of ['dist','dist-v2/v2']){const release=JSON.parse(read(`${dir}/release-manifest.json`)),sw=JSON.parse(read(`${dir}/sw-release.json`));assert.equal(release.files.filter(f=>f.path.endsWith('.pdf')&&f.path.includes('/assets/parents/')).length,2);assert.ok(!sw.precache.some(p=>p.includes('/assets/parents/')));for(const paths of Object.values(sw.missions))assert.ok(!paths.some(p=>p.includes('/assets/parents/')));}
+ for(const dir of ['dist','dist-v2/v2']){const release=JSON.parse(read(`${dir}/release-manifest.json`)),sw=JSON.parse(read(`${dir}/sw-release.json`));assert.equal(release.files.filter(f=>f.path.endsWith('.pdf')&&f.path.includes('/assets/parents/')).length,4);assert.ok(!sw.precache.some(p=>p.includes('/assets/parents/')));for(const paths of Object.values(sw.missions))assert.ok(!paths.some(p=>p.includes('/assets/parents/')));}
+});
+
+test('provided English books retain exact source bytes and fit static asset limit',()=>{
+ const manifest=JSON.parse(read('assets/parents/provided-books-v2.json'));
+ assert.equal(Object.keys(manifest.editions).length,2);
+ for(const book of Object.values(manifest.editions)){const bytes=read(book.path);assert.equal(hash(bytes),book.sha256);assert.equal(bytes.length,book.bytes);assert.ok(bytes.length<25*1024*1024);assert.equal(bytes.subarray(0,5).toString(),'%PDF-');assert.equal(book.pages,44);for(const dir of ['dist','dist-v2/v2']){const release=JSON.parse(read(`${dir}/release-manifest.json`));assert.equal(hash(read(`${dir}/releases/${release.release}/${book.path}`)),book.sha256);}}
 });

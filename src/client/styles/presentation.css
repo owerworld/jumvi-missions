@@ -259,3 +259,8 @@ main:has(>.customer-layout){background:var(--surface);padding:20px;padding-botto
 .customer-layout .discovery-unsaved .control{width:100%;min-width:0}
 .customer-layout .mission-list>.is-completed{border-inline-start:4px solid var(--success)}
 .customer-layout .mission-completed,.customer-layout .featured-completed{display:block;width:fit-content;max-width:100%;font-weight:800;background:var(--surface);color:var(--ink);border:2px solid var(--success);border-radius:10px;padding:4px 8px;white-space:normal}
+
+/* Optional print editions remain in the parent area and wrap with enlarged text. */
+.customer-layout .parent-resource>a{max-width:100%;white-space:normal;gap:8px}
+.customer-layout .parent-resource details{margin-block:12px}
+.customer-layout .parent-resource details a{max-width:100%;white-space:normal}

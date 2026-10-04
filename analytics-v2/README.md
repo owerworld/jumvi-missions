@@ -74,3 +74,13 @@ Run `npm ci --ignore-scripts && npm test` here. Preview requires no credentials 
 - [Cloudflare D1 Time Travel limits](https://developers.cloudflare.com/d1/platform/limits/)
 
 The FAQ itself points to the amended rule for current requirements. This implementation/technical review is not a legal compliance certification.
+
+## Valuation / buyer evidence exports
+
+The authenticated `/api/report?days=7|28|90&locale=all|en-US|tr&format=json|csv` endpoint exports a dated UTC snapshot. JSON includes the schema, metric definitions, raw daily aggregate rows, period totals, and monthly totals **within the selected window only**. CSV repeats mode, generation time and coverage window on each data row. Download both together; an empty CSV contains only its header, while its companion JSON documents the disabled/empty state. Demo files are explicitly marked synthetic.
+
+These are product-usage supporting records, not unique customers, MAU, retention cohorts, funnels, verified purchase counts, measured physical success, financial statements or a company valuation. No identifiers are added to make those claims possible. A future buyer should assess them alongside independently reconciled sales, profit, advertising, refunds, inventory and channel records.
+
+After activation is separately approved, the owner should export each month before the proposed 90-day active retention window expires. Keep paired files in a controlled deal-room/archive, retain their generation timestamps and record instrumentation changes/outages. Overlapping exports are snapshots, not additive batches; compare a metric by day/locale/mission/event and keep the most recent snapshot, rather than summing duplicate rows. The current UTC day is provisional. No automatic long-term external archive or longer server retention was enabled by this change. Silent/no-event dates do not prove successful collection or zero visits.
+
+Activation still requires the administrator address, real Access policy, R8 notice/retention/legal-technical review and infrastructure configuration checks. Adding export buttons does not close these gates.

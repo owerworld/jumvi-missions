@@ -1,5 +1,6 @@
 import {createRemoteJWKSet,jwtVerify} from 'jose';
 import {validEvent,dayUTC,firstDay,summarize} from './contract.mjs';
+import {evidenceReport,reportCSV} from './report.mjs';
 const jwks=new Map();
 const headers={'Cache-Control':'no-store','X-Robots-Tag':'noindex, nofollow, noarchive','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
 const reply=(body,status=200,more={})=>new Response(body,{status,headers:{...headers,...more}});
@@ -41,10 +42,12 @@ export function createWorker(auth=authorized){return {
     if(url.origin!==env.DASHBOARD_ORIGIN)return reply('Not found',404);
     if(!await auth(request,env))return reply('Administrator sign-in required.',401);
     if(!['GET','HEAD'].includes(request.method))return reply(null,405,{'Allow':'GET, HEAD'});
-    if(url.pathname==='/api/summary'){
+    if(['/api/summary','/api/report'].includes(url.pathname)){
       const days=Number(url.searchParams.get('days')||28),locale=url.searchParams.get('locale')||'all';
-      if(![7,28,90].includes(days)||!['all','en-US','tr'].includes(locale)||[...url.searchParams.keys()].some(k=>!['days','locale'].includes(k)))return reply('Invalid filter',400);
+      const report=url.pathname==='/api/report',format=url.searchParams.get('format')||'json';
+      if((report&&!['csv','json'].includes(format))||(!report&&url.searchParams.has('format'))||![7,28,90].includes(days)||!['all','en-US','tr'].includes(locale)||[...url.searchParams.keys()].some(k=>!['days','locale','format'].includes(k)))return reply('Invalid filter',400);
       try{const {results}=await env.DB.prepare('SELECT day,locale,mission,event,count FROM daily_counts WHERE day>=? AND day<=?').bind(firstDay(days),dayUTC()).all();
+        if(report){const data=evidenceReport(results,days,locale,env.COLLECTION_ENABLED==='true'?'live':'disabled');return reply(request.method==='HEAD'?null:format==='csv'?reportCSV(data):JSON.stringify(data,null,2),200,{'Content-Type':format==='csv'?'text/csv; charset=utf-8':'application/json','Content-Disposition':`attachment; filename="jumvi-usage-${data.mode}-${data.period.start}-${data.period.end}-${locale}.${format}"`});}
         return reply(request.method==='HEAD'?null:JSON.stringify({...summarize(results,days,locale),mode:env.COLLECTION_ENABLED==='true'?'live':'disabled'}),200,{'Content-Type':'application/json'});
       }catch{return reply('Summary unavailable',503);}
     }
