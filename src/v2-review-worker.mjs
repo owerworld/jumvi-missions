@@ -1,12 +1,14 @@
 // Dedicated fixed-release Worker. No production services, datasets, secrets or forwarding.
+import {rejectImageEmbedding,protectAssetResponse} from './art-delivery-policy.mjs';
 export const isV2Path = path => path === '/v2' || path.startsWith('/v2/');
-const headers = {'X-Jumvi-Environment':'v2-review','X-Jumvi-Analytics':'disabled','X-Robots-Tag':'noindex, nofollow, noarchive','Cache-Control':'no-store','Vary':'*'};
+const headers = {'X-Jumvi-Environment':'v2-review','X-Jumvi-Analytics':'disabled','X-Robots-Tag':'noindex, nofollow, noarchive, noimageindex','Cache-Control':'no-store','Vary':'*'};
 export default {
  async fetch(request,env){
   const url=new URL(request.url);
   if(!isV2Path(url.pathname))return new Response('Outside review scope',{status:404});
   if(request.headers.has('Authorization'))return new Response('Authenticated requests are not review assets',{status:403,headers});
   if(!['GET','HEAD'].includes(request.method))return new Response('Method not allowed',{status:405,headers});
+  if(rejectImageEmbedding(request))return new Response('Image embedding unavailable',{status:403,headers});
   if(url.pathname==='/v2'){url.pathname='/v2/';return new Response(null,{status:308,headers:{...headers,Location:url.href}});}
   if(/^\/v2\/(?:api|panel|analiz|data|src|tools|compat)(?:\/|$)/.test(url.pathname))return new Response('Unavailable',{status:404,headers});
   const path=url.pathname==='/v2/'?'/v2/index.html':['/v2/tr','/v2/tr/'].includes(url.pathname)?'/v2/tr/index.html':url.pathname;
@@ -20,6 +22,6 @@ export default {
   // Old v254 root SW unconditionally cache.put()s navigation under /index.html.
   // Cache API refuses Vary: *, preserving the old shell on an uncontrolled first visit.
   // Covers legacy runtime asset writes too. V2 SW strips this only AFTER hash/MIME verification.
-  return result;
+  return protectAssetResponse(result,path);
  }
 };

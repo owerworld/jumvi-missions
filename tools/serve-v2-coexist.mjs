@@ -3,7 +3,7 @@ const mime={'.mp3':'audio/mpeg','.txt':'text/plain','.pdf':'application/pdf','.h
 export async function serveCoexist(port=8950,{legacySW='original',v2=true,offline=false}={}){
  const state={legacySW,v2,offline};
  const bytes=(root,p)=>{const f=resolve(root,'.'+p);if(!f.startsWith(resolve(root)+'/')||!existsSync(f)||!statSync(f).isFile())return new Response('Not found',{status:404});return new Response(readFileSync(f),{headers:{'Content-Type':mime[extname(f)]||'application/octet-stream','Cache-Control':'no-store'}});};
- const server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://127.0.0.1');let response;
+ const server=http.createServer(async(req,res)=>{try{const u=new URL(req.url,'http://127.0.0.1:'+server.address().port);let response;
   if(state.offline){req.socket.destroy();return;}
   if(isV2Path(u.pathname)){response=state.v2?await worker.fetch(new Request(u,{method:req.method,headers:req.headers}),{ASSETS:{fetch:r=>bytes('dist-v2',new URL(r.url).pathname)}}):new Response('Review withdrawn',{status:410,headers:{'Cache-Control':'no-store','Vary':'*'}});}
   else if(u.pathname==='/__qa.html')response=new Response('<!doctype html><title>Disposable same-origin QA</title>',{headers:{'Content-Type':'text/html','Cache-Control':'no-store'}});

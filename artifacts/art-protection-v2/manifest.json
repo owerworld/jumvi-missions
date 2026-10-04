@@ -1,0 +1,2218 @@
+{
+  "version": 2,
+  "method": "Visible corner branding + reference-assisted keyed DCT signal + XMP. Not DRM.",
+  "exempt": [
+    "assets/mission-illustrations/m25/jumvi-logo.webp"
+  ],
+  "fontSHA256": "5a455d1cfa099b601ab70751bb9673e8fe1854dc4500c80e1a220d0d75e31745",
+  "assets": [
+    {
+      "path": "assets/mission-illustrations/catalog-v3/m08-scene-1.webp",
+      "sourceSHA256": "07d88a2b7a7bb6b2805c776b95e9ed49796501f2d978e1882e9be7dd080ff719",
+      "width": 960,
+      "height": 560,
+      "watermarkBoxes": [
+        [
+          9,
+          9,
+          80,
+          27
+        ],
+        [
+          877,
+          530,
+          948,
+          548
+        ]
+      ],
+      "sha256": "2dd4fc8110ced8d916ae4baaadfb137b5223a3e54569faafd80a52968ef8360e",
+      "bytes": 155088,
+      "visibleSourceSHA256": "212c50bb2e243c74fc5d7610e42940eaf2438274c7d1e212be9b5a653f8d63ce",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 181,
+        "maxRGBDelta": 3,
+        "psnrDB": 56.731,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/catalog-v3/m08-scene-2.webp",
+      "sourceSHA256": "43926c167a5f221abe298c9a8394ab35612d1b35844f3fb90df0e5d3640dcb21",
+      "width": 960,
+      "height": 560,
+      "watermarkBoxes": [
+        [
+          9,
+          9,
+          80,
+          27
+        ],
+        [
+          877,
+          530,
+          948,
+          548
+        ]
+      ],
+      "sha256": "a286d7f390b2f7b669fcf3bd93f24e8193114b733dcc48b6b0f236b523560554",
+      "bytes": 154620,
+      "visibleSourceSHA256": "8252da67a76a63f0e47dc22d639413d29c9375508a9c7ac4a586cd304d74a4ee",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 181,
+        "maxRGBDelta": 3,
+        "psnrDB": 56.731,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/catalog-v3/m08-scene-3.webp",
+      "sourceSHA256": "d4a51fb61ad28dd132f2e224236110129b9bed3ebec3402067ba418e5e2dd154",
+      "width": 960,
+      "height": 560,
+      "watermarkBoxes": [
+        [
+          9,
+          9,
+          80,
+          27
+        ],
+        [
+          877,
+          530,
+          948,
+          548
+        ]
+      ],
+      "sha256": "3f687c873cf05ab65d7f171deca0b0afd96b82fab9b9a5ee2feafd5d91d02528",
+      "bytes": 151282,
+      "visibleSourceSHA256": "58f82f89807c4fedb9a58df38520e9973d5dd3a0e0691aab85186a519b7f6b0a",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 195,
+        "maxRGBDelta": 3,
+        "psnrDB": 56.408,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m02-freeze.webp",
+      "sourceSHA256": "007e233131d4bb28fbf3555eabdf78ce54bed77a10a888d31f850c312e39cdd7",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "fce068eef20ede14714097ae6b28d256197ffefe7a93c5a11fb0a5cdda9c314f",
+      "bytes": 403968,
+      "visibleSourceSHA256": "2d6b22f97bba6a216317d3e236ea44f2d46595a95db998c60fddeaea2faed528",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1060,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.792,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m04-3.webp",
+      "sourceSHA256": "726528f8d7a42bdd412cf7fa7d9254553af2bb898fb8a952e5069d7ca2f0425f",
+      "width": 900,
+      "height": 1200,
+      "watermarkBoxes": [
+        [
+          14,
+          14,
+          82,
+          32
+        ],
+        [
+          815,
+          1165,
+          883,
+          1183
+        ]
+      ],
+      "sha256": "d7b157ec5457703e8d1a07bdb97a8afd6d17ed66d1725adbfd8fc9a0904fe279",
+      "bytes": 747542,
+      "visibleSourceSHA256": "4aa8e6732f137015e4259772c0ed2dbaa40d53996a1d16e8f2855ad5b31092c1",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1793,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.948,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m04-5.webp",
+      "sourceSHA256": "23abe9f9f16e9f509c293f2e4f5530ad40962afe15f0d1386666634cf8a8a289",
+      "width": 1254,
+      "height": 1254,
+      "watermarkBoxes": [
+        [
+          20,
+          20,
+          111,
+          43
+        ],
+        [
+          1140,
+          1208,
+          1231,
+          1231
+        ]
+      ],
+      "sha256": "7a0e506cc18678eb956fef93dbd8d88d868e0097a518530fb83b49ebbec66d18",
+      "bytes": 736724,
+      "visibleSourceSHA256": "e133d6232e75b8a676c96c6a2c12a1827b364cb20d52cc99c5f0e6462d8a679d",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1814,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.574,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m07-catch.webp",
+      "sourceSHA256": "47233198cd174fd58d6960182d426f17c26ea38641fbb6ebc851492f890fca8f",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "b60e61df181330011ea63262e160aac6ec2e2c8ddc1eccbf7db7138069f1cf46",
+      "bytes": 443588,
+      "visibleSourceSHA256": "03546abc3b6838fb13ef9d8a03227e1a109876a1eb76000d40c7a2d099685e70",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1160,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.388,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m13-detach-silent.webp",
+      "sourceSHA256": "529107275d23ade47b648b0fcac584a4062dcfbe1f176e0b8fb6f00608bc5be2",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "6dd597e267e93ecce0aa05db0c8b933f15da330b90bf231c0246a11bab484190",
+      "bytes": 425412,
+      "visibleSourceSHA256": "cdb308cf26e68d14b6364d4f20a7557b3ac72b1874cd2b741fbca082bd03735b",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1148,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.335,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m13-silent.webp",
+      "sourceSHA256": "f3e443f86b24de8ee3a609a81a9fe9c9bb45c1df50a49495f84728155634848e",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "684c414cd95034c067277c9efbe33acac98e91ac89c449c2ef83759c86b186cd",
+      "bytes": 435422,
+      "visibleSourceSHA256": "5a52f6e66cdc76b4db558327bd428e1e728dc8e7121098107bce9c6eb4684ece",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1106,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.584,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m17-low.webp",
+      "sourceSHA256": "0461a3fa8446da6bcbb1e89d4ffc607ed6bb08b330da4278ce18471d8fa46956",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "12fbbada18b6e91b42f8f7f94cdb129344dd5403f053cc87e6f40c264f87087a",
+      "bytes": 432108,
+      "visibleSourceSHA256": "1418cf74918c444f0f2ee5a137d3980474b4f46f0b3a870b136ba6d5d026e6e5",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1140,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.506,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m17-ready-fixed.webp",
+      "sourceSHA256": "05a5bb2a208011f30d0769677002456e31652ebb35ce9b112c1b6eb6a11eeef4",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "4083331b51b41a7d87177acc3fc0c55941da6b51c6c5e5fb3cb88a6ae31d9138",
+      "bytes": 415986,
+      "visibleSourceSHA256": "84b0e1a739d60e1141861b9c51e7080bc83ec29f64121fef7edd7e93fabdf2fb",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1067,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.764,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m19-catch.webp",
+      "sourceSHA256": "620f8acd7aca79bbd639e935be1193432cd49feecfce369a9d58700fe96ebdb6",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "dcb03dde041629694196c34b77e56f7001479d5bece397623f150fd823808834",
+      "bytes": 436054,
+      "visibleSourceSHA256": "39376ea207f33aadd7a2a2323163ba57891c0277e890ebbc11b1bb7f099dc263",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1170,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.471,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m19-detach.webp",
+      "sourceSHA256": "9282fffa1d93f59b7680ff809586cf68c7b7e8c6f02d67298300984019096054",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "be14fad5588de16d17f529ec078c8ff5ce3387be22805302c303a18d005c2ef2",
+      "bytes": 417712,
+      "visibleSourceSHA256": "f55b04ed7b5973591cf1dd0a805fd171483516f0f9c278e042c1dab97a10c9bb",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1120,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.64,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-detach.webp",
+      "sourceSHA256": "3071c8b671cc0f6fd883cd241368510cdaa38df82d3bf496bd20988808d3b296",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "e2568baa753c3692a71d1efe32e4fffb3ec37608f24fa528a357726010c52087",
+      "bytes": 513094,
+      "visibleSourceSHA256": "bc7df1fe64e3daa05bf92eff88f2c4dd14e61a85c4ab143a54ab94bd9debef78",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1438,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.519,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-pass.webp",
+      "sourceSHA256": "d4fd57d21d1ac965fd8bceb8992f6c7a4b0271afaf33348d0ea3373503c2e27e",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "43eaed20fe976fd9780a79df2a912c37c567e91495bf7ffed28d8285649a7b05",
+      "bytes": 517588,
+      "visibleSourceSHA256": "f24dc3208dbec61e5ed0915324631fbc55c66e5060091e764396dd16a8a3d451",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1415,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.556,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m20-shuffle.webp",
+      "sourceSHA256": "c76879404d5bca17e808bece9ae0cece24e0f3074aca32d42aa354d11e8eb58b",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "324598b6f836c6268c9560a4a3fa30ef09819a7400d9dbcbf878fb09fd089493",
+      "bytes": 471376,
+      "visibleSourceSHA256": "d903f2437a416c2f2b99e493356f1f7266b293c9502d243678d0ddf9bb67da44",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1308,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.965,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-catch.webp",
+      "sourceSHA256": "0338fa8e08247a34707bf168cbc6971df62518ac33b74f4e546c78db9cfdddfb",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "61b2f7d9d95db07d55b6ad17c1708394f2294828b969bcaad156d40c3e569699",
+      "bytes": 408482,
+      "visibleSourceSHA256": "5069340afc753c58cf9aa512b22398efc570297600ccaf88b874eac898e48d93",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1078,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.726,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-ready.webp",
+      "sourceSHA256": "373573095239371e7d1258602e4b683a3b4c54df03997a3c3068f4d45406a6ee",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "abd2c38cebecc27be7092fdc13177e60fd8d45a931d363bec3f4e8e5e5a1ee29",
+      "bytes": 399864,
+      "visibleSourceSHA256": "77c15a7fd59bd8b4a514aa4f86efc205e3eb8c01d0161344020e5d04ff080fa5",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1055,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.847,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m21-swapped-ball.webp",
+      "sourceSHA256": "bf1e6b7724e0ecbcacf457de425e0c2e567217a7c1b23564c402fa4efd065259",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "87f2b5a34ce22b978383ca3f80352124c6e46d9d14d746758a368135543a53c2",
+      "bytes": 398916,
+      "visibleSourceSHA256": "95a6da4d3e981d55bf131bcee3ddf14bf31e19028f9e42117f182ceeb4c4d84b",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1019,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.024,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-catch.webp",
+      "sourceSHA256": "0858cb31844b9e898d92fc25af68b74ed3ef40bd03aacdff555ed2bf477210f0",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "05b5ee4d70b93dba43a7be390f0f53dd2a365f0369de366bf4cba676db557c4f",
+      "bytes": 370980,
+      "visibleSourceSHA256": "e1760e7841251ea4fe69126ad9a773bb747012645fcf8036bba330d85224684e",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 957,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.279,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-detach.webp",
+      "sourceSHA256": "52e30a1dcc025bab7033f8982fa7b6c7a30ff11d441c97bb79be1dcadfcf598d",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "9c8ffb1262576822a70f5eaf64f67e9e733cd011a5b1dfeb8f04c9c7d439c713",
+      "bytes": 336308,
+      "visibleSourceSHA256": "07ba8859a6a8418056e3e92dba07bf4425cbe3b9ba6e49927a37328e8974c75e",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 812,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.968,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m22-step.webp",
+      "sourceSHA256": "38714876df8f1d106439cd2cb4346bd87fb8c53b4771c500ff624c74516f9b15",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "9b7b3b73f0f7b41c548ffb3d6d337115c25097dd343331c2bcdd59202e86e429",
+      "bytes": 350216,
+      "visibleSourceSHA256": "04dd26ebe12fbc9d7bcb9136972035b3fdb67749db7dd6aa339e09b81b26149f",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 865,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.725,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m27-detach-A.webp",
+      "sourceSHA256": "dc60319abfffcc4a0cedc8a79e89d23477adbafc19b29e3f598cbe485850dfef",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "4ea783e5129308cbb6e9db1c1f8c0ef5af48e6373c1dce11093f6107555018ef",
+      "bytes": 374832,
+      "visibleSourceSHA256": "be89fa84610035c766c9293f2c43e1fc24ee020fe4a8b73d6ecbeafe98742515",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 955,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.233,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m27-tilt.webp",
+      "sourceSHA256": "39885d67a9f709e2fc191a18918ad00ea6b06dcaba69ff632bedae323a473184",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "cd710aba5cd7613b400c3023487f5f50e312bf74c86cc0ad4825fefc5c00a507",
+      "bytes": 417354,
+      "visibleSourceSHA256": "1924f36df1e94728ae6f2cf88287dcf9011b8c069e72c6f44243724e5cb14ba1",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1093,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.676,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m30-right.webp",
+      "sourceSHA256": "21e59eae42e52b16136e4fa88311012eab7a122d4dadc71c075d6f61122ff606",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "78c566cfd34a8ef7ec985d94c46e7d11610899388aa5ef76e23d8df8bb8cc99a",
+      "bytes": 432094,
+      "visibleSourceSHA256": "5253ca7df8a9f4f3b0c9a232455b2d3eb36f56cd14c46e57d0db0d736029b58b",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1171,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.375,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m32-basecatch.webp",
+      "sourceSHA256": "9260d69cc52629f26488004da315afdc2691ae812d7cac1374b4e6bf2e165ee4",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "46d50b1d7337dd3a72590fd132444e0f6be4cfaf69e330f34c6f72c6dcca74c9",
+      "bytes": 655356,
+      "visibleSourceSHA256": "78da7d3466187664faadf32ec8ce618ebd023c47be90e7b8634862d8bd25f070",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1384,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.563,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m32-basedetach.webp",
+      "sourceSHA256": "2dbdb292c99d7ac3b0a5560495517d5be93e3f61c186caf65e616d90b232b08d",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "64effae2cdfc0c164418cd4abf45fd9ae69b358d08b3b7b8e8d3bf11680ca5a8",
+      "bytes": 604694,
+      "visibleSourceSHA256": "309160b8edf4fc3a5dc2f45eb0de29a9b5140bef1df3ba7295e7e244fb236473",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1293,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.871,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m34-contact.webp",
+      "sourceSHA256": "4b618fcdea1260032d3bdbd72fc004391866373c3d6b1e0494db9dadab1ddf7f",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "4620bcde6b79cd661d6f9afca60e21b50728488c6804f8271a9a014186242b44",
+      "bytes": 348100,
+      "visibleSourceSHA256": "8b0d2b3cf47fb18fdd1cea3795bbf00e96b0de0db45546d02cea5d5561edf0dd",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 921,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.476,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m34-running.webp",
+      "sourceSHA256": "d4c86e7b5f6dcb5f78126b4a7b81bf97d4921e9e9542434b8766c1e9fffff1d0",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "b3e2532adb7496de8184de102e4e2977d86f259dcb24563822aa9517333bb92a",
+      "bytes": 348908,
+      "visibleSourceSHA256": "57ff3b181c3b62c0b12f10a907e1fe49aef531d9e816df7f493f36a3991c3822",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 928,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.454,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-detach.webp",
+      "sourceSHA256": "50c7c3b8891770d97e7149d3778f62154b32747d7e6ca7c1c3d7d15d3eaff6de",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "71832ea5f233276a1f22e3b35f29add2376b45efdee3a7bc0eac5633d0c7d830",
+      "bytes": 571926,
+      "visibleSourceSHA256": "76a108631535a9fd4acfe1b3eae716e77c721944dc5f5db77540631c5e99211d",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1576,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.033,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-jump.webp",
+      "sourceSHA256": "3fe589f8c87178603695107f7602e881951f4855674d24ea95fe20001d12f3a2",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "6542c039ba41a2c05b7e50ec49badef81b6c3fbfc504841b94ae3cc4927cbc53",
+      "bytes": 622938,
+      "visibleSourceSHA256": "d5cb0e715529bef2c03380134e4cd1688876d70df07b929c4323a340bdd783f4",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1677,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.798,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-land.webp",
+      "sourceSHA256": "4d496c93397d1587503f20ef0e641d0bf90828b4f71c832daa2528745e3cbc59",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "e5c1ed85f948cb7d5b730020a737098a7f424350ebc06106cc1a8114f8dc850b",
+      "bytes": 601496,
+      "visibleSourceSHA256": "a55e0a43532e0c7295d9a14a9ac5213a103845176cb7ed7f5f174c08f353e629",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1604,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.952,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/m35-wait.webp",
+      "sourceSHA256": "c2ce5093bcf1fd85236f03b3417ef839125b45e85dbe3eb8e6b78edd111364d8",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "7fd34eb4409d542a6ab292d7588b5fba183daf96d1771224471c0678986a9a07",
+      "bytes": 598322,
+      "visibleSourceSHA256": "26bbe4c8458dbb9eba45e67b3a616653cf5a1a71a825007e1e6edd8a0cab8a06",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1615,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.933,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-chestcatch.webp",
+      "sourceSHA256": "fe83caa006f36c611897e5a9985132a358792a192db54505f50e9263a6487146",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "c22d5db11fa027ed873fda1966b4091e5143cb217df66f169705dcec31513004",
+      "bytes": 421228,
+      "visibleSourceSHA256": "63a471c85ad9c71cea51d68e8433da3f5fec5e794358f71301673dba729ecd26",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1139,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.471,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-detach.webp",
+      "sourceSHA256": "a72bebd2618b2ca904dd739890957bab3b4f73bcf554ffbd5af59e9a2d7ba1d8",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "92d1c7efbaf4ad8b128aaaad5397bd201ca82fab717d90e110b6f594ad018c11",
+      "bytes": 435774,
+      "visibleSourceSHA256": "134cb89136079387d2015d79d3b54e198d8365e7c8083b78803d8318d15dccfe",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1151,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.383,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-detach.webp",
+      "sourceSHA256": "77e8800fd5fa7db799bc1afbd2ef68148cdeb70951fb3e1b72a60b288d8c0566",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "60c3e44db52b0db2210fce01a903ddcc1f1a594937942193883843ad5e483b55",
+      "bytes": 896260,
+      "visibleSourceSHA256": "d922b517af83dd7b4078cb13f4555f07199f05960521ac1d0a8b78106ae6d570",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2527,
+        "maxRGBDelta": 3,
+        "psnrDB": 47.87,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-front.webp",
+      "sourceSHA256": "69e5f6b78d50aad176da19643bdcd8e4e093af03fbd81e61e8d938fbf99acc28",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "a0dfe8cea1e23d7a20f56dbb373679a3926ca2714432cf84535bdbd81900c8bd",
+      "bytes": 930598,
+      "visibleSourceSHA256": "56a617357c9767ce496969da6eeb6e19ff5155ea823b484892c7fab040001323",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2624,
+        "maxRGBDelta": 3,
+        "psnrDB": 47.731,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-far-stepback-fixed.webp",
+      "sourceSHA256": "ced9c442b5a42f2fbbafaaab6c45e9ef58aa096c4685dcc33c2c69f155ad9ee3",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "a2b55bcde8a7d3fa521dca6dfb7eb121671a0b5396bc4c961debe6b6bd79b43d",
+      "bytes": 893128,
+      "visibleSourceSHA256": "75919738bd853b6a4a82994f86b771510ded11820d13686d2a8a809fa8fe2ceb",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2511,
+        "maxRGBDelta": 3,
+        "psnrDB": 47.926,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-high-flight.webp",
+      "sourceSHA256": "cc847ed0d71af95582c49be83e5599d1d4b49f2b422f6f1603c328ef4f65d29e",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "3d04888ed28be879396bd2776299a4ed81a8bfed49f57abd94e3b2bf4d55a5e7",
+      "bytes": 367158,
+      "visibleSourceSHA256": "0f2603429dffaaf2450194598d8d77597671c6c3e371b3a029af8026beae91ca",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 992,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.149,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-catch.webp",
+      "sourceSHA256": "30e0d9879498abaddc946beb3c7e45dfb7857012150c9220254b4b50569489b6",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "f9f192ebf5ea1b574b98daaab5fa666c93d44ca10d9587e13bc36b2705fc7688",
+      "bytes": 417020,
+      "visibleSourceSHA256": "7c5b523a0c1949ce825a968fbcb0c549d203cb885a944e720b637ac89a6a961f",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1118,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.586,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-low-flight.webp",
+      "sourceSHA256": "431faeb01f2fd4d05f1241ba0b92cf336a2c3d7af9f6225b7cb12463449fe51f",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "b36f3b3553a2bd2faba0617bcdd22ac46c148c1f55629f679fea571e5b813fed",
+      "bytes": 413578,
+      "visibleSourceSHA256": "257c8e1adf3f04aac7cd93d850e7749cf37bde6cfae9a64b8c7b134ca6169f2f",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1126,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.546,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-ready-blue.webp",
+      "sourceSHA256": "2fc2f74980c895f1a5aaa3e74de49144904da60bb6649e9f08b04fb087e44d20",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "049f3a186e94c4051f2c00dcd81980621631aaffb47878018d819d4819c41f2c",
+      "bytes": 399472,
+      "visibleSourceSHA256": "a2e8c3d5091530349ab1700e9e5f7650297b3aec0584be9d29e57753c91915da",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1086,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.689,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-return-backview.webp",
+      "sourceSHA256": "9e262d071e025c6a80ebb75d74ff8674c0f1577729c826dfdfc4dd6c7c25d1a5",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "82ecad3df4d69a27c2d462dcbf93316bbf6620a541c1381c1ea4ec8f02e2c2c2",
+      "bytes": 374508,
+      "visibleSourceSHA256": "de77759c96115bf8c0e005b8da43ac1208cf3fd6cbd2d5c424a4885603bb2748",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1003,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.045,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pair-stepback-fixed.webp",
+      "sourceSHA256": "0203fb1fe5d760c041853c7a1375fdbd5d3cc1d9be5dd2085b8563ebdf4f2ddc",
+      "width": 1200,
+      "height": 800,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          762,
+          1184,
+          784
+        ]
+      ],
+      "sha256": "26719563a581d4dc2c04cf59441b0e10397dc0eeb91b880f6d16295b3c7fd30d",
+      "bytes": 361908,
+      "visibleSourceSHA256": "aad3b111d6bd67bc5789379013aebe662094016c3b07b107c03722bec502e0df",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 974,
+        "maxRGBDelta": 3,
+        "psnrDB": 52.181,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-catch.webp",
+      "sourceSHA256": "813df81f9af796a99c31eacdf828f91ce3f401d0817df0a8d8a83a2cba6e7656",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "0299352efea5f1974b9036291deef1badaaeac696eac5b6f789ce24022e40584",
+      "bytes": 509554,
+      "visibleSourceSHA256": "9ab2758ffe213014223d5e8240acd0dc6bcbc31076acfd65bd6ce93588a36709",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1446,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.561,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-detach.webp",
+      "sourceSHA256": "a92c2971df31526dbb9dea7e2f98ccd09b92bbddf488ee308644445588bf75b7",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "33f7e9224c850488e702f375309ee2d0de5212b4b54bf2aac86a4282bc13223f",
+      "bytes": 493406,
+      "visibleSourceSHA256": "1c32d0bbe88b24ee4edcd138747fd4cec00cea6d413cc7f9036973c127ba0168",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1368,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.767,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-nextcatch.webp",
+      "sourceSHA256": "3618a042829b134c6c02ed5c037a8f52d5cc43f5ce99d11d46b25a8498fa7f5b",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "8a470a95c3026120d7cd782eb9eb9254b59f523613a39a27ed4d793bd473970c",
+      "bytes": 460506,
+      "visibleSourceSHA256": "3bcfa7fc35f30eab32c46351bf6830e9b235e8212e2d0170c2d192c5294b0b50",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1322,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.937,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-recovery-v1/pairs-transfer-fixed.webp",
+      "sourceSHA256": "6b1be17c8ecc4a4ef5715ff5bcb494e1ccaf6e88a4a445a14e73a71399513015",
+      "width": 1200,
+      "height": 811,
+      "watermarkBoxes": [
+        [
+          13,
+          13,
+          102,
+          35
+        ],
+        [
+          1095,
+          773,
+          1184,
+          795
+        ]
+      ],
+      "sha256": "a75a35a2840a7194d7d708436e3a91787ae5accbc2132878040c4663a4da90a6",
+      "bytes": 570842,
+      "visibleSourceSHA256": "8dd2111d90f90c53f44e5eba5d8afef915d2d958654a194d0e5cc7f9f0b372bd",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1618,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.03,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-detach-v1.webp",
+      "sourceSHA256": "1f8bf8cb8c9fa17cd262f282141c5074948a281b25c68ffba2b70a2fa3762928",
+      "width": 1024,
+      "height": 1536,
+      "watermarkBoxes": [
+        [
+          16,
+          16,
+          92,
+          35
+        ],
+        [
+          929,
+          1498,
+          1005,
+          1517
+        ]
+      ],
+      "sha256": "96695a25268c4d8350329765cd9ec5d3a7025603149176ef3656a8183cbb511a",
+      "bytes": 734930,
+      "visibleSourceSHA256": "16adc05f2b9f20c5fb376433e12bf2af6ef1bed09e644ff19177ddf033cc9c60",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2171,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.683,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-freeze-v1.webp",
+      "sourceSHA256": "b8d0da35b087ca66a3d539f05bc7b2d7b67f09e4b7cd9e8fa21a200c7e0c582e",
+      "width": 1024,
+      "height": 1536,
+      "watermarkBoxes": [
+        [
+          16,
+          16,
+          92,
+          35
+        ],
+        [
+          929,
+          1498,
+          1005,
+          1517
+        ]
+      ],
+      "sha256": "7f6e02c814ad34934aa590f052c3c0808bee7cd867d0d0e77fa921df87734876",
+      "bytes": 746440,
+      "visibleSourceSHA256": "915c2b2e592a566fb71bd889ea6be4d712c6fcf3cdf0c1ebfbd17ca99fcd2ed7",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2210,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.615,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m05-return-v1.webp",
+      "sourceSHA256": "87a1964a8c91f155e1c82b86cfc70ac9e08eb2d7a9937abca1c05e2bb3937a70",
+      "width": 1024,
+      "height": 1536,
+      "watermarkBoxes": [
+        [
+          16,
+          16,
+          92,
+          35
+        ],
+        [
+          929,
+          1498,
+          1005,
+          1517
+        ]
+      ],
+      "sha256": "99891cffa47efc086f90ae536fbd625320ef6d73b1c3d41148706d50e24e9bd6",
+      "bytes": 697688,
+      "visibleSourceSHA256": "e807de156ddbca4f6172a91907b7bfb367a0fa119f63132124fd7449f6a8b26b",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2099,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.838,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-catch-v1.webp",
+      "sourceSHA256": "7c20df150c94817c6e7b67f0c0f3f5aefd6d4118d4e5897bc4a91a159b39bc7c",
+      "width": 1374,
+      "height": 1145,
+      "watermarkBoxes": [
+        [
+          18,
+          18,
+          117,
+          42
+        ],
+        [
+          1254,
+          1100,
+          1353,
+          1124
+        ]
+      ],
+      "sha256": "74790e60687bbd4f76392aa5e0bfc3776dad648de43202c7e0fe624d79be568b",
+      "bytes": 719380,
+      "visibleSourceSHA256": "5ca84f3815a6a7f66031858a87bafba1c411dc5900c0cda12cc98c74768fb351",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2074,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.947,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-reset-v1.webp",
+      "sourceSHA256": "4f720405737c652904c2aac0342cfe5ffe13fb52408fc550f10ea12d1f661779",
+      "width": 1374,
+      "height": 1145,
+      "watermarkBoxes": [
+        [
+          18,
+          18,
+          117,
+          42
+        ],
+        [
+          1254,
+          1100,
+          1353,
+          1124
+        ]
+      ],
+      "sha256": "5189ae6eef9a223eb4a99214f52909c9f873493650f5fa676d4a7f2942377375",
+      "bytes": 691010,
+      "visibleSourceSHA256": "9200b29772731c23b2dc68c4e4c2c10169aff2543cbe41189bd45ffd2c610059",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 1994,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.098,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/customer-v4/m10-toss-v1.webp",
+      "sourceSHA256": "de8b4e8fdef2c96044370d1577ad87642dbc76d1225bee6cd7351dd5a7d0f3af",
+      "width": 1374,
+      "height": 1145,
+      "watermarkBoxes": [
+        [
+          18,
+          18,
+          117,
+          42
+        ],
+        [
+          1254,
+          1100,
+          1353,
+          1124
+        ]
+      ],
+      "sha256": "d5f84360fdcf4f93edc48d1e3affdc201d9ff602b36f6a5c62155cd01d4d90ee",
+      "bytes": 732378,
+      "visibleSourceSHA256": "e9dafed5d69bd69db5b86119e1e0b79633b570d356670590ed22593b870f45d1",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 2086,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.918,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/1.webp",
+      "sourceSHA256": "22ab741942c00937a4bcf8d56011615c159d419daf8425d76b918ea7c627f032",
+      "width": 600,
+      "height": 887,
+      "watermarkBoxes": [
+        [
+          10,
+          10,
+          54,
+          22
+        ],
+        [
+          543,
+          862,
+          587,
+          874
+        ]
+      ],
+      "sha256": "c6878b6b5fddae7ad321a1d742cdda5b2c895f52318d124575beb53401363bfa",
+      "bytes": 316768,
+      "visibleSourceSHA256": "54ca3cec9335ab395a43c7e74bd1c523f7ac02cdbbfdf6cc75955a653b02362f",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 952,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.678,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/2.webp",
+      "sourceSHA256": "1435118acb6bbf65e880dd998bb8f6a4747f0f0daddeb538787407108070b5f6",
+      "width": 600,
+      "height": 887,
+      "watermarkBoxes": [
+        [
+          10,
+          10,
+          54,
+          22
+        ],
+        [
+          543,
+          862,
+          587,
+          874
+        ]
+      ],
+      "sha256": "2fc2fca9662b77ca4baa707c32228b072ddf1079df6c85ee358d709bbfc48286",
+      "bytes": 302472,
+      "visibleSourceSHA256": "572498021c7c7a15db19c32fb6929eb6b14b7d5d06421886e05d105db0ab564f",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 893,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.944,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m03/3.webp",
+      "sourceSHA256": "102ff6f0c1ea2981cc8de6287518f75342360a16d84b977ace84f1f1fdf04081",
+      "width": 600,
+      "height": 887,
+      "watermarkBoxes": [
+        [
+          10,
+          10,
+          54,
+          22
+        ],
+        [
+          543,
+          862,
+          587,
+          874
+        ]
+      ],
+      "sha256": "a3ad59c4c91301f340e2e6ea9a4c59856264a8e991de2acdeee658be50c56d4d",
+      "bytes": 309492,
+      "visibleSourceSHA256": "fb0600680cc2334d5c564a9287d14ff0c39c24eb90e0260029f65bc5e7e16f8f",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 921,
+        "maxRGBDelta": 3,
+        "psnrDB": 49.818,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/1.webp",
+      "sourceSHA256": "73c9ee9c3871ee0c7a0127d6734f75953b079d802fcaf502468f54e720f04771",
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "sha256": "46d4812eeba5acf6ffb8252efe5a491d1b96813bfcd092d27df37b279258f03e",
+      "bytes": 146900,
+      "visibleSourceSHA256": "39640ca181055349d48d90e3be228d78b189bbad7f1551e0183994815dcfb288",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 438,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.126,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/2.webp",
+      "sourceSHA256": "8773a44bfe763344055d80c7624c0d46489692d20e28ee98389f72b44eec61e3",
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "sha256": "0a29affd8f06fb9948f69be655d59a4fd1648262c942257112637752dd9241b0",
+      "bytes": 137218,
+      "visibleSourceSHA256": "ac4ee7db64240c917246b70e944578f1e7158caee36a8c771c9904bd30bb6df8",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 413,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.361,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/4.webp",
+      "sourceSHA256": "7de35e98024cd58f8458124d84153eed4605e8a8a751631f72ee4ccb00485a99",
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "sha256": "60d5e854aa60853f806d22e8de340595836a29cb9d4d38b7a9df62f964e4ccd6",
+      "bytes": 141876,
+      "visibleSourceSHA256": "058873bb6c21867fb5f98385019f82e3ca27641b52345067ce69c55bc6dab6b5",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 364,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.86,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m04/6.webp",
+      "sourceSHA256": "bae3a384a77f2d7bb4fe36cedcf3af8c678bfbef891d89e279cb2a3434c10f63",
+      "width": 512,
+      "height": 512,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          48,
+          19
+        ],
+        [
+          461,
+          490,
+          501,
+          501
+        ]
+      ],
+      "sha256": "79a980d97588d5bea377ab1adf3edc53d84df8e94cd9301522a88a09636917e6",
+      "bytes": 132410,
+      "visibleSourceSHA256": "0897d0f361329b85d658a36fa475437faaed1def951f8513591856b1d0935d70",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 361,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.903,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/1-detail.webp",
+      "sourceSHA256": "82aebbb4a6d0031f642433f698a8af377f431ddf418f205e987bcfa3deb7f20d",
+      "width": 600,
+      "height": 514,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          52,
+          20
+        ],
+        [
+          545,
+          491,
+          589,
+          503
+        ]
+      ],
+      "sha256": "a41b0e75efc39afe25b1778d1bf7ad07a2d903cd26a675a21d1173d70d0bde95",
+      "bytes": 80308,
+      "visibleSourceSHA256": "e68979425b396512b6d958f1afa128c60ba027a7727454a02cc102b0c9abba51",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 239,
+        "maxRGBDelta": 3,
+        "psnrDB": 53.559,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/2-detail.webp",
+      "sourceSHA256": "6f86f6970088fb0ae89c582096cd432b21d3be8495aca664f0c8cb009f4844b1",
+      "width": 600,
+      "height": 514,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          52,
+          20
+        ],
+        [
+          545,
+          491,
+          589,
+          503
+        ]
+      ],
+      "sha256": "118804d770f37ba24b4e458d28ee671ca7a4a23dfb8eba013b0aabcd95c3f159",
+      "bytes": 75266,
+      "visibleSourceSHA256": "44d5c5b5229879cae02c79511ef1fefa8a2c462181e7b476ea1a3f6449546d50",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 215,
+        "maxRGBDelta": 3,
+        "psnrDB": 53.913,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/final/m08/3-detail.webp",
+      "sourceSHA256": "091ea07fde1ac1ed4405e1379364cfb5161c85a1166ff72cda4e9404fda385c0",
+      "width": 600,
+      "height": 525,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          52,
+          20
+        ],
+        [
+          545,
+          502,
+          589,
+          514
+        ]
+      ],
+      "sha256": "4880b0aabef08172ac9ed28056c4dc8edec12f59cc73a553faf5946fc2caaf88",
+      "bytes": 121016,
+      "visibleSourceSHA256": "7cbedf18fbae6dad2a17fd4cfce951aee8db213144c89a062d16ace2d8a272fa",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 390,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.267,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/m25/contact-alpha-v1.webp",
+      "sourceSHA256": "1259fabd2075911e93984f868beb1f075b7c220e96462cc3692e7c8e9b98cc4b",
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "sha256": "e07e11824e903b24d0bd2368a4433025f6cf0f015ab8328a32c8da8eb6733f60",
+      "bytes": 289852,
+      "visibleSourceSHA256": "6c7d028b36f29480f08aa879f8564cd022163e3996b9c508b61adda37f58e5a5",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 383,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.628,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/m25/product-still-v1.webp",
+      "sourceSHA256": "0b48406a6fd47948baf0690a54270fdf65830533f7cdb699d1f850ed1250d230",
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "sha256": "97a3fd19e8d46cef1e42ac48549c0a081a3cbd479d77e5c10af5ff82d4de78a4",
+      "bytes": 307506,
+      "visibleSourceSHA256": "0cb66f40251048bd984911b4ae5296152246877d20604deb12df261ca7612387",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 376,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.701,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/m25/reset-alpha-v1.webp",
+      "sourceSHA256": "709cec056c2e712b20cba34869450435157224ca6418cc5de9acceea16aeb33d",
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "sha256": "8deea0528e07e73de8284a9693bc8037c5d03244fc24b0104c50b3ff2fa196f6",
+      "bytes": 313886,
+      "visibleSourceSHA256": "06ca92ea926e32bc65dffa453a41120aec96dd19bd4afd73217ef08acef27566",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 412,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.335,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/m25/seated-editorial-v1.webp",
+      "sourceSHA256": "dc673a156eef55da84b38326afc294fa8dcb29daa0052c38612e176310e1913b",
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "sha256": "26cf081be1700d98d1e26bd14cb9cc37d394301aa4bc615cb8fbfbf30d798547",
+      "bytes": 295252,
+      "visibleSourceSHA256": "cc9cdbe09e99af5d4af43414c3b2d6022a5c4c120d33b037f6a337e5a25fb51d",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 388,
+        "maxRGBDelta": 3,
+        "psnrDB": 51.507,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    },
+    {
+      "path": "assets/mission-illustrations/pilot-v1/m07-hero-v2.webp",
+      "sourceSHA256": "dd6f89884dfab184e544de2918085617907e0b0b7c07f3c1fb7afbe2f365468c",
+      "width": 720,
+      "height": 480,
+      "watermarkBoxes": [
+        [
+          8,
+          8,
+          62,
+          23
+        ],
+        [
+          655,
+          454,
+          709,
+          469
+        ]
+      ],
+      "sha256": "3e0c398f19a41e1c7fef1c313f19839779e93540477c2b0e20d21403c4802fa6",
+      "bytes": 285128,
+      "visibleSourceSHA256": "0d9b6ba5d14c171645b732f3ab2798e734c4452175417218cc815ae1c0ef5291",
+      "hidden": {
+        "scheme": "JUMVI-reference-dct-v2",
+        "keyId": "4e082c67b9e20b48",
+        "blocks": 497,
+        "maxRGBDelta": 3,
+        "psnrDB": 50.565,
+        "alphaExact": true,
+        "dimensionsExact": true
+      }
+    }
+  ]
+}

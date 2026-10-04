@@ -1,5 +1,6 @@
 // Staging isolation adapter. Never imports production code or resources.
 import review,{isV2Path} from "./v2-review-worker.mjs";
+import {rejectImageEmbedding,protectAssetResponse} from './art-delivery-policy.mjs';
 
 
 export default {
@@ -12,7 +13,7 @@ export default {
     const headers = {
       'X-Jumvi-Environment': 'm0-staging',
       'X-Jumvi-Analytics': 'disabled',
-      'X-Robots-Tag': 'noindex, nofollow, noarchive',
+      'X-Robots-Tag': 'noindex, nofollow, noarchive, noimageindex',
       'Cache-Control': 'no-store'
     };
     if (url.pathname === '/api/beacon') {
@@ -24,6 +25,7 @@ export default {
     }
     if (request.headers.has('Authorization') || request.headers.has('Cookie')) return new Response('No authenticated app responses', {status:403,headers});
     if (!['GET','HEAD'].includes(request.method)) return new Response('Method not allowed',{status:405,headers});
+    if(rejectImageEmbedding(request))return new Response('Image embedding unavailable',{status:403,headers});
     if (/^\/(?:api|src|tools|compat)(?:\/|$)/.test(url.pathname)) return new Response('Unavailable',{status:404,headers});
     // Explicit allowlist prevents forwarding any accidental secrets/datasets.
     const path = url.pathname === '/' ? '/index.html' : (['/tr','/tr/'].includes(url.pathname) ? '/tr/index.html' : url.pathname);
@@ -34,6 +36,8 @@ export default {
     if (/^\/releases\/[a-f0-9]{16}\//.test(path)&&response.status===200) result.headers.set('Cache-Control','public, max-age=31536000, immutable');
     if (path==='/service-worker.js') result.headers.set('Service-Worker-Allowed','/');
     result.headers.set('Content-Security-Policy', "connect-src 'self'; form-action 'self'");
-    return result;
+    const protectedResult=protectAssetResponse(result,path);
+    if(path.endsWith('.html'))protectedResult.headers.set('Content-Security-Policy',"connect-src 'self'; form-action 'self'; frame-ancestors 'self'");
+    return protectedResult;
   }
 };

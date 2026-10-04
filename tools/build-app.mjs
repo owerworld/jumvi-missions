@@ -11,7 +11,7 @@ for(const [k,v] of Object.entries(tokens.targetMin))vars.push(`--target-${k}:${v
 for(const [k,v] of Object.entries(tokens.type))if(Array.isArray(v)&&typeof v[0]==='number'){vars.push(`--${k}-size:${v[0]/16}rem`,`--${k}-line:${v[1]/16}rem`);}
 writeFileSync(join(root,'src/client/styles/tokens.css'),`:root{${vars.join(';')}}\n`);
 function files(p){return readdirSync(p,{withFileTypes:true}).flatMap(d=>d.isDirectory()?files(join(p,d.name)):[join(p,d.name)]).sort();}
-const inputs=[join(root,'tools/package-protected-art.mjs'),...files(join(root,'artifacts/art-protection-v1')),join(root,'tools/build-app.mjs'),join(root,'index.html'),...files(join(root,'icons')),...files(join(root,'src/client')),...files(join(root,'content')),...files(join(root,'src/offline'))];
+const inputs=[join(root,'tools/package-protected-art.mjs'),...files(join(root,'artifacts/art-protection-v2')),join(root,'src/art-delivery-policy.mjs'),join(root,'src/v2-review-worker.mjs'),join(root,'tools/build-app.mjs'),join(root,'index.html'),...files(join(root,'icons')),...files(join(root,'src/client')),...files(join(root,'content')),...files(join(root,'src/offline'))];
 if(existsSync(join(root,'assets/mission-illustrations')))inputs.push(...files(join(root,'assets/mission-illustrations')));
 if(existsSync(join(root,'assets/fonts/atkinson')))inputs.push(...files(join(root,'assets/fonts/atkinson')));
 for(const p of ['assets/certificate','assets/parents','assets/narration'])if(existsSync(join(root,p)))inputs.push(...files(join(root,p)));
